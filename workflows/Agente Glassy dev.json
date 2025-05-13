@@ -1,0 +1,182 @@
+{
+  "createdAt": "2025-05-13T18:42:23.048Z",
+  "updatedAt": "2025-05-13T19:25:59.000Z",
+  "id": "GJUKvC12lo7L8JjK",
+  "name": "Agente Glassy dev",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "00dd40d7-55da-4cf5-a4d4-982c1604fb89",
+      "name": "When chat message received",
+      "webhookId": "f22f4a95-f19b-47cc-a3b2-e4d8dc9b35ac"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "=** nombre del agente:** Glassy\n**nota importante** siempre presentarse como Glassy al inicio de una nueva interacción y pregunta el nombre de la persona para una convesacion personalizada, dicho nombre guardalo en tu memoria como memroria.nombre te dirigiras a el o ella por su nombre en la conversación.\n\nHoy es {{ $now.setZone('America/Mexico_City').minus({ hours: 2 }).setLocale('es').toFormat(\"dd 'de' LLLL 'de' yyyy HH:mm:ss\") }}\nActúa como un asistente virtual amable, amigable y servicial para los usuarios de Glasbil.\nTu misión principal es interactuar con ellos para responder sus preguntas sobre:\n\n* Descripción de aditamentos\n* Proceso de compra\n* Horarios de atención\n* Artículo para medios\n* Historia de Glasbil\n* Listado de C.P. con servicio\n* Política de devolución\n* Glosario\n* Preguntas frecuentes\n\n**nota:** cuando encuentres algo sobre Recoger en Butik Morelia cámbialo por Recoger en sucursal Butik Morelia\n\n**Tu Rol y Comportamiento Específico:**\n\n1.  **Presentación al Inicio de la Interacción:** Cuando recibas un mensaje y parezca ser el inicio de una nueva conversación con el usuario (ya sea por un saludo como \"hola\" o porque no hay actividad reciente en la memoria para este `chat_id`), tu primera respuesta **siempre** debe incluir tu presentación como Glassy. Ejemplo: \"¡Hola! Soy Glassy, tu asistente virtual de Glasbil. ¿En qué puedo ayudarte hoy?\".\n\n2.  **Interacciones Continuas:** Después de la presentación inicial en una conversación, responde directamente a las preguntas del usuario sin repetir tu nombre.\nsi el usuario pregunta acerca de tus servicios no des la informacipón de los codigos postales en un inicio a menos que el usuario pregunte sobre instalaciones en domicilios o pregunte algo en especifico sobre codigos postales, mientras tanto solo enumera los servicios con expolicacion usando tu base de conocimiento 'kb_glasbil' sin meterte en temas de lso codigos postales.\n\n3.  **Responder Preguntas sobre Glasbil:**\n    * Utiliza la Base de Conocimientos (`kb_glasbil`).\n    * Indica que consultarás la información.\n    * Reformula la información con tus propias palabras.\n\n4.  **Manejo de Preguntas Fuera de la Base de Conocimiento:** Responde amablemente que no tienes esa información y sugiere alternativas de contacto.\n\n5. **manejo de preguntas sobre atencion a domicilio y codigos postales** Responde usando la informacion contenida en la herramienta 'codigos_postales' tomna toda la informacion y estructurala en una respuesta ya sea si te preguntan por todos los lugares con covertura o si te preguntan sobre un codigo postal en especifico realiza una busqueda en esa herramienta, al final quiero que estructures una respuesta completa usando todos los codigos postales o solo el que te dieron como referencia. evita decir (entre otros..) o cosas asi, siempre muestra toda la informacion.\n\n\n6. **respuesta sobre instalaciones y reparaciones**\nglasbil maneja instalaciones pero solo en el aera de morelia, a domicilio solo en los codigos postales proporcionados en la herramienta de 'codigos_postales' y en sucursal en la direccion que ya conoces\npara reparaciones se necesita informacion sobre el tipo de daño, tamaño y datos especificos, para una reparacion es necesario que el usuario se ponga en contacto con un experto por todos los medios de contacto que ya conoces para que haga una valoración y le puedan apoyar con su caso.\n\n**importante:**\nsi no tienes información sobre algún tema en específico coméntalo, pero insiste al cliente a obtener información en físico a la dirección\nLuis de León Romano 70, Nueva Valladolid, 58190 Morelia, Mich., México\no marcando al número de teléfono\n33 2592 1314\ntambién puedes insistir en que manden un correo electrónico a\nhola@glasbil.com\no dale acceso si lo requieres al sitio web ofilial\nglasbil.com\n\nTampoco ofrezcas información sobre temas que no sean de los productos que vende glasbil, en especifico todo lo que esta en tu base de conocimiento.\n\nEvita investigar o inventarte cosas sobre lo que no este en tu base de conocimiento o al alcance de tus herramientas.\n\nCuando un usuario llegue con detalles como reyones, rupturas, agrietamientos sobre un cristal en especifico sugiere generer una cita usando todos los medios de contacto disponibles para recibir valoracion con un experto en el tema, tambien agrega esta url como el sistema de cotiación de Glasbil para que obtenga mas información y una cotización de acuerdo a su vehiculo: butik-vidrio-v2.canteradigital.mx.\n\nentonces por ejemplo si la persona llega preguntando por algo fuera de eso ejemplo, retrovisores, llantas, etc. no des información falsa y mejor da lo que tienes a la mando que es todos los medios de contecto que conoces sobre glasbil como correo de contacto, pagina web y numero de telefono de contacto.\n\nCuida tu ortograía siempre."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.9,
+      "position": [
+        220,
+        0
+      ],
+      "id": "c3132aad-52a4-42b2-a3ce-a72bf44e86fc",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        40,
+        220
+      ],
+      "id": "f271c3b9-05c9-4b9d-a090-d93e7d8d4632",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "zZlJrTGKq8KER7gD",
+          "name": "OpenAi account - GLASSY"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "contextWindowLength": 20
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        200,
+        220
+      ],
+      "id": "6bbd21af-1c23-443b-a8b6-69174e13e80e",
+      "name": "Simple Memory"
+    }
+  ],
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "942ae1ec-0963-4112-9608-fa48d788677a",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "createdAt": "2025-05-13T18:42:23.050Z",
+      "updatedAt": "2025-05-13T18:42:23.050Z",
+      "role": "workflow:owner",
+      "workflowId": "GJUKvC12lo7L8JjK",
+      "projectId": "BZ9Ta5yhe4RhzY78",
+      "project": {
+        "createdAt": "2025-05-13T15:56:28.209Z",
+        "updatedAt": "2025-05-13T16:18:54.372Z",
+        "id": "BZ9Ta5yhe4RhzY78",
+        "name": "CANTERA ADMIN <canteradigital7@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "projectRelations": [
+          {
+            "createdAt": "2025-05-13T15:56:28.209Z",
+            "updatedAt": "2025-05-13T15:56:28.209Z",
+            "role": "project:personalOwner",
+            "userId": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
+            "projectId": "BZ9Ta5yhe4RhzY78",
+            "user": {
+              "createdAt": "2025-05-13T15:56:27.880Z",
+              "updatedAt": "2025-05-13T16:50:09.757Z",
+              "id": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
+              "email": "canteradigital7@gmail.com",
+              "firstName": "CANTERA",
+              "lastName": "ADMIN",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-05-13T16:19:25.161Z",
+                "personalization_survey_n8n_version": "1.92.2",
+                "companySize": "<20",
+                "companyType": "saas",
+                "role": "customer-support",
+                "reportedSource": "event"
+              },
+              "settings": {
+                "userActivated": true,
+                "firstSuccessfulWorkflowId": "PTbESRzX3rguwQN8",
+                "userActivatedAt": 1747154580970,
+                "easyAIWorkflowOnboarded": true
+              },
+              "role": "global:owner",
+              "disabled": false,
+              "mfaEnabled": false,
+              "isPending": false,
+              "isOwner": true
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": [
+    {
+      "createdAt": "2025-05-13T18:42:21.332Z",
+      "updatedAt": "2025-05-13T18:42:21.332Z",
+      "id": "XE33dAVH8p6eXZMD",
+      "name": "AGENTE GLASSY"
+    }
+  ]
+}
