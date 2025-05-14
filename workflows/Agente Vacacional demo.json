@@ -1,0 +1,350 @@
+{
+  "createdAt": "2025-05-14T14:12:45.844Z",
+  "updatedAt": "2025-05-14T14:59:21.000Z",
+  "id": "TpnNuQtWXr8lsoBy",
+  "name": "Agente Vacacional demo",
+  "active": true,
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -140,
+        -240
+      ],
+      "id": "1ff11041-cb29-45ba-87b7-4de80979aa28",
+      "name": "When chat message received",
+      "webhookId": "252c4af1-674b-4c29-9890-0f0a4eea1afb"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.message.text }}",
+        "options": {
+          "systemMessage": "=¡Hola! 👋 Soy **Viaja Feliz**, tu asistente virtual experto en crear las vacaciones de tus sueños. Mi misión principal es hacerte sentir cómodo y emocionado desde el primer contacto. 😊\n\n**Instrucción Directa:** Inmediatamente después de este saludo, **pregunta directamente al usuario si tiene un lugar de origen específico en mente para su viaje.**\n\n**Manejo del Origen:**\n\n* **Si el usuario proporciona un lugar de origen desde el inicio:**\n    * Menciona el lugar de origen proporcionado como su punto de partida.\n    * Utiliza la herramienta `lugares_origen` para obtener la información correspondiente a ese lugar de origen.\n    * **Es crucial que recuerdes y almacenes el `id` asociado a ese lugar de origen bajo la variable `lugar_origen_id`.** Por ejemplo: `lugar_origen_id: [ID del lugar de origen]`.\n\n* **Si el usuario no proporciona un lugar de origen:**\n    * Utiliza la herramienta `lugares_origen` para obtener la lista de todos los lugares de origen disponibles.\n    * Pregunta al usuario cuál de estos lugares le interesa como punto de partida.\n    * Una vez que el usuario seleccione un lugar de origen, **recuerda y almacena su `id` bajo la variable `lugar_origen_id`.** Por ejemplo: `lugar_origen_id: [ID del lugar de origen seleccionado]`.\n\n**Búsqueda de Corridas y Presentación de Precios:**\n\n* Una vez que tengas el `lugar_origen_id`, **utiliza la herramienta `corridas_busqueda` empleando EXCLUSIVAMENTE el `lugar_origen_id` para buscar todas las corridas disponibles con sus respectivos precios.** **NUNCA utilices el nombre del lugar de origen en esta herramienta.**\n* Presenta claramente al usuario la información de las corridas y sus precios.\n\n**Seguimiento de la Corrida y Reserva:**\n\n* **Inmediatamente después de presentar la información de las corridas, guarda el `id` de la corrida que el usuario elija (o la primera corrida mostrada si no hay selección) bajo la variable `corrida_id`.** Por ejemplo: `corrida_id: [ID de la corrida]`.\n* **Invita al usuario a realizar su reservación en ese momento utilizando el siguiente enlace:** `publicogeneral.clicktransporte.canteradigital.mx/outside-home`.\n\nEstoy aquí para responder tus preguntas, ofrecerte ideas inspiradoras y hacer que la planificación de tus vacaciones sea una experiencia fácil y divertida. ¡Prepárate para empacar tus maletas y vivir momentos inolvidables! 🤩\n\n**importante:**\nsiempre consulta tus deciciones con la herramienta de think para obtener informacion adicional sobre los datos que si se pueden usar y los que no "
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.9,
+      "position": [
+        220,
+        0
+      ],
+      "id": "8f8b841f-b968-43c0-b135-a80975bd932b",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        120,
+        220
+      ],
+      "id": "0bd916c1-67fb-4ff7-8deb-ea30af13cda8",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "ZmWqQ5PGylh4Y05s",
+          "name": "OpenAi account - CANTERA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.message.chat.id }}",
+        "contextWindowLength": 20
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        320,
+        220
+      ],
+      "id": "645fabf1-9971-453a-9bcb-35a461a9a944",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "toolDescription": "Realiza una peticion http y retorna lugares de origenes para una corrida",
+        "url": "https://qaclicktransporte.canteradigital.mx/api/corridas/origenes/activos",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.2,
+      "position": [
+        460,
+        260
+      ],
+      "id": "2a81e14e-b620-4369-aee6-cd21e2e83802",
+      "name": "lugares_origen"
+    },
+    {
+      "parameters": {
+        "description": "=Tu trabajo sera verificar que las acciones que realice el bot sean consientes aparte de asegurarte que el bot se acuerde de datos proporcionados por el usuario o datos que investigue a travez de sus herramientas\n\n\nasegurate de que el agente recuerde todos los ids y datos que el usuario le de al agente porque en base a eso vamos a realizar una reservacion\n\ntambien debes estar seguro que los datos que se estan usando sin de tipo numero com oids nunca usar valores de nombre.\n"
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1,
+      "position": [
+        700,
+        120
+      ],
+      "id": "8adcb174-8e6f-4364-a780-cc50ad89e90d",
+      "name": "Think"
+    },
+    {
+      "parameters": {
+        "url": "=https://qaclicktransporte.canteradigital.mx/api/reservaciones/buscarViajes?origen_id={{$fromAI('lugar_origen_id')}}&destino_id=1",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.2,
+      "position": [
+        580,
+        180
+      ],
+      "id": "a884443f-c742-4cfe-8c3e-1de8958c4140",
+      "name": "corridas_busqueda"
+    },
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "2a51231d-9c59-4757-a024-53ef9f683f75",
+      "name": "Telegram Trigger",
+      "webhookId": "444acb2c-8576-44e0-9608-e5c97b3649f2",
+      "credentials": {
+        "telegramApi": {
+          "id": "Q6LlLbjeWbLhcdok",
+          "name": "Telegram account - Agente vacacional demo"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "={{ $json.output }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        580,
+        0
+      ],
+      "id": "ce4219ba-8273-4412-82ae-19dc35873ce1",
+      "name": "Telegram",
+      "webhookId": "cdc5e108-b400-43f3-8f99-4fa86a1330e1",
+      "credentials": {
+        "telegramApi": {
+          "id": "Q6LlLbjeWbLhcdok",
+          "name": "Telegram account - Agente vacacional demo"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "When chat message received": {
+      "main": [
+        []
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "lugares_origen": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Think": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "corridas_busqueda": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {
+    "Telegram Trigger": [
+      {
+        "json": {
+          "update_id": 487767768,
+          "message": {
+            "message_id": 3,
+            "from": {
+              "id": 775456693,
+              "is_bot": false,
+              "first_name": "Ricardo",
+              "last_name": "Correa",
+              "language_code": "es"
+            },
+            "chat": {
+              "id": 775456693,
+              "first_name": "Ricardo",
+              "last_name": "Correa",
+              "type": "private"
+            },
+            "date": 1747234595,
+            "text": "hola"
+          }
+        }
+      }
+    ]
+  },
+  "versionId": "f82037a1-39d1-42c7-a05c-9d0461c4a27f",
+  "triggerCount": 2,
+  "shared": [
+    {
+      "createdAt": "2025-05-14T14:12:45.853Z",
+      "updatedAt": "2025-05-14T14:12:45.853Z",
+      "role": "workflow:owner",
+      "workflowId": "TpnNuQtWXr8lsoBy",
+      "projectId": "BZ9Ta5yhe4RhzY78",
+      "project": {
+        "createdAt": "2025-05-13T15:56:28.209Z",
+        "updatedAt": "2025-05-13T16:18:54.372Z",
+        "id": "BZ9Ta5yhe4RhzY78",
+        "name": "CANTERA ADMIN <canteradigital7@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "projectRelations": [
+          {
+            "createdAt": "2025-05-13T15:56:28.209Z",
+            "updatedAt": "2025-05-13T15:56:28.209Z",
+            "role": "project:personalOwner",
+            "userId": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
+            "projectId": "BZ9Ta5yhe4RhzY78",
+            "user": {
+              "createdAt": "2025-05-13T15:56:27.880Z",
+              "updatedAt": "2025-05-13T16:50:09.757Z",
+              "id": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
+              "email": "canteradigital7@gmail.com",
+              "firstName": "CANTERA",
+              "lastName": "ADMIN",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-05-13T16:19:25.161Z",
+                "personalization_survey_n8n_version": "1.92.2",
+                "companySize": "<20",
+                "companyType": "saas",
+                "role": "customer-support",
+                "reportedSource": "event"
+              },
+              "settings": {
+                "userActivated": true,
+                "firstSuccessfulWorkflowId": "PTbESRzX3rguwQN8",
+                "userActivatedAt": 1747154580970,
+                "easyAIWorkflowOnboarded": true
+              },
+              "role": "global:owner",
+              "disabled": false,
+              "mfaEnabled": false,
+              "isPending": false,
+              "isOwner": true
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": [
+    {
+      "createdAt": "2025-05-14T14:12:52.100Z",
+      "updatedAt": "2025-05-14T14:12:52.100Z",
+      "id": "fxwqHKMz3pThRxkB",
+      "name": "vacacional demo"
+    }
+  ]
+}
