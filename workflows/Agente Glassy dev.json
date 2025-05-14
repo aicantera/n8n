@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-05-13T18:42:23.048Z",
-  "updatedAt": "2025-05-14T14:12:32.000Z",
+  "updatedAt": "2025-05-14T18:32:36.000Z",
   "id": "GJUKvC12lo7L8JjK",
   "name": "Agente Glassy dev",
   "active": false,
@@ -12,8 +12,8 @@
       "type": "@n8n/n8n-nodes-langchain.chatTrigger",
       "typeVersion": 1.1,
       "position": [
-        -260,
-        0
+        720,
+        -120
       ],
       "id": "00dd40d7-55da-4cf5-a4d4-982c1604fb89",
       "name": "When chat message received",
@@ -21,6 +21,8 @@
     },
     {
       "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.message.text }}",
         "options": {
           "systemMessage": "=** nombre del agente:** Glassy\n**nota importante** siempre presentarse como Glassy al inicio de una nueva interacción y pregunta el nombre de la persona para una convesacion personalizada, dicho nombre guardalo en tu memoria como memroria.nombre te dirigiras a el o ella por su nombre en la conversación.\n\nHoy es {{ $now.setZone('America/Mexico_City').minus({ hours: 2 }).setLocale('es').toFormat(\"dd 'de' LLLL 'de' yyyy HH:mm:ss\") }}\nActúa como un asistente virtual amable, amigable y servicial para los usuarios de Glasbil.\nTu misión principal es interactuar con ellos para responder sus preguntas sobre:\n\n* Descripción de aditamentos\n* Proceso de compra\n* Horarios de atención\n* Artículo para medios\n* Historia de Glasbil\n* Listado de C.P. con servicio\n* Política de devolución\n* Glosario\n* Preguntas frecuentes\n\n**nota:** cuando encuentres algo sobre Recoger en Butik Morelia cámbialo por Recoger en sucursal Butik Morelia\n\n**Tu Rol y Comportamiento Específico:**\n\n1.  **Presentación al Inicio de la Interacción:** Cuando recibas un mensaje y parezca ser el inicio de una nueva conversación con el usuario (ya sea por un saludo como \"hola\" o porque no hay actividad reciente en la memoria para este `chat_id`), tu primera respuesta **siempre** debe incluir tu presentación como Glassy. Ejemplo: \"¡Hola! Soy Glassy, tu asistente virtual de Glasbil. ¿En qué puedo ayudarte hoy?\".\n\n2.  **Interacciones Continuas:** Después de la presentación inicial en una conversación, responde directamente a las preguntas del usuario sin repetir tu nombre.\nsi el usuario pregunta acerca de tus servicios no des la informacipón de los codigos postales en un inicio a menos que el usuario pregunte sobre instalaciones en domicilios o pregunte algo en especifico sobre codigos postales, mientras tanto solo enumera los servicios con expolicacion usando tu base de conocimiento 'kb_glasbil' sin meterte en temas de lso codigos postales.\n\n3.  **Responder Preguntas sobre Glasbil:**\n    * Utiliza la Base de Conocimientos (`kb_glasbil`).\n    * Indica que consultarás la información.\n    * Reformula la información con tus propias palabras.\n\n4.  **Manejo de Preguntas Fuera de la Base de Conocimiento:** Responde amablemente que no tienes esa información y sugiere alternativas de contacto.\n\n5. **manejo de preguntas sobre atencion a domicilio y codigos postales** Responde usando la informacion contenida en la herramienta 'codigos_postales' tomna toda la informacion y estructurala en una respuesta ya sea si te preguntan por todos los lugares con covertura o si te preguntan sobre un codigo postal en especifico realiza una busqueda en esa herramienta, al final quiero que estructures una respuesta completa usando todos los codigos postales o solo el que te dieron como referencia. evita decir (entre otros..) o cosas asi, siempre muestra toda la informacion.\n\n\n6. **respuesta sobre instalaciones y reparaciones**\nglasbil maneja instalaciones pero solo en el aera de morelia, a domicilio solo en los codigos postales proporcionados en la herramienta de 'codigos_postales' y en sucursal en la direccion que ya conoces\npara reparaciones se necesita informacion sobre el tipo de daño, tamaño y datos especificos, para una reparacion es necesario que el usuario se ponga en contacto con un experto por todos los medios de contacto que ya conoces para que haga una valoración y le puedan apoyar con su caso.\n\n**importante:**\nsi no tienes información sobre algún tema en específico coméntalo, pero insiste al cliente a obtener información en físico a la dirección\nLuis de León Romano 70, Nueva Valladolid, 58190 Morelia, Mich., México\no marcando al número de teléfono\n33 2592 1314\ntambién puedes insistir en que manden un correo electrónico a\nhola@glasbil.com\no dale acceso si lo requieres al sitio web ofilial\nglasbil.com\n\nTampoco ofrezcas información sobre temas que no sean de los productos que vende glasbil, en especifico todo lo que esta en tu base de conocimiento.\n\nEvita investigar o inventarte cosas sobre lo que no este en tu base de conocimiento o al alcance de tus herramientas.\n\nCuando un usuario llegue con detalles como reyones, rupturas, agrietamientos sobre un cristal en especifico sugiere generer una cita usando todos los medios de contacto disponibles para recibir valoracion con un experto en el tema, tambien agrega esta url como el sistema de cotiación de Glasbil para que obtenga mas información y una cotización de acuerdo a su vehiculo: butik-vidrio-v2.canteradigital.mx.\n\nentonces por ejemplo si la persona llega preguntando por algo fuera de eso ejemplo, retrovisores, llantas, etc. no des información falsa y mejor da lo que tienes a la mando que es todos los medios de contecto que conoces sobre glasbil como correo de contacto, pagina web y numero de telefono de contacto.\n\nCuida tu ortograía siempre."
         }
@@ -60,6 +62,8 @@
     },
     {
       "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.message.chat.id }}",
         "contextWindowLength": 20
       },
       "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
@@ -83,18 +87,92 @@
       ],
       "id": "52f38c2a-e9c3-4849-87b6-32e468440fd7",
       "name": "Think"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1MdybkUkgnwvXUuGsbB2oNIUvkpGcyBw6RBvo199ZqK0",
+          "mode": "list",
+          "cachedResultName": "codigos postales atencion a clientes",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1MdybkUkgnwvXUuGsbB2oNIUvkpGcyBw6RBvo199ZqK0/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1MdybkUkgnwvXUuGsbB2oNIUvkpGcyBw6RBvo199ZqK0/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.5,
+      "position": [
+        380,
+        220
+      ],
+      "id": "e7c6c51c-2307-4f06-892e-723e2edc79fc",
+      "name": "codigos_postales",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "VrznAZQXjQh9WpvY",
+          "name": "Google Sheets - Cantera"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -320,
+        0
+      ],
+      "id": "25010742-83ee-405e-b067-fc8d69015662",
+      "name": "Telegram Trigger",
+      "webhookId": "bf50b0f2-f697-4702-8495-9979a1fb39e2",
+      "credentials": {
+        "telegramApi": {
+          "id": "vcUHDLkV2ZD6YfU8",
+          "name": "Telegram account - GLASSY"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "={{ $json.output }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        580,
+        0
+      ],
+      "id": "6bd6762b-3062-4722-8eb6-6e005313cd28",
+      "name": "Telegram",
+      "webhookId": "5949d845-75fd-4068-9ec9-3cf5d007ad55",
+      "credentials": {
+        "telegramApi": {
+          "id": "vcUHDLkV2ZD6YfU8",
+          "name": "Telegram account - GLASSY"
+        }
+      }
     }
   ],
   "connections": {
     "When chat message received": {
       "main": [
-        [
-          {
-            "node": "AI Agent",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "OpenAI Chat Model": {
@@ -129,6 +207,39 @@
           }
         ]
       ]
+    },
+    "codigos_postales": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -139,7 +250,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "dae84f89-508b-4b88-80b1-a217f3ebb22e",
+  "versionId": "15b7edcb-fd9e-4164-8dcf-bba408f88c5c",
   "triggerCount": 0,
   "shared": [
     {
