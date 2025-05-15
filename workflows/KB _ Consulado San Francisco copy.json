@@ -1,0 +1,1257 @@
+{
+  "createdAt": "2025-05-15T02:56:29.669Z",
+  "updatedAt": "2025-05-15T02:56:29.669Z",
+  "id": "W9nUrohTuNiWNUrp",
+  "name": "KB _ Consulado San Francisco copy",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -2060,
+        420
+      ],
+      "id": "20b5e555-795e-4c83-84f8-7fdbd213994b",
+      "name": "When clicking ‘Test workflow’"
+    },
+    {
+      "parameters": {
+        "url": "=http://135.232.111.170:11235/task/{{ $json.task_id }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer 14526931"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -1100,
+        440
+      ],
+      "id": "6e8337a2-b332-4731-a078-a4d688e0e875",
+      "name": "WEBSCRAPING RESULTADOS",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://135.232.111.170:11235/crawl",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer 14526931"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "urls",
+              "value": "https://consulmex.sre.gob.mx/sanfrancisco/"
+            },
+            {
+              "name": "priority",
+              "value": "10"
+            },
+            {
+              "name": "max_depth",
+              "value": "20"
+            },
+            {
+              "name": "include_external",
+              "value": "False"
+            },
+            {
+              "name": "pdf",
+              "value": "Ttrue"
+            },
+            {
+              "name": "screenshot",
+              "value": "False"
+            },
+            {
+              "name": "fit_markdown",
+              "value": "True"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -1620,
+        440
+      ],
+      "id": "8698d719-a786-4549-a449-c37b5ef4bf7e",
+      "name": "WEBSCRAPING Crea JOB"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "87b5ff09-f859-493d-8a7e-00753aa3a649",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "completed",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -700,
+        420
+      ],
+      "id": "5ac7479b-5f62-4153-b9e1-8b36270c3d49",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "path": "5e06e9f2-680d-4ac8-8168-9d26384da4d5"
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        -1400,
+        440
+      ],
+      "id": "f089ac88-dd44-4e20-b00f-b218403dc459",
+      "name": "Wait",
+      "webhookId": "5e06e9f2-680d-4ac8-8168-9d26384da4d5"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "3277ad19-1e92-4e24-8e69-0c89e6c36347",
+              "name": "task_id",
+              "value": "={{ $('WEBSCRAPING Crea JOB').item.json.task_id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -760,
+        660
+      ],
+      "id": "a97d9cf3-0404-4b97-afc5-2793031136ec",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "result.links.internal",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        -280,
+        380
+      ],
+      "id": "56a93f55-ea5e-43a6-bab0-6c334be185a0",
+      "name": "Split Out"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        740,
+        140
+      ],
+      "id": "213962fc-ae20-4b66-bbab-3339882be886",
+      "name": "Loop Over Items1"
+    },
+    {
+      "parameters": {
+        "path": "f2830470-a66d-4ac9-a799-cafc59b2dfcc"
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1480,
+        80
+      ],
+      "id": "6a80b6a3-8f30-4627-9fec-46dbd1c82945",
+      "name": "Wait2",
+      "webhookId": "f2830470-a66d-4ac9-a799-cafc59b2dfcc"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://135.232.111.170:11235/crawl",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer 14526931"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "urls",
+              "value": "={{ $json.href }}"
+            },
+            {
+              "name": "priority",
+              "value": "10"
+            },
+            {
+              "name": "max_depth",
+              "value": "20"
+            },
+            {
+              "name": "include_external",
+              "value": "False"
+            },
+            {
+              "name": "pdf",
+              "value": "Ttrue"
+            },
+            {
+              "name": "screenshot",
+              "value": "False"
+            },
+            {
+              "name": "fit_markdown",
+              "value": "True"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1220,
+        100
+      ],
+      "id": "a3a0fcc8-f982-4b6e-a0b9-68659cc65282",
+      "name": "WEBSCRAPING Crea JOB - Páginas Internas1",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "url": "=http://135.232.111.170:11235/task/{{ $('WEBSCRAPING Crea JOB - Páginas Internas1').item.json.task_id }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer 14526931"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1720,
+        80
+      ],
+      "id": "7eba80c9-791d-48fb-8283-8aa3afc2a39c",
+      "name": "WEBSCRAPING RESULTADOS- Internos1",
+      "retryOnFail": true,
+      "alwaysOutputData": true,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "87b5ff09-f859-493d-8a7e-00753aa3a649",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "completed",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            },
+            {
+              "id": "57233517-ddd2-48cc-97b8-13c9ad64395e",
+              "leftValue": "",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        2080,
+        100
+      ],
+      "id": "69fcaa36-f4e3-49fd-b4f9-80c2934b5dd8",
+      "name": "If2"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "={{ $json.result.markdown }}"
+            },
+            {
+              "content": "=eres un analista de datos crea un txto detallado y enriquecido sobre esta informacion dada en formato markdonw y crea titulos sibitulos descripciones analisis y bullets con pasos para entrenar un modelo llm.  no digas la palabra analisis ni sitio web. habla siempre como un redactor de contenidos para documentar todo lo qu se te da y presentarlo a personas usaurioas mexcanos en el consulado de san fracisco. Agrega informacion que pueda complementar esta informacio o enrtiquecerla. "
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        2360,
+        80
+      ],
+      "id": "429827ff-6c64-4179-85d2-aeb7fbabec01",
+      "name": "OpenAI",
+      "credentials": {}
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentURL": "1Oyn7Za5BccDgfPWUiFNMvwohmbSDBt973gGlmpEs0Oo",
+        "actionsUi": {
+          "actionFields": [
+            {
+              "action": "insert",
+              "text": "={{ $json.message.content }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        2760,
+        200
+      ],
+      "id": "3c223932-cc95-40b8-8be0-a477b2cbc5e5",
+      "name": "Google Docs",
+      "credentials": {}
+    }
+  ],
+  "connections": {
+    "WEBSCRAPING RESULTADOS": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "WEBSCRAPING Crea JOB",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "WEBSCRAPING Crea JOB": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "WEBSCRAPING RESULTADOS",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Test workflow’": {
+      "main": [
+        [
+          {
+            "node": "WEBSCRAPING Crea JOB",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items1": {
+      "main": [
+        [],
+        [
+          {
+            "node": "WEBSCRAPING Crea JOB - Páginas Internas1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait2": {
+      "main": [
+        [
+          {
+            "node": "WEBSCRAPING RESULTADOS- Internos1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "WEBSCRAPING Crea JOB - Páginas Internas1": {
+      "main": [
+        [
+          {
+            "node": "Wait2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "WEBSCRAPING RESULTADOS- Internos1": {
+      "main": [
+        [
+          {
+            "node": "If2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If2": {
+      "main": [
+        [
+          {
+            "node": "OpenAI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI": {
+      "main": [
+        [
+          {
+            "node": "Google Docs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Docs": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {
+    "WEBSCRAPING RESULTADOS": [
+      {
+        "json": {
+          "status": "completed",
+          "created_at": 1744256931.9242136,
+          "result": {
+            "url": "https://consulmex.sre.gob.mx/sanfrancisco/",
+            "html": "<!DOCTYPE html><html xml:lang=\"es-es\" lang=\"es-es\" style=\"font-size: 100%;\"><head>\n    <meta charset=\"utf-8\">\n    <base href=\"https://consulmex.sre.gob.mx/sanfrancisco/\">\n\t<meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\">\n\t<meta name=\"generator\" content=\"Joomla! - Open Source Content Management\">\n\t<title>Inicio</title>\n\t<link href=\"/sanfrancisco/index.php?format=feed&amp;type=rss\" rel=\"alternate\" type=\"application/rss+xml\" title=\"RSS 2.0\">\n\t<link href=\"/sanfrancisco/index.php?format=feed&amp;type=atom\" rel=\"alternate\" type=\"application/atom+xml\" title=\"Atom 1.0\">\n\t<link href=\"https://consulmex.sre.gob.mx/sanfrancisco/index.php/component/search/?Itemid=101&amp;format=opensearch\" rel=\"search\" title=\"Buscar Consulmex San Francisco\" type=\"application/opensearchdescription+xml\">\n\t<link href=\"/sanfrancisco/plugins/content/pdf_embed/assets/css/style.css\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"/sanfrancisco/media/com_phocamaps/css/phocamaps.css\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"/sanfrancisco/media/plg_content_phocamaps/css/default.css\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"/sanfrancisco/media/com_phocamaps/js/leaflet/leaflet.css\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"/sanfrancisco/media/com_phocamaps/js/leaflet-awesome/leaflet.awesome-markers.css\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"/sanfrancisco/media/com_phocamaps/js/leaflet-fullscreen/leaflet.fullscreen.css\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"/sanfrancisco/media/com_phocamaps/js/leaflet-control-locate/L.Control.Locate.css\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"/sanfrancisco/media/com_phocamaps/js/leaflet-control-locate/font-awesome.min.css\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"/sanfrancisco/media/com_phocamaps/js/leaflet-search/leaflet-search.css\" rel=\"stylesheet\" type=\"text/css\">\n\t<script src=\"/sanfrancisco/media/jui/js/jquery.min.js?087ebd3522946e751963a4a813ed54b1\" type=\"text/javascript\"></script>\n\t<script src=\"/sanfrancisco/media/jui/js/jquery-noconflict.js?087ebd3522946e751963a4a813ed54b1\" type=\"text/javascript\"></script>\n\t<script src=\"/sanfrancisco/media/jui/js/jquery-migrate.min.js?087ebd3522946e751963a4a813ed54b1\" type=\"text/javascript\"></script>\n\t<script src=\"/sanfrancisco/media/system/js/caption.js?087ebd3522946e751963a4a813ed54b1\" type=\"text/javascript\"></script>\n\t<script src=\"/sanfrancisco/media/com_phocamaps/js/leaflet/leaflet.js\" type=\"text/javascript\"></script>\n\t<script src=\"/sanfrancisco/media/com_phocamaps/js/leaflet-awesome/leaflet.awesome-markers.js\" type=\"text/javascript\"></script>\n\t<script src=\"/sanfrancisco/media/com_phocamaps/js/leaflet-fullscreen/Leaflet.fullscreen.js\" type=\"text/javascript\"></script>\n\t<script src=\"/sanfrancisco/media/com_phocamaps/js/leaflet-control-locate/L.Control.Locate.min.js\" type=\"text/javascript\"></script>\n\t<script src=\"/sanfrancisco/media/com_phocamaps/js/leaflet-omnivore/leaflet-omnivore.js\" type=\"text/javascript\"></script>\n\t<script src=\"/sanfrancisco/media/com_phocamaps/js/leaflet-search/leaflet-search.min.js\" type=\"text/javascript\"></script>\n\t<script src=\"/sanfrancisco/media/com_phocamaps/js/administrator/coordinates.js\" type=\"text/javascript\"></script>\n\t<!--[if lt IE 9]><script src=\"/sanfrancisco/media/system/js/html5fallback.js?087ebd3522946e751963a4a813ed54b1\" type=\"text/javascript\"></script><![endif]-->\n\t<script src=\"/media/plg_system_j3accessibility/dist/accessibility.min.js?087ebd3522946e751963a4a813ed54b1\" type=\"module\"></script>\n\t<script type=\"text/javascript\">\njQuery(window).on('load',  function() {\n\t\t\t\tnew JCaption('img.caption');\n\t\t\t});\njQuery(document).ready(function() {\nvar mapphocaMapPlgPM1 = L.map(\"phocaMapPlgPM1\", {zoomControl: false,}).setView([37.78665741640654, -122.39556491407713], 17);\nnew L.Control.Zoom({ zoomInTitle: 'Zoom in', zoomOutTitle: 'Zoom out' }).addTo(mapphocaMapPlgPM1);\nL.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {\n\tmaxZoom: 18,\n\tattribution: '&copy; <a href=\"https://www.openstreetmap.org/copyright\" target=\"_blank\">OpenStreetMap</a>'\n}).addTo(mapphocaMapPlgPM1);\nvar markerPlgPM1m1 = L.marker([37.786673942965216, -122.39551341550852])\n.addTo(mapphocaMapPlgPM1);\n;\nmarkerPlgPM1m1.bindPopup('<div style=\"font-size:120%;margin: 5px 0px;font-weight:bold;\">Consulado General de México en San Francisco</div><div><p><a href=\\\"https://maps.app.goo.gl/QtQqiL3xyoG9c7h9A\\\" target=\\\"_blank\\\" rel=\\\"noopener noreferrer\\\">532 Folsom Street, San Francisco, California, 94105, Estados Unidos.</a></p></div>').openPopup();\nvar iconPlgPM1m1 = new L.AwesomeMarkers.icon({\n   icon: \"circle\",\n   markerColor: \"blue\",\n   iconColor: \"#ffffff\",\n   prefix: \"fa\",\n   spin: 0,\n   extraClasses: \"\",\n})\n markerPlgPM1m1.setIcon(iconPlgPM1m1);\nmapphocaMapPlgPM1.addControl(\n\tnew L.Control.Fullscreen({\n\t\tposition: 'topright',\n\t\ttitle: {\n\t\t\t'false': 'View Fullscreen',\n\t\t\t'true': 'Exit Fullscreen'\n\t\t}\n\t})\n)\nL.control.locate({\n\tposition: 'topright',\n\tstrings: {\n\t\t'title': 'Current Position'\n\t},\n\tlocateOptions: {\n\t\tenableHighAccuracy: true,\n\t\twatch: true,\n\t}\n}).addTo(mapphocaMapPlgPM1);\n})\n        document.addEventListener('DOMContentLoaded', function() {  \n            var labels = {\"menuTitle\":\"Opciones de accesibilidad\",\"increaseText\":\"Incrementar el tama\\u00f1o del texto\",\"decreaseText\":\"Reducir el tama\\u00f1o del texto\",\"increaseTextSpacing\":\"Incrementar el espacio entre el texto\",\"decreaseTextSpacing\":\"Reducir el espacio entre el texto\",\"invertColors\":\"Invertir colores\",\"grayHues\":\"Cambiar a escala de grises\",\"underlineLinks\":\"Subrayado de hipervinculos\",\"bigCursor\":\"Cambiar tama\\u00f1o del cursor\",\"readingGuide\":\"Guias de lectura\",\"textToSpeech\":\"Activar lector de pantalla\",\"speechToText\":\"Voz a texto\",\"resetTitle\":\"Restaurar\",\"closeTitle\":\"Cerrar\"};\n            var options = { labels: labels, hotkeys: {\"enabled\":true,\"helpTitles\":true} };\n            options.textToSpeechLang = 'es-ES'; \n            options.speechToTextLang = 'es-ES'; \n            options.modules = {\"increaseText\":true,\"decreaseText\":true,\"increaseTextSpacing\":true,\"decreaseTextSpacing\":true,\"invertColors\":true,\"grayHues\":true,\"underlineLinks\":true,\"bigCursor\":true,\"readingGuide\":true,\"textToSpeech\":false,\"speechToText\":false}\n\n            new Accessibility(options || {});\n        });\n\t</script>\n\n    <title>Consulado General de México en San Francisco</title>\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1, shrink-to-fit=no\">\n    <meta name=\"theme-color\" content=\"#611232\">\n    <meta name=\"description\" content=\"El gobierno de México proporciona a nivel internacional en distintos países a través de su Consulado General de México en San Francisco, áreas de protección a mexicanos, documentación a mexicanos y extranjeros; servicios en las áreas de educación, salud y organización comunitaria dirigidos a la comunidad de origen mexicano; promoción cultural y de negocios destinados a la población que reside en el extranjero.\">\n    <link href=\"/sanfrancisco/templates/relex-eua/images/favicon.ico\" rel=\"shortcut icon\"> \n    <link rel=\"stylesheet\" href=\"/sanfrancisco/templates/relex-eua/style/bootstrap.css\" type=\"text/css\">\n    <link rel=\"stylesheet\" href=\"/sanfrancisco/templates/relex-eua/style/styles.css\" type=\"text/css\">\n    <link rel=\"stylesheet\" href=\"/sanfrancisco/templates/relex-eua/style/icomoon.css\" type=\"text/css\">\n<link type=\"text/css\" rel=\"stylesheet\" href=\"https://fonts.googleapis.com/icon?family=Material+Icons\" class=\"_access-font-icon-0\"></head>   <body style=\"font-size: 1em;\">\n      <!-- HEADER -->\n      <header>\n   <div class=\"container header\">\n      <button class=\"btn visible\" id=\"open\" style=\"color: #ffffff;\">\n         <svg xmlns=\"http://www.w3.org/2000/svg\" fill=\"none\" viewBox=\"0 0 24 24\" stroke-width=\"1.5\" stroke=\"currentColor\" class=\"size-6\">\n            <path stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5\"></path>\n         </svg>\n      </button>\n      <div class=\"d-flex invisible\" id=\"menu_ham1\">\n         <button class=\"btn invisible\" id=\"close\">\n            <svg xmlns=\"http://www.w3.org/2000/svg\" fill=\"none\" viewBox=\"0 0 24 24\" stroke-width=\"1.5\" stroke=\"currentColor\" class=\"size-6\">\n               <path stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z\"></path>\n            </svg>\n         </button>\n                     <div class=\"p-2\">\n                     <div class=\"titlemenu\">\n\t\t<h2 class=\"title\">\n  \t\t\tMain Menu    \t</h2>\n\t<hr>\t\n</div>\n<ul class=\"nav menu mod-list\">\n<li class=\"item-101 default current active\"><a href=\"/sanfrancisco/index.php\">Inicio</a></li><li class=\"item-122\"><a href=\"/sanfrancisco/index.php/contacto\">Contacto</a></li></ul>\n            </div>\n                  <div class=\"p-2\">\n                     </div>\n         <div class=\"ml-auto p-2\">\n            <div class=\"search\">\n\t<form action=\"/sanfrancisco/index.php\" method=\"post\" class=\"form-inline\" role=\"search\">\n\t\t<label for=\"mod-search-searchword90\" class=\"element-invisible\">Buscar...</label> <input name=\"searchword\" id=\"mod-search-searchword90\" maxlength=\"200\" class=\"inputbox search-query input-medium\" type=\"search\" placeholder=\"Buscar...\">\t\t<input type=\"hidden\" name=\"task\" value=\"search\">\n\t\t<input type=\"hidden\" name=\"option\" value=\"com_search\">\n\t\t<input type=\"hidden\" name=\"Itemid\" value=\"101\">\n\t</form>\n</div>\n\n         </div>\n      </div>\n   </div>\n            <!-- -->\n   <div class=\"conta\">\n      <div class=\"elemento logo\">\n         <ul class=\"header_container\">\n            <li class=\"sre_logo\"><img src=\"/sanfrancisco/templates/relex-eua/images/relex.svg\" width=\"447\" height=\"53\"></li>\n            <li><img class=\"mexico\" src=\"/sanfrancisco/templates/relex-eua/images/mx.svg\" width=\"116\" height=\"27\"><h1>Consulado General de México en San Francisco</h1></li>\n         </ul>\n      </div>\n   </div>\n            <!-- -->\n <!--  <div class=\"container topmen\">\n      <div class=\"row\">\n      </div>\n   </div>\n   <div class=\"container-fluid logo\">\n            <div class=\"col-sm nrep\">\n               <div class=\"container\">\n               <a href=\"/sanfrancisco/index.php\">\n                  <ul class=\"header_container\">\n                     <li class=\"sre_logo\"><img src=\"/sanfrancisco/templates/relex-eua/images/relex.svg\" /></li>\n                     <li><img class=\"mexico\" src=\"/sanfrancisco/templates/relex-eua/images/mx.svg\" /><h1>Consulado General de México en San Francisco</h1></li>\n                  </ul>\n               </a>\n      </div>\n            </div>-->\n</header>      <!-- HEADER -->\n      <!-- SLIDE -->\n      <div id=\"system-message-container\">\n\t</div>\n\n               <div class=\"portada\">\n<object data=\"https://consulmex.sre.gob.mx/index.php/portada-relex\" width=\"100%\" heigth=\"580px\" type=\"text/html\"></object>\n</div>         <div class=\"bgdorado\" id=\"srv-container\">\n  <button class=\"btn\" id=\"btn-srv-izq\">\n    <svg xmlns=\"http://www.w3.org/2000/svg\" fill=\"none\" viewBox=\"0 0 24 24\" stroke-width=\"1.5\" stroke=\"currentColor\" class=\"size-6\">\n      <path stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M15.75 19.5 8.25 12l7.5-7.5\"></path>\n    </svg>\n  </button>\n  <div class=\"container banner\">\n    <div class=\"row services\">\n      <div class=\"col-sm-3\">\n        <div class=\"services_container\">\n                      <a href=\"/sanfrancisco/index.php/el-consulado\" target=\"_self\">\n              <div class=\"bannerservicios\">\n                <img src=\"https://consulmex.sre.gob.mx/templates/relex-eua/images/icono1.png\">\n                <div class=\"div_banner\"></div>\n                <p>El Consulado</p>\n              </div>\n            </a>\n                    </div>\n      </div>\n      <div class=\"col-sm-3\">\n        <div class=\"services_container\">\n                      <a href=\"/sanfrancisco/index.php/servicios-para-mexicanos\" target=\"_self\">\n              <div class=\"bannerservicios\">\n                <img src=\"https://consulmex.sre.gob.mx/templates/relex-eua/images/icono2.png\">\n                <div class=\"div_banner\"></div>\n                <p>Servicio a Personas Mexicanas</p>\n              </div>\n            </a>\n                    </div>\n      </div>\n      <div class=\"col-sm-3\">\n        <div class=\"services_container\">\n                        <a href=\"https://citas.sre.gob.mx/\" target=\"_blank\">\n                <div class=\"bannerservicios\">\n                  <img src=\"https://consulmex.sre.gob.mx/templates/relex-eua/images/icono3.png\">\n                  <div class=\"div_banner\"></div>\n                  <p>Citas Consulares</p>\n                </div>\n              </a>\n                  </div>\n      </div>\n      <div class=\"col-sm-3\">\n        <div class=\"services_container\">\n                        <a href=\"https://www.gob.mx/sre/acciones-y-programas/telefonos-de-emergencia-de-la-red-consular-de-mexico-en-estados-unidos-7865\" target=\"_blank\">\n                <div class=\"bannerservicios\">\n                  <img src=\"https://consulmex.sre.gob.mx/templates/relex-eua/images/icono4.png\">\n                  <div class=\"div_banner\"></div>\n                  <p>Emergencias</p>\n                </div>\n              </a>\n                  </div>\n      </div>\n    </div>\n    <div class=\"row services\">\n      <div class=\"col-sm-3\">\n        <div class=\"services_container\">\n                        <a href=\"https://visitmexico.com/\" target=\"_blank\">\n                <div class=\"bannerservicios\">\n                  <img src=\"https://consulmex.sre.gob.mx/templates/relex-eua/images/icono5.png\">\n                  <div class=\"div_banner\"></div>\n                  <p>Viaja a México</p>\n                </div>\n              </a>\n                  </div>\n      </div>\n      <div class=\"col-sm-3\">\n        <div class=\"services_container\">\n                        <a href=\"https://www.gob.mx/se\" target=\"_blank\">\n                <div class=\"bannerservicios\">\n                  <img src=\"https://consulmex.sre.gob.mx/templates/relex-eua/images/icono6.png\">\n                  <div class=\"div_banner\"></div>\n                  <p>Cómo invertir en México</p>\n                </div>\n              </a>\n                  </div>\n      </div>\n      <div class=\"col-sm-3\">\n        <div class=\"services_container\">\n                      <a href=\"/sanfrancisco/index.php/servicios-para-extranjeros\" target=\"_self\">\n              <div class=\"bannerservicios\">\n                <img src=\"https://consulmex.sre.gob.mx/templates/relex-eua/images/icono7.png\">\n                <div class=\"div_banner\"></div>\n                <p>Visas para personas extranjeras</p>\n              </div>\n            </a>\n                    </div>\n      </div>\n      <div class=\"col-sm-3\">\n        <div class=\"services_container\">\n                      <a href=\"/sanfrancisco/index.php/alertas-de-viaje\" target=\"_self\">\n              <div class=\"bannerservicios\">\n                <img src=\"https://consulmex.sre.gob.mx/templates/relex-eua/images/icono8.png\">\n                <div class=\"div_banner\"></div>\n                <p>Alertas de viaje</p>\n              </div>\n            </a>\n                    </div>\n      </div>\n    </div>\n  </div>\n  <button class=\"btn\" id=\"btn-srv-der\">\n    <svg xmlns=\"http://www.w3.org/2000/svg\" fill=\"none\" viewBox=\"0 0 24 24\" stroke-width=\"1.5\" stroke=\"currentColor\" class=\"size-6\">\n      <path stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"m8.25 4.5 7.5 7.5-7.5 7.5\"></path>\n    </svg>\n  </button>\n</div>         <div class=\"container\">\n\t<div class=\"row\">\n\t\t<object data=\"https://consulmex.sre.gob.mx/index.php/banners-eua\" width=\"100%\" height=\"715px\" type=\"text/html\"></object>\n\t</div>\n</div>            <!-- SLIDE --> \n            <!-- PRENSA -->\n      <div class=\"bgdorado\">\n  <div class=\"container\">\n\t  <div class=\"row\">\n\t  <div class=\"col-lg-6 comunicados\">\n\t\t  <h2 class=\"title\">Prensa</h2>\n<hr>\t\n<ul class=\"category-module mod-list\">\n\t\t\t\t\t\t<li>\n\t\t\t\t\t\t\t\t\t<a class=\"mod-articles-category-title \" href=\"/sanfrancisco/index.php/comunicados2016/385-press-release-108-mexico-condemns-the-entry-into-force-of-anti-immigrant-law-sb4-in-texas\">BOLETÍN VANGUARDIA TECH SAN FRANCISCO</a>\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t</li>\n\t\t\t\t\t<li>\n\t\t\t\t\t\t\t\t\t<a class=\"mod-articles-category-title \" href=\"/sanfrancisco/index.php/comunicados2016/307-sre-hace-un-llamado-a-connacionales-a-evitar-enganos-en-el-cobro-de-citas-en-sus-embajadas-y-consulados\">COMUNICADO DE PRENSA SFR-0003 EXPOSICIÓN ALEBRIJES Y NAHUALES ANIMALES FANTASTICOS DE MÉXICO</a>\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t</li>\n\t\t\t\t\t<li>\n\t\t\t\t\t\t\t\t\t<a class=\"mod-articles-category-title \" href=\"/sanfrancisco/index.php/comunicados2016/384-comunicado-de-prensa-108-mexico-reprueba-la-entrada-en-vigor-de-ley-antiinmigrante-sb4-en-texas\">COMUNICADO DE PRENSA SFR-0002 LA OBRA OJO DE VENADO DE FERNANDO ESCARTIZ, EN EL CONSULADO</a>\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t</li>\n\t\t\t\t\t<li>\n\t\t\t\t\t\t\t\t\t<a class=\"mod-articles-category-title \" href=\"/sanfrancisco/index.php/comunicados2016/388-comunicado-de-prensa-002-premio-ohtli-hermann-g-hernandez\">COMUNICADO DE PRENSA SFR-0001 EXPOSICIÓN \"DEL MISMO BARRO\"</a>\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t</li>\n\t\t\t\t\t<li>\n\t\t\t\t\t\t\t\t\t<a class=\"mod-articles-category-title \" href=\"/sanfrancisco/index.php/comunicados2016/349-contacto-prensa\">CONTACTO PRENSA</a>\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t</li>\n\t\t\t</ul><div class=\"custom\">\n\t<p class=\"leer_mas\"><a href=\"/sanfrancisco/index.php/comunicados2016\">Ver más</a></p></div>\n\t  </div>\n\t  <div class=\"col-lg-6 avisos\">\n\t\t  <h2 class=\"title\">Avisos</h2>\n<hr>\t\n<ul class=\"category-module mod-list\">\n\t\t\t\t\t\t<li>\n\t\t\t\t\t\t\t\t\t<a class=\"mod-articles-category-title \" href=\"/sanfrancisco/index.php/avisos/396-ime-becas-2025\">IME BECAS 2025 – Local Matching Funds</a>\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t</li>\n\t\t\t\t\t<li>\n\t\t\t\t\t\t\t\t\t<a class=\"mod-articles-category-title \" href=\"/sanfrancisco/index.php/avisos/395-consulapp-contigo\">CONSULAPP CONTIGO</a>\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t</li>\n\t\t\t\t\t<li>\n\t\t\t\t\t\t\t\t\t<a class=\"mod-articles-category-title \" href=\"/sanfrancisco/index.php/avisos/362-tutorial-para-realizar-citas-a-traves-de-internet\">TUTORIAL PARA REALIZAR UNA CITA A TRAVÉS DE INTERNET</a>\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t</li>\n\t\t\t\t\t<li>\n\t\t\t\t\t\t\t\t\t<a class=\"mod-articles-category-title \" href=\"/sanfrancisco/index.php/avisos/382-nueva-plataforma-para-el-servicio-de-denuncia-de-actos-de-corrupcion-cohecho-y-peculado\">PLATAFORMA PARA EL SERVICIO DE DENUNCIA DE ACTOS DE CORRUPCIÓN, COHECHO Y PECULADO</a>\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t</li>\n\t\t\t\t\t<li>\n\t\t\t\t\t\t\t\t\t<a class=\"mod-articles-category-title \" href=\"/sanfrancisco/index.php/avisos/381-afiliacion-voluntaria-al-imss-de-personas-trabajadoras-en-el-exterior\">AFILIACIÓN VOLUNTARIA AL IMSS DE PERSONAS TRABAJADORAS EN EL EXTERIOR</a>\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t</li>\n\t\t\t</ul><div class=\"custom\">\n\t<p class=\"leer_mas\"><a href=\"/sanfrancisco/index.php/avisos\">Ver más</a></p></div>\n\t  </div>\n  </div>\n  </div>\n</div>\n      <!-- PRENSA -->\n      <!-- ABAJO -->\n      \t<div class=\"bgflores\">\n\t\t<div class=\"container\">\n\t\t\t<div class=\"row\">\n\t\t\t\t<div class=\"col-lg-6\">\n\t\t\t\t\t\t\t<h2 class=\"title\">\n  \t\t\tDirección    \t</h2>\n\t<hr>\t\n<div class=\"custom\">\n\t<p></p><div class=\"phocamaps\"><div class=\"phocamaps-box phocamaps-box-border-grey\" align=\"center\" style=\"margin:0;padding:0;margin-top:10px;\"><div id=\"phocaMapPlgPM1\" class=\"phocamaps-map leaflet-container leaflet-touch leaflet-fade-anim leaflet-grab leaflet-touch-drag leaflet-touch-zoom\" style=\"width: 100%; height: 400px; position: relative;\" tabindex=\"0\"><div class=\"leaflet-pane leaflet-map-pane\" style=\"transform: translate3d(0px, 0px, 0px);\"><div class=\"leaflet-pane leaflet-tile-pane\"><div class=\"leaflet-layer \" style=\"z-index: 1; opacity: 1;\"><div class=\"leaflet-tile-container leaflet-zoom-animated\" style=\"z-index: 18; transform: translate3d(0px, 0px, 0px) scale(1);\"><img alt=\"\" role=\"presentation\" src=\"https://b.tile.openstreetmap.org/17/20973/50656.png\" class=\"leaflet-tile leaflet-tile-loaded\" width=\"256\" height=\"256\" style=\"width: 256px; height: 256px; transform: translate3d(228px, 32px, 0px); opacity: 1;\"><img alt=\"\" role=\"presentation\" src=\"https://a.tile.openstreetmap.org/17/20973/50655.png\" class=\"leaflet-tile leaflet-tile-loaded\" width=\"256\" height=\"256\" style=\"width: 256px; height: 256px; transform: translate3d(228px, -224px, 0px); opacity: 1;\"><img alt=\"\" role=\"presentation\" src=\"https://a.tile.openstreetmap.org/17/20972/50656.png\" class=\"leaflet-tile leaflet-tile-loaded\" width=\"256\" height=\"256\" style=\"width: 256px; height: 256px; transform: translate3d(-28px, 32px, 0px); opacity: 1;\"><img alt=\"\" role=\"presentation\" src=\"https://c.tile.openstreetmap.org/17/20974/50656.png\" class=\"leaflet-tile leaflet-tile-loaded\" width=\"256\" height=\"256\" style=\"width: 256px; height: 256px; transform: translate3d(484px, 32px, 0px); opacity: 1;\"><img alt=\"\" role=\"presentation\" src=\"https://c.tile.openstreetmap.org/17/20973/50657.png\" class=\"leaflet-tile leaflet-tile-loaded\" width=\"256\" height=\"256\" style=\"width: 256px; height: 256px; transform: translate3d(228px, 288px, 0px); opacity: 1;\"><img alt=\"\" role=\"presentation\" src=\"https://c.tile.openstreetmap.org/17/20972/50655.png\" class=\"leaflet-tile leaflet-tile-loaded\" width=\"256\" height=\"256\" style=\"width: 256px; height: 256px; transform: translate3d(-28px, -224px, 0px); opacity: 1;\"><img alt=\"\" role=\"presentation\" src=\"https://b.tile.openstreetmap.org/17/20974/50655.png\" class=\"leaflet-tile leaflet-tile-loaded\" width=\"256\" height=\"256\" style=\"width: 256px; height: 256px; transform: translate3d(484px, -224px, 0px); opacity: 1;\"><img alt=\"\" role=\"presentation\" src=\"https://b.tile.openstreetmap.org/17/20972/50657.png\" class=\"leaflet-tile leaflet-tile-loaded\" width=\"256\" height=\"256\" style=\"width: 256px; height: 256px; transform: translate3d(-28px, 288px, 0px); opacity: 1;\"><img alt=\"\" role=\"presentation\" src=\"https://a.tile.openstreetmap.org/17/20974/50657.png\" class=\"leaflet-tile leaflet-tile-loaded\" width=\"256\" height=\"256\" style=\"width: 256px; height: 256px; transform: translate3d(484px, 288px, 0px); opacity: 1;\"></div></div></div><div class=\"leaflet-pane leaflet-shadow-pane\"><div class=\"awesome-marker-shadow awesome-marker leaflet-zoom-animated\" style=\"margin-left: -10px; margin-top: -12px; width: 36px; height: 16px; transform: translate3d(267px, 198px, 0px);\"></div></div><div class=\"leaflet-pane leaflet-overlay-pane\"></div><div class=\"leaflet-pane leaflet-marker-pane\"><div class=\"awesome-marker-icon-blue awesome-marker leaflet-zoom-animated leaflet-interactive\" tabindex=\"0\" style=\"margin-left: -17px; margin-top: -42px; width: 35px; height: 45px; transform: translate3d(267px, 198px, 0px); z-index: 198;\"><i style=\"color: #ffffff\" class=\" fa fa-circle  \"></i></div></div><div class=\"leaflet-pane leaflet-tooltip-pane\"></div><div class=\"leaflet-pane leaflet-popup-pane\"><div class=\"leaflet-popup  leaflet-zoom-animated\" style=\"opacity: 1; transform: translate3d(268px, 164px, 0px); bottom: -7px; left: -171px;\"><div class=\"leaflet-popup-content-wrapper\"><div class=\"leaflet-popup-content\" style=\"width: 301px;\"><div style=\"font-size:120%;margin: 5px 0px;font-weight:bold;\">Consulado General de México en San Francisco</div><div><p><a href=\"https://maps.app.goo.gl/QtQqiL3xyoG9c7h9A\" target=\"_blank\" rel=\"noopener noreferrer\">532 Folsom Street,&nbsp;San Francisco, California, 94105, Estados Unidos.</a></p></div></div></div><div class=\"leaflet-popup-tip-container\"><div class=\"leaflet-popup-tip\"></div></div><a class=\"leaflet-popup-close-button\" href=\"#close\">×</a></div></div><div class=\"leaflet-proxy leaflet-zoom-animated\" style=\"transform: translate3d(5.36912e+06px, 1.29681e+07px, 0px) scale(65536);\"></div></div><div class=\"leaflet-control-container\"><div class=\"leaflet-top leaflet-left\"><div class=\"leaflet-control-zoom leaflet-bar leaflet-control\"><a class=\"leaflet-control-zoom-in\" href=\"#\" title=\"Zoom in\" role=\"button\" aria-label=\"Zoom in\">+</a><a class=\"leaflet-control-zoom-out\" href=\"#\" title=\"Zoom out\" role=\"button\" aria-label=\"Zoom out\">−</a></div></div><div class=\"leaflet-top leaflet-right\"><div class=\"leaflet-control-fullscreen leaflet-bar leaflet-control\"><a class=\"leaflet-control-fullscreen-button leaflet-bar-part\" href=\"#\" title=\"View Fullscreen\"></a></div><div class=\"leaflet-control-locate leaflet-bar leaflet-control\"><a class=\"leaflet-bar-part leaflet-bar-part-single\" title=\"Current Position\"><span class=\"fa fa-map-marker\"></span></a></div></div><div class=\"leaflet-bottom leaflet-left\"></div><div class=\"leaflet-bottom leaflet-right\"><div class=\"leaflet-control-attribution leaflet-control\"><a href=\"http://leafletjs.com\" title=\"A JS library for interactive maps\">Leaflet</a> | © <a href=\"https://www.openstreetmap.org/copyright\" target=\"_blank\">OpenStreetMap</a></div></div></div></div></div><div style=\"clear:both\"></div></div><p></p></div>\n\t\t\t\t</div>\n\t\t\t\t<div class=\"col-lg-6 fpresidencia\">\n\t\t\t\t\t<h2 class=\"title\">Presidenta de México</h2>\n\t\t\t\t\t<hr class=\"red\">\n\t\t\t\t\t<a href=\"https://www.gob.mx/presidencia\" target=\"_blank\"> \n\t\t\t\t\t\t<img src=\"/sanfrancisco/templates/relex-eua/images/fpresidenta.jpg\" width=\"525\" alt=\"Foto de la Presidenta de México, Claudia Sheinbaum Pardo\" height=\"400\">\n\t\t\t\t\t</a>\n\t\t\t\t</div>\n\t\t\t\t<div class=\"col-lg-12\">\n\t\t\t\t\t<center class=\"redes\">\n<h3>Síguenos en:</h3>\n<ul class=\"redsol\">\n      <li>\n      <a href=\"https://www.facebook.com/ConsulmexSFCO\" target=\"_blank\">\n        <img src=\"/sanfrancisco/templates/relex-eua/images/fb.svg\">\n      </a>\n   </li>\n    \n      <li>\n      <a href=\"https://x.com/consulmexsfo?lang=es\" target=\"_blank\">\n        <img src=\"/sanfrancisco/templates/relex-eua/images/xtw.svg\">\n      </a>\n   </li>\n   \n         \n      <li>\n      <a href=\"https://www.instagram.com/consulmexsfo/?hl=es\" target=\"_blank\">\n        <img src=\"/sanfrancisco/templates/relex-eua/images/insta.svg\">\n      </a>\n   </li>\n            \n       \n</ul>\n</center>\t\t\t\t</div>\n\t\t\t</div>\n\t\t</div>\n\t</div>\n      <!-- ABAJO -->\n      <!-- FOOTER -->\n      <footer class=\"main-footer\">\n    <div class=\"container\">\n      <div class=\"row\">\n         <div class=\"col-sm\">\n            <center><img class=\"gobmx-footer\" src=\"/sanfrancisco/templates/relex-eua/images/gmxfooter.svg\" width=\"385\" alt=\"Página de inicio, Gobierno de México\" height=\"113\"></center>\n              <center><p class=\"aviso_priv\"><a style=\"color: #fff;\" href=\"https://consulmex.sre.gob.mx/index.php/aviso-de-privacidad\">Aviso de privacidad</a></p></center>\n         </div>\n      </div>\n   </div>\n</footer>\n<div class=\"container-fluid footer-pleca\">\n    <div class=\"row\">\n      <div class=\"col\">\n        <br><br>\n      </div>\n    </div>\n  </div>      <!-- FOOTER -->\n   <script type=\"text/javascript\" src=\"/_Incapsula_Resource?SWJIYLWA=719d34d31c8e3a6e6fffd425f7e032f3&amp;ns=1&amp;cb=1274601390\" async=\"\"></script>\n   <script>\n      const menu_ham1 = document.querySelector(\"#menu_ham1\");\n      const abrir = document.querySelector(\"#open\");\n      const cerrar = document.querySelector(\"#close\");\n\n      abrir.addEventListener(\"click\", () =>{\n         menu_ham1.classList.remove(\"invisible\");\n         abrir.classList.remove(\"visible\");\n         cerrar.classList.remove(\"invisible\");\n         menu_ham1.classList.add(\"visible\");\n         abrir.classList.add(\"invisible\");\n         cerrar.classList.add(\"visible\");\n      })\n\n      cerrar.addEventListener(\"click\", () =>{\n         menu_ham1.classList.add(\"invisible\");\n         abrir.classList.add(\"visible\");\n         cerrar.classList.add(\"invisible\");\n         menu_ham1.classList.remove(\"visible\");\n         abrir.classList.remove(\"invisible\");\n         cerrar.classList.remove(\"visible\");\n      })\n   </script>\n   <script>\n      const leftBtn = document.querySelector(\"#btn-srv-izq\");\n      const rightBtn = document.querySelector(\"#btn-srv-der\");\n\n      const srvCntr = document.querySelector(\"#srv-container\");\n\n      rightBtn.addEventListener(\"click\", () => {\n         srvCntr.scrollLeft += 150;\n      });\n      \n      leftBtn.addEventListener(\"click\", () => {\n         srvCntr.scrollLeft -= 150;\n      });\n   </script>\n   <script src=\"/sanfrancisco/templates/relex-eua/js/bootstrap.min.js\"></script>\n   <!-- Global site tag (gtag.js) - Google Analytics-->\n   <script async=\"\" src=\"https://www.googletagmanager.com/gtag/js?id=G-5RQ0E8SCG7\"></script>\n   <script>\n      window.dataLayer = window.dataLayer || [];\n\t    function gtag(){dataLayer.push(arguments);}\n\t    gtag('js', new Date());\n\t    gtag('config', 'G-5RQ0E8SCG7');\n\t</script>\n<style class=\"_access-main-css\">\n        ._access-scrollbar::-webkit-scrollbar-track, .mat-autocomplete-panel::-webkit-scrollbar-track, .mat-tab-body-content::-webkit-scrollbar-track, .mat-select-panel:not([class*='mat-elevation-z'])::-webkit-scrollbar-track, .mat-menu-panel::-webkit-scrollbar-track {\n            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);\n            background-color: #F5F5F5;\n        }\n        \n        ._access-scrollbar::-webkit-scrollbar, .mat-autocomplete-panel::-webkit-scrollbar, .mat-tab-body-content::-webkit-scrollbar, .mat-select-panel:not([class*='mat-elevation-z'])::-webkit-scrollbar, .mat-menu-panel::-webkit-scrollbar {\n            width: 6px;\n            background-color: #F5F5F5;\n        }\n        \n        ._access-scrollbar::-webkit-scrollbar-thumb, .mat-autocomplete-panel::-webkit-scrollbar-thumb, .mat-tab-body-content::-webkit-scrollbar-thumb, .mat-select-panel:not([class*='mat-elevation-z'])::-webkit-scrollbar-thumb, .mat-menu-panel::-webkit-scrollbar-thumb {\n            background-color: #999999;\n        }\n        ._access-icon {\n            position: fixed;\n            background-repeat: no-repeat;\n            background-size: contain;\n            cursor: pointer;\n            opacity: 0;\n            transition-duration: .5s;\n            -moz-user-select: none;\n            -webkit-user-select: none;\n            -ms-user-select: none;\n            user-select: none;\n            box-shadow: 1px 1px 5px rgba(0,0,0,.5);\n            transform: scale(1);\n        }\n        ._access-icon:hover {\n            \n            box-shadow: 1px 1px 10px rgba(0,0,0,.9);\n            transform: scale(1.1);\n            \n        }\n        .circular._access-icon {\n            border-radius: 50%;\n            border: .5px solid white;\n        }\n        \n        .access_read_guide_bar{\n            box-sizing: border-box;\n            background: #000000;\n            width: 100%!important;\n            min-width: 100%!important;\n            position: fixed!important;\n            height: 12px !important;\n            border: solid 3px #20ff69;\n            border-radius: 5px;\n            top: 15px;\n            z-index: 2147483647;\n        }\n        .access-high-contrast *{\n            background-color: #000 !important;\n            background-image: none !important;\n            border-color: #fff !important;\n            -webkit-box-shadow: none !important;\n            box-shadow: none !important;\n            color: #fff !important;\n            text-indent: 0 !important;\n            text-shadow: none !important;\n        }\n        ._access-menu {\n            -moz-user-select: none;\n            -webkit-user-select: none;\n            -ms-user-select: none;\n            user-select: none;\n            position: fixed;\n            width: 25vw;\n            height: auto;\n            transition-duration: .5s;\n            z-index: 99991;\n            opacity: 1;\n            background-color: #fff;\n            color: #000;\n            border-radius: 3px;\n            border: solid 1px #f1f0f1;\n            font-family: RobotoDraft, Roboto, sans-serif, Arial;\n            min-width: 300px;\n            box-shadow: 0px 0px 1px #aaa;\n            max-height: 100vh;\n            \n        }\n        ._access-menu.close {\n            z-index: -1;\n            width: 0;\n            opacity: 0;\n            background-color: transparent;\n        }\n        ._access-menu.bottom {\n            bottom: 0;\n        }\n        ._access-menu.top {\n            top: 0;\n        }\n        ._access-menu.left {\n            left: 0;\n        }\n        ._access-menu.close.left {\n            left: -305px;\n        }\n        ._access-menu.right {\n            right: 0;\n        }\n        ._access-menu.close.right {\n            right: -305px;\n        }\n        ._access-menu ._text-center {\n            text-align: center;\n        }\n        ._access-menu h3 {\n            font-size: 24px !important;\n            margin-top: 20px;\n            margin-bottom: 20px;\n            padding: 0;\n            color: rgba(0,0,0,.87);\n            letter-spacing: initial!important;\n            word-spacing: initial!important;\n        }\n        ._access-menu ._menu-close-btn {\n            left: 5px;\n            color: #d63c3c;\n            transition: .3s ease;\n            transform: rotate(0deg);\n        }\n        ._access-menu ._menu-reset-btn:hover,._access-menu ._menu-close-btn:hover {\n            transform: rotate(180deg);\n        }\n        ._access-menu ._menu-reset-btn {\n            right: 5px;\n            color: #4054b2;\n            transition: .3s ease;\n            transform: rotate(0deg);\n        }\n        ._access-menu ._menu-btn {\n            position: absolute;\n            top: 5px;\n            cursor: pointer;\n            font-size: 24px !important;\n            font-weight: bold;\n        }\n        ._access-menu ul {\n            padding: 0;\n            position: relative;\n            font-size: 18px !important;\n            margin: 0;\n            overflow: auto;\n            max-height: calc(100vh - 77px);\n        }\n        html._access_cursor * {\n            cursor: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48IURPQ1RZUEUgc3ZnIFBVQkxJQyAiLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4iICJodHRwOi8vd3d3LnczLm9yZy9HcmFwaGljcy9TVkcvMS4xL0RURC9zdmcxMS5kdGQiPjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiIHdpZHRoPSIyOS4xODhweCIgaGVpZ2h0PSI0My42MjVweCIgdmlld0JveD0iMCAwIDI5LjE4OCA0My42MjUiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDI5LjE4OCA0My42MjUiIHhtbDpzcGFjZT0icHJlc2VydmUiPjxnPjxwb2x5Z29uIGZpbGw9IiNGRkZGRkYiIHN0cm9rZT0iI0Q5REFEOSIgc3Ryb2tlLXdpZHRoPSIxLjE0MDYiIHN0cm9rZS1taXRlcmxpbWl0PSIxMCIgcG9pbnRzPSIyLjgsNC41NDkgMjYuODQ3LDE5LjkwMiAxNi45NjQsMjIuNzAxIDI0LjIzOSwzNy43NDkgMTguMjc4LDQyLjAxNyA5Ljc0MSwzMC43MjQgMS4xMzgsMzUuODA5ICIvPjxnPjxnPjxnPjxwYXRoIGZpbGw9IiMyMTI2MjciIGQ9Ik0yOS4xNzUsMjEuMTU1YzAuMDcxLTAuNjEzLTAuMTY1LTEuMjUzLTAuNjM1LTEuNTczTDIuMTY1LDAuMjU4Yy0wLjQyNC0wLjMyLTAuOTg4LTAuMzQ2LTEuNDM1LTAuMDUzQzAuMjgyLDAuNDk3LDAsMS4wMywwLDEuNjE3djM0LjE3MWMwLDAuNjEzLDAuMzA2LDEuMTQ2LDAuNzc2LDEuNDM5YzAuNDcxLDAuMjY3LDEuMDU5LDAuMjEzLDEuNDgyLTAuMTZsNy40ODItNi4zNDRsNi44NDcsMTIuMTU1YzAuMjU5LDAuNDgsMC43MjksMC43NDYsMS4yLDAuNzQ2YzAuMjM1LDAsMC40OTQtMC4wOCwwLjcwNi0wLjIxM2w2Ljk4OC00LjU4NWMwLjMyOS0wLjIxMywwLjU2NS0wLjU4NiwwLjY1OS0xLjAxM2MwLjA5NC0wLjQyNiwwLjAyNC0wLjg4LTAuMTg4LTEuMjI2bC02LjM3Ni0xMS4zODJsOC42MTEtMi43NDVDMjguNzA1LDIyLjI3NCwyOS4xMDUsMjEuNzY4LDI5LjE3NSwyMS4xNTV6IE0xNi45NjQsMjIuNzAxYy0wLjQyNCwwLjEzMy0wLjc3NiwwLjUwNi0wLjk0MSwwLjk2Yy0wLjE2NSwwLjQ4LTAuMTE4LDEuMDEzLDAuMTE4LDEuNDM5bDYuNTg4LDExLjc4MWwtNC41NDEsMi45ODVsLTYuODk0LTEyLjMxNWMtMC4yMTItMC4zNzMtMC41NDEtMC42NC0wLjk0MS0wLjcyYy0wLjA5NC0wLjAyNy0wLjE2NS0wLjAyNy0wLjI1OS0wLjAyN2MtMC4zMDYsMC0wLjU4OCwwLjEwNy0wLjg0NywwLjMyTDIuOCwzMi41OVY0LjU0OWwyMS41OTksMTUuODA2TDE2Ljk2NCwyMi43MDF6Ii8+PC9nPjwvZz48L2c+PC9nPjwvc3ZnPg==),auto!important;\n        }\n        ._access-menu ul li {\n            list-style-type: none;\n            cursor: pointer;\n            -ms-user-select: none;\n            -moz-user-select: none;\n            -webkit-user-select: none;\n            user-select: none;\n            border: solid 1px #f1f0f1;\n            padding: 10px 0 10px 30px;\n            margin: 5px;\n            border-radius: 4px;\n            transition-duration: .5s;\n            transition-timing-function: ease-in-out;\n            font-size: 18px !important;\n            line-height: 18px !important;\n            text-indent: 5px;\n            background: #f9f9f9;\n            color: rgba(0,0,0,.6);\n            letter-spacing: initial!important;\n            word-spacing: initial!important;\n        }\n        ._access-menu ul.before-collapse li {\n            opacity: 0.05;\n        }\n        ._access-menu ul li.active, ._access-menu ul li.active:hover {\n            color: #fff;\n            background-color: #000;\n        }\n        ._access-menu ul li:hover {\n            color: rgba(0,0,0,.8);\n            background-color: #eaeaea;\n        }\n        ._access-menu ul li.not-supported {\n            display: none;\n        }\n        ._access-menu ul li:before {\n            content: ' ';\n            font-family: Material Icons;\n            text-rendering: optimizeLegibility;\n            font-feature-settings: \"liga\" 1;\n            font-style: normal;\n            text-transform: none;\n            line-height: 1;\n            font-size: 24px !important;\n            width: 30px;\n            height: 30px;\n            display: inline-block;\n            overflow: hidden;\n            -webkit-font-smoothing: antialiased;\n            left: 8px;\n            position: absolute;\n            color: rgba(0,0,0,.6);\n            direction: ltr;\n        }\n        ._access-menu ul li svg path {\n            fill: rgba(0,0,0,.6);\n        }\n        ._access-menu ul li:hover svg path {\n            fill: rgba(0,0,0,.8);\n        }\n        ._access-menu ul li.active svg path {\n            fill: #fff;\n        }\n        ._access-menu ul li:hover:before {\n            color: rgba(0,0,0,.8);\n        }\n        ._access-menu ul li.active:before {\n            color: #fff;\n        }\n        ._access-menu ul li[data-access-action=\"increaseText\"]:before {\n            content: \"zoom_in\";\n        }\n        ._access-menu ul li[data-access-action=\"decreaseText\"]:before {\n            content: \"zoom_out\";\n        }\n        ._access-menu ul li[data-access-action=\"increaseTextSpacing\"]:before {\n            content: \"unfold_more\";\n            transform: rotate(90deg) translate(-7px, 2px);\n        }\n        ._access-menu ul li[data-access-action=\"decreaseTextSpacing\"]:before {\n            content: \"unfold_less\";\n            transform: rotate(90deg) translate(-7px, 2px);\n        }\n        ._access-menu ul li[data-access-action=\"invertColors\"]:before {\n            content: \"invert_colors\";\n        }\n        ._access-menu ul li[data-access-action=\"grayHues\"]:before {\n            content: \"format_color_reset\";\n        }\n        ._access-menu ul li[data-access-action=\"underlineLinks\"]:before {\n            content: \"format_underlined\";\n        }\n        ._access-menu ul li[data-access-action=\"bigCursor\"]:before {\n            /*content: 'touch_app';*/\n        }\n        ._access-menu ul li[data-access-action=\"readingGuide\"]:before {\n            content: \"border_horizontal\";\n        }\n        ._access-menu ul li[data-access-action=\"textToSpeech\"]:before {\n            content: \"record_voice_over\";\n        }\n        ._access-menu ul li[data-access-action=\"speechToText\"]:before {\n            content: \"mic\";\n        }</style><i class=\"_access-icon material-icons _access\" style=\"width: 50px; height: 50px; font-size: 40px; line-height: 45px; text-indent: 5px; background-color: rgb(64, 84, 178); color: rgb(255, 255, 255); bottom: 50px; right: 10px; z-index: 9999; opacity: 1;\" title=\"Opciones de accesibilidad\">accessible</i><div class=\"_access-menu close _access bottom right type\"><h3 class=\"_text-center\"><i class=\"_menu-close-btn _menu-btn material-icons\" title=\"Cerrar\">close</i>Opciones de accesibilidad<i class=\"_menu-reset-btn _menu-btn material-icons\" title=\"Restaurar\">refresh</i></h3><ul class=\"before-collapse _access-scrollbar\"><li data-access-action=\"increaseText\">Incrementar el tamaño del texto</li><li data-access-action=\"decreaseText\">Reducir el tamaño del texto</li><li data-access-action=\"increaseTextSpacing\">Incrementar el espacio entre el texto</li><li data-access-action=\"decreaseTextSpacing\">Reducir el espacio entre el texto</li><li data-access-action=\"invertColors\" title=\"Hotkey: ctrl+alt+i\">Invertir colores</li><li data-access-action=\"grayHues\" title=\"Hotkey: ctrl+alt+g\">Cambiar a escala de grises</li><li data-access-action=\"underlineLinks\" title=\"Hotkey: ctrl+alt+u\">Subrayado de hipervinculos</li><li data-access-action=\"bigCursor\" title=\"Hotkey: ctrl+alt+c\"><svg version=\"1.1\" id=\"iconBigCursorSvg\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" x=\"0px\" y=\"0px\" viewBox=\"0 0 512 512\" style=\"position: absolute;width: 19px;height: 19px;left: 17px;enable-background:new 0 0 512 512;\" xml:space=\"preserve\"><path d=\"M 423.547 323.115 l -320 -320 c -3.051 -3.051 -7.637 -3.947 -11.627 -2.304 s -6.592 5.547 -6.592 9.856 V 480 c 0 4.501 2.837 8.533 7.083 10.048 c 4.224 1.536 8.981 0.192 11.84 -3.285 l 85.205 -104.128 l 56.853 123.179 c 1.792 3.883 5.653 6.187 9.685 6.187 c 1.408 0 2.837 -0.277 4.203 -0.875 l 74.667 -32 c 2.645 -1.131 4.736 -3.285 5.76 -5.973 c 1.024 -2.688 0.939 -5.675 -0.277 -8.299 l -57.024 -123.52 h 132.672 c 4.309 0 8.213 -2.603 9.856 -6.592 C 427.515 330.752 426.598 326.187 423.547 323.115 Z\"></path></svg>Cambiar tamaño del cursor</li><li data-access-action=\"readingGuide\" title=\"Hotkey: ctrl+alt+r\">Guias de lectura</li><li data-access-action=\"textToSpeech\" class=\"not-supported\">Activar lector de pantalla</li><li data-access-action=\"speechToText\" class=\"not-supported\">Voz a texto</li></ul></div></body></html>",
+            "success": true,
+            "cleaned_html": "<header>\n <div>\n  <div>\n   <div>\n    <div>\n     <h2>\n      Main Menu\n     </h2>\n    </div>\n    <ul>\n     <li>\n      <a href='\\\"/sanfrancisco/index.php\\\"'>\n       Inicio\n      </a>\n     </li>\n     <li>\n      <a href='\\\"/sanfrancisco/index.php/contacto\\\"'>\n       Contacto\n      </a>\n     </li>\n    </ul>\n   </div>\n   <div>\n    <div>\n     <form>\n      <label>\n       Buscar...\n      </label>\n     </form>\n    </div>\n   </div>\n  </div>\n </div>\n <div>\n  <div>\n   <ul>\n    <li>\n     <img height='\\\"53\\\"' src='\\\"/sanfrancisco/templates/relex-eua/images/relex.svg\\\"' width='\\\"447\\\"/'/>\n    </li>\n    <li>\n     <img class='\\\"mexico\\\"' height='\\\"27\\\"' src='\\\"/sanfrancisco/templates/relex-eua/images/mx.svg\\\"' width='\\\"116\\\"/'/>\n     <h1>\n      Consulado General de México en San Francisco\n     </h1>\n    </li>\n   </ul>\n  </div>\n </div>\n</header>\n<div>\n <div>\n  <div>\n   <div>\n    <div>\n     <a href='\\\"/sanfrancisco/index.php/el-consulado\\\"'>\n      <div>\n       <img src='\\\"https://consulmex.sre.gob.mx/templates/relex-eua/images/icono1.png\\\"/'/>\n       <p>\n        El Consulado\n       </p>\n      </div>\n     </a>\n    </div>\n   </div>\n   <div>\n    <div>\n     <a href='\\\"/sanfrancisco/index.php/servicios-para-mexicanos\\\"'>\n      <div>\n       <img src='\\\"https://consulmex.sre.gob.mx/templates/relex-eua/images/icono2.png\\\"/'/>\n       <p>\n        Servicio a Personas Mexicanas\n       </p>\n      </div>\n     </a>\n    </div>\n   </div>\n   <div>\n    <div>\n     <a href='\\\"https://citas.sre.gob.mx/\\\"'>\n      <div>\n       <img src='\\\"https://consulmex.sre.gob.mx/templates/relex-eua/images/icono3.png\\\"/'/>\n       <p>\n        Citas Consulares\n       </p>\n      </div>\n     </a>\n    </div>\n   </div>\n   <div>\n    <div>\n     <a href='\\\"https://www.gob.mx/sre/acciones-y-programas/telefonos-de-emergencia-de-la-red-consular-de-mexico-en-estados-unidos-7865\\\"'>\n      <div>\n       <img src='\\\"https://consulmex.sre.gob.mx/templates/relex-eua/images/icono4.png\\\"/'/>\n       <p>\n        Emergencias\n       </p>\n      </div>\n     </a>\n    </div>\n   </div>\n  </div>\n  <div>\n   <div>\n    <div>\n     <a href='\\\"https://visitmexico.com/\\\"'>\n      <div>\n       <img src='\\\"https://consulmex.sre.gob.mx/templates/relex-eua/images/icono5.png\\\"/'/>\n       <p>\n        Viaja a México\n       </p>\n      </div>\n     </a>\n    </div>\n   </div>\n   <div>\n    <div>\n     <a href='\\\"https://www.gob.mx/se\\\"'>\n      <div>\n       <img src='\\\"https://consulmex.sre.gob.mx/templates/relex-eua/images/icono6.png\\\"/'/>\n       <p>\n        Cómo invertir en México\n       </p>\n      </div>\n     </a>\n    </div>\n   </div>\n   <div>\n    <div>\n     <a href='\\\"/sanfrancisco/index.php/servicios-para-extranjeros\\\"'>\n      <div>\n       <img src='\\\"https://consulmex.sre.gob.mx/templates/relex-eua/images/icono7.png\\\"/'/>\n       <p>\n        Visas para personas extranjeras\n       </p>\n      </div>\n     </a>\n    </div>\n   </div>\n   <div>\n    <div>\n     <a href='\\\"/sanfrancisco/index.php/alertas-de-viaje\\\"'>\n      <div>\n       <img src='\\\"https://consulmex.sre.gob.mx/templates/relex-eua/images/icono8.png\\\"/'/>\n       <p>\n        Alertas de viaje\n       </p>\n      </div>\n     </a>\n    </div>\n   </div>\n  </div>\n </div>\n</div>\n<div>\n <div>\n  <div>\n   <div>\n    <h2>\n     Prensa\n    </h2>\n    <ul>\n     <li>\n      <a href='\\\"/sanfrancisco/index.php/comunicados2016/385-press-release-108-mexico-condemns-the-entry-into-force-of-anti-immigrant-law-sb4-in-texas\\\"'>\n       BOLETÍN VANGUARDIA TECH SAN FRANCISCO\n      </a>\n     </li>\n     <li>\n      <a href='\\\"/sanfrancisco/index.php/comunicados2016/307-sre-hace-un-llamado-a-connacionales-a-evitar-enganos-en-el-cobro-de-citas-en-sus-embajadas-y-consulados\\\"'>\n       COMUNICADO DE PRENSA SFR-0003 EXPOSICIÓN ALEBRIJES Y NAHUALES ANIMALES FANTASTICOS DE MÉXICO\n      </a>\n     </li>\n     <li>\n      <a href='\\\"/sanfrancisco/index.php/comunicados2016/384-comunicado-de-prensa-108-mexico-reprueba-la-entrada-en-vigor-de-ley-antiinmigrante-sb4-en-texas\\\"'>\n       COMUNICADO DE PRENSA SFR-0002 LA OBRA OJO DE VENADO DE FERNANDO ESCARTIZ, EN EL CONSULADO\n      </a>\n     </li>\n     <li>\n      <a href='\\\"/sanfrancisco/index.php/comunicados2016/388-comunicado-de-prensa-002-premio-ohtli-hermann-g-hernandez\\\"'>\n       COMUNICADO DE PRENSA SFR-0001 EXPOSICIÓN \\\"DEL MISMO BARRO\\\"\n      </a>\n     </li>\n     <li>\n      <a href='\\\"/sanfrancisco/index.php/comunicados2016/349-contacto-prensa\\\"'>\n       CONTACTO PRENSA\n      </a>\n     </li>\n    </ul>\n    <div>\n     <p>\n      <a href='\\\"/sanfrancisco/index.php/comunicados2016\\\"'>\n       Ver más\n      </a>\n     </p>\n    </div>\n   </div>\n   <div>\n    <h2>\n     Avisos\n    </h2>\n    <ul>\n     <li>\n      <a href='\\\"/sanfrancisco/index.php/avisos/396-ime-becas-2025\\\"'>\n       IME BECAS 2025 – Local Matching Funds\n      </a>\n     </li>\n     <li>\n      <a href='\\\"/sanfrancisco/index.php/avisos/395-consulapp-contigo\\\"'>\n       CONSULAPP CONTIGO\n      </a>\n     </li>\n     <li>\n      <a href='\\\"/sanfrancisco/index.php/avisos/362-tutorial-para-realizar-citas-a-traves-de-internet\\\"'>\n       TUTORIAL PARA REALIZAR UNA CITA A TRAVÉS DE INTERNET\n      </a>\n     </li>\n     <li>\n      <a href='\\\"/sanfrancisco/index.php/avisos/382-nueva-plataforma-para-el-servicio-de-denuncia-de-actos-de-corrupcion-cohecho-y-peculado\\\"'>\n       PLATAFORMA PARA EL SERVICIO DE DENUNCIA DE ACTOS DE CORRUPCIÓN, COHECHO Y PECULADO\n      </a>\n     </li>\n     <li>\n      <a href='\\\"/sanfrancisco/index.php/avisos/381-afiliacion-voluntaria-al-imss-de-personas-trabajadoras-en-el-exterior\\\"'>\n       AFILIACIÓN VOLUNTARIA AL IMSS DE PERSONAS TRABAJADORAS EN EL EXTERIOR\n      </a>\n     </li>\n    </ul>\n    <div>\n     <p>\n      <a href='\\\"/sanfrancisco/index.php/avisos\\\"'>\n       Ver más\n      </a>\n     </p>\n    </div>\n   </div>\n  </div>\n </div>\n</div>\n<div>\n <div>\n  <div>\n   <div>\n    <h2>\n     Dirección\n    </h2>\n    <div>\n     <div>\n      <div>\n       <div>\n        <div>\n         <div>\n          <div>\n           <div>\n            <img 0px);=\"\" 1;\\\"=\"\" 256px;=\"\" 32px,=\"\" alt='\\\"\\\"' class='\\\"leaflet-tile' height='\\\"256\\\"' height:=\"\" leaflet-tile-loaded\\\"=\"\" opacity:=\"\" role='\\\"presentation\\\"' src='\\\"https://b.tile.openstreetmap.org/17/20973/50656.png\\\"' style='\\\"width:' transform:=\"\" translate3d(228px,=\"\" width='\\\"256\\\"/'/>\n            <img -224px,=\"\" 0px);=\"\" 1;\\\"=\"\" 256px;=\"\" alt='\\\"\\\"' class='\\\"leaflet-tile' height='\\\"256\\\"' height:=\"\" leaflet-tile-loaded\\\"=\"\" opacity:=\"\" role='\\\"presentation\\\"' src='\\\"https://a.tile.openstreetmap.org/17/20973/50655.png\\\"' style='\\\"width:' transform:=\"\" translate3d(228px,=\"\" width='\\\"256\\\"/'/>\n            <img 0px);=\"\" 1;\\\"=\"\" 256px;=\"\" 32px,=\"\" alt='\\\"\\\"' class='\\\"leaflet-tile' height='\\\"256\\\"' height:=\"\" leaflet-tile-loaded\\\"=\"\" opacity:=\"\" role='\\\"presentation\\\"' src='\\\"https://a.tile.openstreetmap.org/17/20972/50656.png\\\"' style='\\\"width:' transform:=\"\" translate3d(-28px,=\"\" width='\\\"256\\\"/'/>\n            <img 0px);=\"\" 1;\\\"=\"\" 256px;=\"\" 32px,=\"\" alt='\\\"\\\"' class='\\\"leaflet-tile' height='\\\"256\\\"' height:=\"\" leaflet-tile-loaded\\\"=\"\" opacity:=\"\" role='\\\"presentation\\\"' src='\\\"https://c.tile.openstreetmap.org/17/20974/50656.png\\\"' style='\\\"width:' transform:=\"\" translate3d(484px,=\"\" width='\\\"256\\\"/'/>\n            <img 0px);=\"\" 1;\\\"=\"\" 256px;=\"\" 288px,=\"\" alt='\\\"\\\"' class='\\\"leaflet-tile' height='\\\"256\\\"' height:=\"\" leaflet-tile-loaded\\\"=\"\" opacity:=\"\" role='\\\"presentation\\\"' src='\\\"https://c.tile.openstreetmap.org/17/20973/50657.png\\\"' style='\\\"width:' transform:=\"\" translate3d(228px,=\"\" width='\\\"256\\\"/'/>\n            <img -224px,=\"\" 0px);=\"\" 1;\\\"=\"\" 256px;=\"\" alt='\\\"\\\"' class='\\\"leaflet-tile' height='\\\"256\\\"' height:=\"\" leaflet-tile-loaded\\\"=\"\" opacity:=\"\" role='\\\"presentation\\\"' src='\\\"https://c.tile.openstreetmap.org/17/20972/50655.png\\\"' style='\\\"width:' transform:=\"\" translate3d(-28px,=\"\" width='\\\"256\\\"/'/>\n            <img -224px,=\"\" 0px);=\"\" 1;\\\"=\"\" 256px;=\"\" alt='\\\"\\\"' class='\\\"leaflet-tile' height='\\\"256\\\"' height:=\"\" leaflet-tile-loaded\\\"=\"\" opacity:=\"\" role='\\\"presentation\\\"' src='\\\"https://b.tile.openstreetmap.org/17/20974/50655.png\\\"' style='\\\"width:' transform:=\"\" translate3d(484px,=\"\" width='\\\"256\\\"/'/>\n            <img 0px);=\"\" 1;\\\"=\"\" 256px;=\"\" 288px,=\"\" alt='\\\"\\\"' class='\\\"leaflet-tile' height='\\\"256\\\"' height:=\"\" leaflet-tile-loaded\\\"=\"\" opacity:=\"\" role='\\\"presentation\\\"' src='\\\"https://b.tile.openstreetmap.org/17/20972/50657.png\\\"' style='\\\"width:' transform:=\"\" translate3d(-28px,=\"\" width='\\\"256\\\"/'/>\n            <img 0px);=\"\" 1;\\\"=\"\" 256px;=\"\" 288px,=\"\" alt='\\\"\\\"' class='\\\"leaflet-tile' height='\\\"256\\\"' height:=\"\" leaflet-tile-loaded\\\"=\"\" opacity:=\"\" role='\\\"presentation\\\"' src='\\\"https://a.tile.openstreetmap.org/17/20974/50657.png\\\"' style='\\\"width:' transform:=\"\" translate3d(484px,=\"\" width='\\\"256\\\"/'/>\n           </div>\n          </div>\n         </div>\n         <div>\n          <div>\n           <div>\n            <div>\n             <div>\n              Consulado General de México en San Francisco\n             </div>\n             <div>\n              <p>\n               <a href='\\\"https://maps.app.goo.gl/QtQqiL3xyoG9c7h9A\\\"'>\n                532 Folsom Street, San Francisco, California, 94105, Estados Unidos.\n               </a>\n              </p>\n             </div>\n            </div>\n           </div>\n           <a href='\\\"#close\\\"'>\n            ×\n           </a>\n          </div>\n         </div>\n        </div>\n        <div>\n         <div>\n          <div>\n           <a href='\\\"#\\\"' in\\\"=\"\" title='\\\"Zoom'>\n            +\n           </a>\n           <a href='\\\"#\\\"' out\\\"=\"\" title='\\\"Zoom'>\n            −\n           </a>\n          </div>\n         </div>\n         <div>\n          <div>\n           <a fullscreen\\\"=\"\" href='\\\"#\\\"' title='\\\"View'>\n           </a>\n          </div>\n         </div>\n         <div>\n          <div>\n           <a for=\"\" href='\\\"http://leafletjs.com\\\"' interactive=\"\" js=\"\" library=\"\" maps\\\"=\"\" title='\\\"A'>\n            Leaflet\n           </a>\n           | ©\n           <a href='\\\"https://www.openstreetmap.org/copyright\\\"'>\n            OpenStreetMap\n           </a>\n          </div>\n         </div>\n        </div>\n       </div>\n      </div>\n     </div>\n    </div>\n   </div>\n   <div>\n    <h2>\n     Presidenta de México\n    </h2>\n    <a href='\\\"https://www.gob.mx/presidencia\\\"'>\n     <img alt='\\\"Foto' claudia=\"\" de=\"\" height='\\\"400\\\"' la=\"\" méxico,=\"\" pardo\\\"=\"\" presidenta=\"\" sheinbaum=\"\" src='\\\"/sanfrancisco/templates/relex-eua/images/fpresidenta.jpg\\\"' width='\\\"525\\\"/'/>\n    </a>\n   </div>\n   <div>\n    <center>\n     <h3>\n      Síguenos en:\n     </h3>\n     <ul>\n      <li>\n       <a href='\\\"https://www.facebook.com/ConsulmexSFCO\\\"'>\n        <img src='\\\"/sanfrancisco/templates/relex-eua/images/fb.svg\\\"/'/>\n       </a>\n      </li>\n      <li>\n       <a href='\\\"https://x.com/consulmexsfo?lang=es\\\"'>\n        <img src='\\\"/sanfrancisco/templates/relex-eua/images/xtw.svg\\\"/'/>\n       </a>\n      </li>\n      <li>\n       <a href='\\\"https://www.instagram.com/consulmexsfo/?hl=es\\\"'>\n        <img src='\\\"/sanfrancisco/templates/relex-eua/images/insta.svg\\\"/'/>\n       </a>\n      </li>\n     </ul>\n    </center>\n   </div>\n  </div>\n </div>\n</div>\n<footer>\n <div>\n  <div>\n   <div>\n    <center>\n     <img alt='\\\"Página' class='\\\"gobmx-footer\\\"' de=\"\" gobierno=\"\" height='\\\"113\\\"' inicio,=\"\" méxico\\\"=\"\" src='\\\"/sanfrancisco/templates/relex-eua/images/gmxfooter.svg\\\"' width='\\\"385\\\"/'/>\n    </center>\n    <center>\n     <p>\n      <a href='\\\"https://consulmex.sre.gob.mx/index.php/aviso-de-privacidad\\\"'>\n       Aviso de privacidad\n      </a>\n     </p>\n    </center>\n   </div>\n  </div>\n </div>\n</footer>\n<i accesibilidad\\\"=\"\" de=\"\" title='\\\"Opciones'>\n accessible\n</i>\n<div>\n <h3>\n  <i title='\\\"Cerrar\\\"'>\n   close\n  </i>\n  Opciones de accesibilidad\n  <i title='\\\"Restaurar\\\"'>\n   refresh\n  </i>\n </h3>\n <ul>\n  <li>\n   Incrementar el tamaño del texto\n  </li>\n  <li>\n   Reducir el tamaño del texto\n  </li>\n  <li>\n   Incrementar el espacio entre el texto\n  </li>\n  <li>\n   Reducir el espacio entre el texto\n  </li>\n  <li ctrl+alt+i\\\"=\"\" title='\\\"Hotkey:'>\n   Invertir colores\n  </li>\n  <li ctrl+alt+g\\\"=\"\" title='\\\"Hotkey:'>\n   Cambiar a escala de grises\n  </li>\n  <li ctrl+alt+u\\\"=\"\" title='\\\"Hotkey:'>\n   Subrayado de hipervinculos\n  </li>\n  <li ctrl+alt+c\\\"=\"\" title='\\\"Hotkey:'>\n   Cambiar tamaño del cursor\n  </li>\n  <li ctrl+alt+r\\\"=\"\" title='\\\"Hotkey:'>\n   Guias de lectura\n  </li>\n  <li>\n   Activar lector de pantalla\n  </li>\n  <li>\n   Voz a texto\n  </li>\n </ul>\n</div>\n",
+            "media": {
+              "images": [
+                {
+                  "src": "/sanfrancisco/templates/relex-eua/images/relex.svg",
+                  "data-src": "",
+                  "alt": "",
+                  "desc": "Consulado General de México en San Francisco",
+                  "score": 3,
+                  "type": "image"
+                },
+                {
+                  "src": "https://b.tile.openstreetmap.org/17/20973/50656.png",
+                  "data-src": "",
+                  "alt": "",
+                  "desc": "Consulado General de México en San Francisco 532 Folsom Street, San Francisco, California, 94105, Estados Unidos. ×",
+                  "score": 4,
+                  "type": "image"
+                },
+                {
+                  "src": "https://a.tile.openstreetmap.org/17/20973/50655.png",
+                  "data-src": "",
+                  "alt": "",
+                  "desc": "Consulado General de México en San Francisco 532 Folsom Street, San Francisco, California, 94105, Estados Unidos. ×",
+                  "score": 4,
+                  "type": "image"
+                },
+                {
+                  "src": "https://a.tile.openstreetmap.org/17/20972/50656.png",
+                  "data-src": "",
+                  "alt": "",
+                  "desc": "Consulado General de México en San Francisco 532 Folsom Street, San Francisco, California, 94105, Estados Unidos. ×",
+                  "score": 3,
+                  "type": "image"
+                },
+                {
+                  "src": "https://c.tile.openstreetmap.org/17/20974/50656.png",
+                  "data-src": "",
+                  "alt": "",
+                  "desc": "Consulado General de México en San Francisco 532 Folsom Street, San Francisco, California, 94105, Estados Unidos. ×",
+                  "score": 3,
+                  "type": "image"
+                },
+                {
+                  "src": "https://c.tile.openstreetmap.org/17/20973/50657.png",
+                  "data-src": "",
+                  "alt": "",
+                  "desc": "Consulado General de México en San Francisco 532 Folsom Street, San Francisco, California, 94105, Estados Unidos. ×",
+                  "score": 3,
+                  "type": "image"
+                },
+                {
+                  "src": "https://c.tile.openstreetmap.org/17/20972/50655.png",
+                  "data-src": "",
+                  "alt": "",
+                  "desc": "Consulado General de México en San Francisco 532 Folsom Street, San Francisco, California, 94105, Estados Unidos. ×",
+                  "score": 3,
+                  "type": "image"
+                },
+                {
+                  "src": "https://b.tile.openstreetmap.org/17/20974/50655.png",
+                  "data-src": "",
+                  "alt": "",
+                  "desc": "Consulado General de México en San Francisco 532 Folsom Street, San Francisco, California, 94105, Estados Unidos. ×",
+                  "score": 3,
+                  "type": "image"
+                },
+                {
+                  "src": "https://b.tile.openstreetmap.org/17/20972/50657.png",
+                  "data-src": "",
+                  "alt": "",
+                  "desc": "Consulado General de México en San Francisco 532 Folsom Street, San Francisco, California, 94105, Estados Unidos. ×",
+                  "score": 3,
+                  "type": "image"
+                },
+                {
+                  "src": "https://a.tile.openstreetmap.org/17/20974/50657.png",
+                  "data-src": "",
+                  "alt": "",
+                  "desc": "Consulado General de México en San Francisco 532 Folsom Street, San Francisco, California, 94105, Estados Unidos. ×",
+                  "score": 3,
+                  "type": "image"
+                },
+                {
+                  "src": "/sanfrancisco/templates/relex-eua/images/fpresidenta.jpg",
+                  "data-src": "",
+                  "alt": "Foto de la Presidenta de México, Claudia Sheinbaum Pardo",
+                  "desc": "Presidenta de México",
+                  "score": 4,
+                  "type": "image"
+                }
+              ],
+              "videos": [],
+              "audios": []
+            },
+            "links": {
+              "internal": [
+                {
+                  "href": "https://consulmex.sre.gob.mx/sanfrancisco/index.php",
+                  "text": "Inicio",
+                  "title": ""
+                },
+                {
+                  "href": "https://consulmex.sre.gob.mx/sanfrancisco/index.php/contacto",
+                  "text": "Contacto",
+                  "title": ""
+                },
+                {
+                  "href": "https://consulmex.sre.gob.mx/sanfrancisco/index.php/el-consulado",
+                  "text": "El Consulado",
+                  "title": ""
+                },
+                {
+                  "href": "https://consulmex.sre.gob.mx/sanfrancisco/index.php/servicios-para-mexicanos",
+                  "text": "Servicio a Personas Mexicanas",
+                  "title": ""
+                },
+                {
+                  "href": "https://consulmex.sre.gob.mx/sanfrancisco/index.php/servicios-para-extranjeros",
+                  "text": "Visas para personas extranjeras",
+                  "title": ""
+                },
+                {
+                  "href": "https://consulmex.sre.gob.mx/sanfrancisco/index.php/alertas-de-viaje",
+                  "text": "Alertas de viaje",
+                  "title": ""
+                },
+                {
+                  "href": "https://consulmex.sre.gob.mx/sanfrancisco/index.php/comunicados2016/385-press-release-108-mexico-condemns-the-entry-into-force-of-anti-immigrant-law-sb4-in-texas",
+                  "text": "BOLETÍN VANGUARDIA TECH SAN FRANCISCO",
+                  "title": ""
+                },
+                {
+                  "href": "https://consulmex.sre.gob.mx/sanfrancisco/index.php/comunicados2016/307-sre-hace-un-llamado-a-connacionales-a-evitar-enganos-en-el-cobro-de-citas-en-sus-embajadas-y-consulados",
+                  "text": "COMUNICADO DE PRENSA SFR-0003 EXPOSICIÓN ALEBRIJES Y NAHUALES ANIMALES FANTASTICOS DE MÉXICO",
+                  "title": ""
+                },
+                {
+                  "href": "https://consulmex.sre.gob.mx/sanfrancisco/index.php/comunicados2016/384-comunicado-de-prensa-108-mexico-reprueba-la-entrada-en-vigor-de-ley-antiinmigrante-sb4-en-texas",
+                  "text": "COMUNICADO DE PRENSA SFR-0002 LA OBRA OJO DE VENADO DE FERNANDO ESCARTIZ, EN EL CONSULADO",
+                  "title": ""
+                },
+                {
+                  "href": "https://consulmex.sre.gob.mx/sanfrancisco/index.php/comunicados2016/388-comunicado-de-prensa-002-premio-ohtli-hermann-g-hernandez",
+                  "text": "COMUNICADO DE PRENSA SFR-0001 EXPOSICIÓN \"DEL MISMO BARRO\"",
+                  "title": ""
+                },
+                {
+                  "href": "https://consulmex.sre.gob.mx/sanfrancisco/index.php/comunicados2016/349-contacto-prensa",
+                  "text": "CONTACTO PRENSA",
+                  "title": ""
+                },
+                {
+                  "href": "https://consulmex.sre.gob.mx/sanfrancisco/index.php/comunicados2016",
+                  "text": "Ver más",
+                  "title": ""
+                },
+                {
+                  "href": "https://consulmex.sre.gob.mx/sanfrancisco/index.php/avisos/396-ime-becas-2025",
+                  "text": "IME BECAS 2025 – Local Matching Funds",
+                  "title": ""
+                },
+                {
+                  "href": "https://consulmex.sre.gob.mx/sanfrancisco/index.php/avisos/395-consulapp-contigo",
+                  "text": "CONSULAPP CONTIGO",
+                  "title": ""
+                },
+                {
+                  "href": "https://consulmex.sre.gob.mx/sanfrancisco/index.php/avisos/362-tutorial-para-realizar-citas-a-traves-de-internet",
+                  "text": "TUTORIAL PARA REALIZAR UNA CITA A TRAVÉS DE INTERNET",
+                  "title": ""
+                },
+                {
+                  "href": "https://consulmex.sre.gob.mx/sanfrancisco/index.php/avisos/382-nueva-plataforma-para-el-servicio-de-denuncia-de-actos-de-corrupcion-cohecho-y-peculado",
+                  "text": "PLATAFORMA PARA EL SERVICIO DE DENUNCIA DE ACTOS DE CORRUPCIÓN, COHECHO Y PECULADO",
+                  "title": ""
+                },
+                {
+                  "href": "https://consulmex.sre.gob.mx/sanfrancisco/index.php/avisos/381-afiliacion-voluntaria-al-imss-de-personas-trabajadoras-en-el-exterior",
+                  "text": "AFILIACIÓN VOLUNTARIA AL IMSS DE PERSONAS TRABAJADORAS EN EL EXTERIOR",
+                  "title": ""
+                },
+                {
+                  "href": "https://consulmex.sre.gob.mx/sanfrancisco/index.php/avisos",
+                  "text": "Ver más",
+                  "title": ""
+                },
+                {
+                  "href": "https://consulmex.sre.gob.mx/sanfrancisco/#close",
+                  "text": "×",
+                  "title": ""
+                },
+                {
+                  "href": "https://consulmex.sre.gob.mx/sanfrancisco/",
+                  "text": "+",
+                  "title": "Zoom in"
+                },
+                {
+                  "href": "https://consulmex.sre.gob.mx/index.php/aviso-de-privacidad",
+                  "text": "Aviso de privacidad",
+                  "title": ""
+                }
+              ],
+              "external": [
+                {
+                  "href": "https://citas.sre.gob.mx/",
+                  "text": "Citas Consulares",
+                  "title": ""
+                },
+                {
+                  "href": "https://www.gob.mx/sre/acciones-y-programas/telefonos-de-emergencia-de-la-red-consular-de-mexico-en-estados-unidos-7865",
+                  "text": "Emergencias",
+                  "title": ""
+                },
+                {
+                  "href": "https://visitmexico.com/",
+                  "text": "Viaja a México",
+                  "title": ""
+                },
+                {
+                  "href": "https://www.gob.mx/se",
+                  "text": "Cómo invertir en México",
+                  "title": ""
+                },
+                {
+                  "href": "https://maps.app.goo.gl/QtQqiL3xyoG9c7h9A",
+                  "text": "532 Folsom Street, San Francisco, California, 94105, Estados Unidos.",
+                  "title": ""
+                },
+                {
+                  "href": "http://leafletjs.com",
+                  "text": "Leaflet",
+                  "title": "A JS library for interactive maps"
+                },
+                {
+                  "href": "https://www.openstreetmap.org/copyright",
+                  "text": "OpenStreetMap",
+                  "title": ""
+                },
+                {
+                  "href": "https://www.gob.mx/presidencia",
+                  "text": "",
+                  "title": ""
+                },
+                {
+                  "href": "https://www.facebook.com/ConsulmexSFCO",
+                  "text": "",
+                  "title": ""
+                },
+                {
+                  "href": "https://x.com/consulmexsfo?lang=es",
+                  "text": "",
+                  "title": ""
+                },
+                {
+                  "href": "https://www.instagram.com/consulmexsfo/?hl=es",
+                  "text": "",
+                  "title": ""
+                }
+              ]
+            },
+            "downloaded_files": null,
+            "screenshot": null,
+            "markdown": "##  Main Menu \n\n  * [Inicio](/sanfrancisco/index.php)\n  * [Contacto](/sanfrancisco/index.php/contacto)\n\n\n\nBuscar...\n\n  * ![](/sanfrancisco/templates/relex-eua/images/relex.svg)\n  * ![](/sanfrancisco/templates/relex-eua/images/mx.svg)\n\n# Consulado General de México en San Francisco\n\n\n\n\n[ ![](https://consulmex.sre.gob.mx/templates/relex-eua/images/icono1.png) El Consulado ](/sanfrancisco/index.php/el-consulado)\n\n[ ![](https://consulmex.sre.gob.mx/templates/relex-eua/images/icono2.png) Servicio a Personas Mexicanas ](/sanfrancisco/index.php/servicios-para-mexicanos)\n\n[ ![](https://consulmex.sre.gob.mx/templates/relex-eua/images/icono3.png) Citas Consulares ](https://citas.sre.gob.mx/)\n\n[ ![](https://consulmex.sre.gob.mx/templates/relex-eua/images/icono4.png) Emergencias ](https://www.gob.mx/sre/acciones-y-programas/telefonos-de-emergencia-de-la-red-consular-de-mexico-en-estados-unidos-7865)\n\n[ ![](https://consulmex.sre.gob.mx/templates/relex-eua/images/icono5.png) Viaja a México ](https://visitmexico.com/)\n\n[ ![](https://consulmex.sre.gob.mx/templates/relex-eua/images/icono6.png) Cómo invertir en México ](https://www.gob.mx/se)\n\n[ ![](https://consulmex.sre.gob.mx/templates/relex-eua/images/icono7.png) Visas para personas extranjeras ](/sanfrancisco/index.php/servicios-para-extranjeros)\n\n[ ![](https://consulmex.sre.gob.mx/templates/relex-eua/images/icono8.png) Alertas de viaje ](/sanfrancisco/index.php/alertas-de-viaje)\n\n## Prensa\n\n  * [BOLETÍN VANGUARDIA TECH SAN FRANCISCO](/sanfrancisco/index.php/comunicados2016/385-press-release-108-mexico-condemns-the-entry-into-force-of-anti-immigrant-law-sb4-in-texas)\n  * [COMUNICADO DE PRENSA SFR-0003 EXPOSICIÓN ALEBRIJES Y NAHUALES ANIMALES FANTASTICOS DE MÉXICO](/sanfrancisco/index.php/comunicados2016/307-sre-hace-un-llamado-a-connacionales-a-evitar-enganos-en-el-cobro-de-citas-en-sus-embajadas-y-consulados)\n  * [COMUNICADO DE PRENSA SFR-0002 LA OBRA OJO DE VENADO DE FERNANDO ESCARTIZ, EN EL CONSULADO](/sanfrancisco/index.php/comunicados2016/384-comunicado-de-prensa-108-mexico-reprueba-la-entrada-en-vigor-de-ley-antiinmigrante-sb4-en-texas)\n  * [COMUNICADO DE PRENSA SFR-0001 EXPOSICIÓN \"DEL MISMO BARRO\"](/sanfrancisco/index.php/comunicados2016/388-comunicado-de-prensa-002-premio-ohtli-hermann-g-hernandez)\n  * [CONTACTO PRENSA](/sanfrancisco/index.php/comunicados2016/349-contacto-prensa)\n\n\n\n[Ver más](/sanfrancisco/index.php/comunicados2016)\n\n## Avisos\n\n  * [IME BECAS 2025 – Local Matching Funds](/sanfrancisco/index.php/avisos/396-ime-becas-2025)\n  * [CONSULAPP CONTIGO](/sanfrancisco/index.php/avisos/395-consulapp-contigo)\n  * [TUTORIAL PARA REALIZAR UNA CITA A TRAVÉS DE INTERNET](/sanfrancisco/index.php/avisos/362-tutorial-para-realizar-citas-a-traves-de-internet)\n  * [PLATAFORMA PARA EL SERVICIO DE DENUNCIA DE ACTOS DE CORRUPCIÓN, COHECHO Y PECULADO](/sanfrancisco/index.php/avisos/382-nueva-plataforma-para-el-servicio-de-denuncia-de-actos-de-corrupcion-cohecho-y-peculado)\n  * [AFILIACIÓN VOLUNTARIA AL IMSS DE PERSONAS TRABAJADORAS EN EL EXTERIOR](/sanfrancisco/index.php/avisos/381-afiliacion-voluntaria-al-imss-de-personas-trabajadoras-en-el-exterior)\n\n\n\n[Ver más](/sanfrancisco/index.php/avisos)\n\n##  Dirección \n\n![](https://b.tile.openstreetmap.org/17/20973/50656.png)![](https://a.tile.openstreetmap.org/17/20973/50655.png)![](https://a.tile.openstreetmap.org/17/20972/50656.png)![](https://c.tile.openstreetmap.org/17/20974/50656.png)![](https://c.tile.openstreetmap.org/17/20973/50657.png)![](https://c.tile.openstreetmap.org/17/20972/50655.png)![](https://b.tile.openstreetmap.org/17/20974/50655.png)![](https://b.tile.openstreetmap.org/17/20972/50657.png)![](https://a.tile.openstreetmap.org/17/20974/50657.png)\n\nConsulado General de México en San Francisco\n\n[532 Folsom Street, San Francisco, California, 94105, Estados Unidos.](https://maps.app.goo.gl/QtQqiL3xyoG9c7h9A)\n\n[×](#close)\n\n[+](# \"Zoom in\")[−](# \"Zoom out\")\n\n[](# \"View Fullscreen\")\n\n[Leaflet](http://leafletjs.com \"A JS library for interactive maps\") | © [OpenStreetMap](https://www.openstreetmap.org/copyright)\n\n## Presidenta de México\n\n[ ![Foto de la Presidenta de México, Claudia Sheinbaum Pardo](/sanfrancisco/templates/relex-eua/images/fpresidenta.jpg) ](https://www.gob.mx/presidencia)\n\n### Síguenos en:\n\n  * [ ![](/sanfrancisco/templates/relex-eua/images/fb.svg) ](https://www.facebook.com/ConsulmexSFCO)\n  * [ ![](/sanfrancisco/templates/relex-eua/images/xtw.svg) ](https://x.com/consulmexsfo?lang=es)\n  * [ ![](/sanfrancisco/templates/relex-eua/images/insta.svg) ](https://www.instagram.com/consulmexsfo/?hl=es)\n\n\n\n![Página de inicio, Gobierno de México](/sanfrancisco/templates/relex-eua/images/gmxfooter.svg)\n\n[Aviso de privacidad](https://consulmex.sre.gob.mx/index.php/aviso-de-privacidad)\n\n_accessible_\n\n###  _close_ Opciones de accesibilidad _refresh_\n\n  * Incrementar el tamaño del texto\n  * Reducir el tamaño del texto\n  * Incrementar el espacio entre el texto\n  * Reducir el espacio entre el texto\n  * Invertir colores\n  * Cambiar a escala de grises\n  * Subrayado de hipervinculos\n  * Cambiar tamaño del cursor\n  * Guias de lectura\n  * Activar lector de pantalla\n  * Voz a texto\n\n\n",
+            "fit_markdown": "Set flag 'fit_markdown' to True to get cleaned HTML content.",
+            "fit_html": "Set flag 'fit_markdown' to True to get cleaned HTML content.",
+            "extracted_content": "",
+            "metadata": {
+              "title": "Inicio",
+              "description": "El gobierno de México proporciona a nivel internacional en distintos países a través de su Consulado General de México en San Francisco, áreas de protección a mexicanos, documentación a mexicanos y extranjeros; servicios en las áreas de educación, salud y organización comunitaria dirigidos a la comunidad de origen mexicano; promoción cultural y de negocios destinados a la población que reside en el extranjero.",
+              "keywords": null,
+              "author": null
+            },
+            "error_message": "",
+            "session_id": null,
+            "response_headers": {
+              "cache-control": "no-store, no-cache, must-revalidate, post-check=0, pre-check=0",
+              "content-encoding": "gzip",
+              "content-type": "text/html; charset=utf-8",
+              "date": "Thu, 15 May 2025 02:27:33 GMT",
+              "expires": "Wed, 17 Aug 2005 00:00:00 GMT",
+              "last-modified": "Thu, 15 May 2025 02:27:33 GMT",
+              "pragma": "no-cache",
+              "referrer-policy": "no-referrer-when-downgrade",
+              "server": "Apache",
+              "strict-transport-security": "max-age=63072000; includeSubDomains\nmax-age=31536000",
+              "x-cdn": "Imperva",
+              "x-content-type-options": "nosniff\nnosniff",
+              "x-frame-options": "ALLOW_FROM https://extranet.sre.gob.mx, https://embamex.sre.gob.mx, https://mision.sre.gob.mx, https://icm.sre.gob.mx, https://oscqa.sre.gob.mx, https://cila.sre.gob.mx, https://consulmex.sre.gob.mx",
+              "x-iinfo": "58-15346488-15346491 NNYN CT(60 124 0) RT(1747276052951 14) q(0 0 2 0) r(4 4) U12",
+              "x-xss-protection": "1; mode=block"
+            },
+            "status_code": 200
+          }
+        }
+      }
+    ],
+    "WEBSCRAPING Crea JOB": [
+      {
+        "json": {
+          "task_id": "d7e0c0c8-a1c8-4f35-a639-5e78e3071456"
+        }
+      }
+    ],
+    "If": [
+      {
+        "json": {
+          "status": "completed",
+          "created_at": 1744256931.9242136,
+          "result": {
+            "url": "https://consulmex.sre.gob.mx/sanfrancisco/",
+            "html": "<!DOCTYPE html><html xml:lang=\"es-es\" lang=\"es-es\" style=\"font-size: 100%;\"><head>\n    <meta charset=\"utf-8\">\n    <base href=\"https://consulmex.sre.gob.mx/sanfrancisco/\">\n\t<meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\">\n\t<meta name=\"generator\" content=\"Joomla! - Open Source Content Management\">\n\t<title>Inicio</title>\n\t<link href=\"/sanfrancisco/index.php?format=feed&amp;type=rss\" rel=\"alternate\" type=\"application/rss+xml\" title=\"RSS 2.0\">\n\t<link href=\"/sanfrancisco/index.php?format=feed&amp;type=atom\" rel=\"alternate\" type=\"application/atom+xml\" title=\"Atom 1.0\">\n\t<link href=\"https://consulmex.sre.gob.mx/sanfrancisco/index.php/component/search/?Itemid=101&amp;format=opensearch\" rel=\"search\" title=\"Buscar Consulmex San Francisco\" type=\"application/opensearchdescription+xml\">\n\t<link href=\"/sanfrancisco/plugins/content/pdf_embed/assets/css/style.css\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"/sanfrancisco/media/com_phocamaps/css/phocamaps.css\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"/sanfrancisco/media/plg_content_phocamaps/css/default.css\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"/sanfrancisco/media/com_phocamaps/js/leaflet/leaflet.css\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"/sanfrancisco/media/com_phocamaps/js/leaflet-awesome/leaflet.awesome-markers.css\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"/sanfrancisco/media/com_phocamaps/js/leaflet-fullscreen/leaflet.fullscreen.css\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"/sanfrancisco/media/com_phocamaps/js/leaflet-control-locate/L.Control.Locate.css\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"/sanfrancisco/media/com_phocamaps/js/leaflet-control-locate/font-awesome.min.css\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"/sanfrancisco/media/com_phocamaps/js/leaflet-search/leaflet-search.css\" rel=\"stylesheet\" type=\"text/css\">\n\t<script src=\"/sanfrancisco/media/jui/js/jquery.min.js?087ebd3522946e751963a4a813ed54b1\" type=\"text/javascript\"></script>\n\t<script src=\"/sanfrancisco/media/jui/js/jquery-noconflict.js?087ebd3522946e751963a4a813ed54b1\" type=\"text/javascript\"></script>\n\t<script src=\"/sanfrancisco/media/jui/js/jquery-migrate.min.js?087ebd3522946e751963a4a813ed54b1\" type=\"text/javascript\"></script>\n\t<script src=\"/sanfrancisco/media/system/js/caption.js?087ebd3522946e751963a4a813ed54b1\" type=\"text/javascript\"></script>\n\t<script src=\"/sanfrancisco/media/com_phocamaps/js/leaflet/leaflet.js\" type=\"text/javascript\"></script>\n\t<script src=\"/sanfrancisco/media/com_phocamaps/js/leaflet-awesome/leaflet.awesome-markers.js\" type=\"text/javascript\"></script>\n\t<script src=\"/sanfrancisco/media/com_phocamaps/js/leaflet-fullscreen/Leaflet.fullscreen.js\" type=\"text/javascript\"></script>\n\t<script src=\"/sanfrancisco/media/com_phocamaps/js/leaflet-control-locate/L.Control.Locate.min.js\" type=\"text/javascript\"></script>\n\t<script src=\"/sanfrancisco/media/com_phocamaps/js/leaflet-omnivore/leaflet-omnivore.js\" type=\"text/javascript\"></script>\n\t<script src=\"/sanfrancisco/media/com_phocamaps/js/leaflet-search/leaflet-search.min.js\" type=\"text/javascript\"></script>\n\t<script src=\"/sanfrancisco/media/com_phocamaps/js/administrator/coordinates.js\" type=\"text/javascript\"></script>\n\t<!--[if lt IE 9]><script src=\"/sanfrancisco/media/system/js/html5fallback.js?087ebd3522946e751963a4a813ed54b1\" type=\"text/javascript\"></script><![endif]-->\n\t<script src=\"/media/plg_system_j3accessibility/dist/accessibility.min.js?087ebd3522946e751963a4a813ed54b1\" type=\"module\"></script>\n\t<script type=\"text/javascript\">\njQuery(window).on('load',  function() {\n\t\t\t\tnew JCaption('img.caption');\n\t\t\t});\njQuery(document).ready(function() {\nvar mapphocaMapPlgPM1 = L.map(\"phocaMapPlgPM1\", {zoomControl: false,}).setView([37.78665741640654, -122.39556491407713], 17);\nnew L.Control.Zoom({ zoomInTitle: 'Zoom in', zoomOutTitle: 'Zoom out' }).addTo(mapphocaMapPlgPM1);\nL.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {\n\tmaxZoom: 18,\n\tattribution: '&copy; <a href=\"https://www.openstreetmap.org/copyright\" target=\"_blank\">OpenStreetMap</a>'\n}).addTo(mapphocaMapPlgPM1);\nvar markerPlgPM1m1 = L.marker([37.786673942965216, -122.39551341550852])\n.addTo(mapphocaMapPlgPM1);\n;\nmarkerPlgPM1m1.bindPopup('<div style=\"font-size:120%;margin: 5px 0px;font-weight:bold;\">Consulado General de México en San Francisco</div><div><p><a href=\\\"https://maps.app.goo.gl/QtQqiL3xyoG9c7h9A\\\" target=\\\"_blank\\\" rel=\\\"noopener noreferrer\\\">532 Folsom Street, San Francisco, California, 94105, Estados Unidos.</a></p></div>').openPopup();\nvar iconPlgPM1m1 = new L.AwesomeMarkers.icon({\n   icon: \"circle\",\n   markerColor: \"blue\",\n   iconColor: \"#ffffff\",\n   prefix: \"fa\",\n   spin: 0,\n   extraClasses: \"\",\n})\n markerPlgPM1m1.setIcon(iconPlgPM1m1);\nmapphocaMapPlgPM1.addControl(\n\tnew L.Control.Fullscreen({\n\t\tposition: 'topright',\n\t\ttitle: {\n\t\t\t'false': 'View Fullscreen',\n\t\t\t'true': 'Exit Fullscreen'\n\t\t}\n\t})\n)\nL.control.locate({\n\tposition: 'topright',\n\tstrings: {\n\t\t'title': 'Current Position'\n\t},\n\tlocateOptions: {\n\t\tenableHighAccuracy: true,\n\t\twatch: true,\n\t}\n}).addTo(mapphocaMapPlgPM1);\n})\n        document.addEventListener('DOMContentLoaded', function() {  \n            var labels = {\"menuTitle\":\"Opciones de accesibilidad\",\"increaseText\":\"Incrementar el tama\\u00f1o del texto\",\"decreaseText\":\"Reducir el tama\\u00f1o del texto\",\"increaseTextSpacing\":\"Incrementar el espacio entre el texto\",\"decreaseTextSpacing\":\"Reducir el espacio entre el texto\",\"invertColors\":\"Invertir colores\",\"grayHues\":\"Cambiar a escala de grises\",\"underlineLinks\":\"Subrayado de hipervinculos\",\"bigCursor\":\"Cambiar tama\\u00f1o del cursor\",\"readingGuide\":\"Guias de lectura\",\"textToSpeech\":\"Activar lector de pantalla\",\"speechToText\":\"Voz a texto\",\"resetTitle\":\"Restaurar\",\"closeTitle\":\"Cerrar\"};\n            var options = { labels: labels, hotkeys: {\"enabled\":true,\"helpTitles\":true} };\n            options.textToSpeechLang = 'es-ES'; \n            options.speechToTextLang = 'es-ES'; \n            options.modules = {\"increaseText\":true,\"decreaseText\":true,\"increaseTextSpacing\":true,\"decreaseTextSpacing\":true,\"invertColors\":true,\"grayHues\":true,\"underlineLinks\":true,\"bigCursor\":true,\"readingGuide\":true,\"textToSpeech\":false,\"speechToText\":false}\n\n            new Accessibility(options || {});\n        });\n\t</script>\n\n    <title>Consulado General de México en San Francisco</title>\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1, shrink-to-fit=no\">\n    <meta name=\"theme-color\" content=\"#611232\">\n    <meta name=\"description\" content=\"El gobierno de México proporciona a nivel internacional en distintos países a través de su Consulado General de México en San Francisco, áreas de protección a mexicanos, documentación a mexicanos y extranjeros; servicios en las áreas de educación, salud y organización comunitaria dirigidos a la comunidad de origen mexicano; promoción cultural y de negocios destinados a la población que reside en el extranjero.\">\n    <link href=\"/sanfrancisco/templates/relex-eua/images/favicon.ico\" rel=\"shortcut icon\"> \n    <link rel=\"stylesheet\" href=\"/sanfrancisco/templates/relex-eua/style/bootstrap.css\" type=\"text/css\">\n    <link rel=\"stylesheet\" href=\"/sanfrancisco/templates/relex-eua/style/styles.css\" type=\"text/css\">\n    <link rel=\"stylesheet\" href=\"/sanfrancisco/templates/relex-eua/style/icomoon.css\" type=\"text/css\">\n<link type=\"text/css\" rel=\"stylesheet\" href=\"https://fonts.googleapis.com/icon?family=Material+Icons\" class=\"_access-font-icon-0\"></head>   <body style=\"font-size: 1em;\">\n      <!-- HEADER -->\n      <header>\n   <div class=\"container header\">\n      <button class=\"btn visible\" id=\"open\" style=\"color: #ffffff;\">\n         <svg xmlns=\"http://www.w3.org/2000/svg\" fill=\"none\" viewBox=\"0 0 24 24\" stroke-width=\"1.5\" stroke=\"currentColor\" class=\"size-6\">\n            <path stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5\"></path>\n         </svg>\n      </button>\n      <div class=\"d-flex invisible\" id=\"menu_ham1\">\n         <button class=\"btn invisible\" id=\"close\">\n            <svg xmlns=\"http://www.w3.org/2000/svg\" fill=\"none\" viewBox=\"0 0 24 24\" stroke-width=\"1.5\" stroke=\"currentColor\" class=\"size-6\">\n               <path stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z\"></path>\n            </svg>\n         </button>\n                     <div class=\"p-2\">\n                     <div class=\"titlemenu\">\n\t\t<h2 class=\"title\">\n  \t\t\tMain Menu    \t</h2>\n\t<hr>\t\n</div>\n<ul class=\"nav menu mod-list\">\n<li class=\"item-101 default current active\"><a href=\"/sanfrancisco/index.php\">Inicio</a></li><li class=\"item-122\"><a href=\"/sanfrancisco/index.php/contacto\">Contacto</a></li></ul>\n            </div>\n                  <div class=\"p-2\">\n                     </div>\n         <div class=\"ml-auto p-2\">\n            <div class=\"search\">\n\t<form action=\"/sanfrancisco/index.php\" method=\"post\" class=\"form-inline\" role=\"search\">\n\t\t<label for=\"mod-search-searchword90\" class=\"element-invisible\">Buscar...</label> <input name=\"searchword\" id=\"mod-search-searchword90\" maxlength=\"200\" class=\"inputbox search-query input-medium\" type=\"search\" placeholder=\"Buscar...\">\t\t<input type=\"hidden\" name=\"task\" value=\"search\">\n\t\t<input type=\"hidden\" name=\"option\" value=\"com_search\">\n\t\t<input type=\"hidden\" name=\"Itemid\" value=\"101\">\n\t</form>\n</div>\n\n         </div>\n      </div>\n   </div>\n            <!-- -->\n   <div class=\"conta\">\n      <div class=\"elemento logo\">\n         <ul class=\"header_container\">\n            <li class=\"sre_logo\"><img src=\"/sanfrancisco/templates/relex-eua/images/relex.svg\" width=\"447\" height=\"53\"></li>\n            <li><img class=\"mexico\" src=\"/sanfrancisco/templates/relex-eua/images/mx.svg\" width=\"116\" height=\"27\"><h1>Consulado General de México en San Francisco</h1></li>\n         </ul>\n      </div>\n   </div>\n            <!-- -->\n <!--  <div class=\"container topmen\">\n      <div class=\"row\">\n      </div>\n   </div>\n   <div class=\"container-fluid logo\">\n            <div class=\"col-sm nrep\">\n               <div class=\"container\">\n               <a href=\"/sanfrancisco/index.php\">\n                  <ul class=\"header_container\">\n                     <li class=\"sre_logo\"><img src=\"/sanfrancisco/templates/relex-eua/images/relex.svg\" /></li>\n                     <li><img class=\"mexico\" src=\"/sanfrancisco/templates/relex-eua/images/mx.svg\" /><h1>Consulado General de México en San Francisco</h1></li>\n                  </ul>\n               </a>\n      </div>\n            </div>-->\n</header>      <!-- HEADER -->\n      <!-- SLIDE -->\n      <div id=\"system-message-container\">\n\t</div>\n\n               <div class=\"portada\">\n<object data=\"https://consulmex.sre.gob.mx/index.php/portada-relex\" width=\"100%\" heigth=\"580px\" type=\"text/html\"></object>\n</div>         <div class=\"bgdorado\" id=\"srv-container\">\n  <button class=\"btn\" id=\"btn-srv-izq\">\n    <svg xmlns=\"http://www.w3.org/2000/svg\" fill=\"none\" viewBox=\"0 0 24 24\" stroke-width=\"1.5\" stroke=\"currentColor\" class=\"size-6\">\n      <path stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M15.75 19.5 8.25 12l7.5-7.5\"></path>\n    </svg>\n  </button>\n  <div class=\"container banner\">\n    <div class=\"row services\">\n      <div class=\"col-sm-3\">\n        <div class=\"services_container\">\n                      <a href=\"/sanfrancisco/index.php/el-consulado\" target=\"_self\">\n              <div class=\"bannerservicios\">\n                <img src=\"https://consulmex.sre.gob.mx/templates/relex-eua/images/icono1.png\">\n                <div class=\"div_banner\"></div>\n                <p>El Consulado</p>\n              </div>\n            </a>\n                    </div>\n      </div>\n      <div class=\"col-sm-3\">\n        <div class=\"services_container\">\n                      <a href=\"/sanfrancisco/index.php/servicios-para-mexicanos\" target=\"_self\">\n              <div class=\"bannerservicios\">\n                <img src=\"https://consulmex.sre.gob.mx/templates/relex-eua/images/icono2.png\">\n                <div class=\"div_banner\"></div>\n                <p>Servicio a Personas Mexicanas</p>\n              </div>\n            </a>\n                    </div>\n      </div>\n      <div class=\"col-sm-3\">\n        <div class=\"services_container\">\n                        <a href=\"https://citas.sre.gob.mx/\" target=\"_blank\">\n                <div class=\"bannerservicios\">\n                  <img src=\"https://consulmex.sre.gob.mx/templates/relex-eua/images/icono3.png\">\n                  <div class=\"div_banner\"></div>\n                  <p>Citas Consulares</p>\n                </div>\n              </a>\n                  </div>\n      </div>\n      <div class=\"col-sm-3\">\n        <div class=\"services_container\">\n                        <a href=\"https://www.gob.mx/sre/acciones-y-programas/telefonos-de-emergencia-de-la-red-consular-de-mexico-en-estados-unidos-7865\" target=\"_blank\">\n                <div class=\"bannerservicios\">\n                  <img src=\"https://consulmex.sre.gob.mx/templates/relex-eua/images/icono4.png\">\n                  <div class=\"div_banner\"></div>\n                  <p>Emergencias</p>\n                </div>\n              </a>\n                  </div>\n      </div>\n    </div>\n    <div class=\"row services\">\n      <div class=\"col-sm-3\">\n        <div class=\"services_container\">\n                        <a href=\"https://visitmexico.com/\" target=\"_blank\">\n                <div class=\"bannerservicios\">\n                  <img src=\"https://consulmex.sre.gob.mx/templates/relex-eua/images/icono5.png\">\n                  <div class=\"div_banner\"></div>\n                  <p>Viaja a México</p>\n                </div>\n              </a>\n                  </div>\n      </div>\n      <div class=\"col-sm-3\">\n        <div class=\"services_container\">\n                        <a href=\"https://www.gob.mx/se\" target=\"_blank\">\n                <div class=\"bannerservicios\">\n                  <img src=\"https://consulmex.sre.gob.mx/templates/relex-eua/images/icono6.png\">\n                  <div class=\"div_banner\"></div>\n                  <p>Cómo invertir en México</p>\n                </div>\n              </a>\n                  </div>\n      </div>\n      <div class=\"col-sm-3\">\n        <div class=\"services_container\">\n                      <a href=\"/sanfrancisco/index.php/servicios-para-extranjeros\" target=\"_self\">\n              <div class=\"bannerservicios\">\n                <img src=\"https://consulmex.sre.gob.mx/templates/relex-eua/images/icono7.png\">\n                <div class=\"div_banner\"></div>\n                <p>Visas para personas extranjeras</p>\n              </div>\n            </a>\n                    </div>\n      </div>\n      <div class=\"col-sm-3\">\n        <div class=\"services_container\">\n                      <a href=\"/sanfrancisco/index.php/alertas-de-viaje\" target=\"_self\">\n              <div class=\"bannerservicios\">\n                <img src=\"https://consulmex.sre.gob.mx/templates/relex-eua/images/icono8.png\">\n                <div class=\"div_banner\"></div>\n                <p>Alertas de viaje</p>\n              </div>\n            </a>\n                    </div>\n      </div>\n    </div>\n  </div>\n  <button class=\"btn\" id=\"btn-srv-der\">\n    <svg xmlns=\"http://www.w3.org/2000/svg\" fill=\"none\" viewBox=\"0 0 24 24\" stroke-width=\"1.5\" stroke=\"currentColor\" class=\"size-6\">\n      <path stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"m8.25 4.5 7.5 7.5-7.5 7.5\"></path>\n    </svg>\n  </button>\n</div>         <div class=\"container\">\n\t<div class=\"row\">\n\t\t<object data=\"https://consulmex.sre.gob.mx/index.php/banners-eua\" width=\"100%\" height=\"715px\" type=\"text/html\"></object>\n\t</div>\n</div>            <!-- SLIDE --> \n            <!-- PRENSA -->\n      <div class=\"bgdorado\">\n  <div class=\"container\">\n\t  <div class=\"row\">\n\t  <div class=\"col-lg-6 comunicados\">\n\t\t  <h2 class=\"title\">Prensa</h2>\n<hr>\t\n<ul class=\"category-module mod-list\">\n\t\t\t\t\t\t<li>\n\t\t\t\t\t\t\t\t\t<a class=\"mod-articles-category-title \" href=\"/sanfrancisco/index.php/comunicados2016/385-press-release-108-mexico-condemns-the-entry-into-force-of-anti-immigrant-law-sb4-in-texas\">BOLETÍN VANGUARDIA TECH SAN FRANCISCO</a>\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t</li>\n\t\t\t\t\t<li>\n\t\t\t\t\t\t\t\t\t<a class=\"mod-articles-category-title \" href=\"/sanfrancisco/index.php/comunicados2016/307-sre-hace-un-llamado-a-connacionales-a-evitar-enganos-en-el-cobro-de-citas-en-sus-embajadas-y-consulados\">COMUNICADO DE PRENSA SFR-0003 EXPOSICIÓN ALEBRIJES Y NAHUALES ANIMALES FANTASTICOS DE MÉXICO</a>\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t</li>\n\t\t\t\t\t<li>\n\t\t\t\t\t\t\t\t\t<a class=\"mod-articles-category-title \" href=\"/sanfrancisco/index.php/comunicados2016/384-comunicado-de-prensa-108-mexico-reprueba-la-entrada-en-vigor-de-ley-antiinmigrante-sb4-en-texas\">COMUNICADO DE PRENSA SFR-0002 LA OBRA OJO DE VENADO DE FERNANDO ESCARTIZ, EN EL CONSULADO</a>\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t</li>\n\t\t\t\t\t<li>\n\t\t\t\t\t\t\t\t\t<a class=\"mod-articles-category-title \" href=\"/sanfrancisco/index.php/comunicados2016/388-comunicado-de-prensa-002-premio-ohtli-hermann-g-hernandez\">COMUNICADO DE PRENSA SFR-0001 EXPOSICIÓN \"DEL MISMO BARRO\"</a>\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t</li>\n\t\t\t\t\t<li>\n\t\t\t\t\t\t\t\t\t<a class=\"mod-articles-category-title \" href=\"/sanfrancisco/index.php/comunicados2016/349-contacto-prensa\">CONTACTO PRENSA</a>\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t</li>\n\t\t\t</ul><div class=\"custom\">\n\t<p class=\"leer_mas\"><a href=\"/sanfrancisco/index.php/comunicados2016\">Ver más</a></p></div>\n\t  </div>\n\t  <div class=\"col-lg-6 avisos\">\n\t\t  <h2 class=\"title\">Avisos</h2>\n<hr>\t\n<ul class=\"category-module mod-list\">\n\t\t\t\t\t\t<li>\n\t\t\t\t\t\t\t\t\t<a class=\"mod-articles-category-title \" href=\"/sanfrancisco/index.php/avisos/396-ime-becas-2025\">IME BECAS 2025 – Local Matching Funds</a>\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t</li>\n\t\t\t\t\t<li>\n\t\t\t\t\t\t\t\t\t<a class=\"mod-articles-category-title \" href=\"/sanfrancisco/index.php/avisos/395-consulapp-contigo\">CONSULAPP CONTIGO</a>\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t</li>\n\t\t\t\t\t<li>\n\t\t\t\t\t\t\t\t\t<a class=\"mod-articles-category-title \" href=\"/sanfrancisco/index.php/avisos/362-tutorial-para-realizar-citas-a-traves-de-internet\">TUTORIAL PARA REALIZAR UNA CITA A TRAVÉS DE INTERNET</a>\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t</li>\n\t\t\t\t\t<li>\n\t\t\t\t\t\t\t\t\t<a class=\"mod-articles-category-title \" href=\"/sanfrancisco/index.php/avisos/382-nueva-plataforma-para-el-servicio-de-denuncia-de-actos-de-corrupcion-cohecho-y-peculado\">PLATAFORMA PARA EL SERVICIO DE DENUNCIA DE ACTOS DE CORRUPCIÓN, COHECHO Y PECULADO</a>\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t</li>\n\t\t\t\t\t<li>\n\t\t\t\t\t\t\t\t\t<a class=\"mod-articles-category-title \" href=\"/sanfrancisco/index.php/avisos/381-afiliacion-voluntaria-al-imss-de-personas-trabajadoras-en-el-exterior\">AFILIACIÓN VOLUNTARIA AL IMSS DE PERSONAS TRABAJADORAS EN EL EXTERIOR</a>\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t\t\t\t</li>\n\t\t\t</ul><div class=\"custom\">\n\t<p class=\"leer_mas\"><a href=\"/sanfrancisco/index.php/avisos\">Ver más</a></p></div>\n\t  </div>\n  </div>\n  </div>\n</div>\n      <!-- PRENSA -->\n      <!-- ABAJO -->\n      \t<div class=\"bgflores\">\n\t\t<div class=\"container\">\n\t\t\t<div class=\"row\">\n\t\t\t\t<div class=\"col-lg-6\">\n\t\t\t\t\t\t\t<h2 class=\"title\">\n  \t\t\tDirección    \t</h2>\n\t<hr>\t\n<div class=\"custom\">\n\t<p></p><div class=\"phocamaps\"><div class=\"phocamaps-box phocamaps-box-border-grey\" align=\"center\" style=\"margin:0;padding:0;margin-top:10px;\"><div id=\"phocaMapPlgPM1\" class=\"phocamaps-map leaflet-container leaflet-touch leaflet-fade-anim leaflet-grab leaflet-touch-drag leaflet-touch-zoom\" style=\"width: 100%; height: 400px; position: relative;\" tabindex=\"0\"><div class=\"leaflet-pane leaflet-map-pane\" style=\"transform: translate3d(0px, 0px, 0px);\"><div class=\"leaflet-pane leaflet-tile-pane\"><div class=\"leaflet-layer \" style=\"z-index: 1; opacity: 1;\"><div class=\"leaflet-tile-container leaflet-zoom-animated\" style=\"z-index: 18; transform: translate3d(0px, 0px, 0px) scale(1);\"><img alt=\"\" role=\"presentation\" src=\"https://b.tile.openstreetmap.org/17/20973/50656.png\" class=\"leaflet-tile leaflet-tile-loaded\" width=\"256\" height=\"256\" style=\"width: 256px; height: 256px; transform: translate3d(228px, 32px, 0px); opacity: 1;\"><img alt=\"\" role=\"presentation\" src=\"https://a.tile.openstreetmap.org/17/20973/50655.png\" class=\"leaflet-tile leaflet-tile-loaded\" width=\"256\" height=\"256\" style=\"width: 256px; height: 256px; transform: translate3d(228px, -224px, 0px); opacity: 1;\"><img alt=\"\" role=\"presentation\" src=\"https://a.tile.openstreetmap.org/17/20972/50656.png\" class=\"leaflet-tile leaflet-tile-loaded\" width=\"256\" height=\"256\" style=\"width: 256px; height: 256px; transform: translate3d(-28px, 32px, 0px); opacity: 1;\"><img alt=\"\" role=\"presentation\" src=\"https://c.tile.openstreetmap.org/17/20974/50656.png\" class=\"leaflet-tile leaflet-tile-loaded\" width=\"256\" height=\"256\" style=\"width: 256px; height: 256px; transform: translate3d(484px, 32px, 0px); opacity: 1;\"><img alt=\"\" role=\"presentation\" src=\"https://c.tile.openstreetmap.org/17/20973/50657.png\" class=\"leaflet-tile leaflet-tile-loaded\" width=\"256\" height=\"256\" style=\"width: 256px; height: 256px; transform: translate3d(228px, 288px, 0px); opacity: 1;\"><img alt=\"\" role=\"presentation\" src=\"https://c.tile.openstreetmap.org/17/20972/50655.png\" class=\"leaflet-tile leaflet-tile-loaded\" width=\"256\" height=\"256\" style=\"width: 256px; height: 256px; transform: translate3d(-28px, -224px, 0px); opacity: 1;\"><img alt=\"\" role=\"presentation\" src=\"https://b.tile.openstreetmap.org/17/20974/50655.png\" class=\"leaflet-tile leaflet-tile-loaded\" width=\"256\" height=\"256\" style=\"width: 256px; height: 256px; transform: translate3d(484px, -224px, 0px); opacity: 1;\"><img alt=\"\" role=\"presentation\" src=\"https://b.tile.openstreetmap.org/17/20972/50657.png\" class=\"leaflet-tile leaflet-tile-loaded\" width=\"256\" height=\"256\" style=\"width: 256px; height: 256px; transform: translate3d(-28px, 288px, 0px); opacity: 1;\"><img alt=\"\" role=\"presentation\" src=\"https://a.tile.openstreetmap.org/17/20974/50657.png\" class=\"leaflet-tile leaflet-tile-loaded\" width=\"256\" height=\"256\" style=\"width: 256px; height: 256px; transform: translate3d(484px, 288px, 0px); opacity: 1;\"></div></div></div><div class=\"leaflet-pane leaflet-shadow-pane\"><div class=\"awesome-marker-shadow awesome-marker leaflet-zoom-animated\" style=\"margin-left: -10px; margin-top: -12px; width: 36px; height: 16px; transform: translate3d(267px, 198px, 0px);\"></div></div><div class=\"leaflet-pane leaflet-overlay-pane\"></div><div class=\"leaflet-pane leaflet-marker-pane\"><div class=\"awesome-marker-icon-blue awesome-marker leaflet-zoom-animated leaflet-interactive\" tabindex=\"0\" style=\"margin-left: -17px; margin-top: -42px; width: 35px; height: 45px; transform: translate3d(267px, 198px, 0px); z-index: 198;\"><i style=\"color: #ffffff\" class=\" fa fa-circle  \"></i></div></div><div class=\"leaflet-pane leaflet-tooltip-pane\"></div><div class=\"leaflet-pane leaflet-popup-pane\"><div class=\"leaflet-popup  leaflet-zoom-animated\" style=\"opacity: 1; transform: translate3d(268px, 164px, 0px); bottom: -7px; left: -171px;\"><div class=\"leaflet-popup-content-wrapper\"><div class=\"leaflet-popup-content\" style=\"width: 301px;\"><div style=\"font-size:120%;margin: 5px 0px;font-weight:bold;\">Consulado General de México en San Francisco</div><div><p><a href=\"https://maps.app.goo.gl/QtQqiL3xyoG9c7h9A\" target=\"_blank\" rel=\"noopener noreferrer\">532 Folsom Street,&nbsp;San Francisco, California, 94105, Estados Unidos.</a></p></div></div></div><div class=\"leaflet-popup-tip-container\"><div class=\"leaflet-popup-tip\"></div></div><a class=\"leaflet-popup-close-button\" href=\"#close\">×</a></div></div><div class=\"leaflet-proxy leaflet-zoom-animated\" style=\"transform: translate3d(5.36912e+06px, 1.29681e+07px, 0px) scale(65536);\"></div></div><div class=\"leaflet-control-container\"><div class=\"leaflet-top leaflet-left\"><div class=\"leaflet-control-zoom leaflet-bar leaflet-control\"><a class=\"leaflet-control-zoom-in\" href=\"#\" title=\"Zoom in\" role=\"button\" aria-label=\"Zoom in\">+</a><a class=\"leaflet-control-zoom-out\" href=\"#\" title=\"Zoom out\" role=\"button\" aria-label=\"Zoom out\">−</a></div></div><div class=\"leaflet-top leaflet-right\"><div class=\"leaflet-control-fullscreen leaflet-bar leaflet-control\"><a class=\"leaflet-control-fullscreen-button leaflet-bar-part\" href=\"#\" title=\"View Fullscreen\"></a></div><div class=\"leaflet-control-locate leaflet-bar leaflet-control\"><a class=\"leaflet-bar-part leaflet-bar-part-single\" title=\"Current Position\"><span class=\"fa fa-map-marker\"></span></a></div></div><div class=\"leaflet-bottom leaflet-left\"></div><div class=\"leaflet-bottom leaflet-right\"><div class=\"leaflet-control-attribution leaflet-control\"><a href=\"http://leafletjs.com\" title=\"A JS library for interactive maps\">Leaflet</a> | © <a href=\"https://www.openstreetmap.org/copyright\" target=\"_blank\">OpenStreetMap</a></div></div></div></div></div><div style=\"clear:both\"></div></div><p></p></div>\n\t\t\t\t</div>\n\t\t\t\t<div class=\"col-lg-6 fpresidencia\">\n\t\t\t\t\t<h2 class=\"title\">Presidenta de México</h2>\n\t\t\t\t\t<hr class=\"red\">\n\t\t\t\t\t<a href=\"https://www.gob.mx/presidencia\" target=\"_blank\"> \n\t\t\t\t\t\t<img src=\"/sanfrancisco/templates/relex-eua/images/fpresidenta.jpg\" width=\"525\" alt=\"Foto de la Presidenta de México, Claudia Sheinbaum Pardo\" height=\"400\">\n\t\t\t\t\t</a>\n\t\t\t\t</div>\n\t\t\t\t<div class=\"col-lg-12\">\n\t\t\t\t\t<center class=\"redes\">\n<h3>Síguenos en:</h3>\n<ul class=\"redsol\">\n      <li>\n      <a href=\"https://www.facebook.com/ConsulmexSFCO\" target=\"_blank\">\n        <img src=\"/sanfrancisco/templates/relex-eua/images/fb.svg\">\n      </a>\n   </li>\n    \n      <li>\n      <a href=\"https://x.com/consulmexsfo?lang=es\" target=\"_blank\">\n        <img src=\"/sanfrancisco/templates/relex-eua/images/xtw.svg\">\n      </a>\n   </li>\n   \n         \n      <li>\n      <a href=\"https://www.instagram.com/consulmexsfo/?hl=es\" target=\"_blank\">\n        <img src=\"/sanfrancisco/templates/relex-eua/images/insta.svg\">\n      </a>\n   </li>\n            \n       \n</ul>\n</center>\t\t\t\t</div>\n\t\t\t</div>\n\t\t</div>\n\t</div>\n      <!-- ABAJO -->\n      <!-- FOOTER -->\n      <footer class=\"main-footer\">\n    <div class=\"container\">\n      <div class=\"row\">\n         <div class=\"col-sm\">\n            <center><img class=\"gobmx-footer\" src=\"/sanfrancisco/templates/relex-eua/images/gmxfooter.svg\" width=\"385\" alt=\"Página de inicio, Gobierno de México\" height=\"113\"></center>\n              <center><p class=\"aviso_priv\"><a style=\"color: #fff;\" href=\"https://consulmex.sre.gob.mx/index.php/aviso-de-privacidad\">Aviso de privacidad</a></p></center>\n         </div>\n      </div>\n   </div>\n</footer>\n<div class=\"container-fluid footer-pleca\">\n    <div class=\"row\">\n      <div class=\"col\">\n        <br><br>\n      </div>\n    </div>\n  </div>      <!-- FOOTER -->\n   <script type=\"text/javascript\" src=\"/_Incapsula_Resource?SWJIYLWA=719d34d31c8e3a6e6fffd425f7e032f3&amp;ns=1&amp;cb=1274601390\" async=\"\"></script>\n   <script>\n      const menu_ham1 = document.querySelector(\"#menu_ham1\");\n      const abrir = document.querySelector(\"#open\");\n      const cerrar = document.querySelector(\"#close\");\n\n      abrir.addEventListener(\"click\", () =>{\n         menu_ham1.classList.remove(\"invisible\");\n         abrir.classList.remove(\"visible\");\n         cerrar.classList.remove(\"invisible\");\n         menu_ham1.classList.add(\"visible\");\n         abrir.classList.add(\"invisible\");\n         cerrar.classList.add(\"visible\");\n      })\n\n      cerrar.addEventListener(\"click\", () =>{\n         menu_ham1.classList.add(\"invisible\");\n         abrir.classList.add(\"visible\");\n         cerrar.classList.add(\"invisible\");\n         menu_ham1.classList.remove(\"visible\");\n         abrir.classList.remove(\"invisible\");\n         cerrar.classList.remove(\"visible\");\n      })\n   </script>\n   <script>\n      const leftBtn = document.querySelector(\"#btn-srv-izq\");\n      const rightBtn = document.querySelector(\"#btn-srv-der\");\n\n      const srvCntr = document.querySelector(\"#srv-container\");\n\n      rightBtn.addEventListener(\"click\", () => {\n         srvCntr.scrollLeft += 150;\n      });\n      \n      leftBtn.addEventListener(\"click\", () => {\n         srvCntr.scrollLeft -= 150;\n      });\n   </script>\n   <script src=\"/sanfrancisco/templates/relex-eua/js/bootstrap.min.js\"></script>\n   <!-- Global site tag (gtag.js) - Google Analytics-->\n   <script async=\"\" src=\"https://www.googletagmanager.com/gtag/js?id=G-5RQ0E8SCG7\"></script>\n   <script>\n      window.dataLayer = window.dataLayer || [];\n\t    function gtag(){dataLayer.push(arguments);}\n\t    gtag('js', new Date());\n\t    gtag('config', 'G-5RQ0E8SCG7');\n\t</script>\n<style class=\"_access-main-css\">\n        ._access-scrollbar::-webkit-scrollbar-track, .mat-autocomplete-panel::-webkit-scrollbar-track, .mat-tab-body-content::-webkit-scrollbar-track, .mat-select-panel:not([class*='mat-elevation-z'])::-webkit-scrollbar-track, .mat-menu-panel::-webkit-scrollbar-track {\n            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);\n            background-color: #F5F5F5;\n        }\n        \n        ._access-scrollbar::-webkit-scrollbar, .mat-autocomplete-panel::-webkit-scrollbar, .mat-tab-body-content::-webkit-scrollbar, .mat-select-panel:not([class*='mat-elevation-z'])::-webkit-scrollbar, .mat-menu-panel::-webkit-scrollbar {\n            width: 6px;\n            background-color: #F5F5F5;\n        }\n        \n        ._access-scrollbar::-webkit-scrollbar-thumb, .mat-autocomplete-panel::-webkit-scrollbar-thumb, .mat-tab-body-content::-webkit-scrollbar-thumb, .mat-select-panel:not([class*='mat-elevation-z'])::-webkit-scrollbar-thumb, .mat-menu-panel::-webkit-scrollbar-thumb {\n            background-color: #999999;\n        }\n        ._access-icon {\n            position: fixed;\n            background-repeat: no-repeat;\n            background-size: contain;\n            cursor: pointer;\n            opacity: 0;\n            transition-duration: .5s;\n            -moz-user-select: none;\n            -webkit-user-select: none;\n            -ms-user-select: none;\n            user-select: none;\n            box-shadow: 1px 1px 5px rgba(0,0,0,.5);\n            transform: scale(1);\n        }\n        ._access-icon:hover {\n            \n            box-shadow: 1px 1px 10px rgba(0,0,0,.9);\n            transform: scale(1.1);\n            \n        }\n        .circular._access-icon {\n            border-radius: 50%;\n            border: .5px solid white;\n        }\n        \n        .access_read_guide_bar{\n            box-sizing: border-box;\n            background: #000000;\n            width: 100%!important;\n            min-width: 100%!important;\n            position: fixed!important;\n            height: 12px !important;\n            border: solid 3px #20ff69;\n            border-radius: 5px;\n            top: 15px;\n            z-index: 2147483647;\n        }\n        .access-high-contrast *{\n            background-color: #000 !important;\n            background-image: none !important;\n            border-color: #fff !important;\n            -webkit-box-shadow: none !important;\n            box-shadow: none !important;\n            color: #fff !important;\n            text-indent: 0 !important;\n            text-shadow: none !important;\n        }\n        ._access-menu {\n            -moz-user-select: none;\n            -webkit-user-select: none;\n            -ms-user-select: none;\n            user-select: none;\n            position: fixed;\n            width: 25vw;\n            height: auto;\n            transition-duration: .5s;\n            z-index: 99991;\n            opacity: 1;\n            background-color: #fff;\n            color: #000;\n            border-radius: 3px;\n            border: solid 1px #f1f0f1;\n            font-family: RobotoDraft, Roboto, sans-serif, Arial;\n            min-width: 300px;\n            box-shadow: 0px 0px 1px #aaa;\n            max-height: 100vh;\n            \n        }\n        ._access-menu.close {\n            z-index: -1;\n            width: 0;\n            opacity: 0;\n            background-color: transparent;\n        }\n        ._access-menu.bottom {\n            bottom: 0;\n        }\n        ._access-menu.top {\n            top: 0;\n        }\n        ._access-menu.left {\n            left: 0;\n        }\n        ._access-menu.close.left {\n            left: -305px;\n        }\n        ._access-menu.right {\n            right: 0;\n        }\n        ._access-menu.close.right {\n            right: -305px;\n        }\n        ._access-menu ._text-center {\n            text-align: center;\n        }\n        ._access-menu h3 {\n            font-size: 24px !important;\n            margin-top: 20px;\n            margin-bottom: 20px;\n            padding: 0;\n            color: rgba(0,0,0,.87);\n            letter-spacing: initial!important;\n            word-spacing: initial!important;\n        }\n        ._access-menu ._menu-close-btn {\n            left: 5px;\n            color: #d63c3c;\n            transition: .3s ease;\n            transform: rotate(0deg);\n        }\n        ._access-menu ._menu-reset-btn:hover,._access-menu ._menu-close-btn:hover {\n            transform: rotate(180deg);\n        }\n        ._access-menu ._menu-reset-btn {\n            right: 5px;\n            color: #4054b2;\n            transition: .3s ease;\n            transform: rotate(0deg);\n        }\n        ._access-menu ._menu-btn {\n            position: absolute;\n            top: 5px;\n            cursor: pointer;\n            font-size: 24px !important;\n            font-weight: bold;\n        }\n        ._access-menu ul {\n            padding: 0;\n            position: relative;\n            font-size: 18px !important;\n            margin: 0;\n            overflow: auto;\n            max-height: calc(100vh - 77px);\n        }\n        html._access_cursor * {\n            cursor: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48IURPQ1RZUEUgc3ZnIFBVQkxJQyAiLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4iICJodHRwOi8vd3d3LnczLm9yZy9HcmFwaGljcy9TVkcvMS4xL0RURC9zdmcxMS5kdGQiPjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiIHdpZHRoPSIyOS4xODhweCIgaGVpZ2h0PSI0My42MjVweCIgdmlld0JveD0iMCAwIDI5LjE4OCA0My42MjUiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDI5LjE4OCA0My42MjUiIHhtbDpzcGFjZT0icHJlc2VydmUiPjxnPjxwb2x5Z29uIGZpbGw9IiNGRkZGRkYiIHN0cm9rZT0iI0Q5REFEOSIgc3Ryb2tlLXdpZHRoPSIxLjE0MDYiIHN0cm9rZS1taXRlcmxpbWl0PSIxMCIgcG9pbnRzPSIyLjgsNC41NDkgMjYuODQ3LDE5LjkwMiAxNi45NjQsMjIuNzAxIDI0LjIzOSwzNy43NDkgMTguMjc4LDQyLjAxNyA5Ljc0MSwzMC43MjQgMS4xMzgsMzUuODA5ICIvPjxnPjxnPjxnPjxwYXRoIGZpbGw9IiMyMTI2MjciIGQ9Ik0yOS4xNzUsMjEuMTU1YzAuMDcxLTAuNjEzLTAuMTY1LTEuMjUzLTAuNjM1LTEuNTczTDIuMTY1LDAuMjU4Yy0wLjQyNC0wLjMyLTAuOTg4LTAuMzQ2LTEuNDM1LTAuMDUzQzAuMjgyLDAuNDk3LDAsMS4wMywwLDEuNjE3djM0LjE3MWMwLDAuNjEzLDAuMzA2LDEuMTQ2LDAuNzc2LDEuNDM5YzAuNDcxLDAuMjY3LDEuMDU5LDAuMjEzLDEuNDgyLTAuMTZsNy40ODItNi4zNDRsNi44NDcsMTIuMTU1YzAuMjU5LDAuNDgsMC43MjksMC43NDYsMS4yLDAuNzQ2YzAuMjM1LDAsMC40OTQtMC4wOCwwLjcwNi0wLjIxM2w2Ljk4OC00LjU4NWMwLjMyOS0wLjIxMywwLjU2NS0wLjU4NiwwLjY1OS0xLjAxM2MwLjA5NC0wLjQyNiwwLjAyNC0wLjg4LTAuMTg4LTEuMjI2bC02LjM3Ni0xMS4zODJsOC42MTEtMi43NDVDMjguNzA1LDIyLjI3NCwyOS4xMDUsMjEuNzY4LDI5LjE3NSwyMS4xNTV6IE0xNi45NjQsMjIuNzAxYy0wLjQyNCwwLjEzMy0wLjc3NiwwLjUwNi0wLjk0MSwwLjk2Yy0wLjE2NSwwLjQ4LTAuMTE4LDEuMDEzLDAuMTE4LDEuNDM5bDYuNTg4LDExLjc4MWwtNC41NDEsMi45ODVsLTYuODk0LTEyLjMxNWMtMC4yMTItMC4zNzMtMC41NDEtMC42NC0wLjk0MS0wLjcyYy0wLjA5NC0wLjAyNy0wLjE2NS0wLjAyNy0wLjI1OS0wLjAyN2MtMC4zMDYsMC0wLjU4OCwwLjEwNy0wLjg0NywwLjMyTDIuOCwzMi41OVY0LjU0OWwyMS41OTksMTUuODA2TDE2Ljk2NCwyMi43MDF6Ii8+PC9nPjwvZz48L2c+PC9nPjwvc3ZnPg==),auto!important;\n        }\n        ._access-menu ul li {\n            list-style-type: none;\n            cursor: pointer;\n            -ms-user-select: none;\n            -moz-user-select: none;\n            -webkit-user-select: none;\n            user-select: none;\n            border: solid 1px #f1f0f1;\n            padding: 10px 0 10px 30px;\n            margin: 5px;\n            border-radius: 4px;\n            transition-duration: .5s;\n            transition-timing-function: ease-in-out;\n            font-size: 18px !important;\n            line-height: 18px !important;\n            text-indent: 5px;\n            background: #f9f9f9;\n            color: rgba(0,0,0,.6);\n            letter-spacing: initial!important;\n            word-spacing: initial!important;\n        }\n        ._access-menu ul.before-collapse li {\n            opacity: 0.05;\n        }\n        ._access-menu ul li.active, ._access-menu ul li.active:hover {\n            color: #fff;\n            background-color: #000;\n        }\n        ._access-menu ul li:hover {\n            color: rgba(0,0,0,.8);\n            background-color: #eaeaea;\n        }\n        ._access-menu ul li.not-supported {\n            display: none;\n        }\n        ._access-menu ul li:before {\n            content: ' ';\n            font-family: Material Icons;\n            text-rendering: optimizeLegibility;\n            font-feature-settings: \"liga\" 1;\n            font-style: normal;\n            text-transform: none;\n            line-height: 1;\n            font-size: 24px !important;\n            width: 30px;\n            height: 30px;\n            display: inline-block;\n            overflow: hidden;\n            -webkit-font-smoothing: antialiased;\n            left: 8px;\n            position: absolute;\n            color: rgba(0,0,0,.6);\n            direction: ltr;\n        }\n        ._access-menu ul li svg path {\n            fill: rgba(0,0,0,.6);\n        }\n        ._access-menu ul li:hover svg path {\n            fill: rgba(0,0,0,.8);\n        }\n        ._access-menu ul li.active svg path {\n            fill: #fff;\n        }\n        ._access-menu ul li:hover:before {\n            color: rgba(0,0,0,.8);\n        }\n        ._access-menu ul li.active:before {\n            color: #fff;\n        }\n        ._access-menu ul li[data-access-action=\"increaseText\"]:before {\n            content: \"zoom_in\";\n        }\n        ._access-menu ul li[data-access-action=\"decreaseText\"]:before {\n            content: \"zoom_out\";\n        }\n        ._access-menu ul li[data-access-action=\"increaseTextSpacing\"]:before {\n            content: \"unfold_more\";\n            transform: rotate(90deg) translate(-7px, 2px);\n        }\n        ._access-menu ul li[data-access-action=\"decreaseTextSpacing\"]:before {\n            content: \"unfold_less\";\n            transform: rotate(90deg) translate(-7px, 2px);\n        }\n        ._access-menu ul li[data-access-action=\"invertColors\"]:before {\n            content: \"invert_colors\";\n        }\n        ._access-menu ul li[data-access-action=\"grayHues\"]:before {\n            content: \"format_color_reset\";\n        }\n        ._access-menu ul li[data-access-action=\"underlineLinks\"]:before {\n            content: \"format_underlined\";\n        }\n        ._access-menu ul li[data-access-action=\"bigCursor\"]:before {\n            /*content: 'touch_app';*/\n        }\n        ._access-menu ul li[data-access-action=\"readingGuide\"]:before {\n            content: \"border_horizontal\";\n        }\n        ._access-menu ul li[data-access-action=\"textToSpeech\"]:before {\n            content: \"record_voice_over\";\n        }\n        ._access-menu ul li[data-access-action=\"speechToText\"]:before {\n            content: \"mic\";\n        }</style><i class=\"_access-icon material-icons _access\" style=\"width: 50px; height: 50px; font-size: 40px; line-height: 45px; text-indent: 5px; background-color: rgb(64, 84, 178); color: rgb(255, 255, 255); bottom: 50px; right: 10px; z-index: 9999; opacity: 1;\" title=\"Opciones de accesibilidad\">accessible</i><div class=\"_access-menu close _access bottom right type\"><h3 class=\"_text-center\"><i class=\"_menu-close-btn _menu-btn material-icons\" title=\"Cerrar\">close</i>Opciones de accesibilidad<i class=\"_menu-reset-btn _menu-btn material-icons\" title=\"Restaurar\">refresh</i></h3><ul class=\"before-collapse _access-scrollbar\"><li data-access-action=\"increaseText\">Incrementar el tamaño del texto</li><li data-access-action=\"decreaseText\">Reducir el tamaño del texto</li><li data-access-action=\"increaseTextSpacing\">Incrementar el espacio entre el texto</li><li data-access-action=\"decreaseTextSpacing\">Reducir el espacio entre el texto</li><li data-access-action=\"invertColors\" title=\"Hotkey: ctrl+alt+i\">Invertir colores</li><li data-access-action=\"grayHues\" title=\"Hotkey: ctrl+alt+g\">Cambiar a escala de grises</li><li data-access-action=\"underlineLinks\" title=\"Hotkey: ctrl+alt+u\">Subrayado de hipervinculos</li><li data-access-action=\"bigCursor\" title=\"Hotkey: ctrl+alt+c\"><svg version=\"1.1\" id=\"iconBigCursorSvg\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" x=\"0px\" y=\"0px\" viewBox=\"0 0 512 512\" style=\"position: absolute;width: 19px;height: 19px;left: 17px;enable-background:new 0 0 512 512;\" xml:space=\"preserve\"><path d=\"M 423.547 323.115 l -320 -320 c -3.051 -3.051 -7.637 -3.947 -11.627 -2.304 s -6.592 5.547 -6.592 9.856 V 480 c 0 4.501 2.837 8.533 7.083 10.048 c 4.224 1.536 8.981 0.192 11.84 -3.285 l 85.205 -104.128 l 56.853 123.179 c 1.792 3.883 5.653 6.187 9.685 6.187 c 1.408 0 2.837 -0.277 4.203 -0.875 l 74.667 -32 c 2.645 -1.131 4.736 -3.285 5.76 -5.973 c 1.024 -2.688 0.939 -5.675 -0.277 -8.299 l -57.024 -123.52 h 132.672 c 4.309 0 8.213 -2.603 9.856 -6.592 C 427.515 330.752 426.598 326.187 423.547 323.115 Z\"></path></svg>Cambiar tamaño del cursor</li><li data-access-action=\"readingGuide\" title=\"Hotkey: ctrl+alt+r\">Guias de lectura</li><li data-access-action=\"textToSpeech\" class=\"not-supported\">Activar lector de pantalla</li><li data-access-action=\"speechToText\" class=\"not-supported\">Voz a texto</li></ul></div></body></html>",
+            "success": true,
+            "cleaned_html": "<header>\n <div>\n  <div>\n   <div>\n    <div>\n     <h2>\n      Main Menu\n     </h2>\n    </div>\n    <ul>\n     <li>\n      <a href='\\\"/sanfrancisco/index.php\\\"'>\n       Inicio\n      </a>\n     </li>\n     <li>\n      <a href='\\\"/sanfrancisco/index.php/contacto\\\"'>\n       Contacto\n      </a>\n     </li>\n    </ul>\n   </div>\n   <div>\n    <div>\n     <form>\n      <label>\n       Buscar...\n      </label>\n     </form>\n    </div>\n   </div>\n  </div>\n </div>\n <div>\n  <div>\n   <ul>\n    <li>\n     <img height='\\\"53\\\"' src='\\\"/sanfrancisco/templates/relex-eua/images/relex.svg\\\"' width='\\\"447\\\"/'/>\n    </li>\n    <li>\n     <img class='\\\"mexico\\\"' height='\\\"27\\\"' src='\\\"/sanfrancisco/templates/relex-eua/images/mx.svg\\\"' width='\\\"116\\\"/'/>\n     <h1>\n      Consulado General de México en San Francisco\n     </h1>\n    </li>\n   </ul>\n  </div>\n </div>\n</header>\n<div>\n <div>\n  <div>\n   <div>\n    <div>\n     <a href='\\\"/sanfrancisco/index.php/el-consulado\\\"'>\n      <div>\n       <img src='\\\"https://consulmex.sre.gob.mx/templates/relex-eua/images/icono1.png\\\"/'/>\n       <p>\n        El Consulado\n       </p>\n      </div>\n     </a>\n    </div>\n   </div>\n   <div>\n    <div>\n     <a href='\\\"/sanfrancisco/index.php/servicios-para-mexicanos\\\"'>\n      <div>\n       <img src='\\\"https://consulmex.sre.gob.mx/templates/relex-eua/images/icono2.png\\\"/'/>\n       <p>\n        Servicio a Personas Mexicanas\n       </p>\n      </div>\n     </a>\n    </div>\n   </div>\n   <div>\n    <div>\n     <a href='\\\"https://citas.sre.gob.mx/\\\"'>\n      <div>\n       <img src='\\\"https://consulmex.sre.gob.mx/templates/relex-eua/images/icono3.png\\\"/'/>\n       <p>\n        Citas Consulares\n       </p>\n      </div>\n     </a>\n    </div>\n   </div>\n   <div>\n    <div>\n     <a href='\\\"https://www.gob.mx/sre/acciones-y-programas/telefonos-de-emergencia-de-la-red-consular-de-mexico-en-estados-unidos-7865\\\"'>\n      <div>\n       <img src='\\\"https://consulmex.sre.gob.mx/templates/relex-eua/images/icono4.png\\\"/'/>\n       <p>\n        Emergencias\n       </p>\n      </div>\n     </a>\n    </div>\n   </div>\n  </div>\n  <div>\n   <div>\n    <div>\n     <a href='\\\"https://visitmexico.com/\\\"'>\n      <div>\n       <img src='\\\"https://consulmex.sre.gob.mx/templates/relex-eua/images/icono5.png\\\"/'/>\n       <p>\n        Viaja a México\n       </p>\n      </div>\n     </a>\n    </div>\n   </div>\n   <div>\n    <div>\n     <a href='\\\"https://www.gob.mx/se\\\"'>\n      <div>\n       <img src='\\\"https://consulmex.sre.gob.mx/templates/relex-eua/images/icono6.png\\\"/'/>\n       <p>\n        Cómo invertir en México\n       </p>\n      </div>\n     </a>\n    </div>\n   </div>\n   <div>\n    <div>\n     <a href='\\\"/sanfrancisco/index.php/servicios-para-extranjeros\\\"'>\n      <div>\n       <img src='\\\"https://consulmex.sre.gob.mx/templates/relex-eua/images/icono7.png\\\"/'/>\n       <p>\n        Visas para personas extranjeras\n       </p>\n      </div>\n     </a>\n    </div>\n   </div>\n   <div>\n    <div>\n     <a href='\\\"/sanfrancisco/index.php/alertas-de-viaje\\\"'>\n      <div>\n       <img src='\\\"https://consulmex.sre.gob.mx/templates/relex-eua/images/icono8.png\\\"/'/>\n       <p>\n        Alertas de viaje\n       </p>\n      </div>\n     </a>\n    </div>\n   </div>\n  </div>\n </div>\n</div>\n<div>\n <div>\n  <div>\n   <div>\n    <h2>\n     Prensa\n    </h2>\n    <ul>\n     <li>\n      <a href='\\\"/sanfrancisco/index.php/comunicados2016/385-press-release-108-mexico-condemns-the-entry-into-force-of-anti-immigrant-law-sb4-in-texas\\\"'>\n       BOLETÍN VANGUARDIA TECH SAN FRANCISCO\n      </a>\n     </li>\n     <li>\n      <a href='\\\"/sanfrancisco/index.php/comunicados2016/307-sre-hace-un-llamado-a-connacionales-a-evitar-enganos-en-el-cobro-de-citas-en-sus-embajadas-y-consulados\\\"'>\n       COMUNICADO DE PRENSA SFR-0003 EXPOSICIÓN ALEBRIJES Y NAHUALES ANIMALES FANTASTICOS DE MÉXICO\n      </a>\n     </li>\n     <li>\n      <a href='\\\"/sanfrancisco/index.php/comunicados2016/384-comunicado-de-prensa-108-mexico-reprueba-la-entrada-en-vigor-de-ley-antiinmigrante-sb4-en-texas\\\"'>\n       COMUNICADO DE PRENSA SFR-0002 LA OBRA OJO DE VENADO DE FERNANDO ESCARTIZ, EN EL CONSULADO\n      </a>\n     </li>\n     <li>\n      <a href='\\\"/sanfrancisco/index.php/comunicados2016/388-comunicado-de-prensa-002-premio-ohtli-hermann-g-hernandez\\\"'>\n       COMUNICADO DE PRENSA SFR-0001 EXPOSICIÓN \\\"DEL MISMO BARRO\\\"\n      </a>\n     </li>\n     <li>\n      <a href='\\\"/sanfrancisco/index.php/comunicados2016/349-contacto-prensa\\\"'>\n       CONTACTO PRENSA\n      </a>\n     </li>\n    </ul>\n    <div>\n     <p>\n      <a href='\\\"/sanfrancisco/index.php/comunicados2016\\\"'>\n       Ver más\n      </a>\n     </p>\n    </div>\n   </div>\n   <div>\n    <h2>\n     Avisos\n    </h2>\n    <ul>\n     <li>\n      <a href='\\\"/sanfrancisco/index.php/avisos/396-ime-becas-2025\\\"'>\n       IME BECAS 2025 – Local Matching Funds\n      </a>\n     </li>\n     <li>\n      <a href='\\\"/sanfrancisco/index.php/avisos/395-consulapp-contigo\\\"'>\n       CONSULAPP CONTIGO\n      </a>\n     </li>\n     <li>\n      <a href='\\\"/sanfrancisco/index.php/avisos/362-tutorial-para-realizar-citas-a-traves-de-internet\\\"'>\n       TUTORIAL PARA REALIZAR UNA CITA A TRAVÉS DE INTERNET\n      </a>\n     </li>\n     <li>\n      <a href='\\\"/sanfrancisco/index.php/avisos/382-nueva-plataforma-para-el-servicio-de-denuncia-de-actos-de-corrupcion-cohecho-y-peculado\\\"'>\n       PLATAFORMA PARA EL SERVICIO DE DENUNCIA DE ACTOS DE CORRUPCIÓN, COHECHO Y PECULADO\n      </a>\n     </li>\n     <li>\n      <a href='\\\"/sanfrancisco/index.php/avisos/381-afiliacion-voluntaria-al-imss-de-personas-trabajadoras-en-el-exterior\\\"'>\n       AFILIACIÓN VOLUNTARIA AL IMSS DE PERSONAS TRABAJADORAS EN EL EXTERIOR\n      </a>\n     </li>\n    </ul>\n    <div>\n     <p>\n      <a href='\\\"/sanfrancisco/index.php/avisos\\\"'>\n       Ver más\n      </a>\n     </p>\n    </div>\n   </div>\n  </div>\n </div>\n</div>\n<div>\n <div>\n  <div>\n   <div>\n    <h2>\n     Dirección\n    </h2>\n    <div>\n     <div>\n      <div>\n       <div>\n        <div>\n         <div>\n          <div>\n           <div>\n            <img 0px);=\"\" 1;\\\"=\"\" 256px;=\"\" 32px,=\"\" alt='\\\"\\\"' class='\\\"leaflet-tile' height='\\\"256\\\"' height:=\"\" leaflet-tile-loaded\\\"=\"\" opacity:=\"\" role='\\\"presentation\\\"' src='\\\"https://b.tile.openstreetmap.org/17/20973/50656.png\\\"' style='\\\"width:' transform:=\"\" translate3d(228px,=\"\" width='\\\"256\\\"/'/>\n            <img -224px,=\"\" 0px);=\"\" 1;\\\"=\"\" 256px;=\"\" alt='\\\"\\\"' class='\\\"leaflet-tile' height='\\\"256\\\"' height:=\"\" leaflet-tile-loaded\\\"=\"\" opacity:=\"\" role='\\\"presentation\\\"' src='\\\"https://a.tile.openstreetmap.org/17/20973/50655.png\\\"' style='\\\"width:' transform:=\"\" translate3d(228px,=\"\" width='\\\"256\\\"/'/>\n            <img 0px);=\"\" 1;\\\"=\"\" 256px;=\"\" 32px,=\"\" alt='\\\"\\\"' class='\\\"leaflet-tile' height='\\\"256\\\"' height:=\"\" leaflet-tile-loaded\\\"=\"\" opacity:=\"\" role='\\\"presentation\\\"' src='\\\"https://a.tile.openstreetmap.org/17/20972/50656.png\\\"' style='\\\"width:' transform:=\"\" translate3d(-28px,=\"\" width='\\\"256\\\"/'/>\n            <img 0px);=\"\" 1;\\\"=\"\" 256px;=\"\" 32px,=\"\" alt='\\\"\\\"' class='\\\"leaflet-tile' height='\\\"256\\\"' height:=\"\" leaflet-tile-loaded\\\"=\"\" opacity:=\"\" role='\\\"presentation\\\"' src='\\\"https://c.tile.openstreetmap.org/17/20974/50656.png\\\"' style='\\\"width:' transform:=\"\" translate3d(484px,=\"\" width='\\\"256\\\"/'/>\n            <img 0px);=\"\" 1;\\\"=\"\" 256px;=\"\" 288px,=\"\" alt='\\\"\\\"' class='\\\"leaflet-tile' height='\\\"256\\\"' height:=\"\" leaflet-tile-loaded\\\"=\"\" opacity:=\"\" role='\\\"presentation\\\"' src='\\\"https://c.tile.openstreetmap.org/17/20973/50657.png\\\"' style='\\\"width:' transform:=\"\" translate3d(228px,=\"\" width='\\\"256\\\"/'/>\n            <img -224px,=\"\" 0px);=\"\" 1;\\\"=\"\" 256px;=\"\" alt='\\\"\\\"' class='\\\"leaflet-tile' height='\\\"256\\\"' height:=\"\" leaflet-tile-loaded\\\"=\"\" opacity:=\"\" role='\\\"presentation\\\"' src='\\\"https://c.tile.openstreetmap.org/17/20972/50655.png\\\"' style='\\\"width:' transform:=\"\" translate3d(-28px,=\"\" width='\\\"256\\\"/'/>\n            <img -224px,=\"\" 0px);=\"\" 1;\\\"=\"\" 256px;=\"\" alt='\\\"\\\"' class='\\\"leaflet-tile' height='\\\"256\\\"' height:=\"\" leaflet-tile-loaded\\\"=\"\" opacity:=\"\" role='\\\"presentation\\\"' src='\\\"https://b.tile.openstreetmap.org/17/20974/50655.png\\\"' style='\\\"width:' transform:=\"\" translate3d(484px,=\"\" width='\\\"256\\\"/'/>\n            <img 0px);=\"\" 1;\\\"=\"\" 256px;=\"\" 288px,=\"\" alt='\\\"\\\"' class='\\\"leaflet-tile' height='\\\"256\\\"' height:=\"\" leaflet-tile-loaded\\\"=\"\" opacity:=\"\" role='\\\"presentation\\\"' src='\\\"https://b.tile.openstreetmap.org/17/20972/50657.png\\\"' style='\\\"width:' transform:=\"\" translate3d(-28px,=\"\" width='\\\"256\\\"/'/>\n            <img 0px);=\"\" 1;\\\"=\"\" 256px;=\"\" 288px,=\"\" alt='\\\"\\\"' class='\\\"leaflet-tile' height='\\\"256\\\"' height:=\"\" leaflet-tile-loaded\\\"=\"\" opacity:=\"\" role='\\\"presentation\\\"' src='\\\"https://a.tile.openstreetmap.org/17/20974/50657.png\\\"' style='\\\"width:' transform:=\"\" translate3d(484px,=\"\" width='\\\"256\\\"/'/>\n           </div>\n          </div>\n         </div>\n         <div>\n          <div>\n           <div>\n            <div>\n             <div>\n              Consulado General de México en San Francisco\n             </div>\n             <div>\n              <p>\n               <a href='\\\"https://maps.app.goo.gl/QtQqiL3xyoG9c7h9A\\\"'>\n                532 Folsom Street, San Francisco, California, 94105, Estados Unidos.\n               </a>\n              </p>\n             </div>\n            </div>\n           </div>\n           <a href='\\\"#close\\\"'>\n            ×\n           </a>\n          </div>\n         </div>\n        </div>\n        <div>\n         <div>\n          <div>\n           <a href='\\\"#\\\"' in\\\"=\"\" title='\\\"Zoom'>\n            +\n           </a>\n           <a href='\\\"#\\\"' out\\\"=\"\" title='\\\"Zoom'>\n            −\n           </a>\n          </div>\n         </div>\n         <div>\n          <div>\n           <a fullscreen\\\"=\"\" href='\\\"#\\\"' title='\\\"View'>\n           </a>\n          </div>\n         </div>\n         <div>\n          <div>\n           <a for=\"\" href='\\\"http://leafletjs.com\\\"' interactive=\"\" js=\"\" library=\"\" maps\\\"=\"\" title='\\\"A'>\n            Leaflet\n           </a>\n           | ©\n           <a href='\\\"https://www.openstreetmap.org/copyright\\\"'>\n            OpenStreetMap\n           </a>\n          </div>\n         </div>\n        </div>\n       </div>\n      </div>\n     </div>\n    </div>\n   </div>\n   <div>\n    <h2>\n     Presidenta de México\n    </h2>\n    <a href='\\\"https://www.gob.mx/presidencia\\\"'>\n     <img alt='\\\"Foto' claudia=\"\" de=\"\" height='\\\"400\\\"' la=\"\" méxico,=\"\" pardo\\\"=\"\" presidenta=\"\" sheinbaum=\"\" src='\\\"/sanfrancisco/templates/relex-eua/images/fpresidenta.jpg\\\"' width='\\\"525\\\"/'/>\n    </a>\n   </div>\n   <div>\n    <center>\n     <h3>\n      Síguenos en:\n     </h3>\n     <ul>\n      <li>\n       <a href='\\\"https://www.facebook.com/ConsulmexSFCO\\\"'>\n        <img src='\\\"/sanfrancisco/templates/relex-eua/images/fb.svg\\\"/'/>\n       </a>\n      </li>\n      <li>\n       <a href='\\\"https://x.com/consulmexsfo?lang=es\\\"'>\n        <img src='\\\"/sanfrancisco/templates/relex-eua/images/xtw.svg\\\"/'/>\n       </a>\n      </li>\n      <li>\n       <a href='\\\"https://www.instagram.com/consulmexsfo/?hl=es\\\"'>\n        <img src='\\\"/sanfrancisco/templates/relex-eua/images/insta.svg\\\"/'/>\n       </a>\n      </li>\n     </ul>\n    </center>\n   </div>\n  </div>\n </div>\n</div>\n<footer>\n <div>\n  <div>\n   <div>\n    <center>\n     <img alt='\\\"Página' class='\\\"gobmx-footer\\\"' de=\"\" gobierno=\"\" height='\\\"113\\\"' inicio,=\"\" méxico\\\"=\"\" src='\\\"/sanfrancisco/templates/relex-eua/images/gmxfooter.svg\\\"' width='\\\"385\\\"/'/>\n    </center>\n    <center>\n     <p>\n      <a href='\\\"https://consulmex.sre.gob.mx/index.php/aviso-de-privacidad\\\"'>\n       Aviso de privacidad\n      </a>\n     </p>\n    </center>\n   </div>\n  </div>\n </div>\n</footer>\n<i accesibilidad\\\"=\"\" de=\"\" title='\\\"Opciones'>\n accessible\n</i>\n<div>\n <h3>\n  <i title='\\\"Cerrar\\\"'>\n   close\n  </i>\n  Opciones de accesibilidad\n  <i title='\\\"Restaurar\\\"'>\n   refresh\n  </i>\n </h3>\n <ul>\n  <li>\n   Incrementar el tamaño del texto\n  </li>\n  <li>\n   Reducir el tamaño del texto\n  </li>\n  <li>\n   Incrementar el espacio entre el texto\n  </li>\n  <li>\n   Reducir el espacio entre el texto\n  </li>\n  <li ctrl+alt+i\\\"=\"\" title='\\\"Hotkey:'>\n   Invertir colores\n  </li>\n  <li ctrl+alt+g\\\"=\"\" title='\\\"Hotkey:'>\n   Cambiar a escala de grises\n  </li>\n  <li ctrl+alt+u\\\"=\"\" title='\\\"Hotkey:'>\n   Subrayado de hipervinculos\n  </li>\n  <li ctrl+alt+c\\\"=\"\" title='\\\"Hotkey:'>\n   Cambiar tamaño del cursor\n  </li>\n  <li ctrl+alt+r\\\"=\"\" title='\\\"Hotkey:'>\n   Guias de lectura\n  </li>\n  <li>\n   Activar lector de pantalla\n  </li>\n  <li>\n   Voz a texto\n  </li>\n </ul>\n</div>\n",
+            "media": {
+              "images": [
+                {
+                  "src": "/sanfrancisco/templates/relex-eua/images/relex.svg",
+                  "data-src": "",
+                  "alt": "",
+                  "desc": "Consulado General de México en San Francisco",
+                  "score": 3,
+                  "type": "image"
+                },
+                {
+                  "src": "https://b.tile.openstreetmap.org/17/20973/50656.png",
+                  "data-src": "",
+                  "alt": "",
+                  "desc": "Consulado General de México en San Francisco 532 Folsom Street, San Francisco, California, 94105, Estados Unidos. ×",
+                  "score": 4,
+                  "type": "image"
+                },
+                {
+                  "src": "https://a.tile.openstreetmap.org/17/20973/50655.png",
+                  "data-src": "",
+                  "alt": "",
+                  "desc": "Consulado General de México en San Francisco 532 Folsom Street, San Francisco, California, 94105, Estados Unidos. ×",
+                  "score": 4,
+                  "type": "image"
+                },
+                {
+                  "src": "https://a.tile.openstreetmap.org/17/20972/50656.png",
+                  "data-src": "",
+                  "alt": "",
+                  "desc": "Consulado General de México en San Francisco 532 Folsom Street, San Francisco, California, 94105, Estados Unidos. ×",
+                  "score": 3,
+                  "type": "image"
+                },
+                {
+                  "src": "https://c.tile.openstreetmap.org/17/20974/50656.png",
+                  "data-src": "",
+                  "alt": "",
+                  "desc": "Consulado General de México en San Francisco 532 Folsom Street, San Francisco, California, 94105, Estados Unidos. ×",
+                  "score": 3,
+                  "type": "image"
+                },
+                {
+                  "src": "https://c.tile.openstreetmap.org/17/20973/50657.png",
+                  "data-src": "",
+                  "alt": "",
+                  "desc": "Consulado General de México en San Francisco 532 Folsom Street, San Francisco, California, 94105, Estados Unidos. ×",
+                  "score": 3,
+                  "type": "image"
+                },
+                {
+                  "src": "https://c.tile.openstreetmap.org/17/20972/50655.png",
+                  "data-src": "",
+                  "alt": "",
+                  "desc": "Consulado General de México en San Francisco 532 Folsom Street, San Francisco, California, 94105, Estados Unidos. ×",
+                  "score": 3,
+                  "type": "image"
+                },
+                {
+                  "src": "https://b.tile.openstreetmap.org/17/20974/50655.png",
+                  "data-src": "",
+                  "alt": "",
+                  "desc": "Consulado General de México en San Francisco 532 Folsom Street, San Francisco, California, 94105, Estados Unidos. ×",
+                  "score": 3,
+                  "type": "image"
+                },
+                {
+                  "src": "https://b.tile.openstreetmap.org/17/20972/50657.png",
+                  "data-src": "",
+                  "alt": "",
+                  "desc": "Consulado General de México en San Francisco 532 Folsom Street, San Francisco, California, 94105, Estados Unidos. ×",
+                  "score": 3,
+                  "type": "image"
+                },
+                {
+                  "src": "https://a.tile.openstreetmap.org/17/20974/50657.png",
+                  "data-src": "",
+                  "alt": "",
+                  "desc": "Consulado General de México en San Francisco 532 Folsom Street, San Francisco, California, 94105, Estados Unidos. ×",
+                  "score": 3,
+                  "type": "image"
+                },
+                {
+                  "src": "/sanfrancisco/templates/relex-eua/images/fpresidenta.jpg",
+                  "data-src": "",
+                  "alt": "Foto de la Presidenta de México, Claudia Sheinbaum Pardo",
+                  "desc": "Presidenta de México",
+                  "score": 4,
+                  "type": "image"
+                }
+              ],
+              "videos": [],
+              "audios": []
+            },
+            "links": {
+              "internal": [
+                {
+                  "href": "https://consulmex.sre.gob.mx/sanfrancisco/index.php",
+                  "text": "Inicio",
+                  "title": ""
+                },
+                {
+                  "href": "https://consulmex.sre.gob.mx/sanfrancisco/index.php/contacto",
+                  "text": "Contacto",
+                  "title": ""
+                },
+                {
+                  "href": "https://consulmex.sre.gob.mx/sanfrancisco/index.php/el-consulado",
+                  "text": "El Consulado",
+                  "title": ""
+                },
+                {
+                  "href": "https://consulmex.sre.gob.mx/sanfrancisco/index.php/servicios-para-mexicanos",
+                  "text": "Servicio a Personas Mexicanas",
+                  "title": ""
+                },
+                {
+                  "href": "https://consulmex.sre.gob.mx/sanfrancisco/index.php/servicios-para-extranjeros",
+                  "text": "Visas para personas extranjeras",
+                  "title": ""
+                },
+                {
+                  "href": "https://consulmex.sre.gob.mx/sanfrancisco/index.php/alertas-de-viaje",
+                  "text": "Alertas de viaje",
+                  "title": ""
+                },
+                {
+                  "href": "https://consulmex.sre.gob.mx/sanfrancisco/index.php/comunicados2016/385-press-release-108-mexico-condemns-the-entry-into-force-of-anti-immigrant-law-sb4-in-texas",
+                  "text": "BOLETÍN VANGUARDIA TECH SAN FRANCISCO",
+                  "title": ""
+                },
+                {
+                  "href": "https://consulmex.sre.gob.mx/sanfrancisco/index.php/comunicados2016/307-sre-hace-un-llamado-a-connacionales-a-evitar-enganos-en-el-cobro-de-citas-en-sus-embajadas-y-consulados",
+                  "text": "COMUNICADO DE PRENSA SFR-0003 EXPOSICIÓN ALEBRIJES Y NAHUALES ANIMALES FANTASTICOS DE MÉXICO",
+                  "title": ""
+                },
+                {
+                  "href": "https://consulmex.sre.gob.mx/sanfrancisco/index.php/comunicados2016/384-comunicado-de-prensa-108-mexico-reprueba-la-entrada-en-vigor-de-ley-antiinmigrante-sb4-en-texas",
+                  "text": "COMUNICADO DE PRENSA SFR-0002 LA OBRA OJO DE VENADO DE FERNANDO ESCARTIZ, EN EL CONSULADO",
+                  "title": ""
+                },
+                {
+                  "href": "https://consulmex.sre.gob.mx/sanfrancisco/index.php/comunicados2016/388-comunicado-de-prensa-002-premio-ohtli-hermann-g-hernandez",
+                  "text": "COMUNICADO DE PRENSA SFR-0001 EXPOSICIÓN \"DEL MISMO BARRO\"",
+                  "title": ""
+                },
+                {
+                  "href": "https://consulmex.sre.gob.mx/sanfrancisco/index.php/comunicados2016/349-contacto-prensa",
+                  "text": "CONTACTO PRENSA",
+                  "title": ""
+                },
+                {
+                  "href": "https://consulmex.sre.gob.mx/sanfrancisco/index.php/comunicados2016",
+                  "text": "Ver más",
+                  "title": ""
+                },
+                {
+                  "href": "https://consulmex.sre.gob.mx/sanfrancisco/index.php/avisos/396-ime-becas-2025",
+                  "text": "IME BECAS 2025 – Local Matching Funds",
+                  "title": ""
+                },
+                {
+                  "href": "https://consulmex.sre.gob.mx/sanfrancisco/index.php/avisos/395-consulapp-contigo",
+                  "text": "CONSULAPP CONTIGO",
+                  "title": ""
+                },
+                {
+                  "href": "https://consulmex.sre.gob.mx/sanfrancisco/index.php/avisos/362-tutorial-para-realizar-citas-a-traves-de-internet",
+                  "text": "TUTORIAL PARA REALIZAR UNA CITA A TRAVÉS DE INTERNET",
+                  "title": ""
+                },
+                {
+                  "href": "https://consulmex.sre.gob.mx/sanfrancisco/index.php/avisos/382-nueva-plataforma-para-el-servicio-de-denuncia-de-actos-de-corrupcion-cohecho-y-peculado",
+                  "text": "PLATAFORMA PARA EL SERVICIO DE DENUNCIA DE ACTOS DE CORRUPCIÓN, COHECHO Y PECULADO",
+                  "title": ""
+                },
+                {
+                  "href": "https://consulmex.sre.gob.mx/sanfrancisco/index.php/avisos/381-afiliacion-voluntaria-al-imss-de-personas-trabajadoras-en-el-exterior",
+                  "text": "AFILIACIÓN VOLUNTARIA AL IMSS DE PERSONAS TRABAJADORAS EN EL EXTERIOR",
+                  "title": ""
+                },
+                {
+                  "href": "https://consulmex.sre.gob.mx/sanfrancisco/index.php/avisos",
+                  "text": "Ver más",
+                  "title": ""
+                },
+                {
+                  "href": "https://consulmex.sre.gob.mx/sanfrancisco/#close",
+                  "text": "×",
+                  "title": ""
+                },
+                {
+                  "href": "https://consulmex.sre.gob.mx/sanfrancisco/",
+                  "text": "+",
+                  "title": "Zoom in"
+                },
+                {
+                  "href": "https://consulmex.sre.gob.mx/index.php/aviso-de-privacidad",
+                  "text": "Aviso de privacidad",
+                  "title": ""
+                }
+              ],
+              "external": [
+                {
+                  "href": "https://citas.sre.gob.mx/",
+                  "text": "Citas Consulares",
+                  "title": ""
+                },
+                {
+                  "href": "https://www.gob.mx/sre/acciones-y-programas/telefonos-de-emergencia-de-la-red-consular-de-mexico-en-estados-unidos-7865",
+                  "text": "Emergencias",
+                  "title": ""
+                },
+                {
+                  "href": "https://visitmexico.com/",
+                  "text": "Viaja a México",
+                  "title": ""
+                },
+                {
+                  "href": "https://www.gob.mx/se",
+                  "text": "Cómo invertir en México",
+                  "title": ""
+                },
+                {
+                  "href": "https://maps.app.goo.gl/QtQqiL3xyoG9c7h9A",
+                  "text": "532 Folsom Street, San Francisco, California, 94105, Estados Unidos.",
+                  "title": ""
+                },
+                {
+                  "href": "http://leafletjs.com",
+                  "text": "Leaflet",
+                  "title": "A JS library for interactive maps"
+                },
+                {
+                  "href": "https://www.openstreetmap.org/copyright",
+                  "text": "OpenStreetMap",
+                  "title": ""
+                },
+                {
+                  "href": "https://www.gob.mx/presidencia",
+                  "text": "",
+                  "title": ""
+                },
+                {
+                  "href": "https://www.facebook.com/ConsulmexSFCO",
+                  "text": "",
+                  "title": ""
+                },
+                {
+                  "href": "https://x.com/consulmexsfo?lang=es",
+                  "text": "",
+                  "title": ""
+                },
+                {
+                  "href": "https://www.instagram.com/consulmexsfo/?hl=es",
+                  "text": "",
+                  "title": ""
+                }
+              ]
+            },
+            "downloaded_files": null,
+            "screenshot": null,
+            "markdown": "##  Main Menu \n\n  * [Inicio](/sanfrancisco/index.php)\n  * [Contacto](/sanfrancisco/index.php/contacto)\n\n\n\nBuscar...\n\n  * ![](/sanfrancisco/templates/relex-eua/images/relex.svg)\n  * ![](/sanfrancisco/templates/relex-eua/images/mx.svg)\n\n# Consulado General de México en San Francisco\n\n\n\n\n[ ![](https://consulmex.sre.gob.mx/templates/relex-eua/images/icono1.png) El Consulado ](/sanfrancisco/index.php/el-consulado)\n\n[ ![](https://consulmex.sre.gob.mx/templates/relex-eua/images/icono2.png) Servicio a Personas Mexicanas ](/sanfrancisco/index.php/servicios-para-mexicanos)\n\n[ ![](https://consulmex.sre.gob.mx/templates/relex-eua/images/icono3.png) Citas Consulares ](https://citas.sre.gob.mx/)\n\n[ ![](https://consulmex.sre.gob.mx/templates/relex-eua/images/icono4.png) Emergencias ](https://www.gob.mx/sre/acciones-y-programas/telefonos-de-emergencia-de-la-red-consular-de-mexico-en-estados-unidos-7865)\n\n[ ![](https://consulmex.sre.gob.mx/templates/relex-eua/images/icono5.png) Viaja a México ](https://visitmexico.com/)\n\n[ ![](https://consulmex.sre.gob.mx/templates/relex-eua/images/icono6.png) Cómo invertir en México ](https://www.gob.mx/se)\n\n[ ![](https://consulmex.sre.gob.mx/templates/relex-eua/images/icono7.png) Visas para personas extranjeras ](/sanfrancisco/index.php/servicios-para-extranjeros)\n\n[ ![](https://consulmex.sre.gob.mx/templates/relex-eua/images/icono8.png) Alertas de viaje ](/sanfrancisco/index.php/alertas-de-viaje)\n\n## Prensa\n\n  * [BOLETÍN VANGUARDIA TECH SAN FRANCISCO](/sanfrancisco/index.php/comunicados2016/385-press-release-108-mexico-condemns-the-entry-into-force-of-anti-immigrant-law-sb4-in-texas)\n  * [COMUNICADO DE PRENSA SFR-0003 EXPOSICIÓN ALEBRIJES Y NAHUALES ANIMALES FANTASTICOS DE MÉXICO](/sanfrancisco/index.php/comunicados2016/307-sre-hace-un-llamado-a-connacionales-a-evitar-enganos-en-el-cobro-de-citas-en-sus-embajadas-y-consulados)\n  * [COMUNICADO DE PRENSA SFR-0002 LA OBRA OJO DE VENADO DE FERNANDO ESCARTIZ, EN EL CONSULADO](/sanfrancisco/index.php/comunicados2016/384-comunicado-de-prensa-108-mexico-reprueba-la-entrada-en-vigor-de-ley-antiinmigrante-sb4-en-texas)\n  * [COMUNICADO DE PRENSA SFR-0001 EXPOSICIÓN \"DEL MISMO BARRO\"](/sanfrancisco/index.php/comunicados2016/388-comunicado-de-prensa-002-premio-ohtli-hermann-g-hernandez)\n  * [CONTACTO PRENSA](/sanfrancisco/index.php/comunicados2016/349-contacto-prensa)\n\n\n\n[Ver más](/sanfrancisco/index.php/comunicados2016)\n\n## Avisos\n\n  * [IME BECAS 2025 – Local Matching Funds](/sanfrancisco/index.php/avisos/396-ime-becas-2025)\n  * [CONSULAPP CONTIGO](/sanfrancisco/index.php/avisos/395-consulapp-contigo)\n  * [TUTORIAL PARA REALIZAR UNA CITA A TRAVÉS DE INTERNET](/sanfrancisco/index.php/avisos/362-tutorial-para-realizar-citas-a-traves-de-internet)\n  * [PLATAFORMA PARA EL SERVICIO DE DENUNCIA DE ACTOS DE CORRUPCIÓN, COHECHO Y PECULADO](/sanfrancisco/index.php/avisos/382-nueva-plataforma-para-el-servicio-de-denuncia-de-actos-de-corrupcion-cohecho-y-peculado)\n  * [AFILIACIÓN VOLUNTARIA AL IMSS DE PERSONAS TRABAJADORAS EN EL EXTERIOR](/sanfrancisco/index.php/avisos/381-afiliacion-voluntaria-al-imss-de-personas-trabajadoras-en-el-exterior)\n\n\n\n[Ver más](/sanfrancisco/index.php/avisos)\n\n##  Dirección \n\n![](https://b.tile.openstreetmap.org/17/20973/50656.png)![](https://a.tile.openstreetmap.org/17/20973/50655.png)![](https://a.tile.openstreetmap.org/17/20972/50656.png)![](https://c.tile.openstreetmap.org/17/20974/50656.png)![](https://c.tile.openstreetmap.org/17/20973/50657.png)![](https://c.tile.openstreetmap.org/17/20972/50655.png)![](https://b.tile.openstreetmap.org/17/20974/50655.png)![](https://b.tile.openstreetmap.org/17/20972/50657.png)![](https://a.tile.openstreetmap.org/17/20974/50657.png)\n\nConsulado General de México en San Francisco\n\n[532 Folsom Street, San Francisco, California, 94105, Estados Unidos.](https://maps.app.goo.gl/QtQqiL3xyoG9c7h9A)\n\n[×](#close)\n\n[+](# \"Zoom in\")[−](# \"Zoom out\")\n\n[](# \"View Fullscreen\")\n\n[Leaflet](http://leafletjs.com \"A JS library for interactive maps\") | © [OpenStreetMap](https://www.openstreetmap.org/copyright)\n\n## Presidenta de México\n\n[ ![Foto de la Presidenta de México, Claudia Sheinbaum Pardo](/sanfrancisco/templates/relex-eua/images/fpresidenta.jpg) ](https://www.gob.mx/presidencia)\n\n### Síguenos en:\n\n  * [ ![](/sanfrancisco/templates/relex-eua/images/fb.svg) ](https://www.facebook.com/ConsulmexSFCO)\n  * [ ![](/sanfrancisco/templates/relex-eua/images/xtw.svg) ](https://x.com/consulmexsfo?lang=es)\n  * [ ![](/sanfrancisco/templates/relex-eua/images/insta.svg) ](https://www.instagram.com/consulmexsfo/?hl=es)\n\n\n\n![Página de inicio, Gobierno de México](/sanfrancisco/templates/relex-eua/images/gmxfooter.svg)\n\n[Aviso de privacidad](https://consulmex.sre.gob.mx/index.php/aviso-de-privacidad)\n\n_accessible_\n\n###  _close_ Opciones de accesibilidad _refresh_\n\n  * Incrementar el tamaño del texto\n  * Reducir el tamaño del texto\n  * Incrementar el espacio entre el texto\n  * Reducir el espacio entre el texto\n  * Invertir colores\n  * Cambiar a escala de grises\n  * Subrayado de hipervinculos\n  * Cambiar tamaño del cursor\n  * Guias de lectura\n  * Activar lector de pantalla\n  * Voz a texto\n\n\n",
+            "fit_markdown": "Set flag 'fit_markdown' to True to get cleaned HTML content.",
+            "fit_html": "Set flag 'fit_markdown' to True to get cleaned HTML content.",
+            "extracted_content": "",
+            "metadata": {
+              "title": "Inicio",
+              "description": "El gobierno de México proporciona a nivel internacional en distintos países a través de su Consulado General de México en San Francisco, áreas de protección a mexicanos, documentación a mexicanos y extranjeros; servicios en las áreas de educación, salud y organización comunitaria dirigidos a la comunidad de origen mexicano; promoción cultural y de negocios destinados a la población que reside en el extranjero.",
+              "keywords": null,
+              "author": null
+            },
+            "error_message": "",
+            "session_id": null,
+            "response_headers": {
+              "cache-control": "no-store, no-cache, must-revalidate, post-check=0, pre-check=0",
+              "content-encoding": "gzip",
+              "content-type": "text/html; charset=utf-8",
+              "date": "Thu, 15 May 2025 02:27:33 GMT",
+              "expires": "Wed, 17 Aug 2005 00:00:00 GMT",
+              "last-modified": "Thu, 15 May 2025 02:27:33 GMT",
+              "pragma": "no-cache",
+              "referrer-policy": "no-referrer-when-downgrade",
+              "server": "Apache",
+              "strict-transport-security": "max-age=63072000; includeSubDomains\nmax-age=31536000",
+              "x-cdn": "Imperva",
+              "x-content-type-options": "nosniff\nnosniff",
+              "x-frame-options": "ALLOW_FROM https://extranet.sre.gob.mx, https://embamex.sre.gob.mx, https://mision.sre.gob.mx, https://icm.sre.gob.mx, https://oscqa.sre.gob.mx, https://cila.sre.gob.mx, https://consulmex.sre.gob.mx",
+              "x-iinfo": "58-15346488-15346491 NNYN CT(60 124 0) RT(1747276052951 14) q(0 0 2 0) r(4 4) U12",
+              "x-xss-protection": "1; mode=block"
+            },
+            "status_code": 200
+          }
+        }
+      }
+    ],
+    "Wait": [
+      {
+        "json": {
+          "task_id": "d7e0c0c8-a1c8-4f35-a639-5e78e3071456"
+        }
+      }
+    ]
+  },
+  "versionId": "50e9c762-9152-41e4-8f62-c6b3bf0b01e4",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "createdAt": "2025-05-15T02:56:29.672Z",
+      "updatedAt": "2025-05-15T02:56:29.672Z",
+      "role": "workflow:owner",
+      "workflowId": "W9nUrohTuNiWNUrp",
+      "projectId": "BZ9Ta5yhe4RhzY78",
+      "project": {
+        "createdAt": "2025-05-13T15:56:28.209Z",
+        "updatedAt": "2025-05-13T16:18:54.372Z",
+        "id": "BZ9Ta5yhe4RhzY78",
+        "name": "CANTERA ADMIN <canteradigital7@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "projectRelations": [
+          {
+            "createdAt": "2025-05-13T15:56:28.209Z",
+            "updatedAt": "2025-05-13T15:56:28.209Z",
+            "role": "project:personalOwner",
+            "userId": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
+            "projectId": "BZ9Ta5yhe4RhzY78",
+            "user": {
+              "createdAt": "2025-05-13T15:56:27.880Z",
+              "updatedAt": "2025-05-13T16:50:09.757Z",
+              "id": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
+              "email": "canteradigital7@gmail.com",
+              "firstName": "CANTERA",
+              "lastName": "ADMIN",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-05-13T16:19:25.161Z",
+                "personalization_survey_n8n_version": "1.92.2",
+                "companySize": "<20",
+                "companyType": "saas",
+                "role": "customer-support",
+                "reportedSource": "event"
+              },
+              "settings": {
+                "userActivated": true,
+                "firstSuccessfulWorkflowId": "PTbESRzX3rguwQN8",
+                "userActivatedAt": 1747154580970,
+                "easyAIWorkflowOnboarded": true
+              },
+              "role": "global:owner",
+              "disabled": false,
+              "mfaEnabled": false,
+              "isPending": false,
+              "isOwner": true
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": []
+}
