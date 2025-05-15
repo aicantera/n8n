@@ -1,21 +1,10 @@
 {
   "createdAt": "2025-05-15T02:27:31.379Z",
-  "updatedAt": "2025-05-15T02:56:19.000Z",
+  "updatedAt": "2025-05-15T03:46:34.000Z",
   "id": "8V35cKVhuXSq2JWx",
   "name": "KB _ Consulado San Francisco",
   "active": false,
   "nodes": [
-    {
-      "parameters": {},
-      "type": "n8n-nodes-base.manualTrigger",
-      "typeVersion": 1,
-      "position": [
-        -2060,
-        420
-      ],
-      "id": "6ae41e5e-00d2-4d73-a949-9ffea09c53cd",
-      "name": "When clicking ‘Test workflow’"
-    },
     {
       "parameters": {
         "url": "=http://135.232.111.170:11235/task/{{ $json.task_id }}",
@@ -344,10 +333,10 @@
         "messages": {
           "values": [
             {
-              "content": "={{ $json.result.markdown }}"
+              "content": "=titulo: {{ $json.result.metadata.title }}\nurl fuente: {{ $json.result.url }}\n{{ $json.result.markdown }}"
             },
             {
-              "content": "=eres un analista de datos crea un txto detallado y enriquecido sobre esta informacion dada en formato markdonw y crea titulos sibitulos descripciones analisis y bullets con pasos para entrenar un modelo llm.  no digas la palabra analisis ni sitio web. habla siempre como un redactor de contenidos para documentar todo lo qu se te da y presentarlo a personas usaurioas mexcanos en el consulado de san fracisco. Agrega informacion que pueda complementar esta informacio o enrtiquecerla. "
+              "content": "=Eres un redactor de contenidos experto en documentación oficial y atención a connacionales, trabajando directamente para el Consulado de México en San Francisco. Tu misión es procesar la información que se te proporcionará (proveniente de una fuente de consulta detallada) para organizarla de manera clara, útil y estructurada. El objetivo final es que esta documentación sirva como base para \"instruir\" a un asistente virtual que apoyará en la atención a nuestros connacionales, respondiendo sus preguntas y guiándolos en sus trámites.\n\nRecibirás un bloque de texto con información detallada. Esta información cubre temas relevantes para los trámites, servicios y preguntas frecuentes de los mexicanos que residen en la jurisdicción del consulado en San Francisco.\n\nPara lograr esto, sigue estas indicaciones:\n\nOrganización y Formato: Presenta toda la información procesada en formato Markdown (.txt), utilizando la siguiente estructura:\n\nUn título principal claro y conciso que identifique el tema general de la información (ej. \"Información Consular: Trámites y Servicios\").\nSubtítulos (##) para cada sección mayor o tipo de trámite/servicio (ej. \"Pasaporte\", \"Matrícula Consular\", \"Actas de Nacimiento\").\nSubtítulos de tercer nivel (###) si es necesario para desglosar subtemas dentro de una sección (ej. \"Requisitos para Pasaporte\", \"Costo y Forma de Pago\").\nUtiliza texto plano o párrafos para las descripciones detalladas de cada trámite, servicio o tema. Sé lo más explícito posible.\nContenido Enriquecido: Más allá de la simple descripción, agrega secciones que exploren a fondo los aspectos clave, particularidades o implicaciones importantes de la información. En lugar de usar la palabra \"análisis\", puedes titular estas secciones como:\n\n\"Puntos Clave y Consideraciones Importantes\"\n\"Aspectos a Tomar en Cuenta\"\n\"Detalles Relevantes para el Trámite\"\nSelecciona el título que mejor se ajuste al contexto de cada sección.\nInstrucciones para el Asistente Virtual: Crea una sección dedicada a la preparación del asistente virtual. Titúlala claramente, por ejemplo: \"Guía para la Instrucción del Asistente Virtual\". Dentro de esta sección, utiliza bullets (-) para enumerar los elementos de información específicos, los tipos de preguntas que el asistente debe ser capaz de responder, o las acciones que la información sugiere (ej. \"Identificar requisitos para...\", \"Explicar el proceso de...\", \"Mencionar documentos necesarios...\", \"Proporcionar información sobre horarios/costos...\"). Piensa en qué \"conocimiento\" debe extraer el asistente de cada parte del texto.\n\nTono y Audiencia: El tono debe ser siempre profesional, empático y enfocado en la claridad para el usuario mexicano. Imagina que estás escribiendo la documentación oficial que se entregará o consultará directamente en nuestras oficinas o plataformas, dirigida a nuestros connacionales. Usa un lenguaje accesible y directo.\n\nRestricciones Fundamentales: Es fundamental que nunca uses las palabras 'análisis' ni 'sitio web' (o equivalentes como 'página web', 'web', 'portal'). Refiérete a la fuente de información simplemente como 'la información proporcionada', 'la información de referencia', o 'el contenido facilitado'."
             }
           ]
         },
@@ -395,6 +384,50 @@
           "name": "Google Docs account - CANTERA"
         }
       }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -2040,
+        500
+      ],
+      "id": "6ae41e5e-00d2-4d73-a949-9ffea09c53cd",
+      "name": "When clicking ‘Test workflow’"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "ba44cdc1-a8e9-4d2e-a63a-2fbf059e778a",
+              "leftValue": "={{ $json.href }}",
+              "rightValue": "sanfrancisco",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        -60,
+        380
+      ],
+      "id": "3b26e171-ada6-43ee-ac47-ee7de8dc4e69",
+      "name": "Filter"
     }
   ],
   "connections": {
@@ -467,22 +500,11 @@
         ]
       ]
     },
-    "When clicking ‘Test workflow’": {
-      "main": [
-        [
-          {
-            "node": "WEBSCRAPING Crea JOB",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Split Out": {
       "main": [
         [
           {
-            "node": "Loop Over Items1",
+            "node": "Filter",
             "type": "main",
             "index": 0
           }
@@ -557,6 +579,28 @@
       ]
     },
     "Google Docs": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Test workflow’": {
+      "main": [
+        [
+          {
+            "node": "WEBSCRAPING Crea JOB",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter": {
       "main": [
         [
           {
@@ -1203,7 +1247,7 @@
       }
     ]
   },
-  "versionId": "1dd86b17-799c-4f31-a25c-a52eda90d8d5",
+  "versionId": "f79bace9-f39b-4e56-bf0f-f8248a0be014",
   "triggerCount": 0,
   "shared": [
     {
