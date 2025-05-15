@@ -1,0 +1,314 @@
+{
+  "createdAt": "2025-05-15T14:58:19.895Z",
+  "updatedAt": "2025-05-15T14:58:36.000Z",
+  "id": "5d1FhsCLHsnOBhpa",
+  "name": "Agente glassy dev kb prod",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        220,
+        180
+      ],
+      "id": "2f5198fa-080a-4704-a20f-b7779ac3fbd9",
+      "name": "Embeddings OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "zZlJrTGKq8KER7gD",
+          "name": "OpenAi account - GLASSY"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "dataType": "binary",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1,
+      "position": [
+        460,
+        160
+      ],
+      "id": "da23ba6a-419f-4f6d-9be5-e636a4179edb",
+      "name": "Default Data Loader"
+    },
+    {
+      "parameters": {
+        "chunkOverlap": 200,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+      "typeVersion": 1,
+      "position": [
+        520,
+        380
+      ],
+      "id": "7b9b3706-0747-4a6f-8ff0-8106469bddde",
+      "name": "Recursive Character Text Splitter"
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "triggerOn": "specificFolder",
+        "folderToWatch": {
+          "__rl": true,
+          "value": "1jJxl8Af84DOCp8vtHDTgHRZNfWnhe45e",
+          "mode": "list",
+          "cachedResultName": "KB_glassbil",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1jJxl8Af84DOCp8vtHDTgHRZNfWnhe45e"
+        },
+        "event": "fileCreated",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDriveTrigger",
+      "typeVersion": 1,
+      "position": [
+        -360,
+        -60
+      ],
+      "id": "c5c794e9-ecfc-46ba-9dc0-db230e29a7ba",
+      "name": "Buscamnos cambios en documentos",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "PKQpxniTUryv7dE9",
+          "name": "Google Drive account - DRIVE CANTERA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "searchMethod": "query",
+        "queryString": "name contains 'glasbil'",
+        "returnAll": true,
+        "filter": {
+          "folderId": {
+            "__rl": true,
+            "value": "1jJxl8Af84DOCp8vtHDTgHRZNfWnhe45e",
+            "mode": "list",
+            "cachedResultName": "KB_glassbil",
+            "cachedResultUrl": "https://drive.google.com/drive/folders/1jJxl8Af84DOCp8vtHDTgHRZNfWnhe45e"
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -140,
+        -60
+      ],
+      "id": "d35ddd83-a993-49ec-befa-9bb839ae054d",
+      "name": "sacamos todos los documentos",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "PKQpxniTUryv7dE9",
+          "name": "Google Drive account - DRIVE CANTERA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{$json.id}}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        100,
+        -60
+      ],
+      "id": "bd982865-618c-46db-af1a-b9f9e16921d7",
+      "name": "descargamos los documentos",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "PKQpxniTUryv7dE9",
+          "name": "Google Drive account - DRIVE CANTERA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "tableName": {
+          "__rl": true,
+          "value": "documents_glassy_p",
+          "mode": "list",
+          "cachedResultName": "documents_glassy_p"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1.1,
+      "position": [
+        320,
+        -60
+      ],
+      "id": "a42bb0eb-c3bb-44c7-a8d5-662dccc0e6e4",
+      "name": "añadimos documentos a la base de conocimiento",
+      "credentials": {
+        "supabaseApi": {
+          "id": "ty0KiXsEYP1uJ8t9",
+          "name": "Supabase account - CANTERA"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Embeddings OpenAI": {
+      "ai_embedding": [
+        [
+          {
+            "node": "añadimos documentos a la base de conocimiento",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Default Data Loader": {
+      "ai_document": [
+        [
+          {
+            "node": "añadimos documentos a la base de conocimiento",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recursive Character Text Splitter": {
+      "ai_textSplitter": [
+        [
+          {
+            "node": "Default Data Loader",
+            "type": "ai_textSplitter",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscamnos cambios en documentos": {
+      "main": [
+        [
+          {
+            "node": "sacamos todos los documentos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "sacamos todos los documentos": {
+      "main": [
+        [
+          {
+            "node": "descargamos los documentos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "descargamos los documentos": {
+      "main": [
+        [
+          {
+            "node": "añadimos documentos a la base de conocimiento",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "3f49e27c-76bf-46c5-95c5-f3406f16fedd",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "createdAt": "2025-05-15T14:58:19.899Z",
+      "updatedAt": "2025-05-15T14:58:19.899Z",
+      "role": "workflow:owner",
+      "workflowId": "5d1FhsCLHsnOBhpa",
+      "projectId": "BZ9Ta5yhe4RhzY78",
+      "project": {
+        "createdAt": "2025-05-13T15:56:28.209Z",
+        "updatedAt": "2025-05-13T16:18:54.372Z",
+        "id": "BZ9Ta5yhe4RhzY78",
+        "name": "CANTERA ADMIN <canteradigital7@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "projectRelations": [
+          {
+            "createdAt": "2025-05-13T15:56:28.209Z",
+            "updatedAt": "2025-05-13T15:56:28.209Z",
+            "role": "project:personalOwner",
+            "userId": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
+            "projectId": "BZ9Ta5yhe4RhzY78",
+            "user": {
+              "createdAt": "2025-05-13T15:56:27.880Z",
+              "updatedAt": "2025-05-13T16:50:09.757Z",
+              "id": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
+              "email": "canteradigital7@gmail.com",
+              "firstName": "CANTERA",
+              "lastName": "ADMIN",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-05-13T16:19:25.161Z",
+                "personalization_survey_n8n_version": "1.92.2",
+                "companySize": "<20",
+                "companyType": "saas",
+                "role": "customer-support",
+                "reportedSource": "event"
+              },
+              "settings": {
+                "userActivated": true,
+                "firstSuccessfulWorkflowId": "PTbESRzX3rguwQN8",
+                "userActivatedAt": 1747154580970,
+                "easyAIWorkflowOnboarded": true
+              },
+              "role": "global:owner",
+              "disabled": false,
+              "mfaEnabled": false,
+              "isPending": false,
+              "isOwner": true
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": [
+    {
+      "createdAt": "2025-05-13T18:42:21.332Z",
+      "updatedAt": "2025-05-13T18:42:21.332Z",
+      "id": "XE33dAVH8p6eXZMD",
+      "name": "AGENTE GLASSY"
+    }
+  ]
+}
