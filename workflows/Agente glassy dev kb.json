@@ -1,127 +1,10 @@
 {
   "createdAt": "2025-05-13T19:26:18.873Z",
-  "updatedAt": "2025-05-14T18:18:23.000Z",
+  "updatedAt": "2025-05-15T03:37:33.000Z",
   "id": "GzJuSAkJYNRnyuxJ",
   "name": "Agente glassy dev kb",
   "active": false,
   "nodes": [
-    {
-      "parameters": {
-        "operation": "download",
-        "fileId": {
-          "__rl": true,
-          "value": "={{$json.id}}",
-          "mode": "id"
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.googleDrive",
-      "typeVersion": 3,
-      "position": [
-        100,
-        -60
-      ],
-      "id": "7966ecbe-59ad-473a-9d16-1adec1a721a4",
-      "name": "Google Drive",
-      "credentials": {
-        "googleDriveOAuth2Api": {
-          "id": "PKQpxniTUryv7dE9",
-          "name": "Google Drive account - DRIVE CANTERA"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "resource": "fileFolder",
-        "searchMethod": "query",
-        "queryString": "name contains 'glasbil'",
-        "returnAll": true,
-        "filter": {
-          "folderId": {
-            "__rl": true,
-            "value": "1jJxl8Af84DOCp8vtHDTgHRZNfWnhe45e",
-            "mode": "list",
-            "cachedResultName": "KB_glassbil",
-            "cachedResultUrl": "https://drive.google.com/drive/folders/1jJxl8Af84DOCp8vtHDTgHRZNfWnhe45e"
-          }
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.googleDrive",
-      "typeVersion": 3,
-      "position": [
-        -100,
-        -40
-      ],
-      "id": "47ff4346-8516-46e7-9e80-e026cbaf6c7b",
-      "name": "Google Drive1",
-      "credentials": {
-        "googleDriveOAuth2Api": {
-          "id": "PKQpxniTUryv7dE9",
-          "name": "Google Drive account - DRIVE CANTERA"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "pollTimes": {
-          "item": [
-            {
-              "mode": "everyMinute"
-            }
-          ]
-        },
-        "triggerOn": "specificFolder",
-        "folderToWatch": {
-          "__rl": true,
-          "value": "1jJxl8Af84DOCp8vtHDTgHRZNfWnhe45e",
-          "mode": "list",
-          "cachedResultName": "KB_glassbil",
-          "cachedResultUrl": "https://drive.google.com/drive/folders/1jJxl8Af84DOCp8vtHDTgHRZNfWnhe45e"
-        },
-        "event": "fileCreated",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.googleDriveTrigger",
-      "typeVersion": 1,
-      "position": [
-        -360,
-        -40
-      ],
-      "id": "b8d71667-bf77-40a4-ba64-fb3aaee134e8",
-      "name": "Google Drive Trigger",
-      "credentials": {
-        "googleDriveOAuth2Api": {
-          "id": "PKQpxniTUryv7dE9",
-          "name": "Google Drive account - DRIVE CANTERA"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "mode": "insert",
-        "tableName": {
-          "__rl": true,
-          "mode": "list",
-          "value": ""
-        },
-        "options": {}
-      },
-      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
-      "typeVersion": 1.1,
-      "position": [
-        320,
-        -60
-      ],
-      "id": "9581d066-3930-4c4b-8a5f-e34300d44197",
-      "name": "Supabase Vector Store",
-      "credentials": {
-        "supabaseApi": {
-          "id": "ty0KiXsEYP1uJ8t9",
-          "name": "Supabase account - CANTERA"
-        }
-      }
-    },
     {
       "parameters": {
         "options": {}
@@ -168,47 +51,132 @@
       ],
       "id": "99fd68d6-b101-4456-b1e2-8f51f0896841",
       "name": "Recursive Character Text Splitter"
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "triggerOn": "specificFolder",
+        "folderToWatch": {
+          "__rl": true,
+          "value": "1jJxl8Af84DOCp8vtHDTgHRZNfWnhe45e",
+          "mode": "list",
+          "cachedResultName": "KB_glassbil",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1jJxl8Af84DOCp8vtHDTgHRZNfWnhe45e"
+        },
+        "event": "fileCreated",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDriveTrigger",
+      "typeVersion": 1,
+      "position": [
+        -360,
+        -60
+      ],
+      "id": "b8d71667-bf77-40a4-ba64-fb3aaee134e8",
+      "name": "Buscamnos cambios en documentos",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "PKQpxniTUryv7dE9",
+          "name": "Google Drive account - DRIVE CANTERA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "searchMethod": "query",
+        "queryString": "name contains 'glasbil'",
+        "returnAll": true,
+        "filter": {
+          "folderId": {
+            "__rl": true,
+            "value": "1jJxl8Af84DOCp8vtHDTgHRZNfWnhe45e",
+            "mode": "list",
+            "cachedResultName": "KB_glassbil",
+            "cachedResultUrl": "https://drive.google.com/drive/folders/1jJxl8Af84DOCp8vtHDTgHRZNfWnhe45e"
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -140,
+        -60
+      ],
+      "id": "47ff4346-8516-46e7-9e80-e026cbaf6c7b",
+      "name": "sacamos todos los documentos",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "PKQpxniTUryv7dE9",
+          "name": "Google Drive account - DRIVE CANTERA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{$json.id}}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        100,
+        -60
+      ],
+      "id": "7966ecbe-59ad-473a-9d16-1adec1a721a4",
+      "name": "descargamos los documentos",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "PKQpxniTUryv7dE9",
+          "name": "Google Drive account - DRIVE CANTERA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "tableName": {
+          "__rl": true,
+          "value": "documents_glassy",
+          "mode": "list",
+          "cachedResultName": "documents_glassy"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1.1,
+      "position": [
+        320,
+        -60
+      ],
+      "id": "9581d066-3930-4c4b-8a5f-e34300d44197",
+      "name": "añadimos documentos a la base de conocimiento",
+      "credentials": {
+        "supabaseApi": {
+          "id": "ty0KiXsEYP1uJ8t9",
+          "name": "Supabase account - CANTERA"
+        }
+      }
     }
   ],
   "connections": {
-    "Google Drive1": {
-      "main": [
-        [
-          {
-            "node": "Google Drive",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Google Drive Trigger": {
-      "main": [
-        [
-          {
-            "node": "Google Drive1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Google Drive": {
-      "main": [
-        [
-          {
-            "node": "Supabase Vector Store",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Embeddings OpenAI": {
       "ai_embedding": [
         [
           {
-            "node": "Supabase Vector Store",
+            "node": "añadimos documentos a la base de conocimiento",
             "type": "ai_embedding",
             "index": 0
           }
@@ -219,7 +187,7 @@
       "ai_document": [
         [
           {
-            "node": "Supabase Vector Store",
+            "node": "añadimos documentos a la base de conocimiento",
             "type": "ai_document",
             "index": 0
           }
@@ -236,6 +204,39 @@
           }
         ]
       ]
+    },
+    "Buscamnos cambios en documentos": {
+      "main": [
+        [
+          {
+            "node": "sacamos todos los documentos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "sacamos todos los documentos": {
+      "main": [
+        [
+          {
+            "node": "descargamos los documentos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "descargamos los documentos": {
+      "main": [
+        [
+          {
+            "node": "añadimos documentos a la base de conocimiento",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -246,7 +247,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "8985e4cf-e5dc-448b-9722-cffcdc543d64",
+  "versionId": "9a6fcf2a-f80a-4b57-8904-a08eac430936",
   "triggerCount": 0,
   "shared": [
     {
