@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-05-27T17:24:07.779Z",
-  "updatedAt": "2025-05-27T22:00:43.000Z",
+  "updatedAt": "2025-05-27T22:35:13.000Z",
   "id": "fchq7I7n1VifsCZG",
   "name": "LAUKA KB 1",
   "active": true,
@@ -60,7 +60,7 @@
       "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
       "typeVersion": 1.1,
       "position": [
-        3380,
+        4040,
         -140
       ],
       "id": "6b1b1637-cf74-433c-885c-17a7a9a2f632",
@@ -79,7 +79,7 @@
       "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
       "typeVersion": 1.2,
       "position": [
-        3560,
+        4220,
         80
       ],
       "id": "3e980b0e-7722-4fbc-aae3-47b3d1d2b927",
@@ -107,7 +107,7 @@
       "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
       "typeVersion": 1,
       "position": [
-        3760,
+        4420,
         40
       ],
       "id": "0db5c39e-d691-4d3f-a916-baafe8f922d6",
@@ -122,7 +122,7 @@
       "type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
       "typeVersion": 1,
       "position": [
-        3900,
+        4560,
         240
       ],
       "id": "0c78a8f6-9c1f-4333-93e2-b2712218317c",
@@ -159,7 +159,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        1140,
+        1580,
         0
       ],
       "id": "d05ebb61-e8d0-4a2b-896d-77fdb38f5a69",
@@ -322,9 +322,9 @@
       "parameters": {
         "modelId": {
           "__rl": true,
-          "value": "gpt-4.1",
+          "value": "gpt-4o-mini",
           "mode": "list",
-          "cachedResultName": "GPT-4.1"
+          "cachedResultName": "GPT-4O-MINI"
         },
         "messages": {
           "values": [
@@ -342,8 +342,8 @@
       "type": "@n8n/n8n-nodes-langchain.openAi",
       "typeVersion": 1.8,
       "position": [
-        1960,
-        100
+        2540,
+        80
       ],
       "id": "e438ce49-a5f8-4d0a-a970-6ac42eb077c1",
       "name": "OpenAI",
@@ -361,7 +361,7 @@
       "type": "n8n-nodes-base.splitInBatches",
       "typeVersion": 3,
       "position": [
-        1480,
+        2140,
         0
       ],
       "id": "126d7676-c730-4a2a-b482-ef277f364b02",
@@ -384,7 +384,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        2320,
+        2980,
         100
       ],
       "id": "b2e10a57-3080-4f34-9c83-2a0d403316ba",
@@ -455,7 +455,7 @@
       "type": "@n8n/n8n-nodes-langchain.informationExtractor",
       "typeVersion": 1,
       "position": [
-        2620,
+        3280,
         -700
       ],
       "id": "2d8615f3-2214-407d-aeb7-058a887f00ad",
@@ -516,7 +516,7 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        2980,
+        3640,
         -700
       ],
       "id": "08103c29-ff75-4b5d-a4cd-626dda1302a6",
@@ -541,7 +541,7 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.2,
       "position": [
-        2720,
+        3380,
         -480
       ],
       "id": "47387c1b-8631-4353-b21d-a878d24ed3be",
@@ -560,7 +560,7 @@
       "type": "n8n-nodes-base.splitInBatches",
       "typeVersion": 3,
       "position": [
-        2040,
+        2700,
         -740
       ],
       "id": "34a25ffe-a9b7-4068-9e7a-328754fe3448",
@@ -583,16 +583,45 @@
     },
     {
       "parameters": {
-        "maxItems": 10
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "e52135b8-a9f7-4bf2-87fe-5ff2c5fb94dd",
+              "leftValue": "={{ $json['#'] }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "gte"
+              }
+            },
+            {
+              "id": "fe97a274-d3d1-4e7b-8300-02d7d23d74b9",
+              "leftValue": "={{ $json['#'] }}",
+              "rightValue": 5,
+              "operator": {
+                "type": "number",
+                "operation": "lte"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
       },
-      "type": "n8n-nodes-base.limit",
-      "typeVersion": 1,
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
       "position": [
-        760,
+        1140,
         0
       ],
-      "id": "1c8bbc21-e56c-459d-98c3-9ff8ac71aa5e",
-      "name": "Limit"
+      "id": "c3be5579-588e-491d-97f3-a82d1612341a",
+      "name": "Filter"
     }
   ],
   "connections": {
@@ -660,7 +689,7 @@
       "main": [
         [
           {
-            "node": "Limit",
+            "node": "Filter",
             "type": "main",
             "index": 0
           }
@@ -844,7 +873,7 @@
         ]
       ]
     },
-    "Limit": {
+    "Filter": {
       "main": [
         [
           {
@@ -864,7 +893,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "3f4e0413-f692-4681-9a4c-08e8323564d3",
+  "versionId": "bdb1cba0-e86c-4525-8bf5-0cf65354bdf6",
   "triggerCount": 2,
   "shared": [
     {
