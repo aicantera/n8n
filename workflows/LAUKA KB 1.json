@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-05-27T17:24:07.779Z",
-  "updatedAt": "2025-05-27T18:51:24.000Z",
+  "updatedAt": "2025-05-27T19:54:32.000Z",
   "id": "fchq7I7n1VifsCZG",
   "name": "LAUKA KB 1",
   "active": false,
@@ -60,8 +60,8 @@
       "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
       "typeVersion": 1.1,
       "position": [
-        2260,
-        -120
+        3160,
+        -140
       ],
       "id": "6b1b1637-cf74-433c-885c-17a7a9a2f632",
       "name": "Supabase Vector Store",
@@ -79,8 +79,8 @@
       "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
       "typeVersion": 1.2,
       "position": [
-        2440,
-        100
+        3340,
+        80
       ],
       "id": "3e980b0e-7722-4fbc-aae3-47b3d1d2b927",
       "name": "Embeddings OpenAI",
@@ -107,22 +107,23 @@
       "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
       "typeVersion": 1,
       "position": [
-        2640,
-        60
+        3540,
+        40
       ],
       "id": "0db5c39e-d691-4d3f-a916-baafe8f922d6",
       "name": "Default Data Loader"
     },
     {
       "parameters": {
+        "chunkSize": 2500,
         "chunkOverlap": 200,
         "options": {}
       },
       "type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
       "typeVersion": 1,
       "position": [
-        2780,
-        260
+        3680,
+        240
       ],
       "id": "0c78a8f6-9c1f-4333-93e2-b2712218317c",
       "name": "Recursive Character Text Splitter"
@@ -341,7 +342,7 @@
       "type": "@n8n/n8n-nodes-langchain.openAi",
       "typeVersion": 1.8,
       "position": [
-        1520,
+        1740,
         100
       ],
       "id": "e438ce49-a5f8-4d0a-a970-6ac42eb077c1",
@@ -360,7 +361,7 @@
       "type": "n8n-nodes-base.splitInBatches",
       "typeVersion": 3,
       "position": [
-        1040,
+        1260,
         0
       ],
       "id": "126d7676-c730-4a2a-b482-ef277f364b02",
@@ -383,11 +384,200 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        1880,
+        2100,
         100
       ],
       "id": "b2e10a57-3080-4f34-9c83-2a0d403316ba",
       "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "maxItems": 3
+      },
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        1040,
+        0
+      ],
+      "id": "e4ed386f-0ee9-409a-a045-fb38909bbd8d",
+      "name": "Limit"
+    },
+    {
+      "parameters": {
+        "text": "={{ $json.campo }}",
+        "attributes": {
+          "attributes": [
+            {
+              "name": "=numero_articulo",
+              "description": "numero de articulo",
+              "required": true
+            },
+            {
+              "name": "especificaciones_tecnicas",
+              "description": "especificaicones tecnicas del poducto, detalladas",
+              "required": true
+            },
+            {
+              "name": "casos_de_uso",
+              "description": "casos de uso de este producto",
+              "required": true
+            },
+            {
+              "name": "productos_relacionados",
+              "description": "productos relacionados que se pueden combinar cone ste producto. en caso de no existitr dejar en blanco",
+              "required": true
+            },
+            {
+              "name": "insumos_relacionados",
+              "description": "consumibles o insumos relacionados a este prodcuto. en caso de no existitr dejar en blanco",
+              "required": true
+            },
+            {
+              "name": "link_datasheet",
+              "description": "url link al datahseet de este producto. en caso de no existitr dejar en blanco",
+              "required": true
+            },
+            {
+              "name": "alias_producto",
+              "description": "alias o otros nombres con el que los usuarios reocnocen el producto",
+              "required": true
+            },
+            {
+              "name": "tags_producto",
+              "description": "lista de palabras relacioanadas al producto, separadas por coma",
+              "required": true
+            },
+            {
+              "name": "link_imagen",
+              "description": "link url a la magen delproducto . . en caso de no existitr dejar en blanco"
+            },
+            {
+              "name": "website_fabricante",
+              "description": "sitio web del fabricante"
+            },
+            {
+              "name": "descripcion_ampliada",
+              "description": "descripcion ampliada del producto detallada",
+              "required": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.informationExtractor",
+      "typeVersion": 1,
+      "position": [
+        2400,
+        -700
+      ],
+      "id": "2d8615f3-2214-407d-aeb7-058a887f00ad",
+      "name": "Information Extractor"
+    },
+    {
+      "parameters": {
+        "tableId": "lauka_products",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "numero_articulo",
+              "fieldValue": "={{ $json.output.numero_articulo }}"
+            },
+            {
+              "fieldId": "especificaciones_tecnicas",
+              "fieldValue": "={{ $json.output.especificaciones_tecnicas }}"
+            },
+            {
+              "fieldId": "casos_de_uso",
+              "fieldValue": "={{ $json.output.casos_de_uso }}"
+            },
+            {
+              "fieldId": "productos_relacionados",
+              "fieldValue": "={{ $json.output.productos_relacionados }}"
+            },
+            {
+              "fieldId": "insumos_relacionados",
+              "fieldValue": "={{ $json.output.insumos_relacionados }}"
+            },
+            {
+              "fieldId": "link_datasheet",
+              "fieldValue": "={{ $json.output.link_datasheet }}"
+            },
+            {
+              "fieldId": "alias_producto",
+              "fieldValue": "={{ $json.output.alias_producto }}"
+            },
+            {
+              "fieldId": "tags_producto",
+              "fieldValue": "={{ $json.output.tags_producto }}"
+            },
+            {
+              "fieldId": "link_imagen",
+              "fieldValue": "={{ $json.output.link_imagen }}"
+            },
+            {
+              "fieldId": "website_fabricante",
+              "fieldValue": "={{ $json.output.website_fabricante }}"
+            },
+            {
+              "fieldId": "descripcion_ampliada",
+              "fieldValue": "={{ $json.output.descripcion_ampliada }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        2760,
+        -700
+      ],
+      "id": "08103c29-ff75-4b5d-a4cd-626dda1302a6",
+      "name": "Supabase1",
+      "credentials": {
+        "supabaseApi": {
+          "id": "ty0KiXsEYP1uJ8t9",
+          "name": "Supabase account - CANTERA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-3.5-turbo",
+          "mode": "list",
+          "cachedResultName": "gpt-3.5-turbo"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        2500,
+        -480
+      ],
+      "id": "47387c1b-8631-4353-b21d-a878d24ed3be",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "zZlJrTGKq8KER7gD",
+          "name": "OpenAi account - GLASSY"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        1820,
+        -740
+      ],
+      "id": "34a25ffe-a9b7-4068-9e7a-328754fe3448",
+      "name": "Loop Over Items1"
     }
   ],
   "connections": {
@@ -466,7 +656,7 @@
       "main": [
         [
           {
-            "node": "Loop Over Items",
+            "node": "Limit",
             "type": "main",
             "index": 0
           }
@@ -540,6 +730,11 @@
             "node": "Supabase Vector Store",
             "type": "main",
             "index": 0
+          },
+          {
+            "node": "Loop Over Items1",
+            "type": "main",
+            "index": 0
           }
         ],
         [
@@ -572,6 +767,62 @@
           }
         ]
       ]
+    },
+    "Limit": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Information Extractor": {
+      "main": [
+        [
+          {
+            "node": "Supabase1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Information Extractor",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items1": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Information Extractor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase1": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -582,7 +833,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "c770ee12-edfb-43dc-a1f4-a2bb8075f94b",
+  "versionId": "9eb8f421-2500-4525-bc48-a1887dded19d",
   "triggerCount": 0,
   "shared": [
     {
