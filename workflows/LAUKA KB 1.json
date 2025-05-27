@@ -1,16 +1,16 @@
 {
   "createdAt": "2025-05-27T17:24:07.779Z",
-  "updatedAt": "2025-05-27T19:54:32.000Z",
+  "updatedAt": "2025-05-27T20:05:14.000Z",
   "id": "fchq7I7n1VifsCZG",
   "name": "LAUKA KB 1",
-  "active": false,
+  "active": true,
   "nodes": [
     {
       "parameters": {},
       "type": "n8n-nodes-base.manualTrigger",
       "typeVersion": 1,
       "position": [
-        -160,
+        -680,
         0
       ],
       "id": "b68b09d9-9744-422f-ab3f-fbcff73b9a21",
@@ -21,10 +21,10 @@
         "operation": "download",
         "fileId": {
           "__rl": true,
-          "value": "1MUDAWPdSrdT2Ry_cQiozMFTUVX750A7Q",
+          "value": "10WjYZPXaeoF7w5mMJPqJaZSwqiAc33le",
           "mode": "list",
-          "cachedResultName": " muestra LISTA DE ARTICULOS CRSIOL.xlsx",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1MUDAWPdSrdT2Ry_cQiozMFTUVX750A7Q/edit?usp=drivesdk&ouid=103791099388247549187&rtpof=true&sd=true"
+          "cachedResultName": "Copia de LISTA DE ARTICULOS CRSIOL.xlsx",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/10WjYZPXaeoF7w5mMJPqJaZSwqiAc33le/edit?usp=drivesdk&ouid=103791099388247549187&rtpof=true&sd=true"
         },
         "options": {}
       },
@@ -182,8 +182,8 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        80,
-        -180
+        200,
+        -460
       ],
       "id": "7049b807-f7ac-46be-a645-f21997bd32fe",
       "name": "Supabase",
@@ -392,19 +392,6 @@
     },
     {
       "parameters": {
-        "maxItems": 3
-      },
-      "type": "n8n-nodes-base.limit",
-      "typeVersion": 1,
-      "position": [
-        1040,
-        0
-      ],
-      "id": "e4ed386f-0ee9-409a-a045-fb38909bbd8d",
-      "name": "Limit"
-    },
-    {
-      "parameters": {
         "text": "={{ $json.campo }}",
         "attributes": {
           "attributes": [
@@ -578,6 +565,21 @@
       ],
       "id": "34a25ffe-a9b7-4068-9e7a-328754fe3448",
       "name": "Loop Over Items1"
+    },
+    {
+      "parameters": {
+        "path": "9fdd9fc8-4acc-4f6a-a1ce-ec859e40eab3",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -700,
+        -340
+      ],
+      "id": "c8cf2715-e4a0-4afa-82e5-a4fb04eb9599",
+      "name": "Webhook",
+      "webhookId": "9fdd9fc8-4acc-4f6a-a1ce-ec859e40eab3"
     }
   ],
   "connections": {
@@ -656,7 +658,7 @@
       "main": [
         [
           {
-            "node": "Limit",
+            "node": "Loop Over Items",
             "type": "main",
             "index": 0
           }
@@ -768,17 +770,6 @@
         ]
       ]
     },
-    "Limit": {
-      "main": [
-        [
-          {
-            "node": "Loop Over Items",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Information Extractor": {
       "main": [
         [
@@ -823,6 +814,22 @@
           }
         ]
       ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Google Drive",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Supabase",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -833,8 +840,8 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "9eb8f421-2500-4525-bc48-a1887dded19d",
-  "triggerCount": 0,
+  "versionId": "4c23012f-8b0f-4f62-be29-c69e3b0e90c2",
+  "triggerCount": 2,
   "shared": [
     {
       "createdAt": "2025-05-27T17:24:07.783Z",
