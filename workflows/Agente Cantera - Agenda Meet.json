@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-05-13T21:22:38.125Z",
-  "updatedAt": "2025-05-29T16:59:40.000Z",
+  "updatedAt": "2025-05-29T17:48:56.000Z",
   "id": "A97j1NIcV31TR5Mn",
   "name": "Agente Cantera - Agenda Meet",
   "active": false,
@@ -35,6 +35,9 @@
             },
             {
               "name": "perfilado_de_cliente"
+            },
+            {
+              "name": "resumen_propuesta"
             }
           ]
         }
@@ -42,15 +45,15 @@
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "typeVersion": 1.1,
       "position": [
-        -820,
-        -60
+        -360,
+        -160
       ],
       "id": "15955f09-1dd3-4b52-8a3d-2d0cc73f1533",
       "name": "When Executed by Another Workflow"
     },
     {
       "parameters": {
-        "inputText": "=Esta empresa {{ $json.resumen_propuesta }} , tiene este requerimiento {{ $json.resumen_propuesta }} y este perfilado {{ $json.perfilado_lead }}",
+        "inputText": "=Esta empresa  , tiene este requerimiento {{ $json.requerimiento_cliente }}y este perfilado  {{ $json.perfilado_de_cliente }} ",
         "categories": {
           "categories": [
             {
@@ -137,7 +140,7 @@
         "resource": "organization",
         "name": "={{ $('When Executed by Another Workflow').item.json.nombre_empresa }}",
         "additionalFields": {
-          "label": 12
+          "label": 2
         }
       },
       "type": "n8n-nodes-base.pipedrive",
@@ -159,7 +162,7 @@
       "parameters": {
         "resource": "person",
         "operation": "search",
-        "term": "={{ $('When Executed by Another Workflow').item.json.email_usuario }}",
+        "term": "={{ $('When Executed by Another Workflow').item.json.email_cliente }}",
         "additionalFields": {}
       },
       "type": "n8n-nodes-base.pipedrive",
@@ -180,19 +183,15 @@
     },
     {
       "parameters": {
-        "title": "={{ $('Text Classifier').item.json.perfilado_lead }}",
+        "title": "={{ $('When Executed by Another Workflow').item.json.perfilado_de_cliente }}",
         "org_id": "={{ $('Pipedrive Contacto Actual').item.json.organization.id }}",
         "additionalFields": {
           "currency": "USD",
           "customProperties": {
             "property": [
               {
-                "name": "580d376db007ebe2ba11bd6509338e4d7db10fdf",
-                "value": "El requerimiento es:{{ $('Text Classifier').item.json.resumen_propuesta }}  La estimación y análisis: {{ $('Information Extractor').item.json.output.detail_of_estimation }}  El Perfil de la empresa :{{ $('Text Classifier').item.json.perfilado_Lead }}"
-              },
-              {
-                "name": "4370b1a0393484892305673f903e7309998c9f08",
-                "value": "={{ $('Text Classifier').item.json.value }}   "
+                "name": "0a0d024986d387fc0a9e7ff27a66596d15695b3d",
+                "value": "=El requerimiento es:{{ $('Text Classifier').item.json.resumen_propuesta }}  La estimación y análisis: {{ $('Information Extractor').item.json.output.detail_of_estimation }}  El Perfil de la empresa :{{ $('Text Classifier').item.json.perfilado_Lead }}\n\nvalor del proyecto:{{ $('Text Classifier').item.json.value }}   "
               }
             ]
           },
@@ -220,16 +219,16 @@
     {
       "parameters": {
         "resource": "person",
-        "name": "={{ $('When Executed by Another Workflow').item.json.nombre_usuaior }}",
+        "name": "={{ $('Text Classifier').item.json.nombre_cliente }}",
         "additionalFields": {
           "email": [
-            "={{ $('When Executed by Another Workflow').item.json.email_usuario }}"
+            "={{ $('Text Classifier').item.json.email_cliente }}"
           ],
-          "label": 16,
+          "label": 6,
           "marketing_status": "subscribed",
           "org_id": "={{ $json.id }}",
           "phone": [
-            "={{ $('When Executed by Another Workflow').item.json.telefono_usuario }}"
+            "={{ $('Text Classifier').item.json.telefono_cliente }}"
           ],
           "visible_to": "3"
         }
@@ -251,19 +250,15 @@
     },
     {
       "parameters": {
-        "title": "={{ $('Text Classifier').item.json.perfilado_lead }}",
+        "title": "={{ $('When Executed by Another Workflow').item.json.perfilado_de_cliente }}",
         "org_id": "={{ $('Pipedrive crea organizacion').item.json.id }}",
         "additionalFields": {
           "currency": "USD",
           "customProperties": {
             "property": [
               {
-                "name": "580d376db007ebe2ba11bd6509338e4d7db10fdf",
-                "value": "=El requerimiento es:{{ $('Text Classifier').item.json.resumen_propuesta }} \nLa estimación y análisis: {{ $('Information Extractor').item.json.output.detail_of_estimation }}\n\nEl Perfil de la empresa :{{ $('Text Classifier').item.json.perfilado_Lead }}"
-              },
-              {
-                "name": "4370b1a0393484892305673f903e7309998c9f08",
-                "value": "={{ $('Information Extractor').item.json.output.value }}"
+                "name": "0a0d024986d387fc0a9e7ff27a66596d15695b3d",
+                "value": "=El requerimiento es:{{ $('Text Classifier').item.json.resumen_propuesta }} \nLa estimación y análisis: {{ $('Information Extractor').item.json.output.detail_of_estimation }}\n\nEl Perfil de la empresa : {{ $('When Executed by Another Workflow').item.json.perfilado_de_cliente }}\n\nMonto estimado en USD: {{ $('Information Extractor').item.json.output.value }}"
               }
             ]
           },
@@ -292,12 +287,10 @@
     {
       "parameters": {
         "resource": "lead",
-        "title": "={{ $('Text Classifier').item.json.perfilado_lead }}",
+        "title": "={{ $('When Executed by Another Workflow').item.json.perfilado_de_cliente }}",
         "organization_id": "={{ $('Pipedrive crea organizacion').item.json.id }}",
         "additionalFields": {
-          "label_ids": [
-            "266e833f-564f-4517-8a62-8e54c40bfe0f"
-          ],
+          "label_ids": [],
           "person_id": "={{ $('Pipedrive Crea Persona').item.json.id }}"
         }
       },
@@ -327,7 +320,7 @@
         "messages": {
           "values": [
             {
-              "content": "=datos de la empresa: {{ $json.nombre_empresa }}\npropuesta : {{ $('When Executed by Another Workflow').item.json.resumen_propuesta }}\nperfil empresa:  {{ $('When Executed by Another Workflow').item.json.perfilado_lead }}\nfecha de la reunion: {{ $json.fecha_hora_meet }}. "
+              "content": "=datos de la empresa: {{ $json.nombre_empresa }}\npropuesta :  {{ $('When Executed by Another Workflow').item.json.resumen_propuesta }}\nperfil empresa:  {{ $json.perfilado_de_cliente }}\nfecha de la reunion: {{ $json.dia_meet }} {{ $json.hora_inicio_meet }}"
             },
             {
               "content": "eres un cotizador de sistemas y proyectos de it y te voy a dar datos de una empresa, un requieriiento de IT  y  el perfil de laempresa, y tu debes estimar tres variables: probabilidad de cierre, esta probabilidad es de 0a 1 donde 1 es muy posible de que se cierre y que sea factible, esto debes asociarlo a la complejidad del proyecto  asume  que somos una mepresa de software cn ai agentes y mas de 200 desarrolladores de sofgtare. sel segundo valor, un estimado deen dolares del total de este proyecto de sarrollo mas infrastructura mas consultoria, debes estimas esos 2 valores . el usuari ote dara datos de y debes responder con estos datos. ademas sustenta tu analiss buscando  datos de esta empersa en internaet y estima el tamño y proyectos de esta empresa. crea una propuesta de componente tecnologias y personal requerido para ejecutar este proyecto de forma preliminar , diecndo que hace falta reunirse con el cliente para acotar esto. genera ranbirn la fecha y hora de inicio y fecha y hora de fin 30 minutos  depues de iniciado la reunion. el formato de la fecha debe ser yyyy-mm-dd hh:mm:ss",
@@ -464,15 +457,15 @@
       "parameters": {
         "operation": "send",
         "phoneNumberId": "676686782186843",
-        "recipientPhoneNumber": "={{ $('When Executed by Another Workflow').item.json.telefono_usuario }}",
+        "recipientPhoneNumber": "={{ $json.telefono_cliente }}",
         "textBody": "Dame 30 segundos para analizar tu requerimiento",
         "additionalFields": {}
       },
       "type": "n8n-nodes-base.whatsApp",
       "typeVersion": 1,
       "position": [
-        180,
-        -720
+        200,
+        -420
       ],
       "id": "d236627e-0bb7-4e9e-ab41-63ddc28f8bd5",
       "name": "WhatsApp Business Cloud6",
@@ -486,173 +479,17 @@
     },
     {
       "parameters": {
-        "calendar": {
-          "__rl": true,
-          "value": "vladimir@essavant.com",
-          "mode": "list",
-          "cachedResultName": "vladimir@essavant.com"
-        },
-        "start": "={{ $('Information Extractor').item.json.output.fecha_inicio_meet }}",
-        "end": "={{ $('Information Extractor').item.json.output.fecha_fin_meet }}",
-        "additionalFields": {
-          "attendees": [
-            "={{ $('When Executed by Another Workflow').item.json.email_usuario }}",
-            "corpo@essavant.com"
-          ],
-          "color": "3",
-          "conferenceDataUi": {
-            "conferenceDataValues": {
-              "conferenceSolution": "hangoutsMeet"
-            }
-          },
-          "description": "={{ $('Text Classifier').item.json.resumen_propuesta }} para {{ $('Text Classifier').item.json.nombre_empresa }}",
-          "guestsCanInviteOthers": true,
-          "showMeAs": "opaque",
-          "summary": "={{ $('Text Classifier').item.json.resumen_propuesta }}"
-        }
-      },
-      "type": "n8n-nodes-base.googleCalendar",
-      "typeVersion": 1.3,
-      "position": [
-        3520,
-        -600
-      ],
-      "id": "a7cf1170-03fd-4e28-9ce4-642fc992a411",
-      "name": "Google Calendar"
-    },
-    {
-      "parameters": {
-        "sendTo": "={{ $('When Executed by Another Workflow').item.json.email_usuario }}",
-        "subject": "En SAVANT Tenemos Solución para Tí",
-        "message": "=Hola {{ $('Text Classifier').item.json.nombre_usuaior }} !  Tenemos una propuesta lista para presentarte y nos gustaría {{ $('Text Classifier').item.json.resumen_propuesta }} de {{ $('Text Classifier').item.json.nombre_empresa }}.  Como nos pediste nos vemos el  {{ $('Text Classifier').item.json.fecha_hora_meet }} en este enlace  {{ $json.conferenceData.entryPoints[0].uri }}   Nos vemos!  Rafael Herrera  Director General   Savant \n\n\n{{ $json.htmlLink }}\n\n{{ $json.conferenceData.entryPoints[1].uri }}",
-        "options": {
-          "appendAttribution": false,
-          "ccList": "corpo@essavant.com",
-          "senderName": "SAVANT AI Para tu empresa YA!"
-        }
-      },
-      "type": "n8n-nodes-base.gmail",
-      "typeVersion": 2.1,
-      "position": [
-        3740,
-        -600
-      ],
-      "id": "2851555a-496e-46f7-a26e-293340a61992",
-      "name": "Gmail",
-      "webhookId": "bbf0afea-3ffd-4287-a09e-41cd249791dc"
-    },
-    {
-      "parameters": {
-        "calendar": {
-          "__rl": true,
-          "value": "vladimir@essavant.com",
-          "mode": "list",
-          "cachedResultName": "vladimir@essavant.com"
-        },
-        "start": "={{ $('Information Extractor').item.json.output.fecha_inicio_meet }}",
-        "end": "={{ $('Information Extractor').item.json.output.fecha_fin_meet }}",
-        "additionalFields": {
-          "attendees": [
-            "={{ $('When Executed by Another Workflow').item.json.email_usuario }}",
-            "corpo@essavant.com"
-          ],
-          "color": "3",
-          "conferenceDataUi": {
-            "conferenceDataValues": {
-              "conferenceSolution": "hangoutsMeet"
-            }
-          },
-          "description": "={{ $('Text Classifier').item.json.resumen_propuesta }} para {{ $('Text Classifier').item.json.nombre_empresa }}",
-          "guestsCanInviteOthers": true,
-          "showMeAs": "opaque",
-          "summary": "={{ $('Text Classifier').item.json.resumen_propuesta }}"
-        }
-      },
-      "type": "n8n-nodes-base.googleCalendar",
-      "typeVersion": 1.3,
-      "position": [
-        2700,
-        0
-      ],
-      "id": "44aa0421-b44d-4cd8-9520-ee8a8c442cb7",
-      "name": "Google Calendar1"
-    },
-    {
-      "parameters": {
-        "sendTo": "={{ $('When Executed by Another Workflow').item.json.email_usuario }}",
-        "subject": "En SAVANT Tenemos Solución para Tí",
-        "message": "=Hola {{ $('Text Classifier').item.json.nombre_usuaior }} !  Tenemos una propuesta lista para presentarte y nos gustaría {{ $('Text Classifier').item.json.resumen_propuesta }} de {{ $('Text Classifier').item.json.nombre_empresa }}.  Como nos pediste nos vemos el  {{ $('Text Classifier').item.json.fecha_hora_meet }} en este enlace  {{ $json.webLink }}  Nos vemos!  Rafael Herrera  Director General   Savant  {{ $json.onlineMeeting.joinUrl }}",
-        "options": {
-          "appendAttribution": false,
-          "ccList": "corpo@essavant.com",
-          "senderName": "SAVANT AI Para tu empresa YA!"
-        }
-      },
-      "type": "n8n-nodes-base.gmail",
-      "typeVersion": 2.1,
-      "position": [
-        2920,
-        0
-      ],
-      "id": "bfa57d16-711c-4a23-a743-8358261dac23",
-      "name": "Gmail1",
-      "webhookId": "bbf0afea-3ffd-4287-a09e-41cd249791dc"
-    },
-    {
-      "parameters": {
-        "resource": "media",
-        "phoneNumberId": "676686782186843",
-        "additionalFields": {
-          "mediaFileName": "vision3.mp4"
-        }
-      },
-      "type": "n8n-nodes-base.whatsApp",
-      "typeVersion": 1,
-      "position": [
-        1680,
-        360
-      ],
-      "id": "98089486-7d2f-44be-8b8e-a8ed6e04795d",
-      "name": "WhatsApp Business Cloud13",
-      "webhookId": "3baabad1-c441-4a96-8a75-bf4b7a256b02",
-      "credentials": {
-        "whatsAppApi": {
-          "id": "wss31GmBkFCO7IfF",
-          "name": "WhatsApp account - AGENTE CANTERA"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "url": "http://essavant.com/vision_SAcnzFe0.mp4",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        1300,
-        340
-      ],
-      "id": "0b3f46ed-e45b-473b-9553-c48bfe871c63",
-      "name": "HTTP Request6"
-    },
-    {
-      "parameters": {
         "operation": "send",
-        "phoneNumberId": "577941458736637",
-        "recipientPhoneNumber": "={{ $('Text Classifier').item.json.telefono_usuario }}",
-        "messageType": "video",
-        "mediaPath": "useMediaId",
-        "mediaId": "={{ $json.id }}",
-        "additionalFields": {
-          "mediaCaption": "Nos vemos pronto. el momento es AHORA con SAVANT"
-        }
+        "phoneNumberId": "676686782186843",
+        "recipientPhoneNumber": "={{ $('Text Classifier').item.json.telefono_cliente }}",
+        "textBody": "={{ $json.message.content }}",
+        "additionalFields": {}
       },
       "type": "n8n-nodes-base.whatsApp",
       "typeVersion": 1,
       "position": [
-        1900,
-        360
+        1340,
+        200
       ],
       "id": "1b260592-3521-4a78-8776-06581c1f4120",
       "name": "WhatsApp Business Cloud14",
@@ -666,63 +503,137 @@
     },
     {
       "parameters": {
-        "resource": "media",
-        "phoneNumberId": "676686782186843",
+        "resource": "event",
+        "operation": "create",
+        "calendarId": {
+          "__rl": true,
+          "value": "AAMkADJjODdjYzYzLWI0NDMtNDJlMi1hZmY0LTY3ODFlNzBjNWZmMQBGAAAAAACsqiPeTLOgRbuS-1o5VhlcBwDn26jhz37URKH2Im_c8w6PAAAAAAEGAADn26jhz37URKH2Im_c8w6PAAAAAO4wAAA=",
+          "mode": "list",
+          "cachedResultName": "Calendar"
+        },
+        "subject": "={{ $('Text Classifier').item.json.resumen_propuesta }}",
+        "startDateTime": "={{ $('Information Extractor').item.json.output.fecha_inicio_meet }}",
+        "endDateTime": "={{ $('Information Extractor').item.json.output.fecha_fin_meet }}",
         "additionalFields": {
-          "mediaFileName": "vision3.mp4"
+          "body": "={{ $('Text Classifier').item.json.resumen_propuesta }} para {{ $('Text Classifier').item.json.nombre_empresa }}",
+          "bodyPreview": "={{ $('Text Classifier').item.json.resumen_propuesta }} para {{ $('Text Classifier').item.json.nombre_empresa }}",
+          "type": "singleInstance"
         }
       },
-      "type": "n8n-nodes-base.whatsApp",
-      "typeVersion": 1,
+      "type": "n8n-nodes-base.microsoftOutlook",
+      "typeVersion": 2,
       "position": [
-        1700,
-        860
+        3540,
+        -600
       ],
-      "id": "55c23de8-1372-41da-a2bc-5b5e3b6244da",
-      "name": "WhatsApp Business Cloud15",
-      "webhookId": "fbb605dc-a31a-4423-8c7c-d0e3eac7cd9d",
+      "id": "a8abed5f-361a-4320-9252-2b7c2960b3fe",
+      "name": "Microsoft Outlook",
+      "webhookId": "29b0ddf6-d6e6-4c2c-a78b-e2ebd520beb8",
       "credentials": {
-        "whatsAppApi": {
-          "id": "wss31GmBkFCO7IfF",
-          "name": "WhatsApp account - AGENTE CANTERA"
+        "microsoftOutlookOAuth2Api": {
+          "id": "1e9fbzjIiV9wNv2j",
+          "name": "Microsoft Outlook account - azure@canteradigital.mx"
         }
       }
     },
     {
       "parameters": {
-        "url": "https://essavant.com/3.mp4",
-        "options": {}
+        "toRecipients": "={{ $('When Executed by Another Workflow').item.json.email_cliente }}",
+        "subject": "=En Cantera Tenemos una Porpuesta Increíble {{ $('When Executed by Another Workflow').item.json.email_cliente }}",
+        "bodyContent": "=Hola {{ $('When Executed by Another Workflow').item.json.nombre_cliente }} !  Tenemos una propuesta lista para presentarte  una solución de {{ $('When Executed by Another Workflow').item.json.resumen_propuesta }}  para {{ $('When Executed by Another Workflow').item.json.nombre_empresa }}.  Como nos pediste nos vemos el  {{ $('When Executed by Another Workflow').item.json.dia_meet }}  en este enlace  {{ $json.webLink }} Nos vemos!  \n\nJanneth Cano\nDirectora Comercial\nCantera Digital\n\n \n ",
+        "additionalFields": {}
       },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
+      "type": "n8n-nodes-base.microsoftOutlook",
+      "typeVersion": 2,
       "position": [
-        1300,
-        800
+        3760,
+        -600
       ],
-      "id": "cd4ef082-fdd8-4330-9485-6b1ef1e2c635",
-      "name": "HTTP Request7"
+      "id": "4cdfd126-d9f3-4a24-8702-8b6709abc489",
+      "name": "Microsoft Outlook1",
+      "webhookId": "e9c53466-e64d-4a1a-b342-7e3992ecf8d7",
+      "credentials": {
+        "microsoftOutlookOAuth2Api": {
+          "id": "1e9fbzjIiV9wNv2j",
+          "name": "Microsoft Outlook account - azure@canteradigital.mx"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "event",
+        "operation": "create",
+        "calendarId": {
+          "__rl": true,
+          "value": "AAMkADJjODdjYzYzLWI0NDMtNDJlMi1hZmY0LTY3ODFlNzBjNWZmMQBGAAAAAACsqiPeTLOgRbuS-1o5VhlcBwDn26jhz37URKH2Im_c8w6PAAAAAAEGAADn26jhz37URKH2Im_c8w6PAAAAAO4wAAA=",
+          "mode": "list",
+          "cachedResultName": "Calendar"
+        },
+        "subject": "={{ $('Text Classifier').item.json.resumen_propuesta }}",
+        "startDateTime": "={{ $('Information Extractor').item.json.output.fecha_inicio_meet }}",
+        "endDateTime": "={{ $('Information Extractor').item.json.output.fecha_fin_meet }}",
+        "additionalFields": {
+          "body": "={{ $('Text Classifier').item.json.resumen_propuesta }} para {{ $('Text Classifier').item.json.nombre_empresa }}",
+          "bodyPreview": "={{ $('Text Classifier').item.json.resumen_propuesta }} para {{ $('Text Classifier').item.json.nombre_empresa }}",
+          "type": "singleInstance"
+        }
+      },
+      "type": "n8n-nodes-base.microsoftOutlook",
+      "typeVersion": 2,
+      "position": [
+        2680,
+        -300
+      ],
+      "id": "621bdb81-21cd-42de-823a-1ef23bab65db",
+      "name": "Microsoft Outlook2",
+      "webhookId": "29b0ddf6-d6e6-4c2c-a78b-e2ebd520beb8",
+      "credentials": {
+        "microsoftOutlookOAuth2Api": {
+          "id": "1e9fbzjIiV9wNv2j",
+          "name": "Microsoft Outlook account - azure@canteradigital.mx"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "toRecipients": "={{ $('When Executed by Another Workflow').item.json.email_cliente }}",
+        "subject": "=En Cantera Tenemos una Porpuesta Increíble {{ $('When Executed by Another Workflow').item.json.email_cliente }}",
+        "bodyContent": "=Hola {{ $('When Executed by Another Workflow').item.json.nombre_cliente }} !  Tenemos una propuesta lista para presentarte  una solución de  {{ $('When Executed by Another Workflow').item.json.resumen_propuesta }} para {{ $('When Executed by Another Workflow').item.json.nombre_empresa }}.  Como nos pediste nos vemos el  {{ $('When Executed by Another Workflow').item.json.dia_meet }}  en este enlace  {{ $json.webLink }} Nos vemos!  \n\nJanneth Cano\nDirectora Comercial\nCantera Digital\n\n \n ",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.microsoftOutlook",
+      "typeVersion": 2,
+      "position": [
+        2900,
+        -300
+      ],
+      "id": "6eedbc9e-4eaa-4508-8353-cc29424f53c5",
+      "name": "Microsoft Outlook3",
+      "webhookId": "e9c53466-e64d-4a1a-b342-7e3992ecf8d7",
+      "credentials": {
+        "microsoftOutlookOAuth2Api": {
+          "id": "1e9fbzjIiV9wNv2j",
+          "name": "Microsoft Outlook account - azure@canteradigital.mx"
+        }
+      }
     },
     {
       "parameters": {
         "operation": "send",
         "phoneNumberId": "676686782186843",
-        "recipientPhoneNumber": "={{ $('Text Classifier').item.json.telefono_usuario }}",
-        "messageType": "video",
-        "mediaPath": "useMediaId",
-        "mediaId": "={{ $json.id }}",
-        "additionalFields": {
-          "mediaCaption": "Mira este chat que ter permite preguntarle a tus base de datos,  ERP , o hasta tus excel! con datos seguros y privados sólo con Savant!"
-        }
+        "recipientPhoneNumber": "={{ $('Text Classifier').item.json.telefono_cliente }}",
+        "textBody": "=Perfecto! ya te envié un correo con todos los detalles de nuestra presentación! nos vemos el  {{ $('When Executed by Another Workflow').item.json.dia_meet }} a las {{ $('When Executed by Another Workflow').item.json.hora_inicio_meet }}. Estamos seguros que te sorprenderá nuestra propuesta.",
+        "additionalFields": {}
       },
       "type": "n8n-nodes-base.whatsApp",
       "typeVersion": 1,
       "position": [
-        1940,
-        820
+        4220,
+        -260
       ],
-      "id": "a2bae12b-6c00-4330-9f9c-74750ba94b8c",
-      "name": "WhatsApp Business Cloud16",
-      "webhookId": "380fee7d-0e95-438f-8eeb-72bef6252df1",
+      "id": "d6973de8-5afc-42d0-83e6-bf7d43b2848c",
+      "name": "WhatsApp Business Cloud",
+      "webhookId": "74eb5a43-3c5e-4e6d-8de7-12d915a33100",
       "credentials": {
         "whatsAppApi": {
           "id": "wss31GmBkFCO7IfF",
@@ -821,7 +732,7 @@
       "main": [
         [
           {
-            "node": "Google Calendar1",
+            "node": "Microsoft Outlook2",
             "type": "main",
             "index": 0
           }
@@ -854,7 +765,7 @@
       "main": [
         [
           {
-            "node": "Google Calendar",
+            "node": "Microsoft Outlook",
             "type": "main",
             "index": 0
           }
@@ -898,54 +809,6 @@
       "main": [
         [
           {
-            "node": "HTTP Request6",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "HTTP Request7",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Google Calendar": {
-      "main": [
-        [
-          {
-            "node": "Gmail",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Gmail": {
-      "main": [
-        []
-      ]
-    },
-    "Google Calendar1": {
-      "main": [
-        [
-          {
-            "node": "Gmail1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Gmail1": {
-      "main": [
-        []
-      ]
-    },
-    "WhatsApp Business Cloud13": {
-      "main": [
-        [
-          {
             "node": "WhatsApp Business Cloud14",
             "type": "main",
             "index": 0
@@ -953,33 +816,44 @@
         ]
       ]
     },
-    "HTTP Request6": {
+    "Microsoft Outlook": {
       "main": [
         [
           {
-            "node": "WhatsApp Business Cloud13",
+            "node": "Microsoft Outlook1",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "WhatsApp Business Cloud15": {
+    "Microsoft Outlook2": {
       "main": [
         [
           {
-            "node": "WhatsApp Business Cloud16",
+            "node": "Microsoft Outlook3",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "HTTP Request7": {
+    "Microsoft Outlook1": {
       "main": [
         [
           {
-            "node": "WhatsApp Business Cloud15",
+            "node": "WhatsApp Business Cloud",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Microsoft Outlook3": {
+      "main": [
+        [
+          {
+            "node": "WhatsApp Business Cloud",
             "type": "main",
             "index": 0
           }
@@ -991,9 +865,28 @@
     "executionOrder": "v1"
   },
   "staticData": null,
-  "meta": null,
-  "pinData": {},
-  "versionId": "ce313854-86b8-4ef4-8e4b-01e4c4da0ab4",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {
+    "When Executed by Another Workflow": [
+      {
+        "json": {
+          "time_zone": "America/Mexico_City",
+          "nombre_cliente": "Vladimir Diaz",
+          "email_cliente": "vdiazcas@ford.com",
+          "telefono_cliente": "5215583139537",
+          "nombre_empresa": "Ford",
+          "dia_meet": "30/05/2025",
+          "resumen_propuesta": "Desarrollo de IA Increible",
+          "hora_inicio_meet": "14:00",
+          "requerimiento_cliente": "Necesidad de implementar un sistema de control de acceso para empleados, visitantes y proveedores, utilizando reconocimiento facial y códigos QR.",
+          "perfilado_de_cliente": "Empresa ubicada en Querétaro, con 100 empleados, el director de seguridad y acceso es Vladimir Diaz."
+        }
+      }
+    ]
+  },
+  "versionId": "c4af951c-c271-4210-8b23-cbd01337d197",
   "triggerCount": 0,
   "shared": [
     {
