@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-05-13T21:22:38.125Z",
-  "updatedAt": "2025-05-13T22:04:57.000Z",
+  "updatedAt": "2025-05-29T16:59:40.000Z",
   "id": "A97j1NIcV31TR5Mn",
   "name": "Agente Cantera - Agenda Meet",
   "active": false,
@@ -42,17 +42,948 @@
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "typeVersion": 1.1,
       "position": [
-        -480,
-        -40
+        -820,
+        -60
       ],
       "id": "15955f09-1dd3-4b52-8a3d-2d0cc73f1533",
       "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "inputText": "=Esta empresa {{ $json.resumen_propuesta }} , tiene este requerimiento {{ $json.resumen_propuesta }} y este perfilado {{ $json.perfilado_lead }}",
+        "categories": {
+          "categories": [
+            {
+              "category": "lead_calificado",
+              "description": "leads que tienen que ver con ai, software, tecnologia, desarrollo de soluciones"
+            }
+          ]
+        },
+        "options": {
+          "fallback": "other"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.textClassifier",
+      "typeVersion": 1,
+      "position": [
+        140,
+        -160
+      ],
+      "id": "f0d7d676-db96-46d8-99ff-b242266bb18e",
+      "name": "Text Classifier"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-3.5-turbo",
+          "mode": "list",
+          "cachedResultName": "gpt-3.5-turbo"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        40,
+        120
+      ],
+      "id": "468b1384-4350-4761-bcff-c0dd8d2f243b",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "ZmWqQ5PGylh4Y05s",
+          "name": "OpenAi account - CANTERA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "f1094c47-4084-4268-9026-ccc0335eeccf",
+              "operator": {
+                "type": "dateTime",
+                "operation": "notExists",
+                "singleValue": true
+              },
+              "leftValue": "={{ $json.id }}",
+              "rightValue": ""
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "73e89b24-3e51-41c7-bead-6361b29af3fd",
+      "name": "es un nuevo Lead?",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        1840,
+        -380
+      ],
+      "executeOnce": true,
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "resource": "organization",
+        "name": "={{ $('When Executed by Another Workflow').item.json.nombre_empresa }}",
+        "additionalFields": {
+          "label": 12
+        }
+      },
+      "type": "n8n-nodes-base.pipedrive",
+      "typeVersion": 1,
+      "position": [
+        2260,
+        -600
+      ],
+      "id": "2a9c218e-c76d-4234-acd9-d8f2af7def23",
+      "name": "Pipedrive crea organizacion",
+      "credentials": {
+        "pipedriveApi": {
+          "id": "u1nSP6JjPxyjAtcV",
+          "name": "Pipedrive account - CANTERA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "person",
+        "operation": "search",
+        "term": "={{ $('When Executed by Another Workflow').item.json.email_usuario }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.pipedrive",
+      "typeVersion": 1,
+      "position": [
+        1560,
+        -360
+      ],
+      "id": "b165b450-8446-4ed7-8620-db3bc25eb436",
+      "name": "Pipedrive Contacto Actual",
+      "alwaysOutputData": true,
+      "credentials": {
+        "pipedriveApi": {
+          "id": "u1nSP6JjPxyjAtcV",
+          "name": "Pipedrive account - CANTERA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "title": "={{ $('Text Classifier').item.json.perfilado_lead }}",
+        "org_id": "={{ $('Pipedrive Contacto Actual').item.json.organization.id }}",
+        "additionalFields": {
+          "currency": "USD",
+          "customProperties": {
+            "property": [
+              {
+                "name": "580d376db007ebe2ba11bd6509338e4d7db10fdf",
+                "value": "El requerimiento es:{{ $('Text Classifier').item.json.resumen_propuesta }}  La estimación y análisis: {{ $('Information Extractor').item.json.output.detail_of_estimation }}  El Perfil de la empresa :{{ $('Text Classifier').item.json.perfilado_Lead }}"
+              },
+              {
+                "name": "4370b1a0393484892305673f903e7309998c9f08",
+                "value": "={{ $('Text Classifier').item.json.value }}   "
+              }
+            ]
+          },
+          "probability": "={{ $('Information Extractor').item.json.output.propability }}",
+          "stage_id": 1,
+          "status": "open",
+          "value": "={{ $('Information Extractor').item.json.output.value }}"
+        }
+      },
+      "type": "n8n-nodes-base.pipedrive",
+      "typeVersion": 1,
+      "position": [
+        2280,
+        -320
+      ],
+      "id": "90662181-be88-467b-b020-6f7f479594a4",
+      "name": "Pipedrive registra deal",
+      "credentials": {
+        "pipedriveApi": {
+          "id": "u1nSP6JjPxyjAtcV",
+          "name": "Pipedrive account - CANTERA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "person",
+        "name": "={{ $('When Executed by Another Workflow').item.json.nombre_usuaior }}",
+        "additionalFields": {
+          "email": [
+            "={{ $('When Executed by Another Workflow').item.json.email_usuario }}"
+          ],
+          "label": 16,
+          "marketing_status": "subscribed",
+          "org_id": "={{ $json.id }}",
+          "phone": [
+            "={{ $('When Executed by Another Workflow').item.json.telefono_usuario }}"
+          ],
+          "visible_to": "3"
+        }
+      },
+      "type": "n8n-nodes-base.pipedrive",
+      "typeVersion": 1,
+      "position": [
+        2600,
+        -600
+      ],
+      "id": "f4025f11-c8b6-4c3c-acec-7d34d7d03583",
+      "name": "Pipedrive Crea Persona",
+      "credentials": {
+        "pipedriveApi": {
+          "id": "u1nSP6JjPxyjAtcV",
+          "name": "Pipedrive account - CANTERA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "title": "={{ $('Text Classifier').item.json.perfilado_lead }}",
+        "org_id": "={{ $('Pipedrive crea organizacion').item.json.id }}",
+        "additionalFields": {
+          "currency": "USD",
+          "customProperties": {
+            "property": [
+              {
+                "name": "580d376db007ebe2ba11bd6509338e4d7db10fdf",
+                "value": "=El requerimiento es:{{ $('Text Classifier').item.json.resumen_propuesta }} \nLa estimación y análisis: {{ $('Information Extractor').item.json.output.detail_of_estimation }}\n\nEl Perfil de la empresa :{{ $('Text Classifier').item.json.perfilado_Lead }}"
+              },
+              {
+                "name": "4370b1a0393484892305673f903e7309998c9f08",
+                "value": "={{ $('Information Extractor').item.json.output.value }}"
+              }
+            ]
+          },
+          "person_id": "={{ $json.id }}",
+          "probability": "={{ $('Information Extractor').item.json.output.propability }}",
+          "stage_id": 1,
+          "status": "open",
+          "value": "={{ $('Information Extractor').item.json.output.value }}"
+        }
+      },
+      "type": "n8n-nodes-base.pipedrive",
+      "typeVersion": 1,
+      "position": [
+        2960,
+        -600
+      ],
+      "id": "07e474a8-e620-432f-976b-f0a3265ec6bb",
+      "name": "Pipedrive Crea Deal 2",
+      "credentials": {
+        "pipedriveApi": {
+          "id": "u1nSP6JjPxyjAtcV",
+          "name": "Pipedrive account - CANTERA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "lead",
+        "title": "={{ $('Text Classifier').item.json.perfilado_lead }}",
+        "organization_id": "={{ $('Pipedrive crea organizacion').item.json.id }}",
+        "additionalFields": {
+          "label_ids": [
+            "266e833f-564f-4517-8a62-8e54c40bfe0f"
+          ],
+          "person_id": "={{ $('Pipedrive Crea Persona').item.json.id }}"
+        }
+      },
+      "type": "n8n-nodes-base.pipedrive",
+      "typeVersion": 1,
+      "position": [
+        3240,
+        -600
+      ],
+      "id": "b6fe79e5-97bd-4d8a-aa62-4fe307d13df8",
+      "name": "Pipedrive Crea LEAD",
+      "credentials": {
+        "pipedriveApi": {
+          "id": "u1nSP6JjPxyjAtcV",
+          "name": "Pipedrive account - CANTERA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4",
+          "mode": "list",
+          "cachedResultName": "GPT-4"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=datos de la empresa: {{ $json.nombre_empresa }}\npropuesta : {{ $('When Executed by Another Workflow').item.json.resumen_propuesta }}\nperfil empresa:  {{ $('When Executed by Another Workflow').item.json.perfilado_lead }}\nfecha de la reunion: {{ $json.fecha_hora_meet }}. "
+            },
+            {
+              "content": "eres un cotizador de sistemas y proyectos de it y te voy a dar datos de una empresa, un requieriiento de IT  y  el perfil de laempresa, y tu debes estimar tres variables: probabilidad de cierre, esta probabilidad es de 0a 1 donde 1 es muy posible de que se cierre y que sea factible, esto debes asociarlo a la complejidad del proyecto  asume  que somos una mepresa de software cn ai agentes y mas de 200 desarrolladores de sofgtare. sel segundo valor, un estimado deen dolares del total de este proyecto de sarrollo mas infrastructura mas consultoria, debes estimas esos 2 valores . el usuari ote dara datos de y debes responder con estos datos. ademas sustenta tu analiss buscando  datos de esta empersa en internaet y estima el tamño y proyectos de esta empresa. crea una propuesta de componente tecnologias y personal requerido para ejecutar este proyecto de forma preliminar , diecndo que hace falta reunirse con el cliente para acotar esto. genera ranbirn la fecha y hora de inicio y fecha y hora de fin 30 minutos  depues de iniciado la reunion. el formato de la fecha debe ser yyyy-mm-dd hh:mm:ss",
+              "role": "system"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        800,
+        -260
+      ],
+      "id": "c5adafb5-afd6-4382-bb02-201986765ff4",
+      "name": "OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "ZmWqQ5PGylh4Y05s",
+          "name": "OpenAi account - CANTERA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "text": "={{ $json.message.content }}",
+        "attributes": {
+          "attributes": [
+            {
+              "name": "value",
+              "type": "number",
+              "description": "integer value of the usd value estimated of the project witout money symbol only number",
+              "required": true
+            },
+            {
+              "name": "propability",
+              "type": "number",
+              "description": "value  of probality of close this deal",
+              "required": true
+            },
+            {
+              "name": "detail_of_estimation",
+              "description": "detailed explain of the estimation",
+              "required": true
+            },
+            {
+              "name": "fecha_inicio_meet",
+              "description": "fecha de inicio del meet en formato yyyy-mm-dd hh:ii:ss  ",
+              "required": true
+            },
+            {
+              "name": "fecha_fin_meet",
+              "description": "fecha de fin del meet en formato yyyy-mm-dd hh:ii:ss  ",
+              "required": true
+            }
+          ]
+        },
+        "options": {
+          "systemPromptTemplate": "You are an expert extraction algorithm.\nOnly extract relevant information from the text.\nIf you do not know the value of an attribute asked to extract, you may omit the attribute's value. redacta todo en español"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.informationExtractor",
+      "typeVersion": 1,
+      "position": [
+        1160,
+        -260
+      ],
+      "id": "63e46f6c-212a-4d20-8468-a831c9332f19",
+      "name": "Information Extractor"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-3.5-turbo",
+          "mode": "list",
+          "cachedResultName": "gpt-3.5-turbo"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        1200,
+        -40
+      ],
+      "id": "c74075a9-eaca-4582-8dc4-c19fbfefd614",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "ZmWqQ5PGylh4Y05s",
+          "name": "OpenAi account - CANTERA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4",
+          "mode": "list",
+          "cachedResultName": "GPT-4"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=datos de la empresa: {{ $json.nombre_empresa }}\npropuesta : {{ $('When Executed by Another Workflow').item.json.resumen_propuesta }}\nperfil empresa:  {{ $('When Executed by Another Workflow').item.json.perfilado_lead }}\nfecha de la reunion: {{ $json.fecha_hora_meet }}. "
+            },
+            {
+              "content": "Responde amablemente que por ahora no tenemos una ofrta para empresas pymes, pero responde con recomeandaciones de solcuion opnesource para su requerimientio de proyecto, crea 3 propuesta de implementacion que puede hacer con soluciones de open ai, python o similares. dile que igualmente un  contacto de nesutro equipo comercial le contarcara para hacerle una propuesta  de implemntacion ",
+              "role": "system"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        700,
+        180
+      ],
+      "id": "fd23a9da-9354-48b9-84a1-1b9ed6d1b0f5",
+      "name": "OpenAI1",
+      "credentials": {
+        "openAiApi": {
+          "id": "ZmWqQ5PGylh4Y05s",
+          "name": "OpenAi account - CANTERA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "phoneNumberId": "676686782186843",
+        "recipientPhoneNumber": "={{ $('When Executed by Another Workflow').item.json.telefono_usuario }}",
+        "textBody": "Dame 30 segundos para analizar tu requerimiento",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1,
+      "position": [
+        180,
+        -720
+      ],
+      "id": "d236627e-0bb7-4e9e-ab41-63ddc28f8bd5",
+      "name": "WhatsApp Business Cloud6",
+      "webhookId": "c6d9ff94-3e7d-442f-a123-6522e6cad587",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "wss31GmBkFCO7IfF",
+          "name": "WhatsApp account - AGENTE CANTERA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "calendar": {
+          "__rl": true,
+          "value": "vladimir@essavant.com",
+          "mode": "list",
+          "cachedResultName": "vladimir@essavant.com"
+        },
+        "start": "={{ $('Information Extractor').item.json.output.fecha_inicio_meet }}",
+        "end": "={{ $('Information Extractor').item.json.output.fecha_fin_meet }}",
+        "additionalFields": {
+          "attendees": [
+            "={{ $('When Executed by Another Workflow').item.json.email_usuario }}",
+            "corpo@essavant.com"
+          ],
+          "color": "3",
+          "conferenceDataUi": {
+            "conferenceDataValues": {
+              "conferenceSolution": "hangoutsMeet"
+            }
+          },
+          "description": "={{ $('Text Classifier').item.json.resumen_propuesta }} para {{ $('Text Classifier').item.json.nombre_empresa }}",
+          "guestsCanInviteOthers": true,
+          "showMeAs": "opaque",
+          "summary": "={{ $('Text Classifier').item.json.resumen_propuesta }}"
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [
+        3520,
+        -600
+      ],
+      "id": "a7cf1170-03fd-4e28-9ce4-642fc992a411",
+      "name": "Google Calendar"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('When Executed by Another Workflow').item.json.email_usuario }}",
+        "subject": "En SAVANT Tenemos Solución para Tí",
+        "message": "=Hola {{ $('Text Classifier').item.json.nombre_usuaior }} !  Tenemos una propuesta lista para presentarte y nos gustaría {{ $('Text Classifier').item.json.resumen_propuesta }} de {{ $('Text Classifier').item.json.nombre_empresa }}.  Como nos pediste nos vemos el  {{ $('Text Classifier').item.json.fecha_hora_meet }} en este enlace  {{ $json.conferenceData.entryPoints[0].uri }}   Nos vemos!  Rafael Herrera  Director General   Savant \n\n\n{{ $json.htmlLink }}\n\n{{ $json.conferenceData.entryPoints[1].uri }}",
+        "options": {
+          "appendAttribution": false,
+          "ccList": "corpo@essavant.com",
+          "senderName": "SAVANT AI Para tu empresa YA!"
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        3740,
+        -600
+      ],
+      "id": "2851555a-496e-46f7-a26e-293340a61992",
+      "name": "Gmail",
+      "webhookId": "bbf0afea-3ffd-4287-a09e-41cd249791dc"
+    },
+    {
+      "parameters": {
+        "calendar": {
+          "__rl": true,
+          "value": "vladimir@essavant.com",
+          "mode": "list",
+          "cachedResultName": "vladimir@essavant.com"
+        },
+        "start": "={{ $('Information Extractor').item.json.output.fecha_inicio_meet }}",
+        "end": "={{ $('Information Extractor').item.json.output.fecha_fin_meet }}",
+        "additionalFields": {
+          "attendees": [
+            "={{ $('When Executed by Another Workflow').item.json.email_usuario }}",
+            "corpo@essavant.com"
+          ],
+          "color": "3",
+          "conferenceDataUi": {
+            "conferenceDataValues": {
+              "conferenceSolution": "hangoutsMeet"
+            }
+          },
+          "description": "={{ $('Text Classifier').item.json.resumen_propuesta }} para {{ $('Text Classifier').item.json.nombre_empresa }}",
+          "guestsCanInviteOthers": true,
+          "showMeAs": "opaque",
+          "summary": "={{ $('Text Classifier').item.json.resumen_propuesta }}"
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [
+        2700,
+        0
+      ],
+      "id": "44aa0421-b44d-4cd8-9520-ee8a8c442cb7",
+      "name": "Google Calendar1"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('When Executed by Another Workflow').item.json.email_usuario }}",
+        "subject": "En SAVANT Tenemos Solución para Tí",
+        "message": "=Hola {{ $('Text Classifier').item.json.nombre_usuaior }} !  Tenemos una propuesta lista para presentarte y nos gustaría {{ $('Text Classifier').item.json.resumen_propuesta }} de {{ $('Text Classifier').item.json.nombre_empresa }}.  Como nos pediste nos vemos el  {{ $('Text Classifier').item.json.fecha_hora_meet }} en este enlace  {{ $json.webLink }}  Nos vemos!  Rafael Herrera  Director General   Savant  {{ $json.onlineMeeting.joinUrl }}",
+        "options": {
+          "appendAttribution": false,
+          "ccList": "corpo@essavant.com",
+          "senderName": "SAVANT AI Para tu empresa YA!"
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        2920,
+        0
+      ],
+      "id": "bfa57d16-711c-4a23-a743-8358261dac23",
+      "name": "Gmail1",
+      "webhookId": "bbf0afea-3ffd-4287-a09e-41cd249791dc"
+    },
+    {
+      "parameters": {
+        "resource": "media",
+        "phoneNumberId": "676686782186843",
+        "additionalFields": {
+          "mediaFileName": "vision3.mp4"
+        }
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1,
+      "position": [
+        1680,
+        360
+      ],
+      "id": "98089486-7d2f-44be-8b8e-a8ed6e04795d",
+      "name": "WhatsApp Business Cloud13",
+      "webhookId": "3baabad1-c441-4a96-8a75-bf4b7a256b02",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "wss31GmBkFCO7IfF",
+          "name": "WhatsApp account - AGENTE CANTERA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "http://essavant.com/vision_SAcnzFe0.mp4",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1300,
+        340
+      ],
+      "id": "0b3f46ed-e45b-473b-9553-c48bfe871c63",
+      "name": "HTTP Request6"
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "phoneNumberId": "577941458736637",
+        "recipientPhoneNumber": "={{ $('Text Classifier').item.json.telefono_usuario }}",
+        "messageType": "video",
+        "mediaPath": "useMediaId",
+        "mediaId": "={{ $json.id }}",
+        "additionalFields": {
+          "mediaCaption": "Nos vemos pronto. el momento es AHORA con SAVANT"
+        }
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1,
+      "position": [
+        1900,
+        360
+      ],
+      "id": "1b260592-3521-4a78-8776-06581c1f4120",
+      "name": "WhatsApp Business Cloud14",
+      "webhookId": "74eb5a43-3c5e-4e6d-8de7-12d915a33100",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "wss31GmBkFCO7IfF",
+          "name": "WhatsApp account - AGENTE CANTERA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "media",
+        "phoneNumberId": "676686782186843",
+        "additionalFields": {
+          "mediaFileName": "vision3.mp4"
+        }
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1,
+      "position": [
+        1700,
+        860
+      ],
+      "id": "55c23de8-1372-41da-a2bc-5b5e3b6244da",
+      "name": "WhatsApp Business Cloud15",
+      "webhookId": "fbb605dc-a31a-4423-8c7c-d0e3eac7cd9d",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "wss31GmBkFCO7IfF",
+          "name": "WhatsApp account - AGENTE CANTERA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "https://essavant.com/3.mp4",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1300,
+        800
+      ],
+      "id": "cd4ef082-fdd8-4330-9485-6b1ef1e2c635",
+      "name": "HTTP Request7"
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "phoneNumberId": "676686782186843",
+        "recipientPhoneNumber": "={{ $('Text Classifier').item.json.telefono_usuario }}",
+        "messageType": "video",
+        "mediaPath": "useMediaId",
+        "mediaId": "={{ $json.id }}",
+        "additionalFields": {
+          "mediaCaption": "Mira este chat que ter permite preguntarle a tus base de datos,  ERP , o hasta tus excel! con datos seguros y privados sólo con Savant!"
+        }
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1,
+      "position": [
+        1940,
+        820
+      ],
+      "id": "a2bae12b-6c00-4330-9f9c-74750ba94b8c",
+      "name": "WhatsApp Business Cloud16",
+      "webhookId": "380fee7d-0e95-438f-8eeb-72bef6252df1",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "wss31GmBkFCO7IfF",
+          "name": "WhatsApp account - AGENTE CANTERA"
+        }
+      }
     }
   ],
   "connections": {
     "When Executed by Another Workflow": {
       "main": [
+        [
+          {
+            "node": "WhatsApp Business Cloud6",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Text Classifier",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Text Classifier": {
+      "main": [
+        [
+          {
+            "node": "OpenAI",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "OpenAI1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Text Classifier",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "es un nuevo Lead?": {
+      "main": [
+        [
+          {
+            "node": "Pipedrive crea organizacion",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Pipedrive registra deal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pipedrive crea organizacion": {
+      "main": [
+        [
+          {
+            "node": "Pipedrive Crea Persona",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pipedrive Contacto Actual": {
+      "main": [
+        [
+          {
+            "node": "es un nuevo Lead?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pipedrive registra deal": {
+      "main": [
+        [
+          {
+            "node": "Google Calendar1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pipedrive Crea Persona": {
+      "main": [
+        [
+          {
+            "node": "Pipedrive Crea Deal 2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pipedrive Crea Deal 2": {
+      "main": [
+        [
+          {
+            "node": "Pipedrive Crea LEAD",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pipedrive Crea LEAD": {
+      "main": [
+        [
+          {
+            "node": "Google Calendar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI": {
+      "main": [
+        [
+          {
+            "node": "Information Extractor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Information Extractor": {
+      "main": [
+        [
+          {
+            "node": "Pipedrive Contacto Actual",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Information Extractor",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI1": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request6",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "HTTP Request7",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Calendar": {
+      "main": [
+        [
+          {
+            "node": "Gmail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail": {
+      "main": [
         []
+      ]
+    },
+    "Google Calendar1": {
+      "main": [
+        [
+          {
+            "node": "Gmail1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail1": {
+      "main": [
+        []
+      ]
+    },
+    "WhatsApp Business Cloud13": {
+      "main": [
+        [
+          {
+            "node": "WhatsApp Business Cloud14",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request6": {
+      "main": [
+        [
+          {
+            "node": "WhatsApp Business Cloud13",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "WhatsApp Business Cloud15": {
+      "main": [
+        [
+          {
+            "node": "WhatsApp Business Cloud16",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request7": {
+      "main": [
+        [
+          {
+            "node": "WhatsApp Business Cloud15",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     }
   },
@@ -62,7 +993,7 @@
   "staticData": null,
   "meta": null,
   "pinData": {},
-  "versionId": "a26e53ed-1e35-4a01-bae5-64efd93b5b2d",
+  "versionId": "ce313854-86b8-4ef4-8e4b-01e4c4da0ab4",
   "triggerCount": 0,
   "shared": [
     {
