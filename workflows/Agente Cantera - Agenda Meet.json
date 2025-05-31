@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-05-13T21:22:38.125Z",
-  "updatedAt": "2025-05-31T00:00:04.000Z",
+  "updatedAt": "2025-05-31T00:21:10.000Z",
   "id": "A97j1NIcV31TR5Mn",
   "name": "Agente Cantera - Agenda Meet",
   "active": false,
@@ -464,8 +464,8 @@
       "type": "n8n-nodes-base.whatsApp",
       "typeVersion": 1,
       "position": [
-        200,
-        -420
+        160,
+        -380
       ],
       "id": "d236627e-0bb7-4e9e-ab41-63ddc28f8bd5",
       "name": "WhatsApp Business Cloud6",
@@ -523,8 +523,8 @@
       "type": "n8n-nodes-base.microsoftOutlook",
       "typeVersion": 2,
       "position": [
-        3540,
-        -600
+        3520,
+        -440
       ],
       "id": "a8abed5f-361a-4320-9252-2b7c2960b3fe",
       "name": "Microsoft Outlook",
@@ -534,7 +534,8 @@
           "id": "1e9fbzjIiV9wNv2j",
           "name": "Microsoft Outlook account - azure@canteradigital.mx"
         }
-      }
+      },
+      "disabled": true
     },
     {
       "parameters": {
@@ -581,8 +582,8 @@
       "type": "n8n-nodes-base.microsoftOutlook",
       "typeVersion": 2,
       "position": [
-        2680,
-        -300
+        2980,
+        0
       ],
       "id": "621bdb81-21cd-42de-823a-1ef23bab65db",
       "name": "Microsoft Outlook2",
@@ -592,20 +593,21 @@
           "id": "1e9fbzjIiV9wNv2j",
           "name": "Microsoft Outlook account - azure@canteradigital.mx"
         }
-      }
+      },
+      "disabled": true
     },
     {
       "parameters": {
         "toRecipients": "={{ $('When Executed by Another Workflow').item.json.email_cliente }}",
         "subject": "=En Cantera Tenemos una Porpuesta Increíble {{ $('When Executed by Another Workflow').item.json.email_cliente }}",
-        "bodyContent": "=Hola {{ $('When Executed by Another Workflow').item.json.nombre_cliente }} !  Tenemos una propuesta lista para presentarte  una solución de  {{ $('When Executed by Another Workflow').item.json.resumen_propuesta }} para {{ $('When Executed by Another Workflow').item.json.nombre_empresa }}.  Como nos pediste nos vemos el  {{ $('When Executed by Another Workflow').item.json.dia_meet }}  en este enlace  {{ $json.webLink }} Nos vemos!  \n\nJanneth Cano\nDirectora Comercial\nCantera Digital\n\n \n ",
+        "bodyContent": "=Hola {{ $('When Executed by Another Workflow').item.json.nombre_cliente }} !  Tenemos una propuesta lista para presentarte  una solución de  {{ $('When Executed by Another Workflow').item.json.resumen_propuesta }} para {{ $('When Executed by Another Workflow').item.json.nombre_empresa }}. En los próximos minutos te contactáremos para confirmar la fecha y hora de nuestra junta.\n\nJanneth Cano\nDirectora Comercial\nCantera Digital\n\n \n ",
         "additionalFields": {}
       },
       "type": "n8n-nodes-base.microsoftOutlook",
       "typeVersion": 2,
       "position": [
-        2900,
-        -300
+        3800,
+        -200
       ],
       "id": "6eedbc9e-4eaa-4508-8353-cc29424f53c5",
       "name": "Microsoft Outlook3",
@@ -653,7 +655,7 @@
         },
         "message": "=Tenemos nuevo Lead\n\nCliente:  {{ $('When Executed by Another Workflow').item.json.nombre_cliente }}\nEmpresa: {{ $('When Executed by Another Workflow').item.json.nombre_empresa }}\n\nRequerimiento: {{ $('When Executed by Another Workflow').item.json.requerimiento_cliente }}\nPropuesta: {{ $('When Executed by Another Workflow').item.json.resumen_propuesta }}\nPerfilado de cliente: {{ $('When Executed by Another Workflow').item.json.perfilado_de_cliente }}\nEstimación Inicial: {{ $json.output.detail_of_estimation }}\nValor del Lead: {{ $json.output.value }} USD\nProbablidad de Cierre:  {{ $json.output.propability*100 }} %\n\nJunta Solicitada: {{ $json.output.fecha_inicio_meet }}\nCorreo enviado a Janneth Cano\n",
         "options": {
-          "includeLinkToWorkflow": true
+          "includeLinkToWorkflow": false
         }
       },
       "type": "n8n-nodes-base.microsoftTeams",
@@ -698,6 +700,30 @@
         "microsoftTeamsOAuth2Api": {
           "id": "aCoVuwLpygun9hxH",
           "name": "Microsoft Teams account - cantera"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "phoneNumberId": "676686782186843",
+        "recipientPhoneNumber": "=+52 1 55 3551 6913",
+        "textBody": "=Hola Jan:\nTenemos nuevo Lead\n\nCliente:  {{ $('When Executed by Another Workflow').item.json.nombre_cliente }}\nEmpresa: {{ $('When Executed by Another Workflow').item.json.nombre_empresa }}\n\nRequerimiento: {{ $('When Executed by Another Workflow').item.json.requerimiento_cliente }}\nPropuesta: {{ $('When Executed by Another Workflow').item.json.resumen_propuesta }}\nPerfilado de cliente: {{ $('When Executed by Another Workflow').item.json.perfilado_de_cliente }}\nEstimación Inicial: {{ $json.output.detail_of_estimation }}\nValor del Lead: {{ $json.output.value }} USD\nProbablidad de Cierre:  {{ $json.output.propability*100 }} %\n\nJunta Solicitada: {{ $json.output.fecha_inicio_meet }}\nCorreo enviado a Janneth Cano\n",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1,
+      "position": [
+        2060,
+        460
+      ],
+      "id": "fc274976-48e9-4074-a7ae-a83da756a79c",
+      "name": "WhatsApp Business Cloud15",
+      "webhookId": "74eb5a43-3c5e-4e6d-8de7-12d915a33100",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "wss31GmBkFCO7IfF",
+          "name": "WhatsApp account - AGENTE CANTERA"
         }
       }
     }
@@ -792,7 +818,7 @@
       "main": [
         [
           {
-            "node": "Microsoft Outlook2",
+            "node": "Microsoft Outlook3",
             "type": "main",
             "index": 0
           }
@@ -825,7 +851,7 @@
       "main": [
         [
           {
-            "node": "Microsoft Outlook",
+            "node": "Microsoft Outlook1",
             "type": "main",
             "index": 0
           }
@@ -860,6 +886,11 @@
             "node": "Microsoft Teams2",
             "type": "main",
             "index": 0
+          },
+          {
+            "node": "WhatsApp Business Cloud15",
+            "type": "main",
+            "index": 0
           }
         ]
       ]
@@ -888,24 +919,12 @@
     },
     "Microsoft Outlook": {
       "main": [
-        [
-          {
-            "node": "Microsoft Outlook1",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "Microsoft Outlook2": {
       "main": [
-        [
-          {
-            "node": "Microsoft Outlook3",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "Microsoft Outlook1": {
@@ -939,7 +958,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "830974e6-de3d-4008-8b1b-7bc6b5744d62",
+  "versionId": "0094a7be-8e92-4b6e-82ae-8f7b23bf1121",
   "triggerCount": 0,
   "shared": [
     {
