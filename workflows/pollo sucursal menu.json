@@ -1,0 +1,301 @@
+{
+  "createdAt": "2025-05-30T23:10:28.666Z",
+  "updatedAt": "2025-05-30T23:10:35.000Z",
+  "id": "hzU0NLFBpGfwkEJ8",
+  "name": "pollo sucursal menu",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "codigo_postal"
+            }
+          ]
+        }
+      },
+      "id": "c012f322-4abf-4248-9f7b-e5bb80b97f7c",
+      "typeVersion": 1.1,
+      "name": "When Executed by Another Workflow",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "position": [
+        -1420,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Formatea el texto para tener los datos de la sucursal, y tambien el menu bien descrito, este es el menu la foto del producto no es necesaria.\n\nestos son los datos de la sucursal :\n\n{{ $('Datos_sucursal').item.json.nombre_sucursal }}\ny este es el menu : {{ $json.formattedMessage }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        0,
+        0
+      ],
+      "id": "f1c0fc68-f664-4edb-97a4-8cb525b5ca24",
+      "name": "Busca menu"
+    },
+    {
+      "parameters": {
+        "url": "=https://pechu-api.canteradigital.io/api/locations/sucursales/pc?postalCode={{ $json.codigo_postal }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -1200,
+        200
+      ],
+      "id": "947482e5-75ab-4e35-a68a-92cf5c22caac",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "url": "=https://pechu-api.canteradigital.io/api/locations/sucursales/products/{{ $json.id_sucursal }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -440,
+        260
+      ],
+      "id": "97ca409f-8eb2-4549-9a6c-4b6d0ce0f852",
+      "name": "HTTP Request1",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1ae57d9b-5de8-44a8-a574-7cf1682a2805",
+              "name": "id_sucursal",
+              "value": "={{ $json._id }}",
+              "type": "string"
+            },
+            {
+              "id": "7e3e1334-2b9d-4723-93b0-25f09041071a",
+              "name": "nombre_sucursal",
+              "value": "={{ $json.name }}",
+              "type": "string"
+            },
+            {
+              "id": "71cbb7b7-e9e5-421b-b57f-fe6a241f2dd8",
+              "name": "direccion_sucursal",
+              "value": "={{ $json.address }}",
+              "type": "string"
+            },
+            {
+              "id": "1d260e76-2c5c-4ead-a4d8-2fff7b50d83f",
+              "name": "distancia_sucursal",
+              "value": "={{ $json.distance }}",
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -740,
+        320
+      ],
+      "id": "fd8d1ee1-5726-4fe0-97bf-049bd8e2047c",
+      "name": "Datos_sucursal",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "jsCode": "// Obtenemos los datos de entrada (el JSON completo de las sucursales)\nconst items = $input.all();\n\n// Seleccionamos un elemento aleatorio\nconst randomIndex = Math.floor(Math.random() * items.length);\n\n// Obtenemos la sucursal seleccionada\nconst selectedSucursal = items[randomIndex].json;\n\n// Retornamos todos los datos de la sucursal seleccionada\nreturn [\n  {\n    json: {\n      _id: selectedSucursal._id,\n      name: selectedSucursal.name,\n      address: selectedSucursal.address,\n      location: selectedSucursal.location,\n      distance: selectedSucursal.distance,\n      horaApertura: selectedSucursal.horaApertura,\n      horaCierre: selectedSucursal.horaCierre,\n      rangoEntrega: selectedSucursal.rangoEntrega\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -980,
+        200
+      ],
+      "id": "4f5b728d-7b97-4fa6-b917-43b46cdfe228",
+      "name": "Sucursal_1"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Obtenemos todos los elementos del HTTP Request\nconst products = $input.all();\n\n// Creamos un array para almacenar los mensajes formateados\nlet formattedMessage = \"\";\n\n// Iteramos sobre los productos para extraer la información relevante\nproducts.forEach(product => {\n  const productData = product.json;\n  \n  // Agregamos el nombre del producto, precio y extras si existen\n  let message = `Producto: ${productData.name} - Precio: $${productData.sellPrice}\\n`;\n\n  // Si hay extras, los agregamos al mensaje\n  if (productData.extras && productData.extras.length > 0) {\n    message += \"Extras:\\n\";\n    productData.extras.forEach(extra => {\n      message += `  - ${extra.name} (Cantidad: ${extra.cantidad})\\n`;\n    });\n  }\n\n  // Añadimos los días disponibles si es que existen\n  if (productData.days && productData.days.length > 0) {\n    message += \"Disponible los días: \" + productData.days.map(day => day.day).join(\", \") + \"\\n\";\n  }\n\n  // Añadimos el mensaje final al mensaje formateado\n  formattedMessage += message + \"\\n\\n\";\n});\n\n// Retornamos el mensaje final que será enviado al agente IA\nreturn [\n  {\n    json: {\n      formattedMessage: formattedMessage.trim() // Eliminar espacios innecesarios al final\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -200,
+        240
+      ],
+      "id": "78d7ce36-7961-4b6e-bff4-67e24ee3f869",
+      "name": "formato_productos"
+    }
+  ],
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Sucursal_1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "formato_productos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Datos_sucursal": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sucursal_1": {
+      "main": [
+        [
+          {
+            "node": "Datos_sucursal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "formato_productos": {
+      "main": [
+        [
+          {
+            "node": "Busca menu",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {
+    "When Executed by Another Workflow": [
+      {
+        "json": {
+          "codigo_postal": "45060"
+        }
+      }
+    ]
+  },
+  "versionId": "817541ed-3511-41ef-94e6-c417cf0f00ec",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "createdAt": "2025-05-30T23:10:28.669Z",
+      "updatedAt": "2025-05-30T23:10:28.669Z",
+      "role": "workflow:owner",
+      "workflowId": "hzU0NLFBpGfwkEJ8",
+      "projectId": "BZ9Ta5yhe4RhzY78",
+      "project": {
+        "createdAt": "2025-05-13T15:56:28.209Z",
+        "updatedAt": "2025-05-13T16:18:54.372Z",
+        "id": "BZ9Ta5yhe4RhzY78",
+        "name": "CANTERA ADMIN <canteradigital7@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "projectRelations": [
+          {
+            "createdAt": "2025-05-13T15:56:28.209Z",
+            "updatedAt": "2025-05-13T15:56:28.209Z",
+            "role": "project:personalOwner",
+            "userId": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
+            "projectId": "BZ9Ta5yhe4RhzY78",
+            "user": {
+              "createdAt": "2025-05-13T15:56:27.880Z",
+              "updatedAt": "2025-05-27T17:38:25.272Z",
+              "id": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
+              "email": "canteradigital7@gmail.com",
+              "firstName": "CANTERA",
+              "lastName": "ADMIN",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-05-13T16:19:25.161Z",
+                "personalization_survey_n8n_version": "1.92.2",
+                "companySize": "<20",
+                "companyType": "saas",
+                "role": "customer-support",
+                "reportedSource": "event"
+              },
+              "settings": {
+                "userActivated": true,
+                "firstSuccessfulWorkflowId": "PTbESRzX3rguwQN8",
+                "userActivatedAt": 1747154580970,
+                "easyAIWorkflowOnboarded": true,
+                "npsSurvey": {
+                  "responded": true,
+                  "lastShownAt": 1748367494893
+                }
+              },
+              "role": "global:owner",
+              "disabled": false,
+              "mfaEnabled": false,
+              "isPending": false,
+              "isOwner": true
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": [
+    {
+      "createdAt": "2025-05-30T23:10:34.391Z",
+      "updatedAt": "2025-05-30T23:10:34.391Z",
+      "id": "NFv9z9YC2KR4Susu",
+      "name": "pollo"
+    }
+  ]
+}
