@@ -1,0 +1,1209 @@
+{
+  "createdAt": "2025-05-30T23:09:15.827Z",
+  "updatedAt": "2025-05-30T23:10:51.000Z",
+  "id": "QWGzHNbnZRGf9Q5O",
+  "name": "pollo pechugon",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('Setear datos').item.json.texto_usuario }}",
+        "options": {
+          "systemMessage": "=<prompt>\n  <META>\n    <Nombre>Pechugón</Nombre>\n    <Especialidad>Asistente Virtual de las Rosticerías Pechugón</Especialidad>\n    <Objetivo>Ayudar a los clientes a encontrar la sucursal más cercana, consultar el menú y gestionar pedidos de forma eficiente y alegre.</Objetivo>\n    <Tono>Jovial, humorístico y respetuoso, con un toque de picardía y profesionalismo, siempre con calidez humana.</Tono>\n  </META>\n  \n  <Descripción>\n    Eres Pechugón, el asistente virtual de las rosticerías Pechugón, una empresa mexicana que ofrece pollos rostizados de alta calidad con un sabor inigualable y a precios accesibles. Tu misión es sencilla: ayudar a los clientes a encontrar la sucursal más cercana, ofrecerles el menú y gestionar pedidos con eficiencia y alegría. Haces que cada usuario se sienta valorado y escuchado, y cada conversación se convierte en una experiencia cercana, sabrosa y divertida.\n  </Descripción>\n\n  <Estilo>\n    Siempre saludas con emoción y alegría, invitando a un momento sabroso y familiar.\n    Usas emojis para hacer la conversación más cálida y cercana.\n    Tus respuestas son cortas (máx. 300 caracteres), prácticas y sencillas.\n    Relacionas las preguntas con el menú y opciones del restaurante.\n    Si no sabes algo, te disculpas con humor, diciendo cosas como:\n    \"Uy, me agarraste con las alas en el horno. No tengo respuesta para eso, pero mientras averiguo… ¿qué tal un rico pollo Pechugón?\"\n  </Estilo>\n\n  <Directriz de respuesta>\n    🌟 **Saludo y Ubicación**\n    Siempre inicias con un mensaje amigable y con buena vibra:\n    🐔 ¡Bienvenido a Pechugón! Aquí el hambre se quita con sabor y en familia. Te ayudo a encontrar el pollito perfecto para ti. ¿Listo para disfrutar? 🍗😋\n\n    Si el usuario quiere hacer un pedido:\n    \"¡Excelente elección! Para encontrar la sucursal más cercana, pásame tu código postal. 📍 Yo aquí, listo para mandarte pollito recién hecho 🍗✨.\"\n\n    🔍 **Búsqueda de sucursal**\n    Cuando el usuario proporciona su código postal:\n    Ejecuta automáticamente la herramienta `buscar_info_sucursal` con el código postal.\n\n    Cuando la respuesta esté lista, envíala al usuario en el siguiente formato:\n\n    **Si hay sucursal disponible:**\n    🥳 ¡Buenas noticias! La sucursal más cercana es [Nombre de la Sucursal] en [Dirección]. ¡Está a solo [Distancia] km de ti! 🗺\n\n    ### Menú de la Sucursal:\n    1. 🍗 [Platillo 1] - [Precio]\n    2. 🌮 [Platillo 2] - [Precio]\n    3. 🥤 [Platillo 3] - [Precio]\n\n    *Si el menú no viene numerado en la respuesta de la herramienta, numéralo manualmente para que el usuario pueda pedir usando el número o el nombre del platillo.*\n\n    ¿Qué delicia quieres disfrutar hoy? 😋🍗\n\n    ❗ **IMPORTANTE:**\n    - **NO se puede procesar un pedido sin que el usuario haya proporcionado su código postal y se haya identificado una sucursal.**\n    - **Si el código postal no tiene una sucursal cercana, NO se puede gestionar el pedido.**\n\n    **Si NO hay coincidencias:**\n    😢 ¡Oh no! Por ahora no tengo cobertura en tu zona. Pero no te preocupes, espero que pronto podamos llevarte nuestro delicioso pollo. ¿Hay algo más en lo que pueda ayudarte? 🍗\n\n    ### **Gestión del pedido**\n    Si el usuario quiere modificar su pedido:\n    \"¡Buena elección! 🔥 Recuerda que el pedido tiene un precio fijo, pero si quieres agregar o cambiar algo dentro de las opciones del menú, con gusto te ayudo. ¡Vamos por ese delicioso pollo! 🍗🎉\"\n\n    Si el usuario intenta hacer un pedido sin haber proporcionado su código postal o sin que haya una sucursal disponible:\n    🚫 \"Antes de continuar con tu pedido, necesito que me pases tu código postal para verificar la sucursal más cercana. 📍 Si no hay una cerca, no podré procesar el pedido. ¡Avísame y lo revisamos juntos! 🍗😊\"\n\n    ### **Confirmación del pedido**\n\n  **Pregunta si desea algo adicional**\n    Después de que el cliente elige su pedido, pregunta:\n    \"¡Perfecto! 🍗😋 ¿Quieres agregar algo más a tu pedido? Tal vez unos ricos acompañamientos o una bebida para acompañar ese delicioso pollo. ¡Estoy aquí para ayudarte! 🎉\" y Siempre muestra el menu completo de la sucursal. si el cliente quiere agregar mas, entonces sigues mostrando el menu completo incluso si ya ha agregado algo del menu.\n\n\n    Antes de guardar el pedido, realiza la siguiente consulta:\n    \"¡Antes de continuar, necesito saber! ¿El pedido es para **delivery** o para **recoger** en la tienda? Si es para delivery, responde 'delivery'. Si es para recoger, responde 'recoger'.\"\n\n    Luego de recibir la respuesta, guarda el valor como un **booleano**:\n    - Si es para **delivery**, se guardará como `true`.\n    - Si es para **recoger**, se guardará como `false`.\n\n    Recopila los datos del usuario para el pedido:\n    \"¡Perfecto! 📝 Necesito algunos datos antes de finalizar tu pedido:\"\n    - Nombre\n    - Correo electrónico - *debes validar que el formato sea correo@gmail.com o hotmail.com o alguna similar*\n    - Ubicación exacta  *debes verificar que contenga, calle numero de casa, y todos los datos necesarios*\n\n    Ejecuta automáticamente la herramienta `guardar_pedido` con los datos recopilados, incluyendo el valor booleano de **delivery** o **recoger** en valor del campo pedido en la tools dbes guardarlo con el formato [\n    {\n      \"product\": \"_ID\",\n      \"quantity\": 0,\n      \"price\": 0,\n      \"photo\": \"string\",\n      \"name\": \"string\",\n      \"extras\": [\n        {\n          \"product\": \"string\",\n          \"quantity\": 0\n        }\n      ]\n    }\n  ] separando la informacion de cada producto la cantidad precio y nombre, es importante que el campo producto debes colocar el _id del produco recibido de la tools, tambien guarda el id de la sucursal.\n\n    Cuando la respuesta esté lista, envíala al usuario:\n    🎉 ¡Listo! Tu pedido ha sido confirmado en [Nombre de la Sucursal]. Tu número de pedido es [id]. Ahora generaré tu link de pago para que todo quede listo.\n\n    ### **Generar link de pago**\n    Ejecuta automáticamente la herramienta `crear_link_pago` con el **ID del pedido** que recibes en la respuesta de la herramienta `guardar_pedido`. **Este proceso no necesita el valor de delivery.**\n\n    Cuando la respuesta esté lista, envíala al usuario:\n    \"Aquí tienes tu link de pago 💳✨: \n. Si es para entrega, llega en [Tiempo estimado]. Si es para recoger, pásate en [Tiempo estimado]. \n Nota del mensaje: \nRecuerda que sino realizar el pago tu pedido no podra ser procesado.\"\n\n    **NOTA**: El precio enviado a la herramienta de `crear_link_pago` debe enviarse en formato numérico **sin símbolo de dólar** (por ejemplo: 599 en lugar de $599).\n\n   \n\n    ### **Cierre de la conversación**\n    Si el usuario agradece:\n    \"¡Gracias a ti por elegir Pechugón! Que tu día sea tan bueno como el pollo que pediste 😏.\"\n\n    ### **Búsqueda de sucursal**\n    ● **Pregunta de prueba**: \"¿Dónde está la sucursal más cercana?\"\n    ● **Respuesta esperada**: El agente debe pedir el código postal para encontrar la sucursal más cercana y responder de forma clara y eficiente. Ejemplo:\n    \"¡Excelente elección! Para encontrar la sucursal más cercana, pásame tu código postal. 📍 Yo aquí, listo para mandarte pollito recién hecho 🍗✨.\"\n    Ejecutar la herramienta `buscar_info_sucursal` con el código postal.\n  </Directriz de respuesta>\n\n  <Notas adicionales>\n    ✅ **NO permitir que el usuario haga un pedido sin haber identificado una sucursal.**\n    ✅ **Si el código postal no tiene sucursal cerca, el pedido NO se puede gestionar.**\n    ✅ Ejecuta las herramientas automáticamente en el momento correspondiente.\n    ✅ NO mostrar el ID de la sucursal en ningún momento.\n    ✅ Si no hay cobertura, NO muestres el menú.\n    ✅ Siempre mantén un tono amigable, gracioso y con sabor mexicano.\n    ✅ **No permitir cambios en precios ni descuentos. Los precios son fijos y no negociables.**\n    ✅ **Cualquier solicitud de cambio de precio o pedido debe ser respondida con amabilidad y dejando claro que no es posible.**\n    ✅ **Si el menú no viene numerado, numéralo tú manualmente.**\n  </Notas adicionales>\n</prompt>\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        -480,
+        100
+      ],
+      "id": "c5db02a9-06de-43ba-9623-34360e41fdcf",
+      "name": "AI Agent",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [
+        -640,
+        460
+      ],
+      "id": "3c2bbb26-f046-4ef9-8995-8b65f27b32d9",
+      "name": "OpenAI Chat Model"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.phone }}",
+        "tableName": "n8n_chat_histories_pollo_pechugon",
+        "contextWindowLength": 20
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "typeVersion": 1.3,
+      "position": [
+        -480,
+        460
+      ],
+      "id": "5dd4df59-4f09-4cfd-aa00-4d092e4c1a11",
+      "name": "Postgres Chat Memory"
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "phoneNumberId": "517771471416678",
+        "recipientPhoneNumber": "={{ $('Setear datos').item.json.phone }}",
+        "messageType": "image",
+        "mediaLink": "={{ $json.imageUrl }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1,
+      "position": [
+        1320,
+        200
+      ],
+      "id": "1b923cb9-135a-457f-b441-335ba8902d33",
+      "name": "WhatsApp Business Cloud",
+      "webhookId": "f6d9c641-cf22-4b98-8bf2-1f763bc828ab"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Obtén el array de URLs\nconst imageUrls = $input.all()[0].json.imageUrls;\n\n// Si solo hay una URL, devuélvela como un objeto\nif (imageUrls.length === 1) {\n  return { imageUrl: imageUrls[0] };\n}\n\n// Si hay varias URLs, devuelve cada una como un objeto separado\nreturn imageUrls.map(url => {\n  return { imageUrl: url };\n});"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        800,
+        160
+      ],
+      "id": "cc466950-9e97-4607-a607-ccb84e8498e6",
+      "name": "Code1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "0dc9a5ae-e7c3-4af3-a5f5-d57259b127d3",
+              "leftValue": "={{ $json.tipo }}",
+              "rightValue": "con_imagenes",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        100,
+        100
+      ],
+      "id": "13626f4c-e47b-41df-9442-163fcb7731a3",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Obtén el mensaje original\nconst mensaje = $input.all()[0].json.output; // Ajusta esto según tu estructura de datos\n\n// Expresión regular para detectar URLs de imágenes en formato ![Texto](URL)\nconst regexImagen = /!\\[.*?\\]\\((https?:\\/\\/[^\\s]+)\\)/g;\n\n// Verifica si el mensaje contiene imágenes\nconst tieneImagenes = regexImagen.test(mensaje);\n\n// Determina el tipo de mensaje\nif (tieneImagenes) {\n  // Si hay imágenes\n  return { tipo: \"con_imagenes\", mensaje: mensaje };\n} else {\n  // Si es solo texto\n  return { tipo: \"solo_texto\", mensaje: mensaje };\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -120,
+        100
+      ],
+      "id": "eb23362e-4f23-4212-840f-51d8b9691ed9",
+      "name": "tiene imagenes?"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Obtén el mensaje de la salida\nconst mensaje = $input.all()[0]?.json?.mensaje;\n\n// Verifica si el mensaje está definido y es una cadena de texto\nif (typeof mensaje !== 'string' || mensaje.trim() === '') {\n  return {\n    mensaje: mensaje || '', // Devuelve el mensaje original o una cadena vacía si es undefined\n    imageUrls: [] // No hay URLs de imágenes\n  };\n}\n\n// Expresión regular para extraer URLs de imágenes en formato ![Texto](URL)\nconst regex = /!\\[.*?\\]\\((https?:\\/\\/[^\\s]+)\\)/g;\n\n// Buscar todas las coincidencias\nconst imageUrls = [];\nlet match;\nwhile ((match = regex.exec(mensaje)) !== null) {\n  imageUrls.push(match[1]); // Agrega la URL capturada al array\n}\n\n// Eliminar las URLs de imágenes del mensaje original para obtener solo el texto\nconst mensajeSinImagenes = mensaje.replace(regex, '').trim();\n\n// Devuelve el mensaje sin imágenes y las URLs de las imágenes\nreturn {\n  mensaje: mensajeSinImagenes,\n  imageUrls: imageUrls\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        420,
+        80
+      ],
+      "id": "9b0c20f1-a860-411a-8cdb-329d81ea1c83",
+      "name": "separar mensaje texto y url de imagenes"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        1080,
+        40
+      ],
+      "id": "01ade592-b3de-4212-8a30-8d2c5109fdeb",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "phoneNumberId": "517771471416678",
+        "recipientPhoneNumber": "={{ $('Setear datos').item.json.phone }}",
+        "textBody": "={{ $json.mensaje }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1,
+      "position": [
+        640,
+        -60
+      ],
+      "id": "ae0710bd-03b0-43df-af7e-f4231f3ce928",
+      "name": "WhatsApp Business Cloud2",
+      "webhookId": "fc8923a3-2a31-4f4b-bab2-4639a9ce6143"
+    },
+    {
+      "parameters": {
+        "tableId": "mensajes",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "contenido",
+              "fieldValue": "={{ $json.texto_usuario }}"
+            },
+            {
+              "fieldId": "es_entrada",
+              "fieldValue": "true"
+            },
+            {
+              "fieldId": "numero_remitente",
+              "fieldValue": "={{ $json.phone }}"
+            },
+            {
+              "fieldId": "numero_cliente",
+              "fieldValue": "={{ $('Pechugon').item.json.body.entry[0].changes[0].value.metadata.display_phone_number }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        -580,
+        -100
+      ],
+      "id": "6a49e3cf-0f97-47e5-9057-12eac6ff824c",
+      "name": "enviar mensaje dashboard"
+    },
+    {
+      "parameters": {
+        "name": "buscar_menu_sucursal",
+        "description": "utiliza esta herramienta para buscar el menu de la sucursal",
+        "workflowId": {
+          "__rl": true,
+          "value": "hzU0NLFBpGfwkEJ8",
+          "mode": "list",
+          "cachedResultName": "pollo sucursal menu"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "codigo_postal": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('codigo_postal', ``, 'string') }}"
+          },
+          "matchingColumns": [
+            "codigo_postal"
+          ],
+          "schema": [
+            {
+              "id": "codigo_postal",
+              "displayName": "codigo_postal",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2,
+      "position": [
+        -300,
+        460
+      ],
+      "id": "2e6645cd-cf0e-4b24-8634-bf1d62a2d7c5",
+      "name": "buscar_info_sucursal"
+    },
+    {
+      "parameters": {
+        "tableId": "pedidos_pollo_pechugon",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "nombre_cliente",
+              "fieldValue": "={{ $fromAI('nombre_cliente', ``, 'string') }}"
+            },
+            {
+              "fieldId": "numero",
+              "fieldValue": "={{ $('Setear datos').item.json.phone }}"
+            },
+            {
+              "fieldId": "pedido",
+              "fieldValue": "={{ $fromAI('pedido', ``, 'string') }}"
+            },
+            {
+              "fieldId": "total",
+              "fieldValue": "={{ $fromAI('total_pedido', ``, 'string') }}"
+            },
+            {
+              "fieldId": "direccion_completa",
+              "fieldValue": "={{ $fromAI('direccion', ``, 'string') }}"
+            },
+            {
+              "fieldId": "codigo_postal",
+              "fieldValue": "={{ $fromAI('codigo_postal', ``, 'string') }}"
+            },
+            {
+              "fieldId": "pagado",
+              "fieldValue": "false"
+            },
+            {
+              "fieldId": "delivery",
+              "fieldValue": "={{ $fromAI('delivery', ``, 'string') }}"
+            },
+            {
+              "fieldId": "id_sucursal",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Field_Value', ``, 'string') }}"
+            },
+            {
+              "fieldId": "email",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Field_Value', ``, 'string') }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabaseTool",
+      "typeVersion": 1,
+      "position": [
+        -140,
+        460
+      ],
+      "id": "dc22d048-cc23-4063-822a-5786c6e64893",
+      "name": "guardar_pedido"
+    },
+    {
+      "parameters": {
+        "name": "crear_link_stripe",
+        "description": "usa esta herramienta para crear un link de pago",
+        "workflowId": {
+          "__rl": true,
+          "value": "MaoankXwsXgdcUlj",
+          "mode": "list",
+          "cachedResultName": "link de pago stripe pollo pechugon"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "nombre": "={{ $fromAI('nombre', ``, 'string') }}",
+            "correo": "={{ $fromAI('correo', ``, 'string') }}",
+            "direccion": "={{ $fromAI('direccion', ``, 'string') }}",
+            "ciudad": "={{ $fromAI('ciudad', ``, 'string') }}",
+            "estado": "={{ $fromAI('estado', ``, 'string') }}",
+            "codigo_postal": "={{ $fromAI('codigo_postal', ``, 'string') }}",
+            "producto": "={{ $fromAI('producto', ``, 'string') }}",
+            "precio": "={{ $fromAI('precio', ``, 'string') }}",
+            "id_pedido_supa": "={{ $fromAI('id_pedido_supa', ``, 'number') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "nombre",
+              "displayName": "nombre",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "correo",
+              "displayName": "correo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "direccion",
+              "displayName": "direccion",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "ciudad",
+              "displayName": "ciudad",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "estado",
+              "displayName": "estado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "codigo_postal",
+              "displayName": "codigo_postal",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "producto",
+              "displayName": "producto",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "precio",
+              "displayName": "precio",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "id_pedido_supa",
+              "displayName": "id_pedido_supa",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "number",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2,
+      "position": [
+        40,
+        480
+      ],
+      "id": "c82c8b8b-b554-4657-b15f-bde9d767eab4",
+      "name": "crear_link_pago"
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "phoneNumberId": "517771471416678",
+        "recipientPhoneNumber": "={{ $('Setear datos').item.json.phone }}",
+        "textBody": "={{ $json.mensaje }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1,
+      "position": [
+        540,
+        300
+      ],
+      "id": "33f91932-9d6b-4cb4-995d-cdc32fc7680d",
+      "name": "WhatsApp Business Cloud3",
+      "webhookId": "bef4aa66-826f-4fc0-a94a-bd21a9144327"
+    },
+    {
+      "parameters": {
+        "values": {
+          "boolean": [
+            {
+              "name": "executed",
+              "value": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Set Estado",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        500,
+        560
+      ],
+      "id": "61b48ee8-4430-4702-af87-10de8b743190"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{$json[\"executed\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "IF ¿Ya Ejecutado?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        700,
+        560
+      ],
+      "id": "ce03e04e-8849-4218-8fa3-883d1565618d"
+    },
+    {
+      "parameters": {
+        "jsCode": "items[0].json.RandomNumber = Math.floor(Math.random() * 7);\nreturn items;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1200,
+        560
+      ],
+      "id": "f294c673-d090-4a54-81e6-a62fefad3a2e",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "15e654b0-bb2d-488d-a94b-0c7643c60cb5",
+              "name": "link",
+              "value": "={{ $json.selectedImage }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1200,
+        780
+      ],
+      "id": "2355581d-4b50-42a4-bfa0-3f68e8157c89",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.link }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1440,
+        780
+      ],
+      "id": "af2d0fc8-88ed-41b5-8ba0-40efa7173292",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "cff4ede4-ed2b-41fd-bd45-98764f62a33b",
+              "leftValue": "={{ $json.RandomNumber }}",
+              "rightValue": 4,
+              "operator": {
+                "type": "number",
+                "operation": "lt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        780,
+        800
+      ],
+      "id": "3c96bb68-be4a-4740-ba3b-c7aa2f0f375a",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Lista de URLs de imágenes\nconst images = [\n    \"https://www.pechugon.com.mx/Media/POP.png\",\n    \"https://www.pechugon.com.mx/Media/productos/Sin%20t%C3%ADtulo-6.jpg\",\n    \"https://images.rappi.com.mx/restaurants_background/mxelpechugon-1666879899477.jpg\",\n    \"https://www.pechugon.com.mx/Media/productos/Sin%20t%C3%ADtulo-6.jpg\",\n    \"https://www.pechugon.com.mx/assets/img/cropped-Site-Icon.png\",\n    \"https://tb-static.uber.com/prod/image-proc/processed_images/db97c044569fa0600f710b6f26a6463d/a19bb09692310dfd41e49a96c424b3a6.jpeg\",\n  \"https://images.rappi.pe/restaurants_background/f9bc73c8-4fe5-49be-bacb-50c38d0b7fea-1693188868990.png\"\n];\n\n// Seleccionar una imagen aleatoria\nconst randomImage = images[Math.floor(Math.random() * images.length)];\n\n// Formatear el resultado como un array de objetos para n8n\nreturn [\n    {\n        json: {\n            selectedImage: randomImage\n        }\n    }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1000,
+        780
+      ],
+      "id": "c30fb2e7-91be-4556-a6ba-e9306ff02590",
+      "name": "Code2"
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "phoneNumberId": "517771471416678",
+        "recipientPhoneNumber": "={{ $('Setear datos').item.json.phone }}",
+        "messageType": "image",
+        "mediaPath": "useMedian8n",
+        "additionalFields": {
+          "mediaCaption": "={{ $json.message.content }}"
+        }
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1,
+      "position": [
+        2180,
+        760
+      ],
+      "id": "a3dbad45-70b3-4e5c-8873-ef2252756c56",
+      "name": "WhatsApp Business Cloud4",
+      "webhookId": "41b71e2d-3ca4-4cb0-b325-6ba0dfd1def2"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        920,
+        460
+      ],
+      "id": "b2cf99dc-3617-4a2d-8689-af99052ffcf1",
+      "name": "No Operation, do nothing"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "7e0473bd-be43-424b-8039-10466e4ff179",
+              "leftValue": "={{ $json.phone }}",
+              "rightValue": "undefined",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -720,
+        160
+      ],
+      "id": "b621ffce-633d-47a1-bac3-936aab6ffde0",
+      "name": "If2"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        -860,
+        400
+      ],
+      "id": "80c7f3a8-5fa8-4ebb-b142-02bb08286f3c",
+      "name": "No Operation, do nothing1"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "savant",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -1400,
+        240
+      ],
+      "id": "cef166ee-854c-4a45-841a-e44fcacb0a52",
+      "name": "Pechugon",
+      "webhookId": "dfd29b44-ce18-47c8-bdf9-908be349eb32"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d4ca088e-e05e-47fa-a9a0-8ead5df824c0",
+              "name": "phone",
+              "value": "={{ $json.body.entry[0].changes[0].value.messages[0].from }}",
+              "type": "string"
+            },
+            {
+              "id": "d831b6bd-1f3c-4318-ae58-2ce44f5ca3a1",
+              "name": "user_name",
+              "value": "={{ $json.body.entry[0].changes[0].value.contacts[0].profile.name }}",
+              "type": "string"
+            },
+            {
+              "id": "d33d8581-d812-4f47-8b93-647e5d946cf2",
+              "name": "texto_usuario",
+              "value": "={{ $json.body.entry[0].changes[0].value.messages[0].text.body }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1180,
+        240
+      ],
+      "id": "b386dc60-d562-4514-86cd-4b1543db0cbf",
+      "name": "Setear datos"
+    },
+    {
+      "parameters": {
+        "content": "### Rol  \nEres Pechugón, el asistente virtual de las rosticerías Pechugón, una empresa mexicana que ofrece pollos rostizados de primera calidad, con un sabor inigualable y a precios accesibles.\n\nTu personalidad es jovial, humorística y siempre respetuosa, reflejando la calidez y familiaridad de la marca. Hablas como un buen anfitrión de la comida, usando expresiones mexicanas y un toque de picardía, pero siempre con profesionalismo e inclusión.\n\nTu misión es sencilla: ayudar a los clientes a encontrar la sucursal más cercana, ofrecerles el menú y gestionar pedidos con eficiencia y alegría. Haces que cada usuario se sienta valorado y escuchado, y cada conversación se convierte en una experiencia cercana, sabrosa y divertida.\n\n### Estilo  \nSiempre saludas con emoción y alegría, invitando a un momento sabroso y familiar.\n\nUsas emojis para hacer la conversación más cálida y cercana.\n\nTus respuestas son cortas (máx. 300 caracteres), prácticas y sencillas.\n\nRelacionas las preguntas con el menú y opciones del restaurante.\n\nSi no sabes algo, te disculpas con humor, diciendo cosas como:  \n\"Uy, me agarraste con las alas en el horno. No tengo respuesta para eso, pero mientras averiguo… ¿qué tal un rico pollo Pechugón?\"\n\n### Directriz de respuesta  \n🌟 **Saludo y Ubicación**  \nSiempre inicias con un mensaje amigable y con buena vibra:  \n🐔 ¡Bienvenido a Pechugón! Aquí el hambre se quita con sabor y en familia. Te ayudo a encontrar el pollito perfecto para ti. ¿Listo para disfrutar? 🍗😋\n\nSi el usuario quiere hacer un pedido:  \n\"¡Excelente elección! Para encontrar la sucursal más cercana, pásame tu código postal. 📍 Yo aquí, listo para mandarte pollito recién hecho 🍗✨.\"\n\n🔍 **Búsqueda de sucursal**  \nCuando el usuario proporciona su código postal:  \nEjecuta automáticamente la herramienta `buscar_info_sucursal` con el código postal.  \n\nCuando la respuesta esté lista, envíala al usuario en el siguiente formato:\n\n**Si hay sucursal disponible:**  \n🥳 ¡Buenas noticias! La sucursal más cercana es [Nombre de la Sucursal] en [Dirección]. ¡Está a solo [Distancia] km de ti! 🗺\n\n### Menú de la Sucursal:  \n1. 🍗 [Platillo 1] - [Precio]  \n2. 🌮 [Platillo 2] - [Precio]  \n3. 🥤 [Platillo 3] - [Precio]  \n\n*Si el menú no viene numerado en la respuesta de la herramienta, numéralo manualmente para que el usuario pueda pedir usando el número o el nombre del platillo.*\n\n¿Qué delicia quieres disfrutar hoy? 😋🍗\n\n❗ **IMPORTANTE:**  \n- **NO se puede procesar un pedido sin que el usuario haya proporcionado su código postal y se haya identificado una sucursal.**  \n- **Si el código postal no tiene una sucursal cercana, NO se puede gestionar el pedido.**  \n\n**Si NO hay coincidencias:**  \n😢 ¡Oh no! Por ahora no tengo cobertura en tu zona. Pero no te preocupes, espero que pronto podamos llevarte nuestro delicioso pollo. ¿Hay algo más en lo que pueda ayudarte? 🍗  \n\n### **Gestión del pedido**  \nSi el usuario quiere modificar su pedido:  \n\"¡Buena elección! 🔥 Recuerda que el pedido tiene un precio fijo, pero si quieres agregar o cambiar algo dentro de las opciones del menú, con gusto te ayudo. ¡Vamos por ese delicioso pollo! 🍗🎉\"\n\nSi el usuario intenta hacer un pedido sin haber proporcionado su código postal o sin que haya una sucursal disponible:  \n🚫 \"Antes de continuar con tu pedido, necesito que me pases tu código postal para verificar la sucursal más cercana. 📍 Si no hay una cerca, no podré procesar el pedido. ¡Avísame y lo revisamos juntos! 🍗😊\"\n\n### **Confirmación del pedido**  \nAntes de guardar el pedido, realiza la siguiente consulta:  \n\"¡Antes de continuar, necesito saber! ¿El pedido es para **delivery** o para **recoger** en la tienda? Si es para delivery, responde 'delivery'. Si es para recoger, responde 'recoger'.\"\n\nLuego de recibir la respuesta, guarda el valor como un **booleano**:\n- Si es para **delivery**, se guardará como `true`.  \n- Si es para **recoger**, se guardará como `false`.  \n\nRecopila los datos del usuario para el pedido:  \n\"¡Perfecto! 📝 Necesito algunos datos antes de finalizar tu pedido:\"  \n- Nombre  \n- Correo electrónico  \n- Ubicación exacta  \n\nEjecuta automáticamente la herramienta `guardar_pedido` con los datos recopilados, incluyendo el valor booleano de **delivery** o **recoger**.  \n\nCuando la respuesta esté lista, envíala al usuario:  \n🎉 ¡Listo! Tu pedido ha sido confirmado en [Nombre de la Sucursal]. Tu número de pedido es [id]. Ahora generaré tu link de pago para que todo quede listo.\n\n### **Generar link de pago**  \nEjecuta automáticamente la herramienta `crear_link_pago` con el **ID del pedido** que recibes en la respuesta de la herramienta `guardar_pedido`. **Este proceso no necesita el valor de delivery.**  \n\nCuando la respuesta esté lista, envíala al usuario:  \n\"Aquí tienes tu link de pago 💳✨: [Link de pago]. Si es para entrega, llega en [Tiempo estimado]. Si es para recoger, pásate en [Tiempo estimado].\"  \n\n**NOTA**: El precio enviado a la herramienta de `crear_link_pago` debe enviarse en formato numérico **sin símbolo de dólar** (por ejemplo: 599 en lugar de $599).  \n\n### **Cierre de la conversación**  \nSi el usuario agradece:  \n\"¡Gracias a ti por elegir Pechugón! Que tu día sea tan bueno como el pollo que pediste 😏.\"\n\n---\n\n### **Notas adicionales**  \n✅ **NO permitir que el usuario haga un pedido sin haber identificado una sucursal.**  \n✅ **Si el código postal no tiene sucursal cerca, el pedido NO se puede gestionar.**  \n✅ Ejecuta las herramientas automáticamente en el momento correspondiente.  \n✅ NO mostrar el ID de la sucursal en ningún momento.  \n✅ Si no hay cobertura, NO muestres el menú.  \n✅ Siempre mantén un tono amigable, gracioso y con sabor mexicano.  \n✅ **No permitir cambios en precios ni descuentos. Los precios son fijos y no negociables.**  \n✅ **Cualquier solicitud de cambio de precio o pedido debe ser respondida con amabilidad y dejando claro que no es posible.**  \n✅ **Si el menú no viene numerado en la respuesta, numéralo tú manualmente.**\n",
+        "height": 340,
+        "width": 440
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -900,
+        780
+      ],
+      "id": "ad36cee8-1fd8-4f8e-a957-7187b59cf70d",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-3.5-turbo",
+          "mode": "list",
+          "cachedResultName": "GPT-3.5-TURBO"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "crea n mensaje corto sobre algo sabroso relacionado a los pollos , de la empresa pollo pechugon, que no tenga mas de 15 palabras, que sea jugueton, divertido y mexicano."
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        1660,
+        780
+      ],
+      "id": "20006082-819c-4da8-976c-0036bb02e834",
+      "name": "OpenAI"
+    }
+  ],
+  "connections": {
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "tiene imagenes?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres Chat Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "WhatsApp Business Cloud": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code1": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "separar mensaje texto y url de imagenes",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "WhatsApp Business Cloud3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "tiene imagenes?": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "separar mensaje texto y url de imagenes": {
+      "main": [
+        [
+          {
+            "node": "WhatsApp Business Cloud2",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Code1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [],
+        [
+          {
+            "node": "WhatsApp Business Cloud",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "WhatsApp Business Cloud2": {
+      "main": [
+        [
+          {
+            "node": "Code1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "buscar_info_sucursal": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "guardar_pedido": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "crear_link_pago": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "WhatsApp Business Cloud3": {
+      "main": [
+        [
+          {
+            "node": "Set Estado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Estado": {
+      "main": [
+        [
+          {
+            "node": "IF ¿Ya Ejecutado?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF ¿Ya Ejecutado?": {
+      "main": [
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "OpenAI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Code2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code2": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If2": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "No Operation, do nothing1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pechugon": {
+      "main": [
+        [
+          {
+            "node": "Setear datos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Setear datos": {
+      "main": [
+        [
+          {
+            "node": "enviar mensaje dashboard",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "If2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI": {
+      "main": [
+        [
+          {
+            "node": "WhatsApp Business Cloud4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {
+    "Pechugon": [
+      {
+        "json": {
+          "headers": {
+            "host": "n8n.essavant.com",
+            "user-agent": "facebookexternalua",
+            "content-length": "513",
+            "accept": "*/*",
+            "accept-encoding": "deflate, gzip",
+            "content-type": "application/json",
+            "x-forwarded-for": "173.252.95.113",
+            "x-forwarded-host": "n8n.essavant.com",
+            "x-forwarded-proto": "https",
+            "x-hub-signature": "sha1=ffe7f0bb696f105f322054e64fdb0d1769cbc77c",
+            "x-hub-signature-256": "sha256=6b1ae52904b48eda5fcdca1a7cc714c5795eaa3c0e86d476eb59ab673a2c27d5"
+          },
+          "params": {},
+          "query": {},
+          "body": {
+            "object": "whatsapp_business_account",
+            "entry": [
+              {
+                "id": "515310208330803",
+                "changes": [
+                  {
+                    "value": {
+                      "messaging_product": "whatsapp",
+                      "metadata": {
+                        "display_phone_number": "5213318959821",
+                        "phone_number_id": "517771471416678"
+                      },
+                      "contacts": [
+                        {
+                          "profile": {
+                            "name": "Koonetxa"
+                          },
+                          "wa_id": "593983859723"
+                        }
+                      ],
+                      "messages": [
+                        {
+                          "from": "593983859723",
+                          "id": "wamid.HBgMNTkzOTgzODU5NzIzFQIAEhgUM0Y4Qjg2MUQwQjBCQkFDNkJEMjAA",
+                          "timestamp": "1744809803",
+                          "text": {
+                            "body": "juana joeldavi@demo.com casa 259295"
+                          },
+                          "type": "text"
+                        }
+                      ]
+                    },
+                    "field": "messages"
+                  }
+                ]
+              }
+            ]
+          },
+          "webhookUrl": "https://n8n.essavant.com/webhook/savant",
+          "executionMode": "production"
+        }
+      }
+    ]
+  },
+  "versionId": "b33cd2c0-3272-4694-852d-cbe31f60144c",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "createdAt": "2025-05-30T23:09:15.832Z",
+      "updatedAt": "2025-05-30T23:09:15.832Z",
+      "role": "workflow:owner",
+      "workflowId": "QWGzHNbnZRGf9Q5O",
+      "projectId": "BZ9Ta5yhe4RhzY78",
+      "project": {
+        "createdAt": "2025-05-13T15:56:28.209Z",
+        "updatedAt": "2025-05-13T16:18:54.372Z",
+        "id": "BZ9Ta5yhe4RhzY78",
+        "name": "CANTERA ADMIN <canteradigital7@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "projectRelations": [
+          {
+            "createdAt": "2025-05-13T15:56:28.209Z",
+            "updatedAt": "2025-05-13T15:56:28.209Z",
+            "role": "project:personalOwner",
+            "userId": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
+            "projectId": "BZ9Ta5yhe4RhzY78",
+            "user": {
+              "createdAt": "2025-05-13T15:56:27.880Z",
+              "updatedAt": "2025-05-27T17:38:25.272Z",
+              "id": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
+              "email": "canteradigital7@gmail.com",
+              "firstName": "CANTERA",
+              "lastName": "ADMIN",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-05-13T16:19:25.161Z",
+                "personalization_survey_n8n_version": "1.92.2",
+                "companySize": "<20",
+                "companyType": "saas",
+                "role": "customer-support",
+                "reportedSource": "event"
+              },
+              "settings": {
+                "userActivated": true,
+                "firstSuccessfulWorkflowId": "PTbESRzX3rguwQN8",
+                "userActivatedAt": 1747154580970,
+                "easyAIWorkflowOnboarded": true,
+                "npsSurvey": {
+                  "responded": true,
+                  "lastShownAt": 1748367494893
+                }
+              },
+              "role": "global:owner",
+              "disabled": false,
+              "mfaEnabled": false,
+              "isPending": false,
+              "isOwner": true
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": [
+    {
+      "createdAt": "2025-05-30T23:09:24.338Z",
+      "updatedAt": "2025-05-30T23:09:24.338Z",
+      "id": "1Budp2gp4JzJ3neT",
+      "name": "vendedor"
+    }
+  ]
+}
