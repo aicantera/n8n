@@ -1,0 +1,409 @@
+{
+  "createdAt": "2025-06-05T01:27:07.964Z",
+  "updatedAt": "2025-06-05T01:37:43.000Z",
+  "id": "zUEfBfH2A2ivRZpa",
+  "name": "lauka KB v2",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -3040,
+        320
+      ],
+      "id": "e407fc5f-3ea8-4f3e-a330-a4664da9e491",
+      "name": "When clicking ‘Test workflow’"
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "10WjYZPXaeoF7w5mMJPqJaZSwqiAc33le",
+          "mode": "list",
+          "cachedResultName": "Copia de LISTA DE ARTICULOS CRSIOL.xlsx",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/10WjYZPXaeoF7w5mMJPqJaZSwqiAc33le/edit?usp=drivesdk&ouid=103791099388247549187&rtpof=true&sd=true"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -2560,
+        300
+      ],
+      "id": "9c790d4d-a49b-43b2-81a7-3108ff75613b",
+      "name": "Google Drive",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "PKQpxniTUryv7dE9",
+          "name": "Google Drive account - DRIVE CANTERA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "tableName": {
+          "__rl": true,
+          "value": "documents_lauka2",
+          "mode": "list",
+          "cachedResultName": "documents_lauka2"
+        },
+        "embeddingBatchSize": 2,
+        "options": {
+          "queryName": "match_documents_lauka2"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1.1,
+      "position": [
+        -1680,
+        320
+      ],
+      "id": "9794cd97-a232-4de6-b869-530c7ce1894a",
+      "name": "Supabase Vector Store",
+      "credentials": {
+        "supabaseApi": {
+          "id": "ty0KiXsEYP1uJ8t9",
+          "name": "Supabase account - CANTERA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -1820,
+        600
+      ],
+      "id": "40747dac-26b6-40ba-a9fa-856c627eab0f",
+      "name": "Embeddings OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "zZlJrTGKq8KER7gD",
+          "name": "OpenAi account - GLASSY"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "dataType": "binary",
+        "loader": "csvLoader",
+        "options": {
+          "metadata": {
+            "metadataValues": [
+              {
+                "name": "client",
+                "value": "lauka"
+              }
+            ]
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1,
+      "position": [
+        -1580,
+        580
+      ],
+      "id": "e83d538f-7eae-41d7-a5b6-235ebef2597b",
+      "name": "Default Data Loader"
+    },
+    {
+      "parameters": {
+        "chunkSize": 2500,
+        "chunkOverlap": 200,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+      "typeVersion": 1,
+      "position": [
+        -1520,
+        820
+      ],
+      "id": "44261339-48e6-4dfc-b9e9-9df97ee1f97d",
+      "name": "Recursive Character Text Splitter"
+    },
+    {
+      "parameters": {
+        "operation": "xlsx",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        -2160,
+        1040
+      ],
+      "id": "8daacdd0-941b-42bb-b56b-4d66948db039",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "09e1c3ec-2e57-4a0e-8476-b46e2126a7f4",
+              "name": "campo",
+              "value": "=numero de articulo: {{ $json['Número de artículo'] }}\ndescripcion de articulo: {{ $json['Descripción del artículo'] }}\nfabricante: {{ $json.Fabricante }}\nnumero catalogo de fabricante: {{ $json['Nº catálogo fabricante'] }}\naltura de unidade venta: {{ $json['Altura 1_ Unidad de venta'] }}\ngrupo de articulos: {{ $json['Grupo de artículos'] }}\nfamilia de articulos: {{ $json.Familia }}\nsub familia de articulos: {{ $json['Sub Familia'] }}\nunidad de medida de venta: {{ $json['Unidad de medida de compras'] }}\nmodo de venta de inventario: {{ $json['UdM de inventario'] }}\nproveedor por defecto: {{ $json['Proveedor por defecto'] }}\nsinonimo del producto: {{ $json.Sinonimo }}\nunidad minima de venta : {{ $json['Peso 2_ Unidad de ventas'] }}\ncodigo NCM: {{ $json['Código NCM'] }}\n",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -2180,
+        1040
+      ],
+      "id": "a7eead0b-25bc-4db7-9295-d73149a4c05f",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "tableId": "documents_lauka2",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "id",
+              "condition": "gte",
+              "keyValue": "1"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        -2600,
+        0
+      ],
+      "id": "d6a4feb6-dc83-48d0-8401-24618c6f0c69",
+      "name": "Supabase",
+      "credentials": {
+        "supabaseApi": {
+          "id": "ty0KiXsEYP1uJ8t9",
+          "name": "Supabase account - CANTERA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fileFormat": "xlsx",
+        "options": {
+          "headerRow": true
+        }
+      },
+      "id": "17a83368-06b0-42a9-93a5-0714cf630a58",
+      "name": "Spreadsheet File",
+      "type": "n8n-nodes-base.spreadsheetFile",
+      "typeVersion": 2,
+      "position": [
+        -2260,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "batchSize": 500,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -2040,
+        300
+      ],
+      "id": "496cb63a-7365-4135-a483-26e82e2677f0",
+      "name": "Loop Over Items"
+    }
+  ],
+  "connections": {
+    "When clicking ‘Test workflow’": {
+      "main": [
+        [
+          {
+            "node": "Supabase",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Google Drive",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Drive": {
+      "main": [
+        [
+          {
+            "node": "Spreadsheet File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Supabase Vector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Default Data Loader": {
+      "ai_document": [
+        [
+          {
+            "node": "Supabase Vector Store",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recursive Character Text Splitter": {
+      "ai_textSplitter": [
+        [
+          {
+            "node": "Default Data Loader",
+            "type": "ai_textSplitter",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        []
+      ]
+    },
+    "Spreadsheet File": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Supabase Vector Store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase Vector Store": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {},
+  "versionId": "e944f05c-7215-4541-a8e0-09012a4c50de",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "createdAt": "2025-06-05T01:27:07.970Z",
+      "updatedAt": "2025-06-05T01:27:07.970Z",
+      "role": "workflow:owner",
+      "workflowId": "zUEfBfH2A2ivRZpa",
+      "projectId": "BZ9Ta5yhe4RhzY78",
+      "project": {
+        "createdAt": "2025-05-13T15:56:28.209Z",
+        "updatedAt": "2025-05-13T16:18:54.372Z",
+        "id": "BZ9Ta5yhe4RhzY78",
+        "name": "CANTERA ADMIN <canteradigital7@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "projectRelations": [
+          {
+            "createdAt": "2025-05-13T15:56:28.209Z",
+            "updatedAt": "2025-05-13T15:56:28.209Z",
+            "role": "project:personalOwner",
+            "userId": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
+            "projectId": "BZ9Ta5yhe4RhzY78",
+            "user": {
+              "createdAt": "2025-05-13T15:56:27.880Z",
+              "updatedAt": "2025-05-27T17:38:25.272Z",
+              "id": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
+              "email": "canteradigital7@gmail.com",
+              "firstName": "CANTERA",
+              "lastName": "ADMIN",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-05-13T16:19:25.161Z",
+                "personalization_survey_n8n_version": "1.92.2",
+                "companySize": "<20",
+                "companyType": "saas",
+                "role": "customer-support",
+                "reportedSource": "event"
+              },
+              "settings": {
+                "userActivated": true,
+                "firstSuccessfulWorkflowId": "PTbESRzX3rguwQN8",
+                "userActivatedAt": 1747154580970,
+                "easyAIWorkflowOnboarded": true,
+                "npsSurvey": {
+                  "responded": true,
+                  "lastShownAt": 1748367494893
+                }
+              },
+              "role": "global:owner",
+              "disabled": false,
+              "mfaEnabled": false,
+              "isPending": false,
+              "isOwner": true
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": []
+}
