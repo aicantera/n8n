@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-05-27T17:24:07.779Z",
-  "updatedAt": "2025-06-05T01:54:50.000Z",
+  "updatedAt": "2025-06-05T02:19:14.000Z",
   "id": "fchq7I7n1VifsCZG",
   "name": "LAUKA KB 1",
   "active": true,
@@ -424,7 +424,36 @@
         "fieldsUi": {
           "fieldValues": [
             {
-              "fieldId": "numero_articulo"
+              "fieldId": "numero_articulo",
+              "fieldValue": "={{ $json['Número de artículo'] }}"
+            },
+            {
+              "fieldId": "desc_articulo",
+              "fieldValue": "={{ $json['Descripción del artículo'] }}"
+            },
+            {
+              "fieldId": "fabricante",
+              "fieldValue": "={{ $json.Fabricante }}"
+            },
+            {
+              "fieldId": "n_catalogo",
+              "fieldValue": "={{ $json['Nº catálogo fabricante'] }}"
+            },
+            {
+              "fieldId": "familia",
+              "fieldValue": "={{ $json.Familia }}"
+            },
+            {
+              "fieldId": "sub_familia",
+              "fieldValue": "={{ $json['Sub Familia'] }}"
+            },
+            {
+              "fieldId": "proveedor",
+              "fieldValue": "={{ $json['Proveedor por defecto'] }}"
+            },
+            {
+              "fieldId": "sinonimo",
+              "fieldValue": "={{ $json.Sinonimo }}"
             }
           ]
         }
@@ -460,7 +489,7 @@
     },
     {
       "parameters": {
-        "maxItems": 10
+        "maxItems": 2000
       },
       "type": "n8n-nodes-base.limit",
       "typeVersion": 1,
@@ -470,6 +499,21 @@
       ],
       "id": "7409b78a-0283-4917-b120-0c3be3397496",
       "name": "Limit"
+    },
+    {
+      "parameters": {
+        "path": "85e5dddb-a2de-4f10-8092-2e0db02ede78",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -200,
+        -120
+      ],
+      "id": "6e9ffdfd-8e51-4e69-9024-a4640799bce4",
+      "name": "Webhook",
+      "webhookId": "85e5dddb-a2de-4f10-8092-2e0db02ede78"
     }
   ],
   "connections": {
@@ -619,7 +663,13 @@
     },
     "Supabase1": {
       "main": [
-        []
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     },
     "Edit Fields": {
@@ -660,12 +710,18 @@
       "main": [
         [
           {
-            "node": "Loop Over Items1",
+            "node": "Edit Fields",
             "type": "main",
             "index": 0
-          },
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
           {
-            "node": "Edit Fields",
+            "node": "Google Drive",
             "type": "main",
             "index": 0
           }
@@ -681,8 +737,8 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "61001815-3f83-49df-8daa-73c41d58cbfd",
-  "triggerCount": 1,
+  "versionId": "f7ba5b4b-6cda-42d0-8d05-1ecde990ea86",
+  "triggerCount": 2,
   "shared": [
     {
       "createdAt": "2025-05-27T17:24:07.783Z",
