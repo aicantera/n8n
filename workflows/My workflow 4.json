@@ -1,0 +1,152 @@
+{
+  "createdAt": "2025-06-05T22:42:29.855Z",
+  "updatedAt": "2025-06-05T23:00:58.000Z",
+  "id": "WyA1TUikNM99Yxsi",
+  "name": "My workflow 4",
+  "active": true,
+  "nodes": [
+    {
+      "parameters": {
+        "public": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "067a73d5-0d23-4c8a-bb3d-e73a51828c26",
+      "name": "When chat message received",
+      "webhookId": "8160fa81-3861-458b-902b-74ed07d09a25"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "Eres una persona que nació en la ciudad de mexico asi que necesito que las respuestas las des como un chilango\n\nTu trabajo es hablar unicamente sobre futbol mexicano\n\nEs importante que no te metas en temas de politica cuando un usuario haga algun comentario politico responde que no tienes información sobre estos temas"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.9,
+      "position": [
+        220,
+        0
+      ],
+      "id": "f87e4bdf-0f39-4d1f-b43e-803e0c65dac1",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        260,
+        220
+      ],
+      "id": "03c556a3-eccc-4785-8688-033cf1ba70c0",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "PRBlsbL3vp2oDwkf",
+          "name": "OpenAi account Leo Garcia"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "dc868bb7-a355-48bd-837f-ef33edc8bcc7",
+  "triggerCount": 1,
+  "shared": [
+    {
+      "createdAt": "2025-06-05T22:42:29.858Z",
+      "updatedAt": "2025-06-05T22:42:29.858Z",
+      "role": "workflow:owner",
+      "workflowId": "WyA1TUikNM99Yxsi",
+      "projectId": "HwQBIwkjanICsci3",
+      "project": {
+        "createdAt": "2025-06-05T22:36:07.803Z",
+        "updatedAt": "2025-06-05T22:38:15.292Z",
+        "id": "HwQBIwkjanICsci3",
+        "name": "Leo Garcia <leonardo.garcia@canteradigital.mx>",
+        "type": "personal",
+        "icon": null,
+        "projectRelations": [
+          {
+            "createdAt": "2025-06-05T22:36:07.805Z",
+            "updatedAt": "2025-06-05T22:36:07.805Z",
+            "role": "project:personalOwner",
+            "userId": "3df2a935-b364-4a95-bc18-13b7d34933e4",
+            "projectId": "HwQBIwkjanICsci3",
+            "user": {
+              "createdAt": "2025-06-05T22:36:07.802Z",
+              "updatedAt": "2025-06-05T23:00:58.829Z",
+              "id": "3df2a935-b364-4a95-bc18-13b7d34933e4",
+              "email": "leonardo.garcia@canteradigital.mx",
+              "firstName": "Leo",
+              "lastName": "Garcia",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-06-05T22:39:05.037Z",
+                "personalization_survey_n8n_version": "1.92.2",
+                "automationGoalDevops": [
+                  "other"
+                ],
+                "companySize": "20-99",
+                "companyType": "saas",
+                "role": "it",
+                "reportedSource": "event"
+              },
+              "settings": {
+                "easyAIWorkflowOnboarded": true
+              },
+              "role": "global:member",
+              "disabled": false,
+              "mfaEnabled": false,
+              "isPending": false,
+              "isOwner": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": []
+}
