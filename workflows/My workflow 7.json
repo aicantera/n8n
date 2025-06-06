@@ -1,0 +1,207 @@
+{
+  "createdAt": "2025-06-06T17:20:51.917Z",
+  "updatedAt": "2025-06-06T17:20:51.917Z",
+  "id": "ndXRYXcYs3LEkPMb",
+  "name": "My workflow 7",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "path": "whatsapp-ivr",
+        "options": {}
+      },
+      "id": "96d8ef74-0768-43f0-884a-a69faf6df796",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        -600,
+        100
+      ],
+      "webhookId": "19c67e69-ad6e-4433-83e6-19ca4e2eca42"
+    },
+    {
+      "parameters": {
+        "url": "https://your-supabase-api.com/fetch_user_state",
+        "options": {},
+        "queryParametersUi": {
+          "parameter": [
+            {
+              "name": "user_id",
+              "value": "={{ $json.body.sender }}"
+            }
+          ]
+        }
+      },
+      "id": "d0213f33-a95b-4726-9045-8a4a16541494",
+      "name": "Get User State",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        -400,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.current_step }}",
+              "value2": "menu_1"
+            }
+          ]
+        }
+      },
+      "id": "96b7d7a4-a29d-4165-81dd-6b9ea2e89b88",
+      "name": "Check Step: Menu 1",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        -200,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://your-supabase-api.com/update_user_state",
+        "options": {}
+      },
+      "id": "86be9f5f-aae4-450e-8194-4c352493e879",
+      "name": "Update to Menu 2",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://your-whatsapp-api/send_message",
+        "options": {}
+      },
+      "id": "9e62166b-a3e4-449b-baf8-71848d17c394",
+      "name": "Send Menu 2 Message",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        200,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Get User State",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get User State": {
+      "main": [
+        [
+          {
+            "node": "Check Step: Menu 1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Step: Menu 1": {
+      "main": [
+        [
+          {
+            "node": "Update to Menu 2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update to Menu 2": {
+      "main": [
+        [
+          {
+            "node": "Send Menu 2 Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {},
+  "versionId": "f5c1f019-f56b-474f-8e92-f040c1feb7df",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "createdAt": "2025-06-06T17:20:51.919Z",
+      "updatedAt": "2025-06-06T17:20:51.919Z",
+      "role": "workflow:owner",
+      "workflowId": "ndXRYXcYs3LEkPMb",
+      "projectId": "BZ9Ta5yhe4RhzY78",
+      "project": {
+        "createdAt": "2025-05-13T15:56:28.209Z",
+        "updatedAt": "2025-05-13T16:18:54.372Z",
+        "id": "BZ9Ta5yhe4RhzY78",
+        "name": "CANTERA ADMIN <canteradigital7@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "projectRelations": [
+          {
+            "createdAt": "2025-05-13T15:56:28.209Z",
+            "updatedAt": "2025-05-13T15:56:28.209Z",
+            "role": "project:personalOwner",
+            "userId": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
+            "projectId": "BZ9Ta5yhe4RhzY78",
+            "user": {
+              "createdAt": "2025-05-13T15:56:27.880Z",
+              "updatedAt": "2025-05-27T17:38:25.272Z",
+              "id": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
+              "email": "canteradigital7@gmail.com",
+              "firstName": "CANTERA",
+              "lastName": "ADMIN",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-05-13T16:19:25.161Z",
+                "personalization_survey_n8n_version": "1.92.2",
+                "companySize": "<20",
+                "companyType": "saas",
+                "role": "customer-support",
+                "reportedSource": "event"
+              },
+              "settings": {
+                "userActivated": true,
+                "firstSuccessfulWorkflowId": "PTbESRzX3rguwQN8",
+                "userActivatedAt": 1747154580970,
+                "easyAIWorkflowOnboarded": true,
+                "npsSurvey": {
+                  "responded": true,
+                  "lastShownAt": 1748367494893
+                }
+              },
+              "role": "global:owner",
+              "disabled": false,
+              "mfaEnabled": false,
+              "isPending": false,
+              "isOwner": true
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": []
+}
