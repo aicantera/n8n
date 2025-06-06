@@ -1,10 +1,39 @@
 {
   "createdAt": "2025-06-05T16:02:33.974Z",
-  "updatedAt": "2025-06-05T22:31:13.000Z",
+  "updatedAt": "2025-06-05T23:43:15.000Z",
   "id": "CRX5XfQDwqUbADMP",
   "name": "bot weebhook",
   "active": false,
   "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "pruebas-ricardo-correa",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -440,
+        360
+      ],
+      "id": "2efa2c2a-8a35-472d-a7e3-8fc7763eb300",
+      "name": "Webhook1",
+      "webhookId": "f1dffaff-ee8b-4285-9b84-596e059feec2"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.9,
+      "position": [
+        -120,
+        360
+      ],
+      "id": "03454ab1-b149-4d54-bc6b-9cad1ed111db",
+      "name": "AI Agent1"
+    },
     {
       "parameters": {
         "httpMethod": "POST",
@@ -15,10 +44,10 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2,
       "position": [
-        -360,
+        -440,
         -20
       ],
-      "id": "c591b960-d088-44ec-ac55-410365f78bbe",
+      "id": "6df33646-c2fa-493a-a0ff-c65e1bc10395",
       "name": "Webhook",
       "webhookId": "34dcdceb-3478-4265-ab3d-caffcb94b7cd"
     },
@@ -33,10 +62,10 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 1.9,
       "position": [
-        -140,
+        -220,
         -20
       ],
-      "id": "1fac6f32-40eb-4cff-8df5-a8d514073d84",
+      "id": "7400c4a4-5a93-4128-920d-feeaed3dbb96",
       "name": "AI Agent"
     },
     {
@@ -51,10 +80,10 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.2,
       "position": [
-        -220,
+        -300,
         180
       ],
-      "id": "beda4aeb-cc8f-4e88-a437-192350b676e4",
+      "id": "8cb9be9d-748b-4fb8-8d23-290dcf18458f",
       "name": "OpenAI Chat Model",
       "credentials": {
         "openAiApi": {
@@ -72,19 +101,35 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.2,
       "position": [
-        220,
+        140,
         -20
       ],
-      "id": "cfa9cd7a-cc7a-4e75-b3fc-45c523e70b81",
+      "id": "ba97522a-7e6b-4620-88ac-2457055283ef",
       "name": "Respond to Webhook"
     }
   ],
   "connections": {
+    "Webhook1": {
+      "main": [
+        []
+      ]
+    },
     "Webhook": {
       "main": [
         [
           {
             "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
             "type": "main",
             "index": 0
           }
@@ -101,17 +146,6 @@
           }
         ]
       ]
-    },
-    "AI Agent": {
-      "main": [
-        [
-          {
-            "node": "Respond to Webhook",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
     }
   },
   "settings": {
@@ -122,7 +156,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "733307b7-7075-4c97-8fe5-0ca6d2466a86",
+  "versionId": "35fb6382-e71b-4770-8b17-cca03758fda2",
   "triggerCount": 0,
   "shared": [
     {
