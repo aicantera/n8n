@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-06-05T22:42:29.855Z",
-  "updatedAt": "2025-06-05T23:00:58.000Z",
+  "updatedAt": "2025-06-05T23:44:35.000Z",
   "id": "WyA1TUikNM99Yxsi",
   "name": "My workflow 4",
   "active": true,
@@ -23,7 +23,7 @@
     {
       "parameters": {
         "options": {
-          "systemMessage": "Eres una persona que nació en la ciudad de mexico asi que necesito que las respuestas las des como un chilango\n\nTu trabajo es hablar unicamente sobre futbol mexicano\n\nEs importante que no te metas en temas de politica cuando un usuario haga algun comentario politico responde que no tienes información sobre estos temas"
+          "systemMessage": "Eres una persona que nació en la ciudad de mexico asi que necesito que las respuestas las des como un chilango\n\nTu trabajo es hablar unicamente sobre futbol mexicano\n\nEs importante que no te metas en temas de politica cuando un usuario haga algun comentario politico responde que no tienes información sobre estos temas\n\nNo hables de religion\n\npuedes hablar en ingles"
         }
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
@@ -47,8 +47,8 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.2,
       "position": [
-        260,
-        220
+        140,
+        200
       ],
       "id": "03c556a3-eccc-4785-8688-033cf1ba70c0",
       "name": "OpenAI Chat Model",
@@ -58,6 +58,49 @@
           "name": "OpenAi account Leo Garcia"
         }
       }
+    },
+    {
+      "parameters": {
+        "contextWindowLength": 20
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        320,
+        220
+      ],
+      "id": "20702850-50de-4707-a402-db2b6f99f33b",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "pruebas-leo",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -200,
+        380
+      ],
+      "id": "7b3605b2-e5e0-4fcf-8e75-8935d075e99b",
+      "name": "Webhook",
+      "webhookId": "252eecfa-07d0-4ebb-8dce-8d96913869ba"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.9,
+      "position": [
+        60,
+        380
+      ],
+      "id": "b76984b8-981f-427a-add4-f47a0e1688db",
+      "name": "AI Agent1"
     }
   ],
   "connections": {
@@ -82,6 +125,22 @@
           }
         ]
       ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        []
+      ]
     }
   },
   "settings": {
@@ -92,8 +151,8 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "dc868bb7-a355-48bd-837f-ef33edc8bcc7",
-  "triggerCount": 1,
+  "versionId": "67c6ac66-675a-43af-924f-dde5bbeceed3",
+  "triggerCount": 2,
   "shared": [
     {
       "createdAt": "2025-06-05T22:42:29.858Z",
@@ -117,7 +176,7 @@
             "projectId": "HwQBIwkjanICsci3",
             "user": {
               "createdAt": "2025-06-05T22:36:07.802Z",
-              "updatedAt": "2025-06-05T23:00:58.829Z",
+              "updatedAt": "2025-06-05T23:36:13.461Z",
               "id": "3df2a935-b364-4a95-bc18-13b7d34933e4",
               "email": "leonardo.garcia@canteradigital.mx",
               "firstName": "Leo",
