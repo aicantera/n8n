@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-06-05T22:43:32.902Z",
-  "updatedAt": "2025-06-05T22:43:32.902Z",
+  "updatedAt": "2025-06-05T23:53:44.000Z",
   "id": "jqem4b0kZ9uMntHc",
   "name": "Clase Rick 1",
   "active": false,
@@ -21,7 +21,9 @@
     },
     {
       "parameters": {
-        "options": {}
+        "options": {
+          "systemMessage": "### Perfil del Agente\n\nEres un asistente de inteligencia artificial con la personalidad de alguien que nació y creció en la Ciudad de México. Tu manera de expresarte debe ser coloquial y usar modismos comunes de la CDMX (tono \"chilango\").\n\n### Tema Principal\n\nTu única especialidad y tema de conversación es el **fútbol mexicano**. Esto incluye:\n\n* Liga MX\n* Selección Nacional de México (todas las categorías)\n* Jugadores mexicanos en el extranjero\n* Historia del fútbol en México\n* Debates y análisis sobre partidos y equipos\n\n### Reglas y Restricciones\n\n* **Exclusividad de Tema**: Bajo ninguna circunstancia debes hablar de otro tema que no sea fútbol mexicano.\n* **Restricción de Política**: Si un usuario intenta hablar o preguntar sobre política, debes responder de manera amable pero firme que no tienes información sobre esos temas y redirigir la conversación al fútbol. Por ejemplo: *\"La neta, de política no sé nada. Mejor hablemos de cómo va a quedar el Clásico, ¿no?\"*\n* **Restricción de Religión**: Si un usuario intenta hablar o preguntar sobre religión, debes responder de forma similar, indicando que no es tu área. Por ejemplo: *\"Uy, en esos temas religiosos mejor ni me meto. ¿Viste el golazo que se aventó el 'Chucky' el fin de semana?\"*\n* **Tono y Lenguaje**: Mantén siempre el tono chilango. Usa frases como \"qué onda\", \"chamba\", \"neta\", \"no manches\", \"chido\", etc., de forma natural en la conversación."
+        }
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 1.9,
@@ -31,6 +33,116 @@
       ],
       "id": "398e6fe7-a294-432e-8d34-3edfa793d2f6",
       "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        180,
+        180
+      ],
+      "id": "f5c71e22-4feb-4ad1-8b34-2d938e495dd5",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "Q8WQKibB08nTTio4",
+          "name": "OpenAi account CanteraConnect"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "contextWindowLength": 20
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        320,
+        200
+      ],
+      "id": "97056cee-c001-4552-be1b-c4cf98f2dd73",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "agente-aaron",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -40,
+        480
+      ],
+      "id": "e65eaed9-9a4c-49f0-87d8-9c96075f4913",
+      "name": "Webhook",
+      "webhookId": "34dcdceb-3478-4265-ab3d-caffcb94b7cd"
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{ $json.output }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.2,
+      "position": [
+        540,
+        480
+      ],
+      "id": "3c37361c-d282-4186-9e6d-889b0d58156e",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.body.message }}",
+        "options": {
+          "systemMessage": "eres un agente poderoso capaz de responder a preguntas y realizar chistes al respecto, quiero que te dirijas al usuario como un chilango "
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.9,
+      "position": [
+        180,
+        480
+      ],
+      "id": "e3efd542-86cf-45dd-a5a9-7b508c5fa09b",
+      "name": "AI Agent1"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        100,
+        680
+      ],
+      "id": "b19e515e-7d4d-44d4-966a-6f78fe44e351",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "Q8WQKibB08nTTio4",
+          "name": "OpenAi account CanteraConnect"
+        }
+      }
     }
   ],
   "connections": {
@@ -44,15 +156,72 @@
           }
         ]
       ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent1": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
     "executionOrder": "v1"
   },
   "staticData": null,
-  "meta": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
   "pinData": {},
-  "versionId": "ced28eb1-5e51-4a35-80b5-13f75e82fc57",
+  "versionId": "8a2ad030-0fff-44fe-b1b2-45df1a45b3b0",
   "triggerCount": 0,
   "shared": [
     {
