@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-06-06T18:22:51.409Z",
-  "updatedAt": "2025-06-06T18:27:53.000Z",
+  "updatedAt": "2025-06-06T19:46:02.000Z",
   "id": "IF7A1yjt9VyZJFhD",
   "name": "Almacenar historial",
   "active": false,
@@ -21,7 +21,9 @@
     },
     {
       "parameters": {
-        "options": {}
+        "options": {
+          "systemMessage": "Eres un asistente capaz de contestar preguntas del usuario a cerca del personaje ficticio Darth Revan de la saga de películas de ciencia ficción StarWars, utiliza información de la herramienta **Archivos Darth Revan** para responder las consultas del usuario."
+        }
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 1.9,
@@ -72,6 +74,88 @@
           "name": "Postgres Cuenta Aaron"
         }
       }
+    },
+    {
+      "parameters": {
+        "tableName": {
+          "__rl": true,
+          "value": "documents",
+          "mode": "list",
+          "cachedResultName": "documents"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1.1,
+      "position": [
+        340,
+        380
+      ],
+      "id": "db3714ab-5a23-4b2a-872e-ac81432e249c",
+      "name": "Supabase Vector Store",
+      "credentials": {
+        "supabaseApi": {
+          "id": "JdSpBKWr20tzxL8D",
+          "name": "Supabase Aaron"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "text-embedding-ada-002",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        320,
+        540
+      ],
+      "id": "1e012cdd-8cc5-4805-83e8-183f5f1b211c",
+      "name": "Embeddings OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "Q8WQKibB08nTTio4",
+          "name": "OpenAi account CanteraConnect"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        640,
+        420
+      ],
+      "id": "d6eef1d2-9e7f-46ee-80ca-d01f82ef119c",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "Q8WQKibB08nTTio4",
+          "name": "OpenAi account CanteraConnect"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "description": "Esta herramienta va a dar información sobre el personaje ficticio Darth Revan, el cual aparee en la saga de películas de ciencia ficción llamada StarWars."
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolVectorStore",
+      "typeVersion": 1.1,
+      "position": [
+        500,
+        200
+      ],
+      "id": "ce508fab-6008-4ac7-9e10-980c88b7034b",
+      "name": "Archivos Darth Revan"
     }
   ],
   "connections": {
@@ -107,6 +191,50 @@
           }
         ]
       ]
+    },
+    "Supabase Vector Store": {
+      "ai_vectorStore": [
+        [
+          {
+            "node": "Archivos Darth Revan",
+            "type": "ai_vectorStore",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Supabase Vector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Archivos Darth Revan",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Archivos Darth Revan": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -117,7 +245,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "92d0a68a-8a25-4a63-8981-4513a10b0682",
+  "versionId": "6c783daf-465f-486b-bd09-074961b4a345",
   "triggerCount": 0,
   "shared": [
     {
