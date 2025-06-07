@@ -1,0 +1,317 @@
+{
+  "createdAt": "2025-06-06T23:23:40.028Z",
+  "updatedAt": "2025-06-06T23:39:43.000Z",
+  "id": "aCWNr1E21eLAKUK4",
+  "name": "template kb",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        1500,
+        200
+      ],
+      "id": "0d802d23-7376-4569-a6ca-970955ac9640",
+      "name": "Embeddings OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "PRBlsbL3vp2oDwkf",
+          "name": "OpenAi account Leo Garcia"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "dataType": "binary",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1,
+      "position": [
+        1740,
+        180
+      ],
+      "id": "ce17949c-49dd-4e43-975d-51f7efaf6fad",
+      "name": "Default Data Loader"
+    },
+    {
+      "parameters": {
+        "chunkSize": 200,
+        "chunkOverlap": 20,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+      "typeVersion": 1,
+      "position": [
+        1800,
+        400
+      ],
+      "id": "d733d2ae-9b30-4395-b60d-9c316b0ca71d",
+      "name": "Recursive Character Text Splitter"
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "triggerOn": "specificFolder",
+        "folderToWatch": {
+          "__rl": true,
+          "value": "1pS0a5NLEhCt9IEgOXL8I5yNPPydyAVkK",
+          "mode": "list",
+          "cachedResultName": "clase n8n",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1pS0a5NLEhCt9IEgOXL8I5yNPPydyAVkK"
+        },
+        "event": "fileCreated",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDriveTrigger",
+      "typeVersion": 1,
+      "position": [
+        920,
+        -40
+      ],
+      "id": "da42d51a-2c95-44a7-b6ed-9c40d5a6af90",
+      "name": "Buscamnos cambios en documentos",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "YUiUEKX3tnSlPcMC",
+          "name": "Google Drive account Leo Garcia n8n"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "searchMethod": "query",
+        "queryString": "name contains 'test'",
+        "returnAll": true,
+        "filter": {
+          "folderId": {
+            "__rl": true,
+            "value": "1pS0a5NLEhCt9IEgOXL8I5yNPPydyAVkK",
+            "mode": "list",
+            "cachedResultName": "clase n8n",
+            "cachedResultUrl": "https://drive.google.com/drive/folders/1pS0a5NLEhCt9IEgOXL8I5yNPPydyAVkK"
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1140,
+        -40
+      ],
+      "id": "9373c69f-814e-4d8f-abbe-f13a95625f31",
+      "name": "sacamos todos los documentos",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "YUiUEKX3tnSlPcMC",
+          "name": "Google Drive account Leo Garcia n8n"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{$json.id}}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1380,
+        -40
+      ],
+      "id": "c19feede-880a-4cc4-a506-74e3bd03902a",
+      "name": "descargamos los documentos",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "YUiUEKX3tnSlPcMC",
+          "name": "Google Drive account Leo Garcia n8n"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "tableName": {
+          "__rl": true,
+          "value": "documents",
+          "mode": "list",
+          "cachedResultName": "documents"
+        },
+        "options": {
+          "queryName": "match_documents"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1.1,
+      "position": [
+        1600,
+        -40
+      ],
+      "id": "e0b411c4-dd2e-42d8-913c-69cf232b6c19",
+      "name": "añadimos documentos a la base de conocimiento",
+      "credentials": {
+        "supabaseApi": {
+          "id": "skcUEMppehFesCmg",
+          "name": "Supabase account Leo garcia n8n"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Embeddings OpenAI": {
+      "ai_embedding": [
+        [
+          {
+            "node": "añadimos documentos a la base de conocimiento",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Default Data Loader": {
+      "ai_document": [
+        [
+          {
+            "node": "añadimos documentos a la base de conocimiento",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recursive Character Text Splitter": {
+      "ai_textSplitter": [
+        [
+          {
+            "node": "Default Data Loader",
+            "type": "ai_textSplitter",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscamnos cambios en documentos": {
+      "main": [
+        [
+          {
+            "node": "sacamos todos los documentos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "sacamos todos los documentos": {
+      "main": [
+        [
+          {
+            "node": "descargamos los documentos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "descargamos los documentos": {
+      "main": [
+        [
+          {
+            "node": "añadimos documentos a la base de conocimiento",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "76192dfd-d034-4394-b944-a568c8adb993",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "createdAt": "2025-06-06T23:23:40.031Z",
+      "updatedAt": "2025-06-06T23:23:40.031Z",
+      "role": "workflow:owner",
+      "workflowId": "aCWNr1E21eLAKUK4",
+      "projectId": "HwQBIwkjanICsci3",
+      "project": {
+        "createdAt": "2025-06-05T22:36:07.803Z",
+        "updatedAt": "2025-06-05T22:38:15.292Z",
+        "id": "HwQBIwkjanICsci3",
+        "name": "Leo Garcia <leonardo.garcia@canteradigital.mx>",
+        "type": "personal",
+        "icon": null,
+        "projectRelations": [
+          {
+            "createdAt": "2025-06-05T22:36:07.805Z",
+            "updatedAt": "2025-06-05T22:36:07.805Z",
+            "role": "project:personalOwner",
+            "userId": "3df2a935-b364-4a95-bc18-13b7d34933e4",
+            "projectId": "HwQBIwkjanICsci3",
+            "user": {
+              "createdAt": "2025-06-05T22:36:07.802Z",
+              "updatedAt": "2025-06-05T23:36:13.461Z",
+              "id": "3df2a935-b364-4a95-bc18-13b7d34933e4",
+              "email": "leonardo.garcia@canteradigital.mx",
+              "firstName": "Leo",
+              "lastName": "Garcia",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-06-05T22:39:05.037Z",
+                "personalization_survey_n8n_version": "1.92.2",
+                "automationGoalDevops": [
+                  "other"
+                ],
+                "companySize": "20-99",
+                "companyType": "saas",
+                "role": "it",
+                "reportedSource": "event"
+              },
+              "settings": {
+                "easyAIWorkflowOnboarded": true
+              },
+              "role": "global:member",
+              "disabled": false,
+              "mfaEnabled": false,
+              "isPending": false,
+              "isOwner": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": [
+    {
+      "createdAt": "2025-05-13T17:01:17.387Z",
+      "updatedAt": "2025-05-13T17:01:17.387Z",
+      "id": "PwWwR5Yqz46trn75",
+      "name": "templates"
+    }
+  ]
+}
