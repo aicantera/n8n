@@ -1,0 +1,650 @@
+{
+  "createdAt": "2025-06-08T04:32:35.849Z",
+  "updatedAt": "2025-06-08T04:32:35.849Z",
+  "id": "RCmEsaRxVyPOia8X",
+  "name": "My workflow 9",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "42b02a2f-a642-42db-a565-fd2a01a26fb9",
+              "name": "bg_color",
+              "type": "string",
+              "value": "white"
+            },
+            {
+              "id": "f68b2280-ec85-4400-8a98-10e644b56076",
+              "name": "padding",
+              "type": "string",
+              "value": "5%"
+            },
+            {
+              "id": "8bdee3a1-9107-4bf8-adea-332d299e43ae",
+              "name": "keepInputSize",
+              "type": "boolean",
+              "value": true
+            },
+            {
+              "id": "89d9e4fb-ed14-4ee2-b6f0-73035bafbc39",
+              "name": "outputSize",
+              "type": "string",
+              "value": "1600x1600"
+            },
+            {
+              "id": "ad53bf64-5493-4c4d-a52c-cd4d657cc9f9",
+              "name": "inputFileName",
+              "type": "string",
+              "value": "={{ $json.originalFilename }}"
+            },
+            {
+              "id": "9fc440c6-289b-4a6a-8391-479a6660836f",
+              "name": "OutputDriveFolder",
+              "type": "string",
+              "value": "ENTER GOOGLE DRIVE FOLDER URL"
+            },
+            {
+              "id": "f0f1767a-b659-48c4-bef6-8ee4111cb939",
+              "name": "api-key",
+              "type": "string",
+              "value": "ENTER API KEY"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "3bff02d2-2e85-456b-ab5a-69806e1d661a",
+      "name": "Config",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        -560,
+        1900
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://image-api.photoroom.com/v2/edit",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-api-key",
+              "value": "={{ $json['api-key'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "background.color",
+              "value": "={{ $json.bg_color }}"
+            },
+            {
+              "parameterType": "formBinaryData",
+              "name": "imageFile",
+              "inputDataFieldName": "data"
+            },
+            {
+              "name": "padding",
+              "value": "={{ $json.padding }}"
+            },
+            {
+              "name": "outputSize",
+              "value": "={{ $json.Geometry }}"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {}
+          }
+        }
+      },
+      "id": "0bfe1ad6-56d5-4ad6-a112-92a805ca6a99",
+      "name": "remove background",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        920,
+        1800
+      ],
+      "typeVersion": 4.1
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "Geometry",
+        "options": {
+          "includeBinary": true
+        }
+      },
+      "id": "dfda6f8c-1c63-484a-bce5-c42f214028ac",
+      "name": "Split Out",
+      "type": "n8n-nodes-base.splitOut",
+      "position": [
+        -120,
+        1700
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "name": "=BG-Removed-{{$json.inputFileName.split('.').slice(0, -1).join('.') }}.png",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "mode": "url",
+          "value": "={{ $json.OutputDriveFolder }}"
+        },
+        "options": {}
+      },
+      "id": "d00deaeb-c173-4ba0-b3a9-292abb78e1d5",
+      "name": "Upload Picture to Google Drive",
+      "type": "n8n-nodes-base.googleDrive",
+      "position": [
+        1140,
+        1600
+      ],
+      "typeVersion": 3
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://image-api.photoroom.com/v2/edit",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-api-key",
+              "value": "={{ $json['api-key'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "background.color",
+              "value": "={{ $json.bg_color }}"
+            },
+            {
+              "parameterType": "formBinaryData",
+              "name": "imageFile",
+              "inputDataFieldName": "data"
+            },
+            {
+              "name": "padding",
+              "value": "={{ $json.padding }}"
+            },
+            {
+              "name": "outputSize",
+              "value": "={{ $json.outputSize }}"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {}
+          }
+        }
+      },
+      "id": "3e95d708-941f-4c33-a784-ac87830aab65",
+      "name": "remove background fixed size",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        920,
+        1600
+      ],
+      "typeVersion": 4.1
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "id": "16e2fba2-b67b-40a8-a5a0-51d3e7427574",
+      "name": "Merge",
+      "type": "n8n-nodes-base.merge",
+      "position": [
+        220,
+        1740
+      ],
+      "typeVersion": 3
+    },
+    {
+      "parameters": {
+        "name": "=BG-Removed-{{$json.inputFileName.split('.').slice(0, -1).join('.') }}.png",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "mode": "url",
+          "value": "={{ $json.OutputDriveFolder }}"
+        },
+        "options": {}
+      },
+      "id": "8791fffe-d387-4aae-89a7-d2665b315f75",
+      "name": "Upload Picture to Google Drive1",
+      "type": "n8n-nodes-base.googleDrive",
+      "position": [
+        1160,
+        1800
+      ],
+      "typeVersion": 3
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $json.id }}"
+        },
+        "options": {}
+      },
+      "id": "9a79eac2-9098-4e3a-8188-c02f717626d6",
+      "name": "Download Image",
+      "type": "n8n-nodes-base.googleDrive",
+      "position": [
+        -580,
+        1700
+      ],
+      "typeVersion": 3
+    },
+    {
+      "parameters": {
+        "operation": "information"
+      },
+      "id": "e56c80df-bff4-4035-9223-85ca067d2455",
+      "name": "Get Image Size",
+      "type": "n8n-nodes-base.editImage",
+      "position": [
+        -320,
+        1700
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## About this worfklow \n\n## How it works\nThis workflow does watch out for new images uploaded within Google Drive. \nOnce there are new images it will download the image. And then run some logic, remove the background and add some padding to the output image. \n**By default Images are saved as .png**\nOnce done upload it to Google Drive again.\n## Features* Select Google Drive Credentials within the Google Drive Nodes\n### This workflow supports\n* Remove Background\n* Transparent Background\n* Coloured Background (1 Color)\n* Add Padding\n* Choose Output Size\n\n## Customize it!\n* Feel free to customize the workflow to your needs\n* Speed up the workflow: Using fixed output size\n### Examples \n* Send Final Images to another service\n* For Products: Let ChatGPT Analyze the Product Type\n* Add Text with the \"Edit Image\" Node\n\n### Photroom API Playground\n[Click me](https://www.photoroom.com/api/playground)",
+        "height": 653.6921420882659,
+        "width": 613.2529601722273,
+        "color": 5
+      },
+      "id": "58e68616-92e4-4eee-9642-aa9b03ee0c77",
+      "name": "Sticky Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -960,
+        1000
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## Setup\n\n### Requirements\n* Photoroom API Key [Click me](https://docs.photoroom.com/getting-started/how-can-i-get-my-api-key)\n* Google Drive Credential Setup\n\n\n## Config\n* Select Google Drive Credentials within the Google Drive Nodes\n\n* **Please refer to the \"Config\" Node**\n\nFor the API Key you can also setup an Header Authentication",
+        "height": 395.45317545748134,
+        "width": 437.4768568353068,
+        "color": 4
+      },
+      "id": "e26fae90-8468-47b5-8051-44d71a597028",
+      "name": "Sticky Note2",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -320,
+        1260
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "triggerOn": "specificFolder",
+        "folderToWatch": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        },
+        "event": "fileCreated",
+        "options": {}
+      },
+      "id": "2070caa9-dc8f-4992-9c42-443c999ab107",
+      "name": "Watch for new images",
+      "type": "n8n-nodes-base.googleDriveTrigger",
+      "position": [
+        -940,
+        1800
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "Select Input Folder",
+        "height": 80,
+        "width": 160.79224973089333,
+        "color": 3
+      },
+      "id": "f0ce31cc-0989-4632-88e6-0438bf24af2a",
+      "name": "Sticky Note3",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -960,
+        1960
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "### Configuration\n* Provide Your API Key\n* Set Background Color\n-HEX or values like white, transparent...\n* Select if Output Size / or Original Size should be used \n* Output Drive Folder\n ->Copy URL\n* Padding (Default 5%)",
+        "height": 227.27233584499461,
+        "width": 263.8708288482238,
+        "color": 3
+      },
+      "id": "a3682b76-daa6-40bf-8ac8-f49111f27330",
+      "name": "Sticky Note4",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -600,
+        2060
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "d11ca8bb-0801-480f-b99a-249c5920b876",
+              "operator": {
+                "type": "boolean",
+                "operation": "false",
+                "singleValue": true
+              },
+              "leftValue": "={{ $json.keepInputSize }}",
+              "rightValue": ""
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "1920b276-a9e9-4779-be2e-46f6ba33ce88",
+      "name": "check which output size method is used",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        660,
+        1740
+      ],
+      "typeVersion": 2.2
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "f37ce5ee-c8b4-4488-93b1-515b9a639a1e",
+      "name": "loop all over your images",
+      "type": "n8n-nodes-base.splitInBatches",
+      "position": [
+        440,
+        1740
+      ],
+      "typeVersion": 3
+    }
+  ],
+  "connections": {
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "loop all over your images",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Config": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Image": {
+      "main": [
+        [
+          {
+            "node": "Get Image Size",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Image Size": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "remove background": {
+      "main": [
+        [
+          {
+            "node": "Upload Picture to Google Drive1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Watch for new images": {
+      "main": [
+        [
+          {
+            "node": "Download Image",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Config",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "loop all over your images": {
+      "main": [
+        [],
+        [
+          {
+            "node": "check which output size method is used",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "remove background fixed size": {
+      "main": [
+        [
+          {
+            "node": "Upload Picture to Google Drive",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload Picture to Google Drive": {
+      "main": [
+        [
+          {
+            "node": "loop all over your images",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload Picture to Google Drive1": {
+      "main": [
+        [
+          {
+            "node": "loop all over your images",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "check which output size method is used": {
+      "main": [
+        [
+          {
+            "node": "remove background fixed size",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "remove background",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "0dc5beca-769d-44cd-82fb-e5720fdb1384",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "createdAt": "2025-06-08T04:32:35.858Z",
+      "updatedAt": "2025-06-08T04:32:35.858Z",
+      "role": "workflow:owner",
+      "workflowId": "RCmEsaRxVyPOia8X",
+      "projectId": "UPXsxNbEdAC5wodw",
+      "project": {
+        "createdAt": "2025-05-30T21:50:35.802Z",
+        "updatedAt": "2025-05-30T21:51:22.504Z",
+        "id": "UPXsxNbEdAC5wodw",
+        "name": "Alexandra  Trujillo  <alexandra.trujillo@canteradigital.mx>",
+        "type": "personal",
+        "icon": null,
+        "projectRelations": [
+          {
+            "createdAt": "2025-05-30T21:50:35.804Z",
+            "updatedAt": "2025-05-30T21:50:35.804Z",
+            "role": "project:personalOwner",
+            "userId": "65d58894-4572-495d-8c41-0b8ea4c5b71f",
+            "projectId": "UPXsxNbEdAC5wodw",
+            "user": {
+              "createdAt": "2025-05-30T21:50:35.800Z",
+              "updatedAt": "2025-06-06T21:50:25.281Z",
+              "id": "65d58894-4572-495d-8c41-0b8ea4c5b71f",
+              "email": "alexandra.trujillo@canteradigital.mx",
+              "firstName": "Alexandra ",
+              "lastName": "Trujillo ",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-05-30T21:52:04.811Z",
+                "personalization_survey_n8n_version": "1.92.2",
+                "automationGoalDevops": [
+                  "data-syncing",
+                  "ticketing-systems-integrations",
+                  "ci-cd",
+                  "monitoring-alerting",
+                  "reporting",
+                  "incident-response"
+                ],
+                "companyType": "systems-integrator",
+                "role": "it"
+              },
+              "settings": {
+                "easyAIWorkflowOnboarded": true,
+                "firstSuccessfulWorkflowId": "bmdwVJ36IDZozHoU",
+                "userActivated": true,
+                "userActivatedAt": 1749246625266
+              },
+              "role": "global:member",
+              "disabled": false,
+              "mfaEnabled": false,
+              "isPending": false,
+              "isOwner": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": [
+    {
+      "createdAt": "2025-06-07T20:44:20.613Z",
+      "updatedAt": "2025-06-07T20:44:20.613Z",
+      "id": "eUxStkzz4xWP88MH",
+      "name": "OpenAI"
+    },
+    {
+      "createdAt": "2025-06-07T20:44:20.621Z",
+      "updatedAt": "2025-06-07T20:44:20.621Z",
+      "id": "prrX9HtOr2KedCtf",
+      "name": "Google Drive"
+    }
+  ]
+}
