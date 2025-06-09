@@ -1,0 +1,352 @@
+{
+  "createdAt": "2025-06-09T21:40:20.511Z",
+  "updatedAt": "2025-06-09T21:40:20.511Z",
+  "id": "PLrWRTUnSWAP5Ne3",
+  "name": "My workflow 21",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "contextWindowLength": 10
+      },
+      "id": "eda3f3ea-f83c-4bbd-9e73-a6228ace2a61",
+      "name": "Window Buffer Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "position": [
+        780,
+        800
+      ],
+      "typeVersion": 1.2
+    },
+    {
+      "parameters": {
+        "model": "gpt-4-turbo",
+        "options": {
+          "temperature": 0.3
+        }
+      },
+      "id": "b0146ffe-b47e-4d83-bea2-4e83c919ef87",
+      "name": "OpenAI Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "position": [
+        560,
+        800
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {},
+      "id": "93a270d9-0a15-4b9a-83b4-2140124abc58",
+      "name": "When clicking \"Test workflow\"",
+      "type": "n8n-nodes-base.manualTrigger",
+      "position": [
+        60,
+        220
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "url": "https://www.sqlitetutorial.net/wp-content/uploads/2018/03/chinook.zip",
+        "options": {}
+      },
+      "id": "0dfdb022-84d5-4522-894c-6ff51b46c298",
+      "name": "Get chinook.zip example",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        260,
+        220
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {},
+      "id": "e8b92728-2521-4443-8dcc-1bda5319d85e",
+      "name": "Extract zip file",
+      "type": "n8n-nodes-base.compression",
+      "position": [
+        460,
+        220
+      ],
+      "typeVersion": 1.1
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "./chinook.db",
+        "dataPropertyName": "file_0",
+        "options": {}
+      },
+      "id": "8ac5aef8-02c6-4f54-b233-26e0d2849517",
+      "name": "Save chinook.db locally",
+      "type": "n8n-nodes-base.readWriteFile",
+      "position": [
+        660,
+        220
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "fileSelector": "./chinook.db",
+        "options": {}
+      },
+      "id": "7cfff3f0-bcab-4e63-ac27-9173e5e89cc6",
+      "name": "Load local chinook.db",
+      "type": "n8n-nodes-base.readWriteFile",
+      "position": [
+        180,
+        660
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## Run this part only once\nThis section:\n* downloads the example zip file from https://www.sqlitetutorial.net/sqlite-sample-database/\n* extracts the archive (it contains only a single file)\n* saves the extracted `chinook.db` SQLite database locally\n\nNow you can use chat to \"talk\" to your data!",
+        "height": 372.9454545454546,
+        "width": 834.3272727272731
+      },
+      "id": "1278e7e2-62d6-416b-88a5-0e0f1a21a6c8",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        0,
+        0
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## On every chat message:\n* the local SQLite database is loaded\n* JSON from Chat Trigger is combined with SQLite binary data",
+        "height": 297.89090909090913,
+        "width": 558.5454545454544
+      },
+      "id": "98651048-7ab6-4528-8504-9abd0b235de0",
+      "name": "Sticky Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -40,
+        540
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={{ $('Chat Trigger').item.json }}\n",
+        "options": {
+          "includeBinary": true
+        }
+      },
+      "id": "f363e491-96b8-4fbf-8d68-68fc01e88080",
+      "name": "Combine chat input with the binary",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        380,
+        660
+      ],
+      "typeVersion": 3.3
+    },
+    {
+      "parameters": {
+        "content": "### LangChain SQL Agent can make several queries before producing the final answer.\nTry these examples:\n1. \"Please describe the database\". This input usually requires just 1 query + an extra observation to produce a final answer.\n2. \"What are the revenues by genre?\". This input will launch a series of Agent actions, because it needs to make several queries.\n\nThe final answer is stored in the memory and will be recalled on the next input from the user.",
+        "height": 511.16641410437836,
+        "width": 471.99692219161466
+      },
+      "id": "4b8ebb56-076c-43d5-a239-e8c6101d1a12",
+      "name": "Sticky Note2",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        540,
+        420
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "agent": "sqlAgent",
+        "dataSource": "sqlite",
+        "options": {}
+      },
+      "id": "92e1d25a-1d36-424e-9b2a-4a069f2d4fa5",
+      "name": "AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "position": [
+        580,
+        660
+      ],
+      "typeVersion": 1.6
+    },
+    {
+      "parameters": {},
+      "id": "87f23323-badb-44d5-b75a-d3c717e5a298",
+      "name": "Chat Trigger",
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "position": [
+        -20,
+        660
+      ],
+      "webhookId": "fb565f08-a459-4ff9-8249-1ede58599660",
+      "typeVersion": 1
+    }
+  ],
+  "connections": {
+    "Chat Trigger": {
+      "main": [
+        [
+          {
+            "node": "Load local chinook.db",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract zip file": {
+      "main": [
+        [
+          {
+            "node": "Save chinook.db locally",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Window Buffer Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Load local chinook.db": {
+      "main": [
+        [
+          {
+            "node": "Combine chat input with the binary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get chinook.zip example": {
+      "main": [
+        [
+          {
+            "node": "Extract zip file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking \"Test workflow\"": {
+      "main": [
+        [
+          {
+            "node": "Get chinook.zip example",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Combine chat input with the binary": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {},
+  "versionId": "b38364d7-44f1-4b75-8d63-90da85735657",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "createdAt": "2025-06-09T21:40:20.514Z",
+      "updatedAt": "2025-06-09T21:40:20.514Z",
+      "role": "workflow:owner",
+      "workflowId": "PLrWRTUnSWAP5Ne3",
+      "projectId": "UPXsxNbEdAC5wodw",
+      "project": {
+        "createdAt": "2025-05-30T21:50:35.802Z",
+        "updatedAt": "2025-05-30T21:51:22.504Z",
+        "id": "UPXsxNbEdAC5wodw",
+        "name": "Alexandra  Trujillo  <alexandra.trujillo@canteradigital.mx>",
+        "type": "personal",
+        "icon": null,
+        "projectRelations": [
+          {
+            "createdAt": "2025-05-30T21:50:35.804Z",
+            "updatedAt": "2025-05-30T21:50:35.804Z",
+            "role": "project:personalOwner",
+            "userId": "65d58894-4572-495d-8c41-0b8ea4c5b71f",
+            "projectId": "UPXsxNbEdAC5wodw",
+            "user": {
+              "createdAt": "2025-05-30T21:50:35.800Z",
+              "updatedAt": "2025-06-06T21:50:25.281Z",
+              "id": "65d58894-4572-495d-8c41-0b8ea4c5b71f",
+              "email": "alexandra.trujillo@canteradigital.mx",
+              "firstName": "Alexandra ",
+              "lastName": "Trujillo ",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-05-30T21:52:04.811Z",
+                "personalization_survey_n8n_version": "1.92.2",
+                "automationGoalDevops": [
+                  "data-syncing",
+                  "ticketing-systems-integrations",
+                  "ci-cd",
+                  "monitoring-alerting",
+                  "reporting",
+                  "incident-response"
+                ],
+                "companyType": "systems-integrator",
+                "role": "it"
+              },
+              "settings": {
+                "easyAIWorkflowOnboarded": true,
+                "firstSuccessfulWorkflowId": "bmdwVJ36IDZozHoU",
+                "userActivated": true,
+                "userActivatedAt": 1749246625266
+              },
+              "role": "global:member",
+              "disabled": false,
+              "mfaEnabled": false,
+              "isPending": false,
+              "isOwner": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": []
+}
