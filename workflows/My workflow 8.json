@@ -1,7 +1,7 @@
 {
-  "createdAt": "2025-06-06T23:53:55.016Z",
-  "updatedAt": "2025-06-06T23:58:38.000Z",
-  "id": "4pDhRwfPwbVMwWHF",
+  "createdAt": "2025-06-06T23:50:47.110Z",
+  "updatedAt": "2025-06-06T23:50:47.110Z",
+  "id": "5HZ43Sdmnm9htlTl",
   "name": "My workflow 8",
   "active": false,
   "nodes": [
@@ -12,109 +12,66 @@
       "type": "@n8n/n8n-nodes-langchain.chatTrigger",
       "typeVersion": 1.1,
       "position": [
-        0,
-        0
+        -160,
+        -100
       ],
-      "id": "5a5c8bc0-305a-402f-b50b-97ffecb2cfb5",
+      "id": "f4e97da1-4b82-4838-a016-01bdd7b1a4ad",
       "name": "When chat message received",
-      "webhookId": "6d8fe497-a658-4b6b-a2c9-8d85ff0c05b5"
+      "webhookId": "0e41bb90-42fd-4c21-ba99-fe68ee3541aa"
     },
     {
       "parameters": {
-        "options": {
-          "systemMessage": "=Eres un agente dedicado a resolver consultas sobre la institución educativa \"Nova Futura\" tu trabajo es responder las dudas del usuario usando tu base de conocimiento \"kb_clase_cantera\"\ntienes prohibido hablar de política y religión solo cosas de la institución educativa\n\nTe llamas luis\n\nsi te llega alguna consulta que no puedas contestar usando tu base de conocimiento pide que se comuniquen a los siguientes medios de contacto:\nwhats: 7711615141\ncorreo:leo1@yopmail.com"
-        }
+        "options": {}
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 1.9,
       "position": [
-        220,
-        0
+        60,
+        -100
       ],
-      "id": "84d5c733-b14b-48c4-a1c4-a93662ae9a89",
+      "id": "18a6509e-c9a6-48a5-b579-44d7b6e22034",
       "name": "AI Agent"
     },
     {
       "parameters": {
-        "model": {
+        "resource": "assistant",
+        "operation": "create",
+        "modelId": {
           "__rl": true,
           "mode": "list",
-          "value": "gpt-4o-mini"
+          "value": ""
         },
         "options": {}
       },
-      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
-      "typeVersion": 1.2,
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
       "position": [
-        0,
-        200
+        420,
+        -100
       ],
-      "id": "bdfea88a-4b25-4252-89ea-13b42d431bec",
-      "name": "OpenAI Chat Model",
+      "id": "55792398-16ec-4d9c-b219-aa35c285cad6",
+      "name": "OpenAI",
       "credentials": {
         "openAiApi": {
-          "id": "PRBlsbL3vp2oDwkf",
-          "name": "OpenAi account Leo Garcia"
+          "id": "yRFh8C6XoKn99cc5",
+          "name": "OpenAi account Citlaly Morales"
         }
       }
     },
     {
-      "parameters": {
-        "contextWindowLength": 20
-      },
-      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
-      "typeVersion": 1.3,
+      "parameters": {},
+      "type": "n8n-nodes-base.supabaseTool",
+      "typeVersion": 1,
       "position": [
-        220,
-        220
-      ],
-      "id": "348facf5-5ec1-4d66-b300-5aca98286d90",
-      "name": "Simple Memory"
-    },
-    {
-      "parameters": {
-        "mode": "retrieve-as-tool",
-        "toolName": "kb_clase_cantera",
-        "toolDescription": "en esta sección tienes la base de conocimiento de una institución educativa",
-        "tableName": {
-          "__rl": true,
-          "value": "documents",
-          "mode": "list",
-          "cachedResultName": "documents"
-        },
-        "options": {}
-      },
-      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
-      "typeVersion": 1.1,
-      "position": [
-        600,
+        380,
         120
       ],
-      "id": "af9fb5ac-e165-444f-b5f9-15ae35ca62a2",
-      "name": "kb_clase_cantera",
+      "id": "a8b44e4d-37a2-4637-9968-fe8e8b9ffc4a",
+      "name": "Supabase",
       "credentials": {
         "supabaseApi": {
-          "id": "skcUEMppehFesCmg",
-          "name": "Supabase account Leo garcia n8n"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "options": {}
-      },
-      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
-      "typeVersion": 1.2,
-      "position": [
-        620,
-        340
-      ],
-      "id": "f04a5f42-24ba-4a03-91de-edfd3af9d18e",
-      "name": "Embeddings OpenAI",
-      "credentials": {
-        "openAiApi": {
-          "id": "PRBlsbL3vp2oDwkf",
-          "name": "OpenAi account Leo Garcia"
+          "id": "tpaAerrABENuEVUi",
+          "name": "Supabase account Agente Citlaly"
         }
       }
     }
@@ -131,45 +88,12 @@
         ]
       ]
     },
-    "OpenAI Chat Model": {
-      "ai_languageModel": [
+    "AI Agent": {
+      "main": [
         [
           {
-            "node": "AI Agent",
-            "type": "ai_languageModel",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Simple Memory": {
-      "ai_memory": [
-        [
-          {
-            "node": "AI Agent",
-            "type": "ai_memory",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "kb_clase_cantera": {
-      "ai_tool": [
-        [
-          {
-            "node": "AI Agent",
-            "type": "ai_tool",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Embeddings OpenAI": {
-      "ai_embedding": [
-        [
-          {
-            "node": "kb_clase_cantera",
-            "type": "ai_embedding",
+            "node": "OpenAI",
+            "type": "main",
             "index": 0
           }
         ]
@@ -184,50 +108,52 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "46a9858b-f68f-48b4-845e-478dcd82f3a6",
+  "versionId": "c17b723e-d1dc-43b0-aca3-392675153ea9",
   "triggerCount": 0,
   "shared": [
     {
-      "createdAt": "2025-06-06T23:53:55.018Z",
-      "updatedAt": "2025-06-06T23:53:55.018Z",
+      "createdAt": "2025-06-06T23:50:47.114Z",
+      "updatedAt": "2025-06-06T23:50:47.114Z",
       "role": "workflow:owner",
-      "workflowId": "4pDhRwfPwbVMwWHF",
-      "projectId": "HwQBIwkjanICsci3",
+      "workflowId": "5HZ43Sdmnm9htlTl",
+      "projectId": "dD1u743d0j6dhqjf",
       "project": {
-        "createdAt": "2025-06-05T22:36:07.803Z",
-        "updatedAt": "2025-06-05T22:38:15.292Z",
-        "id": "HwQBIwkjanICsci3",
-        "name": "Leo Garcia <leonardo.garcia@canteradigital.mx>",
+        "createdAt": "2025-06-05T22:33:14.596Z",
+        "updatedAt": "2025-06-05T22:36:56.138Z",
+        "id": "dD1u743d0j6dhqjf",
+        "name": "Citlaly Morales Magos <cmorales@canteradigital.mx>",
         "type": "personal",
         "icon": null,
         "projectRelations": [
           {
-            "createdAt": "2025-06-05T22:36:07.805Z",
-            "updatedAt": "2025-06-05T22:36:07.805Z",
+            "createdAt": "2025-06-05T22:33:14.598Z",
+            "updatedAt": "2025-06-05T22:33:14.598Z",
             "role": "project:personalOwner",
-            "userId": "3df2a935-b364-4a95-bc18-13b7d34933e4",
-            "projectId": "HwQBIwkjanICsci3",
+            "userId": "6536697d-9c0d-4889-a3a4-5a5bf5a7902b",
+            "projectId": "dD1u743d0j6dhqjf",
             "user": {
-              "createdAt": "2025-06-05T22:36:07.802Z",
-              "updatedAt": "2025-06-05T23:36:13.461Z",
-              "id": "3df2a935-b364-4a95-bc18-13b7d34933e4",
-              "email": "leonardo.garcia@canteradigital.mx",
-              "firstName": "Leo",
-              "lastName": "Garcia",
+              "createdAt": "2025-06-05T22:33:14.594Z",
+              "updatedAt": "2025-06-05T23:28:30.533Z",
+              "id": "6536697d-9c0d-4889-a3a4-5a5bf5a7902b",
+              "email": "cmorales@canteradigital.mx",
+              "firstName": "Citlaly",
+              "lastName": "Morales Magos",
               "personalizationAnswers": {
                 "version": "v4",
-                "personalization_survey_submitted_at": "2025-06-05T22:39:05.037Z",
+                "personalization_survey_submitted_at": "2025-06-05T22:37:49.465Z",
                 "personalization_survey_n8n_version": "1.92.2",
-                "automationGoalDevops": [
-                  "other"
-                ],
                 "companySize": "20-99",
                 "companyType": "saas",
-                "role": "it",
-                "reportedSource": "event"
+                "role": "other",
+                "roleOther": "QA Tester",
+                "reportedSource": "other",
+                "reportedSourceOther": "Mi empresa"
               },
               "settings": {
-                "easyAIWorkflowOnboarded": true
+                "easyAIWorkflowOnboarded": true,
+                "firstSuccessfulWorkflowId": "d2cKV8BYcfMUJulH",
+                "userActivated": true,
+                "userActivatedAt": 1749166109861
               },
               "role": "global:member",
               "disabled": false,
