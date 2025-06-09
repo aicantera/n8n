@@ -1,0 +1,1160 @@
+{
+  "createdAt": "2025-06-09T19:57:57.645Z",
+  "updatedAt": "2025-06-09T19:57:57.645Z",
+  "id": "5mnFTWO5yLuQaYjm",
+  "name": "My workflow 16",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "url": "=https://api.hubapi.com/conversations/v3/conversations/threads/{{ $json[\"body\"][0][\"objectId\"] }}/messages/{{ $json[\"body\"][0][\"messageId\"] }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "hubspotAppToken",
+        "options": {}
+      },
+      "id": "aaacdaad-9b11-4466-b65a-a4b7ef1c10a1",
+      "name": "getHubspotMessage",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        -920,
+        280
+      ],
+      "typeVersion": 4.1
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openai.com/v1/threads",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "openAiApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "openai-beta",
+              "value": "assistants=v1"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n \"messages\": [\n {\n \"role\": \"user\",\n \"content\": \"{{ $('getHubspotMessage').item.json[\"text\"] }}\"\n }\n ]\n}",
+        "options": {}
+      },
+      "id": "12825d55-34d6-4782-bb4d-ff03715edcd0",
+      "name": "OpenAi Create Thread",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        60,
+        120
+      ],
+      "typeVersion": 4.1
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.openai.com/v1/threads/{{ $json[\"OpenAI Thread ID\"] }}/runs",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "openAiApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "openai-beta",
+              "value": "assistants=v1"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n \"assistant_id\": \"asst_MA71Jq0SElVpdjmJa212CTFd\"\n}",
+        "options": {}
+      },
+      "id": "a05ff45f-8c58-475f-b265-daeb11af57b0",
+      "name": "OpenAI Run",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        420,
+        120
+      ],
+      "typeVersion": 4.1
+    },
+    {
+      "parameters": {
+        "url": "=https://api.openai.com/v1/threads/{{ $json[\"thread_id\"] }}/runs/{{ $json[\"id\"] }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "openAiApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "openai-beta",
+              "value": "assistants=v1"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "8d8055bd-91ac-4d35-939c-6ceaf2f274f4",
+      "name": "Get Run",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        720,
+        300
+      ],
+      "typeVersion": 4.1,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "url": "=https://api.openai.com/v1/threads/{{ $json[\"thread_id\"] }}/messages",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "openAiApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "openai-beta",
+              "value": "assistants=v1"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "a8cad2b2-23cb-4f61-a279-def1b63cadc4",
+      "name": "Get Last Message",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        1320,
+        160
+      ],
+      "typeVersion": 4.1
+    },
+    {
+      "parameters": {
+        "url": "=https://www.listafirme.ro/api/search-v1.asp",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "key",
+              "value": "982dc86a0c1bd4c71185d39ae9f36998"
+            },
+            {
+              "name": "src",
+              "value": "={{JSON.parse($json[\"required_action\"][\"submit_tool_outputs\"][\"tool_calls\"][0][\"function\"][\"arguments\"]).src}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "8b8b54a2-5747-4e61-ab24-cecdc36a2c0c",
+      "name": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        1620,
+        660
+      ],
+      "typeVersion": 4.1
+    },
+    {
+      "parameters": {
+        "dataType": "string",
+        "value1": "={{ $json.status }}",
+        "rules": {
+          "rules": [
+            {
+              "value2": "completed"
+            },
+            {
+              "value2": "requires_action",
+              "output": 1
+            },
+            {
+              "operation": "=equal",
+              "value2": "in_progress",
+              "output": 2
+            },
+            {
+              "value2": "queued",
+              "output": 3
+            }
+          ]
+        }
+      },
+      "id": "6dee2121-d820-41eb-84d3-08c10799e467",
+      "name": "Completed, Action or Inprogress",
+      "type": "n8n-nodes-base.switch",
+      "position": [
+        920,
+        300
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "unit": "seconds"
+      },
+      "id": "a9cb1795-1944-4d7d-84d9-adf47c54cba1",
+      "name": "Wait",
+      "type": "n8n-nodes-base.wait",
+      "position": [
+        1160,
+        700
+      ],
+      "webhookId": "e15c2bb6-e022-4c6d-869b-f361b1ec1259",
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "unit": "seconds"
+      },
+      "id": "d2461d36-31e5-4908-b000-b24317fd5a1a",
+      "name": "Wait1",
+      "type": "n8n-nodes-base.wait",
+      "position": [
+        1140,
+        460
+      ],
+      "webhookId": "3a175bf4-c569-431e-bc56-abed3653ce9d",
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.openai.com/v1/threads/{{ $('Select Function').item.json[\"thread_id\"] }}/runs/{{ $('Select Function').item.json[\"id\"] }}/submit_tool_outputs",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "openAiApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "openai-beta",
+              "value": "assistants=v1"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n \"tool_outputs\": [\n {\n \"tool_call_id\": \"{{ $('Select Function').item.json[\"required_action\"][\"submit_tool_outputs\"][\"tool_calls\"][0][\"id\"] }}\",\n \"output\": \"{{$json.escapedJsonString}}\"\n }\n ]\n} ",
+        "options": {}
+      },
+      "id": "898dffd5-b610-4e6f-93d3-d761b99d8038",
+      "name": "Submit Data",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        2160,
+        660
+      ],
+      "typeVersion": 4.1,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "dataType": "string",
+        "value1": "={{ $json.required_action.submit_tool_outputs.tool_calls[0].function.name }}",
+        "rules": {
+          "rules": [
+            {
+              "value2": "getAWBbyOrder"
+            },
+            {
+              "value2": "get_awb_history",
+              "output": 1
+            }
+          ]
+        }
+      },
+      "id": "1148f856-0311-4f6c-9652-c8bdef566189",
+      "name": "Select Function",
+      "type": "n8n-nodes-base.switch",
+      "position": [
+        1320,
+        400
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "jsCode": "const item1 = $input.all()[0]?.json;\nconst jsonString = JSON.stringify(item1);\nconst escapedJsonString = jsonString.replace(/\"/g, '\\\\\"');\n\nreturn { escapedJsonString };\n"
+      },
+      "id": "07ba700a-26ee-4a17-985c-38fc90ff0871",
+      "name": "Code1",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        1880,
+        660
+      ],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "unit": "seconds"
+      },
+      "id": "dfa508a9-4f2e-4212-9e4c-4a0e9776f73e",
+      "name": "Wait2",
+      "type": "n8n-nodes-base.wait",
+      "position": [
+        2520,
+        1100
+      ],
+      "webhookId": "68ae5068-6a39-424c-b88d-019bfee78b6f",
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "url": "=https://www.listafirme.ro/api/info-v1.asp",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "key",
+              "value": "982dc86a0c1bd4c71185d39ae9f36998"
+            },
+            {
+              "name": "data",
+              "value": "={\"TaxCode\":\"{{JSON.parse($json[\"required_action\"][\"submit_tool_outputs\"][\"tool_calls\"][0][\"function\"][\"arguments\"]).src}}\",\"NACE\":\"info\",\"VAT\":\"\", \"RegNo\":\"\", \"Status\":\"\", \"LegalForm\":\"\", \"Name\":\"\", \"Date\":\"\", \"TownCode\":\"\", \"County\":\"\", \"City\":\"\", \"Address\":\"\", \"Administrators\":\"\", \"Shareholders\":\"\", \"Balance\":\"latest\", \"Phone\":\"\", \"Mobile\":\"\", \"Fax\":\"\", \"Email\":\"\", \"Web\":\"\", \"Geolocation\":\"\", \"Description\":\"\", \"Trademarks\":\"\", \"Subsidiaries\":\"\", \"Branches\":\"\", \"FiscalActivity\":\"\", \"Obligations\":\"\", \"Links\":\"\"}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "c428e733-73e1-42fc-85c7-b3fc1ca096a8",
+      "name": "HTTP Request1",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        1620,
+        880
+      ],
+      "typeVersion": 4.1
+    },
+    {
+      "parameters": {
+        "jsCode": "const item1 = $input.all()[0]?.json;\nconst jsonString = JSON.stringify(item1);\nconst escapedJsonString = jsonString.replace(/\"/g, '\\\\\"');\n\nreturn { escapedJsonString };\n"
+      },
+      "id": "d135a0bc-4bab-4dc3-a692-89723e08b046",
+      "name": "Code",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        1860,
+        880
+      ],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.openai.com/v1/threads/{{ $('Select Function').item.json[\"thread_id\"] }}/runs/{{ $('Select Function').item.json[\"id\"] }}/submit_tool_outputs",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "openAiApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "openai-beta",
+              "value": "assistants=v1"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n \"tool_outputs\": [\n {\n \"tool_call_id\": \"{{ $('Select Function').item.json[\"required_action\"][\"submit_tool_outputs\"][\"tool_calls\"][0][\"id\"] }}\",\n \"output\": \"{{$json.escapedJsonString}}\"\n }\n ]\n} ",
+        "options": {}
+      },
+      "id": "bf4c2b58-d1fa-4471-a8e3-13d0eee6c925",
+      "name": "Submit Data1",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        2060,
+        880
+      ],
+      "typeVersion": 4.1,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "unit": "seconds"
+      },
+      "id": "064dfe38-5f9c-4f70-be46-16326486cf8e",
+      "name": "Wait3",
+      "type": "n8n-nodes-base.wait",
+      "position": [
+        2260,
+        1060
+      ],
+      "webhookId": "6d7d039c-8a4b-4178-8d31-57fb3c24ac14",
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.hubapi.com/conversations/v3/conversations/threads/{{ $('getHubspotMessage').item.json[\"conversationsThreadId\"] }}/messages",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "hubspotAppToken",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "type",
+              "value": "MESSAGE"
+            },
+            {
+              "name": "richText",
+              "value": "={{ $json.data[0].content[0].text.value }}"
+            },
+            {
+              "name": "senderActorId",
+              "value": "A-5721819"
+            },
+            {
+              "name": "channelId",
+              "value": "={{ $('getHubspotMessage').item.json.channelId }}"
+            },
+            {
+              "name": "channelAccountId",
+              "value": "={{ $('getHubspotMessage').item.json.channelAccountId }}"
+            },
+            {
+              "name": "text",
+              "value": "{{ $json.data[0].content[0].text.value }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "a771c321-a684-45b5-bb57-6f1a6f12db81",
+      "name": "respondHubspotMessage1",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        1620,
+        120
+      ],
+      "typeVersion": 4.1
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $('getHubspotMessage').item.json[\"senders\"][0][\"actorId\"] }}",
+              "operation": "notEqual",
+              "value2": "A-5721819"
+            }
+          ]
+        }
+      },
+      "id": "95c9d67f-b532-4a20-b5b2-41b5d3795b99",
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        -560,
+        300
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "mode": "list",
+          "value": "appGAPr0tOy8J0NXC",
+          "cachedResultUrl": "https://airtable.com/appGAPr0tOy8J0NXC",
+          "cachedResultName": "Hubspot Conversations ChatGPT"
+        },
+        "table": {
+          "__rl": true,
+          "mode": "list",
+          "value": "tbljZ0POq35jgnKES",
+          "cachedResultUrl": "https://airtable.com/appGAPr0tOy8J0NXC/tbljZ0POq35jgnKES",
+          "cachedResultName": "Conversations"
+        },
+        "filterByFormula": "={Hubspot Thread ID}=\"{{ $json.conversationsThreadId }}\"",
+        "options": {}
+      },
+      "id": "71228e8b-e117-43c8-aa73-2ae1880e202c",
+      "name": "Airtable",
+      "type": "n8n-nodes-base.airtable",
+      "position": [
+        -340,
+        300
+      ],
+      "typeVersion": 2,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $('Airtable').item.json.id }}",
+              "operation": "isEmpty"
+            }
+          ]
+        }
+      },
+      "id": "4fee461c-6ac0-4809-ad9e-a7249d948e04",
+      "name": "IF1",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        -160,
+        340
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "mode": "list",
+          "value": "appGAPr0tOy8J0NXC",
+          "cachedResultUrl": "https://airtable.com/appGAPr0tOy8J0NXC",
+          "cachedResultName": "Hubspot Conversations ChatGPT"
+        },
+        "table": {
+          "__rl": true,
+          "mode": "list",
+          "value": "tbljZ0POq35jgnKES",
+          "cachedResultUrl": "https://airtable.com/appGAPr0tOy8J0NXC/tbljZ0POq35jgnKES",
+          "cachedResultName": "Conversations"
+        },
+        "columns": {
+          "value": {
+            "OpenAI Thread ID": "={{ $json[\"id\"] }}",
+            "Hubspot Thread ID": "={{ $('getHubspotMessage').item.json.conversationsThreadId }}"
+          },
+          "schema": [
+            {
+              "id": "Hubspot Thread ID",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Hubspot Thread ID",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "OpenAI Thread ID",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "OpenAI Thread ID",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "defineBelow",
+          "matchingColumns": []
+        },
+        "options": {}
+      },
+      "id": "2fc5b7f5-9766-46d2-a671-bc16b8b9a684",
+      "name": "createThread",
+      "type": "n8n-nodes-base.airtable",
+      "position": [
+        240,
+        120
+      ],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.openai.com/v1/threads/{{ $('Airtable').item.json[\"OpenAI Thread ID\"] }}/runs",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "openAiApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "openai-beta",
+              "value": "assistants=v1"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n \"assistant_id\": \"asst_MA71Jq0SElVpdjmJa212CTFd\"\n}",
+        "options": {}
+      },
+      "id": "99519557-eeed-4325-980a-d00c3fc6fe33",
+      "name": "OpenAI Run1",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        420,
+        480
+      ],
+      "typeVersion": 4.1,
+      "alwaysOutputData": false,
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json[\"body\"][0][\"messageId\"] }}",
+              "operation": "isNotEmpty"
+            }
+          ]
+        }
+      },
+      "id": "233bbedf-cb3f-4b3a-9649-015b4c5da353",
+      "name": "IF2",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        -1140,
+        300
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "Watch for new message on the chatbot. \nThis can be triggered with [n8n chat widget](https://www.npmjs.com/package/@n8n/chat), hubspot or other chat services. \n\n",
+        "height": 428.68258455167785,
+        "width": 640.1970959824021
+      },
+      "id": "08b9cefc-08de-497f-936f-6848887e3a82",
+      "name": "Sticky Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1400,
+        140
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "Post assistant Message back to chat service, in this case Hubspot",
+        "height": 279.76857176586907,
+        "width": 615.2010006500725
+      },
+      "id": "ca9f4cce-af48-470d-8daa-f1932e0c9e10",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1280,
+        40
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "Create a new Thread, save it to database and RUN",
+        "height": 304.69360473583896,
+        "width": 636.6434938094908
+      },
+      "id": "fadf50ce-f359-48fa-a810-b4556814a43b",
+      "name": "Sticky Note2",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        0,
+        0
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "UPDATE USER FILTER FOR DUPLICATION",
+        "height": 421.64797280574976,
+        "width": 328.9155262250898
+      },
+      "id": "2763a5dd-44f1-4a12-96cb-b4066ad070ea",
+      "name": "Sticky Note3",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -720,
+        140
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "Search for Thread ID in a database. \n\nThis database is maintaing references between messaging service thread id and OpenI Thread ID. ",
+        "height": 421.64797280574976,
+        "width": 328.9155262250898
+      },
+      "id": "df4c8107-3115-410b-8bf8-ebeeeab925f4",
+      "name": "Sticky Note6",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -360,
+        140
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "POST a new message to existing thread.",
+        "height": 304.69360473583896,
+        "width": 636.6434938094908
+      },
+      "id": "40d2a9f1-3c4c-4adf-8fcb-c39ce619a7dc",
+      "name": "Sticky Note7",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        0,
+        380
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "Get Run Status:\nIf still in progress, run again. \nIf action needed go to respective action.\nIf Completed, post message.",
+        "height": 629.4777449641093,
+        "width": 393.4831089305742
+      },
+      "id": "d9c88547-6fae-4a92-a16e-ddb5b8d38766",
+      "name": "Sticky Note8",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        700,
+        20
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "Run required actions based on Assistant answer and respond to Assistant with the function answer. \n\nEach route is a function that you need to define inside your assistant configuration.\n",
+        "height": 731.995091888263,
+        "width": 1361.867818730004
+      },
+      "id": "308323b5-0ceb-489b-af5e-3452348300bf",
+      "name": "Sticky Note9",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1340,
+        540
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "resource": "assistant",
+        "assistantId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "asst_wVbEcnRttQ8K65DOV0fk1DJU",
+          "cachedResultName": "Lista Firma Agent"
+        },
+        "prompt": "define",
+        "text": "={{ $('getHubspotMessage').item.json[\"text\"] }}",
+        "options": {
+          "baseURL": "https://api.openai.com/v1/threads/{{ $('Airtable').item.json[\"OpenAI Thread ID\"] }}/messages"
+        }
+      },
+      "id": "5047017f-a452-467e-a7de-aa58cd85fd3c",
+      "name": "OpenAI",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "position": [
+        80,
+        480
+      ],
+      "typeVersion": 1.3
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "hubspot-tinder",
+        "options": {}
+      },
+      "id": "ce2c0816-fcac-4447-a714-ea07bcd98558",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "position": [
+        -1360,
+        300
+      ],
+      "webhookId": "637d5b46-b35f-4943-92a2-864ddce170f4",
+      "typeVersion": 1
+    }
+  ],
+  "connections": {
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "Airtable",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF1": {
+      "main": [
+        [
+          {
+            "node": "OpenAi Create Thread",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "OpenAI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF2": {
+      "main": [
+        [
+          {
+            "node": "getHubspotMessage",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Submit Data1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Get Run",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code1": {
+      "main": [
+        [
+          {
+            "node": "Submit Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait1": {
+      "main": [
+        [
+          {
+            "node": "Get Run",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait2": {
+      "main": [
+        [
+          {
+            "node": "Get Run",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait3": {
+      "main": [
+        [
+          {
+            "node": "Get Run",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI": {
+      "main": [
+        [
+          {
+            "node": "OpenAI Run1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Run": {
+      "main": [
+        [
+          {
+            "node": "Completed, Action or Inprogress",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "IF2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Airtable": {
+      "main": [
+        [
+          {
+            "node": "IF1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Run": {
+      "main": [
+        [
+          {
+            "node": "Get Run",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Run1": {
+      "main": [
+        [
+          {
+            "node": "Get Run",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Submit Data": {
+      "main": [
+        [
+          {
+            "node": "Wait2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Code1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Submit Data1": {
+      "main": [
+        [
+          {
+            "node": "Wait3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "createThread": {
+      "main": [
+        [
+          {
+            "node": "OpenAI Run",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Select Function": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Last Message": {
+      "main": [
+        [
+          {
+            "node": "respondHubspotMessage1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "getHubspotMessage": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAi Create Thread": {
+      "main": [
+        [
+          {
+            "node": "createThread",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Completed, Action or Inprogress": {
+      "main": [
+        [
+          {
+            "node": "Get Last Message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Select Function",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Wait1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "0704cd1c-b601-4392-9c3b-23454f2a09ea",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "createdAt": "2025-06-09T19:57:57.648Z",
+      "updatedAt": "2025-06-09T19:57:57.648Z",
+      "role": "workflow:owner",
+      "workflowId": "5mnFTWO5yLuQaYjm",
+      "projectId": "UPXsxNbEdAC5wodw",
+      "project": {
+        "createdAt": "2025-05-30T21:50:35.802Z",
+        "updatedAt": "2025-05-30T21:51:22.504Z",
+        "id": "UPXsxNbEdAC5wodw",
+        "name": "Alexandra  Trujillo  <alexandra.trujillo@canteradigital.mx>",
+        "type": "personal",
+        "icon": null,
+        "projectRelations": [
+          {
+            "createdAt": "2025-05-30T21:50:35.804Z",
+            "updatedAt": "2025-05-30T21:50:35.804Z",
+            "role": "project:personalOwner",
+            "userId": "65d58894-4572-495d-8c41-0b8ea4c5b71f",
+            "projectId": "UPXsxNbEdAC5wodw",
+            "user": {
+              "createdAt": "2025-05-30T21:50:35.800Z",
+              "updatedAt": "2025-06-06T21:50:25.281Z",
+              "id": "65d58894-4572-495d-8c41-0b8ea4c5b71f",
+              "email": "alexandra.trujillo@canteradigital.mx",
+              "firstName": "Alexandra ",
+              "lastName": "Trujillo ",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-05-30T21:52:04.811Z",
+                "personalization_survey_n8n_version": "1.92.2",
+                "automationGoalDevops": [
+                  "data-syncing",
+                  "ticketing-systems-integrations",
+                  "ci-cd",
+                  "monitoring-alerting",
+                  "reporting",
+                  "incident-response"
+                ],
+                "companyType": "systems-integrator",
+                "role": "it"
+              },
+              "settings": {
+                "easyAIWorkflowOnboarded": true,
+                "firstSuccessfulWorkflowId": "bmdwVJ36IDZozHoU",
+                "userActivated": true,
+                "userActivatedAt": 1749246625266
+              },
+              "role": "global:member",
+              "disabled": false,
+              "mfaEnabled": false,
+              "isPending": false,
+              "isOwner": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": []
+}
