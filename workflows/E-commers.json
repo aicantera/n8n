@@ -1,18 +1,223 @@
 {
   "createdAt": "2025-06-09T17:50:17.067Z",
-  "updatedAt": "2025-06-09T17:50:17.067Z",
+  "updatedAt": "2025-06-09T18:12:24.000Z",
   "id": "MvkHi9IkEQizpPq2",
   "name": "E-commers",
   "active": false,
-  "nodes": [],
-  "connections": {},
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "triggerOn": "specificFolder",
+        "folderToWatch": {
+          "__rl": true,
+          "value": "1bsmI83G4axjNv-TwpT9ED_IWH_3Ok8nt",
+          "mode": "list",
+          "cachedResultName": "Documentos",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1bsmI83G4axjNv-TwpT9ED_IWH_3Ok8nt"
+        },
+        "event": "fileCreated",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDriveTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "786c69c6-4ded-4974-98a1-54750b70078b",
+      "name": "Google Drive Trigger",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "qyLYDHqds4fDuWE4",
+          "name": "Google Drive Jumperaron"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "1IKG7yd5AHgds9QqW3ThdeFvwm7D1yv7X",
+          "mode": "list",
+          "cachedResultName": "Politica_Devoluciones.docx",
+          "cachedResultUrl": "https://docs.google.com/document/d/1IKG7yd5AHgds9QqW3ThdeFvwm7D1yv7X/edit?usp=drivesdk&ouid=113359470387026625140&rtpof=true&sd=true"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        220,
+        0
+      ],
+      "id": "7d5b9462-312e-49ae-a6b4-ebd77029a9a1",
+      "name": "Google Drive",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "qyLYDHqds4fDuWE4",
+          "name": "Google Drive Jumperaron"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "tableName": {
+          "__rl": true,
+          "value": "documents_ecommerce",
+          "mode": "list",
+          "cachedResultName": "documents_ecommerce"
+        },
+        "options": {
+          "queryName": "match_documents_ecommerce"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1.1,
+      "position": [
+        420,
+        0
+      ],
+      "id": "24987817-601d-4e5b-b473-a1567f9ad617",
+      "name": "Supabase Vector Store",
+      "credentials": {
+        "supabaseApi": {
+          "id": "JdSpBKWr20tzxL8D",
+          "name": "Supabase Aaron"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        380,
+        180
+      ],
+      "id": "5e7b51bb-9660-4c5d-b99d-004970f65e1c",
+      "name": "Embeddings OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "Q8WQKibB08nTTio4",
+          "name": "OpenAi account CanteraConnect"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "dataType": "binary",
+        "options": {
+          "metadata": {
+            "metadataValues": [
+              {
+                "name": "data",
+                "value": "={{ $json.name }}"
+              }
+            ]
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1,
+      "position": [
+        560,
+        160
+      ],
+      "id": "26988d86-cfc5-40b7-a594-938d4f3f2c02",
+      "name": "Default Data Loader"
+    },
+    {
+      "parameters": {
+        "chunkSize": 200,
+        "chunkOverlap": 20
+      },
+      "type": "@n8n/n8n-nodes-langchain.textSplitterTokenSplitter",
+      "typeVersion": 1,
+      "position": [
+        540,
+        320
+      ],
+      "id": "95f869ad-d5b0-4f05-9f94-070da2e5d67b",
+      "name": "Token Splitter"
+    }
+  ],
+  "connections": {
+    "Google Drive Trigger": {
+      "main": [
+        [
+          {
+            "node": "Google Drive",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Drive": {
+      "main": [
+        [
+          {
+            "node": "Supabase Vector Store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Supabase Vector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Default Data Loader": {
+      "ai_document": [
+        [
+          {
+            "node": "Supabase Vector Store",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Token Splitter": {
+      "ai_textSplitter": [
+        [
+          {
+            "node": "Default Data Loader",
+            "type": "ai_textSplitter",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
   "settings": {
     "executionOrder": "v1"
   },
   "staticData": null,
-  "meta": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
   "pinData": {},
-  "versionId": "046e0c5c-5f20-4d19-b137-bc03c434e69b",
+  "versionId": "86e98d86-c9d1-4da9-8264-88d1a1c7a7fe",
   "triggerCount": 0,
   "shared": [
     {
