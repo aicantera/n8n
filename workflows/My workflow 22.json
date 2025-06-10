@@ -1,0 +1,320 @@
+{
+  "createdAt": "2025-06-10T15:32:15.163Z",
+  "updatedAt": "2025-06-10T15:32:15.163Z",
+  "id": "mbtsDctklrPvOUd3",
+  "name": "My workflow 22",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "b439879d-be46-4285-b7b9-cb514ef69c7c",
+      "name": "When clicking \"Execute Workflow\"",
+      "type": "n8n-nodes-base.manualTrigger",
+      "position": [
+        -900,
+        320
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "d0cdd428-be96-4821-85bc-65342cf928d0",
+        "options": {}
+      },
+      "id": "d04353eb-dac7-4e34-a90b-8d778512efdb",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "position": [
+        -900,
+        120
+      ],
+      "webhookId": "d0cdd428-be96-4821-85bc-65342cf928d0",
+      "typeVersion": 1
+    },
+    {
+      "parameters": {},
+      "id": "b6931816-d31e-4999-9e22-b1c968f08461",
+      "name": "No Operation, do nothing",
+      "type": "n8n-nodes-base.noOp",
+      "position": [
+        0,
+        480
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "resource": "chat",
+        "model": "gpt-4",
+        "prompt": {
+          "messages": [
+            {
+              "role": "system",
+              "content": "Act as a service desk agent and help to categorize user messages. Return back only JSON without quotations. Do not return anything else."
+            },
+            {
+              "content": "=Here is a user feedback: \"{{ $json.body.feedback }}\". Please analyse it and put into one of the categories:\n1. \"success-story\" for user appraisal or success story. this will be processed by customer success department\n2. \"urgent-issue\" for extreme dissatisfaction or an urgent problem. this will be escalated to the IT team. Please assess if the request is really urgent and whether it has an immediate impact on the client. If the ticket doesn't look like an immediate problem or an extreme dissatisfaction then proceed as a normal ticket.\n3. \"ticket\" for everything else. This will be processed as normal by customer support team.\n\nPlease return back a JSON with the following structure: category (string), feedback (string), instruction (string).\nCategory must match the analysed category. feedback must match the original text. instruction should contain a text for a department according to the category with a one sentense summary of the feedback. Please be polite and friendly to the colleagues."
+            }
+          ]
+        },
+        "options": {
+          "maxTokens": 500,
+          "temperature": 0.5
+        },
+        "requestOptions": {}
+      },
+      "id": "d52aa93f-182c-4332-837c-c61ec56a28c7",
+      "name": "Analyze user request",
+      "type": "n8n-nodes-base.openAi",
+      "position": [
+        -700,
+        220
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "dataType": "string",
+        "value1": "={{ $json.gpt_reply.category.toLowerCase() }}",
+        "rules": {
+          "rules": [
+            {
+              "value2": "success-story"
+            },
+            {
+              "value2": "urgent-issue",
+              "output": 1
+            },
+            {
+              "value2": "ticket",
+              "output": 2
+            }
+          ]
+        },
+        "fallbackOutput": 3
+      },
+      "id": "b89dde19-0735-4108-bfdb-6275c634f57a",
+      "name": "Select category",
+      "type": "n8n-nodes-base.switch",
+      "position": [
+        -280,
+        220
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "gpt_reply",
+              "value": "={{ JSON.parse( $json.message.content.replace(/\\n(?=[^\"]*\"(?:[^\"]*\"[^\"]*\")*[^\"]*$)/g, '\\\\n')) }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "f266a318-755d-4491-9713-a3731dfa3d11",
+      "name": "Parse JSON",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        -480,
+        220
+      ],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "webhookUri": "https://discord.com/api/webhooks/<YOUR WEBHOOK HERE>",
+        "text": "={{ $json.gpt_reply.instruction }}",
+        "options": {}
+      },
+      "id": "25c5fc3c-4e00-4fac-8896-21553204d7ab",
+      "name": "User Success Dept",
+      "type": "n8n-nodes-base.discord",
+      "position": [
+        0,
+        0
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "webhookUri": "https://discord.com/api/webhooks/<YOUR WEBHOOK HERE>",
+        "text": "={{ $json.gpt_reply.instruction }}",
+        "options": {}
+      },
+      "id": "31996609-4701-4618-a9cc-676fc49da66d",
+      "name": "IT Dept",
+      "type": "n8n-nodes-base.discord",
+      "position": [
+        0,
+        160
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "webhookUri": "https://discord.com/api/webhooks/<YOUR WEBHOOK HERE>",
+        "text": "={{ $json.gpt_reply.instruction }}",
+        "options": {}
+      },
+      "id": "8d8532af-09d3-45c6-b676-c15950e3d6b0",
+      "name": "Helpdesk",
+      "type": "n8n-nodes-base.discord",
+      "position": [
+        0,
+        320
+      ],
+      "typeVersion": 1
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Analyze user request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse JSON": {
+      "main": [
+        [
+          {
+            "node": "Select category",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Select category": {
+      "main": [
+        [
+          {
+            "node": "User Success Dept",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "IT Dept",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Helpdesk",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze user request": {
+      "main": [
+        [
+          {
+            "node": "Parse JSON",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking \"Execute Workflow\"": {
+      "main": [
+        [
+          {
+            "node": "Analyze user request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {},
+  "versionId": "f88f7cdc-586e-4a1e-a470-147e0cac4a65",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "createdAt": "2025-06-10T15:32:15.167Z",
+      "updatedAt": "2025-06-10T15:32:15.167Z",
+      "role": "workflow:owner",
+      "workflowId": "mbtsDctklrPvOUd3",
+      "projectId": "UPXsxNbEdAC5wodw",
+      "project": {
+        "createdAt": "2025-05-30T21:50:35.802Z",
+        "updatedAt": "2025-05-30T21:51:22.504Z",
+        "id": "UPXsxNbEdAC5wodw",
+        "name": "Alexandra  Trujillo  <alexandra.trujillo@canteradigital.mx>",
+        "type": "personal",
+        "icon": null,
+        "projectRelations": [
+          {
+            "createdAt": "2025-05-30T21:50:35.804Z",
+            "updatedAt": "2025-05-30T21:50:35.804Z",
+            "role": "project:personalOwner",
+            "userId": "65d58894-4572-495d-8c41-0b8ea4c5b71f",
+            "projectId": "UPXsxNbEdAC5wodw",
+            "user": {
+              "createdAt": "2025-05-30T21:50:35.800Z",
+              "updatedAt": "2025-06-06T21:50:25.281Z",
+              "id": "65d58894-4572-495d-8c41-0b8ea4c5b71f",
+              "email": "alexandra.trujillo@canteradigital.mx",
+              "firstName": "Alexandra ",
+              "lastName": "Trujillo ",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-05-30T21:52:04.811Z",
+                "personalization_survey_n8n_version": "1.92.2",
+                "automationGoalDevops": [
+                  "data-syncing",
+                  "ticketing-systems-integrations",
+                  "ci-cd",
+                  "monitoring-alerting",
+                  "reporting",
+                  "incident-response"
+                ],
+                "companyType": "systems-integrator",
+                "role": "it"
+              },
+              "settings": {
+                "easyAIWorkflowOnboarded": true,
+                "firstSuccessfulWorkflowId": "bmdwVJ36IDZozHoU",
+                "userActivated": true,
+                "userActivatedAt": 1749246625266
+              },
+              "role": "global:member",
+              "disabled": false,
+              "mfaEnabled": false,
+              "isPending": false,
+              "isOwner": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": []
+}
