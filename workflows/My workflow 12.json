@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-06-09T16:34:20.833Z",
-  "updatedAt": "2025-06-10T05:11:57.000Z",
+  "updatedAt": "2025-06-10T16:37:01.000Z",
   "id": "k6PApGOzpLKtnZ0q",
   "name": "My workflow 12",
   "active": false,
@@ -158,6 +158,31 @@
               },
               "renameOutput": true,
               "outputKey": "menu inicial"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "49660bd6-0c53-49b6-a272-353eae4acf80",
+                    "leftValue": "={{ $json.state }}",
+                    "rightValue": "espera_respuesta_menu_inicial",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "espera_respuesta_menu_inicial"
             }
           ]
         },
@@ -166,7 +191,7 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.2,
       "position": [
-        1260,
+        1480,
         -340
       ],
       "id": "7cdd5610-e227-4acb-8870-c29658a61c9d",
@@ -207,7 +232,7 @@
           "conditions": [
             {
               "id": "83be55d6-1bd8-4380-93b4-de2dd522cec4",
-              "leftValue": "={{ $json._id }}",
+              "leftValue": "={{ $json._id.toString() }}",
               "rightValue": "",
               "operator": {
                 "type": "string",
@@ -233,14 +258,14 @@
       "parameters": {
         "operation": "insert",
         "collection": "user_state",
-        "fields": "=phoneNumber ,state",
+        "fields": "=phoneNumber ,state, userStateId, date",
         "options": {}
       },
       "type": "n8n-nodes-base.mongoDb",
       "typeVersion": 1.1,
       "position": [
-        860,
-        0
+        940,
+        -60
       ],
       "id": "0350eb73-8086-42ea-8cb0-8b3adc555133",
       "name": "MongoDB1",
@@ -266,6 +291,18 @@
               "name": "state",
               "value": "menuInicial",
               "type": "string"
+            },
+            {
+              "id": "5c9e798a-8608-42b9-9270-1f7f94f9cff8",
+              "name": "userStateId",
+              "value": "={{ $json.uuid }}",
+              "type": "string"
+            },
+            {
+              "id": "2dcff05b-66b8-45a5-abc6-c4fa9f78c174",
+              "name": "date",
+              "value": "={{ $json.now }}",
+              "type": "string"
             }
           ]
         },
@@ -274,8 +311,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        560,
-        -160
+        620,
+        -80
       ],
       "id": "09dc5559-adf9-48e2-a749-538b5c605844",
       "name": "Edit Fields"
@@ -312,8 +349,8 @@
       "type": "n8n-nodes-base.mongoDb",
       "typeVersion": 1.1,
       "position": [
-        1000,
-        -160
+        1180,
+        -40
       ],
       "id": "db6500ba-15fd-47b3-9a1e-c42fd67912ed",
       "name": "MongoDB2",
@@ -378,7 +415,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        1160,
+        1380,
         -140
       ],
       "id": "14b4f334-4086-4200-8d98-a2ef3b69d013",
@@ -512,6 +549,31 @@
               },
               "renameOutput": true,
               "outputKey": "texto"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "8bb0b189-ee63-4c74-aaaf-62d744854522",
+                    "leftValue": "={{ $json.messages[0].interactive.type }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "exists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "mensaje replica"
             }
           ]
         },
@@ -663,12 +725,12 @@
           "conditions": [
             {
               "id": "0b13a5d9-6075-4751-9c4a-d9665ea0c75b",
-              "leftValue": "",
+              "leftValue": "={{ $('Main Logic Placeholder').item.json.multi_student }}",
               "rightValue": "",
               "operator": {
-                "type": "string",
-                "operation": "equals",
-                "name": "filter.operator.equals"
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
               }
             }
           ],
@@ -679,11 +741,393 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        -560,
-        -400
+        1800,
+        -1500
       ],
       "id": "6f6c92e8-1353-4ec8-829f-f69e29ec23d0",
       "name": "If1"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Importante: Esto se coloca dentro de un nodo \"Code\" en n8n\n\nfunction uuidv4() {\n  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {\n    const r = Math.random() * 16 | 0;\n    const v = c === 'x' ? r : (r & 0x3 | 0x8);\n    return v.toString(16);\n  });\n}\n\nreturn [\n  {\n    json: {\n      uuid: uuidv4(),\n      now: new Date().toLocaleString('es-MX', {\n  timeZone: 'America/Mexico_City'\n})\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        380,
+        -80
+      ],
+      "id": "4e63bef4-44ee-4fbd-8f56-26c0626e377b",
+      "name": "Code",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "url": "={{ $('Set Variables').item.json.currentEnvironment }}﻿/assistant/select_student?user_id={{ $('Main Logic Placeholder').item.json.user_id }}﻿﻿&tenant_id=﻿﻿{{ $('Main Logic Placeholder').item.json.tenant_id }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2260,
+        -1600
+      ],
+      "id": "62283365-fe1b-4256-91d6-2b9992beca3a",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "5127ea2d-67c4-4e02-9cc4-b41d25b89c73",
+              "name": "student_id",
+              "value": "={{ $('Main Logic Placeholder').item.json.students_data[0].student_id }}",
+              "type": "string"
+            },
+            {
+              "id": "858d8bba-88da-4426-9ca2-2ad5917f192a",
+              "name": "_id",
+              "value": "={{ $('MongoDB').item.json._id.toString() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2220,
+        -1360
+      ],
+      "id": "3e694494-e6d6-477b-bb3c-fa616c2f52fe",
+      "name": "student_id"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "collection": "user_state",
+        "updateKey": "=_id",
+        "fields": "student_id",
+        "upsert": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1.1,
+      "position": [
+        2440,
+        -1360
+      ],
+      "id": "a50c53de-baf5-4662-b2c8-96b5c88fdefd",
+      "name": "MongoDB3",
+      "alwaysOutputData": true,
+      "credentials": {
+        "mongoDb": {
+          "id": "xZYe0R0CRtWFmyv7",
+          "name": "MongoDB account cerebro core"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v22.0/626839230509107/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer EAAHeSgKjRYEBOZBi0kUskW4k3L6ZCO8EhqsGNjWLyfJ3U1NZCbDyQp9WSoX0Ouh8hh44Jue9ev7TMlygkZAMoqMReAJL9cNZBQZCZB508HXZB84HCNFZBIRlSa9cXFs0dXmR31XoO0iUZBOTx4VSnErdZC9OD1sQDKprPHpbK7NBrTZAWy8D6pvNi9w0w4c9pt2KE3stGwZDZD"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"5214434901193\",\n  \"type\": \"interactive\",\n  \"interactive\": {\n    \"type\": \"button\",\n    \"body\": {\n      \"text\": \"¡Hola! 😊 Estoy aquí para ayudarte a encontrar la información que necesitas.👉 Presiona 'Calendario' 📅 para ver la información de los eventosprogramados para este mes.👉 Presiona 'Preguntas frecuentes'❓ para resolver dudas frecuentes.👉 Presiona 'Académico'❓ para obtener información de tareas o lecciones de tu alumno.\"\n    },\n    \"action\": {\n      \"buttons\": [\n        {\n          \"type\": \"reply\",\n          \"reply\": {\n            \"id\": \"calendario\",\n            \"title\": \"Calendario\"\n          }\n        },\n        {\n          \"type\": \"reply\",\n          \"reply\": {\n            \"id\": \"preguntas_frecuentes\",\n            \"title\": \"Preguntas Frecuentes\"\n          }\n        },\n        {\n          \"type\": \"reply\",\n          \"reply\": {\n            \"id\": \"academico\",\n            \"title\": \"Académico\"\n          }\n        }\n      ]\n    }\n  }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3500,
+        -1380
+      ],
+      "id": "b765dada-3f68-45e0-81a2-2e47775261be",
+      "name": "menu principal"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "670342e3-e699-4e30-af27-04db7bace385",
+              "name": "user_id",
+              "value": "={{ $('Main Logic Placeholder').item.json.students_data[0].user_id }}",
+              "type": "string"
+            },
+            {
+              "id": "391a519a-9e7c-4dee-8dfc-f8b38f7f8fc7",
+              "name": "information",
+              "value": "se presenta menu inicial",
+              "type": "string"
+            },
+            {
+              "id": "915b68b5-3dee-44ad-82f6-65a3d9a74629",
+              "name": "log_id",
+              "value": "={{ $json.uuid }}",
+              "type": "string"
+            },
+            {
+              "id": "f07b7183-62a0-4d4a-90a7-ad93e7acd220",
+              "name": "date",
+              "value": "={{ $json.now }}",
+              "type": "string"
+            },
+            {
+              "id": "e5baae19-924c-4972-8a51-b4d87aad8bad",
+              "name": "state",
+              "value": "espera_respuesta_menu_inicial",
+              "type": "string"
+            },
+            {
+              "id": "127efdf6-7193-4011-a155-fa072b66e80f",
+              "name": "userStateId",
+              "value": "={{ $('MongoDB').item.json.userStateId }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2780,
+        -1360
+      ],
+      "id": "da6c3507-cf8f-4c59-ab23-46865cd14583",
+      "name": "Edit Fields3"
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "collection": "log_chatbot",
+        "fields": "user_id, information,log_id, date",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1.1,
+      "position": [
+        2940,
+        -1360
+      ],
+      "id": "f6dc0341-6e08-4db6-b7de-62ffce157ebd",
+      "name": "MongoDB4",
+      "credentials": {
+        "mongoDb": {
+          "id": "xZYe0R0CRtWFmyv7",
+          "name": "MongoDB account cerebro core"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Importante: Esto se coloca dentro de un nodo \"Code\" en n8n\n\nfunction uuidv4() {\n  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {\n    const r = Math.random() * 16 | 0;\n    const v = c === 'x' ? r : (r & 0x3 | 0x8);\n    return v.toString(16);\n  });\n}\n\nreturn [\n  {\n    json: {\n      uuid: uuidv4(),\n      now: new Date().toLocaleString('es-MX', {\n  timeZone: 'America/Mexico_City'\n})\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2600,
+        -1340
+      ],
+      "id": "9ab341f3-165a-4f8b-856d-b882831d2d9e",
+      "name": "Code1",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "collection": "user_state",
+        "updateKey": "userStateId",
+        "fields": "state, date",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1.1,
+      "position": [
+        3280,
+        -1380
+      ],
+      "id": "3056ee39-a0b1-4f49-baa8-b46b7dddf0bc",
+      "name": "MongoDB5",
+      "credentials": {
+        "mongoDb": {
+          "id": "xZYe0R0CRtWFmyv7",
+          "name": "MongoDB account cerebro core"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f07b7183-62a0-4d4a-90a7-ad93e7acd220",
+              "name": "date",
+              "value": "={{ $('Code1').item.json.now }}",
+              "type": "string"
+            },
+            {
+              "id": "e5baae19-924c-4972-8a51-b4d87aad8bad",
+              "name": "state",
+              "value": "espera_respuesta_menu_inicial",
+              "type": "string"
+            },
+            {
+              "id": "127efdf6-7193-4011-a155-fa072b66e80f",
+              "name": "userStateId",
+              "value": "={{ $('MongoDB').item.json.userStateId }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        3120,
+        -1360
+      ],
+      "id": "7458866a-a583-4af3-89b6-a75d93270899",
+      "name": "Edit Fields4"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('WhatsApp Trigger').item.json.messages[0].interactive.button_reply.id }}",
+                    "rightValue": "preguntas_frecuentes",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "ae0403eb-4811-49f5-9f3f-4277c01979e6"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "preguntas_frecuentes"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "d5ecb85c-4c14-4d45-9f24-7783cc2e0ce1",
+                    "leftValue": "={{ $('WhatsApp Trigger').item.json.messages[0].interactive.button_reply.id }}",
+                    "rightValue": "academico",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "academico"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "bcdc59b2-73ca-4bb5-b043-279d90c6f320",
+                    "leftValue": "={{ $('WhatsApp Trigger').item.json.messages[0].interactive.button_reply.id }}",
+                    "rightValue": "calendario",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "calendario"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        1780,
+        -260
+      ],
+      "id": "5847ccb6-e192-458b-a562-ba8895f828ac",
+      "name": "Switch2"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v22.0/626839230509107/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer EAAHeSgKjRYEBOZBi0kUskW4k3L6ZCO8EhqsGNjWLyfJ3U1NZCbDyQp9WSoX0Ouh8hh44Jue9ev7TMlygkZAMoqMReAJL9cNZBQZCZB508HXZB84HCNFZBIRlSa9cXFs0dXmR31XoO0iUZBOTx4VSnErdZC9OD1sQDKprPHpbK7NBrTZAWy8D6pvNi9w0w4c9pt2KE3stGwZDZD"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"5214434901193\",\n  \"type\": \"interactive\",\n  \"interactive\": {\n    \"type\": \"button\",\n    \"body\": {\n      \"text\": \"¡Hola! 😊 Estoy aquí para ayudarte a encontrar la información que necesitas. 👉 Presiona \\\"Guía del mes\\\" 📅 para ver los eventos programados o \\\"FAQ\\\"❓ para resolver tus dudas sobre el colegio.\"\n    },\n    \"action\": {\n      \"buttons\": [\n        {\n          \"type\": \"reply\",\n          \"reply\": {\n            \"id\": \"monthly_guide\",\n            \"title\": \"Guía del Mes\"\n          }\n        },\n        {\n          \"type\": \"reply\",\n          \"reply\": {\n            \"id\": \"faq\",\n            \"title\": \"FAQ\"\n          }\n        }\n      ]\n    }\n  }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2060,
+        -120
+      ],
+      "id": "34aef4e6-f64f-41e3-8403-9733ab851340",
+      "name": "menu principal1"
     }
   ],
   "connections": {
@@ -753,7 +1197,7 @@
         ],
         [
           {
-            "node": "Edit Fields",
+            "node": "Code",
             "type": "main",
             "index": 0
           }
@@ -862,6 +1306,13 @@
             "type": "main",
             "index": 0
           }
+        ],
+        [
+          {
+            "node": "Set Variables",
+            "type": "main",
+            "index": 0
+          }
         ]
       ]
     },
@@ -870,6 +1321,132 @@
         [
           {
             "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Switch2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "student_id",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "student_id": {
+      "main": [
+        [
+          {
+            "node": "MongoDB3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MongoDB3": {
+      "main": [
+        [
+          {
+            "node": "Code1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields3": {
+      "main": [
+        [
+          {
+            "node": "MongoDB4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MongoDB4": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MongoDB5": {
+      "main": [
+        [
+          {
+            "node": "menu principal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields4": {
+      "main": [
+        [
+          {
+            "node": "MongoDB5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch2": {
+      "main": [
+        [],
+        [],
+        [
+          {
+            "node": "menu principal1",
             "type": "main",
             "index": 0
           }
@@ -885,7 +1462,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "a20e98a3-dca0-4021-b8b2-6a3851dcc8dc",
+  "versionId": "92d3c313-3643-43b3-9fb1-15b44159da3c",
   "triggerCount": 0,
   "shared": [
     {
