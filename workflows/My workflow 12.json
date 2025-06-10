@@ -1,9 +1,9 @@
 {
   "createdAt": "2025-06-09T16:34:20.833Z",
-  "updatedAt": "2025-06-10T16:37:01.000Z",
+  "updatedAt": "2025-06-10T22:35:36.000Z",
   "id": "k6PApGOzpLKtnZ0q",
   "name": "My workflow 12",
-  "active": false,
+  "active": true,
   "nodes": [
     {
       "parameters": {
@@ -183,6 +183,31 @@
               },
               "renameOutput": true,
               "outputKey": "espera_respuesta_menu_inicial"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "e63b8bcb-ffae-47fd-be83-4460047ee4f3",
+                    "leftValue": "={{ $json.state }}",
+                    "rightValue": "espera_respuesta_menu_calendario",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "espera_respuesta_menu_calendario"
             }
           ]
         },
@@ -787,8 +812,8 @@
             },
             {
               "id": "858d8bba-88da-4426-9ca2-2ad5917f192a",
-              "name": "_id",
-              "value": "={{ $('MongoDB').item.json._id.toString() }}",
+              "name": "phoneNumber",
+              "value": "={{ $('Edit Fields2').item.json.phoneNumber }}",
               "type": "string"
             }
           ]
@@ -808,7 +833,7 @@
       "parameters": {
         "operation": "update",
         "collection": "user_state",
-        "updateKey": "=_id",
+        "updateKey": "=phoneNumber",
         "fields": "student_id",
         "upsert": true,
         "options": {}
@@ -1092,8 +1117,8 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.2,
       "position": [
-        1780,
-        -260
+        1840,
+        -1000
       ],
       "id": "5847ccb6-e192-458b-a562-ba8895f828ac",
       "name": "Switch2"
@@ -1117,17 +1142,285 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "{\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"5214434901193\",\n  \"type\": \"interactive\",\n  \"interactive\": {\n    \"type\": \"button\",\n    \"body\": {\n      \"text\": \"¡Hola! 😊 Estoy aquí para ayudarte a encontrar la información que necesitas. 👉 Presiona \\\"Guía del mes\\\" 📅 para ver los eventos programados o \\\"FAQ\\\"❓ para resolver tus dudas sobre el colegio.\"\n    },\n    \"action\": {\n      \"buttons\": [\n        {\n          \"type\": \"reply\",\n          \"reply\": {\n            \"id\": \"monthly_guide\",\n            \"title\": \"Guía del Mes\"\n          }\n        },\n        {\n          \"type\": \"reply\",\n          \"reply\": {\n            \"id\": \"faq\",\n            \"title\": \"FAQ\"\n          }\n        }\n      ]\n    }\n  }\n}\n",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"type\": \"interactive\",\n  \"interactive\": {\n    \"type\": \"button\",\n    \"body\": {\n      \"text\": \"{{ $json.safeText }}\"\n    },\n    \"action\": {\n      \"buttons\": [\n        {\n          \"type\": \"reply\",\n          \"reply\": {\n            \"id\": \"menu_inicial\",\n            \"title\": \"Menú Incial\"\n          }\n        }\n      ]\n    }\n } }\n\n",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        2060,
-        -120
+        3700,
+        -760
       ],
       "id": "34aef4e6-f64f-41e3-8403-9733ab851340",
       "name": "menu principal1"
+    },
+    {
+      "parameters": {
+        "jsCode": "const monthOrder = [\n    \"Enero\", \"Febrero\", \"Marzo\", \"Abril\", \"Mayo\", \"Junio\",\n    \"Julio\", \"Agosto\", \"Septiembre\", \"Octubre\", \"Noviembre\", \"Diciembre\"\n];\n\nfunction sortMonths(months) {\n    return months.sort((a, b) => monthOrder.indexOf(a) - monthOrder.indexOf(b));\n}\n\nfunction createEventDaysDictionary(monthEvents) {\n    const eventsByDay = monthEvents.reduce((acc, event) => {\n        if (event.type === 'individual' && event.content && event.content.day) {\n            const day = event.content.day.toString();\n            if (!acc[day]) acc[day] = [];\n            acc[day].push(event);\n        }\n        return acc;\n    }, {});\n\n    const sortedDays = Object.keys(eventsByDay)\n        .map(day => parseInt(day))\n        .sort((a, b) => a - b);\n\n    const dictionary = sortedDays.reduce((acc, day, index) => {\n        acc[(index + 1).toString()] = day.toString();\n        return acc;\n    }, {});\n\n    return { dictionary, eventsByDay };\n}\n\nfunction createMonthlyMessage(monthlyGuideData, currentMonth) {\n    let message = `*¡Eventos de ${currentMonth}!* 📅\\n\\n`;\n\n    const monthEvents = monthlyGuideData.filter(item =>\n        item.month === currentMonth && item.type === 'individual'\n    );\n\n    let eventDaysDictionary = {};\n    let eventsByDay = {};\n    let hasContent = monthEvents.length === 0 ? \"no\" : \"yes\";\n\n    if (monthEvents.length === 0) {\n        message += `No hay eventos programados para ${currentMonth}. ¡Pero cada día es una oportunidad para aprender!\\n\\n`;\n    } else {\n        const eventData = createEventDaysDictionary(monthEvents);\n        eventDaysDictionary = eventData.dictionary;\n        eventsByDay = eventData.eventsByDay;\n\n        message += \"*Eventos del mes:*\\n\";\n        Object.entries(eventDaysDictionary).forEach(([order, day]) => {\n            const dayEvents = eventsByDay[day];\n            if (dayEvents && dayEvents.length > 0) {\n                message += `${order}. 🗓 Día ${day}:\\n`;\n                dayEvents.forEach((event, idx) => {\n                    message += `   ${String.fromCharCode(97 + idx)}) \"${event.content.title}\"\\n`;\n                });\n                message += \"\\n\";\n            }\n        });\n    }\n\n    message += `¡Esperamos tu participación! Juntos haremos de este mes una experiencia inolvidable. 🌟`;\n\n    return { message, eventDaysDictionary, hasContent };\n}\n\n// Obtener la variable MonthlyGuide desde items[0].json\nconst input = items[0].json;\n\nlet monthlyGuideData = [];\nlet availableMonths = [];\n\ntry {\n    const parsedMonthlyGuide = JSON.parse(input.MonthlyGuide);\n    monthlyGuideData = parsedMonthlyGuide.MonthlyGuide || [];\n\n    availableMonths = [...new Set(monthlyGuideData.map(item => item.month))];\n    availableMonths = sortMonths(availableMonths);\n} catch (error) {\n    throw new Error(\"Error al procesar MonthlyGuide: \" + error.message);\n}\n\nconst currentMonth = monthOrder[new Date().getMonth()];\nconst { message, eventDaysDictionary, hasContent } = createMonthlyMessage(monthlyGuideData, currentMonth);\n\n// Salida del nodo\nreturn [\n  {\n    json: {\n      mensaje_guardian_options: message.trim(),\n      dias_eventos_enumerados: eventDaysDictionary,\n      available_months: availableMonths,\n      has_content: hasContent\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2880,
+        -740
+      ],
+      "id": "e3284f76-a641-42f1-9d1d-0ccb0ee60171",
+      "name": "Code2"
+    },
+    {
+      "parameters": {
+        "url": "={{ $('Set Variables').item.json.currentEnvironment }}//assistant/community_records_whatsapp?user_id={{ $('Main Logic Placeholder').item.json.user_id }}&role={{ $('Main Logic Placeholder').item.json.role }}&tenant_id={{ $('Main Logic Placeholder').item.json.tenant_id }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2420,
+        -800
+      ],
+      "id": "2a189cd8-827b-42de-9c7c-e5871ecbabae",
+      "name": "HTTP Request1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c939e818-0f2a-4c19-8d62-c77f842d8667",
+              "name": "MonthlyGuide",
+              "value": "={{ JSON.stringify($json.data_whatsapp_guardian_conversation.MonthlyGuide) }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2640,
+        -800
+      ],
+      "id": "d1d05127-fa9a-4799-98c7-df28490b9af1",
+      "name": "Edit Fields5"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "cee8dd42-7e45-4a60-8990-ff8cea984ca1",
+              "leftValue": "={{ $json.has_content }}",
+              "rightValue": "no",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        3100,
+        -740
+      ],
+      "id": "17303b77-2ac7-44b1-b3cf-fa0726286aa2",
+      "name": "If2"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "6b5b1a8a-0f4e-442a-9509-55164899707b",
+              "name": "safeText",
+              "value": "={{ $json.mensaje_guardian_options\n    .replace(/\\r?\\n/g, \"\\\\n\")\n    .replace(/^\\\\n+|\\\\n+$/g, \"\") }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        3500,
+        -760
+      ],
+      "id": "3a6e1e73-8f6e-481e-a68a-b4c795bb4221",
+      "name": "Edit Fields6"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "collection": "user_state",
+        "updateKey": "userStateId",
+        "fields": "state, date",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1.1,
+      "position": [
+        4260,
+        -760
+      ],
+      "id": "8eedaf5d-79a9-4f67-b55a-703cc44c602f",
+      "name": "MongoDB6",
+      "credentials": {
+        "mongoDb": {
+          "id": "xZYe0R0CRtWFmyv7",
+          "name": "MongoDB account cerebro core"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f07b7183-62a0-4d4a-90a7-ad93e7acd220",
+              "name": "date",
+              "value": "={{ $json.now }}",
+              "type": "string"
+            },
+            {
+              "id": "e5baae19-924c-4972-8a51-b4d87aad8bad",
+              "name": "state",
+              "value": "espera_respuesta_menu_calendario",
+              "type": "string"
+            },
+            {
+              "id": "127efdf6-7193-4011-a155-fa072b66e80f",
+              "name": "userStateId",
+              "value": "={{ $('MongoDB').item.json.userStateId }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        4080,
+        -760
+      ],
+      "id": "631ac78b-1dbf-4c9e-af13-2ed27284234b",
+      "name": "Edit Fields7"
+    },
+    {
+      "parameters": {
+        "jsCode": "\n\nreturn [\n  {\n    json: {\n      now: new Date().toLocaleString('es-MX', {\n  timeZone: 'America/Mexico_City'\n})\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3860,
+        -760
+      ],
+      "id": "b13556c6-3c4d-4d98-8b8d-216224eab877",
+      "name": "Code3",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "670342e3-e699-4e30-af27-04db7bace385",
+              "name": "user_id",
+              "value": "={{ $('Main Logic Placeholder').item.json.students_data[0].user_id }}",
+              "type": "string"
+            },
+            {
+              "id": "391a519a-9e7c-4dee-8dfc-f8b38f7f8fc7",
+              "name": "information",
+              "value": "se presenta menu calendario",
+              "type": "string"
+            },
+            {
+              "id": "915b68b5-3dee-44ad-82f6-65a3d9a74629",
+              "name": "log_id",
+              "value": "={{ $json.uuid }}",
+              "type": "string"
+            },
+            {
+              "id": "f07b7183-62a0-4d4a-90a7-ad93e7acd220",
+              "name": "date",
+              "value": "={{ $json.now }}",
+              "type": "string"
+            },
+            {
+              "id": "e5baae19-924c-4972-8a51-b4d87aad8bad",
+              "name": "state",
+              "value": "espera_respuesta_menu_inicial",
+              "type": "string"
+            },
+            {
+              "id": "127efdf6-7193-4011-a155-fa072b66e80f",
+              "name": "userStateId",
+              "value": "={{ $('MongoDB').item.json.userStateId }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2120,
+        -800
+      ],
+      "id": "f725e64e-2db6-493e-96a9-f5b93c8374fc",
+      "name": "Edit Fields8"
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "collection": "log_chatbot",
+        "fields": "user_id, information,log_id, date",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1.1,
+      "position": [
+        2280,
+        -800
+      ],
+      "id": "ee615403-8408-47fb-85fa-0da313b1e37d",
+      "name": "MongoDB7",
+      "credentials": {
+        "mongoDb": {
+          "id": "xZYe0R0CRtWFmyv7",
+          "name": "MongoDB account cerebro core"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Importante: Esto se coloca dentro de un nodo \"Code\" en n8n\n\nfunction uuidv4() {\n  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {\n    const r = Math.random() * 16 | 0;\n    const v = c === 'x' ? r : (r & 0x3 | 0x8);\n    return v.toString(16);\n  });\n}\n\nreturn [\n  {\n    json: {\n      uuid: uuidv4(),\n      now: new Date().toLocaleString('es-MX', {\n  timeZone: 'America/Mexico_City'\n})\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1940,
+        -780
+      ],
+      "id": "22e54685-9ffc-4579-a082-42342f215996",
+      "name": "Code4",
+      "alwaysOutputData": true
     }
   ],
   "connections": {
@@ -1331,7 +1624,8 @@
             "type": "main",
             "index": 0
           }
-        ]
+        ],
+        []
       ]
     },
     "Code": {
@@ -1446,7 +1740,128 @@
         [],
         [
           {
+            "node": "Code4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields5": {
+      "main": [
+        [
+          {
+            "node": "Code2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code2": {
+      "main": [
+        [
+          {
+            "node": "If2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If2": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields6": {
+      "main": [
+        [
+          {
             "node": "menu principal1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields7": {
+      "main": [
+        [
+          {
+            "node": "MongoDB6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "menu principal1": {
+      "main": [
+        [
+          {
+            "node": "Code3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code3": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields7",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields8": {
+      "main": [
+        [
+          {
+            "node": "MongoDB7",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code4": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields8",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MongoDB7": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
             "type": "main",
             "index": 0
           }
@@ -1461,9 +1876,41 @@
   "meta": {
     "templateCredsSetupCompleted": true
   },
-  "pinData": {},
-  "versionId": "92d3c313-3643-43b3-9fb1-15b44159da3c",
-  "triggerCount": 0,
+  "pinData": {
+    "WhatsApp Trigger": [
+      {
+        "json": {
+          "messaging_product": "whatsapp",
+          "metadata": {
+            "display_phone_number": "5215612472568",
+            "phone_number_id": "626839230509107"
+          },
+          "contacts": [
+            {
+              "profile": {
+                "name": "Rick"
+              },
+              "wa_id": "5214434901193"
+            }
+          ],
+          "messages": [
+            {
+              "from": "5214434901193",
+              "id": "wamid.HBgNNTIxNDQzNDkwMTE5MxUCABIYFjNFQjBBMDAzRjE1OUE0OUU1RkJFOUUA",
+              "timestamp": "1749594627",
+              "text": {
+                "body": "hola"
+              },
+              "type": "text"
+            }
+          ],
+          "field": "messages"
+        }
+      }
+    ]
+  },
+  "versionId": "8a103727-b4be-4fb9-be68-0a0c0bde9f6e",
+  "triggerCount": 1,
   "shared": [
     {
       "createdAt": "2025-06-09T16:34:20.836Z",
@@ -1487,7 +1934,7 @@
             "projectId": "BsYMJSPwury6TiTn",
             "user": {
               "createdAt": "2025-06-06T20:24:22.275Z",
-              "updatedAt": "2025-06-06T21:09:59.000Z",
+              "updatedAt": "2025-06-10T22:30:29.363Z",
               "id": "f9268337-0922-4cba-994c-bf6b40332731",
               "email": "adolfocuentas123@gmail.com",
               "firstName": "adolfo",
@@ -1501,7 +1948,11 @@
                 "role": "business-owner",
                 "reportedSource": "twitter"
               },
-              "settings": null,
+              "settings": {
+                "firstSuccessfulWorkflowId": "k6PApGOzpLKtnZ0q",
+                "userActivated": true,
+                "userActivatedAt": 1749594629341
+              },
               "role": "global:member",
               "disabled": false,
               "mfaEnabled": false,
