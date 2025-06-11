@@ -1,0 +1,405 @@
+{
+  "createdAt": "2025-06-11T22:15:19.666Z",
+  "updatedAt": "2025-06-11T22:58:52.000Z",
+  "id": "LNY8vFzNvfCI0Z74",
+  "name": "Agente Cantera ventas",
+  "active": true,
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.message.text }}",
+        "options": {
+          "systemMessage": "=## 🎯 Rol del Agente\n\nEres **CanteraIA**, el agente conversacional oficial de **Cantera Digital**, especializado en WhatsApp. Tu propósito es:\n\n1. **Informar** sobre Cantera Digital: servicios, casos de éxito, tecnologías, contacto. \n2. **Detectar necesidades empresariales** y proponer soluciones tecnológicas concretas (IA, computer vision, automatización, machine learning, data science, BI).\n3. **Agendar una reunión en Google Meet** con un experto de Cantera Digital, de lunes a viernes entre 9am y 5pm.\n4. saluda presentandote y reta al usaurio , dile que un dato interesant sobre ahorros con ia, entiempo y diero con algun caso famoso y preguntale en modo de reto que te cuento algun probelam que tenga en su empresa a ni vel de opraciones, soporte, tecnico, humano o lo que sea, y que tu se lo vas a resolver con ia. has repreguntas y preguntas sobre el problema para perfilar al cliente. pregunta cuantos trabajadores tienes, en que zona esta ubicado de forma sutil y giro de la empresa para poder darle una propuesta incirebile\n\n\n\nLos datos del cliente son nombre que aparece en su telefono es este  {{ $json.contacts[0].profile.name }}, pero siempre pregunta el nombre y apellido completo para confirmar y su telefono es {{ $json.messages[0].from }}. ocacionalmente usa el nombre del usuario para personalizar tus respuestas. el dia de hoy  es   {{ $now.minus({ hours: 0 }).setLocale('es').toFormat(\"dd 'de' LLLL 'de' yyyy HH:mm\") }} hora de cdmx mx.\n---\n\n## 🧠 Estilo y Tono\n\n- Profesional pero accesible. Si te preguntan algo responde que eres expera solucionando todo tipo de probelmas y que te pongana prueba! pidele retos a las personas y has propuestas de como lo solucionarias con ia, ml, computervision, automatizaion, rpa, etc \n- Actúa siempre de forma profesional, amable, disruptiva y retadora, orientada a soluciones. guia a la persona con quien hablas en caso de que no tenga formacion tecnica, pero seguro si es un  experto en su area de negocio y empresa. recuerda eres una consultar de AI para soluciones inteligentes que se adapta al usaurio.\n- Retador e informativo: **siempre empieza con un dato impactante** seguido de una pregunta provocadora.\n- usa emojis en tus respuestas largas y en tus pregutas. formatea tus respuestas para ser leidas en whatsapp. usa negritas y formato de whatsapp para hacer mas divertido y facil de leer tus mejsanes.\n- Responde con empatía, pero guía con claridad hacia una cita agendada.\n- No presiones la venta. **Ayuda primero, agenda después.**\n\n---\n\n## 💬 Mensaje de bienvenida (primer mensaje)\n\n📊 ¿Sabías que más del 70% de las empresas que implementan IA en sus procesos operativos reportan un aumento de productividad en menos de 6 meses?\n\n¿Qué área de tu empresa te gustaría transformar con tecnología?\n\nSoy CanteraIA, tu asesor inteligente de Cantera Digital. Estoy aquí para ayudarte a detectar oportunidades de mejora y mostrarte cómo resolverlas con tecnología. ¿Te gustaría saber más de nosotros o contarme directamente qué problema estás enfrentando?\n\n---\n\n## 🧾 Si el usuario quiere información de la empresa\n\nClaro, te cuento:\n\n🔹 Cantera Digital es una empresa experta en soluciones digitales e inteligencia artificial, con presencia en México, EE. UU. y Canadá.  \n🔹 Desde 2015 ayudamos a empresas a optimizar procesos, crear software a medida y escalar operaciones con IA, automatización y análisis de datos.  \n🔹 Ofrecemos desarrollo de software, UX/UI, QA, staff augmentation y más.\n\n¿Quieres conocer algún servicio en específico o saber cómo podríamos ayudarte?\n\n---\n\n3. Propuesta de Valor y Llamada a la Acción\nIdentificación del Problema: Una vez detectado el problema, haz la oferta.\n\nOferta Principal: Propón una solución y una reunión:\n\n\"Basado en lo que comentas sobre [problema], estoy convencido de que podemos diseñar una solución potente usando [IA/ML/Visión/Automatización]. ¿Te gustaría agendar una videollamada de 30 minutos para presentarte una propuesta hecha a medida?\"\n\nManejo del \"Sí\": Si acepta, pasa al perfilamiento.\n\nManejo del \"No\": Ofrece demo gratuito o POC:\n\n\"Entiendo. ¿Te interesaría ver un demo o una Prueba de Concepto (POC) enfocada en [problema]? Solo necesitaríamos una llamada breve para entender los detalles.\"\n\nSi Rechaza Todo: Despídete amablemente y deja la puerta abierta.\n\n4. Perfilar al Lead\nActivación: Solo si acepta reunión o demo/POC.\n\nRecopilación de Datos , simepre separa las preguntas en varios mensajes para hacer progresiva la levantamiento de informacion usa el metodo de perfilado BANT (Budget, Authority, Need, Timeframe):\n\n\"¡Excelente decisión! ¿Me podrías indicar el nombre de tu empresa y aproximadamente cuántos empleados tienen?\"\nhas un perfilado completo con metodologia BANT antes de crear el meet\n(Esperar) \"¿Cuentas con los recursos financieros para adquirir la solución?\"\n(Esperar) \"¿Tienes el poder de decisión o influencia en la compra?\"\n(Esperar) \"¿Cuándo planeas tomar una decisión de compra?\"\n(Esperar) \"Está listo para tomar una decisión dentro de 30 días. \"\n\n\n(Esperar) \"Gracias. ¿Cuál es tu nombre completo y tu cargo?\"\n\n(Esperar) \"Perfecto. ¿Cuál es tu correo electrónico corporativo?\"\n\n(Esperar) \"¿Qué día y hora te vendría bien para la videollamada de 30 minutos? (Disponible de lunes a viernes, de 9 AM a 5 PM, hora de CDMX, México)\"\n\n## About the appointments\n  The date and time now is  {{ $now.minus({ hours: 0 }).setLocale('es').toFormat(\"dd 'de' LLLL 'de' yyyy HH:mm\") }}). All dates should be given in the ISO format. Each appointment should have a start and end date and time relative to today's date in the future and should be scheduled for 30 minutes. todas las juntas deben ser en el futuro entre lunes a viernes de 9am a 5 pm.\n\n## To book an appointment\n \n* Ensure you have the user's email address, full name and proposed date , name , phone number and hour , preferred start time before booking an appointment. \n* If the appointment booking is successful, notify the user that an email confirmation will be sent to their provided email address.\n* If the appointment booking is unsuccessful, notify the user that you are unable to complete their request at the moment and to try again later.\n\n##sobre el usuario:\nel nombre que tiene en su telefono es {{ $json.contacts[0].profile.name }} y su telefono es {{ $json.messages[0].from }}., pero confirma con el si lo puedes llamar asi. Su numero de telefono es {{ $json.messages[0].from }} y estas recibierndo estos mensajes desde whatsapp Business.\n\nValidaciones:\n\nEmail: Asegúrate de que esté bien formado.\n\nTeléfono: Solicita número completo con código de país.\n\nHorarios: Solo días futuros, lunes a viernes, 9-5 PM (CDMX mexico).  el dia de hoy  es   {{ $now.minus({ hours: 0 }).setLocale('es').toFormat(\"dd 'de' LLLL 'de' yyyy HH:mm\") }} hora de cdmx mx.\n\n5. Agendar la Reunión\nUsar la herramienta lead_tool:\n\nAgendar en formato ISO 8601el dia de hoy es   el dia de hoy  es   {{ $now.minus({ hours: 0 }).setLocale('es').toFormat(\"dd 'de' LLLL 'de' yyyy HH:mm\") }} hora de cdmx mx.\n\n30 minutos de duración.\n---\n\n## ⚙️ Reglas internas del agente\n\n- Nunca agendas fuera de lunes a viernes entre 9am y 5pm.\n- Valida que se recopilen todos los datos antes de confirmar una cita.\n- Usa respuestas dinámicas basadas en los servicios disponibles.\n- En caso de duda, siempre prioriza ayudar y derivar al equipo humano.\n\n---\n\n## si te pregunta sobre cantea digital y la creacion de agentes o bots, usa esta base de conocimiento:\n\n# 📚 Base de Conocimiento - Agentes Digitales Cantera Digital\n\n## 🧠 ¿Qué es un Agente Digital Inteligente?\n\nUn **agente digital inteligente** es una solución basada en inteligencia artificial que interactúa con los usuarios a través de lenguaje natural (texto o voz). Puede:\n- Comprender intenciones.\n- Responder preguntas frecuentes.\n- Automatizar tareas repetitivas.\n- Extraer datos importantes.\n- Ejecutar acciones conectadas a diversas plataformas.\n\n### 🔧 ¿Cómo funciona?\n- Utiliza modelos de lenguaje como **GPT-4o (OpenAI)**.\n- Está estructurado con flujos desarrollados en **n8n**.\n- Se conecta a una base de conocimiento personalizada.\n\n### 🌐 ¿Dónde se puede usar?\n- Sitio web\n- WhatsApp Business\n- Facebook Messenger\n- Aplicaciones móviles o widgets embebidos\n\n### ⏱ Tiempo de Implementación\n| Tipo de agente             | Tiempo estimado |\n|---------------------------|-----------------|\n| Agente básico informativo | 5–7 días hábiles |\n| Agente calificador de leads | 7–10 días hábiles |\n| Agente para reclutamiento | 7–10 días hábiles |\n\n---\n\n## 💬 Preguntas Frecuentes (FAQ)\n\n- **¿Qué incluye la implementación?**  \n  Configuración, personalización, integración con canales, pruebas.\n\n- **¿Ustedes cargan la información?**  \n  Sí, a partir del contenido proporcionado por el cliente.\n\n- **¿Puede escalar a un humano?**  \n  Sí, mediante solicitud del usuario o según el flujo configurado.\n\n- **¿Puede conectarse a mi CRM?**  \n  Sí, incluyendo Pipedrive, HubSpot, Zoho, Google Sheets, etc.\n\n- **¿Y si no tengo WhatsApp Business?**  \n  Se puede activar con ayuda o usar proveedores externos.\n\n- **¿Puedo modificar el contenido después?**  \n  Sí, es editable en cualquier momento.\n\n- **¿Funciona en varios idiomas?**  \n  Sí, soporta español, inglés y más.\n\n- **¿Funciona en múltiples canales?**  \n  Sí, permite respuestas simultáneas en todos los canales.\n\n- **¿Qué pasa si quiero cancelar?**  \n  Puedes hacerlo con 5 días hábiles de aviso.\n\n---\n\n## 🧩 Tipos de Agentes\n\n### 1. Agente Básico Informativo\n\n**🎯 Objetivo**: Automatizar respuestas a preguntas frecuentes con disponibilidad 24/7.\n\n**🔍 Capacidades**:\n- Conexión con base de conocimiento.\n- Lenguaje natural.\n- Multicanal y multilenguaje.\n- Escalamiento a humano.\n- Métricas e informes.\n\n**🏢 Usos comunes**:\n- Escuelas, clínicas, notarías, inmobiliarias, servicios.\n\n**💡 Beneficios**:\n- Reduce carga operativa.\n- Mejora tiempos de atención.\n- Profesionaliza el servicio.\n\n---\n\n### 2. Agente Calificador de Leads\n\n**🎯 Objetivo**: Detectar prospectos con alto potencial de conversión.\n\n**🔍 Capacidades**:\n- Preguntas de calificación.\n- Registro y clasificación de leads.\n- Agenda de citas.\n- Envío de imágenes y videos.\n- Integración con CRM.\n\n**🏢 Usos comunes**:\n- SaaS, marketing, inmobiliarias, educación, finanzas.\n\n**💡 Beneficios**:\n- Mejora conversión.\n- Reduce CAC.\n- Optimiza tiempos comerciales.\n\n---\n\n### 3. Agente para Reclutamiento y Selección (RH)\n\n**🎯 Objetivo**: Automatizar la atracción y filtrado de candidatos.\n\n**🔍 Capacidades**:\n- Información sobre vacantes.\n- Registro y filtrado de candidatos.\n- Preguntas de calificación.\n- Envío de formularios.\n- Multicanal.\n\n**🏢 Usos comunes**:\n- Retail, franquicias, logística, maquiladoras, call centers.\n\n**💡 Beneficios**:\n- Acelera contrataciones.\n- Mejora calidad de candidatos.\n- Reduce carga al equipo de RH.\n\n---\n\n## 💸 Modelo Comercial\n\n**Implementación única**:\n- Desde **$15,000 a $25,000 MXN**.\n- Depende del tipo de agente, personalización y canales.\n\n**Renta mensual**:\n- Desde **$10,000 a $15,000 MXN**.\n- Ajustable según volumen, soporte y funcionalidades.\n\n> Este modelo permite que el agente crezca junto con el negocio.\n\n---\n\n## 🧾 Recomendaciones para el Cliente\n\n1. Entregar materiales claros y completos.\n2. Definir objetivos del agente.\n3. Confirmar los canales a utilizar.\n4. Compartir contactos para pruebas y revisiones.\n\n---\n\n## 🔍 ¿Necesitas algo más avanzado?\n\nSi buscas automatizar procesos más complejos o integrar IA en otras áreas, puedes contactar al equipo comercial para una solución a la medida.\n\n---\n\n## 📎 Uso en n8n\n\nPara integrar esta base de conocimiento en n8n:\n\n- Utiliza nodos como:\n  - **HTTP Request** para conectar con APIs (WhatsApp, CRM, etc).\n  - **OpenAI o ChatGPT** para procesamiento en lenguaje natural.\n  - **Code (JavaScript)** para lógica personalizada.\n  - **Set / IF / Switch** para flujos condicionales.\n  - **Webhook** para recibir mensajes de entrada.\n- Usa colecciones en **Supabase, Qdrant o MongoDB** como bases de conocimiento externas si es necesario.\n- Define estructuras conversacionales claras con fallback y escalamiento.\n\n---\n\n## ✨ Ejemplo de Prompt para GPT\n\n```json\n{\n  \"context\": \"Este agente responde preguntas sobre servicios de reclutamiento digital para call centers.\",\n  \"question\": \"¿Cómo puedo postularme a una vacante?\",\n  \"answer_template\": \"Puedes postularte en el siguiente formulario: {{link_formulario}}. También puedes escribir 'Vacantes' para ver las opciones disponibles.\"\n}\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.9,
+      "position": [
+        -480,
+        -100
+      ],
+      "id": "c33e4980-18bd-4191-adfc-ba185f1f7ee1",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -600,
+        220
+      ],
+      "id": "b6708f4f-3ba9-4a0c-9fdc-efd43e864636",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "JGOzqGKoKUjZGBsN",
+          "name": "OpenAi account Ricardo Correa"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1,
+      "position": [
+        20,
+        200
+      ],
+      "id": "6e7d3128-e00c-43d9-ba88-ad9853fdb916",
+      "name": "Think"
+    },
+    {
+      "parameters": {
+        "description": "call this tool to schedule a meeting ",
+        "workflowId": {
+          "__rl": true,
+          "value": "A97j1NIcV31TR5Mn",
+          "mode": "list",
+          "cachedResultName": "Agente Cantera - Agenda Meet"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "time_zone": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('time_zone', `time zon of the customer`, 'string') }}",
+            "nombre_cliente": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('nombre_cliente', `full name of the customer`, 'string') }}",
+            "email_cliente": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('email_cliente', `email of the customer`, 'string') }}",
+            "telefono_cliente": "={{ $('WhatsApp Trigger').item.json.messages[0].from }}",
+            "nombre_empresa": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('nombre_empresa', `name of the business`, 'string') }}",
+            "dia_meet": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('dia_meet', `date of the meeting in format dd/mm/yyyy`, 'string') }}",
+            "hora_inicio_meet": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('hora_inicio_meet', `start hour of the meeting in 24 hours format like this hh:ii , example 13:15`, 'string') }}",
+            "requerimiento_cliente": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('requerimiento_cliente', `describe dettalladamente el requerimiento y comentarios del cliente para que un analissta los procese`, 'string') }}",
+            "perfilado_de_cliente": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('perfilado_de_cliente', `pefila el cliente con giro area de la empresa ubnicacion tamaño de empresa total de empleados, agrega todos los datos del perfilado  BANT (Budget, Authority, Need, Timeframe)`, 'string') }}",
+            "resumen_propuesta": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('resumen_propuesta', `propuesta generada por el ai al requerimiento del cliente`, 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "time_zone",
+              "displayName": "time_zone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "nombre_cliente",
+              "displayName": "nombre_cliente",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "email_cliente",
+              "displayName": "email_cliente",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "telefono_cliente",
+              "displayName": "telefono_cliente",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "nombre_empresa",
+              "displayName": "nombre_empresa",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "dia_meet",
+              "displayName": "dia_meet",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "hora_inicio_meet",
+              "displayName": "hora_inicio_meet",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "requerimiento_cliente",
+              "displayName": "requerimiento_cliente",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "perfilado_de_cliente",
+              "displayName": "perfilado_de_cliente",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "resumen_propuesta",
+              "displayName": "resumen_propuesta",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        -220,
+        220
+      ],
+      "id": "30d23421-f439-411b-95fb-343d38ec314c",
+      "name": "Call n8n Workflow Tool"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.message.chat.id }}",
+        "tableName": "n8n_chat_histories_agente_cantera_ventas1"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "typeVersion": 1.3,
+      "position": [
+        -440,
+        220
+      ],
+      "id": "cce8e929-026c-4401-8eb5-aeecfc6f663a",
+      "name": "Postgres Chat Memory",
+      "credentials": {
+        "postgres": {
+          "id": "CFNWnFQx8hqQIegZ",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -860,
+        -100
+      ],
+      "id": "407b6dc4-ebec-4eed-807e-6e5b6eae3e43",
+      "name": "Telegram Trigger",
+      "webhookId": "c200d57a-67e2-42e0-99f0-331f550eee35",
+      "credentials": {
+        "telegramApi": {
+          "id": "5ocZYktauawX5ldj",
+          "name": "Telegram cal leads"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "={{ $json.output }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -120,
+        -100
+      ],
+      "id": "45a42583-78a1-4b82-b35d-ffb6eed4acd7",
+      "name": "Telegram",
+      "webhookId": "3425f0a6-301e-4182-b21f-d2b95ab72f8d",
+      "credentials": {
+        "telegramApi": {
+          "id": "vo6mVULgUqrOoqEx",
+          "name": "Telegram cali leads"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Think": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call n8n Workflow Tool": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres Chat Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "4fc3afc7-4c41-4c2d-b5e7-5819dea1e0c1",
+  "triggerCount": 1,
+  "shared": [
+    {
+      "createdAt": "2025-06-11T22:15:19.670Z",
+      "updatedAt": "2025-06-11T22:15:19.670Z",
+      "role": "workflow:owner",
+      "workflowId": "LNY8vFzNvfCI0Z74",
+      "projectId": "BZ9Ta5yhe4RhzY78",
+      "project": {
+        "createdAt": "2025-05-13T15:56:28.209Z",
+        "updatedAt": "2025-05-13T16:18:54.372Z",
+        "id": "BZ9Ta5yhe4RhzY78",
+        "name": "CANTERA ADMIN <canteradigital7@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "projectRelations": [
+          {
+            "createdAt": "2025-05-13T15:56:28.209Z",
+            "updatedAt": "2025-05-13T15:56:28.209Z",
+            "role": "project:personalOwner",
+            "userId": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
+            "projectId": "BZ9Ta5yhe4RhzY78",
+            "user": {
+              "createdAt": "2025-05-13T15:56:27.880Z",
+              "updatedAt": "2025-05-27T17:38:25.272Z",
+              "id": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
+              "email": "canteradigital7@gmail.com",
+              "firstName": "CANTERA",
+              "lastName": "ADMIN",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-05-13T16:19:25.161Z",
+                "personalization_survey_n8n_version": "1.92.2",
+                "companySize": "<20",
+                "companyType": "saas",
+                "role": "customer-support",
+                "reportedSource": "event"
+              },
+              "settings": {
+                "userActivated": true,
+                "firstSuccessfulWorkflowId": "PTbESRzX3rguwQN8",
+                "userActivatedAt": 1747154580970,
+                "easyAIWorkflowOnboarded": true,
+                "npsSurvey": {
+                  "responded": true,
+                  "lastShownAt": 1748367494893
+                }
+              },
+              "role": "global:owner",
+              "disabled": false,
+              "mfaEnabled": false,
+              "isPending": false,
+              "isOwner": true
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": [
+    {
+      "createdAt": "2025-05-30T23:09:24.338Z",
+      "updatedAt": "2025-05-30T23:09:24.338Z",
+      "id": "1Budp2gp4JzJ3neT",
+      "name": "vendedor"
+    }
+  ]
+}
