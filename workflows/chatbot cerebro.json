@@ -1,9 +1,9 @@
 {
   "createdAt": "2025-06-09T16:34:20.833Z",
-  "updatedAt": "2025-06-10T23:02:11.000Z",
+  "updatedAt": "2025-06-11T02:36:17.000Z",
   "id": "k6PApGOzpLKtnZ0q",
   "name": "chatbot cerebro",
-  "active": true,
+  "active": false,
   "nodes": [
     {
       "parameters": {
@@ -216,7 +216,7 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.2,
       "position": [
-        1920,
+        1740,
         -340
       ],
       "id": "7cdd5610-e227-4acb-8870-c29658a61c9d",
@@ -1421,6 +1421,47 @@
       "id": "22e54685-9ffc-4579-a082-42342f215996",
       "name": "Code4",
       "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('WhatsApp Trigger').item.json.messages[0].interactive.button_reply.id }}",
+                    "rightValue": "menu_inicial",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "432ba432-c707-48e0-8243-31588236a08d"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "menu_inicial"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        1960,
+        -240
+      ],
+      "id": "931b92b5-0b24-4404-b22b-77f5da57f456",
+      "name": "Switch3"
     }
   ],
   "connections": {
@@ -1625,7 +1666,13 @@
             "index": 0
           }
         ],
-        []
+        [
+          {
+            "node": "Switch3",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     },
     "Code": {
@@ -1867,6 +1914,17 @@
           }
         ]
       ]
+    },
+    "Switch3": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -1897,11 +1955,11 @@
             {
               "context": {
                 "from": "5215612472568",
-                "id": "wamid.HBgNNTIxNDQzNDkwMTE5MxUCABEYEjQ1N0YyNTMyNjhEMTdBOUVFRQA="
+                "id": "wamid.HBgNNTIxNDQzNDkwMTE5MxUCABEYEkQwN0Q3RUUyQUM0OThGMkUyRQA="
               },
               "from": "5214434901193",
-              "id": "wamid.HBgNNTIxNDQzNDkwMTE5MxUCABIYFjNFQjA3QUQ3NzA3MDREQTNDNUUxMkQA",
-              "timestamp": "1749595075",
+              "id": "wamid.HBgNNTIxNDQzNDkwMTE5MxUCABIYFjNFQjA1RDAwREYwNTExNkJCRjAyNDYA",
+              "timestamp": "1749608768",
               "type": "interactive",
               "interactive": {
                 "type": "button_reply",
@@ -1917,7 +1975,7 @@
       }
     ]
   },
-  "versionId": "aac47256-3c2b-4b69-b33a-118ce15fc7c7",
+  "versionId": "ac43fe1a-f8f2-4c9c-8400-1a43c696ba1b",
   "triggerCount": 1,
   "shared": [
     {
