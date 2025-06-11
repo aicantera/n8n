@@ -1,0 +1,1976 @@
+{
+  "createdAt": "2025-06-09T16:34:20.833Z",
+  "updatedAt": "2025-06-10T23:02:11.000Z",
+  "id": "k6PApGOzpLKtnZ0q",
+  "name": "chatbot cerebro",
+  "active": true,
+  "nodes": [
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "currentEnvironment",
+              "value": "https://cerebro-dev-7d8f30a4b3ff.herokuapp.com"
+            },
+            {
+              "name": "status_report",
+              "value": "https://cerebro-core-050afed4ca53.herokuapp.com/sma/receive_messagebird_data"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Set Variables",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        -940,
+        -180
+      ],
+      "id": "a8977c1e-b3f8-4fcc-a362-c47a4944ae60"
+    },
+    {
+      "parameters": {
+        "url": "={{$node[\"Set Variables\"].json[\"currentEnvironment\"]}}/mbauth/auth_guardian?phone={{ $('WhatsApp Trigger').item.json.messages[0].from }}",
+        "options": {}
+      },
+      "name": "Auth Guardian",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        -720,
+        -120
+      ],
+      "id": "c1179ee7-55d5-4c29-ad7f-9fc452b81407"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{ $json.number_students }}",
+              "operation": "largerEqual",
+              "value2": 1
+            }
+          ]
+        }
+      },
+      "name": "IF - Auth Success",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        -480,
+        -120
+      ],
+      "id": "c989c6ef-f773-41f7-980e-895732ffab87"
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "group",
+              "value": "={{ $('Auth Guardian').item.json.students_data[0].courses[0].group }}"
+            },
+            {
+              "name": "guardian_name",
+              "value": "={{ $('Auth Guardian').item.json.students_data[0].guardian_name }}"
+            },
+            {
+              "name": "role",
+              "value": "={{ $('Auth Guardian').item.json.students_data[0].role }}"
+            },
+            {
+              "name": "school_section",
+              "value": "={{ $('Auth Guardian').item.json.students_data[0].courses[0].school_section }}"
+            },
+            {
+              "name": "student_name",
+              "value": "={{ $('Auth Guardian').item.json.students_data[0].student_name }}"
+            },
+            {
+              "name": "tenant_id",
+              "value": "={{ $('Auth Guardian').item.json.students_data[0].tenant_id }}"
+            },
+            {
+              "name": "user_id",
+              "value": "={{ $('Auth Guardian').item.json.students_data[0].user_id }}"
+            },
+            {
+              "name": "year",
+              "value": "={{ $('Auth Guardian').item.json.students_data[0].courses[0].year }}"
+            },
+            {
+              "name": "school_name",
+              "value": "={{ $('Auth Guardian').item.json.students_data[0].school_name }}"
+            },
+            {
+              "name": "feature"
+            },
+            {
+              "name": "validated_whatsapp",
+              "value": "={{ $('Auth Guardian').item.json.validated_whatsapp }}"
+            }
+          ],
+          "boolean": [
+            {
+              "name": "multi_student",
+              "value": "={{ $('Auth Guardian').item.json.multi_student }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Main Logic Placeholder",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        -200,
+        -280
+      ],
+      "id": "0313de02-5a8d-4ff8-849c-13cb9abb7717"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.state ? $json.state_edited : $json.state_finded }}",
+                    "rightValue": "menuInicial",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "67ada602-4a37-408f-880d-29a2c0a2964d"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "menu inicial"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "49660bd6-0c53-49b6-a272-353eae4acf80",
+                    "leftValue": "={{ $json.state ? $json.state_edited : $json.state_finded }}",
+                    "rightValue": "espera_respuesta_menu_inicial",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "espera_respuesta_menu_inicial"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "e63b8bcb-ffae-47fd-be83-4460047ee4f3",
+                    "leftValue": "={{ $json.state ? $json.state_edited : $json.state_finded }}",
+                    "rightValue": "espera_respuesta_menu_calendario",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "espera_respuesta_menu_calendario"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        1920,
+        -340
+      ],
+      "id": "7cdd5610-e227-4acb-8870-c29658a61c9d",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "collection": "user_state",
+        "options": {},
+        "query": "={\n  \"phoneNumber\":\"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\"\n}"
+      },
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        -300
+      ],
+      "id": "1bf3262e-29cb-414b-b6c9-eb3f099c4493",
+      "name": "MongoDB",
+      "alwaysOutputData": true,
+      "credentials": {
+        "mongoDb": {
+          "id": "xZYe0R0CRtWFmyv7",
+          "name": "MongoDB account cerebro core"
+        }
+      },
+      "notes": "sdi no encuentras datos lanza un mensaje de no data returned"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "83be55d6-1bd8-4380-93b4-de2dd522cec4",
+              "leftValue": "={{ $json._id.toString() }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        260,
+        -340
+      ],
+      "id": "3cc4ad9b-d231-447e-bb94-9beaffc8d484",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "collection": "user_state",
+        "fields": "=phoneNumber ,state, userStateId, date",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1.1,
+      "position": [
+        940,
+        -60
+      ],
+      "id": "0350eb73-8086-42ea-8cb0-8b3adc555133",
+      "name": "MongoDB1",
+      "credentials": {
+        "mongoDb": {
+          "id": "xZYe0R0CRtWFmyv7",
+          "name": "MongoDB account cerebro core"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "3631f4b8-c7de-42ac-a953-b78f8b10b879",
+              "name": "phoneNumber",
+              "value": "={{ $('WhatsApp Trigger').item.json.messages[0].from }}",
+              "type": "string"
+            },
+            {
+              "id": "961af1d0-8fba-486d-b2ff-5acdf1625b55",
+              "name": "state",
+              "value": "menuInicial",
+              "type": "string"
+            },
+            {
+              "id": "5c9e798a-8608-42b9-9270-1f7f94f9cff8",
+              "name": "userStateId",
+              "value": "={{ $json.uuid }}",
+              "type": "string"
+            },
+            {
+              "id": "2dcff05b-66b8-45a5-abc6-c4fa9f78c174",
+              "name": "date",
+              "value": "={{ $json.now }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        620,
+        -80
+      ],
+      "id": "09dc5559-adf9-48e2-a749-538b5c605844",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "updates": [
+          "messages"
+        ],
+        "options": {}
+      },
+      "type": "n8n-nodes-base.whatsAppTrigger",
+      "typeVersion": 1,
+      "position": [
+        -1620,
+        -440
+      ],
+      "id": "1a441ff5-52de-4c02-bfb7-69e1738823f7",
+      "name": "WhatsApp Trigger",
+      "webhookId": "79902303-7c8b-4b2f-b91e-30dfa471b049",
+      "credentials": {
+        "whatsAppTriggerApi": {
+          "id": "3id56xF4KBltVP02",
+          "name": "WhatsApp OAuth account cerebro"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "collection": "user_state",
+        "options": {},
+        "query": "={\n  \"phoneNumber\":\"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\"\n}"
+      },
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1.1,
+      "position": [
+        1120,
+        -60
+      ],
+      "id": "db6500ba-15fd-47b3-9a1e-c42fd67912ed",
+      "name": "MongoDB2",
+      "alwaysOutputData": true,
+      "credentials": {
+        "mongoDb": {
+          "id": "xZYe0R0CRtWFmyv7",
+          "name": "MongoDB account cerebro core"
+        }
+      },
+      "notes": "sdi no encuentras datos lanza un mensaje de no data returned"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e1c21e64-5126-4a0c-a594-363efc7028d1",
+              "name": "phoneNumber_finded",
+              "value": "={{ $('MongoDB').item.json.phoneNumber }}",
+              "type": "string"
+            },
+            {
+              "id": "93580ec9-264e-4176-bc40-b50aaf34e1f2",
+              "name": "state_finded",
+              "value": "={{ $('MongoDB').item.json.state }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        940,
+        -360
+      ],
+      "id": "9aba8df9-8b8b-4123-9d25-f44b407b5a0b",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e1c21e64-5126-4a0c-a594-363efc7028d1",
+              "name": "phoneNumber_edited",
+              "value": "={{ $json.phoneNumber }}",
+              "type": "string"
+            },
+            {
+              "id": "93580ec9-264e-4176-bc40-b50aaf34e1f2",
+              "name": "state_edited",
+              "value": "={{ $json.state }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1400,
+        -140
+      ],
+      "id": "14b4f334-4086-4200-8d98-a2ef3b69d013",
+      "name": "Edit Fields2"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.messages[0].audio.voice }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "exists",
+                      "singleValue": true
+                    },
+                    "id": "1d07820e-eba7-477b-9d97-b7eafab2b218"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "mensaje de voz"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "1af6c276-b636-440b-bbe5-cbc837091bd2",
+                    "leftValue": "={{ $json.messages[0].type }}",
+                    "rightValue": "document",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "documento"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "5618e653-a507-4ea4-979f-00b7f2b130d9",
+                    "leftValue": "={{ $json.messages[0].type }}",
+                    "rightValue": "image",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "imagen"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "da89dce8-8fe7-4db2-8fdf-ec07c5275504",
+                    "leftValue": "={{ $json.messages[0].type }}",
+                    "rightValue": "video",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "video"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "cb6a1619-9e4f-4fb1-ada2-ddbc8d0e9bc3",
+                    "leftValue": "={{ $json.messages[0].type }}",
+                    "rightValue": "text",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "texto"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "8bb0b189-ee63-4c74-aaaf-62d744854522",
+                    "leftValue": "={{ $json.messages[0].interactive.type }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "exists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "mensaje replica"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -1420,
+        -400
+      ],
+      "id": "076fb3e0-f180-439d-934e-a222b35afe66",
+      "name": "Switch1",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v22.0/626839230509107/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer EAAHeSgKjRYEBOZBi0kUskW4k3L6ZCO8EhqsGNjWLyfJ3U1NZCbDyQp9WSoX0Ouh8hh44Jue9ev7TMlygkZAMoqMReAJL9cNZBQZCZB508HXZB84HCNFZBIRlSa9cXFs0dXmR31XoO0iUZBOTx4VSnErdZC9OD1sQDKprPHpbK7NBrTZAWy8D6pvNi9w0w4c9pt2KE3stGwZDZD"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"Lo siento, en este momento no tengo la capacidad de interpretar notas de voz. Sin embargo, estamos trabajando para incluir esta función en futuras actualizaciones.  Gracias por tu comprensión.\"\n  }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -960,
+        -1020
+      ],
+      "id": "072128b3-f59b-45cd-bb7a-5a12fa743431",
+      "name": "Error mensaje de voz"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v22.0/626839230509107/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer EAAHeSgKjRYEBOZBi0kUskW4k3L6ZCO8EhqsGNjWLyfJ3U1NZCbDyQp9WSoX0Ouh8hh44Jue9ev7TMlygkZAMoqMReAJL9cNZBQZCZB508HXZB84HCNFZBIRlSa9cXFs0dXmR31XoO0iUZBOTx4VSnErdZC9OD1sQDKprPHpbK7NBrTZAWy8D6pvNi9w0w4c9pt2KE3stGwZDZD"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"Lo siento, en este momento no tengo la capacidad de interpretar archivos. Gracias por tu comprensión.\"\n  }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -960,
+        -840
+      ],
+      "id": "5d81b2ee-8a82-44c0-a983-871c638078d4",
+      "name": "error documento"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v22.0/626839230509107/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer EAAHeSgKjRYEBOZBi0kUskW4k3L6ZCO8EhqsGNjWLyfJ3U1NZCbDyQp9WSoX0Ouh8hh44Jue9ev7TMlygkZAMoqMReAJL9cNZBQZCZB508HXZB84HCNFZBIRlSa9cXFs0dXmR31XoO0iUZBOTx4VSnErdZC9OD1sQDKprPHpbK7NBrTZAWy8D6pvNi9w0w4c9pt2KE3stGwZDZD"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"Lo siento, en este momento no tengo la capacidad de interpretar imagenes. Sin embargo, estamos trabajando para incluir esta función en futuras actualizaciones. Gracias por tu comprensión.\"\n  }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -960,
+        -640
+      ],
+      "id": "3b0dd856-9c8e-463e-bb34-f59301d1110d",
+      "name": "error imagen"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v22.0/626839230509107/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer EAAHeSgKjRYEBOZBi0kUskW4k3L6ZCO8EhqsGNjWLyfJ3U1NZCbDyQp9WSoX0Ouh8hh44Jue9ev7TMlygkZAMoqMReAJL9cNZBQZCZB508HXZB84HCNFZBIRlSa9cXFs0dXmR31XoO0iUZBOTx4VSnErdZC9OD1sQDKprPHpbK7NBrTZAWy8D6pvNi9w0w4c9pt2KE3stGwZDZD"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"Lo siento, en este momento no tengo la capacidad de interpretar notas de voz. Sin embargo, estamos trabajando para incluir esta función en futuras actualizaciones.  Gracias por tu comprensión.\"\n  }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -960,
+        -440
+      ],
+      "id": "8ed66e1c-c97f-4288-b50c-f4f960cecc89",
+      "name": "error video"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "0b13a5d9-6075-4751-9c4a-d9665ea0c75b",
+              "leftValue": "={{ $('Main Logic Placeholder').item.json.multi_student }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        2240,
+        -1500
+      ],
+      "id": "6f6c92e8-1353-4ec8-829f-f69e29ec23d0",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Importante: Esto se coloca dentro de un nodo \"Code\" en n8n\n\nfunction uuidv4() {\n  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {\n    const r = Math.random() * 16 | 0;\n    const v = c === 'x' ? r : (r & 0x3 | 0x8);\n    return v.toString(16);\n  });\n}\n\nreturn [\n  {\n    json: {\n      uuid: uuidv4(),\n      now: new Date().toLocaleString('es-MX', {\n  timeZone: 'America/Mexico_City'\n})\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        380,
+        -80
+      ],
+      "id": "4e63bef4-44ee-4fbd-8f56-26c0626e377b",
+      "name": "Code",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "url": "={{ $('Set Variables').item.json.currentEnvironment }}﻿/assistant/select_student?user_id={{ $('Main Logic Placeholder').item.json.user_id }}﻿﻿&tenant_id=﻿﻿{{ $('Main Logic Placeholder').item.json.tenant_id }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2700,
+        -1600
+      ],
+      "id": "62283365-fe1b-4256-91d6-2b9992beca3a",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "5127ea2d-67c4-4e02-9cc4-b41d25b89c73",
+              "name": "student_id",
+              "value": "={{ $('Main Logic Placeholder').item.json.students_data[0].student_id }}",
+              "type": "string"
+            },
+            {
+              "id": "858d8bba-88da-4426-9ca2-2ad5917f192a",
+              "name": "phoneNumber",
+              "value": "={{ $json.phoneNumber_finded ? $json.phoneNumber_finded : $json.phoneNumber_edited }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2660,
+        -1360
+      ],
+      "id": "3e694494-e6d6-477b-bb3c-fa616c2f52fe",
+      "name": "student_id"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "collection": "user_state",
+        "updateKey": "=phoneNumber",
+        "fields": "student_id",
+        "upsert": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1.1,
+      "position": [
+        2880,
+        -1360
+      ],
+      "id": "a50c53de-baf5-4662-b2c8-96b5c88fdefd",
+      "name": "MongoDB3",
+      "alwaysOutputData": true,
+      "credentials": {
+        "mongoDb": {
+          "id": "xZYe0R0CRtWFmyv7",
+          "name": "MongoDB account cerebro core"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v22.0/626839230509107/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer EAAHeSgKjRYEBOZBi0kUskW4k3L6ZCO8EhqsGNjWLyfJ3U1NZCbDyQp9WSoX0Ouh8hh44Jue9ev7TMlygkZAMoqMReAJL9cNZBQZCZB508HXZB84HCNFZBIRlSa9cXFs0dXmR31XoO0iUZBOTx4VSnErdZC9OD1sQDKprPHpbK7NBrTZAWy8D6pvNi9w0w4c9pt2KE3stGwZDZD"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"5214434901193\",\n  \"type\": \"interactive\",\n  \"interactive\": {\n    \"type\": \"button\",\n    \"body\": {\n      \"text\": \"¡Hola! 😊 Estoy aquí para ayudarte a encontrar la información que necesitas.👉 Presiona 'Calendario' 📅 para ver la información de los eventosprogramados para este mes.👉 Presiona 'Preguntas frecuentes'❓ para resolver dudas frecuentes.👉 Presiona 'Académico'❓ para obtener información de tareas o lecciones de tu alumno.\"\n    },\n    \"action\": {\n      \"buttons\": [\n        {\n          \"type\": \"reply\",\n          \"reply\": {\n            \"id\": \"calendario\",\n            \"title\": \"Calendario\"\n          }\n        },\n        {\n          \"type\": \"reply\",\n          \"reply\": {\n            \"id\": \"preguntas_frecuentes\",\n            \"title\": \"Preguntas Frecuentes\"\n          }\n        },\n        {\n          \"type\": \"reply\",\n          \"reply\": {\n            \"id\": \"academico\",\n            \"title\": \"Académico\"\n          }\n        }\n      ]\n    }\n  }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3940,
+        -1380
+      ],
+      "id": "b765dada-3f68-45e0-81a2-2e47775261be",
+      "name": "menu principal"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "670342e3-e699-4e30-af27-04db7bace385",
+              "name": "user_id",
+              "value": "={{ $('Main Logic Placeholder').item.json.students_data[0].user_id }}",
+              "type": "string"
+            },
+            {
+              "id": "391a519a-9e7c-4dee-8dfc-f8b38f7f8fc7",
+              "name": "information",
+              "value": "se presenta menu inicial",
+              "type": "string"
+            },
+            {
+              "id": "915b68b5-3dee-44ad-82f6-65a3d9a74629",
+              "name": "log_id",
+              "value": "={{ $json.uuid }}",
+              "type": "string"
+            },
+            {
+              "id": "f07b7183-62a0-4d4a-90a7-ad93e7acd220",
+              "name": "date",
+              "value": "={{ $json.now }}",
+              "type": "string"
+            },
+            {
+              "id": "e5baae19-924c-4972-8a51-b4d87aad8bad",
+              "name": "state",
+              "value": "espera_respuesta_menu_inicial",
+              "type": "string"
+            },
+            {
+              "id": "127efdf6-7193-4011-a155-fa072b66e80f",
+              "name": "userStateId",
+              "value": "={{ $('MongoDB').item.json.userStateId }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        3220,
+        -1360
+      ],
+      "id": "da6c3507-cf8f-4c59-ab23-46865cd14583",
+      "name": "Edit Fields3"
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "collection": "log_chatbot",
+        "fields": "user_id, information,log_id, date",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1.1,
+      "position": [
+        3380,
+        -1360
+      ],
+      "id": "f6dc0341-6e08-4db6-b7de-62ffce157ebd",
+      "name": "MongoDB4",
+      "credentials": {
+        "mongoDb": {
+          "id": "xZYe0R0CRtWFmyv7",
+          "name": "MongoDB account cerebro core"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Importante: Esto se coloca dentro de un nodo \"Code\" en n8n\n\nfunction uuidv4() {\n  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {\n    const r = Math.random() * 16 | 0;\n    const v = c === 'x' ? r : (r & 0x3 | 0x8);\n    return v.toString(16);\n  });\n}\n\nreturn [\n  {\n    json: {\n      uuid: uuidv4(),\n      now: new Date().toLocaleString('es-MX', {\n  timeZone: 'America/Mexico_City'\n})\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3040,
+        -1340
+      ],
+      "id": "9ab341f3-165a-4f8b-856d-b882831d2d9e",
+      "name": "Code1",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "collection": "user_state",
+        "updateKey": "userStateId",
+        "fields": "state, date",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1.1,
+      "position": [
+        3720,
+        -1380
+      ],
+      "id": "3056ee39-a0b1-4f49-baa8-b46b7dddf0bc",
+      "name": "MongoDB5",
+      "credentials": {
+        "mongoDb": {
+          "id": "xZYe0R0CRtWFmyv7",
+          "name": "MongoDB account cerebro core"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f07b7183-62a0-4d4a-90a7-ad93e7acd220",
+              "name": "date",
+              "value": "={{ $('Code1').item.json.now }}",
+              "type": "string"
+            },
+            {
+              "id": "e5baae19-924c-4972-8a51-b4d87aad8bad",
+              "name": "state",
+              "value": "espera_respuesta_menu_inicial",
+              "type": "string"
+            },
+            {
+              "id": "127efdf6-7193-4011-a155-fa072b66e80f",
+              "name": "userStateId",
+              "value": "={{ $('MongoDB').item.json.userStateId }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        3560,
+        -1360
+      ],
+      "id": "7458866a-a583-4af3-89b6-a75d93270899",
+      "name": "Edit Fields4"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('WhatsApp Trigger').item.json.messages[0].interactive.button_reply.id }}",
+                    "rightValue": "preguntas_frecuentes",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "ae0403eb-4811-49f5-9f3f-4277c01979e6"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "preguntas_frecuentes"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "d5ecb85c-4c14-4d45-9f24-7783cc2e0ce1",
+                    "leftValue": "={{ $('WhatsApp Trigger').item.json.messages[0].interactive.button_reply.id }}",
+                    "rightValue": "academico",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "academico"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "bcdc59b2-73ca-4bb5-b043-279d90c6f320",
+                    "leftValue": "={{ $('WhatsApp Trigger').item.json.messages[0].interactive.button_reply.id }}",
+                    "rightValue": "calendario",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "calendario"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        2280,
+        -1000
+      ],
+      "id": "5847ccb6-e192-458b-a562-ba8895f828ac",
+      "name": "Switch2"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v22.0/626839230509107/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer EAAHeSgKjRYEBOZBi0kUskW4k3L6ZCO8EhqsGNjWLyfJ3U1NZCbDyQp9WSoX0Ouh8hh44Jue9ev7TMlygkZAMoqMReAJL9cNZBQZCZB508HXZB84HCNFZBIRlSa9cXFs0dXmR31XoO0iUZBOTx4VSnErdZC9OD1sQDKprPHpbK7NBrTZAWy8D6pvNi9w0w4c9pt2KE3stGwZDZD"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"type\": \"interactive\",\n  \"interactive\": {\n    \"type\": \"button\",\n    \"body\": {\n      \"text\": \"{{ $json.safeText }}\"\n    },\n    \"action\": {\n      \"buttons\": [\n        {\n          \"type\": \"reply\",\n          \"reply\": {\n            \"id\": \"menu_inicial\",\n            \"title\": \"Menú Incial\"\n          }\n        }\n      ]\n    }\n } }\n\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        4140,
+        -760
+      ],
+      "id": "34aef4e6-f64f-41e3-8403-9733ab851340",
+      "name": "menu principal1"
+    },
+    {
+      "parameters": {
+        "jsCode": "const monthOrder = [\n    \"Enero\", \"Febrero\", \"Marzo\", \"Abril\", \"Mayo\", \"Junio\",\n    \"Julio\", \"Agosto\", \"Septiembre\", \"Octubre\", \"Noviembre\", \"Diciembre\"\n];\n\nfunction sortMonths(months) {\n    return months.sort((a, b) => monthOrder.indexOf(a) - monthOrder.indexOf(b));\n}\n\nfunction createEventDaysDictionary(monthEvents) {\n    const eventsByDay = monthEvents.reduce((acc, event) => {\n        if (event.type === 'individual' && event.content && event.content.day) {\n            const day = event.content.day.toString();\n            if (!acc[day]) acc[day] = [];\n            acc[day].push(event);\n        }\n        return acc;\n    }, {});\n\n    const sortedDays = Object.keys(eventsByDay)\n        .map(day => parseInt(day))\n        .sort((a, b) => a - b);\n\n    const dictionary = sortedDays.reduce((acc, day, index) => {\n        acc[(index + 1).toString()] = day.toString();\n        return acc;\n    }, {});\n\n    return { dictionary, eventsByDay };\n}\n\nfunction createMonthlyMessage(monthlyGuideData, currentMonth) {\n    let message = `*¡Eventos de ${currentMonth}!* 📅\\n\\n`;\n\n    const monthEvents = monthlyGuideData.filter(item =>\n        item.month === currentMonth && item.type === 'individual'\n    );\n\n    let eventDaysDictionary = {};\n    let eventsByDay = {};\n    let hasContent = monthEvents.length === 0 ? \"no\" : \"yes\";\n\n    if (monthEvents.length === 0) {\n        message += `No hay eventos programados para ${currentMonth}. ¡Pero cada día es una oportunidad para aprender!\\n\\n`;\n    } else {\n        const eventData = createEventDaysDictionary(monthEvents);\n        eventDaysDictionary = eventData.dictionary;\n        eventsByDay = eventData.eventsByDay;\n\n        message += \"*Eventos del mes:*\\n\";\n        Object.entries(eventDaysDictionary).forEach(([order, day]) => {\n            const dayEvents = eventsByDay[day];\n            if (dayEvents && dayEvents.length > 0) {\n                message += `${order}. 🗓 Día ${day}:\\n`;\n                dayEvents.forEach((event, idx) => {\n                    message += `   ${String.fromCharCode(97 + idx)}) \"${event.content.title}\"\\n`;\n                });\n                message += \"\\n\";\n            }\n        });\n    }\n\n    message += `¡Esperamos tu participación! Juntos haremos de este mes una experiencia inolvidable. 🌟`;\n\n    return { message, eventDaysDictionary, hasContent };\n}\n\n// Obtener la variable MonthlyGuide desde items[0].json\nconst input = items[0].json;\n\nlet monthlyGuideData = [];\nlet availableMonths = [];\n\ntry {\n    const parsedMonthlyGuide = JSON.parse(input.MonthlyGuide);\n    monthlyGuideData = parsedMonthlyGuide.MonthlyGuide || [];\n\n    availableMonths = [...new Set(monthlyGuideData.map(item => item.month))];\n    availableMonths = sortMonths(availableMonths);\n} catch (error) {\n    throw new Error(\"Error al procesar MonthlyGuide: \" + error.message);\n}\n\nconst currentMonth = monthOrder[new Date().getMonth()];\nconst { message, eventDaysDictionary, hasContent } = createMonthlyMessage(monthlyGuideData, currentMonth);\n\n// Salida del nodo\nreturn [\n  {\n    json: {\n      mensaje_guardian_options: message.trim(),\n      dias_eventos_enumerados: eventDaysDictionary,\n      available_months: availableMonths,\n      has_content: hasContent\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3320,
+        -740
+      ],
+      "id": "e3284f76-a641-42f1-9d1d-0ccb0ee60171",
+      "name": "Code2"
+    },
+    {
+      "parameters": {
+        "url": "={{ $('Set Variables').item.json.currentEnvironment }}//assistant/community_records_whatsapp?user_id={{ $('Main Logic Placeholder').item.json.user_id }}&role={{ $('Main Logic Placeholder').item.json.role }}&tenant_id={{ $('Main Logic Placeholder').item.json.tenant_id }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2860,
+        -800
+      ],
+      "id": "2a189cd8-827b-42de-9c7c-e5871ecbabae",
+      "name": "HTTP Request1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c939e818-0f2a-4c19-8d62-c77f842d8667",
+              "name": "MonthlyGuide",
+              "value": "={{ JSON.stringify($json.data_whatsapp_guardian_conversation.MonthlyGuide) }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        3080,
+        -800
+      ],
+      "id": "d1d05127-fa9a-4799-98c7-df28490b9af1",
+      "name": "Edit Fields5"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "cee8dd42-7e45-4a60-8990-ff8cea984ca1",
+              "leftValue": "={{ $json.has_content }}",
+              "rightValue": "no",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        3540,
+        -740
+      ],
+      "id": "17303b77-2ac7-44b1-b3cf-fa0726286aa2",
+      "name": "If2"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "6b5b1a8a-0f4e-442a-9509-55164899707b",
+              "name": "safeText",
+              "value": "={{ $json.mensaje_guardian_options\n    .replace(/\\r?\\n/g, \"\\\\n\")\n    .replace(/^\\\\n+|\\\\n+$/g, \"\") }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        3940,
+        -760
+      ],
+      "id": "3a6e1e73-8f6e-481e-a68a-b4c795bb4221",
+      "name": "Edit Fields6"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "collection": "user_state",
+        "updateKey": "userStateId",
+        "fields": "state, date",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1.1,
+      "position": [
+        4700,
+        -760
+      ],
+      "id": "8eedaf5d-79a9-4f67-b55a-703cc44c602f",
+      "name": "MongoDB6",
+      "credentials": {
+        "mongoDb": {
+          "id": "xZYe0R0CRtWFmyv7",
+          "name": "MongoDB account cerebro core"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f07b7183-62a0-4d4a-90a7-ad93e7acd220",
+              "name": "date",
+              "value": "={{ $json.now }}",
+              "type": "string"
+            },
+            {
+              "id": "e5baae19-924c-4972-8a51-b4d87aad8bad",
+              "name": "state",
+              "value": "espera_respuesta_menu_calendario",
+              "type": "string"
+            },
+            {
+              "id": "127efdf6-7193-4011-a155-fa072b66e80f",
+              "name": "userStateId",
+              "value": "={{ $('MongoDB').item.json.userStateId }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        4520,
+        -760
+      ],
+      "id": "631ac78b-1dbf-4c9e-af13-2ed27284234b",
+      "name": "Edit Fields7"
+    },
+    {
+      "parameters": {
+        "jsCode": "\n\nreturn [\n  {\n    json: {\n      now: new Date().toLocaleString('es-MX', {\n  timeZone: 'America/Mexico_City'\n})\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        4300,
+        -760
+      ],
+      "id": "b13556c6-3c4d-4d98-8b8d-216224eab877",
+      "name": "Code3",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "670342e3-e699-4e30-af27-04db7bace385",
+              "name": "user_id",
+              "value": "={{ $('Main Logic Placeholder').item.json.students_data[0].user_id }}",
+              "type": "string"
+            },
+            {
+              "id": "391a519a-9e7c-4dee-8dfc-f8b38f7f8fc7",
+              "name": "information",
+              "value": "se presenta menu calendario",
+              "type": "string"
+            },
+            {
+              "id": "915b68b5-3dee-44ad-82f6-65a3d9a74629",
+              "name": "log_id",
+              "value": "={{ $json.uuid }}",
+              "type": "string"
+            },
+            {
+              "id": "f07b7183-62a0-4d4a-90a7-ad93e7acd220",
+              "name": "date",
+              "value": "={{ $json.now }}",
+              "type": "string"
+            },
+            {
+              "id": "e5baae19-924c-4972-8a51-b4d87aad8bad",
+              "name": "state",
+              "value": "espera_respuesta_menu_inicial",
+              "type": "string"
+            },
+            {
+              "id": "127efdf6-7193-4011-a155-fa072b66e80f",
+              "name": "userStateId",
+              "value": "={{ $('MongoDB').item.json.userStateId }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2560,
+        -800
+      ],
+      "id": "f725e64e-2db6-493e-96a9-f5b93c8374fc",
+      "name": "Edit Fields8"
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "collection": "log_chatbot",
+        "fields": "user_id, information,log_id, date",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1.1,
+      "position": [
+        2720,
+        -800
+      ],
+      "id": "ee615403-8408-47fb-85fa-0da313b1e37d",
+      "name": "MongoDB7",
+      "credentials": {
+        "mongoDb": {
+          "id": "xZYe0R0CRtWFmyv7",
+          "name": "MongoDB account cerebro core"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Importante: Esto se coloca dentro de un nodo \"Code\" en n8n\n\nfunction uuidv4() {\n  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {\n    const r = Math.random() * 16 | 0;\n    const v = c === 'x' ? r : (r & 0x3 | 0x8);\n    return v.toString(16);\n  });\n}\n\nreturn [\n  {\n    json: {\n      uuid: uuidv4(),\n      now: new Date().toLocaleString('es-MX', {\n  timeZone: 'America/Mexico_City'\n})\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2380,
+        -780
+      ],
+      "id": "22e54685-9ffc-4579-a082-42342f215996",
+      "name": "Code4",
+      "alwaysOutputData": true
+    }
+  ],
+  "connections": {
+    "Set Variables": {
+      "main": [
+        [
+          {
+            "node": "Auth Guardian",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Auth Guardian": {
+      "main": [
+        [
+          {
+            "node": "IF - Auth Success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF - Auth Success": {
+      "main": [
+        [
+          {
+            "node": "Main Logic Placeholder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Main Logic Placeholder": {
+      "main": [
+        [
+          {
+            "node": "MongoDB",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MongoDB": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MongoDB1": {
+      "main": [
+        [
+          {
+            "node": "MongoDB2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "MongoDB1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "WhatsApp Trigger": {
+      "main": [
+        [
+          {
+            "node": "Switch1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MongoDB2": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields2": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch1": {
+      "main": [
+        [
+          {
+            "node": "Error mensaje de voz",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "error documento",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "error imagen",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "error video",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set Variables",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set Variables",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Switch2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "student_id",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "student_id": {
+      "main": [
+        [
+          {
+            "node": "MongoDB3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MongoDB3": {
+      "main": [
+        [
+          {
+            "node": "Code1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields3": {
+      "main": [
+        [
+          {
+            "node": "MongoDB4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MongoDB4": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MongoDB5": {
+      "main": [
+        [
+          {
+            "node": "menu principal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields4": {
+      "main": [
+        [
+          {
+            "node": "MongoDB5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch2": {
+      "main": [
+        [],
+        [],
+        [
+          {
+            "node": "Code4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields5": {
+      "main": [
+        [
+          {
+            "node": "Code2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code2": {
+      "main": [
+        [
+          {
+            "node": "If2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If2": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields6": {
+      "main": [
+        [
+          {
+            "node": "menu principal1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields7": {
+      "main": [
+        [
+          {
+            "node": "MongoDB6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "menu principal1": {
+      "main": [
+        [
+          {
+            "node": "Code3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code3": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields7",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields8": {
+      "main": [
+        [
+          {
+            "node": "MongoDB7",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code4": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields8",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MongoDB7": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {
+    "WhatsApp Trigger": [
+      {
+        "json": {
+          "messaging_product": "whatsapp",
+          "metadata": {
+            "display_phone_number": "5215612472568",
+            "phone_number_id": "626839230509107"
+          },
+          "contacts": [
+            {
+              "profile": {
+                "name": "Rick"
+              },
+              "wa_id": "5214434901193"
+            }
+          ],
+          "messages": [
+            {
+              "context": {
+                "from": "5215612472568",
+                "id": "wamid.HBgNNTIxNDQzNDkwMTE5MxUCABEYEjQ1N0YyNTMyNjhEMTdBOUVFRQA="
+              },
+              "from": "5214434901193",
+              "id": "wamid.HBgNNTIxNDQzNDkwMTE5MxUCABIYFjNFQjA3QUQ3NzA3MDREQTNDNUUxMkQA",
+              "timestamp": "1749595075",
+              "type": "interactive",
+              "interactive": {
+                "type": "button_reply",
+                "button_reply": {
+                  "id": "calendario",
+                  "title": "Calendario"
+                }
+              }
+            }
+          ],
+          "field": "messages"
+        }
+      }
+    ]
+  },
+  "versionId": "aac47256-3c2b-4b69-b33a-118ce15fc7c7",
+  "triggerCount": 1,
+  "shared": [
+    {
+      "createdAt": "2025-06-09T16:34:20.836Z",
+      "updatedAt": "2025-06-09T16:34:20.836Z",
+      "role": "workflow:owner",
+      "workflowId": "k6PApGOzpLKtnZ0q",
+      "projectId": "BsYMJSPwury6TiTn",
+      "project": {
+        "createdAt": "2025-06-06T20:24:22.277Z",
+        "updatedAt": "2025-06-06T21:09:46.835Z",
+        "id": "BsYMJSPwury6TiTn",
+        "name": "adolfo huerta <adolfocuentas123@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "projectRelations": [
+          {
+            "createdAt": "2025-06-06T20:24:22.278Z",
+            "updatedAt": "2025-06-06T20:24:22.278Z",
+            "role": "project:personalOwner",
+            "userId": "f9268337-0922-4cba-994c-bf6b40332731",
+            "projectId": "BsYMJSPwury6TiTn",
+            "user": {
+              "createdAt": "2025-06-06T20:24:22.275Z",
+              "updatedAt": "2025-06-10T22:30:29.363Z",
+              "id": "f9268337-0922-4cba-994c-bf6b40332731",
+              "email": "adolfocuentas123@gmail.com",
+              "firstName": "adolfo",
+              "lastName": "huerta",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-06-06T21:09:59.993Z",
+                "personalization_survey_n8n_version": "1.92.2",
+                "companySize": "<20",
+                "companyType": "saas",
+                "role": "business-owner",
+                "reportedSource": "twitter"
+              },
+              "settings": {
+                "firstSuccessfulWorkflowId": "k6PApGOzpLKtnZ0q",
+                "userActivated": true,
+                "userActivatedAt": 1749594629341
+              },
+              "role": "global:member",
+              "disabled": false,
+              "mfaEnabled": false,
+              "isPending": false,
+              "isOwner": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": []
+}
