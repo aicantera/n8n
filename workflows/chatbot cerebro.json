@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-06-09T16:34:20.833Z",
-  "updatedAt": "2025-06-11T17:01:04.000Z",
+  "updatedAt": "2025-06-11T18:29:36.000Z",
   "id": "k6PApGOzpLKtnZ0q",
   "name": "chatbot cerebro",
   "active": false,
@@ -1880,8 +1880,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        2980,
-        -1560
+        2900,
+        -1860
       ],
       "id": "c300128f-14bd-4623-9d81-c77f57a8c51e",
       "name": "seleccionar usuario mensaje"
@@ -1893,8 +1893,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        3260,
-        -1560
+        3180,
+        -1860
       ],
       "id": "feaebd25-461e-4fba-b978-f01cd411bcd8",
       "name": "Code7",
@@ -1911,8 +1911,8 @@
       "type": "n8n-nodes-base.mongoDb",
       "typeVersion": 1.1,
       "position": [
-        3720,
-        -1560
+        3640,
+        -1860
       ],
       "id": "ca186aa1-950a-4615-85e5-c85d18b82d84",
       "name": "MongoDB10",
@@ -1952,8 +1952,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        3500,
-        -1560
+        3420,
+        -1860
       ],
       "id": "14d38e7f-68bb-497f-b25b-bf9ab846a957",
       "name": "body estatus seleccion_alumno"
@@ -1968,8 +1968,8 @@
       "type": "n8n-nodes-base.mongoDb",
       "typeVersion": 1.1,
       "position": [
-        4160,
-        -1560
+        4080,
+        -1860
       ],
       "id": "96d54cf3-05a4-4ffa-9e8a-723f53101fc3",
       "name": "MongoDB11",
@@ -2027,8 +2027,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        3940,
-        -1560
+        3860,
+        -1860
       ],
       "id": "dcf5f531-c98d-4e72-abe9-5ff7b4240672",
       "name": "body presentacion menu selec student"
@@ -2040,13 +2040,13 @@
             {
               "id": "c8c23d02-4a43-45ae-b3a8-ba75ca263b0d",
               "name": "htmlResponseBody",
-              "value": "={{ $('HTTP Request').item.json.data_multi }}",
+              "value": "={{ $('HTTP Request').item.json }}",
               "type": "string"
             },
             {
               "id": "db2a36d3-1d7a-4e09-8474-823828015e40",
-              "name": "selectedNum",
-              "value": "",
+              "name": "selected_student",
+              "value": "={{ $('WhatsApp Trigger').item.json.messages[0].text.body }}",
               "type": "string"
             }
           ]
@@ -2056,8 +2056,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        2920,
-        -1320
+        3000,
+        -1420
       ],
       "id": "06af86d6-67fe-4608-9fed-8ba1dcb4f1a0",
       "name": "Edit Fields11"
@@ -2069,11 +2069,243 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        3140,
-        -1320
+        3220,
+        -1420
       ],
       "id": "4b4be5d9-b99d-43ff-ad94-c9748b8c603f",
       "name": "Code8"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "5127ea2d-67c4-4e02-9cc4-b41d25b89c73",
+              "name": "student_id",
+              "value": "={{ $json.selected_student.student_id }}",
+              "type": "string"
+            },
+            {
+              "id": "858d8bba-88da-4426-9ca2-2ad5917f192a",
+              "name": "phoneNumber",
+              "value": "={{ $('WhatsApp Trigger').item.json.messages[0].from }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        3480,
+        -1460
+      ],
+      "id": "e23bf110-c635-4ee7-970c-4ecfca6652ff",
+      "name": "student_id1"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "collection": "user_state",
+        "updateKey": "=phoneNumber",
+        "fields": "student_id",
+        "upsert": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1.1,
+      "position": [
+        3700,
+        -1460
+      ],
+      "id": "ad38d188-e992-40a4-994e-9db70b5e01ba",
+      "name": "MongoDB12",
+      "alwaysOutputData": true,
+      "credentials": {
+        "mongoDb": {
+          "id": "xZYe0R0CRtWFmyv7",
+          "name": "MongoDB account cerebro core"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v22.0/626839230509107/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer EAAHeSgKjRYEBOZBi0kUskW4k3L6ZCO8EhqsGNjWLyfJ3U1NZCbDyQp9WSoX0Ouh8hh44Jue9ev7TMlygkZAMoqMReAJL9cNZBQZCZB508HXZB84HCNFZBIRlSa9cXFs0dXmR31XoO0iUZBOTx4VSnErdZC9OD1sQDKprPHpbK7NBrTZAWy8D6pvNi9w0w4c9pt2KE3stGwZDZD"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"5214434901193\",\n  \"type\": \"interactive\",\n  \"interactive\": {\n    \"type\": \"button\",\n    \"body\": {\n      \"text\": \"¡Hola! 😊 Estoy aquí para ayudarte a encontrar la información que necesitas.👉 Presiona 'Calendario' 📅 para ver la información de los eventosprogramados para este mes.👉 Presiona 'Preguntas frecuentes'❓ para resolver dudas frecuentes.👉 Presiona 'Académico'❓ para obtener información de tareas o lecciones de tu alumno.\"\n    },\n    \"action\": {\n      \"buttons\": [\n        {\n          \"type\": \"reply\",\n          \"reply\": {\n            \"id\": \"calendario\",\n            \"title\": \"Calendario\"\n          }\n        },\n        {\n          \"type\": \"reply\",\n          \"reply\": {\n            \"id\": \"preguntas_frecuentes\",\n            \"title\": \"Preguntas Frecuentes\"\n          }\n        },\n        {\n          \"type\": \"reply\",\n          \"reply\": {\n            \"id\": \"academico\",\n            \"title\": \"Académico\"\n          }\n        }\n      ]\n    }\n  }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        5020,
+        -1460
+      ],
+      "id": "2222597c-9153-42c2-a66f-2e0ec520ea4c",
+      "name": "menu principal4"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "670342e3-e699-4e30-af27-04db7bace385",
+              "name": "user_id",
+              "value": "={{ $('Main Logic Placeholder').item.json.students_data[0].user_id }}",
+              "type": "string"
+            },
+            {
+              "id": "391a519a-9e7c-4dee-8dfc-f8b38f7f8fc7",
+              "name": "information",
+              "value": "se presenta menu inicial",
+              "type": "string"
+            },
+            {
+              "id": "915b68b5-3dee-44ad-82f6-65a3d9a74629",
+              "name": "log_id",
+              "value": "={{ $json.uuid }}",
+              "type": "string"
+            },
+            {
+              "id": "f07b7183-62a0-4d4a-90a7-ad93e7acd220",
+              "name": "date",
+              "value": "={{ $json.now }}",
+              "type": "string"
+            },
+            {
+              "id": "e5baae19-924c-4972-8a51-b4d87aad8bad",
+              "name": "state",
+              "value": "espera_respuesta_menu_inicial",
+              "type": "string"
+            },
+            {
+              "id": "127efdf6-7193-4011-a155-fa072b66e80f",
+              "name": "userStateId",
+              "value": "={{ $('MongoDB').item.json.userStateId }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        4140,
+        -1460
+      ],
+      "id": "f7589ece-33e3-4fa8-90fc-488134e33740",
+      "name": "Edit Fields12"
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "collection": "log_chatbot",
+        "fields": "user_id, information,log_id, date",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1.1,
+      "position": [
+        4360,
+        -1460
+      ],
+      "id": "bfa4ca8e-3db6-4e24-a04f-4f2a92149ca7",
+      "name": "MongoDB13",
+      "credentials": {
+        "mongoDb": {
+          "id": "xZYe0R0CRtWFmyv7",
+          "name": "MongoDB account cerebro core"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Importante: Esto se coloca dentro de un nodo \"Code\" en n8n\n\nfunction uuidv4() {\n  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {\n    const r = Math.random() * 16 | 0;\n    const v = c === 'x' ? r : (r & 0x3 | 0x8);\n    return v.toString(16);\n  });\n}\n\nreturn [\n  {\n    json: {\n      uuid: uuidv4(),\n      now: new Date().toLocaleString('es-MX', {\n  timeZone: 'America/Mexico_City'\n})\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3920,
+        -1460
+      ],
+      "id": "96762b5a-b7a7-4eb0-ba94-e587786f9444",
+      "name": "Code9",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "collection": "user_state",
+        "updateKey": "userStateId",
+        "fields": "state, date",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1.1,
+      "position": [
+        4800,
+        -1460
+      ],
+      "id": "6711edb6-3108-4dcf-b321-e917ae1419b0",
+      "name": "MongoDB14",
+      "credentials": {
+        "mongoDb": {
+          "id": "xZYe0R0CRtWFmyv7",
+          "name": "MongoDB account cerebro core"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f07b7183-62a0-4d4a-90a7-ad93e7acd220",
+              "name": "date",
+              "value": "={{ $('Code9').item.json.now }}",
+              "type": "string"
+            },
+            {
+              "id": "e5baae19-924c-4972-8a51-b4d87aad8bad",
+              "name": "state",
+              "value": "espera_respuesta_menu_inicial",
+              "type": "string"
+            },
+            {
+              "id": "127efdf6-7193-4011-a155-fa072b66e80f",
+              "name": "userStateId",
+              "value": "={{ $('MongoDB').item.json.userStateId }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        4580,
+        -1460
+      ],
+      "id": "bd3f907a-b4db-4154-b4e5-dcf1ca5a5570",
+      "name": "Edit Fields13"
     }
   ],
   "connections": {
@@ -2747,6 +2979,94 @@
           }
         ]
       ]
+    },
+    "student_id1": {
+      "main": [
+        [
+          {
+            "node": "MongoDB12",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MongoDB12": {
+      "main": [
+        [
+          {
+            "node": "Code9",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields12": {
+      "main": [
+        [
+          {
+            "node": "MongoDB13",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MongoDB13": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields13",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code9": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields12",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MongoDB14": {
+      "main": [
+        [
+          {
+            "node": "menu principal4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields13": {
+      "main": [
+        [
+          {
+            "node": "MongoDB14",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code8": {
+      "main": [
+        [
+          {
+            "node": "student_id1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -2779,7 +3099,7 @@
               "id": "wamid.HBgNNTIxNDQzNDkwMTE5MxUCABIYFjNFQjAzODhDNjFGMjcyMDdCMzY4MjQA",
               "timestamp": "1749661037",
               "text": {
-                "body": "5"
+                "body": "2"
               },
               "type": "text"
             }
@@ -2789,7 +3109,7 @@
       }
     ]
   },
-  "versionId": "95136cfa-57c6-427b-a179-2098dd12f6d5",
+  "versionId": "12d33232-7164-467f-afd9-d52bea69c99c",
   "triggerCount": 1,
   "shared": [
     {
