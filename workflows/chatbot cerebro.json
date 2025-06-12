@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-06-09T16:34:20.833Z",
-  "updatedAt": "2025-06-11T18:29:36.000Z",
+  "updatedAt": "2025-06-12T14:59:32.000Z",
   "id": "k6PApGOzpLKtnZ0q",
   "name": "chatbot cerebro",
   "active": false,
@@ -816,8 +816,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        1840,
-        -1280
+        1920,
+        -1760
       ],
       "id": "6f6c92e8-1353-4ec8-829f-f69e29ec23d0",
       "name": "If1"
@@ -844,8 +844,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        2480,
-        -1420
+        2340,
+        -1940
       ],
       "id": "62283365-fe1b-4256-91d6-2b9992beca3a",
       "name": "HTTP Request"
@@ -873,8 +873,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        2480,
-        -1220
+        2340,
+        -1740
       ],
       "id": "3e694494-e6d6-477b-bb3c-fa616c2f52fe",
       "name": "student_id"
@@ -891,8 +891,8 @@
       "type": "n8n-nodes-base.mongoDb",
       "typeVersion": 1.1,
       "position": [
-        2700,
-        -1220
+        2560,
+        -1740
       ],
       "id": "a50c53de-baf5-4662-b2c8-96b5c88fdefd",
       "name": "MongoDB3",
@@ -929,8 +929,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        4020,
-        -1220
+        3880,
+        -1740
       ],
       "id": "b765dada-3f68-45e0-81a2-2e47775261be",
       "name": "menu principal"
@@ -982,8 +982,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        3140,
-        -1220
+        3000,
+        -1740
       ],
       "id": "da6c3507-cf8f-4c59-ab23-46865cd14583",
       "name": "Edit Fields3"
@@ -998,8 +998,8 @@
       "type": "n8n-nodes-base.mongoDb",
       "typeVersion": 1.1,
       "position": [
-        3360,
-        -1220
+        3220,
+        -1740
       ],
       "id": "f6dc0341-6e08-4db6-b7de-62ffce157ebd",
       "name": "MongoDB4",
@@ -1017,8 +1017,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        2920,
-        -1220
+        2780,
+        -1740
       ],
       "id": "9ab341f3-165a-4f8b-856d-b882831d2d9e",
       "name": "Code1",
@@ -1035,8 +1035,8 @@
       "type": "n8n-nodes-base.mongoDb",
       "typeVersion": 1.1,
       "position": [
-        3800,
-        -1220
+        3660,
+        -1740
       ],
       "id": "3056ee39-a0b1-4f49-baa8-b46b7dddf0bc",
       "name": "MongoDB5",
@@ -1076,8 +1076,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        3580,
-        -1220
+        3440,
+        -1740
       ],
       "id": "7458866a-a583-4af3-89b6-a75d93270899",
       "name": "Edit Fields4"
@@ -1206,7 +1206,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const monthOrder = [\n    \"Enero\", \"Febrero\", \"Marzo\", \"Abril\", \"Mayo\", \"Junio\",\n    \"Julio\", \"Agosto\", \"Septiembre\", \"Octubre\", \"Noviembre\", \"Diciembre\"\n];\n\nfunction sortMonths(months) {\n    return months.sort((a, b) => monthOrder.indexOf(a) - monthOrder.indexOf(b));\n}\n\nfunction createEventDaysDictionary(monthEvents) {\n    const eventsByDay = monthEvents.reduce((acc, event) => {\n        if (event.type === 'individual' && event.content && event.content.day) {\n            const day = event.content.day.toString();\n            if (!acc[day]) acc[day] = [];\n            acc[day].push(event);\n        }\n        return acc;\n    }, {});\n\n    const sortedDays = Object.keys(eventsByDay)\n        .map(day => parseInt(day))\n        .sort((a, b) => a - b);\n\n    const dictionary = sortedDays.reduce((acc, day, index) => {\n        acc[(index + 1).toString()] = day.toString();\n        return acc;\n    }, {});\n\n    return { dictionary, eventsByDay };\n}\n\nfunction createMonthlyMessage(monthlyGuideData, currentMonth) {\n    let message = `*¡Eventos de ${currentMonth}!* 📅\\n\\n`;\n\n    const monthEvents = monthlyGuideData.filter(item =>\n        item.month === currentMonth && item.type === 'individual'\n    );\n\n    let eventDaysDictionary = {};\n    let eventsByDay = {};\n    let hasContent = monthEvents.length === 0 ? \"no\" : \"yes\";\n\n    if (monthEvents.length === 0) {\n        message += `No hay eventos programados para ${currentMonth}. ¡Pero cada día es una oportunidad para aprender!\\n\\n`;\n    } else {\n        const eventData = createEventDaysDictionary(monthEvents);\n        eventDaysDictionary = eventData.dictionary;\n        eventsByDay = eventData.eventsByDay;\n\n        message += \"*Eventos del mes:*\\n\";\n        Object.entries(eventDaysDictionary).forEach(([order, day]) => {\n            const dayEvents = eventsByDay[day];\n            if (dayEvents && dayEvents.length > 0) {\n                message += `${order}. 🗓 Día ${day}:\\n`;\n                dayEvents.forEach((event, idx) => {\n                    message += `   ${String.fromCharCode(97 + idx)}) \"${event.content.title}\"\\n`;\n                });\n                message += \"\\n\";\n            }\n        });\n    }\n\n    message += `¡Esperamos tu participación! Juntos haremos de este mes una experiencia inolvidable. 🌟`;\n\n    return { message, eventDaysDictionary, hasContent };\n}\n\n// Obtener la variable MonthlyGuide desde items[0].json\nconst input = items[0].json;\n\nlet monthlyGuideData = [];\nlet availableMonths = [];\n\ntry {\n    const parsedMonthlyGuide = JSON.parse(input.MonthlyGuide);\n    monthlyGuideData = parsedMonthlyGuide.MonthlyGuide || [];\n\n    availableMonths = [...new Set(monthlyGuideData.map(item => item.month))];\n    availableMonths = sortMonths(availableMonths);\n} catch (error) {\n    throw new Error(\"Error al procesar MonthlyGuide: \" + error.message);\n}\n\nconst currentMonth = monthOrder[new Date().getMonth()];\nconst { message, eventDaysDictionary, hasContent } = createMonthlyMessage(monthlyGuideData, currentMonth);\n\n// Salida del nodo\nreturn [\n  {\n    json: {\n      mensaje_guardian_options: message.trim(),\n      dias_eventos_enumerados: eventDaysDictionary,\n      available_months: availableMonths,\n      has_content: hasContent\n    }\n  }\n];\n"
+        "jsCode": "// Modo: Run Once for All Items\n\n// 1) Leer variables desde el Set previo\nconst input = items[0].json;\n\n// 2) Definir orden de meses\nconst monthOrder = [\n  \"Enero\",\"Febrero\",\"Marzo\",\"Abril\",\"Mayo\",\"Junio\",\n  \"Julio\",\"Agosto\",\"Septiembre\",\"Octubre\",\"Noviembre\",\"Diciembre\",\n];\n\n// 3) Función para ordenar un array de meses según monthOrder\nfunction sortMonths(months) {\n  return months.sort(\n    (a, b) => monthOrder.indexOf(a) - monthOrder.indexOf(b)\n  );\n}\n\n// 4) Función para crear diccionario día→eventos\nfunction createEventDaysDictionary(monthEvents) {\n  const eventsByDay = monthEvents.reduce((acc, ev) => {\n    if (ev.type === \"individual\" && ev.content?.day) {\n      const d = String(ev.content.day);\n      acc[d] = acc[d]||[];\n      acc[d].push(ev);\n    }\n    return acc;\n  }, {});\n  const sortedDays = Object.keys(eventsByDay)\n    .map(d => parseInt(d))\n    .sort((a,b)=>a-b);\n  const dictionary = sortedDays.reduce((acc, day, i) => {\n    acc[String(i+1)] = String(day);\n    return acc;\n  }, {});\n  return { dictionary, eventsByDay };\n}\n\n// 5) Función para generar el mensaje de WhatsApp\nfunction createMonthlyMessage(data, currentMonth) {\n  let msg = `*¡Eventos de ${currentMonth}!* 📅\\n\\n`;\n  const monthEvents = data.filter(\n    i => i.month === currentMonth && i.type === \"individual\"\n  );\n  const hasContent = monthEvents.length>0 ? \"yes\":\"no\";\n\n  if (!monthEvents.length) {\n    msg += `No hay eventos programados para ${currentMonth}. ¡Pero cada día es una oportunidad para aprender!\\n\\n`;\n  } else {\n    const { dictionary, eventsByDay } = createEventDaysDictionary(monthEvents);\n    msg += \"*Eventos del mes:*\\n\";\n    for (const [order, day] of Object.entries(dictionary)) {\n      const evs = eventsByDay[day]||[];\n      msg += `${order}. 🗓 Día ${day}:\\n`;\n      evs.forEach((ev, idx) => {\n        msg += `   ${String.fromCharCode(97+idx)}) \"${ev.content.title}\"\\n`;\n      });\n      msg += \"\\n\";\n    }\n  }\n  msg += \"¡Esperamos tu participación! Juntos haremos de este mes una experiencia inolvidable. 🌟\";\n  return { message: msg, eventDaysDictionary: createEventDaysDictionary(monthEvents).dictionary, hasContent };\n}\n\n// 6) Parsear MonthlyGuide (string o ya objeto)\nlet monthlyGuideData = [];\ntry {\n  const raw = input.MonthlyGuide;\n  const parsed = typeof raw === \"string\" ? JSON.parse(raw) : raw;\n  // Si viene envuelto en { MonthlyGuide: [...] }\n  monthlyGuideData = Array.isArray(parsed)\n    ? parsed\n    : parsed.MonthlyGuide || [];\n} catch (e) {\n  // si falla el parse, dejamos el array vacío\n  monthlyGuideData = [];\n}\n\n// 7) Sacar los meses disponibles y ordenarlos\nlet availableMonths = [\n  ...new Set(monthlyGuideData.map(i=>i.month))\n];\navailableMonths = sortMonths(availableMonths);\n\n// 8) Mes actual e invocar creación de mensaje\nconst currentMonth = monthOrder[new Date().getMonth()];\nconst { message, eventDaysDictionary, hasContent } =\n  createMonthlyMessage(monthlyGuideData, currentMonth);\n\n// 9) Devolver la salida que usará el resto del workflow\nreturn [{\n  json: {\n    salida_whatsapp_guardian_function: {\n      mensaje_guardian_options: message,\n      dias_eventos_enumerados: eventDaysDictionary,\n      available_months: availableMonths,\n      has_content: hasContent,\n    }\n  }\n}];\n"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -1561,7 +1561,7 @@
       "typeVersion": 3.4,
       "position": [
         2640,
-        -960
+        -1400
       ],
       "id": "edd1a89e-bade-458e-9a6f-8e75bc51c70c",
       "name": "Edit Fields9"
@@ -1577,7 +1577,7 @@
       "typeVersion": 1.1,
       "position": [
         2860,
-        -960
+        -1400
       ],
       "id": "d4bb448d-7ddc-4c6f-a2ad-e48073e40229",
       "name": "MongoDB8",
@@ -1596,7 +1596,7 @@
       "typeVersion": 2,
       "position": [
         2420,
-        -960
+        -1400
       ],
       "id": "6fd46ef3-6082-4bb4-aad0-b8310ddf3faf",
       "name": "Code5",
@@ -1628,7 +1628,7 @@
       "typeVersion": 4.2,
       "position": [
         3080,
-        -960
+        -1400
       ],
       "id": "169195e8-c45b-498f-a840-d8489fceb97b",
       "name": "menu principal2"
@@ -1645,7 +1645,7 @@
       "typeVersion": 1.1,
       "position": [
         3520,
-        -960
+        -1400
       ],
       "id": "f9fc1274-4815-425e-b433-8c055405a2a1",
       "name": "MongoDB9",
@@ -1686,7 +1686,7 @@
       "typeVersion": 3.4,
       "position": [
         3300,
-        -960
+        -1400
       ],
       "id": "a04aeabb-58f4-4811-aa22-2eec0a370d65",
       "name": "Edit Fields10"
@@ -1849,8 +1849,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        2700,
-        -1420
+        2560,
+        -1940
       ],
       "id": "60d919b2-b7ea-4573-8ccc-79c96814f263",
       "name": "If4"
@@ -1880,8 +1880,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        2900,
-        -1860
+        2760,
+        -2380
       ],
       "id": "c300128f-14bd-4623-9d81-c77f57a8c51e",
       "name": "seleccionar usuario mensaje"
@@ -1893,8 +1893,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        3180,
-        -1860
+        3040,
+        -2380
       ],
       "id": "feaebd25-461e-4fba-b978-f01cd411bcd8",
       "name": "Code7",
@@ -1911,8 +1911,8 @@
       "type": "n8n-nodes-base.mongoDb",
       "typeVersion": 1.1,
       "position": [
-        3640,
-        -1860
+        3500,
+        -2380
       ],
       "id": "ca186aa1-950a-4615-85e5-c85d18b82d84",
       "name": "MongoDB10",
@@ -1952,8 +1952,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        3420,
-        -1860
+        3280,
+        -2380
       ],
       "id": "14d38e7f-68bb-497f-b25b-bf9ab846a957",
       "name": "body estatus seleccion_alumno"
@@ -1968,8 +1968,8 @@
       "type": "n8n-nodes-base.mongoDb",
       "typeVersion": 1.1,
       "position": [
-        4080,
-        -1860
+        3940,
+        -2380
       ],
       "id": "96d54cf3-05a4-4ffa-9e8a-723f53101fc3",
       "name": "MongoDB11",
@@ -2027,8 +2027,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        3860,
-        -1860
+        3720,
+        -2380
       ],
       "id": "dcf5f531-c98d-4e72-abe9-5ff7b4240672",
       "name": "body presentacion menu selec student"
@@ -2056,8 +2056,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        3000,
-        -1420
+        2860,
+        -1940
       ],
       "id": "06af86d6-67fe-4608-9fed-8ba1dcb4f1a0",
       "name": "Edit Fields11"
@@ -2069,8 +2069,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        3220,
-        -1420
+        3080,
+        -1940
       ],
       "id": "4b4be5d9-b99d-43ff-ad94-c9748b8c603f",
       "name": "Code8"
@@ -2098,8 +2098,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        3480,
-        -1460
+        3340,
+        -1980
       ],
       "id": "e23bf110-c635-4ee7-970c-4ecfca6652ff",
       "name": "student_id1"
@@ -2116,8 +2116,8 @@
       "type": "n8n-nodes-base.mongoDb",
       "typeVersion": 1.1,
       "position": [
-        3700,
-        -1460
+        3560,
+        -1980
       ],
       "id": "ad38d188-e992-40a4-994e-9db70b5e01ba",
       "name": "MongoDB12",
@@ -2154,8 +2154,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        5020,
-        -1460
+        4880,
+        -1980
       ],
       "id": "2222597c-9153-42c2-a66f-2e0ec520ea4c",
       "name": "menu principal4"
@@ -2207,8 +2207,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        4140,
-        -1460
+        4000,
+        -1980
       ],
       "id": "f7589ece-33e3-4fa8-90fc-488134e33740",
       "name": "Edit Fields12"
@@ -2223,8 +2223,8 @@
       "type": "n8n-nodes-base.mongoDb",
       "typeVersion": 1.1,
       "position": [
-        4360,
-        -1460
+        4220,
+        -1980
       ],
       "id": "bfa4ca8e-3db6-4e24-a04f-4f2a92149ca7",
       "name": "MongoDB13",
@@ -2242,8 +2242,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        3920,
-        -1460
+        3780,
+        -1980
       ],
       "id": "96762b5a-b7a7-4eb0-ba94-e587786f9444",
       "name": "Code9",
@@ -2260,8 +2260,8 @@
       "type": "n8n-nodes-base.mongoDb",
       "typeVersion": 1.1,
       "position": [
-        4800,
-        -1460
+        4660,
+        -1980
       ],
       "id": "6711edb6-3108-4dcf-b321-e917ae1419b0",
       "name": "MongoDB14",
@@ -2301,11 +2301,257 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        4580,
-        -1460
+        4440,
+        -1980
       ],
       "id": "bd3f907a-b4db-4154-b4e5-dcf1ca5a5570",
       "name": "Edit Fields13"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "fdcbd5e2-5f4e-45c7-96d3-45e10dc3a681",
+              "name": "mensaje_guardian_options",
+              "value": "={{ $json.salida_whatsapp_guardian_function.mensaje_guardian_options }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        4040,
+        -640
+      ],
+      "id": "db6b3abf-abad-42eb-aebb-6f0269e86e65",
+      "name": "Edit Fields14"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v22.0/626839230509107/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer EAAHeSgKjRYEBOZBi0kUskW4k3L6ZCO8EhqsGNjWLyfJ3U1NZCbDyQp9WSoX0Ouh8hh44Jue9ev7TMlygkZAMoqMReAJL9cNZBQZCZB508HXZB84HCNFZBIRlSa9cXFs0dXmR31XoO0iUZBOTx4VSnErdZC9OD1sQDKprPHpbK7NBrTZAWy8D6pvNi9w0w4c9pt2KE3stGwZDZD"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"type\": \"interactive\",\n  \"interactive\": {\n    \"type\": \"button\",\n    \"body\": {\n      \"text\": {{JSON.stringify($json.mensaje_guardian_options) }}\n    },\n    \"action\": {\n      \"buttons\": [\n        {\n          \"type\": \"reply\",\n          \"reply\": {\n            \"id\": \"menu_inicial\",\n            \"title\": \"Menú Incial\"\n          }\n        }\n      ]\n    }\n } }\n\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        4240,
+        -640
+      ],
+      "id": "7fb69b48-ca21-4a79-b0ba-c85821438bf2",
+      "name": "menu principal5"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "collection": "user_state",
+        "updateKey": "userStateId",
+        "fields": "state, date",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1.1,
+      "position": [
+        4900,
+        -640
+      ],
+      "id": "7d03dbe2-30de-4b9f-a4d0-36d53dea8129",
+      "name": "MongoDB15",
+      "credentials": {
+        "mongoDb": {
+          "id": "xZYe0R0CRtWFmyv7",
+          "name": "MongoDB account cerebro core"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f07b7183-62a0-4d4a-90a7-ad93e7acd220",
+              "name": "date",
+              "value": "={{ $json.now }}",
+              "type": "string"
+            },
+            {
+              "id": "e5baae19-924c-4972-8a51-b4d87aad8bad",
+              "name": "state",
+              "value": "espera_respuesta_evento_calendario",
+              "type": "string"
+            },
+            {
+              "id": "127efdf6-7193-4011-a155-fa072b66e80f",
+              "name": "userStateId",
+              "value": "={{ $('MongoDB').item.json.userStateId }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        4680,
+        -640
+      ],
+      "id": "3efc4e78-82b6-4803-835b-845062c6cb27",
+      "name": "Edit Fields15"
+    },
+    {
+      "parameters": {
+        "jsCode": "\n\nreturn [\n  {\n    json: {\n      now: new Date().toLocaleString('es-MX', {\n  timeZone: 'America/Mexico_City'\n})\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        4460,
+        -640
+      ],
+      "id": "94c324e4-f2c2-4c14-8d7b-cc01c4f9f2b3",
+      "name": "Code10",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "670342e3-e699-4e30-af27-04db7bace385",
+              "name": "user_id",
+              "value": "={{ $('Main Logic Placeholder').item.json.students_data[0].user_id }}",
+              "type": "string"
+            },
+            {
+              "id": "391a519a-9e7c-4dee-8dfc-f8b38f7f8fc7",
+              "name": "information",
+              "value": "se presenta menu academico",
+              "type": "string"
+            },
+            {
+              "id": "915b68b5-3dee-44ad-82f6-65a3d9a74629",
+              "name": "log_id",
+              "value": "={{ $json.uuid }}",
+              "type": "string"
+            },
+            {
+              "id": "f07b7183-62a0-4d4a-90a7-ad93e7acd220",
+              "name": "date",
+              "value": "={{ $json.now }}",
+              "type": "string"
+            },
+            {
+              "id": "e5baae19-924c-4972-8a51-b4d87aad8bad",
+              "name": "state",
+              "value": "espera_respuesta_menu_inicial",
+              "type": "string"
+            },
+            {
+              "id": "127efdf6-7193-4011-a155-fa072b66e80f",
+              "name": "userStateId",
+              "value": "={{ $('MongoDB').item.json.userStateId }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2660,
+        -940
+      ],
+      "id": "24f536a4-f1a7-403b-86e6-9193b7e3652a",
+      "name": "Edit Fields16"
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "collection": "log_chatbot",
+        "fields": "user_id, information,log_id, date",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1.1,
+      "position": [
+        2880,
+        -940
+      ],
+      "id": "847bfcba-3fe9-4234-8894-5c624d063d19",
+      "name": "MongoDB16",
+      "credentials": {
+        "mongoDb": {
+          "id": "xZYe0R0CRtWFmyv7",
+          "name": "MongoDB account cerebro core"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Importante: Esto se coloca dentro de un nodo \"Code\" en n8n\n\nfunction uuidv4() {\n  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {\n    const r = Math.random() * 16 | 0;\n    const v = c === 'x' ? r : (r & 0x3 | 0x8);\n    return v.toString(16);\n  });\n}\n\nreturn [\n  {\n    json: {\n      uuid: uuidv4(),\n      now: new Date().toLocaleString('es-MX', {\n  timeZone: 'America/Mexico_City'\n})\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2440,
+        -940
+      ],
+      "id": "78ec067f-6de0-444b-90ad-b272b3ad17e9",
+      "name": "Code11",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v22.0/626839230509107/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer EAAHeSgKjRYEBOZBi0kUskW4k3L6ZCO8EhqsGNjWLyfJ3U1NZCbDyQp9WSoX0Ouh8hh44Jue9ev7TMlygkZAMoqMReAJL9cNZBQZCZB508HXZB84HCNFZBIRlSa9cXFs0dXmR31XoO0iUZBOTx4VSnErdZC9OD1sQDKprPHpbK7NBrTZAWy8D6pvNi9w0w4c9pt2KE3stGwZDZD"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"Bienvenido al área de Académico de Cerebro.\\n\\n1️⃣  Clases de la semana.\\n2️⃣ Recibir clases por email.\"\n  }\n}\n\n\n\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3140,
+        -940
+      ],
+      "id": "6371b9a1-624f-4d2a-a57c-4dfab6d033b9",
+      "name": "menu academico"
     }
   ],
   "connections": {
@@ -2648,7 +2894,13 @@
             "index": 0
           }
         ],
-        [],
+        [
+          {
+            "node": "Code11",
+            "type": "main",
+            "index": 0
+          }
+        ],
         [
           {
             "node": "Code4",
@@ -2696,6 +2948,13 @@
         [
           {
             "node": "Edit Fields6",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields14",
             "type": "main",
             "index": 0
           }
@@ -3067,6 +3326,83 @@
           }
         ]
       ]
+    },
+    "Edit Fields14": {
+      "main": [
+        [
+          {
+            "node": "menu principal5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields15": {
+      "main": [
+        [
+          {
+            "node": "MongoDB15",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code10": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields15",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "menu principal5": {
+      "main": [
+        [
+          {
+            "node": "Code10",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields16": {
+      "main": [
+        [
+          {
+            "node": "MongoDB16",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code11": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields16",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MongoDB16": {
+      "main": [
+        [
+          {
+            "node": "menu academico",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -3076,40 +3412,8 @@
   "meta": {
     "templateCredsSetupCompleted": true
   },
-  "pinData": {
-    "WhatsApp Trigger": [
-      {
-        "json": {
-          "messaging_product": "whatsapp",
-          "metadata": {
-            "display_phone_number": "5215612472568",
-            "phone_number_id": "626839230509107"
-          },
-          "contacts": [
-            {
-              "profile": {
-                "name": "Rick"
-              },
-              "wa_id": "5214434901193"
-            }
-          ],
-          "messages": [
-            {
-              "from": "5214434901193",
-              "id": "wamid.HBgNNTIxNDQzNDkwMTE5MxUCABIYFjNFQjAzODhDNjFGMjcyMDdCMzY4MjQA",
-              "timestamp": "1749661037",
-              "text": {
-                "body": "2"
-              },
-              "type": "text"
-            }
-          ],
-          "field": "messages"
-        }
-      }
-    ]
-  },
-  "versionId": "12d33232-7164-467f-afd9-d52bea69c99c",
+  "pinData": {},
+  "versionId": "d06ab8bd-ab15-494d-ad7c-0225ae3830b4",
   "triggerCount": 1,
   "shared": [
     {
