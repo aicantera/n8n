@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-06-09T16:34:20.833Z",
-  "updatedAt": "2025-06-12T14:59:32.000Z",
+  "updatedAt": "2025-06-12T15:53:53.000Z",
   "id": "k6PApGOzpLKtnZ0q",
   "name": "chatbot cerebro",
   "active": false,
@@ -258,6 +258,31 @@
               },
               "renameOutput": true,
               "outputKey": "seleccion_alumno"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "7ba99368-0eb6-48ed-af01-77c7c4768b41",
+                    "leftValue": "={{ $json.state ? $json.state_edited : $json.state_finded }}",
+                    "rightValue": "espera_respuesta_evento_calendario",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "respuesta evento calendario"
             }
           ]
         },
@@ -402,7 +427,7 @@
       "type": "n8n-nodes-base.whatsAppTrigger",
       "typeVersion": 1,
       "position": [
-        -1620,
+        -1900,
         -1400
       ],
       "id": "1a441ff5-52de-4c02-bfb7-69e1738823f7",
@@ -1507,8 +1532,8 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.2,
       "position": [
-        1640,
-        -600
+        1780,
+        -1000
       ],
       "id": "931b92b5-0b24-4404-b22b-77f5da57f456",
       "name": "Switch3"
@@ -1719,8 +1744,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        1340,
-        -460
+        1780,
+        -600
       ],
       "id": "51fa68e8-2aab-443c-b358-4860c9802fd6",
       "name": "If3"
@@ -1772,8 +1797,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        1620,
-        -420
+        2060,
+        -560
       ],
       "id": "26039478-0b59-4300-9279-b2d6891ef529",
       "name": "cuerpo funcion response_worker_FAQ"
@@ -1785,8 +1810,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1840,
-        -420
+        2280,
+        -560
       ],
       "id": "5caac5b7-0487-40d7-aaa9-63c41c5f605b",
       "name": "Code6"
@@ -1816,8 +1841,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        2120,
-        -420
+        2560,
+        -560
       ],
       "id": "03fd18ba-f526-46c0-80de-7e853c2d435c",
       "name": "menu principal3"
@@ -2332,37 +2357,6 @@
     },
     {
       "parameters": {
-        "method": "POST",
-        "url": "https://graph.facebook.com/v22.0/626839230509107/messages",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "Authorization",
-              "value": "Bearer EAAHeSgKjRYEBOZBi0kUskW4k3L6ZCO8EhqsGNjWLyfJ3U1NZCbDyQp9WSoX0Ouh8hh44Jue9ev7TMlygkZAMoqMReAJL9cNZBQZCZB508HXZB84HCNFZBIRlSa9cXFs0dXmR31XoO0iUZBOTx4VSnErdZC9OD1sQDKprPHpbK7NBrTZAWy8D6pvNi9w0w4c9pt2KE3stGwZDZD"
-            },
-            {
-              "name": "Content-Type",
-              "value": "application/json"
-            }
-          ]
-        },
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"type\": \"interactive\",\n  \"interactive\": {\n    \"type\": \"button\",\n    \"body\": {\n      \"text\": {{JSON.stringify($json.mensaje_guardian_options) }}\n    },\n    \"action\": {\n      \"buttons\": [\n        {\n          \"type\": \"reply\",\n          \"reply\": {\n            \"id\": \"menu_inicial\",\n            \"title\": \"Menú Incial\"\n          }\n        }\n      ]\n    }\n } }\n\n",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        4240,
-        -640
-      ],
-      "id": "7fb69b48-ca21-4a79-b0ba-c85821438bf2",
-      "name": "menu principal5"
-    },
-    {
-      "parameters": {
         "operation": "update",
         "collection": "user_state",
         "updateKey": "userStateId",
@@ -2552,6 +2546,87 @@
       ],
       "id": "6371b9a1-624f-4d2a-a57c-4dfab6d033b9",
       "name": "menu academico"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v22.0/626839230509107/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer EAAHeSgKjRYEBOZBi0kUskW4k3L6ZCO8EhqsGNjWLyfJ3U1NZCbDyQp9WSoX0Ouh8hh44Jue9ev7TMlygkZAMoqMReAJL9cNZBQZCZB508HXZB84HCNFZBIRlSa9cXFs0dXmR31XoO0iUZBOTx4VSnErdZC9OD1sQDKprPHpbK7NBrTZAWy8D6pvNi9w0w4c9pt2KE3stGwZDZD"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"type\": \"interactive\",\n  \"interactive\": {\n    \"type\": \"button\",\n    \"body\": {\n      \"text\": {{JSON.stringify($json.mensaje_guardian_options) }}\n    },\n    \"action\": {\n      \"buttons\": [\n        {\n          \"type\": \"reply\",\n          \"reply\": {\n            \"id\": \"mas_info_calendario\",\n            \"title\": \"Más Información\"\n          }\n        },\n        {\n          \"type\": \"reply\",\n          \"reply\": {\n            \"id\": \"menu_inicial\",\n            \"title\": \"Regresar al Menú\"\n          }\n        },\n        {\n          \"type\": \"reply\",\n          \"reply\": {\n            \"id\": \"soporte_tecnico\",\n            \"title\": \"Soporte Técnico\"\n          }\n        }\n      ]\n    }\n } }\n\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        4240,
+        -640
+      ],
+      "id": "7fb69b48-ca21-4a79-b0ba-c85821438bf2",
+      "name": "calendario"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Modo: Run Once for All Items\n\n// 1) Leer variables desde el Set previo\nconst input = items[0].json;\n\n// 2) Definir orden de meses\nconst monthOrder = [\n  \"Enero\",\"Febrero\",\"Marzo\",\"Abril\",\"Mayo\",\"Junio\",\n  \"Julio\",\"Agosto\",\"Septiembre\",\"Octubre\",\"Noviembre\",\"Diciembre\",\n];\n\n// 3) Función para ordenar un array de meses según monthOrder\nfunction sortMonths(months) {\n  return months.sort(\n    (a, b) => monthOrder.indexOf(a) - monthOrder.indexOf(b)\n  );\n}\n\n// 4) Función para crear diccionario día→eventos\nfunction createEventDaysDictionary(monthEvents) {\n  const eventsByDay = monthEvents.reduce((acc, ev) => {\n    if (ev.type === \"individual\" && ev.content?.day) {\n      const d = String(ev.content.day);\n      acc[d] = acc[d]||[];\n      acc[d].push(ev);\n    }\n    return acc;\n  }, {});\n  const sortedDays = Object.keys(eventsByDay)\n    .map(d => parseInt(d))\n    .sort((a,b)=>a-b);\n  const dictionary = sortedDays.reduce((acc, day, i) => {\n    acc[String(i+1)] = String(day);\n    return acc;\n  }, {});\n  return { dictionary, eventsByDay };\n}\n\n// 5) Función para generar el mensaje de WhatsApp\nfunction createMonthlyMessage(data, currentMonth) {\n  let msg = `*¡Eventos de ${currentMonth}!* 📅\\n\\n`;\n  const monthEvents = data.filter(\n    i => i.month === currentMonth && i.type === \"individual\"\n  );\n  const hasContent = monthEvents.length>0 ? \"yes\":\"no\";\n\n  if (!monthEvents.length) {\n    msg += `No hay eventos programados para ${currentMonth}. ¡Pero cada día es una oportunidad para aprender!\\n\\n`;\n  } else {\n    const { dictionary, eventsByDay } = createEventDaysDictionary(monthEvents);\n    msg += \"*Eventos del mes:*\\n\";\n    for (const [order, day] of Object.entries(dictionary)) {\n      const evs = eventsByDay[day]||[];\n      msg += `${order}. 🗓 Día ${day}:\\n`;\n      evs.forEach((ev, idx) => {\n        msg += `   ${String.fromCharCode(97+idx)}) \"${ev.content.title}\"\\n`;\n      });\n      msg += \"\\n\";\n    }\n  }\n  msg += \"¡Esperamos tu participación! Juntos haremos de este mes una experiencia inolvidable. 🌟\";\n  return { message: msg, eventDaysDictionary: createEventDaysDictionary(monthEvents).dictionary, hasContent };\n}\n\n// 6) Parsear MonthlyGuide (string o ya objeto)\nlet monthlyGuideData = [];\ntry {\n  const raw = input.MonthlyGuide;\n  const parsed = typeof raw === \"string\" ? JSON.parse(raw) : raw;\n  // Si viene envuelto en { MonthlyGuide: [...] }\n  monthlyGuideData = Array.isArray(parsed)\n    ? parsed\n    : parsed.MonthlyGuide || [];\n} catch (e) {\n  // si falla el parse, dejamos el array vacío\n  monthlyGuideData = [];\n}\n\n// 7) Sacar los meses disponibles y ordenarlos\nlet availableMonths = [\n  ...new Set(monthlyGuideData.map(i=>i.month))\n];\navailableMonths = sortMonths(availableMonths);\n\n// 8) Mes actual e invocar creación de mensaje\nconst currentMonth = monthOrder[new Date().getMonth()];\nconst { message, eventDaysDictionary, hasContent } =\n  createMonthlyMessage(monthlyGuideData, currentMonth);\n\n// 9) Devolver la salida que usará el resto del workflow\nreturn [{\n  json: {\n    salida_whatsapp_guardian_function: {\n      mensaje_guardian_options: message,\n      dias_eventos_enumerados: eventDaysDictionary,\n      available_months: availableMonths,\n      has_content: hasContent,\n    }\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2020,
+        -320
+      ],
+      "id": "ac5f3e21-fba3-47d1-8988-9c1f53b6bf86",
+      "name": "Code12"
+    },
+    {
+      "parameters": {
+        "url": "={{ $('Set Variables').item.json.currentEnvironment }}//assistant/community_records_whatsapp?user_id={{ $('Main Logic Placeholder').item.json.user_id }}&role={{ $('Main Logic Placeholder').item.json.role }}&tenant_id={{ $('Main Logic Placeholder').item.json.tenant_id }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1580,
+        -320
+      ],
+      "id": "dfcffb1a-1c02-4f7f-aea8-03f250eaed97",
+      "name": "HTTP Request2"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c939e818-0f2a-4c19-8d62-c77f842d8667",
+              "name": "MonthlyGuide",
+              "value": "={{ JSON.stringify($json.data_whatsapp_guardian_conversation.MonthlyGuide) }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1800,
+        -320
+      ],
+      "id": "b188e68e-e7e5-43f0-876c-1127beafe8ce",
+      "name": "Edit Fields17"
     }
   ],
   "connections": {
@@ -2773,6 +2848,13 @@
         [
           {
             "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "HTTP Request2",
             "type": "main",
             "index": 0
           }
@@ -3331,7 +3413,7 @@
       "main": [
         [
           {
-            "node": "menu principal5",
+            "node": "calendario",
             "type": "main",
             "index": 0
           }
@@ -3354,17 +3436,6 @@
         [
           {
             "node": "Edit Fields15",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "menu principal5": {
-      "main": [
-        [
-          {
-            "node": "Code10",
             "type": "main",
             "index": 0
           }
@@ -3403,6 +3474,39 @@
           }
         ]
       ]
+    },
+    "calendario": {
+      "main": [
+        [
+          {
+            "node": "Code10",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request2": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields17",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields17": {
+      "main": [
+        [
+          {
+            "node": "Code12",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -3413,7 +3517,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "d06ab8bd-ab15-494d-ad7c-0225ae3830b4",
+  "versionId": "c9132d31-55a8-4c79-90ea-2c18d4d74c87",
   "triggerCount": 1,
   "shared": [
     {
