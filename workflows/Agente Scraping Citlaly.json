@@ -1,0 +1,184 @@
+{
+  "createdAt": "2025-06-12T22:42:59.481Z",
+  "updatedAt": "2025-06-12T22:57:37.000Z",
+  "id": "ZCcbYF4YReZfKDeL",
+  "name": "Agente Scraping Citlaly",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "0e16f1a2-122b-42b4-8874-81fe492870bf",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{$jason.query}}",
+        "options": {
+          "systemMessage": "=*Instrucciones*\n\n1. **Texto de base**\nTu trabajo es obtener el texto que se te envía por el query\n2. **Tarea** tienes que investigar en internet utilizando tu texto base como partida. Realiza web scraping en diversas fuentes relevantes para encontrar información más precisa y completa sobre el tema proporcionado\n3. **Salida** Genera un resumen conciso de la información que encuentres en **dos párrafos pequeños** con un máximo de **50 caracteres por párrafo** debes identificar puntos clave sobre tu investigación y generar la redacción mejor posible, la información debe ser relevante a la fecha actual.\n\n**Consideraciones para el Agente:**\n \n* Priorizar fuentes de información confiables y relevantes para el tema del texto base.\n* Utilizar técnicas de web scraping eficientes para extraer la información necesaria.\n* Identificar y sintetizar los puntos más importantes y significativos de la información recopilada.\n* Asegurar que el resumen sea coherente, preciso y cumpla con las restricciones de longitud especificadas.\n* Evitar la repetición de información entre los dos párrafos.\n \n**Ejemplo de Salida (Formato Markdown):**\n \n```markdown\nLa investigación revela que [PUNTO CLAVE 1] y [DETALLE IMPORTANTE 1]. Diversas fuentes web confirman que [PUNTO CLAVE 2], lo cual tiene implicaciones en [CONSECUENCIA O APLICACIÓN].\n \nAdemás, se encontró información relevante sobre [PUNTO CLAVE 3] en [FUENTE PRINCIPAL]. Esto sugiere que [CONCLUSIÓN BREVE] y podría influir en [ÁREA DE INFLUENCIA].\n\nLa fecha actual es {{ new Date().toISOString() }}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.9,
+      "position": [
+        220,
+        0
+      ],
+      "id": "03536f62-ce3d-4654-b90d-bbae05125d46",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        220,
+        280
+      ],
+      "id": "a1d6a0d2-6f14-4c8b-951c-889536c263ae",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "yRFh8C6XoKn99cc5",
+          "name": "OpenAi account Citlaly Morales"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolSerpApi",
+      "typeVersion": 1,
+      "position": [
+        120,
+        -180
+      ],
+      "id": "f12e1b04-3d9a-43c9-bc07-9cef92a3e6e6",
+      "name": "SerpAPI",
+      "credentials": {
+        "serpApi": {
+          "id": "T6XFCsVpTAGxEn4k",
+          "name": "SerpAPI account Citlaly Morales"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "d6b5c414-7159-4c9b-896c-61b138de1d78",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "createdAt": "2025-06-12T22:42:59.484Z",
+      "updatedAt": "2025-06-12T22:42:59.484Z",
+      "role": "workflow:owner",
+      "workflowId": "ZCcbYF4YReZfKDeL",
+      "projectId": "dD1u743d0j6dhqjf",
+      "project": {
+        "createdAt": "2025-06-05T22:33:14.596Z",
+        "updatedAt": "2025-06-05T22:36:56.138Z",
+        "id": "dD1u743d0j6dhqjf",
+        "name": "Citlaly Morales Magos <cmorales@canteradigital.mx>",
+        "type": "personal",
+        "icon": null,
+        "projectRelations": [
+          {
+            "createdAt": "2025-06-05T22:33:14.598Z",
+            "updatedAt": "2025-06-05T22:33:14.598Z",
+            "role": "project:personalOwner",
+            "userId": "6536697d-9c0d-4889-a3a4-5a5bf5a7902b",
+            "projectId": "dD1u743d0j6dhqjf",
+            "user": {
+              "createdAt": "2025-06-05T22:33:14.594Z",
+              "updatedAt": "2025-06-12T22:19:24.499Z",
+              "id": "6536697d-9c0d-4889-a3a4-5a5bf5a7902b",
+              "email": "cmorales@canteradigital.mx",
+              "firstName": "Citlaly",
+              "lastName": "Morales Magos",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-06-05T22:37:49.465Z",
+                "personalization_survey_n8n_version": "1.92.2",
+                "companySize": "20-99",
+                "companyType": "saas",
+                "role": "other",
+                "roleOther": "QA Tester",
+                "reportedSource": "other",
+                "reportedSourceOther": "Mi empresa"
+              },
+              "settings": {
+                "easyAIWorkflowOnboarded": true,
+                "firstSuccessfulWorkflowId": "d2cKV8BYcfMUJulH",
+                "userActivated": true,
+                "userActivatedAt": 1749166109861,
+                "npsSurvey": {
+                  "responded": true,
+                  "lastShownAt": 1749766762049
+                }
+              },
+              "role": "global:member",
+              "disabled": false,
+              "mfaEnabled": false,
+              "isPending": false,
+              "isOwner": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": [
+    {
+      "createdAt": "2025-05-13T17:01:17.387Z",
+      "updatedAt": "2025-05-13T17:01:17.387Z",
+      "id": "PwWwR5Yqz46trn75",
+      "name": "templates"
+    }
+  ]
+}
