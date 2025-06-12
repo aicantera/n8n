@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-06-09T16:34:20.833Z",
-  "updatedAt": "2025-06-12T15:53:53.000Z",
+  "updatedAt": "2025-06-12T16:58:58.000Z",
   "id": "k6PApGOzpLKtnZ0q",
   "name": "chatbot cerebro",
   "active": false,
@@ -2123,8 +2123,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        3340,
-        -1980
+        3660,
+        -1940
       ],
       "id": "e23bf110-c635-4ee7-970c-4ecfca6652ff",
       "name": "student_id1"
@@ -2141,8 +2141,8 @@
       "type": "n8n-nodes-base.mongoDb",
       "typeVersion": 1.1,
       "position": [
-        3560,
-        -1980
+        3880,
+        -1940
       ],
       "id": "ad38d188-e992-40a4-994e-9db70b5e01ba",
       "name": "MongoDB12",
@@ -2179,8 +2179,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        4880,
-        -1980
+        5200,
+        -1940
       ],
       "id": "2222597c-9153-42c2-a66f-2e0ec520ea4c",
       "name": "menu principal4"
@@ -2232,8 +2232,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        4000,
-        -1980
+        4320,
+        -1940
       ],
       "id": "f7589ece-33e3-4fa8-90fc-488134e33740",
       "name": "Edit Fields12"
@@ -2248,8 +2248,8 @@
       "type": "n8n-nodes-base.mongoDb",
       "typeVersion": 1.1,
       "position": [
-        4220,
-        -1980
+        4540,
+        -1940
       ],
       "id": "bfa4ca8e-3db6-4e24-a04f-4f2a92149ca7",
       "name": "MongoDB13",
@@ -2267,8 +2267,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        3780,
-        -1980
+        4100,
+        -1940
       ],
       "id": "96762b5a-b7a7-4eb0-ba94-e587786f9444",
       "name": "Code9",
@@ -2285,8 +2285,8 @@
       "type": "n8n-nodes-base.mongoDb",
       "typeVersion": 1.1,
       "position": [
-        4660,
-        -1980
+        4980,
+        -1940
       ],
       "id": "6711edb6-3108-4dcf-b321-e917ae1419b0",
       "name": "MongoDB14",
@@ -2326,8 +2326,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        4440,
-        -1980
+        4760,
+        -1940
       ],
       "id": "bd3f907a-b4db-4154-b4e5-dcf1ca5a5570",
       "name": "Edit Fields13"
@@ -2627,6 +2627,71 @@
       ],
       "id": "b188e68e-e7e5-43f0-876c-1127beafe8ce",
       "name": "Edit Fields17"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "797b0050-2694-48ef-a7d9-19a8bd4d4251",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "error",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        3320,
+        -2040
+      ],
+      "id": "81a56962-c9e9-4426-a0ef-b650108c160d",
+      "name": "If5"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v22.0/626839230509107/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer EAAHeSgKjRYEBOZBi0kUskW4k3L6ZCO8EhqsGNjWLyfJ3U1NZCbDyQp9WSoX0Ouh8hh44Jue9ev7TMlygkZAMoqMReAJL9cNZBQZCZB508HXZB84HCNFZBIRlSa9cXFs0dXmR31XoO0iUZBOTx4VSnErdZC9OD1sQDKprPHpbK7NBrTZAWy8D6pvNi9w0w4c9pt2KE3stGwZDZD"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"{{ $json.message }}\"\n  }\n}\n\n\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3660,
+        -2120
+      ],
+      "id": "bf9f12f3-ae87-4f0a-87b2-cb2a625c787c",
+      "name": "menu principal5"
     }
   ],
   "connections": {
@@ -3402,7 +3467,7 @@
       "main": [
         [
           {
-            "node": "student_id1",
+            "node": "If5",
             "type": "main",
             "index": 0
           }
@@ -3507,6 +3572,24 @@
           }
         ]
       ]
+    },
+    "If5": {
+      "main": [
+        [
+          {
+            "node": "menu principal5",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "student_id1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -3516,8 +3599,40 @@
   "meta": {
     "templateCredsSetupCompleted": true
   },
-  "pinData": {},
-  "versionId": "c9132d31-55a8-4c79-90ea-2c18d4d74c87",
+  "pinData": {
+    "WhatsApp Trigger": [
+      {
+        "json": {
+          "messaging_product": "whatsapp",
+          "metadata": {
+            "display_phone_number": "5215612472568",
+            "phone_number_id": "626839230509107"
+          },
+          "contacts": [
+            {
+              "profile": {
+                "name": "Rick"
+              },
+              "wa_id": "5214434901193"
+            }
+          ],
+          "messages": [
+            {
+              "from": "5214434901193",
+              "id": "wamid.HBgNNTIxNDQzNDkwMTE5MxUCABIYFjNFQjAxM0I4MDFFMTJBOTYzRUQwQjkA",
+              "timestamp": "1749747189",
+              "text": {
+                "body": "21"
+              },
+              "type": "text"
+            }
+          ],
+          "field": "messages"
+        }
+      }
+    ]
+  },
+  "versionId": "f0744525-e03e-4b2d-9b7a-24329319840a",
   "triggerCount": 1,
   "shared": [
     {
