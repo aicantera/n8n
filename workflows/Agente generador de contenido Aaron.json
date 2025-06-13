@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-06-12T23:12:04.054Z",
-  "updatedAt": "2025-06-12T23:55:01.000Z",
+  "updatedAt": "2025-06-13T00:05:47.000Z",
   "id": "fMWJs5KoHPsoLgpj",
   "name": "Agente generador de contenido Aaron",
   "active": false,
@@ -184,6 +184,8 @@
     },
     {
       "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "={{ $json.text }}",
         "additionalFields": {
           "appendAttribution": false
         }
@@ -197,6 +199,95 @@
       "id": "bd6d1fcf-6323-4926-b70b-767ceb2c633e",
       "name": "Telegram",
       "webhookId": "b8f9f858-71b8-444a-8598-f6d20d30e0ae",
+      "credentials": {
+        "telegramApi": {
+          "id": "IFiolr4CXfc0j6II",
+          "name": "Telegram account Generador contenido Aaron"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.output }}",
+        "messages": {
+          "messageValues": [
+            {
+              "message": "**Instructions for the AI Model: DALL-E Prompt Generator**  **Objective:** To receive a user's request and generate detailed and effective prompts specifically designed for OpenAI's DALL-E image generation model. The generated prompts should aim to produce high-quality, relevant, and visually interesting images that accurately reflect the user's input.  **Input:** A natural language request from the user describing the desired image.  **Tasks:**  1.  **Understand the User's Request:** Analyze the user's input to identify the key elements, subjects, actions, settings, moods, and artistic styles they are envisioning.  2.  **Identify Key Entities and Concepts:** Extract the main nouns, verbs, adjectives, and adverbs from the user's request. These form the core of the image to be generated.  3.  **Elaborate on Details:** Expand upon the user's basic request by adding specific details that can enhance the generated image. Consider aspects such as:     * **Subject Details:** Specific characteristics of the main objects or characters (e.g., age, clothing, expression, posture).     * **Setting/Environment:** The location, time of day, weather conditions, and overall atmosphere.     * **Actions/Interactions:** What the subjects are doing and how they are interacting with their surroundings or other elements.     * **Mood/Atmosphere:** The emotional tone or feeling the image should convey (e.g., serene, mysterious, vibrant, dramatic).     * **Lighting:** The type and direction of light (e.g., soft sunlight, dramatic shadows, neon glow).     * **Camera Angle/Perspective:** The viewpoint from which the scene is depicted (e.g., close-up, wide shot, bird's-eye view).  4.  **Incorporate Artistic Style and Techniques:** Suggest or incorporate specific artistic styles, mediums, or techniques that could enhance the visual appeal and align with the user's implicit or explicit preferences. Examples include:     * **Painting Styles:** Impressionism, Surrealism, Renaissance, Abstract.     * **Photography Styles:** Macro, Landscape, Portrait, Documentary.     * **Rendering Techniques:** Realistic, Photorealistic, Stylized, Cartoonish, 3D render.     * **Artists:** Referencing the style of famous artists (e.g., \"in the style of Van Gogh\").  5.  **Use DALL-E Specific Keywords and Modifiers:** Employ keywords and phrases known to work well with DALL-E to influence the generated image's quality and style. This might include terms related to detail, realism, artistic quality, and specific visual effects.  6.  **Structure the Prompt Effectively:** Organize the generated prompt in a clear and logical manner. A common structure includes:     * Start with the main subject(s).     * Describe the setting and environment.     * Specify any actions or interactions.     * Detail the desired mood, lighting, and camera angle.     * Mention the artistic style or rendering technique.     * Include quality enhancers (e.g., \"highly detailed,\" \"realistic,\" \"cinematic lighting\").  7.  **Provide Multiple Prompt Options (Optional but Recommended):** Generate several variations of the prompt, each with slightly different emphasis or stylistic choices, to give the user more options and potentially better results from DALL-E.  **Output:** Generate one or more detailed prompts for DALL-E, formatted as clear and concise text strings.  **Example of Expected Output (in Spanish):**  ```markdown **Prompt 1:** Una majestuosa criatura híbrida, mitad águila calva y mitad león africano, volando a través de un cielo crepuscular con nubes arremolinadas de color naranja y púrpura. Plumaje dorado brillante y melena leonina ondeando al viento. Iluminación dramática, estilo de pintura de fantasía épica.  **Prompt 2:** Un acogedor café futurista en una calle lluviosa de Tokio por la noche. Luces de neón reflejándose en el pavimento mojado. Un robot barista sirviendo un café a un cliente humano con un abrigo largo. Ambiente melancólico y vibrante, fotografía cinematográfica con profundidad de campo.  **Prompt 3:** Un bodegón surrealista con frutas flotando en el aire y relojes derritiéndose sobre una mesa de madera antigua. Fondo abstracto con colores vibrantes y formas geométricas. Estilo de Salvador Dalí. Alta resolución, detalles intrincados."
+            }
+          ]
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.6,
+      "position": [
+        780,
+        340
+      ],
+      "id": "51e66d3d-2098-4d00-b3b8-1f457f80add9",
+      "name": "Basic LLM Chain1"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        880,
+        560
+      ],
+      "id": "88942aeb-13a6-45b4-86d1-7a612885e1a4",
+      "name": "OpenAI Chat Model2",
+      "credentials": {
+        "openAiApi": {
+          "id": "Q8WQKibB08nTTio4",
+          "name": "OpenAi account CanteraConnect"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "prompt": "={{ $json.text }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        1140,
+        340
+      ],
+      "id": "92f863f9-c755-45f0-8d31-0c364fc22347",
+      "name": "OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "Q8WQKibB08nTTio4",
+          "name": "OpenAi account CanteraConnect"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "sendPhoto",
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "binaryData": true,
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1360,
+        340
+      ],
+      "id": "7e24442a-0799-46ef-871d-4cddf5b62fb3",
+      "name": "Telegram1",
+      "webhookId": "394af060-e4d2-4bb7-be15-6c49b7c7ab4e",
       "credentials": {
         "telegramApi": {
           "id": "IFiolr4CXfc0j6II",
@@ -268,6 +359,11 @@
             "node": "Basic LLM Chain",
             "type": "main",
             "index": 0
+          },
+          {
+            "node": "Basic LLM Chain1",
+            "type": "main",
+            "index": 0
           }
         ]
       ]
@@ -293,6 +389,44 @@
           }
         ]
       ]
+    },
+    "Telegram": {
+      "main": [
+        []
+      ]
+    },
+    "OpenAI Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain1": {
+      "main": [
+        [
+          {
+            "node": "OpenAI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI": {
+      "main": [
+        [
+          {
+            "node": "Telegram1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -303,7 +437,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "5cf215f7-f0f6-4230-a629-1148693fb7b9",
+  "versionId": "15ee2056-9556-4698-bd61-9ffe8fd3fb03",
   "triggerCount": 0,
   "shared": [
     {
