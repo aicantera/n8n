@@ -1,0 +1,159 @@
+{
+  "createdAt": "2025-06-12T23:11:40.775Z",
+  "updatedAt": "2025-06-12T23:11:40.775Z",
+  "id": "zBAo2KFJdR9UbAbs",
+  "name": "Agente copy writter Aaron",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "61843831-5d55-42df-8634-3b7c55d47824",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.query }}",
+        "options": {
+          "systemMessage": "=**Instructions for n8n Agent: Social Media Copywriter (Agent_copy_writer)**\n \n**Objective:** To generate compelling and effective social media copy based on information extracted via web scraping by a previous n8n agent. The copy should be relevant, attention-grabbing, informative, and adhere to best copywriting practices.\n \n**Input:** The output (summary in two short paragraphs) from the previous web scraping agent.\n \n**Tasks:**\n \n1.  **Understand the Source Material:** Analyze the two-paragraph summary provided by the web scraping agent to fully grasp the key information and insights.\n \n2.  **Identify the Target Audience:** Assume the target audience for the social media posts and tailor the language and tone accordingly. (While not explicitly defined here, the agent should be adaptable to different potential audiences if that context is available or can be inferred).\n \n3.  **Extract Key Selling Points/Information:** Identify the most interesting, valuable, or newsworthy aspects of the scraped information that would resonate with a social media audience.\n \n4.  **Craft Attention-Grabbing Headlines/Hooks:** Develop concise and impactful headlines or opening lines that immediately capture attention and encourage engagement. Utilize techniques like questions, strong verbs, numbers, or addressing a pain point/desire.\n \n5.  **Develop Engaging Body Copy:** Expand on the key points in a clear, concise, and persuasive manner. Use storytelling, benefit-driven language, and emotional appeals where appropriate.\n \n6.  **Incorporate Calls to Action (CTAs):** Include clear and direct calls to action that prompt the audience to take the desired next step (e.g., \"Learn more,\" \"Visit the link in bio,\" \"Share this post,\" \"Comment below\").\n \n7.  **Optimize for Social Media:**\n    * Keep the copy relatively short and scannable.\n    * Use relevant hashtags to increase visibility.\n    * Consider the visual context (if any) and ensure the copy complements it.\n    * Adapt the tone and style to the specific social media platform (e.g., more informal for Twitter/TikTok, more professional for LinkedIn).\n \n8.  **Apply Copywriting Best Practices:**\n    * Focus on benefits over features.\n    * Use clear and concise language, avoiding jargon.\n    * Create a sense of urgency or excitement where relevant.\n    * Maintain a consistent brand voice (if applicable).\n    * Proofread carefully for any errors.\n \n**Output:** Generate several options (at least 3) for social media posts based on the input information. Each option should be tailored for a specific platform or angle and include:\n \n* **Platform Suggestion (e.g., Twitter, Instagram, Facebook, LinkedIn)**\n* **Compelling Headline/Hook**\n* **Engaging Body Copy**\n* **Relevant Hashtags**\n* **Clear Call to Action**\n \n**Important Note:** The agent should always respond in Spanish.\n \n**Example of Expected Output (in Spanish):**\n \n```markdown\n**Opción 1: Twitter**\n \n**Titular:** ¡Descubre lo último! 🚀 [Punto clave impactante del scraping]. Te sorprenderá cómo afecta a [Área relevante].\n \n**Cuerpo:** Nuestra investigación revela datos cruciales sobre [Detalle importante]. No te quedes atrás, ¡mantente informado! #Noticias #[HashtagTemático] #Innovación\n \n**Llamada a la acción:** Lee más aquí: [Enlace]\n \n---\n \n**Opción 2: Instagram**\n \n**Titular:** ¿Te interesa [Tema del scraping]? 🤔 Mira este dato clave que encontramos: [Punto clave conciso y visual].\n \n**Cuerpo:** [Ampliación breve y atractiva del punto clave]. ¡Esto podría cambiarlo todo! Cuéntanos tu opinión en los comentarios 👇 #Descubrimientos #[HashtagRelevante] #InformaciónImportante\n \n**Llamada a la acción:** Link en la bio para más detalles.\n \n---\n \n**Opción 3: LinkedIn**\n \n**Titular:** Nuevo análisis revela [Hallazgo profesional del scraping] con implicaciones significativas para [Industria/Sector].\n \n**Cuerpo:** Un reciente estudio basado en datos extraídos de la web destaca la importancia de [Punto clave con enfoque profesional]. Esto podría influir en las estrategias de [Área de aplicación]. #Análisis #[HashtagProfesional] #Tendencias\n \n**Llamada a la acción:** Comparte tu perspectiva."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.9,
+      "position": [
+        220,
+        0
+      ],
+      "id": "91a85a24-d514-47e6-9ed4-d63b208f8a66",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        180,
+        180
+      ],
+      "id": "72316930-53ce-4ed5-b550-f8a2bcbdaa26",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "Q8WQKibB08nTTio4",
+          "name": "OpenAi account CanteraConnect"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {},
+  "versionId": "b38a642b-4792-4087-ad01-7f91b944eeb5",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "createdAt": "2025-06-12T23:11:40.786Z",
+      "updatedAt": "2025-06-12T23:11:40.786Z",
+      "role": "workflow:owner",
+      "workflowId": "zBAo2KFJdR9UbAbs",
+      "projectId": "CT8jqMv2UjSvaT1W",
+      "project": {
+        "createdAt": "2025-05-30T21:50:01.643Z",
+        "updatedAt": "2025-05-30T21:51:05.081Z",
+        "id": "CT8jqMv2UjSvaT1W",
+        "name": "Aaron Avila <ravila@canteradigital.mx>",
+        "type": "personal",
+        "icon": null,
+        "projectRelations": [
+          {
+            "createdAt": "2025-05-30T21:50:01.650Z",
+            "updatedAt": "2025-05-30T21:50:01.650Z",
+            "role": "project:personalOwner",
+            "userId": "66393108-3fbc-4a7f-81fe-752936ae60ef",
+            "projectId": "CT8jqMv2UjSvaT1W",
+            "user": {
+              "createdAt": "2025-05-30T21:50:01.641Z",
+              "updatedAt": "2025-06-12T22:57:35.352Z",
+              "id": "66393108-3fbc-4a7f-81fe-752936ae60ef",
+              "email": "ravila@canteradigital.mx",
+              "firstName": "Aaron",
+              "lastName": "Avila",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-05-30T21:53:17.529Z",
+                "personalization_survey_n8n_version": "1.92.2",
+                "automationGoalDevops": [
+                  "ci-cd",
+                  "data-syncing"
+                ],
+                "companySize": "100-499",
+                "companyType": "saas",
+                "role": "engineering",
+                "reportedSource": "google"
+              },
+              "settings": {
+                "easyAIWorkflowOnboarded": true,
+                "firstSuccessfulWorkflowId": "8OXBRWPKi4bVVx2f",
+                "userActivated": true,
+                "userActivatedAt": 1749245726426,
+                "npsSurvey": {
+                  "waitingForResponse": true,
+                  "ignoredCount": 1,
+                  "lastShownAt": 1749769052156
+                }
+              },
+              "role": "global:member",
+              "disabled": false,
+              "mfaEnabled": false,
+              "isPending": false,
+              "isOwner": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": []
+}
