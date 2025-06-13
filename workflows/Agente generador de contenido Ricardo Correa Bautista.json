@@ -1,9 +1,9 @@
 {
   "createdAt": "2025-06-12T23:11:32.926Z",
-  "updatedAt": "2025-06-12T23:44:13.000Z",
+  "updatedAt": "2025-06-13T00:09:29.000Z",
   "id": "SOuonTZrbGaefQXV",
   "name": "Agente generador de contenido Ricardo Correa Bautista",
-  "active": false,
+  "active": true,
   "nodes": [
     {
       "parameters": {
@@ -136,6 +136,168 @@
       ],
       "id": "12061bc8-94cf-4980-b347-c3090e33f21d",
       "name": "agente_copy"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.output }}",
+        "messages": {
+          "messageValues": [
+            {
+              "message": "=**Prompt Completo para la Cadena LLM de Formateo de Salida**\n\n**Idioma de Instrucciones:** Inglés\n\n**Idioma de Respuesta:** Español\n\n**Objetivo:** Formatear la respuesta de salida de un modelo de lenguaje grande (LLM) para eliminar símbolos extraños o estructuras de información que no sean palabras u oraciones estándar en español. El objetivo es limpiar el texto y presentarlo de una manera más legible y en lenguaje natural.\n\n**Instrucciones Detalladas para el Modelo LLM:**\n\n1.  **Input Analysis:** Recibe una cadena de texto como entrada. Esta cadena puede contener símbolos no deseados, elementos que no son palabras, o estructuras de información que necesitan ser removidas o convertidas a texto plano.\n\n2.  **Identification of Non-Standard Elements:** Identifica elementos dentro del texto de entrada que no son palabras típicas, signos de puntuación estándar o estructuras de oraciones comunes en español. Esto incluye, pero no se limita a:\n    * Símbolos especiales o caracteres inusuales (por ejemplo, `###`, `####`, `-----`, caracteres de control, etc.).\n    * Estructuras de formato como listas con viñetas (`-`), listas numeradas (`1.`, `2.`), si el objetivo es texto plano continuo.\n    * Enlaces URL o direcciones web, si no se consideran parte del contenido principal en lenguaje natural.\n    * Cualquier otro marcador no lingüístico o artefacto del formato original que dificulte la lectura como texto normal.\n\n3.  **Removal and Transformation:** Aplica las siguientes acciones a los elementos no estándar identificados:\n    * **Eliminación:** Remueve completamente los símbolos o estructuras que no contribuyen al significado del texto como lenguaje natural en español.\n    * **Transformación:** Convierte estructuras como listas en texto continuo, utilizando conectores lingüísticos apropiados (por ejemplo, \"Además,\", \"También,\", \"En cuanto a,\"). Si se considera relevante, extrae la información clave de elementos no textuales y exprésala en palabras (por ejemplo, si se decide incluir información de un enlace, se debería parafrasear su significado en una oración).\n\n4.  **Preservation of Meaning and Structure:** Asegúrate de que el proceso de eliminación y transformación no altere el significado fundamental del texto original. El resultado debe ser una secuencia de oraciones coherentes y gramaticalmente correctas en español.\n\n5.  **Focus on Natural Language:** El resultado principal debe ser un texto fluido compuesto por palabras y oraciones en español que sean fáciles de leer y entender por un humano. Evita la inclusión de los símbolos o estructuras no deseadas identificadas en el paso 2.\n"
+            }
+          ]
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.6,
+      "position": [
+        -140,
+        -180
+      ],
+      "id": "cbf7d99e-88f4-46ec-925f-8a6f43e76185",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -100,
+        0
+      ],
+      "id": "fef69009-eb5d-4ca7-a9b5-4abd79158fb1",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "JGOzqGKoKUjZGBsN",
+          "name": "OpenAi account Ricardo Correa"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "={{ $json.text }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        220,
+        -180
+      ],
+      "id": "624d7e06-5294-4426-a5c1-da30c9ed1e35",
+      "name": "Telegram",
+      "webhookId": "a7ebc93a-2b64-45f3-a4e8-d705bc4973b2",
+      "credentials": {
+        "telegramApi": {
+          "id": "xxxrmH9znK07vpFH",
+          "name": "Telegram account Ricardo Correa Contenido"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.output }}",
+        "messages": {
+          "messageValues": [
+            {
+              "message": "=**Instructions for the AI Model: DALL-E Prompt Generator**  **Objective:** To receive a user's request and generate detailed and effective prompts specifically designed for OpenAI's DALL-E image generation model. The generated prompts should aim to produce high-quality, relevant, and visually interesting images that accurately reflect the user's input.  **Input:** A natural language request from the user describing the desired image.  **Tasks:**  1.  **Understand the User's Request:** Analyze the user's input to identify the key elements, subjects, actions, settings, moods, and artistic styles they are envisioning.  2.  **Identify Key Entities and Concepts:** Extract the main nouns, verbs, adjectives, and adverbs from the user's request. These form the core of the image to be generated.  3.  **Elaborate on Details:** Expand upon the user's basic request by adding specific details that can enhance the generated image. Consider aspects such as:     * **Subject Details:** Specific characteristics of the main objects or characters (e.g., age, clothing, expression, posture).     * **Setting/Environment:** The location, time of day, weather conditions, and overall atmosphere.     * **Actions/Interactions:** What the subjects are doing and how they are interacting with their surroundings or other elements.     * **Mood/Atmosphere:** The emotional tone or feeling the image should convey (e.g., serene, mysterious, vibrant, dramatic).     * **Lighting:** The type and direction of light (e.g., soft sunlight, dramatic shadows, neon glow).     * **Camera Angle/Perspective:** The viewpoint from which the scene is depicted (e.g., close-up, wide shot, bird's-eye view).  4.  **Incorporate Artistic Style and Techniques:** Suggest or incorporate specific artistic styles, mediums, or techniques that could enhance the visual appeal and align with the user's implicit or explicit preferences. Examples include:     * **Painting Styles:** Impressionism, Surrealism, Renaissance, Abstract.     * **Photography Styles:** Macro, Landscape, Portrait, Documentary.     * **Rendering Techniques:** Realistic, Photorealistic, Stylized, Cartoonish, 3D render.     * **Artists:** Referencing the style of famous artists (e.g., \"in the style of Van Gogh\").  5.  **Use DALL-E Specific Keywords and Modifiers:** Employ keywords and phrases known to work well with DALL-E to influence the generated image's quality and style. This might include terms related to detail, realism, artistic quality, and specific visual effects.  6.  **Structure the Prompt Effectively:** Organize the generated prompt in a clear and logical manner. A common structure includes:     * Start with the main subject(s).     * Describe the setting and environment.     * Specify any actions or interactions.     * Detail the desired mood, lighting, and camera angle.     * Mention the artistic style or rendering technique.     * Include quality enhancers (e.g., \"highly detailed,\" \"realistic,\" \"cinematic lighting\").  7.  **Provide Multiple Prompt Options (Optional but Recommended):** Generate several variations of the prompt, each with slightly different emphasis or stylistic choices, to give the user more options and potentially better results from DALL-E.  **Output:** Generate one or more detailed prompts for DALL-E, formatted as clear and concise text strings.  **Example of Expected Output (in Spanish):**  ```markdown **Prompt 1:** Una majestuosa criatura híbrida, mitad águila calva y mitad león africano, volando a través de un cielo crepuscular con nubes arremolinadas de color naranja y púrpura. Plumaje dorado brillante y melena leonina ondeando al viento. Iluminación dramática, estilo de pintura de fantasía épica.  **Prompt 2:** Un acogedor café futurista en una calle lluviosa de Tokio por la noche. Luces de neón reflejándose en el pavimento mojado. Un robot barista sirviendo un café a un cliente humano con un abrigo largo. Ambiente melancólico y vibrante, fotografía cinematográfica con profundidad de campo.  **Prompt 3:** Un bodegón surrealista con frutas flotando en el aire y relojes derritiéndose sobre una mesa de madera antigua. Fondo abstracto con colores vibrantes y formas geométricas. Estilo de Salvador Dalí. Alta resolución, detalles intrincados."
+            }
+          ]
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.6,
+      "position": [
+        60,
+        120
+      ],
+      "id": "f59e2f58-89be-4c0a-97d9-a10a5d728ca1",
+      "name": "Basic LLM Chain1",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        160,
+        340
+      ],
+      "id": "ab6d6987-f144-4e71-b402-39678ad81bd5",
+      "name": "OpenAI Chat Model2",
+      "credentials": {
+        "openAiApi": {
+          "id": "JGOzqGKoKUjZGBsN",
+          "name": "OpenAi account Ricardo Correa"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "prompt": "={{ $json.text }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        420,
+        120
+      ],
+      "id": "5a3570f2-f98d-4945-b587-d19b96c4b98e",
+      "name": "OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "jgUWOLNsMtib1FUP",
+          "name": "OpenAi account Selene Ibarra"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "operation": "sendPhoto",
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "binaryData": true,
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        640,
+        120
+      ],
+      "id": "e4a79c4d-2f96-47b5-bd3b-641df13928cb",
+      "name": "Telegram1",
+      "webhookId": "7e5343df-273c-43a6-8b78-eccc2eced9d9",
+      "credentials": {
+        "telegramApi": {
+          "id": "xxxrmH9znK07vpFH",
+          "name": "Telegram account Ricardo Correa Contenido"
+        }
+      },
+      "disabled": true
     }
   ],
   "connections": {
@@ -193,6 +355,77 @@
           }
         ]
       ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Basic LLM Chain1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain1": {
+      "main": [
+        [
+          {
+            "node": "OpenAI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI": {
+      "main": [
+        [
+          {
+            "node": "Telegram1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -202,9 +435,42 @@
   "meta": {
     "templateCredsSetupCompleted": true
   },
-  "pinData": {},
-  "versionId": "c971ad0a-f512-4de3-949b-408e1a65cb45",
-  "triggerCount": 0,
+  "pinData": {
+    "Telegram Trigger": [
+      {
+        "json": {
+          "update_id": 571785313,
+          "message": {
+            "message_id": 7,
+            "from": {
+              "id": 775456693,
+              "is_bot": false,
+              "first_name": "Ricardo",
+              "last_name": "Correa",
+              "language_code": "es"
+            },
+            "chat": {
+              "id": 775456693,
+              "first_name": "Ricardo",
+              "last_name": "Correa",
+              "type": "private"
+            },
+            "date": 1749773179,
+            "text": "generame un post para la red social x.com que hable sobre los problemas de el trabajo presencial",
+            "entities": [
+              {
+                "offset": 36,
+                "length": 5,
+                "type": "url"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "versionId": "f179446f-e866-45a8-8cd0-fc56973e65b9",
+  "triggerCount": 1,
   "shared": [
     {
       "createdAt": "2025-06-12T23:11:32.928Z",
