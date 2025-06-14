@@ -1,9 +1,9 @@
 {
   "createdAt": "2025-06-09T16:34:20.833Z",
-  "updatedAt": "2025-06-13T22:09:09.000Z",
+  "updatedAt": "2025-06-14T00:23:02.000Z",
   "id": "k6PApGOzpLKtnZ0q",
   "name": "chatbot cerebro",
-  "active": false,
+  "active": true,
   "nodes": [
     {
       "parameters": {
@@ -562,6 +562,12 @@
               "id": "ea7c6241-4996-49e5-8eea-1e84ac3d27d1",
               "name": "type_conversation_finded",
               "value": "={{ $('MongoDB').item.json.type_conversation }}",
+              "type": "string"
+            },
+            {
+              "id": "baefc287-abc1-42da-ace7-65a6859a8e25",
+              "name": "student_selected",
+              "value": "={{ $json.student_id }}",
               "type": "string"
             }
           ]
@@ -3804,7 +3810,7 @@
     },
     {
       "parameters": {
-        "url": "={{ $('Set Variables').item.json.currentEnvironment }}/assistant/journal_students?student_id={{ $('Main Logic Placeholder').item.json.students_data[1].student_id }}&tenant_id=﻿﻿{{ $('Main Logic Placeholder').item.json.students_data[1].tenant_id }}",
+        "url": "={{ $('Set Variables').item.json.currentEnvironment }}/assistant/journal_students?student_id={{ $('Edit Fields1').item.json.student_selected }}&tenant_id=﻿﻿{{ $('Main Logic Placeholder').item.json.students_data[1].tenant_id }}",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
@@ -3819,7 +3825,7 @@
     },
     {
       "parameters": {
-        "url": "={{ $('Set Variables').item.json.currentEnvironment }}/assistant/send_journal_students_guide?student_id={{ $('Main Logic Placeholder').item.json.students_data[1].student_id }}&tenant_id=﻿﻿{{ $('Main Logic Placeholder').item.json.students_data[1].tenant_id }}",
+        "url": "={{ $('Set Variables').item.json.currentEnvironment }}/assistant/send_journal_students_guide?student_id={{ $('Edit Fields1').item.json.student_selected }}&tenant_id=﻿﻿{{ $('Main Logic Placeholder').item.json.students_data[1].tenant_id }}",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
@@ -5642,7 +5648,7 @@
       }
     ]
   },
-  "versionId": "43cddbed-1563-4ba6-98af-03509c9a4d1d",
+  "versionId": "a15e4dd1-80c2-49bf-9384-ce8f4e6e1cdd",
   "triggerCount": 1,
   "shared": [
     {
