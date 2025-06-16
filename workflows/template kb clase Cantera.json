@@ -1,19 +1,261 @@
 {
   "createdAt": "2025-06-16T04:25:57.260Z",
-  "updatedAt": "2025-06-16T04:26:57.000Z",
+  "updatedAt": "2025-06-16T05:45:25.000Z",
   "id": "uQUxUpLGcgV4o1mN",
   "name": "template kb clase Cantera",
   "active": false,
-  "nodes": [],
-  "connections": {},
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -20,
+        220
+      ],
+      "id": "05efbef6-8585-4e5c-af1b-8306673861be",
+      "name": "Embeddings OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "kN8CVraho0i9hYUQ",
+          "name": "OpenAi account Alexandra Trujillo"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "dataType": "binary",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1,
+      "position": [
+        440,
+        120
+      ],
+      "id": "032b8535-c153-4fdd-88aa-5b72a4503ebc",
+      "name": "Default Data Loader"
+    },
+    {
+      "parameters": {
+        "chunkSize": 200,
+        "chunkOverlap": 20,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+      "typeVersion": 1,
+      "position": [
+        500,
+        340
+      ],
+      "id": "ba1867a2-0f7d-4e00-8dc1-d6ab6c25f486",
+      "name": "Recursive Character Text Splitter"
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "triggerOn": "specificFolder",
+        "folderToWatch": {
+          "__rl": true,
+          "value": "1nr1nC-mTXnxc_RMV13AblelJLrGgNzu2",
+          "mode": "list",
+          "cachedResultName": "educacion",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1nr1nC-mTXnxc_RMV13AblelJLrGgNzu2"
+        },
+        "event": "fileCreated",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDriveTrigger",
+      "typeVersion": 1,
+      "position": [
+        -380,
+        -100
+      ],
+      "id": "be2b2529-f848-46f1-8957-2cfe70d0056a",
+      "name": "Buscamnos cambios en documentos",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "ScMR3q0SPhbh9AbL",
+          "name": "Google Drive account AlexandraTR N8N"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "searchMethod": "query",
+        "queryString": "name contains 'test'",
+        "returnAll": true,
+        "filter": {
+          "folderId": {
+            "__rl": true,
+            "value": "1nr1nC-mTXnxc_RMV13AblelJLrGgNzu2",
+            "mode": "list",
+            "cachedResultName": "educacion",
+            "cachedResultUrl": "https://drive.google.com/drive/folders/1nr1nC-mTXnxc_RMV13AblelJLrGgNzu2"
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -160,
+        -100
+      ],
+      "id": "b76cc8ff-da1b-4c96-9034-7d627f349530",
+      "name": "sacamos todos los documentos",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "ScMR3q0SPhbh9AbL",
+          "name": "Google Drive account AlexandraTR N8N"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{$json.id}}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        40,
+        -60
+      ],
+      "id": "c301ad77-fd22-40cd-b2ad-0f2aabdeacf7",
+      "name": "descargamos los documentos",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "ScMR3q0SPhbh9AbL",
+          "name": "Google Drive account AlexandraTR N8N"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "tableName": {
+          "__rl": true,
+          "value": "documents",
+          "mode": "list",
+          "cachedResultName": "documents"
+        },
+        "options": {
+          "queryName": "match_documents"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1.1,
+      "position": [
+        300,
+        -100
+      ],
+      "id": "83a0fead-1030-40b0-9bbb-30dacf6bbbf1",
+      "name": "añadimos documentos a la base de conocimiento",
+      "credentials": {
+        "supabaseApi": {
+          "id": "mMDqXCCWAbTXoHjt",
+          "name": "Supabase account Alexandra clase M8N"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Embeddings OpenAI": {
+      "ai_embedding": [
+        [
+          {
+            "node": "añadimos documentos a la base de conocimiento",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Default Data Loader": {
+      "ai_document": [
+        [
+          {
+            "node": "añadimos documentos a la base de conocimiento",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recursive Character Text Splitter": {
+      "ai_textSplitter": [
+        [
+          {
+            "node": "Default Data Loader",
+            "type": "ai_textSplitter",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscamnos cambios en documentos": {
+      "main": [
+        [
+          {
+            "node": "sacamos todos los documentos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "sacamos todos los documentos": {
+      "main": [
+        [
+          {
+            "node": "descargamos los documentos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "descargamos los documentos": {
+      "main": [
+        [
+          {
+            "node": "añadimos documentos a la base de conocimiento",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
   "settings": {
     "executionOrder": "v1"
   },
-  "staticData": null,
-  "meta": null,
+  "staticData": {
+    "node:Buscamnos cambios en documentos": {
+      "lastTimeChecked": "2025-06-16T05:45:22Z"
+    }
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
   "pinData": {},
-  "versionId": "a61a37d4-fbb2-467d-a6fe-724825f83e53",
-  "triggerCount": 0,
+  "versionId": "859a232f-2d5e-49f5-a2a8-0674efa17ed5",
+  "triggerCount": 1,
   "shared": [
     {
       "createdAt": "2025-06-16T04:25:57.263Z",
