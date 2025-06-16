@@ -1,9 +1,9 @@
 {
   "createdAt": "2025-06-09T16:34:20.833Z",
-  "updatedAt": "2025-06-14T01:16:46.000Z",
+  "updatedAt": "2025-06-16T15:40:19.000Z",
   "id": "k6PApGOzpLKtnZ0q",
   "name": "chatbot cerebro",
-  "active": false,
+  "active": true,
   "nodes": [
     {
       "parameters": {
@@ -812,7 +812,7 @@
       "typeVersion": 4.2,
       "position": [
         -960,
-        -1600
+        -1860
       ],
       "id": "072128b3-f59b-45cd-bb7a-5a12fa743431",
       "name": "Error mensaje de voz"
@@ -843,7 +843,7 @@
       "typeVersion": 4.2,
       "position": [
         -960,
-        -1400
+        -1660
       ],
       "id": "5d81b2ee-8a82-44c0-a983-871c638078d4",
       "name": "error documento"
@@ -874,7 +874,7 @@
       "typeVersion": 4.2,
       "position": [
         -960,
-        -1200
+        -1460
       ],
       "id": "3b0dd856-9c8e-463e-bb34-f59301d1110d",
       "name": "error imagen"
@@ -905,7 +905,7 @@
       "typeVersion": 4.2,
       "position": [
         -960,
-        -1000
+        -1260
       ],
       "id": "8ed66e1c-c97f-4288-b50c-f4f960cecc89",
       "name": "error video"
@@ -3839,37 +3839,6 @@
     },
     {
       "parameters": {
-        "method": "POST",
-        "url": "https://graph.facebook.com/v22.0/626839230509107/messages",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "Authorization",
-              "value": "Bearer EAAHeSgKjRYEBOZBi0kUskW4k3L6ZCO8EhqsGNjWLyfJ3U1NZCbDyQp9WSoX0Ouh8hh44Jue9ev7TMlygkZAMoqMReAJL9cNZBQZCZB508HXZB84HCNFZBIRlSa9cXFs0dXmR31XoO0iUZBOTx4VSnErdZC9OD1sQDKprPHpbK7NBrTZAWy8D6pvNi9w0w4c9pt2KE3stGwZDZD"
-            },
-            {
-              "name": "Content-Type",
-              "value": "application/json"
-            }
-          ]
-        },
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"status\":\"read\",\n  \"message_id\":\"{{ $json.messages[0].id }}\",\n  \"typing_indicator\": {\n    \"type\":\"text\"\n  }\n}\n",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        -1640,
-        -1280
-      ],
-      "id": "2701590e-52a1-4e7f-943a-e0501a52cf10",
-      "name": "HTTP Request6"
-    },
-    {
-      "parameters": {
         "conditions": {
           "options": {
             "caseSensitive": true,
@@ -4178,6 +4147,37 @@
       ],
       "id": "ef33097a-6c0a-4142-9e53-44589f3810b4",
       "name": "respuesta preguta frecuente1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v22.0/626839230509107/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer EAAHeSgKjRYEBOZBi0kUskW4k3L6ZCO8EhqsGNjWLyfJ3U1NZCbDyQp9WSoX0Ouh8hh44Jue9ev7TMlygkZAMoqMReAJL9cNZBQZCZB508HXZB84HCNFZBIRlSa9cXFs0dXmR31XoO0iUZBOTx4VSnErdZC9OD1sQDKprPHpbK7NBrTZAWy8D6pvNi9w0w4c9pt2KE3stGwZDZD"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"status\":\"read\",\n  \"message_id\":\"{{ $json.messages[0].id }}\",\n  \"typing_indicator\": {\n    \"type\":\"text\"\n  }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -960,
+        -1040
+      ],
+      "id": "2701590e-52a1-4e7f-943a-e0501a52cf10",
+      "name": "typing indicator"
     }
   ],
   "connections": {
@@ -4283,11 +4283,6 @@
             "node": "Switch1",
             "type": "main",
             "index": 0
-          },
-          {
-            "node": "HTTP Request6",
-            "type": "main",
-            "index": 0
           }
         ]
       ]
@@ -4360,11 +4355,21 @@
             "node": "Set Variables",
             "type": "main",
             "index": 0
+          },
+          {
+            "node": "typing indicator",
+            "type": "main",
+            "index": 0
           }
         ],
         [
           {
             "node": "Set Variables",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "typing indicator",
             "type": "main",
             "index": 0
           }
@@ -5493,17 +5498,6 @@
         ]
       ]
     },
-    "HTTP Request6": {
-      "main": [
-        [
-          {
-            "node": "Switch1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "HTTP Request5": {
       "main": [
         [
@@ -5617,6 +5611,11 @@
           }
         ]
       ]
+    },
+    "typing indicator": {
+      "main": [
+        []
+      ]
     }
   },
   "settings": {
@@ -5659,7 +5658,7 @@
       }
     ]
   },
-  "versionId": "3a5513bd-2c41-4acb-8175-d476d544a22a",
+  "versionId": "4e813d11-b54a-428f-8ce5-7bf638a65268",
   "triggerCount": 1,
   "shared": [
     {
