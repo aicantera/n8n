@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-06-16T18:47:05.200Z",
-  "updatedAt": "2025-06-16T19:03:58.000Z",
+  "updatedAt": "2025-06-16T21:25:03.000Z",
   "id": "31IGIEeHfP5mekUe",
   "name": "agente generador de contenido Alexandra",
   "active": false,
@@ -15,8 +15,8 @@
       "type": "n8n-nodes-base.telegramTrigger",
       "typeVersion": 1.2,
       "position": [
-        0,
-        0
+        -480,
+        -140
       ],
       "id": "880c3185-986e-4fe2-a2ea-ba92025c3c23",
       "name": "Telegram Trigger",
@@ -27,9 +27,174 @@
           "name": "Telegram account contenido Alexandra"
         }
       }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.message.text }}",
+        "options": {
+          "systemMessage": "=**Instructions for n8n Parent Agent: Social Media Post Creator**\n \n**Objective:** To orchestrate the workflow for creating social media posts by calling upon two child agents: \"agente_scrappyng\" for information retrieval and \"agente_copy\" for image generation. The parent agent will then combine the scraped information and the generated image to produce a complete social media post.\n \n**Workflow:**\n \n1.  **Receive User Request:** The parent agent will receive a user's request specifying the topic or keywords for the social media post.\n \n2.  **Call \"agente_scrappyng\":**\n    * The parent agent will invoke the \"agente_scrappyng\" agent.\n    * It will pass the user's input (topic/keywords) as the search query for \"agente_scrappyng\".\n    * It will instruct \"agente_scrappyng\" to perform web scraping to find relevant information based on the query.\n    * It will expect \"agente_scrappyng\" to return a summary of the findings in two short paragraphs (maximum 500 characters per paragraph), as previously defined.\n \n3.  **Receive Scraped Information:** The parent agent will receive the summarized information from \"agente_scrappyng\".\n \n4.  **Call \"agente_copy\" (Image Generation):**\n    * The parent agent will invoke the \"agente_copy\" agent (assuming this is the designated name for the image generation agent).\n    * It will pass the summarized information received from \"agente_scrappyng\" as context for the image generation.\n    * It will instruct \"agente_copy\" to generate a relevant and visually appealing image that complements the scraped information and is suitable for social media.\n    * It will expect \"agente_copy\" to return the generated image (e.g., as a file path or data URL).\n \n5.  **Receive Generated Image:** The parent agent will receive the image from \"agente_copy\".\n \n6.  **Construct Social Media Post:**\n    * The parent agent will combine the summarized information from \"agente_scrappyng\" and the generated image from \"agente_copy\".\n    * It will format this information into a complete social media post, considering best practices for engagement and readability on social media platforms.\n    * This may involve:\n        * Writing a compelling caption that incorporates key findings from the scraped information.\n        * Ensuring the caption is engaging, informative, and includes a call to action (if appropriate).\n        * Attaching the generated image to the post.\n        * Suggesting relevant hashtags.\n \n7.  **Output Social Media Post:** The parent agent will output the complete social media post (text and image).\n \n**Output Format (in Spanish):**\n \n```markdown\n**Post para Redes Sociales:**\n \n**Imagen:** [Aquí se adjuntaría la imagen generada por el agente_copy]\n \n**Texto:**\n \n[Párrafo 1 del resumen del agente_scrappyng]\n \n[Párrafo 2 del resumen del agente_scrappyng]\n \n[Texto adicional para redes sociales: titular llamativo, llamada a la acción, etc. - aplicando principios de copywriting]\n \n**Hashtags sugeridos:** #[Hashtag1] #[Hashtag2] #[HashtagRelacionado]\n \n{{ new Date().toISOString() }}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.9,
+      "position": [
+        -260,
+        -140
+      ],
+      "id": "fb9e0666-de00-4ab6-b391-14757887ad77",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -340,
+        60
+      ],
+      "id": "4229751d-c591-4b9a-a53d-113b59dc3001",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "kN8CVraho0i9hYUQ",
+          "name": "OpenAi account Alexandra Trujillo"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.message.chat.id }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -180,
+        80
+      ],
+      "id": "fa9b2a04-8c64-4476-93de-34219b5ae1c2",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "description": "Llamar a este agente cuando se tenga una petición de búsqueda de internet",
+        "workflowId": {
+          "__rl": true,
+          "value": "p46e8KjRicXzWNwj",
+          "mode": "list",
+          "cachedResultName": "agente scrappyng Alexandra"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        0,
+        80
+      ],
+      "id": "8c9d5679-4027-4636-a9f1-971f54077e2b",
+      "name": "agente_scrappyng"
+    },
+    {
+      "parameters": {
+        "description": "Se llama a este agente cuando se necesita generar instrucciones para un modelo de generación de imágenes ",
+        "workflowId": {
+          "__rl": true,
+          "value": "me73A3ZR04AECuj4",
+          "mode": "list",
+          "cachedResultName": "agente copy write Alexandra"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        200,
+        80
+      ],
+      "id": "0637255b-c405-4f93-98a7-c6ce1cc4e79e",
+      "name": "agente_copy"
     }
   ],
-  "connections": {},
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "agente_scrappyng": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "agente_copy": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
   "settings": {
     "executionOrder": "v1"
   },
@@ -37,8 +202,36 @@
   "meta": {
     "templateCredsSetupCompleted": true
   },
-  "pinData": {},
-  "versionId": "61f527b8-fb8c-475c-99f0-587294c8ed0a",
+  "pinData": {
+    "Telegram Trigger": [
+      {
+        "json": {
+          "update_id": 379454297,
+          "message": {
+            "message_id": 2,
+            "from": {
+              "id": 7344396579,
+              "is_bot": false,
+              "first_name": "Alexandra Viridiana",
+              "last_name": "Trujillo Rubalcava",
+              "username": "alexatr99",
+              "language_code": "es"
+            },
+            "chat": {
+              "id": 7344396579,
+              "first_name": "Alexandra Viridiana",
+              "last_name": "Trujillo Rubalcava",
+              "username": "alexatr99",
+              "type": "private"
+            },
+            "date": 1750100561,
+            "text": "hola"
+          }
+        }
+      }
+    ]
+  },
+  "versionId": "e0c86aa2-535c-4ef7-90d7-141da90de4bb",
   "triggerCount": 0,
   "shared": [
     {
