@@ -1,0 +1,199 @@
+{
+  "createdAt": "2025-06-16T18:02:52.024Z",
+  "updatedAt": "2025-06-16T18:25:16.000Z",
+  "id": "p46e8KjRicXzWNwj",
+  "name": "agente scrappyng Alexandra",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "cbb498aa-1466-4e9f-9f0a-def2f8fa7072",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.query }}",
+        "options": {
+          "systemMessage": "=**Instrucciones**\n1._ **Texto de base**\nTu trabajo es obtener el texto que se te envia por el query\n2._ **Tarea**\nTienes que investigar en internet utilizando tu texto base como partida realiza wrb scrappyng en diversas fuentes relevantes para encontrar informacion precisa y comleta sobre el tema proporcionado\n3._ **Salida**\nGenera un resumen conciso de la informacion que encuentres en ** dos parrafos pequeños** con maximo de **500 caracteres por parrafo** debes identificar puntos clave sobre tu investigacion y generar la redacion mejor posible, la informacion debe ser relevante a la fecha actual\n\n**Consideraciones para el Agente:**\n \n* Priorizar fuentes de información confiables y relevantes para el tema del texto base.\n* Utilizar técnicas de web scraping eficientes para extraer la información necesaria.\n* Identificar y sintetizar los puntos más importantes y significativos de la información recopilada.\n* Asegurar que el resumen sea coherente, preciso y cumpla con las restricciones de longitud especificadas.\n* Evitar la repetición de información entre los dos párrafos.\n \n**Ejemplo de Salida (Formato Markdown):**\n \n```markdown\nLa investigación revela que [PUNTO CLAVE 1] y [DETALLE IMPORTANTE 1]. Diversas fuentes web confirman que [PUNTO CLAVE 2], lo cual tiene implicaciones en [CONSECUENCIA O APLICACIÓN].\n \nAdemás, se encontró información relevante sobre [PUNTO CLAVE 3] en [FUENTE PRINCIPAL]. Esto sugiere que [CONCLUSIÓN BREVE] y podría influir en [ÁREA DE INFLUENCIA].\n\nla fecha actual es {{ new Date().toISOString() }}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.9,
+      "position": [
+        220,
+        0
+      ],
+      "id": "ae624771-d3f1-4c96-8c6b-34d71de20238",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        140,
+        220
+      ],
+      "id": "e2297aa5-87d8-44bf-b339-0715682f0abd",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "kN8CVraho0i9hYUQ",
+          "name": "OpenAi account Alexandra Trujillo"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolSerpApi",
+      "typeVersion": 1,
+      "position": [
+        500,
+        240
+      ],
+      "id": "0946fe61-a7d9-4804-aece-8f752ec0b3d5",
+      "name": "SerpAPI",
+      "credentials": {
+        "serpApi": {
+          "id": "YdPqpUMdmD2LzFSj",
+          "name": "SerpAPI account Alexandra"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SerpAPI": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "0b483ce1-b1de-430e-8d7f-7c6c00774d5f",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "createdAt": "2025-06-16T18:02:52.028Z",
+      "updatedAt": "2025-06-16T18:02:52.028Z",
+      "role": "workflow:owner",
+      "workflowId": "p46e8KjRicXzWNwj",
+      "projectId": "UPXsxNbEdAC5wodw",
+      "project": {
+        "createdAt": "2025-05-30T21:50:35.802Z",
+        "updatedAt": "2025-05-30T21:51:22.504Z",
+        "id": "UPXsxNbEdAC5wodw",
+        "name": "Alexandra  Trujillo  <alexandra.trujillo@canteradigital.mx>",
+        "type": "personal",
+        "icon": null,
+        "projectRelations": [
+          {
+            "createdAt": "2025-05-30T21:50:35.804Z",
+            "updatedAt": "2025-05-30T21:50:35.804Z",
+            "role": "project:personalOwner",
+            "userId": "65d58894-4572-495d-8c41-0b8ea4c5b71f",
+            "projectId": "UPXsxNbEdAC5wodw",
+            "user": {
+              "createdAt": "2025-05-30T21:50:35.800Z",
+              "updatedAt": "2025-06-12T00:59:16.255Z",
+              "id": "65d58894-4572-495d-8c41-0b8ea4c5b71f",
+              "email": "alexandra.trujillo@canteradigital.mx",
+              "firstName": "Alexandra ",
+              "lastName": "Trujillo ",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-05-30T21:52:04.811Z",
+                "personalization_survey_n8n_version": "1.92.2",
+                "automationGoalDevops": [
+                  "data-syncing",
+                  "ticketing-systems-integrations",
+                  "ci-cd",
+                  "monitoring-alerting",
+                  "reporting",
+                  "incident-response"
+                ],
+                "companyType": "systems-integrator",
+                "role": "it"
+              },
+              "settings": {
+                "easyAIWorkflowOnboarded": true,
+                "firstSuccessfulWorkflowId": "bmdwVJ36IDZozHoU",
+                "userActivated": true,
+                "userActivatedAt": 1749246625266,
+                "npsSurvey": {
+                  "responded": true,
+                  "lastShownAt": 1749689952085
+                }
+              },
+              "role": "global:member",
+              "disabled": false,
+              "mfaEnabled": false,
+              "isPending": false,
+              "isOwner": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": [
+    {
+      "createdAt": "2025-05-13T17:01:17.387Z",
+      "updatedAt": "2025-05-13T17:01:17.387Z",
+      "id": "PwWwR5Yqz46trn75",
+      "name": "templates"
+    }
+  ]
+}
