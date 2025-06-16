@@ -1,0 +1,234 @@
+{
+  "createdAt": "2025-06-16T22:51:19.635Z",
+  "updatedAt": "2025-06-16T22:51:19.635Z",
+  "id": "aJIJlLEOEfejYf81",
+  "name": "agente cantera ingreso",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -280,
+        -20
+      ],
+      "id": "957235fd-ba68-4caa-9541-168f6810ca12",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4",
+          "mode": "list",
+          "cachedResultName": "GPT-4"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=datos de la empresa: {{ $json.nombre_empresa }}\npropuesta :  {{ $('When Executed by Another Workflow').item.json.resumen_propuesta }}\nperfil empresa:  {{ $json.perfilado_de_cliente }}\nfecha de la reunion: {{ $json.dia_meet }} {{ $json.hora_inicio_meet }}"
+            },
+            {
+              "content": "eres un cotizador de sistemas y proyectos de it y te voy a dar datos de una empresa, un requieriiento de IT  y  el perfil de laempresa, y tu debes estimar tres variables: probabilidad de cierre, esta probabilidad es de 0a 1 donde 1 es muy posible de que se cierre y que sea factible, esto debes asociarlo a la complejidad del proyecto  asume  que somos una mepresa de software cn ai agentes y mas de 200 desarrolladores de sofgtare. sel segundo valor, un estimado deen dolares del total de este proyecto de sarrollo mas infrastructura mas consultoria, debes estimas esos 2 valores . el usuari ote dara datos de y debes responder con estos datos. ademas sustenta tu analiss buscando  datos de esta empersa en internaet y estima el tamño y proyectos de esta empresa. crea una propuesta de componente tecnologias y personal requerido para ejecutar este proyecto de forma preliminar , diecndo que hace falta reunirse con el cliente para acotar esto. genera ranbirn la fecha y hora de inicio y fecha y hora de fin 30 minutos  depues de iniciado la reunion. el formato de la fecha debe ser yyyy-mm-dd hh:mm:ss",
+              "role": "system"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -40,
+        -20
+      ],
+      "id": "b58544ae-cf7d-484b-967f-17035a84388b",
+      "name": "OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "ZmWqQ5PGylh4Y05s",
+          "name": "OpenAi account - CANTERA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "text": "={{ $json.message.content }}",
+        "attributes": {
+          "attributes": [
+            {
+              "name": "value",
+              "type": "number",
+              "description": "integer value of the usd value estimated of the project witout money symbol only number",
+              "required": true
+            },
+            {
+              "name": "propability",
+              "type": "number",
+              "description": "value  of probality of close this deal",
+              "required": true
+            },
+            {
+              "name": "detail_of_estimation",
+              "description": "detailed explain of the estimation",
+              "required": true
+            },
+            {
+              "name": "fecha_inicio_meet",
+              "description": "fecha de inicio del meet en formato yyyy-mm-dd hh:ii:ss  ",
+              "required": true
+            },
+            {
+              "name": "fecha_fin_meet",
+              "description": "fecha de fin del meet en formato yyyy-mm-dd hh:ii:ss  ",
+              "required": true
+            }
+          ]
+        },
+        "options": {
+          "systemPromptTemplate": "You are an expert extraction algorithm.\nOnly extract relevant information from the text.\nIf you do not know the value of an attribute asked to extract, you may omit the attribute's value. redacta todo en español"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.informationExtractor",
+      "typeVersion": 1,
+      "position": [
+        320,
+        -20
+      ],
+      "id": "64d69121-488a-40f8-a7d1-919f01b6083a",
+      "name": "Information Extractor"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-3.5-turbo",
+          "mode": "list",
+          "cachedResultName": "gpt-3.5-turbo"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        360,
+        200
+      ],
+      "id": "b904411e-1426-4494-97fd-38366e758ea0",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "ZmWqQ5PGylh4Y05s",
+          "name": "OpenAi account - CANTERA"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "OpenAI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI": {
+      "main": [
+        [
+          {
+            "node": "Information Extractor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Information Extractor",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "3ffddb23-7d8d-4daa-8e3e-3995d498ce2b",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "createdAt": "2025-06-16T22:51:19.638Z",
+      "updatedAt": "2025-06-16T22:51:19.638Z",
+      "role": "workflow:owner",
+      "workflowId": "aJIJlLEOEfejYf81",
+      "projectId": "BZ9Ta5yhe4RhzY78",
+      "project": {
+        "createdAt": "2025-05-13T15:56:28.209Z",
+        "updatedAt": "2025-05-13T16:18:54.372Z",
+        "id": "BZ9Ta5yhe4RhzY78",
+        "name": "CANTERA ADMIN <canteradigital7@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "projectRelations": [
+          {
+            "createdAt": "2025-05-13T15:56:28.209Z",
+            "updatedAt": "2025-05-13T15:56:28.209Z",
+            "role": "project:personalOwner",
+            "userId": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
+            "projectId": "BZ9Ta5yhe4RhzY78",
+            "user": {
+              "createdAt": "2025-05-13T15:56:27.880Z",
+              "updatedAt": "2025-05-27T17:38:25.272Z",
+              "id": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
+              "email": "canteradigital7@gmail.com",
+              "firstName": "CANTERA",
+              "lastName": "ADMIN",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-05-13T16:19:25.161Z",
+                "personalization_survey_n8n_version": "1.92.2",
+                "companySize": "<20",
+                "companyType": "saas",
+                "role": "customer-support",
+                "reportedSource": "event"
+              },
+              "settings": {
+                "userActivated": true,
+                "firstSuccessfulWorkflowId": "PTbESRzX3rguwQN8",
+                "userActivatedAt": 1747154580970,
+                "easyAIWorkflowOnboarded": true,
+                "npsSurvey": {
+                  "responded": true,
+                  "lastShownAt": 1748367494893
+                }
+              },
+              "role": "global:owner",
+              "disabled": false,
+              "mfaEnabled": false,
+              "isPending": false,
+              "isOwner": true
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": []
+}
