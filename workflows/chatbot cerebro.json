@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-06-09T16:34:20.833Z",
-  "updatedAt": "2025-06-16T19:40:04.000Z",
+  "updatedAt": "2025-06-16T22:17:53.000Z",
   "id": "k6PApGOzpLKtnZ0q",
   "name": "chatbot cerebro",
   "active": true,
@@ -4601,6 +4601,24 @@
       ],
       "id": "a8ba0b62-ba4d-484e-ad92-0868274f7def",
       "name": "typing indicator2"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Set Variables').item.json.currentEnvironment }}/message_crafter/continue_conversation_agent",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n    \"phone\" : \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n    \"tenant_id\" : \"{{ $('Main Logic Placeholder').item.json.students_data[1].tenant_id }}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        800,
+        2040
+      ],
+      "id": "a854a3d5-8401-4bdf-9791-48863b03b172",
+      "name": "paso con un agente"
     }
   ],
   "connections": {
@@ -5643,7 +5661,8 @@
             "type": "main",
             "index": 0
           }
-        ]
+        ],
+        []
       ]
     },
     "If10": {
@@ -6205,6 +6224,17 @@
           }
         ]
       ]
+    },
+    "MongoDB20": {
+      "main": [
+        [
+          {
+            "node": "paso con un agente",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -6255,7 +6285,7 @@
       }
     ]
   },
-  "versionId": "7d658643-cc3e-49fe-b300-34633eb0868f",
+  "versionId": "b705dbf6-9518-4dd0-b80e-3e9113fe0fe9",
   "triggerCount": 1,
   "shared": [
     {
