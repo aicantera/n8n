@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-06-09T16:34:20.833Z",
-  "updatedAt": "2025-06-16T17:20:30.000Z",
+  "updatedAt": "2025-06-16T18:56:34.000Z",
   "id": "k6PApGOzpLKtnZ0q",
   "name": "chatbot cerebro",
   "active": false,
@@ -2381,8 +2381,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        7080,
-        -1120
+        9360,
+        420
       ],
       "id": "24f536a4-f1a7-403b-86e6-9193b7e3652a",
       "name": "Edit Fields16"
@@ -2397,8 +2397,8 @@
       "type": "n8n-nodes-base.mongoDb",
       "typeVersion": 1.1,
       "position": [
-        7300,
-        -1120
+        9580,
+        420
       ],
       "id": "847bfcba-3fe9-4234-8894-5c624d063d19",
       "name": "MongoDB16",
@@ -2416,8 +2416,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        6860,
-        -1120
+        9140,
+        420
       ],
       "id": "78ec067f-6de0-444b-90ad-b272b3ad17e9",
       "name": "Code11",
@@ -2442,14 +2442,14 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"Bienvenido al área de Académico de Cerebro.\\n\\n1️⃣  Clases de la semana.\\n2️⃣ Recibir clases por email.\\n3️⃣ Revisar calificaciones del estudiante.\"\n  }\n}\n\n\n\n",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"Bienvenido al área de Académico de Cerebro.\\n\\n1️⃣  Clases de la semana.\\n2️⃣ Recibir clases por email.\\n3️⃣ Revisar calificaciones del estudiante.\\n4️⃣ Menú Inicial.\"\n  }\n}\n\n\n\n",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        7560,
-        -1120
+        9840,
+        420
       ],
       "id": "6371b9a1-624f-4d2a-a57c-4dfab6d033b9",
       "name": "menu academico"
@@ -3260,13 +3260,13 @@
         "operation": "update",
         "collection": "user_state",
         "updateKey": "userStateId",
-        "fields": "type_conversation, date",
+        "fields": "type_conversation, date, state",
         "options": {}
       },
       "type": "n8n-nodes-base.mongoDb",
       "typeVersion": 1.1,
       "position": [
-        3820,
+        4200,
         -160
       ],
       "id": "560e0bc6-066d-42b1-beac-2459151d3d21",
@@ -3299,6 +3299,12 @@
               "name": "userStateId",
               "value": "={{ $('MongoDB').item.json.userStateId }}",
               "type": "string"
+            },
+            {
+              "id": "9bbcc0d5-3397-4a18-a53d-e163348b53cb",
+              "name": "state",
+              "value": "menuInicial",
+              "type": "string"
             }
           ]
         },
@@ -3307,7 +3313,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        3600,
+        3980,
         -160
       ],
       "id": "1fadd807-d9ce-4db0-996b-e129fab2ab57",
@@ -3320,7 +3326,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        3380,
+        3760,
         -160
       ],
       "id": "bad0136b-ae55-4729-a1f4-c5b8f7afa1a5",
@@ -3588,8 +3594,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        7820,
-        -1120
+        10100,
+        420
       ],
       "id": "83b90b3c-7458-4611-8ffb-4ff6340ad82a",
       "name": "seteamos estatus de espera_respuesta_academico"
@@ -3605,8 +3611,8 @@
       "type": "n8n-nodes-base.mongoDb",
       "typeVersion": 1.1,
       "position": [
-        8040,
-        -1120
+        10320,
+        420
       ],
       "id": "24a9a236-3b80-40fb-b280-5a434a43f5f9",
       "name": "actualizamos estatus del usuario a espera_respuesta_academico",
@@ -3642,7 +3648,7 @@
     },
     {
       "parameters": {
-        "jsCode": "return items.map(item => {\n  // 1. Leer y convertir a número\n  const raw = item.json.userInput;           \n  const userInput = Number(raw);\n\n  let outputText;\n  switch (userInput) {\n    case 1:\n      outputText = '1';\n      break;\n    case 2:\n      outputText = '2';\n      break;\n    case 3:\n      outputText = '3';\n      break;\n    default:\n      outputText = `Error`;\n  }\n\n  return {\n    json: {\n      ...item.json,\n      response: outputText\n    }\n  };\n});\n"
+        "jsCode": "return items.map(item => {\n  // 1. Leer y convertir a número\n  const raw = item.json.userInput;           \n  const userInput = Number(raw);\n\n  let outputText;\n  switch (userInput) {\n    case 1:\n      outputText = '1';\n      break;\n    case 2:\n      outputText = '2';\n      break;\n    case 3:\n      outputText = '3';\n      break;\n    case 4:\n      outputText = '4';\n      break;\n    default:\n      outputText = `Error`;\n  }\n\n  return {\n    json: {\n      ...item.json,\n      response: outputText\n    }\n  };\n});\n"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -3794,6 +3800,29 @@
               },
               "renameOutput": true,
               "outputKey": "3"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "e129980a-7f14-40a2-a7dd-88deed1b1c4c",
+                    "leftValue": "={{ $json.response }}",
+                    "rightValue": "4",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
             }
           ]
         },
@@ -3831,8 +3860,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        2980,
-        1440
+        3260,
+        1540
       ],
       "id": "f9b526f7-9a7a-4265-9ee9-4a1df597c9cc",
       "name": "HTTP Request5"
@@ -3849,11 +3878,12 @@
           "conditions": [
             {
               "id": "7ad6eabb-f764-4e1e-908c-d9b4bd960c09",
-              "leftValue": "={{ $json.message }}",
+              "leftValue": "={{ $json.guides }}",
               "rightValue": "No guides found for the current week",
               "operator": {
-                "type": "string",
-                "operation": "notEquals"
+                "type": "array",
+                "operation": "exists",
+                "singleValue": true
               }
             }
           ],
@@ -3864,42 +3894,11 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        3200,
-        1440
+        3480,
+        1760
       ],
       "id": "909c87cc-9350-4280-a752-2d325c257690",
       "name": "revisamos si hay actividades para la semana"
-    },
-    {
-      "parameters": {
-        "method": "POST",
-        "url": "https://graph.facebook.com/v22.0/626839230509107/messages",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "Authorization",
-              "value": "Bearer EAAHeSgKjRYEBOZBi0kUskW4k3L6ZCO8EhqsGNjWLyfJ3U1NZCbDyQp9WSoX0Ouh8hh44Jue9ev7TMlygkZAMoqMReAJL9cNZBQZCZB508HXZB84HCNFZBIRlSa9cXFs0dXmR31XoO0iUZBOTx4VSnErdZC9OD1sQDKprPHpbK7NBrTZAWy8D6pvNi9w0w4c9pt2KE3stGwZDZD"
-            },
-            {
-              "name": "Content-Type",
-              "value": "application/json"
-            }
-          ]
-        },
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"type\": \"interactive\",\n  \"interactive\": {\n    \"type\": \"button\",\n    \"body\": {\n      \"text\": \"No hay actividaes para esta semana\"\n    },\n    \"action\": {\n      \"buttons\": [\n        {\n          \"type\": \"reply\",\n          \"reply\": {\n            \"id\": \"menu_inicial\",\n            \"title\": \"Volver al menu\"\n          }\n        }\n      ]\n    }\n } }\n\n",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        3580,
-        1520
-      ],
-      "id": "950092a3-e461-4fb3-b456-3944f42efd30",
-      "name": "mensaje de error de academico1"
     },
     {
       "parameters": {
@@ -3912,8 +3911,8 @@
       "type": "n8n-nodes-base.mongoDb",
       "typeVersion": 1.1,
       "position": [
-        4300,
-        1660
+        4580,
+        1980
       ],
       "id": "0afa551e-7af2-41a6-8220-9d524f1a580d",
       "name": "MongoDB21",
@@ -3953,8 +3952,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        4080,
-        1660
+        4360,
+        1980
       ],
       "id": "b02d763f-3afb-49ce-95eb-a406afb3dbcd",
       "name": "Edit Fields23"
@@ -3966,8 +3965,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        3860,
-        1660
+        4140,
+        1980
       ],
       "id": "e2d6863f-da2f-4449-9faa-38e638d7a295",
       "name": "Code18",
@@ -4111,42 +4110,11 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        3600,
+        3380,
         2180
       ],
       "id": "087f9d6d-93b7-439c-a2d7-5c3bb35eb09a",
       "name": "HTTP Request7"
-    },
-    {
-      "parameters": {
-        "method": "POST",
-        "url": "https://graph.facebook.com/v22.0/626839230509107/messages",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "Authorization",
-              "value": "Bearer EAAHeSgKjRYEBOZBi0kUskW4k3L6ZCO8EhqsGNjWLyfJ3U1NZCbDyQp9WSoX0Ouh8hh44Jue9ev7TMlygkZAMoqMReAJL9cNZBQZCZB508HXZB84HCNFZBIRlSa9cXFs0dXmR31XoO0iUZBOTx4VSnErdZC9OD1sQDKprPHpbK7NBrTZAWy8D6pvNi9w0w4c9pt2KE3stGwZDZD"
-            },
-            {
-              "name": "Content-Type",
-              "value": "application/json"
-            }
-          ]
-        },
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"type\": \"interactive\",\n  \"interactive\": {\n    \"type\": \"button\",\n    \"body\": {\n      \"text\": {{ JSON.stringify($json.data.whatsapp_summary) }}\n    },\n    \"action\": {\n      \"buttons\": [\n        {\n          \"type\": \"reply\",\n          \"reply\": {\n            \"id\": \"menu_anterior\",\n            \"title\": \"Volver al menu\"\n          }\n        }\n      ]\n    }\n } }\n\n",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        3840,
-        2180
-      ],
-      "id": "ef33097a-6c0a-4142-9e53-44589f3810b4",
-      "name": "respuesta preguta frecuente1"
     },
     {
       "parameters": {
@@ -4243,8 +4211,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        3640,
-        1300
+        3620,
+        1280
       ],
       "id": "170b8e0b-e566-4d47-8218-c352f9e579cd",
       "name": "Code19"
@@ -4268,7 +4236,7 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": {{ JSON.stringify($json.whatsapp_message) }}\n  }\n}\n",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": {{ JSON.stringify($json.whatsapp_message)}}\n  }\n}\n",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
@@ -4299,7 +4267,7 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"Actualmente no hay actividades.\"\n  }\n}\n",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"No hay actividaes para esta semana\"\n  }\n}\n\n\n\n",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
@@ -4310,6 +4278,267 @@
       ],
       "id": "55802e8e-a833-400b-a255-adcf186cc12d",
       "name": "mensaje de sin actividades"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v22.0/626839230509107/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer EAAHeSgKjRYEBOZBi0kUskW4k3L6ZCO8EhqsGNjWLyfJ3U1NZCbDyQp9WSoX0Ouh8hh44Jue9ev7TMlygkZAMoqMReAJL9cNZBQZCZB508HXZB84HCNFZBIRlSa9cXFs0dXmR31XoO0iUZBOTx4VSnErdZC9OD1sQDKprPHpbK7NBrTZAWy8D6pvNi9w0w4c9pt2KE3stGwZDZD"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"No hay actividaes para esta semana\"\n  }\n}\n\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3860,
+        1840
+      ],
+      "id": "950092a3-e461-4fb3-b456-3944f42efd30",
+      "name": "no hay actividades en la semana para enviar"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "collection": "user_state",
+        "updateKey": "userStateId",
+        "fields": "state, date",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1.1,
+      "position": [
+        5120,
+        1780
+      ],
+      "id": "01f16acd-ff1e-4312-b929-cba01eb65cad",
+      "name": "MongoDB22",
+      "credentials": {
+        "mongoDb": {
+          "id": "xZYe0R0CRtWFmyv7",
+          "name": "MongoDB account cerebro core"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f07b7183-62a0-4d4a-90a7-ad93e7acd220",
+              "name": "date",
+              "value": "={{ $json.now }}",
+              "type": "string"
+            },
+            {
+              "id": "e5baae19-924c-4972-8a51-b4d87aad8bad",
+              "name": "state",
+              "value": "espera_respuesta_informacion_academico",
+              "type": "string"
+            },
+            {
+              "id": "127efdf6-7193-4011-a155-fa072b66e80f",
+              "name": "userStateId",
+              "value": "={{ $('MongoDB').item.json.userStateId }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        4900,
+        1780
+      ],
+      "id": "b9c8a992-bb83-43d2-8cea-1e782470df1d",
+      "name": "Edit Fields24"
+    },
+    {
+      "parameters": {
+        "jsCode": "\n\nreturn [\n  {\n    json: {\n      now: new Date().toLocaleString('es-MX', {\n  timeZone: 'America/Mexico_City'\n})\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        4680,
+        1780
+      ],
+      "id": "d15c1cdc-f638-4ea2-88c4-893933838a04",
+      "name": "Code20",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v22.0/626839230509107/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer EAAHeSgKjRYEBOZBi0kUskW4k3L6ZCO8EhqsGNjWLyfJ3U1NZCbDyQp9WSoX0Ouh8hh44Jue9ev7TMlygkZAMoqMReAJL9cNZBQZCZB508HXZB84HCNFZBIRlSa9cXFs0dXmR31XoO0iUZBOTx4VSnErdZC9OD1sQDKprPHpbK7NBrTZAWy8D6pvNi9w0w4c9pt2KE3stGwZDZD"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"Se enviaron las actividades de manera correcta a tu correo electrónico.\"\n  }\n}\n\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3860,
+        1640
+      ],
+      "id": "84a2ca8b-4cd5-4615-8c37-161f1329f3fc",
+      "name": "actividades enviadas correctamente"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "c146e3cd-bec7-4f6a-86b1-beeac9d351c6",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "success",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        3600,
+        2180
+      ],
+      "id": "20cef7dd-ad8f-40d6-bdd6-bea3ec5686bb",
+      "name": "If2"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v22.0/626839230509107/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer EAAHeSgKjRYEBOZBi0kUskW4k3L6ZCO8EhqsGNjWLyfJ3U1NZCbDyQp9WSoX0Ouh8hh44Jue9ev7TMlygkZAMoqMReAJL9cNZBQZCZB508HXZB84HCNFZBIRlSa9cXFs0dXmR31XoO0iUZBOTx4VSnErdZC9OD1sQDKprPHpbK7NBrTZAWy8D6pvNi9w0w4c9pt2KE3stGwZDZD"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": {{ JSON.stringify($json.data.whatsapp_summary) }}\n  }\n}\n\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        4060,
+        2180
+      ],
+      "id": "ef33097a-6c0a-4142-9e53-44589f3810b4",
+      "name": "información de las calificaciones del estudiante"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v22.0/626839230509107/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer EAAHeSgKjRYEBOZBi0kUskW4k3L6ZCO8EhqsGNjWLyfJ3U1NZCbDyQp9WSoX0Ouh8hh44Jue9ev7TMlygkZAMoqMReAJL9cNZBQZCZB508HXZB84HCNFZBIRlSa9cXFs0dXmR31XoO0iUZBOTx4VSnErdZC9OD1sQDKprPHpbK7NBrTZAWy8D6pvNi9w0w4c9pt2KE3stGwZDZD"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"Actualmente no hay tareas registradas del estudiante\"\n  }\n}\n\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3860,
+        2380
+      ],
+      "id": "8c925d29-7679-4bb4-b891-5260d80607d6",
+      "name": "no hay datos del estudiante calificaciones"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v22.0/626839230509107/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer EAAHeSgKjRYEBOZBi0kUskW4k3L6ZCO8EhqsGNjWLyfJ3U1NZCbDyQp9WSoX0Ouh8hh44Jue9ev7TMlygkZAMoqMReAJL9cNZBQZCZB508HXZB84HCNFZBIRlSa9cXFs0dXmR31XoO0iUZBOTx4VSnErdZC9OD1sQDKprPHpbK7NBrTZAWy8D6pvNi9w0w4c9pt2KE3stGwZDZD"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"¡Excelente! En un momento, uno de nuestros agentes se pondrá en contacto contigo. Fue un gusto ayudarte.\"\n  }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3440,
+        -160
+      ],
+      "id": "8c528def-689b-4291-bafd-ac2945e7262b",
+      "name": "calendario eventos4"
     }
   ],
   "connections": {
@@ -5518,7 +5747,7 @@
         ],
         [
           {
-            "node": "Code17",
+            "node": "calendario eventos4",
             "type": "main",
             "index": 0
           }
@@ -5627,6 +5856,13 @@
             "type": "main",
             "index": 0
           }
+        ],
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
         ]
       ]
     },
@@ -5643,10 +5879,16 @@
     },
     "revisamos si hay actividades para la semana": {
       "main": [
-        [],
         [
           {
-            "node": "mensaje de error de academico1",
+            "node": "actividades enviadas correctamente",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "no hay actividades en la semana para enviar",
             "type": "main",
             "index": 0
           }
@@ -5669,17 +5911,6 @@
         [
           {
             "node": "Edit Fields23",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "mensaje de error de academico1": {
-      "main": [
-        [
-          {
-            "node": "Code18",
             "type": "main",
             "index": 0
           }
@@ -5726,18 +5957,7 @@
       "main": [
         [
           {
-            "node": "respuesta preguta frecuente1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "respuesta preguta frecuente1": {
-      "main": [
-        [
-          {
-            "node": "Code11",
+            "node": "If2",
             "type": "main",
             "index": 0
           }
@@ -5821,6 +6041,101 @@
           }
         ]
       ]
+    },
+    "no hay actividades en la semana para enviar": {
+      "main": [
+        [
+          {
+            "node": "Code11",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields24": {
+      "main": [
+        [
+          {
+            "node": "MongoDB22",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code20": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields24",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "actividades enviadas correctamente": {
+      "main": [
+        [
+          {
+            "node": "Code11",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If2": {
+      "main": [
+        [
+          {
+            "node": "información de las calificaciones del estudiante",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "no hay datos del estudiante calificaciones",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "información de las calificaciones del estudiante": {
+      "main": [
+        [
+          {
+            "node": "Code11",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "no hay datos del estudiante calificaciones": {
+      "main": [
+        [
+          {
+            "node": "Code11",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "calendario eventos4": {
+      "main": [
+        [
+          {
+            "node": "Code17",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -5831,7 +6146,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "dec67ddf-6268-4ced-8deb-d36d7280ba3b",
+  "versionId": "1ac20c16-c66b-4034-9626-092b2d4129ca",
   "triggerCount": 1,
   "shared": [
     {
