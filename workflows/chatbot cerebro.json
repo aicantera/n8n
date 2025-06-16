@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-06-09T16:34:20.833Z",
-  "updatedAt": "2025-06-16T16:47:30.000Z",
+  "updatedAt": "2025-06-16T17:20:30.000Z",
   "id": "k6PApGOzpLKtnZ0q",
   "name": "chatbot cerebro",
   "active": false,
@@ -4111,8 +4111,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        3240,
-        1960
+        3600,
+        2180
       ],
       "id": "087f9d6d-93b7-439c-a2d7-5c3bb35eb09a",
       "name": "HTTP Request7"
@@ -4142,8 +4142,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        3480,
-        1960
+        3840,
+        2180
       ],
       "id": "ef33097a-6c0a-4142-9e53-44589f3810b4",
       "name": "respuesta preguta frecuente1"
@@ -4178,6 +4178,138 @@
       ],
       "id": "2701590e-52a1-4e7f-943a-e0501a52cf10",
       "name": "typing indicator"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "f0261319-b297-4038-a62f-f9c3f4453619",
+              "leftValue": "={{ $json.error }}",
+              "rightValue": "true",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        3200,
+        1200
+      ],
+      "id": "588532c1-af2d-49eb-bda9-2abdea8c2bc6",
+      "name": "revisamos si hay error"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "2d4a5a87-3528-4a40-ac5d-33c293102fa7",
+              "name": "bodyString",
+              "value": "={{ $json }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        3420,
+        1300
+      ],
+      "id": "e13946e5-dc40-425d-9552-0417ce49afc7",
+      "name": "tomamos el body de la respuesta"
+    },
+    {
+      "parameters": {
+        "jsCode": "// 1) Leer el string JSON desde el Set previo\nconst input     = items[0].json;\nconst rawString = input.bodyString;  // <— el string con tu JSON\n\n// 2) Parsearlo a objeto\nlet data;\ntry {\n  data = JSON.parse(rawString);\n} catch (e) {\n  throw new Error('JSON inválido en bodyString: ' + e.message);\n}\n\n// 3) Extraer cursos y datos de la semana\nconst courses = data.courses_with_lessons || [];\nconst week    = data.week_info           || {};\n\n// 4) Construir el mensaje\nlet message = `*Informe Semanal* 📅\\n` +\n  `Semana ${week.week_number}/${week.year}\\n` +\n  `Del ${week.start_date} al ${week.end_date}\\n\\n`;\n\ncourses.forEach((course, i) => {\n  message += `*${i+1}. ${course.course_name}*\\n`;\n  message += `Profesor: ${course.teacher_name}\\n`;\n  \n  if (Array.isArray(course.lessons) && course.lessons.length) {\n    course.lessons.forEach((lesson, j) => {\n      const sesiones = lesson.number_of_sessions != null\n        ? ` (${lesson.number_of_sessions} sesión${lesson.number_of_sessions > 1 ? 'es' : ''})`\n        : '';\n      message += `  ${j+1}) ${lesson.lesson_name} — ${lesson.lesson_status}${sesiones}\\n`;\n    });\n  } else {\n    message += `_Sin lecciones registradas_\\n`;\n  }\n  \n  message += `\\n`;\n});\n\n// 5) Devolverlo para el siguiente nodo\nreturn [\n  {\n    json: {\n      whatsapp_message: message.trim(),\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3640,
+        1300
+      ],
+      "id": "170b8e0b-e566-4d47-8218-c352f9e579cd",
+      "name": "Code19"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v22.0/626839230509107/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer EAAHeSgKjRYEBOZBi0kUskW4k3L6ZCO8EhqsGNjWLyfJ3U1NZCbDyQp9WSoX0Ouh8hh44Jue9ev7TMlygkZAMoqMReAJL9cNZBQZCZB508HXZB84HCNFZBIRlSa9cXFs0dXmR31XoO0iUZBOTx4VSnErdZC9OD1sQDKprPHpbK7NBrTZAWy8D6pvNi9w0w4c9pt2KE3stGwZDZD"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": {{ JSON.stringify($json.whatsapp_message) }}\n  }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3860,
+        1300
+      ],
+      "id": "deb3ace1-db0f-47e7-92f1-d0d0c7aa462d",
+      "name": "mensaje de error de academico2"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v22.0/626839230509107/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer EAAHeSgKjRYEBOZBi0kUskW4k3L6ZCO8EhqsGNjWLyfJ3U1NZCbDyQp9WSoX0Ouh8hh44Jue9ev7TMlygkZAMoqMReAJL9cNZBQZCZB508HXZB84HCNFZBIRlSa9cXFs0dXmR31XoO0iUZBOTx4VSnErdZC9OD1sQDKprPHpbK7NBrTZAWy8D6pvNi9w0w4c9pt2KE3stGwZDZD"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"Actualmente no hay actividades.\"\n  }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3500,
+        1100
+      ],
+      "id": "55802e8e-a833-400b-a255-adcf186cc12d",
+      "name": "mensaje de sin actividades"
     }
   ],
   "connections": {
@@ -5616,6 +5748,79 @@
       "main": [
         []
       ]
+    },
+    "HTTP Request4": {
+      "main": [
+        [
+          {
+            "node": "revisamos si hay error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "revisamos si hay error": {
+      "main": [
+        [
+          {
+            "node": "mensaje de sin actividades",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "tomamos el body de la respuesta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "tomamos el body de la respuesta": {
+      "main": [
+        [
+          {
+            "node": "Code19",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code19": {
+      "main": [
+        [
+          {
+            "node": "mensaje de error de academico2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "mensaje de error de academico2": {
+      "main": [
+        [
+          {
+            "node": "Code11",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "mensaje de sin actividades": {
+      "main": [
+        [
+          {
+            "node": "Code11",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -5625,40 +5830,8 @@
   "meta": {
     "templateCredsSetupCompleted": true
   },
-  "pinData": {
-    "WhatsApp Trigger": [
-      {
-        "json": {
-          "messaging_product": "whatsapp",
-          "metadata": {
-            "display_phone_number": "5215526307069",
-            "phone_number_id": "677352828794095"
-          },
-          "statuses": [
-            {
-              "id": "wamid.HBgNNTIxNDQzNDkwMTE5MxUCABEYEjkwNTJDMjNCQTQyMzdFMDlDMQA=",
-              "status": "failed",
-              "timestamp": "1749863614",
-              "recipient_id": "5214434901193",
-              "errors": [
-                {
-                  "code": 131047,
-                  "title": "Re-engagement message",
-                  "message": "Re-engagement message",
-                  "error_data": {
-                    "details": "Message failed to send because more than 24 hours have passed since the customer last replied to this number."
-                  },
-                  "href": "https://developers.facebook.com/docs/whatsapp/cloud-api/support/error-codes/"
-                }
-              ]
-            }
-          ],
-          "field": "messages"
-        }
-      }
-    ]
-  },
-  "versionId": "4e813d11-b54a-428f-8ce5-7bf638a65268",
+  "pinData": {},
+  "versionId": "dec67ddf-6268-4ced-8deb-d36d7280ba3b",
   "triggerCount": 1,
   "shared": [
     {
