@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-05-15T15:53:39.991Z",
-  "updatedAt": "2025-05-15T16:31:03.000Z",
+  "updatedAt": "2025-06-17T20:59:21.000Z",
   "id": "4QLd4KoP0XGafQmk",
   "name": "Agente cotizados glasbil dev",
   "active": false,
@@ -23,7 +23,7 @@
         "promptType": "define",
         "text": "={{ $json.query }}",
         "options": {
-          "systemMessage": "=Eres un agente dedicado a realizzar peticiones para hacer cotizaciónes de glasbil\ntu trabajo es hacer peticiones y poder retornar iinformacion\ntambien tienes la capacidad de realizzar cotizaciones todo esto usando herramientas de http request\n\ntienes acceso a estas herramientas\n\n'available_years': con esta herramienta puedes consultar los años disponibles en el sistema de glasbil\n\n'available_brands(year)': con esta herramienta puedes consultar las marcas disponibles dependiendo del año que te den, para esta es importante que te den el año para consultar\n\n'available_models(year,brand)': con esta herramienta seras capaz de realizar busquedas de los modelos de un auto usando el año y la marca es importante que estos dos datos te lleguen para poder cumplir con esta funcion\n\n'available_type_car(year,brand,model)': con esta herramienta podras obtener los tipos de carros dependiendo del año, marca y modelo es importante que estos datos te sean dados para que puedas cumplir tu funcion\n\n'available_type_glasses(year,brand,model,type_car)': con esta herramienta puedes obtener los tipos de cristales disponibles dependiendo del año, marca, modelo, tipo de carro, es importante que los datos los tengas todos para que puedas cumplir con tu funcion\n"
+          "systemMessage": "=Eres un agente dedicado a realizzar peticiones para hacer cotizaciónes de glasbil\ntu trabajo es hacer peticiones y poder retornar iinformacion\ntambien tienes la capacidad de realizzar cotizaciones todo esto usando herramientas de http request\n\ntienes acceso a estas herramientas\n\n'available_years': con esta herramienta puedes consultar los años disponibles en el sistema de glasbil\n\n'available_brands(year)': con esta herramienta puedes consultar las marcas disponibles dependiendo del año que te den, para esta es importante que te den el año para consultar\n\n'available_models(year,brand)': con esta herramienta seras capaz de realizar busquedas de los modelos de un auto usando el año y la marca es importante que estos dos datos te lleguen para poder cumplir con esta funcion\n\n'available_type_car(year,brand,model)': con esta herramienta podras obtener los tipos de carros dependiendo del año, marca y modelo es importante que estos datos te sean dados para que puedas cumplir tu funcion\n\n'available_type_glasses(year,brand,model,type_car)': con esta herramienta puedes obtener los tipos de cristales disponibles dependiendo del año, marca, modelo, tipo de carro, es importante que los datos los tengas todos para que puedas cumplir con tu funcion\n\n'search_products(year,brand,model,type_car,type_glass)': con esta herramienta puedes obtener los productos disponibles dependiendo del año, marca, modelo, tipo de carro, y tipo de cristal. Es importante que los datos los tengas todos para que puedas cumplir con tu funcion\n"
         }
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
@@ -68,8 +68,8 @@
       "type": "n8n-nodes-base.httpRequestTool",
       "typeVersion": 4.2,
       "position": [
-        460,
-        20
+        620,
+        0
       ],
       "id": "3aca31b7-a9c5-4d53-a702-7c7fb362e96a",
       "name": "available_years"
@@ -82,7 +82,7 @@
       "type": "n8n-nodes-base.httpRequestTool",
       "typeVersion": 4.2,
       "position": [
-        460,
+        580,
         200
       ],
       "id": "8487dc39-67fe-48a0-8078-2f34caab45f7",
@@ -112,8 +112,8 @@
       "type": "n8n-nodes-base.httpRequestTool",
       "typeVersion": 4.2,
       "position": [
-        460,
-        400
+        500,
+        360
       ],
       "id": "f3bc81ba-5d13-4d9c-9fba-1f5f7c0c9697",
       "name": "available_type_car"
@@ -132,6 +132,21 @@
       ],
       "id": "e041f4ee-d415-4c2d-b0e8-95bfea45764e",
       "name": "available_type_glasses"
+    },
+    {
+      "parameters": {
+        "toolDescription": "Esta herramienta te ayudara a obtener los productos disponibles para un vehiculo de acuerdo a year, brand, model, car_type, type_glass ",
+        "url": "https://butik-vidrio.canteradigital.mx/api/finder/searchProducts/filtered?year={{$fromAI('year')}}&brand={{$fromAI('brand')}}&model={{$fromAI('model')}}&type_car={{ $fromAI('type_car') }}&type_glass={{$fromAI('type_glass')}}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.2,
+      "position": [
+        140,
+        400
+      ],
+      "id": "ecdd068e-8f10-47f5-bfc2-aebbc2bf88e5",
+      "name": "search_products"
     }
   ],
   "connections": {
@@ -211,6 +226,17 @@
           }
         ]
       ]
+    },
+    "search_products": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -221,7 +247,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "4e65dfb9-4885-46ef-8ad9-37a4abcb8907",
+  "versionId": "8cf28fd4-4a94-4e5f-9b9b-5b4ff4225bb0",
   "triggerCount": 0,
   "shared": [
     {
