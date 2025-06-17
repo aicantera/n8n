@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-06-09T16:34:20.833Z",
-  "updatedAt": "2025-06-17T17:14:11.000Z",
+  "updatedAt": "2025-06-17T18:52:59.000Z",
   "id": "k6PApGOzpLKtnZ0q",
   "name": "chatbot cerebro",
   "active": false,
@@ -2442,7 +2442,7 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"Bienvenido al área de Académico de Cerebro.\\n\\n1️⃣  Clases de la semana.\\n2️⃣ Recibir clases por email.\\n3️⃣ Revisar calificaciones del estudiante.\\n4️⃣ Menú Inicial.\"\n  }\n}\n\n\n\n",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"Bienvenido al área de Académico de Cerebro.\\n\\n1️⃣  Clases de la semana.\\n2️⃣ Recibir clases por email.\\n3️⃣ Revisar calificaciones del estudiante.\\n4️⃣ Reportar Justificante\\n5️⃣Menú Inicial.\"\n  }\n}\n\n\n\n",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
@@ -3494,7 +3494,7 @@
       "typeVersion": 2.2,
       "position": [
         -320,
-        1880
+        1820
       ],
       "id": "69e6b3aa-8ea1-40bf-849a-6b09c3588c80",
       "name": "el boton es menu inicial"
@@ -3823,6 +3823,31 @@
                 ],
                 "combinator": "and"
               }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "9aafb1d1-f1d0-4741-adf3-76a9a495c8fb",
+                    "leftValue": "={{ $json.response }}",
+                    "rightValue": "5",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "5"
             }
           ]
         },
@@ -3831,7 +3856,7 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.2,
       "position": [
-        -680,
+        -720,
         3420
       ],
       "id": "d94bff0e-0258-477a-8098-e96cdf270eed",
@@ -4749,6 +4774,37 @@
       ],
       "id": "2965b8c3-a37d-4e89-8550-00d0378a52ed",
       "name": "revisamos si el usuario respondio por boton1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v22.0/626839230509107/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer EAAHeSgKjRYEBOZBi0kUskW4k3L6ZCO8EhqsGNjWLyfJ3U1NZCbDyQp9WSoX0Ouh8hh44Jue9ev7TMlygkZAMoqMReAJL9cNZBQZCZB508HXZB84HCNFZBIRlSa9cXFs0dXmR31XoO0iUZBOTx4VSnErdZC9OD1sQDKprPHpbK7NBrTZAWy8D6pvNi9w0w4c9pt2KE3stGwZDZD"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"type\": \"interactive\",\n  \"interactive\": {\n    \"type\": \"button\",\n    \"body\": {\n      \"text\": \"¡De acuerdo! Comencemos con el proceso para crear un justificante. 📝\\n\\nPara salir del proceso preciona el boton Volver al Menú\"\n    },\n    \"action\": {\n      \"buttons\": [\n        {\n          \"type\": \"reply\",\n          \"reply\": {\n            \"id\": \"menu_inicial\",\n            \"title\": \"Volver al menu\"\n          }\n        }\n      ]\n    }\n } }\n\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -460,
+        4840
+      ],
+      "id": "19359bc2-118b-4cc7-b5a1-fa10cd1d628a",
+      "name": "mensaje de error de academico1"
     }
   ],
   "connections": {
@@ -6060,6 +6116,13 @@
         ],
         [
           {
+            "node": "mensaje de error de academico1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
             "node": "If1",
             "type": "main",
             "index": 0
@@ -6411,7 +6474,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "b2694e98-8659-4fbd-bbd7-1a4465ece12e",
+  "versionId": "422ba6d4-aa29-4a7e-affb-91719acf0d4e",
   "triggerCount": 1,
   "shared": [
     {
