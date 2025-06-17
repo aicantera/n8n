@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-05-15T17:24:39.085Z",
-  "updatedAt": "2025-06-16T21:34:49.000Z",
+  "updatedAt": "2025-06-16T23:51:09.000Z",
   "id": "FqLw4NrJ9drMRdhD",
   "name": "Agente Glassy prod",
   "active": true,
@@ -81,8 +81,8 @@
       "type": "n8n-nodes-base.googleSheetsTool",
       "typeVersion": 4.5,
       "position": [
-        540,
-        440
+        640,
+        680
       ],
       "id": "c21396ca-8cd4-4ed3-835b-077ca22883f6",
       "name": "codigos_postales",
@@ -274,40 +274,6 @@
     },
     {
       "parameters": {
-        "conditions": {
-          "options": {
-            "caseSensitive": true,
-            "leftValue": "",
-            "typeValidation": "strict",
-            "version": 2
-          },
-          "conditions": [
-            {
-              "id": "3de5f7b2-a515-4155-b40a-1fe52ee52c87",
-              "leftValue": "={{ $json.mensaje }}",
-              "rightValue": "",
-              "operator": {
-                "type": "string",
-                "operation": "exists",
-                "singleValue": true
-              }
-            }
-          ],
-          "combinator": "and"
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.filter",
-      "typeVersion": 2.2,
-      "position": [
-        -280,
-        300
-      ],
-      "id": "a1c9dca2-4a2d-4255-a96a-1ec9fc98dece",
-      "name": "Filter"
-    },
-    {
-      "parameters": {
         "operation": "send",
         "phoneNumberId": "613903945143564",
         "recipientPhoneNumber": "={{ $('Edit Fields').item.json.telefono }}",
@@ -317,7 +283,7 @@
       "type": "n8n-nodes-base.whatsApp",
       "typeVersion": 1,
       "position": [
-        940,
+        680,
         300
       ],
       "id": "fc916af7-62d4-4556-b5e7-3f893cf22ae5",
@@ -350,10 +316,11 @@
       "typeVersion": 1.1,
       "position": [
         -700,
-        280
+        40
       ],
       "id": "8f593d05-6bc5-48dc-8e8b-084795276cfd",
-      "name": "When Executed by Another Workflow"
+      "name": "When Executed by Another Workflow",
+      "disabled": true
     },
     {
       "parameters": {
@@ -362,19 +329,19 @@
             {
               "id": "c186aeab-a5d4-4f37-99d6-409910e705b3",
               "name": "telefono",
-              "value": "={{ $json.telefono }}",
+              "value": "={{ $('WhatsApp Trigger1').item.json.messages[0].from }}",
               "type": "string"
             },
             {
               "id": "37edbf6f-5ae8-4dd0-ab9b-690bfdc5c302",
               "name": "name",
-              "value": "={{ $json.name }}",
+              "value": "={{ $('WhatsApp Trigger1').item.json.contacts[0].profile.name }}",
               "type": "string"
             },
             {
               "id": "04f2160c-2f62-444d-b8e7-b9a4d9feda43",
               "name": "mensaje",
-              "value": "={{ $json.mensaje }}",
+              "value": "={{ $('WhatsApp Trigger1').item.json.messages[0].text.body }}",
               "type": "string"
             }
           ]
@@ -384,11 +351,77 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -60,
+        60,
         300
       ],
       "id": "9b8ac7be-a5e0-4aa2-a0f1-2a6f6b5ac0b2",
       "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "updates": [
+          "messages"
+        ],
+        "options": {}
+      },
+      "type": "n8n-nodes-base.whatsAppTrigger",
+      "typeVersion": 1,
+      "position": [
+        -400,
+        300
+      ],
+      "id": "52cfb319-9b50-44e5-a633-57362e65a431",
+      "name": "WhatsApp Trigger1",
+      "webhookId": "2c635aec-a869-4391-81f3-01e4d89d0362",
+      "credentials": {
+        "whatsAppTriggerApi": {
+          "id": "ska63vfMO6bTh555",
+          "name": "WhatsApp OAuth account - GLASSY"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "3de5f7b2-a515-4155-b40a-1fe52ee52c87",
+              "leftValue": "={{ $json.messages[0].text.body }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "5c855192-c031-4ce2-adda-971e3140f30d",
+              "leftValue": "={{ $json.metadata.display_phone_number }}",
+              "rightValue": "5214431865276",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        -180,
+        300
+      ],
+      "id": "ceec4b87-b496-4c0b-a168-1d72350984f8",
+      "name": "Filter2"
     }
   ],
   "connections": {
@@ -501,26 +534,9 @@
         []
       ]
     },
-    "Filter": {
-      "main": [
-        [
-          {
-            "node": "Edit Fields",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "When Executed by Another Workflow": {
       "main": [
-        [
-          {
-            "node": "Filter",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "Edit Fields": {
@@ -528,6 +544,28 @@
         [
           {
             "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "WhatsApp Trigger1": {
+      "main": [
+        [
+          {
+            "node": "Filter2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter2": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
             "type": "main",
             "index": 0
           }
@@ -553,8 +591,8 @@
       }
     ]
   },
-  "versionId": "6ec75663-935a-462b-9e83-2916b5afd70f",
-  "triggerCount": 1,
+  "versionId": "2db61fc7-0376-465a-b499-a7bbac0f345e",
+  "triggerCount": 2,
   "shared": [
     {
       "createdAt": "2025-05-15T17:24:39.091Z",
