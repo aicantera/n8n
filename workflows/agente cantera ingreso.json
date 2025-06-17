@@ -1,23 +1,10 @@
 {
   "createdAt": "2025-06-16T22:51:19.635Z",
-  "updatedAt": "2025-06-16T22:51:19.635Z",
+  "updatedAt": "2025-06-16T23:44:14.000Z",
   "id": "aJIJlLEOEfejYf81",
   "name": "agente cantera ingreso",
   "active": false,
   "nodes": [
-    {
-      "parameters": {
-        "inputSource": "passthrough"
-      },
-      "type": "n8n-nodes-base.executeWorkflowTrigger",
-      "typeVersion": 1.1,
-      "position": [
-        -280,
-        -20
-      ],
-      "id": "957235fd-ba68-4caa-9541-168f6810ca12",
-      "name": "When Executed by Another Workflow"
-    },
     {
       "parameters": {
         "modelId": {
@@ -29,7 +16,7 @@
         "messages": {
           "values": [
             {
-              "content": "=datos de la empresa: {{ $json.nombre_empresa }}\npropuesta :  {{ $('When Executed by Another Workflow').item.json.resumen_propuesta }}\nperfil empresa:  {{ $json.perfilado_de_cliente }}\nfecha de la reunion: {{ $json.dia_meet }} {{ $json.hora_inicio_meet }}"
+              "content": "=datos de la empresa: {{ $json.nombre_empresa }}\npropuesta :  {{ $('When Executed by Another Workflow').item.json.resumen_propuesta }}\nperfil empresa:  {{ $json.perfilado_de_cliente }}\n"
             },
             {
               "content": "eres un cotizador de sistemas y proyectos de it y te voy a dar datos de una empresa, un requieriiento de IT  y  el perfil de laempresa, y tu debes estimar tres variables: probabilidad de cierre, esta probabilidad es de 0a 1 donde 1 es muy posible de que se cierre y que sea factible, esto debes asociarlo a la complejidad del proyecto  asume  que somos una mepresa de software cn ai agentes y mas de 200 desarrolladores de sofgtare. sel segundo valor, un estimado deen dolares del total de este proyecto de sarrollo mas infrastructura mas consultoria, debes estimas esos 2 valores . el usuari ote dara datos de y debes responder con estos datos. ademas sustenta tu analiss buscando  datos de esta empersa en internaet y estima el tamño y proyectos de esta empresa. crea una propuesta de componente tecnologias y personal requerido para ejecutar este proyecto de forma preliminar , diecndo que hace falta reunirse con el cliente para acotar esto. genera ranbirn la fecha y hora de inicio y fecha y hora de fin 30 minutos  depues de iniciado la reunion. el formato de la fecha debe ser yyyy-mm-dd hh:mm:ss",
@@ -75,16 +62,6 @@
               "name": "detail_of_estimation",
               "description": "detailed explain of the estimation",
               "required": true
-            },
-            {
-              "name": "fecha_inicio_meet",
-              "description": "fecha de inicio del meet en formato yyyy-mm-dd hh:ii:ss  ",
-              "required": true
-            },
-            {
-              "name": "fecha_fin_meet",
-              "description": "fecha de fin del meet en formato yyyy-mm-dd hh:ii:ss  ",
-              "required": true
             }
           ]
         },
@@ -125,20 +102,106 @@
           "name": "OpenAi account - CANTERA"
         }
       }
+    },
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "nombre_cliente"
+            },
+            {
+              "name": "email_cliente"
+            },
+            {
+              "name": "telefono_cliente"
+            },
+            {
+              "name": "nombre_empresa"
+            },
+            {
+              "name": "requerimiento_cliente"
+            },
+            {
+              "name": "perfilado_de_cliente"
+            },
+            {
+              "name": "resumen_propuesta"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -280,
+        0
+      ],
+      "id": "b278c57c-2c6e-4b14-bc3c-572d5eee2b67",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "resource": "channelMessage",
+        "teamId": {
+          "__rl": true,
+          "value": "b6b236f7-9ae6-42d1-9e1b-3af1452cba07",
+          "mode": "list",
+          "cachedResultName": "Cantera Digital"
+        },
+        "channelId": {
+          "__rl": true,
+          "value": "19:f920de9afa9c4ac8b8c827fb884d2d9c@thread.tacv2",
+          "mode": "list",
+          "cachedResultName": "Leads",
+          "cachedResultUrl": "https://teams.cloud.microsoft/l/channel/19%3Af920de9afa9c4ac8b8c827fb884d2d9c%40thread.tacv2/Leads?groupId=b6b236f7-9ae6-42d1-9e1b-3af1452cba07&tenantId=3823387a-1cbb-49ad-bf55-69153c1f8269&allowXTenantAccess=True&ngc=True"
+        },
+        "message": "=Tenemos nuevo Lead\n\nCliente:  {{ $('When Executed by Another Workflow').item.json.nombre_cliente }}\nEmpresa: {{ $('When Executed by Another Workflow').item.json.nombre_empresa }}\n\nRequerimiento: {{ $('When Executed by Another Workflow').item.json.requerimiento_cliente }}\nPropuesta: {{ $('When Executed by Another Workflow').item.json.resumen_propuesta }}\n{{ \"\\n\" }}\nPerfilado de cliente: {{ $('When Executed by Another Workflow').item.json.perfilado_de_cliente }}\n{{ \"\\n\" }}\nEstimación Inicial: {{ $json.output.detail_of_estimation }}\n{{ \"\\n\" }}\nValor del Lead: {{ $json.output.value }} USD\nProbablidad de Cierre:  {{ $json.output.propability*100 }} %\n{{ \"\\n\" }}\n\nPodemos contactar al cliente por los siguientes medios\nWhatsapp: {{ $('When Executed by Another Workflow').item.json.telefono_cliente }}\nCorreo: {{ $('When Executed by Another Workflow').item.json.email_cliente }}\n\nSe mando la información por correo electónico.\n\n",
+        "options": {
+          "includeLinkToWorkflow": false
+        }
+      },
+      "type": "n8n-nodes-base.microsoftTeams",
+      "typeVersion": 2,
+      "position": [
+        1240,
+        -20
+      ],
+      "id": "bfd88904-d7bf-4cf9-98c7-033668162065",
+      "name": "Microsoft Teams2",
+      "webhookId": "1ed86f49-ce45-4cb2-b96c-38c48cd1d7f1",
+      "credentials": {
+        "microsoftTeamsOAuth2Api": {
+          "id": "aCoVuwLpygun9hxH",
+          "name": "Microsoft Teams account - cantera"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "toRecipients": "=jc@canteradigital.mx,janette.cano@canteradigital.mx,francisco@canteradigital.mx,edgar@canteradigital.mx,nathanael.solorio@canteradigital.mx",
+        "subject": "Nuevo Lead",
+        "bodyContent": "=Tenemos nuevo Lead\n\nCliente:  {{ $('When Executed by Another Workflow').item.json.nombre_cliente }}\nEmpresa: {{ $('When Executed by Another Workflow').item.json.nombre_empresa }}\n\nRequerimiento: {{ $('When Executed by Another Workflow').item.json.requerimiento_cliente }}\nPropuesta: {{ $('When Executed by Another Workflow').item.json.resumen_propuesta }}\n{{ \"\\n\" }}\nPerfilado de cliente: {{ $('When Executed by Another Workflow').item.json.perfilado_de_cliente }}\n{{ \"\\n\" }}\nEstimación Inicial: {{ $json.output.detail_of_estimation }}\n{{ \"\\n\" }}\nValor del Lead: {{ $json.output.value }} USD\nProbablidad de Cierre:  {{ $json.output.propability*100 }} %\n{{ \"\\n\" }}\n\nPodemos contactar al cliente por los siguientes medios\nWhatsapp: {{ $('When Executed by Another Workflow').item.json.telefono_cliente }}\nCorreo: {{ $('When Executed by Another Workflow').item.json.email_cliente }}\n\n",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.microsoftOutlook",
+      "typeVersion": 2,
+      "position": [
+        860,
+        -20
+      ],
+      "id": "062c793f-44e6-429b-a06f-589ee27e5835",
+      "name": "Microsoft Outlook",
+      "webhookId": "28d91d12-609f-420c-b3d1-690bd1f2c164",
+      "credentials": {
+        "microsoftOutlookOAuth2Api": {
+          "id": "1e9fbzjIiV9wNv2j",
+          "name": "Microsoft Outlook account - azure@canteradigital.mx"
+        }
+      }
     }
   ],
   "connections": {
-    "When Executed by Another Workflow": {
-      "main": [
-        [
-          {
-            "node": "OpenAI",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "OpenAI": {
       "main": [
         [
@@ -160,6 +223,39 @@
           }
         ]
       ]
+    },
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "OpenAI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Information Extractor": {
+      "main": [
+        [
+          {
+            "node": "Microsoft Outlook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Microsoft Outlook": {
+      "main": [
+        [
+          {
+            "node": "Microsoft Teams2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -169,8 +265,22 @@
   "meta": {
     "templateCredsSetupCompleted": true
   },
-  "pinData": {},
-  "versionId": "3ffddb23-7d8d-4daa-8e3e-3995d498ce2b",
+  "pinData": {
+    "When Executed by Another Workflow": [
+      {
+        "json": {
+          "nombre_cliente": "Ricardo Correa",
+          "email_cliente": "ricardo@perritosfelices.com",
+          "telefono_cliente": "5214434901193",
+          "nombre_empresa": "Perritos Felices",
+          "requerimiento_cliente": "Desarrollo de un marketplace para alimentos para perros con registro de productos, catálogo y ventas mediante Stripe. Presupuesto: $20,000, sin diseño inicial.",
+          "perfilado_de_cliente": "Industria: E-commerce | 5 empleados | Proyecto activo con decisión en 2 semanas.",
+          "resumen_propuesta": "Desarrollo completo del marketplace en un periodo de 2 semanas, contacto inmediato para detalles y ajustes."
+        }
+      }
+    ]
+  },
+  "versionId": "fd8ee283-28f9-43d2-b7ac-f19595e4bd5c",
   "triggerCount": 0,
   "shared": [
     {
