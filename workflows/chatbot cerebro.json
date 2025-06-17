@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-06-09T16:34:20.833Z",
-  "updatedAt": "2025-06-17T20:51:09.000Z",
+  "updatedAt": "2025-06-17T21:57:57.000Z",
   "id": "k6PApGOzpLKtnZ0q",
   "name": "chatbot cerebro",
   "active": false,
@@ -4950,12 +4950,11 @@
           "conditions": [
             {
               "id": "7310bed5-65a5-47c2-ba3c-3b42ef60d73c",
-              "leftValue": "",
-              "rightValue": "",
+              "leftValue": "={{ $('WhatsApp Trigger').item.json.messages[0].type }}",
+              "rightValue": "text",
               "operator": {
                 "type": "string",
-                "operation": "equals",
-                "name": "filter.operator.equals"
+                "operation": "notEquals"
               }
             }
           ],
@@ -4970,7 +4969,122 @@
         4820
       ],
       "id": "2063d3ba-5773-460b-b97f-707c40403dcc",
-      "name": "If3"
+      "name": "presiono el menu de inicio"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "00a12027-ed43-4713-88be-e9f58fa8b407",
+              "leftValue": "={{ $('WhatsApp Trigger').item.json.messages[0].text.body.toInt() }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            },
+            {
+              "id": "25c6854b-aa51-490c-9a3a-f8061702be99",
+              "leftValue": "={{ $('WhatsApp Trigger').item.json.messages[0].text.body.toInt() }}",
+              "rightValue": 6,
+              "operator": {
+                "type": "number",
+                "operation": "lt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        -2000,
+        4760
+      ],
+      "id": "192fb6f4-9464-445c-a7be-4615043e29c5",
+      "name": "revisa si el numero que mando es un dia de la semana entre 1 y 5"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "00a12027-ed43-4713-88be-e9f58fa8b407",
+              "leftValue": "={{ $('WhatsApp Trigger').item.json.messages[0].text.body.toInt() }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "lt"
+              }
+            },
+            {
+              "id": "25c6854b-aa51-490c-9a3a-f8061702be99",
+              "leftValue": "={{ $('WhatsApp Trigger').item.json.messages[0].text.body.toInt() }}",
+              "rightValue": 6,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        -2020,
+        4980
+      ],
+      "id": "5fb80d66-353a-4e63-809b-73920f26180e",
+      "name": "revisa si el numero que mando no es un dia de la semana entre 1 y"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v22.0/626839230509107/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer EAAHeSgKjRYEBOZBi0kUskW4k3L6ZCO8EhqsGNjWLyfJ3U1NZCbDyQp9WSoX0Ouh8hh44Jue9ev7TMlygkZAMoqMReAJL9cNZBQZCZB508HXZB84HCNFZBIRlSa9cXFs0dXmR31XoO0iUZBOTx4VSnErdZC9OD1sQDKprPHpbK7NBrTZAWy8D6pvNi9w0w4c9pt2KE3stGwZDZD"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"El número debe ser un día de la semana entre 1 y 5.\"\n  }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -1760,
+        4980
+      ],
+      "id": "8620d80b-af05-40ad-b1cf-cb068d50360a",
+      "name": "no se envio un numero de dia valido"
     }
   ],
   "connections": {
@@ -5085,7 +5199,7 @@
         ],
         [
           {
-            "node": "If3",
+            "node": "presiono el menu de inicio",
             "type": "main",
             "index": 0
           }
@@ -6692,6 +6806,40 @@
           }
         ]
       ]
+    },
+    "presiono el menu de inicio": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "revisa si el numero que mando es un dia de la semana entre 1 y 5",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "revisa si el numero que mando no es un dia de la semana entre 1 y",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "revisa si el numero que mando no es un dia de la semana entre 1 y": {
+      "main": [
+        [
+          {
+            "node": "no se envio un numero de dia valido",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -6702,7 +6850,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "c58c6ccf-8559-44b9-888f-cb5ca0bfeaf6",
+  "versionId": "e1c35d64-e0e3-4306-8e2e-bea791a32f7f",
   "triggerCount": 1,
   "shared": [
     {
