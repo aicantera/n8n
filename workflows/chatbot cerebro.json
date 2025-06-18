@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-06-09T16:34:20.833Z",
-  "updatedAt": "2025-06-18T02:01:04.000Z",
+  "updatedAt": "2025-06-18T02:44:35.000Z",
   "id": "k6PApGOzpLKtnZ0q",
   "name": "chatbot cerebro",
   "active": true,
@@ -4899,7 +4899,7 @@
     },
     {
       "parameters": {
-        "jsCode": "\n\nreturn [\n  {\n    json: {\n      now: new Date().toLocaleString('es-MX', {\n  timeZone: 'America/Mexico_City'\n})\n    }\n  }\n];\n"
+        "jsCode": "function uuidv4() {\n  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {\n    const r = Math.random() * 16 | 0;\n    const v = c === 'x' ? r : (r & 0x3 | 0x8);\n    return v.toString(16);\n  });\n}\n\nreturn [\n  {\n    json: {\n      uuid:uuidv4(),\n      now: new Date().toLocaleString('es-MX', {\n  timeZone: 'America/Mexico_City'\n})\n    }\n  }\n];\n"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -5235,7 +5235,7 @@
     },
     {
       "parameters": {
-        "jsCode": "\n\nreturn [\n  {\n    json: {\n      now: new Date().toLocaleString('es-MX', {\n  timeZone: 'America/Mexico_City'\n})\n    }\n  }\n];\n"
+        "jsCode": "function uuidv4() {\n  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {\n    const r = Math.random() * 16 | 0;\n    const v = c === 'x' ? r : (r & 0x3 | 0x8);\n    return v.toString(16);\n  });\n}\n\nreturn [\n  {\n    json: {\n      uuid:uuidv4(),\n      now: new Date().toLocaleString('es-MX', {\n  timeZone: 'America/Mexico_City'\n})\n    }\n  }\n];\n"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -5500,6 +5500,350 @@
       ],
       "id": "84d642dd-194f-4b80-b3e4-c99c27e9c3c9",
       "name": "motivo de justificacion"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "collection": "user_state",
+        "updateKey": "userStateId",
+        "fields": "justify_state, date, justify_selected_date",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1.1,
+      "position": [
+        -220,
+        4900
+      ],
+      "id": "0d372aad-9ad1-40ea-b684-594a47a51854",
+      "name": "MongoDB25",
+      "credentials": {
+        "mongoDb": {
+          "id": "xZYe0R0CRtWFmyv7",
+          "name": "MongoDB account cerebro core"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "\n\nreturn [\n  {\n    json: {\n      now: new Date().toLocaleString('es-MX', {\n  timeZone: 'America/Mexico_City'\n})\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -700,
+        4900
+      ],
+      "id": "8b90a3fa-e215-4993-9889-46de9427d455",
+      "name": "Code24",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f07b7183-62a0-4d4a-90a7-ad93e7acd220",
+              "name": "date",
+              "value": "={{ $json.now }}",
+              "type": "string"
+            },
+            {
+              "id": "e5baae19-924c-4972-8a51-b4d87aad8bad",
+              "name": "justify_state",
+              "value": "motivo_justificación",
+              "type": "string"
+            },
+            {
+              "id": "127efdf6-7193-4011-a155-fa072b66e80f",
+              "name": "userStateId",
+              "value": "={{ $('MongoDB').item.json.userStateId }}",
+              "type": "string"
+            },
+            {
+              "id": "253438c6-7083-4f22-a627-70c0a65142bf",
+              "name": "justify_selected_date",
+              "value": "=",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -480,
+        4900
+      ],
+      "id": "82e5f02a-7783-47f7-9547-9e0dc7de5bb3",
+      "name": "vaciamos los datos de fecha de justificacion"
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "collection": "log_chatbot",
+        "fields": "user_id, information,log_id, date",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1.1,
+      "position": [
+        1900,
+        4160
+      ],
+      "id": "4540d0f7-8ec8-440d-b831-960cadf055f9",
+      "name": "MongoDB26",
+      "credentials": {
+        "mongoDb": {
+          "id": "xZYe0R0CRtWFmyv7",
+          "name": "MongoDB account cerebro core"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "670342e3-e699-4e30-af27-04db7bace385",
+              "name": "user_id",
+              "value": "={{ $('Main Logic Placeholder').item.json.students_data[0].user_id }}",
+              "type": "string"
+            },
+            {
+              "id": "391a519a-9e7c-4dee-8dfc-f8b38f7f8fc7",
+              "name": "information",
+              "value": "se presenta pantalla inicio justificante (fechas)",
+              "type": "string"
+            },
+            {
+              "id": "915b68b5-3dee-44ad-82f6-65a3d9a74629",
+              "name": "log_id",
+              "value": "={{ $('Code21').item.json.uuid }}",
+              "type": "string"
+            },
+            {
+              "id": "f07b7183-62a0-4d4a-90a7-ad93e7acd220",
+              "name": "date",
+              "value": "={{ $('Code21').item.json.now }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1680,
+        4160
+      ],
+      "id": "a401ae56-f574-4be0-89fb-95d0a22506af",
+      "name": "mostramos el set para la pantalla de fechas para justificacion"
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "collection": "log_chatbot",
+        "fields": "user_id, information,log_id, date",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1.1,
+      "position": [
+        780,
+        4700
+      ],
+      "id": "faf552c8-f4bc-45fa-b81c-bc46954dfeb3",
+      "name": "MongoDB27",
+      "credentials": {
+        "mongoDb": {
+          "id": "xZYe0R0CRtWFmyv7",
+          "name": "MongoDB account cerebro core"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "670342e3-e699-4e30-af27-04db7bace385",
+              "name": "user_id",
+              "value": "={{ $('Main Logic Placeholder').item.json.students_data[0].user_id }}",
+              "type": "string"
+            },
+            {
+              "id": "391a519a-9e7c-4dee-8dfc-f8b38f7f8fc7",
+              "name": "information",
+              "value": "se presenta pantalla motivo justificación",
+              "type": "string"
+            },
+            {
+              "id": "915b68b5-3dee-44ad-82f6-65a3d9a74629",
+              "name": "log_id",
+              "value": "={{ $('Code23').item.json.uuid }}",
+              "type": "string"
+            },
+            {
+              "id": "f07b7183-62a0-4d4a-90a7-ad93e7acd220",
+              "name": "date",
+              "value": "={{ $('Code23').item.json.now }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        560,
+        4700
+      ],
+      "id": "c65eb3b1-2bc2-4a5a-8154-50b04a0be850",
+      "name": "mostramos el set para la pantalla de fechas para justificacion1"
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "collection": "log_chatbot",
+        "fields": "user_id, information,log_id, date",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1.1,
+      "position": [
+        240,
+        4900
+      ],
+      "id": "1a251c3b-94f2-464f-b485-bdf1ccf1a5a9",
+      "name": "MongoDB28",
+      "credentials": {
+        "mongoDb": {
+          "id": "xZYe0R0CRtWFmyv7",
+          "name": "MongoDB account cerebro core"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "670342e3-e699-4e30-af27-04db7bace385",
+              "name": "user_id",
+              "value": "={{ $('Main Logic Placeholder').item.json.students_data[0].user_id }}",
+              "type": "string"
+            },
+            {
+              "id": "391a519a-9e7c-4dee-8dfc-f8b38f7f8fc7",
+              "name": "information",
+              "value": "se presenta pantalla justificante correcto",
+              "type": "string"
+            },
+            {
+              "id": "915b68b5-3dee-44ad-82f6-65a3d9a74629",
+              "name": "log_id",
+              "value": "={{ $json.uuid }}",
+              "type": "string"
+            },
+            {
+              "id": "f07b7183-62a0-4d4a-90a7-ad93e7acd220",
+              "name": "date",
+              "value": "={{ $json.now }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        20,
+        4900
+      ],
+      "id": "88c21535-52dd-49d4-b082-94fedd1ed76a",
+      "name": "mostramos el set para la pantalla de fechas para justificacion2"
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "collection": "log_chatbot",
+        "fields": "user_id, information,log_id, date",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1.1,
+      "position": [
+        -220,
+        5200
+      ],
+      "id": "4b2c7fd8-6c71-4c42-bf95-f4d4483cb935",
+      "name": "MongoDB29",
+      "credentials": {
+        "mongoDb": {
+          "id": "xZYe0R0CRtWFmyv7",
+          "name": "MongoDB account cerebro core"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "670342e3-e699-4e30-af27-04db7bace385",
+              "name": "user_id",
+              "value": "={{ $('Main Logic Placeholder').item.json.students_data[0].user_id }}",
+              "type": "string"
+            },
+            {
+              "id": "391a519a-9e7c-4dee-8dfc-f8b38f7f8fc7",
+              "name": "information",
+              "value": "se presenta pantalla din datos de asistencia para fecha solicitada",
+              "type": "string"
+            },
+            {
+              "id": "915b68b5-3dee-44ad-82f6-65a3d9a74629",
+              "name": "log_id",
+              "value": "={{ $json.uuid }}",
+              "type": "string"
+            },
+            {
+              "id": "f07b7183-62a0-4d4a-90a7-ad93e7acd220",
+              "name": "date",
+              "value": "={{ $json.now }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -440,
+        5200
+      ],
+      "id": "6f151398-2144-4445-a923-def71704b133",
+      "name": "mostramos el set para la pantalla de fechas para justificacion3"
+    },
+    {
+      "parameters": {
+        "jsCode": "function uuidv4() {\n  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {\n    const r = Math.random() * 16 | 0;\n    const v = c === 'x' ? r : (r & 0x3 | 0x8);\n    return v.toString(16);\n  });\n}\n\nreturn [\n  {\n    json: {\n      uuid:uuidv4(),\n      now: new Date().toLocaleString('es-MX', {\n  timeZone: 'America/Mexico_City'\n})\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -640,
+        5200
+      ],
+      "id": "6bc32807-9c61-4047-b7bc-4e1ad5e5a206",
+      "name": "Code25",
+      "alwaysOutputData": true
     }
   ],
   "connections": {
@@ -7375,6 +7719,11 @@
             "node": "HTTP Request6",
             "type": "main",
             "index": 0
+          },
+          {
+            "node": "Code25",
+            "type": "main",
+            "index": 0
           }
         ]
       ]
@@ -7400,6 +7749,127 @@
         [
           {
             "node": "registramos la justificación",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code24": {
+      "main": [
+        [
+          {
+            "node": "vaciamos los datos de fecha de justificacion",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "mensaje justificante completado": {
+      "main": [
+        [
+          {
+            "node": "Code24",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "vaciamos los datos de fecha de justificacion": {
+      "main": [
+        [
+          {
+            "node": "MongoDB25",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MongoDB23": {
+      "main": [
+        [
+          {
+            "node": "mostramos el set para la pantalla de fechas para justificacion",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "mostramos el set para la pantalla de fechas para justificacion": {
+      "main": [
+        [
+          {
+            "node": "MongoDB26",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "mostramos el set para la pantalla de fechas para justificacion1": {
+      "main": [
+        [
+          {
+            "node": "MongoDB27",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "comienzo con el porceso de justificante1": {
+      "main": [
+        [
+          {
+            "node": "mostramos el set para la pantalla de fechas para justificacion1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "mostramos el set para la pantalla de fechas para justificacion2": {
+      "main": [
+        [
+          {
+            "node": "MongoDB28",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MongoDB25": {
+      "main": [
+        [
+          {
+            "node": "mostramos el set para la pantalla de fechas para justificacion2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "mostramos el set para la pantalla de fechas para justificacion3": {
+      "main": [
+        [
+          {
+            "node": "MongoDB29",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code25": {
+      "main": [
+        [
+          {
+            "node": "mostramos el set para la pantalla de fechas para justificacion3",
             "type": "main",
             "index": 0
           }
@@ -7434,10 +7904,10 @@
           "messages": [
             {
               "from": "5214434901193",
-              "id": "wamid.HBgNNTIxNDQzNDkwMTE5MxUCABIYFjNFQjA2NkNFN0I3M0YxNTc2RjlCODQA",
-              "timestamp": "1750211709",
+              "id": "wamid.HBgNNTIxNDQzNDkwMTE5MxUCABIYFjNFQjA1MTNDOTVFQzAzMEFDMEI1MTkA",
+              "timestamp": "1750214380",
               "text": {
-                "body": "1"
+                "body": "4"
               },
               "type": "text"
             }
@@ -7447,7 +7917,7 @@
       }
     ]
   },
-  "versionId": "c9db2629-5b3b-49d4-bce1-4687e723849a",
+  "versionId": "a2ac5b33-40a4-4598-80a3-f8613fdfca24",
   "triggerCount": 1,
   "shared": [
     {
