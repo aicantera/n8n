@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-06-16T22:51:19.635Z",
-  "updatedAt": "2025-06-17T23:56:41.000Z",
+  "updatedAt": "2025-06-18T00:22:46.000Z",
   "id": "aJIJlLEOEfejYf81",
   "name": "agente cantera ingreso",
   "active": false,
@@ -16,7 +16,7 @@
         "messages": {
           "values": [
             {
-              "content": "=datos de la empresa: {{ $json.nombre_empresa }}\npropuesta :  {{ $('When Executed by Another Workflow').item.json.resumen_propuesta }}\nperfil empresa:  {{ $json.perfilado_de_cliente }}\n"
+              "content": "=datos de la empresa: {{ $('When Executed by Another Workflow').item.json.nombre_empresa }}\npropuesta :  {{ $('When Executed by Another Workflow').item.json.resumen_propuesta }}\nperfil empresa:  {{ $('When Executed by Another Workflow').item.json.perfilado_de_cliente }}\n"
             },
             {
               "content": "eres un cotizador de sistemas y proyectos de it y te voy a dar datos de una empresa, un requieriiento de IT  y  el perfil de laempresa, y tu debes estimar tres variables: probabilidad de cierre, esta probabilidad es de 0a 1 donde 1 es muy posible de que se cierre y que sea factible, esto debes asociarlo a la complejidad del proyecto  asume  que somos una mepresa de software cn ai agentes y mas de 200 desarrolladores de sofgtare. sel segundo valor, un estimado deen dolares del total de este proyecto de sarrollo mas infrastructura mas consultoria, debes estimas esos 2 valores . el usuari ote dara datos de y debes responder con estos datos. ademas sustenta tu analiss buscando  datos de esta empersa en internaet y estima el tamño y proyectos de esta empresa. crea una propuesta de componente tecnologias y personal requerido para ejecutar este proyecto de forma preliminar , diecndo que hace falta reunirse con el cliente para acotar esto. genera ranbirn la fecha y hora de inicio y fecha y hora de fin 30 minutos  depues de iniciado la reunion. el formato de la fecha debe ser yyyy-mm-dd hh:mm:ss",
@@ -137,8 +137,8 @@
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "typeVersion": 1.1,
       "position": [
-        -280,
-        0
+        -340,
+        -20
       ],
       "id": "b278c57c-2c6e-4b14-bc3c-572d5eee2b67",
       "name": "When Executed by Another Workflow"
@@ -289,12 +289,12 @@
         "title": "={{ $('When Executed by Another Workflow').item.json.perfilado_de_cliente }}",
         "org_id": "={{ $('Pipedrive Contacto Actual').item.json.organization.id }}",
         "additionalFields": {
-          "currency": "USD",
+          "currency": "MXN",
           "customProperties": {
             "property": [
               {
                 "name": "0a0d024986d387fc0a9e7ff27a66596d15695b3d",
-                "value": "=El requerimiento es:{{ $('Text Classifier').item.json.resumen_propuesta }}  La estimación y análisis: {{ $('Information Extractor').item.json.output.detail_of_estimation }}  El Perfil de la empresa :{{ $('Text Classifier').item.json.perfilado_Lead }}\n\nvalor del proyecto:{{ $('Text Classifier').item.json.value }}   "
+                "value": "=El requerimiento es:{{ $('When Executed by Another Workflow').item.json.resumen_propuesta }}  La estimación y análisis: {{ $('Information Extractor').item.json.output.detail_of_estimation }}  El Perfil de la empresa :{{ $('Information Extractor').item.json.output.detail_of_estimation }}\n\nvalor del proyecto:{{ $('Information Extractor').item.json.output.value }}"
               }
             ]
           },
@@ -327,7 +327,7 @@
           "email": [
             "={{ $('When Executed by Another Workflow').item.json.email_cliente }}"
           ],
-          "label": "={{ $('When Executed by Another Workflow').item.json.type_lead }}",
+          "label": "templado",
           "marketing_status": "subscribed",
           "org_id": "={{ $json.id }}",
           "phone": [
@@ -356,12 +356,12 @@
         "title": "={{ $('When Executed by Another Workflow').item.json.perfilado_de_cliente }}",
         "org_id": "={{ $('Pipedrive crea organizacion').item.json.id }}",
         "additionalFields": {
-          "currency": "USD",
+          "currency": "MXN",
           "customProperties": {
             "property": [
               {
                 "name": "0a0d024986d387fc0a9e7ff27a66596d15695b3d",
-                "value": "=El requerimiento es:{{ $('Text Classifier').item.json.resumen_propuesta }} \nLa estimación y análisis: {{ $('Information Extractor').item.json.output.detail_of_estimation }}\n\nEl Perfil de la empresa : {{ $('When Executed by Another Workflow').item.json.perfilado_de_cliente }}\n\nMonto estimado en USD: {{ $('Information Extractor').item.json.output.value }}"
+                "value": "=El requerimiento es:{{ $('When Executed by Another Workflow').item.json.resumen_propuesta }}\nLa estimación y análisis: {{ $('Information Extractor').item.json.output.detail_of_estimation }}\n\nEl Perfil de la empresa : {{ $('Information Extractor').item.json.output.detail_of_estimation }}\n\nMonto estimado en USD: {{ $('Information Extractor').item.json.output.value }}"
               }
             ]
           },
@@ -422,8 +422,8 @@
       "type": "n8n-nodes-base.microsoftOutlook",
       "typeVersion": 2,
       "position": [
-        2960,
-        -60
+        2740,
+        -160
       ],
       "id": "e3975536-c1cb-469f-bf84-216ab3f7ec4c",
       "name": "Microsoft Outlook3",
@@ -433,7 +433,8 @@
           "id": "1e9fbzjIiV9wNv2j",
           "name": "Microsoft Outlook account - azure@canteradigital.mx"
         }
-      }
+      },
+      "disabled": true
     },
     {
       "parameters": {
@@ -457,8 +458,8 @@
       "type": "n8n-nodes-base.microsoftOutlook",
       "typeVersion": 2,
       "position": [
-        2680,
-        -300
+        2740,
+        -460
       ],
       "id": "3fc210da-9a5e-4477-91aa-29b6b2150ce0",
       "name": "Microsoft Outlook2",
@@ -470,6 +471,30 @@
         }
       },
       "disabled": true
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "phoneNumberId": "676686782186843",
+        "recipientPhoneNumber": "={{ $('When Executed by Another Workflow').item.json.telefono_cliente }}",
+        "textBody": "=Perfecto! ya tenemos todos tus datos, nuestros asesores se pondran en contacto contigo.{{\"\\n\"}} Estamos seguros que te sorprenderá nuestra propuesta.",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1,
+      "position": [
+        3040,
+        -320
+      ],
+      "id": "411105a1-4aec-4251-968f-f584a74244a4",
+      "name": "WhatsApp Business Cloud",
+      "webhookId": "74eb5a43-3c5e-4e6d-8de7-12d915a33100",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "wss31GmBkFCO7IfF",
+          "name": "WhatsApp account - AGENTE CANTERA"
+        }
+      }
     }
   ],
   "connections": {
@@ -616,6 +641,28 @@
           }
         ]
       ]
+    },
+    "Microsoft Outlook2": {
+      "main": [
+        [
+          {
+            "node": "WhatsApp Business Cloud",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Microsoft Outlook3": {
+      "main": [
+        [
+          {
+            "node": "WhatsApp Business Cloud",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -633,15 +680,15 @@
           "email_cliente": "luis@lapiedrota.com",
           "telefono_cliente": "5215511887816",
           "nombre_empresa": "La Piedrota",
-          "requerimiento_cliente": "Desarrollo de una aplicación para vender piedras duras en bolsa dirigida a mamás, con un presupuesto de 15,000 pesos y lanzamiento en 6 meses. El cliente espera tomar una decisión en 2 meses.",
-          "perfilado_de_cliente": "2 empleados, ubicado en Monterrey, no tiene poder de decisión pero está involucrado en el proceso, urgencia en 2 meses.",
-          "resumen_propuesta": "Desarrollo integral de la solución de aplicación móvil para venta de piedras duras.",
-          "type_lead": "templado"
+          "requerimiento_cliente": "Desarrollo de aplicación móvil para vender piedras duras en bolsa.",
+          "perfilado_de_cliente": "2 empleados, ubicado en Monterrey, no tiene poder de decisión.",
+          "resumen_propuesta": "Desarrollo completo de la aplicación en 6 meses, con un presupuesto de 15,000 pesos.",
+          "type_lead": "Warm lead"
         }
       }
     ]
   },
-  "versionId": "a519a1a7-c82a-42e9-b7e1-b74bbbf1bb56",
+  "versionId": "eda9b633-54a2-42ac-bb66-97bff4d52555",
   "triggerCount": 0,
   "shared": [
     {
