@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-05-15T15:53:39.991Z",
-  "updatedAt": "2025-06-17T23:00:20.000Z",
+  "updatedAt": "2025-06-17T23:24:10.000Z",
   "id": "4QLd4KoP0XGafQmk",
   "name": "Agente cotizados glasbil dev",
   "active": false,
@@ -23,7 +23,7 @@
         "promptType": "define",
         "text": "={{ $json.query }}",
         "options": {
-          "systemMessage": "=Eres un agente dedicado a realizzar peticiones para hacer cotizaciónes de glasbil\ntu trabajo es hacer peticiones y poder retornar iinformacion\ntambien tienes la capacidad de realizzar cotizaciones todo esto usando herramientas de http request\n\ntienes acceso a estas herramientas\n\n'available_years': con esta herramienta puedes consultar los años disponibles en el sistema de glasbil\n\n'available_brands(year)': con esta herramienta puedes consultar las marcas disponibles dependiendo del año que te den, para esta es importante que te den el año para consultar\n\n'available_models(year,brand)': con esta herramienta seras capaz de realizar busquedas de los modelos de un auto usando el año y la marca es importante que estos dos datos te lleguen para poder cumplir con esta funcion\n\n'available_type_car(year,brand,model)': con esta herramienta podras obtener los tipos de carros dependiendo del año, marca y modelo es importante que estos datos te sean dados para que puedas cumplir tu funcion\n\n'available_type_glasses(year,brand,model,type_car)': con esta herramienta puedes obtener los tipos de cristales disponibles dependiendo del año, marca, modelo, tipo de carro, es importante que los datos los tengas todos para que puedas cumplir con tu funcion\n\n'search_products(year,brand,model,type_car,type_glass)': con esta herramienta puedes obtener los productos disponibles dependiendo del año, marca, modelo, tipo de carro, y tipo de cristal. Es importante que los datos los tengas todos para que puedas cumplir con tu funcion\n"
+          "systemMessage": "=Eres un agente dedicado a realizzar peticiones para hacer cotizaciónes de glasbil\ntu trabajo es hacer peticiones y poder retornar iinformacion\ntambien tienes la capacidad de realizzar cotizaciones todo esto usando herramientas de http request\n\ntienes acceso a estas herramientas\n\n'available_years': con esta herramienta puedes consultar los años disponibles en el sistema de glasbil\n\n'available_brands(year)': con esta herramienta puedes consultar las marcas disponibles dependiendo del año que te den, para esta es importante que te den el año para consultar\n\n'available_models(year,brand)': con esta herramienta seras capaz de realizar busquedas de los modelos de un auto usando el año y la marca es importante que estos dos datos te lleguen para poder cumplir con esta funcion\n\n'available_type_car(year,brand,model)': con esta herramienta podras obtener los tipos de carros dependiendo del año, marca y modelo es importante que estos datos te sean dados para que puedas cumplir tu funcion\n\n'available_type_glasses(year,brand,model,type_car)': con esta herramienta puedes obtener los tipos de cristales disponibles dependiendo del año, marca, modelo, tipo de carro, es importante que los datos los tengas todos para que puedas cumplir con tu funcion\n\n'search_products(year,brand,model,car_type,type_glass)': con esta herramienta puedes obtener los productos disponibles dependiendo del año, marca, modelo, tipo de carro, y tipo de cristal. Es importante que los datos los tengas todos para que puedas cumplir con tu funcion\n"
         }
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
@@ -136,7 +136,7 @@
     {
       "parameters": {
         "toolDescription": "Esta herramienta te ayudara a obtener los productos disponibles para un vehiculo de acuerdo a year, brand, model, car_type, type_glass ",
-        "url": "https://butik-vidrio.canteradigital.mx/api/finder/searchProducts/filtered?year={{$fromAI('year')}}&brand={{$fromAI('brand')}}&model={{$fromAI('model')}}&type_car={{ $fromAI('type_car') }}&type_glass={{$fromAI('type_glass')}}",
+        "url": "=https://butik-vidrio.canteradigital.mx/api/finder/searchProducts/filtered?year={{$fromAI('year')}}&brand={{$fromAI('brand')}}&model={{$fromAI('model')}}&car_type={{$fromAI('car_type')}}&type_glass={{$fromAI('type_glass')}}&antenna=false&encapsulated=false&hud=false&heated=false&attachment=false",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequestTool",
@@ -246,16 +246,8 @@
   "meta": {
     "templateCredsSetupCompleted": true
   },
-  "pinData": {
-    "When Executed by Another Workflow": [
-      {
-        "json": {
-          "query": "solicita los productos disponibles para el año 2020, la marca Nissan, el modelo Sentra, el tipo de automóvil 4 Door Sedan y el tipo de cristal windshield"
-        }
-      }
-    ]
-  },
-  "versionId": "6149c6cd-21ab-4aa6-ad20-6d57e8d87596",
+  "pinData": {},
+  "versionId": "976eb449-49b2-4485-9411-0b44146804d3",
   "triggerCount": 0,
   "shared": [
     {
