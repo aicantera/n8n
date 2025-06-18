@@ -1,19 +1,209 @@
 {
   "createdAt": "2025-06-18T02:56:28.104Z",
-  "updatedAt": "2025-06-18T02:56:28.104Z",
+  "updatedAt": "2025-06-18T03:28:02.000Z",
   "id": "lvEmEanFbdDwGFYm",
   "name": "revisar datos de usuarios chatbot",
   "active": false,
-  "nodes": [],
-  "connections": {},
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## Flujo de actualización de estado de usuarios\n\nEste flujo revisa cada 20 minutos la colección `user_state` de MongoDB. Para cada usuario que lleve más de 30 minutos inactivo y cuyo estado no sea `menuInicial`, actualiza `state` a `menuInicial` y actualiza `date` al momento actual en formato `D/M/YYYY, h:mm:ss a`.",
+        "height": 220,
+        "width": 450
+      },
+      "name": "Workflow Overview",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        350,
+        -50
+      ],
+      "id": "generated-0ef5d026-2a21-4e1e-b68a-8be96e6f75ca"
+    },
+    {
+      "parameters": {
+        "triggerTimes": {
+          "values": [],
+          "item": [
+            {
+              "mode": "everyX",
+              "value": 10,
+              "unit": "minutes"
+            }
+          ]
+        }
+      },
+      "name": "Inactivity Cron",
+      "type": "n8n-nodes-base.cron",
+      "position": [
+        200,
+        100
+      ],
+      "id": "generated-085e3d00-b45f-4c65-bd74-1ab762a804df"
+    },
+    {
+      "parameters": {
+        "collection": "user_state",
+        "options": {
+          "skip": 0,
+          "sort": "{}",
+          "projection": "{}"
+        }
+      },
+      "name": "Find Users",
+      "type": "n8n-nodes-base.mongoDb",
+      "position": [
+        450,
+        100
+      ],
+      "id": "generated-6990bf4a-814e-471e-9b05-e6e9e354d68a",
+      "credentials": {
+        "mongoDb": {
+          "id": "xZYe0R0CRtWFmyv7",
+          "name": "MongoDB account cerebro core"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "const results = [];\nconst nowUtcMs = Date.now();\nconst offsetMs = 6 * 60 * 60 * 1000; // UTC-6\nfor (const item of items) {\n  const data = item.json;\n  // Sólo conversaciones de tipo chatbot\n  if (data.type_conversation !== 'chatbot') continue;\n  const dateStr = data.date;\n  if (!dateStr) continue;\n  // Parsear fecha y hora\n  const [datePart, timePart] = dateStr.split(', ');\n  const [day, month, year] = datePart.split('/').map(Number);\n  let [timeStr, meridiem] = timePart.split(' ');\n  meridiem = meridiem.toLowerCase();\n  let [hour, minute, second] = timeStr.split(':').map(Number);\n  if (meridiem === 'p.m.' && hour < 12) hour += 12;\n  if (meridiem === 'a.m.' && hour === 12) hour = 0;\n  // Última interacción en UTC (sumar 6 horas a hora local)\n  const lastUtcMs = Date.UTC(year, month - 1, day, hour + 6, minute, second);\n  const diffMin = (nowUtcMs - lastUtcMs) / 60000;\n  // Si inactivo >30min y no está en menuInicial\n  if (diffMin > 30 && data.state !== 'menuInicial') {\n    // Calcular fecha actual en UTC-6\n    const nowMexicoUtcMs = nowUtcMs - offsetMs;\n    const d = new Date(nowMexicoUtcMs);\n    const D = d.getUTCDate();\n    const M = d.getUTCMonth() + 1;\n    const Y = d.getUTCFullYear();\n    let h2 = d.getUTCHours();\n    const m2 = String(d.getUTCMinutes()).padStart(2, '0');\n    const s2 = String(d.getUTCSeconds()).padStart(2, '0');\n    const ampm2 = h2 >= 12 ? 'p.m.' : 'a.m.';\n    h2 = h2 % 12 === 0 ? 12 : h2 % 12;\n    const newDateStr = `${D}/${M}/${Y}, ${h2}:${m2}:${s2} ${ampm2}`;\n    results.push({\n      json: {\n        _id: data._id,\n        state: 'menuInicial',\n        date: newDateStr,\n        phoneNumber: data.phoneNumber\n      }\n    });\n  }\n}\nreturn results;"
+      },
+      "name": "Filter Inactive Users",
+      "type": "n8n-nodes-base.function",
+      "position": [
+        700,
+        100
+      ],
+      "id": "generated-78f83fdd-8173-463a-b671-d65399eb1007",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "collection": "user_state",
+        "updateKey": "_id",
+        "fields": "state,date",
+        "options": {
+          "dateFields": "",
+          "useDotNotation": false
+        }
+      },
+      "name": "Update User State",
+      "type": "n8n-nodes-base.mongoDb",
+      "position": [
+        950,
+        100
+      ],
+      "id": "generated-22fe5eb3-bbba-46e9-b6c5-c330ea1f7576",
+      "credentials": {
+        "mongoDb": {
+          "id": "xZYe0R0CRtWFmyv7",
+          "name": "MongoDB account cerebro core"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/<PHONE_NUMBER_ID>/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "values": []
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": {
+          "messaging_product": "whatsapp",
+          "to": "={{$json[\"phoneNumber\"]}}",
+          "type": "text",
+          "text": {
+            "body": "Tu conversación se reiniciará por inactividad."
+          }
+        },
+        "options": {
+          "batching": {
+            "values": {}
+          },
+          "allowUnauthorizedCerts": false,
+          "lowercaseHeaders": true,
+          "redirect": {
+            "values": {}
+          },
+          "response": {
+            "values": {}
+          },
+          "pagination": {
+            "values": {}
+          },
+          "proxy": "",
+          "timeout": 10000
+        }
+      },
+      "name": "Send WhatsApp Notification",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        1180,
+        100
+      ],
+      "id": "generated-ce148389-b3f6-4cca-8c25-e37c1ad74be1",
+      "disabled": true
+    }
+  ],
+  "connections": {
+    "Inactivity Cron": {
+      "main": [
+        [
+          {
+            "node": "Find Users",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Find Users": {
+      "main": [
+        [
+          {
+            "node": "Filter Inactive Users",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter Inactive Users": {
+      "main": [
+        [
+          {
+            "node": "Update User State",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update User State": {
+      "main": [
+        [
+          {
+            "node": "Send WhatsApp Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
   "settings": {
     "executionOrder": "v1"
   },
   "staticData": null,
-  "meta": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
   "pinData": {},
-  "versionId": "74854914-95e5-4083-beb3-0edf53f00a8e",
-  "triggerCount": 0,
+  "versionId": "a7921488-8055-42ca-bd5b-93513d13738c",
+  "triggerCount": 1,
   "shared": [
     {
       "createdAt": "2025-06-18T02:56:28.108Z",
@@ -37,7 +227,7 @@
             "projectId": "BsYMJSPwury6TiTn",
             "user": {
               "createdAt": "2025-06-06T20:24:22.275Z",
-              "updatedAt": "2025-06-10T22:30:29.363Z",
+              "updatedAt": "2025-06-18T03:10:17.057Z",
               "id": "f9268337-0922-4cba-994c-bf6b40332731",
               "email": "adolfocuentas123@gmail.com",
               "firstName": "adolfo",
@@ -54,7 +244,11 @@
               "settings": {
                 "firstSuccessfulWorkflowId": "k6PApGOzpLKtnZ0q",
                 "userActivated": true,
-                "userActivatedAt": 1749594629341
+                "userActivatedAt": 1749594629341,
+                "npsSurvey": {
+                  "responded": true,
+                  "lastShownAt": 1750216203399
+                }
               },
               "role": "global:member",
               "disabled": false,
