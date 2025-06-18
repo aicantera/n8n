@@ -1,36 +1,76 @@
 {
-  "createdAt": "2025-06-05T22:42:29.104Z",
-  "updatedAt": "2025-06-05T22:44:39.000Z",
-  "id": "7D7GstwYBDe0kElT",
+  "createdAt": "2025-06-05T22:42:02.900Z",
+  "updatedAt": "2025-06-05T23:31:52.000Z",
+  "id": "Yv8RnVcErAnAC5J4",
   "name": "My workflow 3",
   "active": true,
   "nodes": [
     {
       "parameters": {
+        "public": true,
         "options": {}
       },
       "type": "@n8n/n8n-nodes-langchain.chatTrigger",
       "typeVersion": 1.1,
       "position": [
-        -680,
-        0
+        -380,
+        -100
       ],
-      "id": "397c4bab-b910-4b56-99b1-45d3acaa2240",
+      "id": "e4a477e8-8635-4b8d-9869-dccbd3beeab3",
       "name": "When chat message received",
-      "webhookId": "4975501d-4889-4fdb-b7aa-a7ae56ed23e1"
+      "webhookId": "b2ca9127-6fdf-4b5d-9ed3-fe633dfe2e8b"
     },
     {
       "parameters": {
-        "options": {}
+        "options": {
+          "systemMessage": "=---\n## Instrucciones para el Agente de IA\n\n### Persona y Tono de Voz\nActúa como si fueras de la **Ciudad de México**. Adopta un tono y jerga **\"chilanga\"** en todas tus respuestas. Sé amigable, directo y apasionado por el fútbol.\n\n### Tema Principal y Enfoque\nTu única especialidad es el **fútbol mexicano**. Toda tu conversación debe centrarse exclusivamente en la **Liga MX**, la **Selección Nacional de México**, jugadores mexicanos, historia del fútbol en México, etc.\n\n### Reglas y Limitaciones\nNo hables de política ni de religión. Es fundamental que evites cualquier tema relacionado con esos dos asuntos.\n\n**Manejo de preguntas no permitidas:** Si un usuario intenta hablar o preguntar sobre política o religión, debes responder de manera neutral y directa, indicando que no tienes información sobre esos temas.\n\n**Ejemplos de respuesta:**\n\n* **Para política:** \"La neta, de eso sí no sé nada, lo mío es el puro fut.\"\n* **Para religión:** \"De religión no sabría qué decirte, carnal. Mejor hablemos de a quién le vas.\"\n* **General:** \"No tengo información sobre esos temas, mi chamba es hablar de fútbol.\"\n---"
+        }
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 1.9,
       "position": [
-        -460,
-        0
+        -120,
+        -100
       ],
-      "id": "7d017124-4e3a-4919-bdb2-b02ce7167290",
+      "id": "bf25fc03-6e6b-4dc2-8659-885949f55ab3",
       "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -180,
+        100
+      ],
+      "id": "62cd83cf-0fd8-45ec-9304-f04a68b96c33",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "JGOzqGKoKUjZGBsN",
+          "name": "OpenAi account Ricardo Correa"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "contextWindowLength": 20
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -40,
+        120
+      ],
+      "id": "c5a3739c-dacc-497f-8846-ac6ca42afd40",
+      "name": "Simple Memory"
     }
   ],
   "connections": {
@@ -44,60 +84,92 @@
           }
         ]
       ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
     "executionOrder": "v1"
   },
   "staticData": null,
-  "meta": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
   "pinData": {},
-  "versionId": "d496ec8c-cee0-466c-962b-1c7527ef1906",
+  "versionId": "72f7c952-3bc3-49dd-8eaa-33c82c946fd6",
   "triggerCount": 1,
   "shared": [
     {
-      "createdAt": "2025-06-05T22:42:29.107Z",
-      "updatedAt": "2025-06-05T22:42:29.107Z",
+      "createdAt": "2025-06-05T22:42:02.903Z",
+      "updatedAt": "2025-06-05T22:42:02.903Z",
       "role": "workflow:owner",
-      "workflowId": "7D7GstwYBDe0kElT",
-      "projectId": "exJU1Tfv5U9vUaih",
+      "workflowId": "Yv8RnVcErAnAC5J4",
+      "projectId": "BZ9Ta5yhe4RhzY78",
       "project": {
-        "createdAt": "2025-06-05T22:37:27.754Z",
-        "updatedAt": "2025-06-05T22:38:40.680Z",
-        "id": "exJU1Tfv5U9vUaih",
-        "name": "Selene Ibarra <sibarra@canteradigital.mx>",
+        "createdAt": "2025-05-13T15:56:28.209Z",
+        "updatedAt": "2025-05-13T16:18:54.372Z",
+        "id": "BZ9Ta5yhe4RhzY78",
+        "name": "CANTERA ADMIN <canteradigital7@gmail.com>",
         "type": "personal",
         "icon": null,
         "projectRelations": [
           {
-            "createdAt": "2025-06-05T22:37:27.756Z",
-            "updatedAt": "2025-06-05T22:37:27.756Z",
+            "createdAt": "2025-05-13T15:56:28.209Z",
+            "updatedAt": "2025-05-13T15:56:28.209Z",
             "role": "project:personalOwner",
-            "userId": "fbe6f710-575d-4c16-9e26-de34e99e4369",
-            "projectId": "exJU1Tfv5U9vUaih",
+            "userId": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
+            "projectId": "BZ9Ta5yhe4RhzY78",
             "user": {
-              "createdAt": "2025-06-05T22:37:27.752Z",
-              "updatedAt": "2025-06-05T22:44:39.967Z",
-              "id": "fbe6f710-575d-4c16-9e26-de34e99e4369",
-              "email": "sibarra@canteradigital.mx",
-              "firstName": "Selene",
-              "lastName": "Ibarra",
+              "createdAt": "2025-05-13T15:56:27.880Z",
+              "updatedAt": "2025-05-27T17:38:25.272Z",
+              "id": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
+              "email": "canteradigital7@gmail.com",
+              "firstName": "CANTERA",
+              "lastName": "ADMIN",
               "personalizationAnswers": {
                 "version": "v4",
-                "personalization_survey_submitted_at": "2025-06-05T22:39:22.926Z",
+                "personalization_survey_submitted_at": "2025-05-13T16:19:25.161Z",
                 "personalization_survey_n8n_version": "1.92.2",
-                "automationGoalDevops": [],
+                "companySize": "<20",
                 "companyType": "saas",
-                "role": "it"
+                "role": "customer-support",
+                "reportedSource": "event"
               },
               "settings": {
-                "easyAIWorkflowOnboarded": true
+                "userActivated": true,
+                "firstSuccessfulWorkflowId": "PTbESRzX3rguwQN8",
+                "userActivatedAt": 1747154580970,
+                "easyAIWorkflowOnboarded": true,
+                "npsSurvey": {
+                  "responded": true,
+                  "lastShownAt": 1748367494893
+                }
               },
-              "role": "global:member",
+              "role": "global:owner",
               "disabled": false,
               "mfaEnabled": false,
               "isPending": false,
-              "isOwner": false
+              "isOwner": true
             }
           }
         ]
