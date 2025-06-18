@@ -1,9 +1,9 @@
 {
   "createdAt": "2025-06-18T02:56:28.104Z",
-  "updatedAt": "2025-06-18T03:28:02.000Z",
+  "updatedAt": "2025-06-18T16:30:55.000Z",
   "id": "lvEmEanFbdDwGFYm",
   "name": "revisar datos de usuarios chatbot",
-  "active": false,
+  "active": true,
   "nodes": [
     {
       "parameters": {
@@ -65,7 +65,7 @@
     },
     {
       "parameters": {
-        "functionCode": "const results = [];\nconst nowUtcMs = Date.now();\nconst offsetMs = 6 * 60 * 60 * 1000; // UTC-6\nfor (const item of items) {\n  const data = item.json;\n  // Sólo conversaciones de tipo chatbot\n  if (data.type_conversation !== 'chatbot') continue;\n  const dateStr = data.date;\n  if (!dateStr) continue;\n  // Parsear fecha y hora\n  const [datePart, timePart] = dateStr.split(', ');\n  const [day, month, year] = datePart.split('/').map(Number);\n  let [timeStr, meridiem] = timePart.split(' ');\n  meridiem = meridiem.toLowerCase();\n  let [hour, minute, second] = timeStr.split(':').map(Number);\n  if (meridiem === 'p.m.' && hour < 12) hour += 12;\n  if (meridiem === 'a.m.' && hour === 12) hour = 0;\n  // Última interacción en UTC (sumar 6 horas a hora local)\n  const lastUtcMs = Date.UTC(year, month - 1, day, hour + 6, minute, second);\n  const diffMin = (nowUtcMs - lastUtcMs) / 60000;\n  // Si inactivo >30min y no está en menuInicial\n  if (diffMin > 30 && data.state !== 'menuInicial') {\n    // Calcular fecha actual en UTC-6\n    const nowMexicoUtcMs = nowUtcMs - offsetMs;\n    const d = new Date(nowMexicoUtcMs);\n    const D = d.getUTCDate();\n    const M = d.getUTCMonth() + 1;\n    const Y = d.getUTCFullYear();\n    let h2 = d.getUTCHours();\n    const m2 = String(d.getUTCMinutes()).padStart(2, '0');\n    const s2 = String(d.getUTCSeconds()).padStart(2, '0');\n    const ampm2 = h2 >= 12 ? 'p.m.' : 'a.m.';\n    h2 = h2 % 12 === 0 ? 12 : h2 % 12;\n    const newDateStr = `${D}/${M}/${Y}, ${h2}:${m2}:${s2} ${ampm2}`;\n    results.push({\n      json: {\n        _id: data._id,\n        state: 'menuInicial',\n        date: newDateStr,\n        phoneNumber: data.phoneNumber\n      }\n    });\n  }\n}\nreturn results;"
+        "functionCode": "const results = [];\nconst nowUtcMs = Date.now();\nconst offsetMs = 6 * 60 * 60 * 1000; // UTC-6\nfor (const item of items) {\n  const data = item.json;\n  // Sólo conversaciones de tipo chatbot\n  if (data.type_conversation !== 'chatbot') continue;\n  const dateStr = data.date;\n  if (!dateStr) continue;\n  // Parsear fecha y hora\n  const [datePart, timePart] = dateStr.split(', ');\n  const [day, month, year] = datePart.split('/').map(Number);\n  let [timeStr, meridiem] = timePart.split(' ');\n  meridiem = meridiem.toLowerCase();\n  let [hour, minute, second] = timeStr.split(':').map(Number);\n  if (meridiem === 'p.m.' && hour < 12) hour += 12;\n  if (meridiem === 'a.m.' && hour === 12) hour = 0;\n  // Última interacción en UTC (sumar 6 horas a hora local)\n  const lastUtcMs = Date.UTC(year, month - 1, day, hour + 6, minute, second);\n  const diffMin = (nowUtcMs - lastUtcMs) / 60000;\n  // Si inactivo >30min y no está en menuInicial\n  if (diffMin > 10 && data.state !== 'menuInicial') {\n    // Calcular fecha actual en UTC-6\n    const nowMexicoUtcMs = nowUtcMs - offsetMs;\n    const d = new Date(nowMexicoUtcMs);\n    const D = d.getUTCDate();\n    const M = d.getUTCMonth() + 1;\n    const Y = d.getUTCFullYear();\n    let h2 = d.getUTCHours();\n    const m2 = String(d.getUTCMinutes()).padStart(2, '0');\n    const s2 = String(d.getUTCSeconds()).padStart(2, '0');\n    const ampm2 = h2 >= 12 ? 'p.m.' : 'a.m.';\n    h2 = h2 % 12 === 0 ? 12 : h2 % 12;\n    const newDateStr = `${D}/${M}/${Y}, ${h2}:${m2}:${s2} ${ampm2}`;\n    results.push({\n      json: {\n        _id: data._id,\n        state: 'menuInicial',\n        date: newDateStr,\n        phoneNumber: data.phoneNumber\n      }\n    });\n  }\n}\nreturn results;"
       },
       "name": "Filter Inactive Users",
       "type": "n8n-nodes-base.function",
@@ -90,8 +90,8 @@
       "name": "Update User State",
       "type": "n8n-nodes-base.mongoDb",
       "position": [
-        950,
-        100
+        920,
+        -60
       ],
       "id": "generated-22fe5eb3-bbba-46e9-b6c5-c330ea1f7576",
       "credentials": {
@@ -104,48 +104,46 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "https://graph.facebook.com/<PHONE_NUMBER_ID>/messages",
+        "url": "https://graph.facebook.com/v22.0/626839230509107/messages",
         "sendHeaders": true,
         "headerParameters": {
-          "values": []
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer EAAHeSgKjRYEBOZBi0kUskW4k3L6ZCO8EhqsGNjWLyfJ3U1NZCbDyQp9WSoX0Ouh8hh44Jue9ev7TMlygkZAMoqMReAJL9cNZBQZCZB508HXZB84HCNFZBIRlSa9cXFs0dXmR31XoO0iUZBOTx4VSnErdZC9OD1sQDKprPHpbK7NBrTZAWy8D6pvNi9w0w4c9pt2KE3stGwZDZD"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": {
-          "messaging_product": "whatsapp",
-          "to": "={{$json[\"phoneNumber\"]}}",
-          "type": "text",
-          "text": {
-            "body": "Tu conversación se reiniciará por inactividad."
-          }
-        },
-        "options": {
-          "batching": {
-            "values": {}
-          },
-          "allowUnauthorizedCerts": false,
-          "lowercaseHeaders": true,
-          "redirect": {
-            "values": {}
-          },
-          "response": {
-            "values": {}
-          },
-          "pagination": {
-            "values": {}
-          },
-          "proxy": "",
-          "timeout": 10000
-        }
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{$json.phoneNumber}}\",\n  \"text\": {\n    \"body\": \"Lo siento, por falta de una respuesta hemos cerrado la comunicación, si necesitas otra cosa no dudes en mandar mensaje\"\n  }\n}",
+        "options": {}
       },
-      "name": "Send WhatsApp Notification",
       "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
       "position": [
-        1180,
-        100
+        1240,
+        160
       ],
-      "id": "generated-ce148389-b3f6-4cca-8c25-e37c1ad74be1",
-      "disabled": true
+      "id": "73edc7cb-ae6e-42e7-8583-bf01ee467b2e",
+      "name": "mensaje de confirmación de cierre de sesion"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        940,
+        140
+      ],
+      "id": "ca7c7d56-a25f-44f8-ad3c-cafe9b22e62c",
+      "name": "Loop Over Items"
     }
   ],
   "connections": {
@@ -178,15 +176,37 @@
             "node": "Update User State",
             "type": "main",
             "index": 0
+          },
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
           }
         ]
       ]
     },
     "Update User State": {
       "main": [
+        []
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [],
         [
           {
-            "node": "Send WhatsApp Notification",
+            "node": "mensaje de confirmación de cierre de sesion",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "mensaje de confirmación de cierre de sesion": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
             "type": "main",
             "index": 0
           }
@@ -202,7 +222,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "a7921488-8055-42ca-bd5b-93513d13738c",
+  "versionId": "fd748f38-1e2f-4e85-b023-be21d959dea8",
   "triggerCount": 1,
   "shared": [
     {
