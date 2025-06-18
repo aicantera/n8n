@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-06-16T22:51:19.635Z",
-  "updatedAt": "2025-06-17T00:15:18.000Z",
+  "updatedAt": "2025-06-17T23:56:41.000Z",
   "id": "aJIJlLEOEfejYf81",
   "name": "agente cantera ingreso",
   "active": false,
@@ -127,6 +127,9 @@
             },
             {
               "name": "resumen_propuesta"
+            },
+            {
+              "name": "type_lead"
             }
           ]
         }
@@ -199,6 +202,274 @@
           "name": "Microsoft Outlook account - azure@canteradigital.mx"
         }
       }
+    },
+    {
+      "parameters": {
+        "resource": "person",
+        "operation": "search",
+        "term": "={{ $('When Executed by Another Workflow').item.json.email_cliente }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.pipedrive",
+      "typeVersion": 1,
+      "position": [
+        680,
+        -240
+      ],
+      "id": "d36095f3-b15b-4bbd-a68d-5fed9c338b9d",
+      "name": "Pipedrive Contacto Actual",
+      "alwaysOutputData": true,
+      "credentials": {
+        "pipedriveApi": {
+          "id": "u1nSP6JjPxyjAtcV",
+          "name": "Pipedrive account - CANTERA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "f1094c47-4084-4268-9026-ccc0335eeccf",
+              "operator": {
+                "type": "dateTime",
+                "operation": "notExists",
+                "singleValue": true
+              },
+              "leftValue": "={{ $json.id }}",
+              "rightValue": ""
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "54c506b8-59d3-4368-b06b-14cd13058939",
+      "name": "es un nuevo Lead?",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        1000,
+        -240
+      ],
+      "executeOnce": true,
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "resource": "organization",
+        "name": "={{ $('When Executed by Another Workflow').item.json.nombre_empresa }}",
+        "additionalFields": {
+          "label": 2
+        }
+      },
+      "type": "n8n-nodes-base.pipedrive",
+      "typeVersion": 1,
+      "position": [
+        1420,
+        -460
+      ],
+      "id": "1949f7b9-61a7-4a45-8b14-f54917082305",
+      "name": "Pipedrive crea organizacion",
+      "credentials": {
+        "pipedriveApi": {
+          "id": "u1nSP6JjPxyjAtcV",
+          "name": "Pipedrive account - CANTERA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "title": "={{ $('When Executed by Another Workflow').item.json.perfilado_de_cliente }}",
+        "org_id": "={{ $('Pipedrive Contacto Actual').item.json.organization.id }}",
+        "additionalFields": {
+          "currency": "USD",
+          "customProperties": {
+            "property": [
+              {
+                "name": "0a0d024986d387fc0a9e7ff27a66596d15695b3d",
+                "value": "=El requerimiento es:{{ $('Text Classifier').item.json.resumen_propuesta }}  La estimación y análisis: {{ $('Information Extractor').item.json.output.detail_of_estimation }}  El Perfil de la empresa :{{ $('Text Classifier').item.json.perfilado_Lead }}\n\nvalor del proyecto:{{ $('Text Classifier').item.json.value }}   "
+              }
+            ]
+          },
+          "probability": "={{ $('Information Extractor').item.json.output.propability }}",
+          "stage_id": 1,
+          "status": "open",
+          "value": "={{ $('Information Extractor').item.json.output.value }}"
+        }
+      },
+      "type": "n8n-nodes-base.pipedrive",
+      "typeVersion": 1,
+      "position": [
+        1440,
+        -180
+      ],
+      "id": "0c24094d-4638-48db-a343-faab8e00047b",
+      "name": "Pipedrive registra deal",
+      "credentials": {
+        "pipedriveApi": {
+          "id": "u1nSP6JjPxyjAtcV",
+          "name": "Pipedrive account - CANTERA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "person",
+        "name": "={{ $('When Executed by Another Workflow').item.json.nombre_cliente }}",
+        "additionalFields": {
+          "email": [
+            "={{ $('When Executed by Another Workflow').item.json.email_cliente }}"
+          ],
+          "label": "={{ $('When Executed by Another Workflow').item.json.type_lead }}",
+          "marketing_status": "subscribed",
+          "org_id": "={{ $json.id }}",
+          "phone": [
+            "={{ $('When Executed by Another Workflow').item.json.telefono_cliente }}"
+          ],
+          "visible_to": "3"
+        }
+      },
+      "type": "n8n-nodes-base.pipedrive",
+      "typeVersion": 1,
+      "position": [
+        1760,
+        -460
+      ],
+      "id": "2c569be3-9156-436c-b9ea-652c7aad80ac",
+      "name": "Pipedrive Crea Persona",
+      "credentials": {
+        "pipedriveApi": {
+          "id": "u1nSP6JjPxyjAtcV",
+          "name": "Pipedrive account - CANTERA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "title": "={{ $('When Executed by Another Workflow').item.json.perfilado_de_cliente }}",
+        "org_id": "={{ $('Pipedrive crea organizacion').item.json.id }}",
+        "additionalFields": {
+          "currency": "USD",
+          "customProperties": {
+            "property": [
+              {
+                "name": "0a0d024986d387fc0a9e7ff27a66596d15695b3d",
+                "value": "=El requerimiento es:{{ $('Text Classifier').item.json.resumen_propuesta }} \nLa estimación y análisis: {{ $('Information Extractor').item.json.output.detail_of_estimation }}\n\nEl Perfil de la empresa : {{ $('When Executed by Another Workflow').item.json.perfilado_de_cliente }}\n\nMonto estimado en USD: {{ $('Information Extractor').item.json.output.value }}"
+              }
+            ]
+          },
+          "person_id": "={{ $json.id }}",
+          "probability": "={{ $('Information Extractor').item.json.output.propability }}",
+          "stage_id": 1,
+          "status": "open",
+          "value": "={{ $('Information Extractor').item.json.output.value }}"
+        }
+      },
+      "type": "n8n-nodes-base.pipedrive",
+      "typeVersion": 1,
+      "position": [
+        2120,
+        -460
+      ],
+      "id": "fdcd1399-26d2-4263-84f2-b7c31bc3677a",
+      "name": "Pipedrive Crea Deal 2",
+      "credentials": {
+        "pipedriveApi": {
+          "id": "u1nSP6JjPxyjAtcV",
+          "name": "Pipedrive account - CANTERA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "lead",
+        "title": "={{ $('When Executed by Another Workflow').item.json.perfilado_de_cliente }}",
+        "organization_id": "={{ $('Pipedrive crea organizacion').item.json.id }}",
+        "additionalFields": {
+          "label_ids": [],
+          "person_id": "={{ $('Pipedrive Crea Persona').item.json.id }}"
+        }
+      },
+      "type": "n8n-nodes-base.pipedrive",
+      "typeVersion": 1,
+      "position": [
+        2400,
+        -460
+      ],
+      "id": "b68bcf0e-2c7d-4482-bc31-4be47451b5d4",
+      "name": "Pipedrive Crea LEAD",
+      "credentials": {
+        "pipedriveApi": {
+          "id": "u1nSP6JjPxyjAtcV",
+          "name": "Pipedrive account - CANTERA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "toRecipients": "={{ $('When Executed by Another Workflow').item.json.email_cliente }}",
+        "subject": "=En Cantera Tenemos una Porpuesta Increíble {{ $('When Executed by Another Workflow').item.json.email_cliente }}",
+        "bodyContent": "=Hola {{ $('When Executed by Another Workflow').item.json.nombre_cliente }} !  Tenemos una propuesta lista para presentarte  una solución de  {{ $('When Executed by Another Workflow').item.json.resumen_propuesta }} para {{ $('When Executed by Another Workflow').item.json.nombre_empresa }}. En los próximos minutos te contactáremos para confirmar la fecha y hora de nuestra junta.\n\nJanneth Cano\nDirectora Comercial\nCantera Digital\n\n \n ",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.microsoftOutlook",
+      "typeVersion": 2,
+      "position": [
+        2960,
+        -60
+      ],
+      "id": "e3975536-c1cb-469f-bf84-216ab3f7ec4c",
+      "name": "Microsoft Outlook3",
+      "webhookId": "e9c53466-e64d-4a1a-b342-7e3992ecf8d7",
+      "credentials": {
+        "microsoftOutlookOAuth2Api": {
+          "id": "1e9fbzjIiV9wNv2j",
+          "name": "Microsoft Outlook account - azure@canteradigital.mx"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "event",
+        "operation": "create",
+        "calendarId": {
+          "__rl": true,
+          "value": "AAMkADJjODdjYzYzLWI0NDMtNDJlMi1hZmY0LTY3ODFlNzBjNWZmMQBGAAAAAACsqiPeTLOgRbuS-1o5VhlcBwDn26jhz37URKH2Im_c8w6PAAAAAAEGAADn26jhz37URKH2Im_c8w6PAAAAAO4wAAA=",
+          "mode": "list",
+          "cachedResultName": "Calendar"
+        },
+        "subject": "={{ $('Text Classifier').item.json.resumen_propuesta }}",
+        "startDateTime": "={{ $('Information Extractor').item.json.output.fecha_inicio_meet }}",
+        "endDateTime": "={{ $('Information Extractor').item.json.output.fecha_fin_meet }}",
+        "additionalFields": {
+          "body": "={{ $('Text Classifier').item.json.resumen_propuesta }} para {{ $('Text Classifier').item.json.nombre_empresa }}",
+          "bodyPreview": "={{ $('Text Classifier').item.json.resumen_propuesta }} para {{ $('Text Classifier').item.json.nombre_empresa }}",
+          "type": "singleInstance"
+        }
+      },
+      "type": "n8n-nodes-base.microsoftOutlook",
+      "typeVersion": 2,
+      "position": [
+        2680,
+        -300
+      ],
+      "id": "3fc210da-9a5e-4477-91aa-29b6b2150ce0",
+      "name": "Microsoft Outlook2",
+      "webhookId": "29b0ddf6-d6e6-4c2c-a78b-e2ebd520beb8",
+      "credentials": {
+        "microsoftOutlookOAuth2Api": {
+          "id": "1e9fbzjIiV9wNv2j",
+          "name": "Microsoft Outlook account - azure@canteradigital.mx"
+        }
+      },
+      "disabled": true
     }
   ],
   "connections": {
@@ -242,6 +513,11 @@
             "node": "Microsoft Outlook",
             "type": "main",
             "index": 0
+          },
+          {
+            "node": "Pipedrive Contacto Actual",
+            "type": "main",
+            "index": 0
           }
         ]
       ]
@@ -251,6 +527,90 @@
         [
           {
             "node": "Microsoft Teams2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "es un nuevo Lead?": {
+      "main": [
+        [
+          {
+            "node": "Pipedrive crea organizacion",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Pipedrive registra deal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pipedrive crea organizacion": {
+      "main": [
+        [
+          {
+            "node": "Pipedrive Crea Persona",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pipedrive registra deal": {
+      "main": [
+        [
+          {
+            "node": "Microsoft Outlook3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pipedrive Crea Persona": {
+      "main": [
+        [
+          {
+            "node": "Pipedrive Crea Deal 2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pipedrive Crea Deal 2": {
+      "main": [
+        [
+          {
+            "node": "Pipedrive Crea LEAD",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pipedrive Crea LEAD": {
+      "main": [
+        [
+          {
+            "node": "Microsoft Outlook2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pipedrive Contacto Actual": {
+      "main": [
+        [
+          {
+            "node": "es un nuevo Lead?",
             "type": "main",
             "index": 0
           }
@@ -269,18 +629,19 @@
     "When Executed by Another Workflow": [
       {
         "json": {
-          "nombre_cliente": "Ricardo Correa",
-          "email_cliente": "ricardo@perritosfelices.com",
-          "telefono_cliente": "5214434901193",
-          "nombre_empresa": "Perritos Felices",
-          "requerimiento_cliente": "Desarrollo de un marketplace para alimentos para perros con registro de productos, catálogo y ventas mediante Stripe. Presupuesto: $20,000, sin diseño inicial.",
-          "perfilado_de_cliente": "Industria: E-commerce | 5 empleados | Proyecto activo con decisión en 2 semanas.",
-          "resumen_propuesta": "Desarrollo completo del marketplace en un periodo de 2 semanas, contacto inmediato para detalles y ajustes."
+          "nombre_cliente": "Luis Fragoso",
+          "email_cliente": "luis@lapiedrota.com",
+          "telefono_cliente": "5215511887816",
+          "nombre_empresa": "La Piedrota",
+          "requerimiento_cliente": "Desarrollo de una aplicación para vender piedras duras en bolsa dirigida a mamás, con un presupuesto de 15,000 pesos y lanzamiento en 6 meses. El cliente espera tomar una decisión en 2 meses.",
+          "perfilado_de_cliente": "2 empleados, ubicado en Monterrey, no tiene poder de decisión pero está involucrado en el proceso, urgencia en 2 meses.",
+          "resumen_propuesta": "Desarrollo integral de la solución de aplicación móvil para venta de piedras duras.",
+          "type_lead": "templado"
         }
       }
     ]
   },
-  "versionId": "48098620-b6fd-4fc6-961f-cf03fa99bc2a",
+  "versionId": "a519a1a7-c82a-42e9-b7e1-b74bbbf1bb56",
   "triggerCount": 0,
   "shared": [
     {
