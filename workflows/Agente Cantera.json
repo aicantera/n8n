@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-05-13T16:37:03.099Z",
-  "updatedAt": "2025-06-18T21:57:12.000Z",
+  "updatedAt": "2025-06-19T18:00:53.000Z",
   "id": "PTbESRzX3rguwQN8",
   "name": "Agente Cantera",
   "active": true,
@@ -15,8 +15,8 @@
       "type": "n8n-nodes-base.whatsAppTrigger",
       "typeVersion": 1,
       "position": [
-        -740,
-        -80
+        -500,
+        0
       ],
       "id": "df54a231-f313-4651-960a-c9d46e90dba1",
       "name": "WhatsApp Trigger",
@@ -142,11 +142,12 @@
       "type": "n8n-nodes-base.filter",
       "typeVersion": 2.2,
       "position": [
-        -480,
-        -80
+        -620,
+        300
       ],
       "id": "063c0bff-50e8-455b-bd12-f54cda253677",
-      "name": "Filter"
+      "name": "Filter",
+      "disabled": true
     },
     {
       "parameters": {
@@ -320,109 +321,6 @@
       "name": "Webhook",
       "webhookId": "9915762b-2556-4cce-b291-25d620376af9",
       "disabled": true
-    },
-    {
-      "parameters": {
-        "conditions": {
-          "options": {
-            "caseSensitive": true,
-            "leftValue": "",
-            "typeValidation": "strict",
-            "version": 2
-          },
-          "conditions": [
-            {
-              "id": "3de5f7b2-a515-4155-b40a-1fe52ee52c87",
-              "leftValue": "={{ $json.messages[0].text.body }}",
-              "rightValue": "",
-              "operator": {
-                "type": "string",
-                "operation": "exists",
-                "singleValue": true
-              }
-            },
-            {
-              "id": "5c855192-c031-4ce2-adda-971e3140f30d",
-              "leftValue": "={{ $json.metadata.display_phone_number }}",
-              "rightValue": "5214431865276",
-              "operator": {
-                "type": "string",
-                "operation": "equals",
-                "name": "filter.operator.equals"
-              }
-            }
-          ],
-          "combinator": "and"
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.filter",
-      "typeVersion": 2.2,
-      "position": [
-        -600,
-        160
-      ],
-      "id": "b5066954-3c30-452c-87aa-599007954572",
-      "name": "Filter1"
-    },
-    {
-      "parameters": {
-        "workflowId": {
-          "__rl": true,
-          "value": "FqLw4NrJ9drMRdhD",
-          "mode": "list",
-          "cachedResultName": "Agente Glassy prod"
-        },
-        "workflowInputs": {
-          "mappingMode": "defineBelow",
-          "value": {
-            "telefono": "={{ $json.messages[0].from }}",
-            "mensaje": "={{ $json.messages[0].text.body }}",
-            "name": "={{ $json.contacts[0].profile.name }}"
-          },
-          "matchingColumns": [],
-          "schema": [
-            {
-              "id": "telefono",
-              "displayName": "telefono",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "canBeUsedToMatch": true,
-              "type": "string"
-            },
-            {
-              "id": "name",
-              "displayName": "name",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "canBeUsedToMatch": true,
-              "type": "string"
-            },
-            {
-              "id": "mensaje",
-              "displayName": "mensaje",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "canBeUsedToMatch": true,
-              "type": "string"
-            }
-          ],
-          "attemptToConvertTypes": false,
-          "convertFieldsToString": true
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.executeWorkflow",
-      "typeVersion": 1.2,
-      "position": [
-        -380,
-        160
-      ],
-      "id": "8b05a568-c960-47e2-9af6-bd9092e1ac7c",
-      "name": "Execute Workflow"
     },
     {
       "parameters": {},
@@ -743,7 +641,7 @@
       "typeVersion": 4.2,
       "position": [
         -240,
-        -80
+        0
       ],
       "id": "2fbffac3-2d86-4f66-a64d-0785e8e80d7f",
       "name": "typing indicator1"
@@ -883,7 +781,7 @@
       "main": [
         [
           {
-            "node": "Filter",
+            "node": "typing indicator1",
             "type": "main",
             "index": 0
           }
@@ -925,13 +823,7 @@
     },
     "Filter": {
       "main": [
-        [
-          {
-            "node": "typing indicator1",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "Call n8n Workflow Tool": {
@@ -959,17 +851,6 @@
     "Webhook": {
       "main": [
         []
-      ]
-    },
-    "Filter1": {
-      "main": [
-        [
-          {
-            "node": "Execute Workflow",
-            "type": "main",
-            "index": 0
-          }
-        ]
       ]
     },
     "When clicking ‘Test workflow’": {
@@ -1067,40 +948,9 @@
           "executionMode": "production"
         }
       }
-    ],
-    "WhatsApp Trigger": [
-      {
-        "json": {
-          "messaging_product": "whatsapp",
-          "metadata": {
-            "display_phone_number": "5214431866819",
-            "phone_number_id": "676686782186843"
-          },
-          "contacts": [
-            {
-              "profile": {
-                "name": "Luis Fragoso"
-              },
-              "wa_id": "5215511887816"
-            }
-          ],
-          "messages": [
-            {
-              "from": "5215511887816",
-              "id": "wamid.HBgNNTIxNTUxMTg4NzgxNhUCABIYFDNGNDE4NjEwQUM5MUUzMjFEMzcxAA==",
-              "timestamp": "1750203918",
-              "text": {
-                "body": "soy Luis Fragoso y mi correo es Luis@lapiedrota.com"
-              },
-              "type": "text"
-            }
-          ],
-          "field": "messages"
-        }
-      }
     ]
   },
-  "versionId": "e7ba652b-3705-4a43-a635-79ab6c12b225",
+  "versionId": "243ae0ae-1ba5-4ef1-b26a-a7ef2be1f4f7",
   "triggerCount": 1,
   "shared": [
     {
