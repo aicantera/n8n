@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-05-13T16:37:03.099Z",
-  "updatedAt": "2025-06-19T18:00:53.000Z",
+  "updatedAt": "2025-06-19T18:08:11.000Z",
   "id": "PTbESRzX3rguwQN8",
   "name": "Agente Cantera",
   "active": true,
@@ -15,7 +15,7 @@
       "type": "n8n-nodes-base.whatsAppTrigger",
       "typeVersion": 1,
       "position": [
-        -500,
+        -720,
         0
       ],
       "id": "df54a231-f313-4651-960a-c9d46e90dba1",
@@ -124,15 +124,6 @@
                 "operation": "exists",
                 "singleValue": true
               }
-            },
-            {
-              "id": "5c855192-c031-4ce2-adda-971e3140f30d",
-              "leftValue": "={{ $json.metadata.display_phone_number }}",
-              "rightValue": "5214431866819",
-              "operator": {
-                "type": "string",
-                "operation": "equals"
-              }
             }
           ],
           "combinator": "and"
@@ -142,12 +133,11 @@
       "type": "n8n-nodes-base.filter",
       "typeVersion": 2.2,
       "position": [
-        -620,
-        300
+        -500,
+        0
       ],
       "id": "063c0bff-50e8-455b-bd12-f54cda253677",
-      "name": "Filter",
-      "disabled": true
+      "name": "Filter"
     },
     {
       "parameters": {
@@ -781,7 +771,7 @@
       "main": [
         [
           {
-            "node": "typing indicator1",
+            "node": "Filter",
             "type": "main",
             "index": 0
           }
@@ -823,7 +813,13 @@
     },
     "Filter": {
       "main": [
-        []
+        [
+          {
+            "node": "typing indicator1",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     },
     "Call n8n Workflow Tool": {
@@ -948,9 +944,40 @@
           "executionMode": "production"
         }
       }
+    ],
+    "WhatsApp Trigger": [
+      {
+        "json": {
+          "messaging_product": "whatsapp",
+          "metadata": {
+            "display_phone_number": "5214431866819",
+            "phone_number_id": "676686782186843"
+          },
+          "statuses": [
+            {
+              "id": "wamid.HBgNNTIxNDQzNDkwMTE5MxUCABEYEjA4OUE3QUI0OUI0QUU4OTU3MQA=",
+              "status": "delivered",
+              "timestamp": "1750356323",
+              "recipient_id": "5214434901193",
+              "conversation": {
+                "id": "2d8765e15024fde00d0a18eef74a607b",
+                "origin": {
+                  "type": "service"
+                }
+              },
+              "pricing": {
+                "billable": true,
+                "pricing_model": "CBP",
+                "category": "service"
+              }
+            }
+          ],
+          "field": "messages"
+        }
+      }
     ]
   },
-  "versionId": "243ae0ae-1ba5-4ef1-b26a-a7ef2be1f4f7",
+  "versionId": "dce6acdd-7113-40b1-b007-4d8c1e9d95f3",
   "triggerCount": 1,
   "shared": [
     {
