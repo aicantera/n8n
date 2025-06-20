@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-05-15T15:53:39.991Z",
-  "updatedAt": "2025-06-20T20:58:30.000Z",
+  "updatedAt": "2025-06-20T21:36:32.000Z",
   "id": "4QLd4KoP0XGafQmk",
   "name": "Agente cotizados glasbil dev",
   "active": false,
@@ -23,7 +23,7 @@
         "promptType": "define",
         "text": "={{ $json.query }}",
         "options": {
-          "systemMessage": "=Eres un agente dedicado a realizzar peticiones para hacer cotizaciónes de glasbil\ntu trabajo es hacer peticiones y poder retornar iinformacion\ntambien tienes la capacidad de realizzar cotizaciones todo esto usando herramientas de http request\n\ntienes acceso a estas herramientas\n\n'available_years': con esta herramienta puedes consultar los años disponibles en el sistema de glasbil\n\n'available_brands(year)': con esta herramienta puedes consultar las marcas disponibles dependiendo del año que te den, para esta es importante que te den el año para consultar\n\n'available_models(year,brand)': con esta herramienta seras capaz de realizar busquedas de los modelos de un auto usando el año y la marca es importante que estos dos datos te lleguen para poder cumplir con esta funcion\n\n'available_type_car(year,brand,model)': con esta herramienta podras obtener los tipos de carros dependiendo del año, marca y modelo es importante que estos datos te sean dados para que puedas cumplir tu funcion\n\n'available_type_glasses(year,brand,model,type_car)': con esta herramienta puedes obtener los tipos de cristales disponibles dependiendo del año, marca, modelo, tipo de carro, es importante que los datos los tengas todos para que puedas cumplir con tu funcion\n\n'search_products(year,brand,model,car_type,type_glass)': con esta herramienta puedes obtener los productos disponibles dependiendo del año, marca, modelo, tipo de carro, y tipo de cristal. Es importante que los datos los tengas todos para que puedas cumplir con tu funcion. En la información que retornes de cada producto incluye lo siguientes datos: 'external_id', 'origin' y 'nag'.\n\n'send_quote(contact_name, contact_phone, contact_email, brand, model, year, car_type, glass_type, product_external_id, product_origin, product_nag)': con esta herramienta puedes mandar la cotización del usuario. Es importante que los datos los tengas todos para que puedas cumplir con tu funcion"
+          "systemMessage": "=Eres un agente dedicado a realizzar peticiones para hacer cotizaciónes de glasbil\ntu trabajo es hacer peticiones y poder retornar iinformacion\ntambien tienes la capacidad de realizzar cotizaciones todo esto usando herramientas de http request\n\ntienes acceso a estas herramientas\n\n'available_years': con esta herramienta puedes consultar los años disponibles en el sistema de glasbil\n\n'available_brands(year)': con esta herramienta puedes consultar las marcas disponibles dependiendo del año que te den, para esta es importante que te den el año para consultar\n\n'available_models(year,brand)': con esta herramienta seras capaz de realizar busquedas de los modelos de un auto usando el año y la marca es importante que estos dos datos te lleguen para poder cumplir con esta funcion\n\n'available_type_car(year,brand,model)': con esta herramienta podras obtener los tipos de carros dependiendo del año, marca y modelo es importante que estos datos te sean dados para que puedas cumplir tu funcion\n\n'available_type_glasses(year,brand,model,type_car)': con esta herramienta puedes obtener los tipos de cristales disponibles dependiendo del año, marca, modelo, tipo de carro, es importante que los datos los tengas todos para que puedas cumplir con tu funcion\n\n'search_products(year,brand,model,car_type,type_glass)': con esta herramienta puedes obtener los productos disponibles dependiendo del año, marca, modelo, tipo de carro, y tipo de cristal. Es importante que los datos los tengas todos para que puedas cumplir con tu funcion. En la información que retornes de cada producto incluye lo siguientes datos: 'external_id', 'origin' y 'nag'.\n\n'send_quote(contact_name, contact_phone, contact_email, brand, model, year, car_type, glass_type, product_external_id, product_origin, product_nag, product_name)': con esta herramienta puedes mandar la cotización del usuario. Es importante que los datos los tengas todos para que puedas cumplir con tu funcion"
         }
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
@@ -150,7 +150,7 @@
     },
     {
       "parameters": {
-        "toolDescription": "Esta herramienta te ayudara a mandar la cotización del usuario con los siguientes datos contact_name, contact_phone, contact_email, brand, model, year, car_type, glass_type, product_external_id, product_origin, product_nag",
+        "toolDescription": "Esta herramienta te ayudara a mandar la cotización del usuario con los siguientes datos contact_name, contact_phone, contact_email, brand, model, year, car_type, glass_type, product_external_id, product_origin, product_nag, product_name",
         "method": "POST",
         "url": "https://butik-vidrio.canteradigital.mx/api/productQuotes",
         "sendBody": true,
@@ -158,7 +158,7 @@
           "parameters": [
             {
               "name": "user_id",
-              "value": "=null"
+              "value": "={{ null }}"
             },
             {
               "name": "contact_name",
@@ -203,6 +203,10 @@
             {
               "name": "product_nag",
               "value": "={{ $fromAI('product_nag') }}"
+            },
+            {
+              "name": "product_name",
+              "value": "={{ $fromAI('product_name') }}"
             }
           ]
         },
@@ -327,7 +331,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "78d132a4-dc70-4654-ab8b-d10fbd844b11",
+  "versionId": "0a69801b-e3bd-4a50-8778-16cf4a8c35ed",
   "triggerCount": 0,
   "shared": [
     {
