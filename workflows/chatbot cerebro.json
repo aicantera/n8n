@@ -1,9 +1,9 @@
 {
   "createdAt": "2025-06-09T16:34:20.833Z",
-  "updatedAt": "2025-06-19T03:31:43.000Z",
+  "updatedAt": "2025-06-23T16:44:00.000Z",
   "id": "k6PApGOzpLKtnZ0q",
   "name": "chatbot cerebro",
-  "active": true,
+  "active": false,
   "nodes": [
     {
       "parameters": {
@@ -3156,7 +3156,7 @@
       "typeVersion": 1.1,
       "position": [
         1000,
-        2640
+        2620
       ],
       "id": "2436caaa-6e6f-478e-b439-b9ec56b0c44e",
       "name": "MongoDB18",
@@ -3257,7 +3257,7 @@
       "typeVersion": 1.1,
       "position": [
         1000,
-        2440
+        2320
       ],
       "id": "f67fbb1d-e3c3-4bf0-a206-f69fdd93bd60",
       "name": "MongoDB19",
@@ -3913,7 +3913,7 @@
       "typeVersion": 4.2,
       "position": [
         560,
-        3060
+        3260
       ],
       "id": "1e68fa8b-ae6c-47d4-8ccb-49a26d2c46cc",
       "name": "HTTP Request5"
@@ -3947,7 +3947,7 @@
       "typeVersion": 2.2,
       "position": [
         780,
-        3060
+        3260
       ],
       "id": "94a21322-28c4-4bf2-949f-9d56f52996e4",
       "name": "revisamos si hay actividades para la semana"
@@ -4312,7 +4312,7 @@
       "typeVersion": 4.2,
       "position": [
         1000,
-        2560
+        2440
       ],
       "id": "0c318e05-dad1-4625-920e-9b5dc0ece855",
       "name": "mensaje de sin actividades"
@@ -4343,7 +4343,7 @@
       "typeVersion": 4.2,
       "position": [
         1000,
-        3160
+        3360
       ],
       "id": "626a233b-cdda-4fa5-9912-7089398de61a",
       "name": "no hay actividades en la semana para enviar"
@@ -4446,7 +4446,7 @@
       "typeVersion": 4.2,
       "position": [
         1000,
-        2960
+        3140
       ],
       "id": "ec1e0a1c-67f0-481f-acb2-8d1661bfad50",
       "name": "actividades enviadas correctamente"
@@ -4479,8 +4479,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        780,
-        3460
+        2120,
+        5200
       ],
       "id": "a405f89e-efe9-47d2-ab72-5d270de1b1d2",
       "name": "If2"
@@ -4510,8 +4510,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        1000,
-        3360
+        2340,
+        5100
       ],
       "id": "46ae3478-3e60-4bed-a1e5-8ef113df6759",
       "name": "información de las calificaciones del estudiante"
@@ -4541,8 +4541,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        1000,
-        3560
+        2340,
+        5300
       ],
       "id": "8d5ea413-a153-489c-a31a-8ef88a242d16",
       "name": "no hay datos del estudiante calificaciones"
@@ -5839,8 +5839,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        560,
-        3460
+        1900,
+        5200
       ],
       "id": "f67e9333-0519-49f6-8aee-a2a2899bc8d8",
       "name": "get_academic_data_by_student_id"
@@ -5859,6 +5859,177 @@
       ],
       "id": "16ad3100-721f-483b-ac3e-e6ae7fc46ced",
       "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "url": "={{ $('Set Variables').item.json.currentEnvironment }}/assistant/get_academic_data_by_student_id?student_id={{ $('Main Logic Placeholder').item.json.students_data[1].student_id }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1300,
+        2660
+      ],
+      "id": "32034ba2-5a5b-42e6-a15b-d1935cc5d7c8",
+      "name": "get_academic_data_by_student_id1"
+    },
+    {
+      "parameters": {
+        "url": "={{ $('Set Variables').item.json.currentEnvironment }}/assistant/get_courses_by_student_id?student_id=b5a613af-2559-4f7e-b0e3-288e05be7c3f",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        600,
+        3780
+      ],
+      "id": "50a609b0-8c4c-4200-b7e4-c2ba9682be1b",
+      "name": "get_courses_by_student_id"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f07b7183-62a0-4d4a-90a7-ad93e7acd220",
+              "name": "date",
+              "value": "={{ $json.now }}",
+              "type": "string"
+            },
+            {
+              "id": "e5baae19-924c-4972-8a51-b4d87aad8bad",
+              "name": "state",
+              "value": "proceso_calificaciones_estudiante",
+              "type": "string"
+            },
+            {
+              "id": "127efdf6-7193-4011-a155-fa072b66e80f",
+              "name": "userStateId",
+              "value": "={{ $('MongoDB').item.json.userStateId }}",
+              "type": "string"
+            },
+            {
+              "id": "1f575aaf-fb00-4a3b-97f4-af8ce87de353",
+              "name": "grade_state",
+              "value": "seleccionar_periodo",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1040,
+        3780
+      ],
+      "id": "782e9868-fb10-4f7e-acb9-0407424017ac",
+      "name": "Edit Fields26"
+    },
+    {
+      "parameters": {
+        "jsCode": "function uuidv4() {\n  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {\n    const r = Math.random() * 16 | 0;\n    const v = c === 'x' ? r : (r & 0x3 | 0x8);\n    return v.toString(16);\n  });\n}\n\nreturn [\n  {\n    json: {\n      uuid:uuidv4(),\n      now: new Date().toLocaleString('es-MX', {\n  timeZone: 'America/Mexico_City'\n})\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        820,
+        3780
+      ],
+      "id": "48d0757a-5bb2-4652-84ff-e3b7acb683fc",
+      "name": "Code26",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "collection": "log_chatbot",
+        "fields": "user_id, information,log_id, date",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1.1,
+      "position": [
+        1700,
+        3780
+      ],
+      "id": "e24808af-4afd-40c7-930f-cafc0ed72a8e",
+      "name": "MongoDB30",
+      "credentials": {
+        "mongoDb": {
+          "id": "xZYe0R0CRtWFmyv7",
+          "name": "MongoDB account cerebro core"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "670342e3-e699-4e30-af27-04db7bace385",
+              "name": "user_id",
+              "value": "={{ $('Main Logic Placeholder').item.json.students_data[0].user_id }}",
+              "type": "string"
+            },
+            {
+              "id": "391a519a-9e7c-4dee-8dfc-f8b38f7f8fc7",
+              "name": "information",
+              "value": "se presenta pantalla periodos de calificaciones",
+              "type": "string"
+            },
+            {
+              "id": "915b68b5-3dee-44ad-82f6-65a3d9a74629",
+              "name": "log_id",
+              "value": "={{ $('Code26').item.json.uuid }}",
+              "type": "string"
+            },
+            {
+              "id": "f07b7183-62a0-4d4a-90a7-ad93e7acd220",
+              "name": "date",
+              "value": "={{ $('Code26').item.json.now }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1480,
+        3780
+      ],
+      "id": "983985a6-b78a-442b-8f80-ab1e3a59d0f7",
+      "name": "mostramos el set para la pantalla de fechas para justificacion4"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "collection": "user_state",
+        "updateKey": "userStateId",
+        "fields": "state, date, justify_state",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1.1,
+      "position": [
+        1260,
+        3780
+      ],
+      "id": "1c0469e0-2884-4302-b0e0-41a23c43accc",
+      "name": "MongoDB31",
+      "credentials": {
+        "mongoDb": {
+          "id": "xZYe0R0CRtWFmyv7",
+          "name": "MongoDB account cerebro core"
+        }
+      },
+      "disabled": true
     }
   ],
   "connections": {
@@ -7170,7 +7341,7 @@
         ],
         [
           {
-            "node": "get_academic_data_by_student_id",
+            "node": "get_courses_by_student_id",
             "type": "main",
             "index": 0
           }
@@ -7415,24 +7586,12 @@
     },
     "información de las calificaciones del estudiante": {
       "main": [
-        [
-          {
-            "node": "Code11",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "no hay datos del estudiante calificaciones": {
       "main": [
-        [
-          {
-            "node": "Code11",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "calendario eventos4": {
@@ -7890,6 +8049,61 @@
           }
         ]
       ]
+    },
+    "Code26": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields26",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "mostramos el set para la pantalla de fechas para justificacion4": {
+      "main": [
+        [
+          {
+            "node": "MongoDB30",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields26": {
+      "main": [
+        [
+          {
+            "node": "MongoDB31",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MongoDB31": {
+      "main": [
+        [
+          {
+            "node": "mostramos el set para la pantalla de fechas para justificacion4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "get_courses_by_student_id": {
+      "main": [
+        [
+          {
+            "node": "Code26",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -7932,7 +8146,7 @@
       }
     ]
   },
-  "versionId": "e5e3d198-c9e3-4490-9456-2dcd68ff5f48",
+  "versionId": "44d6bd4f-6ba5-48c4-961d-a23262d0a564",
   "triggerCount": 1,
   "shared": [
     {
