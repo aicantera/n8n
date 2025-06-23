@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-05-13T16:37:03.099Z",
-  "updatedAt": "2025-06-20T01:00:09.000Z",
+  "updatedAt": "2025-06-23T22:55:14.000Z",
   "id": "PTbESRzX3rguwQN8",
   "name": "Agente Cantera",
   "active": true,
@@ -39,7 +39,7 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 1.9,
       "position": [
-        0,
+        220,
         0
       ],
       "id": "7f7060fc-e5ef-4a01-bf99-c2ebfef185e4",
@@ -57,7 +57,7 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.2,
       "position": [
-        -120,
+        100,
         300
       ],
       "id": "18dc5c7b-38c0-40c4-9c7c-dfc1e395d428",
@@ -74,13 +74,13 @@
         "operation": "send",
         "phoneNumberId": "676686782186843",
         "recipientPhoneNumber": "={{ $('WhatsApp Trigger').item.json.messages[0].from }}",
-        "textBody": "={{ $json.output }}",
+        "textBody": "={{ $('AI Agent').item.json.output }}",
         "additionalFields": {}
       },
       "type": "n8n-nodes-base.whatsApp",
       "typeVersion": 1,
       "position": [
-        500,
+        940,
         0
       ],
       "id": "8b3ba99a-5287-456f-8c1a-75a938f1b238",
@@ -98,7 +98,7 @@
       "type": "@n8n/n8n-nodes-langchain.toolThink",
       "typeVersion": 1,
       "position": [
-        540,
+        760,
         300
       ],
       "id": "1fa96322-1569-417d-9501-fe3e3666553a",
@@ -265,7 +265,7 @@
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 2.2,
       "position": [
-        840,
+        1060,
         320
       ],
       "id": "8dd38a29-ed15-4201-8c5f-bd0ca04bb696",
@@ -282,7 +282,7 @@
       "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
       "typeVersion": 1.3,
       "position": [
-        60,
+        280,
         300
       ],
       "id": "4774fd76-6f60-4aeb-b76c-73954492e2d1",
@@ -562,7 +562,7 @@
       "type": "n8n-nodes-base.googleSheetsTool",
       "typeVersion": 4.5,
       "position": [
-        240,
+        460,
         300
       ],
       "id": "b5e24246-2921-40f3-a865-663a97278e05",
@@ -630,7 +630,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -240,
+        -20,
         0
       ],
       "id": "2fbffac3-2d86-4f66-a64d-0785e8e80d7f",
@@ -743,7 +743,7 @@
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 2.2,
       "position": [
-        420,
+        640,
         400
       ],
       "id": "6f858d96-f135-42d9-aff1-c2bf4e7bc307",
@@ -764,6 +764,174 @@
       ],
       "id": "5d3f4d9f-5578-4a33-acac-5655f9b17b9f",
       "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1kN2oLcVbFQpBGWzii95gKByZ652ziKeDhlmc5L4T4_s",
+          "mode": "list",
+          "cachedResultName": "Leads cantera",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1kN2oLcVbFQpBGWzii95gKByZ652ziKeDhlmc5L4T4_s/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 230853568,
+          "mode": "list",
+          "cachedResultName": "Hoja 2",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1kN2oLcVbFQpBGWzii95gKByZ652ziKeDhlmc5L4T4_s/edit#gid=230853568"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "date": "={{ $now.minus({ hours: 0 }).setLocale('es').toFormat(\"dd 'de' LLLL 'de' yyyy HH:mm\") }}",
+            "chat_id": "={{ $json.messages[0].from }}",
+            "type": "human",
+            "message": "={{ $json.messages[0].text.body }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "date",
+              "displayName": "date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "chat_id",
+              "displayName": "chat_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "type",
+              "displayName": "type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "message",
+              "displayName": "message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        -280,
+        0
+      ],
+      "id": "2832cdaa-2c65-469a-9d99-a0710f7d3d81",
+      "name": "Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "VrznAZQXjQh9WpvY",
+          "name": "Google Sheets - Cantera"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1kN2oLcVbFQpBGWzii95gKByZ652ziKeDhlmc5L4T4_s",
+          "mode": "list",
+          "cachedResultName": "Leads cantera",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1kN2oLcVbFQpBGWzii95gKByZ652ziKeDhlmc5L4T4_s/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 230853568,
+          "mode": "list",
+          "cachedResultName": "Hoja 2",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1kN2oLcVbFQpBGWzii95gKByZ652ziKeDhlmc5L4T4_s/edit#gid=230853568"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "date": "={{ $now.minus({ hours: 0 }).setLocale('es').toFormat(\"dd 'de' LLLL 'de' yyyy HH:mm\") }}",
+            "chat_id": "={{ $('WhatsApp Trigger').item.json.messages[0].from }}",
+            "message": "={{ $json.output }}",
+            "type": "agente"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "date",
+              "displayName": "date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "chat_id",
+              "displayName": "chat_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "type",
+              "displayName": "type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "message",
+              "displayName": "message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        620,
+        0
+      ],
+      "id": "be19b7a7-d7ed-454c-b5ce-a840483c99a7",
+      "name": "Google Sheets1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "VrznAZQXjQh9WpvY",
+          "name": "Google Sheets - Cantera"
+        }
+      }
     }
   ],
   "connections": {
@@ -793,7 +961,7 @@
       "main": [
         [
           {
-            "node": "WhatsApp Business Cloud",
+            "node": "Google Sheets1",
             "type": "main",
             "index": 0
           }
@@ -815,7 +983,7 @@
       "main": [
         [
           {
-            "node": "typing indicator1",
+            "node": "Google Sheets",
             "type": "main",
             "index": 0
           }
@@ -908,6 +1076,28 @@
           }
         ]
       ]
+    },
+    "Google Sheets": {
+      "main": [
+        [
+          {
+            "node": "typing indicator1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets1": {
+      "main": [
+        [
+          {
+            "node": "WhatsApp Business Cloud",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -953,23 +1143,23 @@
             "display_phone_number": "5214431866819",
             "phone_number_id": "676686782186843"
           },
-          "statuses": [
+          "contacts": [
             {
-              "id": "wamid.HBgNNTIxNDQzNDkwMTE5MxUCABEYEjA4OUE3QUI0OUI0QUU4OTU3MQA=",
-              "status": "delivered",
-              "timestamp": "1750356323",
-              "recipient_id": "5214434901193",
-              "conversation": {
-                "id": "2d8765e15024fde00d0a18eef74a607b",
-                "origin": {
-                  "type": "service"
-                }
+              "profile": {
+                "name": "Rick"
               },
-              "pricing": {
-                "billable": true,
-                "pricing_model": "CBP",
-                "category": "service"
-              }
+              "wa_id": "5214434901193"
+            }
+          ],
+          "messages": [
+            {
+              "from": "5214434901193",
+              "id": "wamid.HBgNNTIxNDQzNDkwMTE5MxUCABIYFjNFQjAzOEZBRjk0RUM0MDlGOEI3MTkA",
+              "timestamp": "1750719147",
+              "text": {
+                "body": "hola"
+              },
+              "type": "text"
             }
           ],
           "field": "messages"
@@ -977,7 +1167,7 @@
       }
     ]
   },
-  "versionId": "ca614f11-5336-436b-8469-e5c0167c22f7",
+  "versionId": "acff9e8f-b573-4e52-acf8-51c47157ae97",
   "triggerCount": 1,
   "shared": [
     {
