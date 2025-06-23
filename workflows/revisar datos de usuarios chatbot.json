@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-06-18T02:56:28.104Z",
-  "updatedAt": "2025-06-18T16:30:55.000Z",
+  "updatedAt": "2025-06-23T17:18:36.000Z",
   "id": "lvEmEanFbdDwGFYm",
   "name": "revisar datos de usuarios chatbot",
   "active": true,
@@ -14,8 +14,8 @@
       "name": "Workflow Overview",
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        350,
-        -50
+        300,
+        -220
       ],
       "id": "generated-0ef5d026-2a21-4e1e-b68a-8be96e6f75ca"
     },
@@ -120,13 +120,13 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{$json.phoneNumber}}\",\n  \"text\": {\n    \"body\": \"Lo siento, por falta de una respuesta hemos cerrado la comunicación, si necesitas otra cosa no dudes en mandar mensaje\"\n  }\n}",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{$json.phoneNumber}}\",\n  \"text\": {\n    \"body\": \"Entendemos que puedes estar ocupado en este momento 😊. Como no recibimos respuesta, cerraremos esta conversación por ahora. Si necesitas algo más, no dudes en escribirnos 📩.\"\n  }\n}",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        1240,
+        1640,
         160
       ],
       "id": "73edc7cb-ae6e-42e7-8583-bf01ee467b2e",
@@ -144,6 +144,40 @@
       ],
       "id": "ca7c7d56-a25f-44f8-ad3c-cafe9b22e62c",
       "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "1612e11b-a829-4752-a5b9-c44f8525858b",
+              "leftValue": "={{$json.phoneNumber}}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1280,
+        160
+      ],
+      "id": "bab60f53-de59-4bb1-b131-94862afea762",
+      "name": "If"
     }
   ],
   "connections": {
@@ -195,7 +229,7 @@
         [],
         [
           {
-            "node": "mensaje de confirmación de cierre de sesion",
+            "node": "If",
             "type": "main",
             "index": 0
           }
@@ -204,6 +238,24 @@
     },
     "mensaje de confirmación de cierre de sesion": {
       "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "mensaje de confirmación de cierre de sesion",
+            "type": "main",
+            "index": 0
+          }
+        ],
         [
           {
             "node": "Loop Over Items",
@@ -221,8 +273,14 @@
   "meta": {
     "templateCredsSetupCompleted": true
   },
-  "pinData": {},
-  "versionId": "fd748f38-1e2f-4e85-b023-be21d959dea8",
+  "pinData": {
+    "Inactivity Cron": [
+      {
+        "json": {}
+      }
+    ]
+  },
+  "versionId": "5fd3f646-4433-4cf9-bbdd-32ed31312411",
   "triggerCount": 1,
   "shared": [
     {
