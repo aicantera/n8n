@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-06-09T16:34:20.833Z",
-  "updatedAt": "2025-06-23T19:25:08.000Z",
+  "updatedAt": "2025-06-23T20:17:55.000Z",
   "id": "k6PApGOzpLKtnZ0q",
   "name": "chatbot cerebro",
   "active": true,
@@ -6266,8 +6266,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -640,
-        6740
+        0,
+        6760
       ],
       "id": "0de81243-0c3d-41f3-98bb-804702dad62e",
       "name": "Edit Fields27"
@@ -6282,8 +6282,8 @@
       "type": "n8n-nodes-base.mongoDb",
       "typeVersion": 1.1,
       "position": [
-        20,
-        6740
+        660,
+        6760
       ],
       "id": "41d77406-e9d5-4b3a-8153-2726ed25a22d",
       "name": "MongoDB32",
@@ -6305,8 +6305,8 @@
       "type": "n8n-nodes-base.mongoDb",
       "typeVersion": 1.1,
       "position": [
-        -420,
-        6740
+        220,
+        6760
       ],
       "id": "4d0c38a3-fecc-4799-903d-4ed23872aa13",
       "name": "MongoDB33",
@@ -6342,8 +6342,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        220,
-        6740
+        860,
+        6760
       ],
       "id": "650f21e2-fd83-4d30-93f2-b948889dcddf",
       "name": "comienzo con el porceso de calificaciones (cursos)1"
@@ -6383,8 +6383,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -200,
-        6740
+        440,
+        6760
       ],
       "id": "85c9bc75-f1c1-4f3a-bbeb-a052247c507a",
       "name": "mostramos el set para la pantalla de periodo de evaluación"
@@ -6396,8 +6396,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -900,
-        6740
+        -260,
+        6760
       ],
       "id": "d80326f8-7438-4665-8231-9475895eb558",
       "name": "Code27",
@@ -6412,8 +6412,8 @@
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        -2520,
-        6280
+        -2360,
+        6300
       ],
       "id": "411c98f4-f9f1-4a33-930d-380066aea139",
       "name": "Sticky Note1"
@@ -6509,7 +6509,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// 1) Leer y validar selección\nconst selRaw = items[0].json.selection;\nconst sel    = parseInt(selRaw, 10);\n\nif (isNaN(sel) || sel < 1 || sel > 3) {\n  return [{\n    json: {\n      status: 'error',\n      message: `Opción inválida '${selRaw}'. Por favor elige 1, 2 o 3.`\n    }\n  }];\n}\n\n// 2) Helpers de formateo DD/MM/YYYY\nfunction pad(n){ return n<10? '0'+n : ''+n; }\nfunction fmt(d){\n  return `${pad(d.getDate())}/${pad(d.getMonth()+1)}/${d.getFullYear()}`;\n}\n\n// 3) Fecha actual\nconst now = new Date();\n\nlet start_date = null;\nlet end_date   = null;\nlet response;\n\n// 4) Lógica según selección\nif (sel === 1) {\n  // Semana pasada lunes→viernes\n  const dow = now.getDay();               // Dom=0, Lun=1…Sáb=6\n  // Averiguar lunes de ESTA semana:\n  const thisMonday = new Date(now);\n  thisMonday.setDate(now.getDate() - ((dow + 6) % 7));\n  // Lunes de la SEMANA pasada:\n  const lastMonday = new Date(thisMonday);\n  lastMonday.setDate(thisMonday.getDate() - 7);\n  // Viernes de esa semana:\n  const lastFriday = new Date(lastMonday);\n  lastFriday.setDate(lastMonday.getDate() + 4);\n\n  start_date = fmt(lastMonday);\n  end_date   = fmt(lastFriday);\n  response   = { start_date, end_date };\n}\nelse if (sel === 2) {\n  // Mes en curso 1°→último día\n  const firstOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);\n  const lastOfMonth  = new Date(now.getFullYear(), now.getMonth()+1, 0);\n  start_date = fmt(firstOfMonth);\n  end_date   = fmt(lastOfMonth);\n  response   = { start_date, end_date };\n}\nelse {\n  // sel === 3\n  response = { selected_number: 3 };\n}\n\n// 5) Retornar\nreturn [{\n  json: {\n    status: 'success',\n    ...response\n  }\n}];\n"
+        "jsCode": "// 1) Leer y validar selección\nconst selRaw = items[0].json.selection;\nconst sel    = parseInt(selRaw, 10);\n\nif (isNaN(sel) || sel < 1 || sel > 3) {\n  return [{\n    json: {\n      status: 'error',\n      message: `Opción inválida '${selRaw}'. Por favor elige 1, 2 o 3.`\n    }\n  }];\n}\n\n// 2) Helpers de formateo DD/MM/YYYY\nfunction pad(n){ return n<10? '0'+n : ''+n; }\nfunction fmt(d){\n  return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;\n}\n\n// 3) Fecha actual\nconst now = new Date();\n\nlet start_date = null;\nlet end_date   = null;\nlet response;\n\n// 4) Lógica según selección\nif (sel === 1) {\n  // Semana pasada lunes→viernes\n  const dow = now.getDay();               // Dom=0, Lun=1…Sáb=6\n  // Averiguar lunes de ESTA semana:\n  const thisMonday = new Date(now);\n  thisMonday.setDate(now.getDate() - ((dow + 6) % 7));\n  // Lunes de la SEMANA pasada:\n  const lastMonday = new Date(thisMonday);\n  lastMonday.setDate(thisMonday.getDate() - 7);\n  // Viernes de esa semana:\n  const lastFriday = new Date(lastMonday);\n  lastFriday.setDate(lastMonday.getDate() + 4);\n\n  start_date = fmt(lastMonday);\n  end_date   = fmt(lastFriday);\n  response   = { start_date, end_date };\n}\nelse if (sel === 2) {\n  // Mes en curso 1°→último día\n  const firstOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);\n  const lastOfMonth  = new Date(now.getFullYear(), now.getMonth()+1, 0);\n  start_date = fmt(firstOfMonth);\n  end_date   = fmt(lastOfMonth);\n  response   = { start_date, end_date };\n}\nelse {\n  // sel === 3\n  response = { selected_number: 3 };\n}\n\n// 5) Retornar\nreturn [{\n  json: {\n    status: 'success',\n    ...response\n  }\n}];\n"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -6573,99 +6573,6 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"{{ $('Seleccion curso').item.json.message }}\"\n  }\n}\n",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        -1960,
-        6100
-      ],
-      "id": "4c1f19da-6bfa-4a06-b2a9-1b59923aaffa",
-      "name": "error curso seleccionado1"
-    },
-    {
-      "parameters": {
-        "method": "POST",
-        "url": "https://graph.facebook.com/v22.0/626839230509107/messages",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "Authorization",
-              "value": "Bearer EAAHeSgKjRYEBOZBi0kUskW4k3L6ZCO8EhqsGNjWLyfJ3U1NZCbDyQp9WSoX0Ouh8hh44Jue9ev7TMlygkZAMoqMReAJL9cNZBQZCZB508HXZB84HCNFZBIRlSa9cXFs0dXmR31XoO0iUZBOTx4VSnErdZC9OD1sQDKprPHpbK7NBrTZAWy8D6pvNi9w0w4c9pt2KE3stGwZDZD"
-            },
-            {
-              "name": "Content-Type",
-              "value": "application/json"
-            }
-          ]
-        },
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"{{ $('Seleccion curso').item.json.message }}\"\n  }\n}\n",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        -1880,
-        6180
-      ],
-      "id": "2950a33c-5c26-4d4e-962f-43c150d054fb",
-      "name": "error curso seleccionado2"
-    },
-    {
-      "parameters": {
-        "method": "POST",
-        "url": "https://graph.facebook.com/v22.0/626839230509107/messages",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "Authorization",
-              "value": "Bearer EAAHeSgKjRYEBOZBi0kUskW4k3L6ZCO8EhqsGNjWLyfJ3U1NZCbDyQp9WSoX0Ouh8hh44Jue9ev7TMlygkZAMoqMReAJL9cNZBQZCZB508HXZB84HCNFZBIRlSa9cXFs0dXmR31XoO0iUZBOTx4VSnErdZC9OD1sQDKprPHpbK7NBrTZAWy8D6pvNi9w0w4c9pt2KE3stGwZDZD"
-            },
-            {
-              "name": "Content-Type",
-              "value": "application/json"
-            }
-          ]
-        },
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"{{ $('Seleccion curso').item.json.message }}\"\n  }\n}\n",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        -1800,
-        6260
-      ],
-      "id": "bfbba6a3-9ef9-4cc4-a9c2-1bfa17758aa3",
-      "name": "error curso seleccionado3"
-    },
-    {
-      "parameters": {
-        "method": "POST",
-        "url": "https://graph.facebook.com/v22.0/626839230509107/messages",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "Authorization",
-              "value": "Bearer EAAHeSgKjRYEBOZBi0kUskW4k3L6ZCO8EhqsGNjWLyfJ3U1NZCbDyQp9WSoX0Ouh8hh44Jue9ev7TMlygkZAMoqMReAJL9cNZBQZCZB508HXZB84HCNFZBIRlSa9cXFs0dXmR31XoO0iUZBOTx4VSnErdZC9OD1sQDKprPHpbK7NBrTZAWy8D6pvNi9w0w4c9pt2KE3stGwZDZD"
-            },
-            {
-              "name": "Content-Type",
-              "value": "application/json"
-            }
-          ]
-        },
-        "sendBody": true,
-        "specifyBody": "json",
         "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"{{ $('obtenemos los datos de rango de fcehas').item.json.message }}\"\n  }\n}\n",
         "options": {}
       },
@@ -6677,6 +6584,108 @@
       ],
       "id": "92a71943-5102-46e6-b912-86aff238609f",
       "name": "error curso seleccionado4"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "7e04ed95-77a8-4026-9d9d-820fdee1744a",
+              "leftValue": "={{ $json.selected_number }}",
+              "rightValue": "",
+              "operator": {
+                "type": "number",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -1260,
+        7020
+      ],
+      "id": "325603c5-7411-4792-b40d-6754c621b703",
+      "name": "revisamos si se selecciono la tercera opción"
+    },
+    {
+      "parameters": {
+        "url": "={{ $('Set Variables').item.json.currentEnvironment }}/assistant/get_academic_data_by_student_id?student_id={{ $('MongoDB').item.json.student_id }}&course_id={{ $('MongoDB').item.json.course_selected }}&init_date={{ $('obtenemos los datos de rango de fcehas').item.json.start_date }}&finish_date={{ $('obtenemos los datos de rango de fcehas').item.json.end_date }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -1040,
+        7120
+      ],
+      "id": "c6b0babd-cae4-43fb-88cc-3c6b2a42649f",
+      "name": "obtenemos el reporte academico entre fechas"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v22.0/626839230509107/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer EAAHeSgKjRYEBOZBi0kUskW4k3L6ZCO8EhqsGNjWLyfJ3U1NZCbDyQp9WSoX0Ouh8hh44Jue9ev7TMlygkZAMoqMReAJL9cNZBQZCZB508HXZB84HCNFZBIRlSa9cXFs0dXmR31XoO0iUZBOTx4VSnErdZC9OD1sQDKprPHpbK7NBrTZAWy8D6pvNi9w0w4c9pt2KE3stGwZDZD"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"{{ $json.data.whatsapp_summary.replace(/\\r?\\n/g, \"\\\\n\")\n    .replace(/^\\\\n+|\\\\n+$/g, \"\") }}\"\n  }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -840,
+        7120
+      ],
+      "id": "3fd14829-f4dc-46d9-9358-33ba316eeed7",
+      "name": "error curso seleccionado5"
+    },
+    {
+      "parameters": {
+        "url": "={{ $('Set Variables').item.json.currentEnvironment }}/assistant/get_academic_data_by_student_teacher_gradebooks?student_id={{ $('MongoDB').item.json.student_id }}&course_id={{ $('MongoDB').item.json.course_selected }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Tenant",
+              "value": "demo"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -1000,
+        6940
+      ],
+      "id": "70050add-281e-4048-a171-deadd2fb4dc0",
+      "name": "obtenemos el reporte academico entre fechas1"
     }
   ],
   "connections": {
@@ -8942,6 +8951,53 @@
             "type": "main",
             "index": 0
           }
+        ],
+        [
+          {
+            "node": "revisamos si se selecciono la tercera opción",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "revisamos si se selecciono la tercera opción": {
+      "main": [
+        [
+          {
+            "node": "obtenemos el reporte academico entre fechas1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "obtenemos el reporte academico entre fechas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "obtenemos el reporte academico entre fechas": {
+      "main": [
+        [
+          {
+            "node": "error curso seleccionado5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "error curso seleccionado5": {
+      "main": [
+        [
+          {
+            "node": "Code27",
+            "type": "main",
+            "index": 0
+          }
         ]
       ]
     }
@@ -8976,7 +9032,7 @@
               "id": "wamid.HBgNNTIxNDQzNDkwMTE5MxUCABIYFjNFQjA2ODJCQkU4MzA1NzUyQTA1OUUA",
               "timestamp": "1750702361",
               "text": {
-                "body": "1"
+                "body": "3"
               },
               "type": "text"
             }
@@ -8986,7 +9042,7 @@
       }
     ]
   },
-  "versionId": "a0e279ce-9f13-4d9e-bda1-f6c37bb9bae2",
+  "versionId": "63f8a9dd-b2bb-4988-9d8d-3bfc1bafd7fb",
   "triggerCount": 1,
   "shared": [
     {
