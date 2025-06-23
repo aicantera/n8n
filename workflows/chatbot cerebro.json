@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-06-09T16:34:20.833Z",
-  "updatedAt": "2025-06-23T18:56:49.000Z",
+  "updatedAt": "2025-06-23T19:25:08.000Z",
   "id": "k6PApGOzpLKtnZ0q",
   "name": "chatbot cerebro",
   "active": true,
@@ -559,7 +559,7 @@
       "typeVersion": 1,
       "position": [
         -5560,
-        1226
+        1220
       ],
       "id": "bbf6a97a-93c2-4658-97c4-f0c9d3cb08ef",
       "name": "WhatsApp Trigger",
@@ -6106,47 +6106,6 @@
     },
     {
       "parameters": {
-        "rules": {
-          "values": [
-            {
-              "conditions": {
-                "options": {
-                  "caseSensitive": true,
-                  "leftValue": "",
-                  "typeValidation": "strict",
-                  "version": 2
-                },
-                "conditions": [
-                  {
-                    "leftValue": "={{ $('MongoDB').item.json.grade_state }}",
-                    "rightValue": "seleccionar_cursos",
-                    "operator": {
-                      "type": "string",
-                      "operation": "equals"
-                    },
-                    "id": "677cbcdf-fada-411b-9a2b-0834fbb83ff0"
-                  }
-                ],
-                "combinator": "and"
-              },
-              "renameOutput": true,
-              "outputKey": "select_cursos"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.switch",
-      "typeVersion": 3.2,
-      "position": [
-        -2140,
-        6660
-      ],
-      "id": "77d09cfa-680e-401f-96d4-e42ce6d0b8c1",
-      "name": "Switch2"
-    },
-    {
-      "parameters": {
         "url": "={{ $('Set Variables').item.json.currentEnvironment }}/assistant/get_courses_by_student_id?student_id={{ $('MongoDB').item.json.student_id }}",
         "options": {}
       },
@@ -6260,8 +6219,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -980,
-        6560
+        -900,
+        6540
       ],
       "id": "d5471666-d053-4dfe-87ff-f4cc0eba4254",
       "name": "error curso seleccionado"
@@ -6291,13 +6250,13 @@
             {
               "id": "1f575aaf-fb00-4a3b-97f4-af8ce87de353",
               "name": "grade_state",
-              "value": "seleccionar_cursos",
+              "value": "seleccionar_periodo",
               "type": "string"
             },
             {
               "id": "36e1cbed-85ac-445e-bd39-0613715bac1d",
               "name": "course_selected",
-              "value": "={{ $json.selected_course.course_id }}",
+              "value": "={{ $('Seleccion curso').item.json.selected_course.course_id }}",
               "type": "string"
             }
           ]
@@ -6443,6 +6402,281 @@
       "id": "d80326f8-7438-4665-8231-9475895eb558",
       "name": "Code27",
       "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "content": "## Flujo para mostrar los datos de busqueda de periodo y calificaciones por curso y estudiante seleccionados\n",
+        "height": 1040,
+        "width": 3640
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -2520,
+        6280
+      ],
+      "id": "411c98f4-f9f1-4a33-930d-380066aea139",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('MongoDB').item.json.grade_state }}",
+                    "rightValue": "seleccionar_cursos",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "677cbcdf-fada-411b-9a2b-0834fbb83ff0"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "select_cursos"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "c79e7d02-df81-4262-82b3-fb040662801d",
+                    "leftValue": "={{ $('MongoDB').item.json.grade_state }}",
+                    "rightValue": "seleccionar_periodo",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "periodo"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -2140,
+        6820
+      ],
+      "id": "77d09cfa-680e-401f-96d4-e42ce6d0b8c1",
+      "name": "revisamos el grade state"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ec481598-9f14-4bfd-9fb1-725d1a70d2ce",
+              "name": "selection",
+              "value": "={{ $('WhatsApp Trigger').item.json.messages[0].text.body }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1920,
+        6920
+      ],
+      "id": "47ab1104-0efc-47f8-82b6-c9a21a97c4dc",
+      "name": "Body para seleccionar rango de fechas"
+    },
+    {
+      "parameters": {
+        "jsCode": "// 1) Leer y validar selección\nconst selRaw = items[0].json.selection;\nconst sel    = parseInt(selRaw, 10);\n\nif (isNaN(sel) || sel < 1 || sel > 3) {\n  return [{\n    json: {\n      status: 'error',\n      message: `Opción inválida '${selRaw}'. Por favor elige 1, 2 o 3.`\n    }\n  }];\n}\n\n// 2) Helpers de formateo DD/MM/YYYY\nfunction pad(n){ return n<10? '0'+n : ''+n; }\nfunction fmt(d){\n  return `${pad(d.getDate())}/${pad(d.getMonth()+1)}/${d.getFullYear()}`;\n}\n\n// 3) Fecha actual\nconst now = new Date();\n\nlet start_date = null;\nlet end_date   = null;\nlet response;\n\n// 4) Lógica según selección\nif (sel === 1) {\n  // Semana pasada lunes→viernes\n  const dow = now.getDay();               // Dom=0, Lun=1…Sáb=6\n  // Averiguar lunes de ESTA semana:\n  const thisMonday = new Date(now);\n  thisMonday.setDate(now.getDate() - ((dow + 6) % 7));\n  // Lunes de la SEMANA pasada:\n  const lastMonday = new Date(thisMonday);\n  lastMonday.setDate(thisMonday.getDate() - 7);\n  // Viernes de esa semana:\n  const lastFriday = new Date(lastMonday);\n  lastFriday.setDate(lastMonday.getDate() + 4);\n\n  start_date = fmt(lastMonday);\n  end_date   = fmt(lastFriday);\n  response   = { start_date, end_date };\n}\nelse if (sel === 2) {\n  // Mes en curso 1°→último día\n  const firstOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);\n  const lastOfMonth  = new Date(now.getFullYear(), now.getMonth()+1, 0);\n  start_date = fmt(firstOfMonth);\n  end_date   = fmt(lastOfMonth);\n  response   = { start_date, end_date };\n}\nelse {\n  // sel === 3\n  response = { selected_number: 3 };\n}\n\n// 5) Retornar\nreturn [{\n  json: {\n    status: 'success',\n    ...response\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1700,
+        6920
+      ],
+      "id": "7406c046-b58f-45f5-9b7f-b5b626cd5995",
+      "name": "obtenemos los datos de rango de fcehas"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "22ee781f-f81b-4fbe-80a6-b8e70fd7c393",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "error",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -1480,
+        6920
+      ],
+      "id": "b0d601c6-672b-4dcf-9641-101c9fb9b472",
+      "name": "opcion invalida periodo"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v22.0/626839230509107/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer EAAHeSgKjRYEBOZBi0kUskW4k3L6ZCO8EhqsGNjWLyfJ3U1NZCbDyQp9WSoX0Ouh8hh44Jue9ev7TMlygkZAMoqMReAJL9cNZBQZCZB508HXZB84HCNFZBIRlSa9cXFs0dXmR31XoO0iUZBOTx4VSnErdZC9OD1sQDKprPHpbK7NBrTZAWy8D6pvNi9w0w4c9pt2KE3stGwZDZD"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"{{ $('Seleccion curso').item.json.message }}\"\n  }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -1960,
+        6100
+      ],
+      "id": "4c1f19da-6bfa-4a06-b2a9-1b59923aaffa",
+      "name": "error curso seleccionado1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v22.0/626839230509107/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer EAAHeSgKjRYEBOZBi0kUskW4k3L6ZCO8EhqsGNjWLyfJ3U1NZCbDyQp9WSoX0Ouh8hh44Jue9ev7TMlygkZAMoqMReAJL9cNZBQZCZB508HXZB84HCNFZBIRlSa9cXFs0dXmR31XoO0iUZBOTx4VSnErdZC9OD1sQDKprPHpbK7NBrTZAWy8D6pvNi9w0w4c9pt2KE3stGwZDZD"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"{{ $('Seleccion curso').item.json.message }}\"\n  }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -1880,
+        6180
+      ],
+      "id": "2950a33c-5c26-4d4e-962f-43c150d054fb",
+      "name": "error curso seleccionado2"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v22.0/626839230509107/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer EAAHeSgKjRYEBOZBi0kUskW4k3L6ZCO8EhqsGNjWLyfJ3U1NZCbDyQp9WSoX0Ouh8hh44Jue9ev7TMlygkZAMoqMReAJL9cNZBQZCZB508HXZB84HCNFZBIRlSa9cXFs0dXmR31XoO0iUZBOTx4VSnErdZC9OD1sQDKprPHpbK7NBrTZAWy8D6pvNi9w0w4c9pt2KE3stGwZDZD"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"{{ $('Seleccion curso').item.json.message }}\"\n  }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -1800,
+        6260
+      ],
+      "id": "bfbba6a3-9ef9-4cc4-a9c2-1bfa17758aa3",
+      "name": "error curso seleccionado3"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v22.0/626839230509107/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer EAAHeSgKjRYEBOZBi0kUskW4k3L6ZCO8EhqsGNjWLyfJ3U1NZCbDyQp9WSoX0Ouh8hh44Jue9ev7TMlygkZAMoqMReAJL9cNZBQZCZB508HXZB84HCNFZBIRlSa9cXFs0dXmR31XoO0iUZBOTx4VSnErdZC9OD1sQDKprPHpbK7NBrTZAWy8D6pvNi9w0w4c9pt2KE3stGwZDZD"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"{{ $('obtenemos los datos de rango de fcehas').item.json.message }}\"\n  }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -1240,
+        6840
+      ],
+      "id": "92a71943-5102-46e6-b912-86aff238609f",
+      "name": "error curso seleccionado4"
     }
   ],
   "connections": {
@@ -8547,18 +8781,7 @@
         ],
         [
           {
-            "node": "Switch2",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Switch2": {
-      "main": [
-        [
-          {
-            "node": "get_courses_by_student_id1",
+            "node": "revisamos el grade state",
             "type": "main",
             "index": 0
           }
@@ -8670,6 +8893,57 @@
           }
         ]
       ]
+    },
+    "revisamos el grade state": {
+      "main": [
+        [
+          {
+            "node": "get_courses_by_student_id1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Body para seleccionar rango de fechas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Body para seleccionar rango de fechas": {
+      "main": [
+        [
+          {
+            "node": "obtenemos los datos de rango de fcehas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "obtenemos los datos de rango de fcehas": {
+      "main": [
+        [
+          {
+            "node": "opcion invalida periodo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "opcion invalida periodo": {
+      "main": [
+        [
+          {
+            "node": "error curso seleccionado4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -8712,7 +8986,7 @@
       }
     ]
   },
-  "versionId": "9d0564e0-ee68-4548-906b-0c8cdf52cebd",
+  "versionId": "a0e279ce-9f13-4d9e-bda1-f6c37bb9bae2",
   "triggerCount": 1,
   "shared": [
     {
