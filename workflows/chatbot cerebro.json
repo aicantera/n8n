@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-06-09T16:34:20.833Z",
-  "updatedAt": "2025-06-23T22:08:17.000Z",
+  "updatedAt": "2025-06-24T06:58:01.000Z",
   "id": "k6PApGOzpLKtnZ0q",
   "name": "chatbot cerebro",
   "active": true,
@@ -6266,7 +6266,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        0,
+        660,
         6760
       ],
       "id": "0de81243-0c3d-41f3-98bb-804702dad62e",
@@ -6282,7 +6282,7 @@
       "type": "n8n-nodes-base.mongoDb",
       "typeVersion": 1.1,
       "position": [
-        660,
+        1320,
         6760
       ],
       "id": "41d77406-e9d5-4b3a-8153-2726ed25a22d",
@@ -6305,7 +6305,7 @@
       "type": "n8n-nodes-base.mongoDb",
       "typeVersion": 1.1,
       "position": [
-        220,
+        880,
         6760
       ],
       "id": "4d0c38a3-fecc-4799-903d-4ed23872aa13",
@@ -6342,7 +6342,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        860,
+        1520,
         6760
       ],
       "id": "650f21e2-fd83-4d30-93f2-b948889dcddf",
@@ -6383,7 +6383,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        440,
+        1100,
         6760
       ],
       "id": "85c9bc75-f1c1-4f3a-bbeb-a052247c507a",
@@ -6396,7 +6396,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -260,
+        400,
         6760
       ],
       "id": "d80326f8-7438-4665-8231-9475895eb558",
@@ -6659,8 +6659,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -840,
-        7120
+        -740,
+        7200
       ],
       "id": "3fd14829-f4dc-46d9-9358-33ba316eeed7",
       "name": "error curso seleccionado5"
@@ -6668,15 +6668,6 @@
     {
       "parameters": {
         "url": "={{ $('Set Variables').item.json.currentEnvironment }}/assistant/get_academic_data_by_student_teacher_gradebooks?student_id={{ $('MongoDB').item.json.student_id }}&course_id={{ $('MongoDB').item.json.course_selected }}",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "X-Tenant",
-              "value": "demo"
-            }
-          ]
-        },
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
@@ -6687,6 +6678,274 @@
       ],
       "id": "70050add-281e-4048-a171-deadd2fb4dc0",
       "name": "obtenemos el reporte academico entre fechas1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "2fde828a-a66b-465f-a810-c714a93c5a0f",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "error",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -780,
+        6940
+      ],
+      "id": "5e2ffb67-058f-4cfe-acd1-2517584c0f50",
+      "name": "revisamos si hay error en ese periodo"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v22.0/626839230509107/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer EAAHeSgKjRYEBOZBi0kUskW4k3L6ZCO8EhqsGNjWLyfJ3U1NZCbDyQp9WSoX0Ouh8hh44Jue9ev7TMlygkZAMoqMReAJL9cNZBQZCZB508HXZB84HCNFZBIRlSa9cXFs0dXmR31XoO0iUZBOTx4VSnErdZC9OD1sQDKprPHpbK7NBrTZAWy8D6pvNi9w0w4c9pt2KE3stGwZDZD"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"{{ $json.data.whatsapp_summary.replace(/\\r?\\n/g, \"\\\\n\")\n    .replace(/^\\\\n+|\\\\n+$/g, \"\") }}\"\n  }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -500,
+        7020
+      ],
+      "id": "8e2ddcf5-8ce5-4dd8-9d37-56e11f0b33f3",
+      "name": "whatsapp_summary ultimo periodo"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v22.0/626839230509107/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer EAAHeSgKjRYEBOZBi0kUskW4k3L6ZCO8EhqsGNjWLyfJ3U1NZCbDyQp9WSoX0Ouh8hh44Jue9ev7TMlygkZAMoqMReAJL9cNZBQZCZB508HXZB84HCNFZBIRlSa9cXFs0dXmR31XoO0iUZBOTx4VSnErdZC9OD1sQDKprPHpbK7NBrTZAWy8D6pvNi9w0w4c9pt2KE3stGwZDZD"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"{{ $json.data.whatsapp_message.replace(/\\r?\\n/g, \"\\\\n\")\n    .replace(/^\\\\n+|\\\\n+$/g, \"\") }}\"\n  }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -520,
+        6860
+      ],
+      "id": "ba79d772-ee6d-4e4d-ad64-4e92b785b175",
+      "name": "whatsapp_message error periodo solicitado"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f07b7183-62a0-4d4a-90a7-ad93e7acd220",
+              "name": "date",
+              "value": "={{ $json.now }}",
+              "type": "string"
+            },
+            {
+              "id": "e5baae19-924c-4972-8a51-b4d87aad8bad",
+              "name": "state",
+              "value": "proceso_calificaciones_estudiante",
+              "type": "string"
+            },
+            {
+              "id": "127efdf6-7193-4011-a155-fa072b66e80f",
+              "name": "userStateId",
+              "value": "={{ $('MongoDB').item.json.userStateId }}",
+              "type": "string"
+            },
+            {
+              "id": "1f575aaf-fb00-4a3b-97f4-af8ce87de353",
+              "name": "grade_state",
+              "value": "seleccionar_periodo",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        400,
+        7100
+      ],
+      "id": "81d9d219-ac86-4494-a976-5a23e2c01ee5",
+      "name": "Edit Fields28"
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "collection": "log_chatbot",
+        "fields": "user_id, information,log_id, date",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1.1,
+      "position": [
+        1060,
+        7100
+      ],
+      "id": "f75ab26d-04f0-4ea6-b45d-413799f77014",
+      "name": "MongoDB34",
+      "credentials": {
+        "mongoDb": {
+          "id": "xZYe0R0CRtWFmyv7",
+          "name": "MongoDB account cerebro core"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "collection": "user_state",
+        "updateKey": "userStateId",
+        "fields": "state, date, grade_state",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1.1,
+      "position": [
+        620,
+        7100
+      ],
+      "id": "f5b524af-efde-4ab7-a69a-71b284fa5579",
+      "name": "MongoDB35",
+      "credentials": {
+        "mongoDb": {
+          "id": "xZYe0R0CRtWFmyv7",
+          "name": "MongoDB account cerebro core"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v22.0/626839230509107/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer EAAHeSgKjRYEBOZBi0kUskW4k3L6ZCO8EhqsGNjWLyfJ3U1NZCbDyQp9WSoX0Ouh8hh44Jue9ev7TMlygkZAMoqMReAJL9cNZBQZCZB508HXZB84HCNFZBIRlSa9cXFs0dXmR31XoO0iUZBOTx4VSnErdZC9OD1sQDKprPHpbK7NBrTZAWy8D6pvNi9w0w4c9pt2KE3stGwZDZD"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"type\": \"interactive\",\n  \"interactive\": {\n    \"type\": \"button\",\n    \"body\": {\n  \"text\": \"Selecciona el periodo que quieres para revisar las evaluaciones\\n\\n1️⃣ Última semana.\\n2️⃣ Último mes.\\n3️⃣ Último periodo\\n\\nPara salir del proceso, presiona el botón Volver al Menú\"\n    },\n    \"action\": {\n      \"buttons\": [\n        {\n          \"type\": \"reply\",\n          \"reply\": {\n            \"id\": \"menu_inicial\",\n            \"title\": \"Volver al menu\"\n          }\n        }\n      ]\n    }\n } }\n\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1260,
+        7100
+      ],
+      "id": "b857e420-cef8-4556-affb-b0facc9f5ede",
+      "name": "comienzo con el porceso de calificaciones (cursos)2"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "670342e3-e699-4e30-af27-04db7bace385",
+              "name": "user_id",
+              "value": "={{ $('Main Logic Placeholder').item.json.students_data[0].user_id }}",
+              "type": "string"
+            },
+            {
+              "id": "391a519a-9e7c-4dee-8dfc-f8b38f7f8fc7",
+              "name": "information",
+              "value": "se presenta pantalla periodos de calificaciones",
+              "type": "string"
+            },
+            {
+              "id": "915b68b5-3dee-44ad-82f6-65a3d9a74629",
+              "name": "log_id",
+              "value": "={{ $('Code28').item.json.uuid }}",
+              "type": "string"
+            },
+            {
+              "id": "f07b7183-62a0-4d4a-90a7-ad93e7acd220",
+              "name": "date",
+              "value": "={{ $('Code28').item.json.now }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        840,
+        7100
+      ],
+      "id": "36a23144-5557-4b11-903f-219d4da541ff",
+      "name": "mostramos el set para la pantalla de periodo de evaluación1"
+    },
+    {
+      "parameters": {
+        "jsCode": "function uuidv4() {\n  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {\n    const r = Math.random() * 16 | 0;\n    const v = c === 'x' ? r : (r & 0x3 | 0x8);\n    return v.toString(16);\n  });\n}\n\nreturn [\n  {\n    json: {\n      uuid:uuidv4(),\n      now: new Date().toLocaleString('es-MX', {\n  timeZone: 'America/Mexico_City'\n})\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        140,
+        7100
+      ],
+      "id": "54947f30-975e-4f8b-8de3-dc3e65d4b63f",
+      "name": "Code28",
+      "alwaysOutputData": true
     }
   ],
   "connections": {
@@ -8995,7 +9254,113 @@
       "main": [
         [
           {
-            "node": "Code27",
+            "node": "Code28",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "obtenemos el reporte academico entre fechas1": {
+      "main": [
+        [
+          {
+            "node": "revisamos si hay error en ese periodo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "revisamos si hay error en ese periodo": {
+      "main": [
+        [
+          {
+            "node": "whatsapp_message error periodo solicitado",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "whatsapp_summary ultimo periodo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "whatsapp_summary ultimo periodo": {
+      "main": [
+        [
+          {
+            "node": "Code28",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "whatsapp_message error periodo solicitado": {
+      "main": [
+        [
+          {
+            "node": "Code28",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields28": {
+      "main": [
+        [
+          {
+            "node": "MongoDB35",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MongoDB34": {
+      "main": [
+        [
+          {
+            "node": "comienzo con el porceso de calificaciones (cursos)2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MongoDB35": {
+      "main": [
+        [
+          {
+            "node": "mostramos el set para la pantalla de periodo de evaluación1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "mostramos el set para la pantalla de periodo de evaluación1": {
+      "main": [
+        [
+          {
+            "node": "MongoDB34",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code28": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields28",
             "type": "main",
             "index": 0
           }
@@ -9030,10 +9395,10 @@
           "messages": [
             {
               "from": "5214434901193",
-              "id": "wamid.HBgNNTIxNDQzNDkwMTE5MxUCABIYFjNFQjA2ODJCQkU4MzA1NzUyQTA1OUUA",
-              "timestamp": "1750702361",
+              "id": "wamid.HBgNNTIxNDQzNDkwMTE5MxUCABIYIDM2QzE5RkUwRDdFQTY3RUVGNEYyNzE5Q0JDMUUwMjU5AA==",
+              "timestamp": "1750748115",
               "text": {
-                "body": "3"
+                "body": "1"
               },
               "type": "text"
             }
@@ -9043,7 +9408,7 @@
       }
     ]
   },
-  "versionId": "e3749fcb-de9a-4973-844f-6ed08156a05c",
+  "versionId": "e9036c71-5811-44e4-8bb0-0de8234914cd",
   "triggerCount": 1,
   "shared": [
     {
