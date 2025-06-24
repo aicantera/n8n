@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-06-09T16:34:20.833Z",
-  "updatedAt": "2025-06-24T06:58:01.000Z",
+  "updatedAt": "2025-06-24T15:47:15.000Z",
   "id": "k6PApGOzpLKtnZ0q",
   "name": "chatbot cerebro",
   "active": true,
@@ -16,6 +16,14 @@
             {
               "name": "status_report",
               "value": "https://cerebro-core-050afed4ca53.herokuapp.com/sma/receive_messagebird_data"
+            },
+            {
+              "name": "clienteIdWp",
+              "value": "626839230509107"
+            },
+            {
+              "name": "tokenWp",
+              "value": "Bearer EAAHeSgKjRYEBOZBi0kUskW4k3L6ZCO8EhqsGNjWLyfJ3U1NZCbDyQp9WSoX0Ouh8hh44Jue9ev7TMlygkZAMoqMReAJL9cNZBQZCZB508HXZB84HCNFZBIRlSa9cXFs0dXmR31XoO0iUZBOTx4VSnErdZC9OD1sQDKprPHpbK7NBrTZAWy8D6pvNi9w0w4c9pt2KE3stGwZDZD"
             }
           ]
         },
@@ -4606,13 +4614,13 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "https://graph.facebook.com/v22.0/626839230509107/messages",
+        "url": "=https://graph.facebook.com/v22.0/{{ $('Set Variables').item.json.clienteIdWp }}/messages",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
               "name": "Authorization",
-              "value": "Bearer EAAHeSgKjRYEBOZBi0kUskW4k3L6ZCO8EhqsGNjWLyfJ3U1NZCbDyQp9WSoX0Ouh8hh44Jue9ev7TMlygkZAMoqMReAJL9cNZBQZCZB508HXZB84HCNFZBIRlSa9cXFs0dXmR31XoO0iUZBOTx4VSnErdZC9OD1sQDKprPHpbK7NBrTZAWy8D6pvNi9w0w4c9pt2KE3stGwZDZD"
+              "value": "={{ $('Set Variables').item.json.tokenWp }}"
             },
             {
               "name": "Content-Type",
@@ -6510,7 +6518,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// 1) Leer y validar selección\nconst selRaw = items[0].json.selection;\nconst sel    = parseInt(selRaw, 10);\n\nif (isNaN(sel) || sel < 1 || sel > 3) {\n  return [{\n    json: {\n      status: 'error',\n      message: `Opción inválida '${selRaw}'. Por favor elige 1, 2 o 3.`\n    }\n  }];\n}\n\n// 2) Helpers de formateo DD/MM/YYYY\nfunction pad(n){ return n<10? '0'+n : ''+n; }\nfunction fmt(d){\n  return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;\n}\n\n// 3) Fecha actual\nconst now = new Date();\n\nlet start_date = null;\nlet end_date   = null;\nlet response;\n\n// 4) Lógica según selección\nif (sel === 1) {\n  // Semana pasada lunes→viernes\n  const dow = now.getDay();               // Dom=0, Lun=1…Sáb=6\n  // Averiguar lunes de ESTA semana:\n  const thisMonday = new Date(now);\n  thisMonday.setDate(now.getDate() - ((dow + 6) % 7));\n  // Lunes de la SEMANA pasada:\n  const lastMonday = new Date(thisMonday);\n  lastMonday.setDate(thisMonday.getDate() - 7);\n  // Viernes de esa semana:\n  const lastFriday = new Date(lastMonday);\n  lastFriday.setDate(lastMonday.getDate() + 4);\n\n  start_date = fmt(lastMonday);\n  end_date   = fmt(lastFriday);\n  response   = { start_date, end_date };\n}\nelse if (sel === 2) {\n  // Mes en curso 1°→último día\n  const firstOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);\n  const lastOfMonth  = new Date(now.getFullYear(), now.getMonth()+1, 0);\n  start_date = fmt(firstOfMonth);\n  end_date   = fmt(lastOfMonth);\n  response   = { start_date, end_date };\n}\nelse {\n  // sel === 3\n  response = { selected_number: 3 };\n}\n\n// 5) Retornar\nreturn [{\n  json: {\n    status: 'success',\n    ...response\n  }\n}];\n"
+        "jsCode": "// 1) Leer y validar selección\nconst selRaw = items[0].json.selection;\nconst sel    = parseInt(selRaw, 10);\n\nif (isNaN(sel) || sel < 1 || sel > 3) {\n  return [{\n    json: {\n      status: 'error',\n      message: `Opción inválida '${selRaw}'. Por favor elige 1, 2 o 3.`\n    }\n  }];\n}\n\n// 2) Helpers de formateo DD/MM/YYYY\nfunction pad(n){ return n<10? '0'+n : ''+n; }\nfunction fmt(d){\n  return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;\n}\n\n// 3) Fecha actual\nconst now = new Date();\n\nlet start_date = null;\nlet end_date   = null;\nlet response;\n\n// 4) Lógica según selección\nif (sel === 1) {\n  // Semana pasada lunes→viernes\n  const dow = now.getDay();               // Dom=0, Lun=1…Sáb=6\n  // Averiguar lunes de ESTA semana:\n  const thisMonday = new Date(now);\n  thisMonday.setDate(now.getDate() - ((dow + 6) % 7));\n  // Lunes de la SEMANA pasada:\n  const lastMonday = new Date(thisMonday);\n  lastMonday.setDate(thisMonday.getDate() - 7);\n  // Viernes de esa semana:\n  const lastFriday = new Date(lastMonday);\n  lastFriday.setDate(lastMonday.getDate() + 4);\n\n  start_date = fmt(lastMonday);\n  end_date   = fmt(lastFriday);\n  response   = { start_date, end_date };\n}\nelse if (sel === 2) {\n  // Mes pasado 1°→último\n  // Si estamos en enero (mes 0), retrocedemos al diciembre anterior\n  const year  = now.getFullYear();\n  const month = now.getMonth();           // junio→5, mayo→4\n  // Primer día del mes pasado:\n  const firstOfPrevMonth = new Date(year, month - 1, 1);\n  // Último día del mes pasado: día 0 del mes actual\n  const lastOfPrevMonth  = new Date(year, month, 0);\n\n  response = {\n    start_date: fmt(firstOfPrevMonth),\n    end_date:   fmt(lastOfPrevMonth),\n  };\n}\nelse {\n  // sel === 3\n  response = { selected_number: 3 };\n}\n\n// 5) Retornar\nreturn [{\n  json: {\n    status: 'success',\n    ...response\n  }\n}];\n"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -9398,7 +9406,7 @@
               "id": "wamid.HBgNNTIxNDQzNDkwMTE5MxUCABIYIDM2QzE5RkUwRDdFQTY3RUVGNEYyNzE5Q0JDMUUwMjU5AA==",
               "timestamp": "1750748115",
               "text": {
-                "body": "1"
+                "body": "2"
               },
               "type": "text"
             }
@@ -9408,7 +9416,7 @@
       }
     ]
   },
-  "versionId": "e9036c71-5811-44e4-8bb0-0de8234914cd",
+  "versionId": "bb87ea39-1dd8-4903-a736-a5845708ea97",
   "triggerCount": 1,
   "shared": [
     {
