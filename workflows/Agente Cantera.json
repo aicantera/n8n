@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-05-13T16:37:03.099Z",
-  "updatedAt": "2025-06-23T22:55:14.000Z",
+  "updatedAt": "2025-06-23T23:01:25.000Z",
   "id": "PTbESRzX3rguwQN8",
   "name": "Agente Cantera",
   "active": true,
@@ -932,6 +932,74 @@
           "name": "Google Sheets - Cantera"
         }
       }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "months"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -1580,
+        -300
+      ],
+      "id": "10fe6234-f47d-493a-8ff6-6e11b855e19a",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "documentId": {
+          "__rl": true,
+          "value": "1kN2oLcVbFQpBGWzii95gKByZ652ziKeDhlmc5L4T4_s",
+          "mode": "list",
+          "cachedResultName": "Leads cantera",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1kN2oLcVbFQpBGWzii95gKByZ652ziKeDhlmc5L4T4_s/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 230853568,
+          "mode": "list",
+          "cachedResultName": "Hoja 2",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1kN2oLcVbFQpBGWzii95gKByZ652ziKeDhlmc5L4T4_s/edit#gid=230853568"
+        },
+        "numberToDelete": 180000
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        -1360,
+        -300
+      ],
+      "id": "40455d24-6fce-43a0-a80c-e1ff57e655a0",
+      "name": "Google Sheets2",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "VrznAZQXjQh9WpvY",
+          "name": "Google Sheets - Cantera"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Cron Job para eliminar conversaciones cada mes\n",
+        "height": 400,
+        "width": 600
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1680,
+        -480
+      ],
+      "id": "a9ca1b75-cd79-46f4-96f5-e41f4f317549",
+      "name": "Sticky Note1"
     }
   ],
   "connections": {
@@ -1098,12 +1166,27 @@
           }
         ]
       ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
     "executionOrder": "v1"
   },
-  "staticData": null,
+  "staticData": {
+    "node:Schedule Trigger": {
+      "recurrenceRules": []
+    }
+  },
   "meta": {
     "templateCredsSetupCompleted": true
   },
@@ -1167,8 +1250,8 @@
       }
     ]
   },
-  "versionId": "acff9e8f-b573-4e52-acf8-51c47157ae97",
-  "triggerCount": 1,
+  "versionId": "f182ba80-9d6a-4965-8f90-e50b556322d1",
+  "triggerCount": 2,
   "shared": [
     {
       "createdAt": "2025-05-13T16:37:03.103Z",
