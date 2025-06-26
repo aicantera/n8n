@@ -1,0 +1,243 @@
+{
+  "createdAt": "2025-06-25T23:51:43.844Z",
+  "updatedAt": "2025-06-26T00:09:44.000Z",
+  "id": "agrxFvpdTY9DBR1t",
+  "name": "agente cantera perfilador",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "nombre_cliente"
+            },
+            {
+              "name": "email_cliente"
+            },
+            {
+              "name": "telefono_cliente"
+            },
+            {
+              "name": "nombre_empresa"
+            },
+            {
+              "name": "requerimiento_cliente"
+            },
+            {
+              "name": "perfilado_de_cliente"
+            },
+            {
+              "name": "resumen_propuesta"
+            },
+            {
+              "name": "presupuesto_cliente"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -360,
+        -40
+      ],
+      "id": "56bafac9-b30b-4365-9318-56e7fe8a272b",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4",
+          "mode": "list",
+          "cachedResultName": "GPT-4"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Datos de la empresa:\nnombre_cliente: {{ $json.nombre_cliente }},\nnombre_empresa: {{ $json.nombre_empresa }},\nrequerimiento:{{ $json.requerimiento_cliente }},\nperfilado_cliente:{{ $json.perfilado_de_cliente }},\nresumen_propuesta:{{ $json.resumen_propuesta }},\npresupuesto_cliente:{{ $json.presupuesto_cliente }}"
+            },
+            {
+              "content": "=Eres un agente dedicado al perfilamiento de los leads quiero que en base a la información proporcionada por el cliente generes un perfilado y me traigas dos datos uno es el tipo de lead que puede ser caliente, templado o frio dependiendo de estas especificaciones:\n\n🔥 **LEAD CALIENTE**\n* **Definición:** El usuario tiene un proyecto claramente definido y puede describirlo.\n• Ya tiene proyecto definido.\n• Maneja un presupuesto mayor a 200,000 mxn (peso mexicano) o decisión en puerta.\n• Está solicitando cotización, reunión, contacto inmediato o incluso se muestra interesado en una solcuion tecnologica.\n• Maneja un time frame realista no menos de 3 meses por ejemplo.\n• Es es la persona que toma las deciones o tiene la capacidad de alterar el rumbo del proyecto.\n• Acción: agradecer, confirmar datos y asegurar contacto inmediato con asesor.\n• Ejemplo: “Gracias por compartir tu información, [Nombre]. Ya tengo todo lo necesario. En breve, uno de nuestros especialistas se pondrá en contacto contigo para ayudarte a avanzar en tu proyecto.”\n\n🌡️ **LEAD TEMPLADO**\n* **Definición:** Está explorando ideas o evaluando si la tecnología puede resolver un problema, pero el proyecto no está completamente definido.\n• Está evaluando opciones.\n• Tiene dudas sobre servicios o procesos.\n• No tiene urgencia definida, pero muestra curiosidad real.\n• Maneja un presupuesto limitado o no tiene ningun presupuesto definido.\n• Maneja tiempos poco realistas.\n• Acción: ofrecer más información, sugerir seguimiento posterior.\n• Ejemplo: “Gracias por compartir tu situación. Te enviaré más información a tu correo para que puedas analizarla con calma. Si más adelante deseas que un asesor te contacte, estaré aquí para ayudarte.”\n\n❄️ **LEAD FRÍO**\n* **Definición:** Solo busca información general o superficial (ej. \"¿Qué es Data Engineering?\"). Su necesidad no encaja claramente con los servicios ofrecidos.\n• Solo busca información superficial.\n• Está lejos de tomar decisión.\n• El servicio no es adecuado para su situación.\n• No maneja ningun tipo de presupuesto,\n• No menciona tiempos exactos o requioere de tiempos urgenetes (menores a 1 mes por ejemplo)\n• No es la persona directa que toma deciciones en la empresa.\n• Acción: agradecer y cerrar con cortesía, aparte de solicitar datos para poder dar seguimiento despues.\n• Ejemplo: “Gracias por tu interés. Si en el futuro necesitas apoyo con soluciones tecnológicas o deseas conocer más sobre nuestros servicios, estaré encantada de ayudarte.”\n\nla segunda variable que necesitamos es la siguiente lead_pipedrive esta variable es en inglés y los adtos pueden ser HOT_LEAD,TEMPLATE_LEAD,COLD_LEAD usando los mismos parametros",
+              "role": "system"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -120,
+        -40
+      ],
+      "id": "64e2a1b6-99af-4ba5-9dff-6e354c505544",
+      "name": "OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "ZmWqQ5PGylh4Y05s",
+          "name": "OpenAi account - CANTERA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "text": "={{ $json.message.content }}",
+        "attributes": {
+          "attributes": [
+            {
+              "name": "type_lead",
+              "description": "tipo de lead de la respuesta del nodo anterior en español (caliente, templado,frio)",
+              "required": true
+            },
+            {
+              "name": "type_lead_english",
+              "description": "tipo de lead en inglés de la respuesta del nodo anterior (HOT_LEAD, TEMPLATE_LEAD,, COLD_LEAD)",
+              "required": true
+            }
+          ]
+        },
+        "options": {
+          "systemPromptTemplate": "You are an expert extraction algorithm.\nOnly extract relevant information from the text.\nIf you do not know the value of an attribute asked to extract, you may omit the attribute's value. redacta todo en español"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.informationExtractor",
+      "typeVersion": 1,
+      "position": [
+        240,
+        -40
+      ],
+      "id": "e3e33a91-3007-448a-9ff0-f8dc48c904dc",
+      "name": "Information Extractor"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        200,
+        180
+      ],
+      "id": "b26d7a15-17a8-464d-a07e-7ff4ae2a4e61",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "ZmWqQ5PGylh4Y05s",
+          "name": "OpenAi account - CANTERA"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "OpenAI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI": {
+      "main": [
+        [
+          {
+            "node": "Information Extractor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Information Extractor",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "55bbd14a-3ce9-42fd-ac0c-9e34be08e92c",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "createdAt": "2025-06-25T23:51:43.846Z",
+      "updatedAt": "2025-06-25T23:51:43.846Z",
+      "role": "workflow:owner",
+      "workflowId": "agrxFvpdTY9DBR1t",
+      "projectId": "BZ9Ta5yhe4RhzY78",
+      "project": {
+        "createdAt": "2025-05-13T15:56:28.209Z",
+        "updatedAt": "2025-05-13T16:18:54.372Z",
+        "id": "BZ9Ta5yhe4RhzY78",
+        "name": "CANTERA ADMIN <canteradigital7@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "projectRelations": [
+          {
+            "createdAt": "2025-05-13T15:56:28.209Z",
+            "updatedAt": "2025-05-13T15:56:28.209Z",
+            "role": "project:personalOwner",
+            "userId": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
+            "projectId": "BZ9Ta5yhe4RhzY78",
+            "user": {
+              "createdAt": "2025-05-13T15:56:27.880Z",
+              "updatedAt": "2025-05-27T17:38:25.272Z",
+              "id": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
+              "email": "canteradigital7@gmail.com",
+              "firstName": "CANTERA",
+              "lastName": "ADMIN",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-05-13T16:19:25.161Z",
+                "personalization_survey_n8n_version": "1.92.2",
+                "companySize": "<20",
+                "companyType": "saas",
+                "role": "customer-support",
+                "reportedSource": "event"
+              },
+              "settings": {
+                "userActivated": true,
+                "firstSuccessfulWorkflowId": "PTbESRzX3rguwQN8",
+                "userActivatedAt": 1747154580970,
+                "easyAIWorkflowOnboarded": true,
+                "npsSurvey": {
+                  "responded": true,
+                  "lastShownAt": 1748367494893
+                }
+              },
+              "role": "global:owner",
+              "disabled": false,
+              "mfaEnabled": false,
+              "isPending": false,
+              "isOwner": true
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": []
+}
