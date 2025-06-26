@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-05-13T16:37:03.099Z",
-  "updatedAt": "2025-06-25T23:41:17.000Z",
+  "updatedAt": "2025-06-26T00:34:25.000Z",
   "id": "PTbESRzX3rguwQN8",
   "name": "Agente Cantera",
   "active": true,
@@ -94,7 +94,9 @@
       }
     },
     {
-      "parameters": {},
+      "parameters": {
+        "description": "Recuerda considerar todas las definiciones de la calificacion de leads que esta en el prompt, para garantizar la correcta calificacion de cada uno de ellos dependiendo de la conversación con el cliente."
+      },
       "type": "@n8n/n8n-nodes-langchain.toolThink",
       "typeVersion": 1,
       "position": [
@@ -102,8 +104,7 @@
         300
       ],
       "id": "1fa96322-1569-417d-9501-fe3e3666553a",
-      "name": "Think",
-      "disabled": true
+      "name": "Think"
     },
     {
       "parameters": {
@@ -317,7 +318,7 @@
       "type": "n8n-nodes-base.manualTrigger",
       "typeVersion": 1,
       "position": [
-        -60,
+        180,
         -180
       ],
       "id": "1f2f7840-5375-46a5-b7ff-67645ad00b91",
@@ -344,7 +345,7 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        160,
+        400,
         -180
       ],
       "id": "eb2bdc86-8c48-4dbe-93b0-524af42ab2d4",
@@ -600,7 +601,7 @@
       "typeVersion": 4.2,
       "position": [
         -920,
-        280
+        -280
       ],
       "id": "9af7a194-a5dc-4035-ba0f-0d1eb03a9734",
       "name": "HTTP Request"
@@ -1032,8 +1033,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -240,
-        440
+        -360,
+        380
       ],
       "id": "e68b5708-7f7e-47bd-ada4-a1106319ff11",
       "name": "Transcripción audios",
@@ -1061,8 +1062,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -620,
-        340
+        -840,
+        240
       ],
       "id": "6d6096e1-16a2-4f80-a9c2-0576fc68ff35",
       "name": "obtener datos del audio"
@@ -1075,11 +1076,121 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -440,
-        420
+        -640,
+        380
       ],
       "id": "186c619b-740b-4c78-92c1-3e958efdec28",
       "name": "Obtiene el binary file del audio de whatsapp"
+    },
+    {
+      "parameters": {
+        "description": "LLama a este nodo cuando necesites saber el tipo de perfilado de un lead antes de almacenar la informacion del usuario",
+        "workflowId": {
+          "__rl": true,
+          "value": "agrxFvpdTY9DBR1t",
+          "mode": "list",
+          "cachedResultName": "agente cantera perfilador"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "nombre_cliente": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('nombre_cliente', ``, 'string') }}",
+            "email_cliente": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('email_cliente', ``, 'string') }}",
+            "telefono_cliente": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('telefono_cliente', ``, 'string') }}",
+            "nombre_empresa": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('nombre_empresa', ``, 'string') }}",
+            "requerimiento_cliente": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('requerimiento_cliente', ``, 'string') }}",
+            "perfilado_de_cliente": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('perfilado_de_cliente', ``, 'string') }}",
+            "resumen_propuesta": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('resumen_propuesta', ``, 'string') }}",
+            "presupuesto_cliente": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('presupuesto_cliente', ``, 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "nombre_cliente",
+              "displayName": "nombre_cliente",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "email_cliente",
+              "displayName": "email_cliente",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "telefono_cliente",
+              "displayName": "telefono_cliente",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "nombre_empresa",
+              "displayName": "nombre_empresa",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "requerimiento_cliente",
+              "displayName": "requerimiento_cliente",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "perfilado_de_cliente",
+              "displayName": "perfilado_de_cliente",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "resumen_propuesta",
+              "displayName": "resumen_propuesta",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "presupuesto_cliente",
+              "displayName": "presupuesto_cliente",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        780,
+        -160
+      ],
+      "id": "33160d46-08c9-4d28-bcea-58f53ecff6c6",
+      "name": "perfilador",
+      "disabled": true
     }
   ],
   "connections": {
@@ -1262,6 +1373,11 @@
       "main": [
         []
       ]
+    },
+    "perfilador": {
+      "ai_tool": [
+        []
+      ]
     }
   },
   "settings": {
@@ -1314,18 +1430,18 @@
           "contacts": [
             {
               "profile": {
-                "name": "Rick"
+                "name": "Luis Fragoso"
               },
-              "wa_id": "5214434901193"
+              "wa_id": "5215511887816"
             }
           ],
           "messages": [
             {
-              "from": "5214434901193",
-              "id": "wamid.HBgNNTIxNDQzNDkwMTE5MxUCABIYFjNFQjA4NTlBQzJCRjFENDJBRUUyMTQA",
-              "timestamp": "1750893675",
+              "from": "5215511887816",
+              "id": "wamid.HBgNNTIxNTUxMTg4NzgxNhUCABIYFDNGQTU2MTRGQjIwQzA5OEFENkMxAA==",
+              "timestamp": "1750897275",
               "text": {
-                "body": "abarrotera san miguel\nricardo correa pruebas\nlider de equipo\nricardocorreabautista@gmail.com\n4455112255\nmorelia, michoacan mexico"
+                "body": "ok"
               },
               "type": "text"
             }
@@ -1335,7 +1451,7 @@
       }
     ]
   },
-  "versionId": "59d53d17-49e0-43ce-826b-a1eecb287a8d",
+  "versionId": "559b70c5-51c1-4a63-91c8-fbedd46c4734",
   "triggerCount": 1,
   "shared": [
     {
