@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-06-09T16:34:20.833Z",
-  "updatedAt": "2025-06-25T22:20:18.000Z",
+  "updatedAt": "2025-06-26T16:57:25.000Z",
   "id": "k6PApGOzpLKtnZ0q",
   "name": "chatbot cerebro",
   "active": true,
@@ -3101,7 +3101,7 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"type\": \"interactive\",\n  \"interactive\": {\n    \"type\": \"button\",\n    \"body\": {\n      \"text\": \"{{ $json.response }}\\n\\n si necesitas realizar otra pregunta no dudes en hacerla\"\n    },\n    \"action\": {\n      \"buttons\": [\n        {\n          \"type\": \"reply\",\n          \"reply\": {\n            \"id\": \"menu_inicial\",\n            \"title\": \"Volver al menu\"\n          }\n        }\n      ]\n    }\n } }\n\n",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"type\": \"text\",\n  \"text\": {\n    \"body\": \"{{$json.response.replace(/\\r?\\n/g, \"\\\\n\")\n    .replace(/^\\\\n+|\\\\n+$/g, \"\").replace(/\"/g, \"'\") }}\"\n  }\n}\n\n",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
@@ -3172,7 +3172,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        2620,
+        2900,
         1500
       ],
       "id": "a9b8d54c-d9bd-4768-879e-6acfafe8adc2",
@@ -3207,7 +3207,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        2400,
+        2680,
         1500
       ],
       "id": "92ca755e-9c33-46bc-bfe9-edb3f0566d42",
@@ -6954,6 +6954,37 @@
       "id": "54947f30-975e-4f8b-8de3-dc3e65d4b63f",
       "name": "Code28",
       "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v22.0/626839230509107/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer EAAHeSgKjRYEBOZBi0kUskW4k3L6ZCO8EhqsGNjWLyfJ3U1NZCbDyQp9WSoX0Ouh8hh44Jue9ev7TMlygkZAMoqMReAJL9cNZBQZCZB508HXZB84HCNFZBIRlSa9cXFs0dXmR31XoO0iUZBOTx4VSnErdZC9OD1sQDKprPHpbK7NBrTZAWy8D6pvNi9w0w4c9pt2KE3stGwZDZD"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"type\": \"interactive\",\n  \"interactive\": {\n    \"type\": \"button\",\n    \"body\": {\n      \"text\": \"si necesitas realizar otra pregunta no dudes en hacerla.\"\n    },\n    \"action\": {\n      \"buttons\": [\n        {\n          \"type\": \"reply\",\n          \"reply\": {\n            \"id\": \"menu_inicial\",\n            \"title\": \"Volver al menu\"\n          }\n        }\n      ]\n    }\n } }",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2440,
+        1580
+      ],
+      "id": "1834a186-ed7f-47e4-ba94-961683190881",
+      "name": "respuesta preguta frecuente1"
     }
   ],
   "connections": {
@@ -8028,6 +8059,11 @@
     "respuesta preguta frecuente": {
       "main": [
         [
+          {
+            "node": "respuesta preguta frecuente1",
+            "type": "main",
+            "index": 0
+          },
           {
             "node": "Code15",
             "type": "main",
@@ -9374,6 +9410,11 @@
           }
         ]
       ]
+    },
+    "respuesta preguta frecuente1": {
+      "main": [
+        []
+      ]
     }
   },
   "settings": {
@@ -9383,8 +9424,40 @@
   "meta": {
     "templateCredsSetupCompleted": true
   },
-  "pinData": {},
-  "versionId": "87ab3f65-640f-465b-a85f-70e8b6660a4f",
+  "pinData": {
+    "WhatsApp Trigger": [
+      {
+        "json": {
+          "messaging_product": "whatsapp",
+          "metadata": {
+            "display_phone_number": "5215612472568",
+            "phone_number_id": "626839230509107"
+          },
+          "contacts": [
+            {
+              "profile": {
+                "name": "Rick"
+              },
+              "wa_id": "5214434901193"
+            }
+          ],
+          "messages": [
+            {
+              "from": "5214434901193",
+              "id": "wamid.HBgNNTIxNDQzNDkwMTE5MxUCABIYFjNFQjBDOUEzRkIyNTZFQ0FERkM5RTMA",
+              "timestamp": "1750955624",
+              "text": {
+                "body": "hola"
+              },
+              "type": "text"
+            }
+          ],
+          "field": "messages"
+        }
+      }
+    ]
+  },
+  "versionId": "e2474505-0b33-4b5c-ad4c-d704f284bdc6",
   "triggerCount": 1,
   "shared": [
     {
