@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-06-24T22:28:19.611Z",
-  "updatedAt": "2025-06-27T17:30:24.000Z",
+  "updatedAt": "2025-06-27T19:00:28.000Z",
   "id": "PetXIW4fDRVoHgK5",
   "name": "chatbot sales",
   "active": false,
@@ -888,7 +888,7 @@
                   {
                     "id": "49660bd6-0c53-49b6-a272-353eae4acf80",
                     "leftValue": "={{ $json.state_edited ? $json.state_edited : $json.state_finded}}",
-                    "rightValue": "espera_respuesta_menu_inicial",
+                    "rightValue": "esperando_respuesta_menu_inicial",
                     "operator": {
                       "type": "string",
                       "operation": "equals",
@@ -1349,8 +1349,8 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        3300,
-        -260
+        3680,
+        -2160
       ],
       "id": "db2c5269-a65d-4cbd-ba77-02377e42e985",
       "name": "Execute Workflow"
@@ -1380,8 +1380,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        2640,
-        -260
+        3020,
+        -2160
       ],
       "id": "82f639a3-d94d-4dfd-979c-7b3170f9b635",
       "name": "Error mensaje de voz1"
@@ -1442,8 +1442,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        2860,
-        -260
+        3240,
+        -2160
       ],
       "id": "70814299-a8f6-4d6c-82b3-e2eeecc92625",
       "name": "revisamos si ya existia"
@@ -1477,8 +1477,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        3080,
-        -260
+        3460,
+        -2160
       ],
       "id": "f077b3b3-bd2e-4f68-9176-5800a3cdc48a",
       "name": "Edit Fields5"
@@ -1495,6 +1495,502 @@
       ],
       "id": "edec0766-ea03-4223-84c9-0e8491026044",
       "name": "Code2"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.selection }}",
+                    "rightValue": 1,
+                    "operator": {
+                      "type": "number",
+                      "operation": "equals"
+                    },
+                    "id": "6f7b2060-af41-4559-bbfb-7ac41ceb3091"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "información"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "5a969ce2-2d9e-400d-9058-e9686ab50d02",
+                    "leftValue": "={{ $json.selection }}",
+                    "rightValue": 2,
+                    "operator": {
+                      "type": "number",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "ubicación"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "dd4a50a5-f08c-4bf7-b9c2-7d4626ba2cc2",
+                    "leftValue": "={{ $json.selection }}",
+                    "rightValue": 3,
+                    "operator": {
+                      "type": "number",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "costos"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "5e69f0a7-cb9f-4330-99d2-e637322242a1",
+                    "leftValue": "={{ $json.selection }}",
+                    "rightValue": 4,
+                    "operator": {
+                      "type": "number",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "horario extendido"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        3940,
+        -1940
+      ],
+      "id": "bfea1332-db16-4ee4-a51f-7c1b159fe33f",
+      "name": "Switch2"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Nodo “Function” de n8n\n// Valida items[0].json.selection y retorna status con mensajes amistosos\n\n// 1. Leer la selección del nodo Set anterior\nconst raw = items[0].json.selection;\nconst sel = Number(raw);\n\n// 2. Preparar la respuesta con mensajes descriptivos\nlet result;\n\nif (Number.isNaN(sel)) {\n  // No es un número\n  result = {\n    status: 'error',\n    message: `Ups, parece que tu elección “${raw}” no es un número. Por favor escribe un número del 1 al 7 para continuar.`\n  };\n} else if (!Number.isInteger(sel)) {\n  // No es entero\n  result = {\n    status: 'error',\n    message: `Veo que has ingresado ${sel}, pero necesitamos un número entero. Por favor elige un número sin decimales entre 1 y 7.`\n  };\n} else if (sel < 1 || sel > 7) {\n  // Fuera de rango\n  result = {\n    status: 'error',\n    message: `Tu selección es ${sel}, pero debe estar entre 1 y 7. Intenta de nuevo con un número dentro de ese rango.`\n  };\n} else {\n  // OK\n  result = {\n    status: 'success',\n    message: `¡Genial! Has seleccionado la opción número ${sel}.`,\n    selection: sel\n  };\n}\n\n// 3. Devolver el resultado para usar en nodos siguientes\nreturn [\n  {\n    json: result\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3460,
+        -1720
+      ],
+      "id": "9f7cee82-f0b6-4236-bd99-6c13c07d0951",
+      "name": "Code3"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "967bc904-1e28-4f4e-af20-bde631bb863a",
+              "name": "selection",
+              "value": "={{ $('WhatsApp Trigger').item.json.messages[0].text.body }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        3200,
+        -1720
+      ],
+      "id": "44caa38a-faf3-4977-b7ee-b1736bc294b9",
+      "name": "obtenemos la respuesta del menu inicial"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "1b2792b2-4d4e-4e50-af12-cb3d4c3e0e08",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "success",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        3680,
+        -1720
+      ],
+      "id": "afe4f66b-e131-494e-9415-67bfe5886956",
+      "name": "verificamos que la seleccion sea valida"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v22.0/{{ $('Variables Wp').item.json.clienteIdWp }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ $('Variables Wp').item.json.tokenWp }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"{{ $json.message }}\"\n  }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3920,
+        -1700
+      ],
+      "id": "3ff2f6dd-cf7b-4737-80dc-bf2f831a01ea",
+      "name": "Error seleccion menu invalida"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        4140,
+        -1700
+      ],
+      "id": "623335ff-8469-4170-a97f-e249ae8b38f7",
+      "name": "No Operation, do nothing"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v22.0/{{ $('Variables Wp').item.json.clienteIdWp }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ $('Variables Wp').item.json.tokenWp }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"Nos ubicamos en 📍Av. Cafetales 233, Coapa, Tlalpan, CDMX. A un lado del centro de entrenamiento Nelson Vargas. \\n\\n¿Para qué sección estás interesado? \\n\\nEscribe el número de la opción que deseas:\\n\\n1️⃣ Preescolar\\n2️⃣ Primaria \\n3️⃣ Secundaria\\n4️⃣ Bachillerato \\n5️⃣ La ubicación no me queda\"\n  }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        4480,
+        -2520
+      ],
+      "id": "534ac9e6-3f4e-43e6-ad26-c280eb6ac82e",
+      "name": "envio de mensaje ubicación"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "PetXIW4fDRVoHgK5",
+          "mode": "list",
+          "cachedResultName": "chatbot sales"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "state": "esperando_respuesta_menu_ubicacion",
+            "userStateId": "={{ $json.userStateId }}",
+            "userId": "={{ $json.userId }}",
+            "info": "={{ $json.info }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "state",
+              "displayName": "state",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "userId",
+              "displayName": "userId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "userStateId",
+              "displayName": "userStateId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "info",
+              "displayName": "info",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        4880,
+        -2520
+      ],
+      "id": "40198380-24dc-4fc3-8c6b-a7f86f6360ff",
+      "name": "Execute Workflow1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "cb5bf561-971f-493b-8312-772ff7f21da3",
+              "name": "userStateId",
+              "value": "={{ $('Code2').item.json.user_state_final }}",
+              "type": "string"
+            },
+            {
+              "id": "1356aa24-d7f3-4700-9568-aa9b6ece9b4c",
+              "name": "info",
+              "value": "se presenta ubicación y menú",
+              "type": "string"
+            },
+            {
+              "id": "6b9a8f55-16af-4e52-b897-0ac1cfca6083",
+              "name": "userId",
+              "value": "={{ $('Code2').item.json.user_id_finded || $('Code2').item.json.user_id_edited }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        4700,
+        -2520
+      ],
+      "id": "53b0a1f3-6429-4275-bea6-806adf88504b",
+      "name": "body datos ubicacion"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v22.0/{{ $('Variables Wp').item.json.clienteIdWp }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ $('Variables Wp').item.json.tokenWp }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"¿Para qué grado estás interesad@? Escribe el número de la opción que deseas:\\n1️⃣ Maternal\\n2️⃣ Preescolar\\n3️⃣ Primaria\\n4️⃣ Secundaria\\n5️⃣ Bachillerato\\n\\n-----------------------------------------------------\\n\\n6️⃣  Regresar al menú anterior:\"\n  }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        4480,
+        -2320
+      ],
+      "id": "21276aeb-dd6f-431b-a022-b2b305f1b7f2",
+      "name": "envio de mensaje ubicación1"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "PetXIW4fDRVoHgK5",
+          "mode": "list",
+          "cachedResultName": "chatbot sales"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "state": "esperando_respuesta_menu_costos",
+            "userStateId": "={{ $json.userStateId }}",
+            "userId": "={{ $json.userId }}",
+            "info": "={{ $json.info }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "state",
+              "displayName": "state",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "userId",
+              "displayName": "userId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "userStateId",
+              "displayName": "userStateId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "info",
+              "displayName": "info",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        4940,
+        -2320
+      ],
+      "id": "317d7de1-3be6-4ea1-8936-fd94951c0415",
+      "name": "Execute Workflow2",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "cb5bf561-971f-493b-8312-772ff7f21da3",
+              "name": "userStateId",
+              "value": "={{ $('Code2').item.json.user_state_final }}",
+              "type": "string"
+            },
+            {
+              "id": "1356aa24-d7f3-4700-9568-aa9b6ece9b4c",
+              "name": "info",
+              "value": "se presenta costos y menú",
+              "type": "string"
+            },
+            {
+              "id": "6b9a8f55-16af-4e52-b897-0ac1cfca6083",
+              "name": "userId",
+              "value": "={{ $('Code2').item.json.user_id_finded || $('Code2').item.json.user_id_edited }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        4720,
+        -2320
+      ],
+      "id": "4dd81662-7e81-46eb-bb22-1b65041dac53",
+      "name": "body datos costos"
     }
   ],
   "connections": {
@@ -1789,6 +2285,13 @@
             "type": "main",
             "index": 0
           }
+        ],
+        [
+          {
+            "node": "obtenemos la respuesta del menu inicial",
+            "type": "main",
+            "index": 0
+          }
         ]
       ]
     },
@@ -1846,6 +2349,121 @@
           }
         ]
       ]
+    },
+    "Code3": {
+      "main": [
+        [
+          {
+            "node": "verificamos que la seleccion sea valida",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "obtenemos la respuesta del menu inicial": {
+      "main": [
+        [
+          {
+            "node": "Code3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "verificamos que la seleccion sea valida": {
+      "main": [
+        [
+          {
+            "node": "Switch2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Error seleccion menu invalida",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Error seleccion menu invalida": {
+      "main": [
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch2": {
+      "main": [
+        [],
+        [
+          {
+            "node": "envio de mensaje ubicación",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "envio de mensaje ubicación1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "envio de mensaje ubicación": {
+      "main": [
+        [
+          {
+            "node": "body datos ubicacion",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "body datos ubicacion": {
+      "main": [
+        [
+          {
+            "node": "Execute Workflow1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "envio de mensaje ubicación1": {
+      "main": [
+        [
+          {
+            "node": "body datos costos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "body datos costos": {
+      "main": [
+        [
+          {
+            "node": "Execute Workflow2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -1876,7 +2494,7 @@
               "id": "wamid.HBgNNTIxNDQzNDkwMTE5MxUCABIYFjNFQjA4QzY1MDQ4QjQwNTMyMUE3NTIA",
               "timestamp": "1751040242",
               "text": {
-                "body": "hola"
+                "body": "3"
               },
               "type": "text"
             }
@@ -1886,7 +2504,7 @@
       }
     ]
   },
-  "versionId": "6aab88dd-cac4-438a-a515-9ec30a78178a",
+  "versionId": "28180e3b-d6a2-422a-b949-ec6ea5011d43",
   "triggerCount": 1,
   "shared": [
     {
