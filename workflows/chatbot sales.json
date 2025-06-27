@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-06-24T22:28:19.611Z",
-  "updatedAt": "2025-06-27T16:00:26.000Z",
+  "updatedAt": "2025-06-27T17:01:00.000Z",
   "id": "PetXIW4fDRVoHgK5",
   "name": "chatbot sales",
   "active": false,
@@ -25,7 +25,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 1,
       "position": [
-        -120,
+        200,
         820
       ],
       "id": "1ec9ea27-083f-478a-9832-0d65cd17fe52"
@@ -39,8 +39,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        100,
-        820
+        -700,
+        -1340
       ],
       "id": "9d3bc755-2ee3-4071-b7bb-d9b014d12eac"
     },
@@ -60,8 +60,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        320,
-        820
+        -480,
+        -1340
       ],
       "id": "b21651bb-836f-4a74-b3aa-af4318763127"
     },
@@ -126,8 +126,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 1,
       "position": [
-        540,
-        820
+        -240,
+        -1320
       ],
       "id": "03048936-dfd8-4ed9-8cbd-91d7db7e218e"
     },
@@ -330,6 +330,12 @@
               "name": "student_selected",
               "value": "={{ $json.student_id }}",
               "type": "string"
+            },
+            {
+              "id": "192aa38a-3a34-4956-aa99-29730cc29e9c",
+              "name": "user_id_finded",
+              "value": "={{ $('MongoDB').item.json.userStateId }}",
+              "type": "string"
             }
           ]
         },
@@ -364,6 +370,12 @@
               "id": "78d840a2-ae29-44c0-b0fc-1dcd3b44ff00",
               "name": "type_conversation_edited",
               "value": "={{ $json.type_conversation }}",
+              "type": "string"
+            },
+            {
+              "id": "a3888bbd-713a-45ba-883d-997e16a38877",
+              "name": "user_state_edited",
+              "value": "={{ $('MongoDB1').item.json.userStateId }}",
               "type": "string"
             }
           ]
@@ -697,7 +709,7 @@
           "conditions": [
             {
               "id": "9b562075-a550-4abf-b109-c329dec77be5",
-              "leftValue": "={{ $json.type_conversation_finded }}",
+              "leftValue": "={{ $json.type_conversation_finded || $json.type_conversation_edited }}",
               "rightValue": "chatbot",
               "operator": {
                 "type": "string",
@@ -713,8 +725,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        2520,
-        720
+        3380,
+        820
       ],
       "id": "7f8dff70-c405-4787-bf48-3d95a12e225f",
       "name": "If9"
@@ -747,8 +759,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        2520,
-        920
+        -520,
+        -1740
       ],
       "id": "0be26412-6bb9-46e2-b176-bbb8ab2ffefb",
       "name": "If10"
@@ -1121,7 +1133,7 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.2,
       "position": [
-        2800,
+        3880,
         640
       ],
       "id": "6b61f4d1-58b2-48fe-b95c-ec8eedb5d012",
@@ -1134,13 +1146,13 @@
             {
               "id": "670342e3-e699-4e30-af27-04db7bace385",
               "name": "user_id",
-              "value": "={{ $('When Executed by Another Workflow').item.json.userId }}",
+              "value": "={{ $('flujo de actualización base de datos').item.json.userId }}",
               "type": "string"
             },
             {
               "id": "391a519a-9e7c-4dee-8dfc-f8b38f7f8fc7",
               "name": "information",
-              "value": "={{ $('When Executed by Another Workflow').item.json.info }}",
+              "value": "={{ $('flujo de actualización base de datos').item.json.info }}",
               "type": "string"
             },
             {
@@ -1158,13 +1170,13 @@
             {
               "id": "e5baae19-924c-4972-8a51-b4d87aad8bad",
               "name": "state",
-              "value": "={{ $('When Executed by Another Workflow').item.json.state }}",
+              "value": "={{ $('flujo de actualización base de datos').item.json.state }}",
               "type": "string"
             },
             {
               "id": "127efdf6-7193-4011-a155-fa072b66e80f",
               "name": "userStateId",
-              "value": "={{ $('When Executed by Another Workflow').item.json.userStateId }}",
+              "value": "={{ $('flujo de actualización base de datos').item.json.userStateId }}",
               "type": "string"
             }
           ]
@@ -1174,8 +1186,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        1540,
-        -240
+        3820,
+        -1120
       ],
       "id": "2707c8fa-70dc-41a5-956b-a5ffad36ec7a",
       "name": "Edit Fields3"
@@ -1183,15 +1195,15 @@
     {
       "parameters": {
         "operation": "insert",
-        "collection": "log_chatbot",
+        "collection": "log_chatbot_sales",
         "fields": "user_id, information,log_id, date",
         "options": {}
       },
       "type": "n8n-nodes-base.mongoDb",
       "typeVersion": 1.1,
       "position": [
-        1760,
-        -240
+        4040,
+        -1120
       ],
       "id": "3f1045c2-13c4-420d-8df6-06ced704adff",
       "name": "MongoDB4",
@@ -1209,8 +1221,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        960,
-        -240
+        3240,
+        -1120
       ],
       "id": "714361d5-b6bb-4f46-aee9-34ff13710712",
       "name": "Code1",
@@ -1219,7 +1231,7 @@
     {
       "parameters": {
         "operation": "update",
-        "collection": "user_state",
+        "collection": "user_state_sales",
         "updateKey": "userStateId",
         "fields": "state, date",
         "options": {}
@@ -1227,8 +1239,8 @@
       "type": "n8n-nodes-base.mongoDb",
       "typeVersion": 1.1,
       "position": [
-        1340,
-        -240
+        3620,
+        -1120
       ],
       "id": "8c3b9bc5-82ec-49c2-b3c1-351516f79c48",
       "name": "MongoDB5",
@@ -1252,13 +1264,13 @@
             {
               "id": "e5baae19-924c-4972-8a51-b4d87aad8bad",
               "name": "state",
-              "value": "={{ $('When Executed by Another Workflow').item.json.state }}",
+              "value": "={{ $('flujo de actualización base de datos').item.json.state }}",
               "type": "string"
             },
             {
               "id": "127efdf6-7193-4011-a155-fa072b66e80f",
               "name": "userStateId",
-              "value": "={{ $('When Executed by Another Workflow').item.json.userStateId }}",
+              "value": "={{ $('flujo de actualización base de datos').item.json.userStateId }}",
               "type": "string"
             }
           ]
@@ -1268,24 +1280,111 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        1160,
-        -240
+        3440,
+        -1120
       ],
       "id": "cb12897e-213d-41b1-930e-bf71480dc920",
       "name": "Edit Fields4"
     },
     {
       "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "PetXIW4fDRVoHgK5",
+          "mode": "list",
+          "cachedResultName": "chatbot sales"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "state": "esperando_respuesta_menu_inicial",
+            "userStateId": "={{ $json.userStateId }}",
+            "userId": "={{ $json.userId }}",
+            "info": "={{ $json.info }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "state",
+              "displayName": "state",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "userId",
+              "displayName": "userId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "userStateId",
+              "displayName": "userStateId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "info",
+              "displayName": "info",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
         "options": {}
       },
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        600,
-        240
+        5200,
+        580
       ],
       "id": "db2c5269-a65d-4cbd-ba77-02377e42e985",
       "name": "Execute Workflow"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v22.0/{{ $('Variables Wp').item.json.clienteIdWp }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ $('Variables Wp').item.json.tokenWp }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"Hola! Bienvenid@ al Colegio Reims! 😃\\n\\n¿En qué te podemos ayudar? Escribe el número de la opción que deseas: \\n\\n1️⃣ Informes\\n2️⃣ Ubicación \\n3️⃣ Costos\\n4️⃣ Horario Extendido\\n5️⃣ Programa Bilingüe\\n6️⃣ Contáctame 📲\\n\\n7️⃣ Gracias, ya estoy hablando con un asesor ✅\"\n  }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        4300,
+        580
+      ],
+      "id": "82f639a3-d94d-4dfd-979c-7b3170f9b635",
+      "name": "Error mensaje de voz1"
     },
     {
       "parameters": {
@@ -1309,26 +1408,121 @@
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "typeVersion": 1.1,
       "position": [
-        760,
-        -240
+        3040,
+        -1120
       ],
       "id": "c4cc66de-e835-4e05-8941-1674ed6d7741",
-      "name": "When Executed by Another Workflow"
+      "name": "flujo de actualización base de datos"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "a91ed21b-1b4c-40c7-9fdb-b98f3ad8d94b",
+              "leftValue": "={{ $('Code2').item.json.user_state_final }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        4520,
+        580
+      ],
+      "id": "70814299-a8f6-4d6c-82b3-e2eeecc92625",
+      "name": "revisamos si ya existia"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "cb5bf561-971f-493b-8312-772ff7f21da3",
+              "name": "userStateId",
+              "value": "={{ $('Code2').item.json.user_state_final }}",
+              "type": "string"
+            },
+            {
+              "id": "1356aa24-d7f3-4700-9568-aa9b6ece9b4c",
+              "name": "info",
+              "value": "se presenta menú inicial",
+              "type": "string"
+            },
+            {
+              "id": "6b9a8f55-16af-4e52-b897-0ac1cfca6083",
+              "name": "userId",
+              "value": "={{ $('Code2').item.json.user_id_finded || $('Code2').item.json.user_id_edited }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        4740,
+        480
+      ],
+      "id": "f077b3b3-bd2e-4f68-9176-5800a3cdc48a",
+      "name": "Edit Fields5"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Function node\nconst idInsertado  = $json.user_id_finded;             // viene de la rama de insert\nconst idActualizado = $json.user_state_edited;      // viene de la rama de update\nreturn [{ json: {\n  ...$json,\n  user_state_final: idActualizado || idInsertado,\n}}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2940,
+        820
+      ],
+      "id": "edec0766-ea03-4223-84c9-0e8491026044",
+      "name": "Code2"
     }
   ],
   "connections": {
     "Set Variables": {
       "main": [
-        []
+        [
+          {
+            "node": "MongoDB",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     },
     "Auth Guardian": {
       "main": [
-        []
+        [
+          {
+            "node": "IF - Auth Success",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     },
     "IF - Auth Success": {
       "main": [
+        [],
         []
       ]
     },
@@ -1339,23 +1533,53 @@
     },
     "MongoDB": {
       "main": [
-        []
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     },
     "If": {
       "main": [
-        [],
-        []
+        [
+          {
+            "node": "typing indicator1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "typing indicator2",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     },
     "MongoDB1": {
       "main": [
-        []
+        [
+          {
+            "node": "MongoDB2",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     },
     "Edit Fields": {
       "main": [
-        []
+        [
+          {
+            "node": "MongoDB1",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     },
     "WhatsApp Trigger": {
@@ -1371,17 +1595,35 @@
     },
     "MongoDB2": {
       "main": [
-        []
+        [
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     },
     "Edit Fields1": {
       "main": [
-        []
+        [
+          {
+            "node": "Code2",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     },
     "Edit Fields2": {
       "main": [
-        []
+        [
+          {
+            "node": "Code2",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     },
     "Switch1": {
@@ -1432,17 +1674,35 @@
     },
     "Code": {
       "main": [
-        []
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     },
     "typing indicator1": {
       "main": [
-        []
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     },
     "typing indicator2": {
       "main": [
-        []
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     },
     "Variables Wp": {
@@ -1458,7 +1718,13 @@
     },
     "If9": {
       "main": [
-        []
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     },
     "If10": {
@@ -1504,7 +1770,40 @@
         ]
       ]
     },
-    "When Executed by Another Workflow": {
+    "MongoDB5": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Error mensaje de voz1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Error mensaje de voz1": {
+      "main": [
+        [
+          {
+            "node": "revisamos si ya existia",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "flujo de actualización base de datos": {
       "main": [
         [
           {
@@ -1515,11 +1814,33 @@
         ]
       ]
     },
-    "MongoDB5": {
+    "revisamos si ya existia": {
       "main": [
         [
           {
-            "node": "Edit Fields3",
+            "node": "Edit Fields5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields5": {
+      "main": [
+        [
+          {
+            "node": "Execute Workflow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code2": {
+      "main": [
+        [
+          {
+            "node": "If9",
             "type": "main",
             "index": 0
           }
@@ -1532,8 +1853,40 @@
   },
   "staticData": null,
   "meta": null,
-  "pinData": {},
-  "versionId": "92633799-eb3b-4f44-a0d2-c988427d71cd",
+  "pinData": {
+    "WhatsApp Trigger": [
+      {
+        "json": {
+          "messaging_product": "whatsapp",
+          "metadata": {
+            "display_phone_number": "5215665139893",
+            "phone_number_id": "669848086217681"
+          },
+          "contacts": [
+            {
+              "profile": {
+                "name": "Rick"
+              },
+              "wa_id": "5214434901193"
+            }
+          ],
+          "messages": [
+            {
+              "from": "5214434901193",
+              "id": "wamid.HBgNNTIxNDQzNDkwMTE5MxUCABIYFjNFQjA4QzY1MDQ4QjQwNTMyMUE3NTIA",
+              "timestamp": "1751040242",
+              "text": {
+                "body": "hola"
+              },
+              "type": "text"
+            }
+          ],
+          "field": "messages"
+        }
+      }
+    ]
+  },
+  "versionId": "22937c05-146f-4773-baec-4ccd72fe26a8",
   "triggerCount": 1,
   "shared": [
     {
