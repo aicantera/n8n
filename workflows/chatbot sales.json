@@ -1,9 +1,9 @@
 {
   "createdAt": "2025-06-24T22:28:19.611Z",
-  "updatedAt": "2025-06-25T16:04:52.000Z",
+  "updatedAt": "2025-06-27T16:00:26.000Z",
   "id": "PetXIW4fDRVoHgK5",
   "name": "chatbot sales",
-  "active": true,
+  "active": false,
   "nodes": [
     {
       "parameters": {
@@ -133,7 +133,7 @@
     },
     {
       "parameters": {
-        "collection": "user_state",
+        "collection": "user_state_sales",
         "options": {},
         "query": "={\n  \"phoneNumber\":\"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\"\n}"
       },
@@ -191,7 +191,7 @@
     {
       "parameters": {
         "operation": "insert",
-        "collection": "user_state",
+        "collection": "user_state_sales",
         "fields": "=phoneNumber ,state, userStateId, date, type_conversation",
         "options": {}
       },
@@ -282,7 +282,7 @@
     },
     {
       "parameters": {
-        "collection": "user_state",
+        "collection": "user_state_sales",
         "options": {},
         "query": "={\n  \"phoneNumber\":\"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\"\n}"
       },
@@ -581,13 +581,13 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "https://graph.facebook.com/v22.0/626839230509107/messages",
+        "url": "=https://graph.facebook.com/v22.0/{{ $('Variables Wp').item.json.clienteIdWp }}/messages",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
               "name": "Authorization",
-              "value": "Bearer EAAHeSgKjRYEBOZBi0kUskW4k3L6ZCO8EhqsGNjWLyfJ3U1NZCbDyQp9WSoX0Ouh8hh44Jue9ev7TMlygkZAMoqMReAJL9cNZBQZCZB508HXZB84HCNFZBIRlSa9cXFs0dXmR31XoO0iUZBOTx4VSnErdZC9OD1sQDKprPHpbK7NBrTZAWy8D6pvNi9w0w4c9pt2KE3stGwZDZD"
+              "value": "={{ $('Variables Wp').item.json.tokenWp }}"
             },
             {
               "name": "Content-Type",
@@ -612,13 +612,13 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "https://graph.facebook.com/v22.0/626839230509107/messages",
+        "url": "=https://graph.facebook.com/v22.0/{{ $('Variables Wp').item.json.clienteIdWp }}/messages",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
               "name": "Authorization",
-              "value": "Bearer EAAHeSgKjRYEBOZBi0kUskW4k3L6ZCO8EhqsGNjWLyfJ3U1NZCbDyQp9WSoX0Ouh8hh44Jue9ev7TMlygkZAMoqMReAJL9cNZBQZCZB508HXZB84HCNFZBIRlSa9cXFs0dXmR31XoO0iUZBOTx4VSnErdZC9OD1sQDKprPHpbK7NBrTZAWy8D6pvNi9w0w4c9pt2KE3stGwZDZD"
+              "value": "={{ $('Set Variables').item.json.tokenWp }}"
             },
             {
               "name": "Content-Type",
@@ -643,13 +643,13 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "https://graph.facebook.com/v22.0/626839230509107/messages",
+        "url": "=https://graph.facebook.com/v22.0/{{ $('Variables Wp').item.json.clienteIdWp }}/messages",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
               "name": "Authorization",
-              "value": "Bearer EAAHeSgKjRYEBOZBi0kUskW4k3L6ZCO8EhqsGNjWLyfJ3U1NZCbDyQp9WSoX0Ouh8hh44Jue9ev7TMlygkZAMoqMReAJL9cNZBQZCZB508HXZB84HCNFZBIRlSa9cXFs0dXmR31XoO0iUZBOTx4VSnErdZC9OD1sQDKprPHpbK7NBrTZAWy8D6pvNi9w0w4c9pt2KE3stGwZDZD"
+              "value": "={{ $('Set Variables').item.json.tokenWp }}"
             },
             {
               "name": "Content-Type",
@@ -787,17 +787,13 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "https://graph.facebook.com/v22.0/626839230509107/messages",
+        "url": "=https://graph.facebook.com/v22.0/{{ $('Variables Wp').item.json.clienteIdWp }}/messages",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
               "name": "Authorization",
-              "value": "Bearer EAAHeSgKjRYEBOZBi0kUskW4k3L6ZCO8EhqsGNjWLyfJ3U1NZCbDyQp9WSoX0Ouh8hh44Jue9ev7TMlygkZAMoqMReAJL9cNZBQZCZB508HXZB84HCNFZBIRlSa9cXFs0dXmR31XoO0iUZBOTx4VSnErdZC9OD1sQDKprPHpbK7NBrTZAWy8D6pvNi9w0w4c9pt2KE3stGwZDZD"
-            },
-            {
-              "name": "Content-Type",
-              "value": "application/json"
+              "value": "={{ $('Set Variables').item.json.tokenWp }}"
             }
           ]
         },
@@ -839,102 +835,527 @@
         420
       ],
       "id": "8cbd6a37-2a04-42b2-be31-90976fa13006"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.state_edited ? $json.state_edited : $json.state_finded}}",
+                    "rightValue": "menuInicial",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "67ada602-4a37-408f-880d-29a2c0a2964d"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "menu inicial"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "49660bd6-0c53-49b6-a272-353eae4acf80",
+                    "leftValue": "={{ $json.state_edited ? $json.state_edited : $json.state_finded}}",
+                    "rightValue": "espera_respuesta_menu_inicial",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "espera_respuesta_menu_inicial"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "e63b8bcb-ffae-47fd-be83-4460047ee4f3",
+                    "leftValue": "={{ $json.state_edited ? $json.state_edited : $json.state_finded}}",
+                    "rightValue": "espera_respuesta_menu_calendario",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "re_m_calendario"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "faed8982-b54d-4cc9-85df-45c31ad392ec",
+                    "leftValue": "={{ $json.state_edited ? $json.state_edited : $json.state_finded}}",
+                    "rightValue": "espera_respuesta_faq",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "espera_respuesta_faq"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "5d560ba0-a11a-45f3-9d2d-d13049d4df4c",
+                    "leftValue": "={{ $json.state_edited ? $json.state_edited : $json.state_finded}}",
+                    "rightValue": "seleccion_alumno",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "seleccion_alumno"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "7ba99368-0eb6-48ed-af01-77c7c4768b41",
+                    "leftValue": "={{ $json.state_edited ? $json.state_edited : $json.state_finded}}",
+                    "rightValue": "espera_respuesta_evento_calendario",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "resp evento calendario"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "2d803248-e0f9-4478-8ff0-768db480b95d",
+                    "leftValue": "={{ $json.state_edited ? $json.state_edited : $json.state_finded}}",
+                    "rightValue": "espera_respuesta_evento_informacion_calendario",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "mas info evento calendario"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "5f2b8eb8-dca7-40cc-9d86-1ed8f85b1027",
+                    "leftValue": "={{ $json.state_edited ? $json.state_edited : $json.state_finded}}",
+                    "rightValue": "espera_respuesta_academico",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "resp academico"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "c17a27fb-f67a-48af-ab13-a78c9f77e4f8",
+                    "leftValue": "={{ $json.state_edited ? $json.state_edited : $json.state_finded}}",
+                    "rightValue": "espera_respuesta_informacion_academico",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "re_inf_academico"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "e897eb9e-7845-4596-b7e4-6e6299e2de6c",
+                    "leftValue": "={{ $json.state_edited ? $json.state_edited : $json.state_finded}}",
+                    "rightValue": "proceso_justificacion",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "justificacion"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "59c5aacd-d431-4d88-a74c-4511477b8cfa",
+                    "leftValue": "={{ $json.state_edited ? $json.state_edited : $json.state_finded}}",
+                    "rightValue": "proceso_calificaciones_estudiante",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "calificaciones"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        2800,
+        640
+      ],
+      "id": "6b61f4d1-58b2-48fe-b95c-ec8eedb5d012",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "670342e3-e699-4e30-af27-04db7bace385",
+              "name": "user_id",
+              "value": "={{ $('When Executed by Another Workflow').item.json.userId }}",
+              "type": "string"
+            },
+            {
+              "id": "391a519a-9e7c-4dee-8dfc-f8b38f7f8fc7",
+              "name": "information",
+              "value": "={{ $('When Executed by Another Workflow').item.json.info }}",
+              "type": "string"
+            },
+            {
+              "id": "915b68b5-3dee-44ad-82f6-65a3d9a74629",
+              "name": "log_id",
+              "value": "={{ $('Code1').item.json.uuid }}",
+              "type": "string"
+            },
+            {
+              "id": "f07b7183-62a0-4d4a-90a7-ad93e7acd220",
+              "name": "date",
+              "value": "={{ $('Code1').item.json.now }}",
+              "type": "string"
+            },
+            {
+              "id": "e5baae19-924c-4972-8a51-b4d87aad8bad",
+              "name": "state",
+              "value": "={{ $('When Executed by Another Workflow').item.json.state }}",
+              "type": "string"
+            },
+            {
+              "id": "127efdf6-7193-4011-a155-fa072b66e80f",
+              "name": "userStateId",
+              "value": "={{ $('When Executed by Another Workflow').item.json.userStateId }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1540,
+        -240
+      ],
+      "id": "2707c8fa-70dc-41a5-956b-a5ffad36ec7a",
+      "name": "Edit Fields3"
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "collection": "log_chatbot",
+        "fields": "user_id, information,log_id, date",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1.1,
+      "position": [
+        1760,
+        -240
+      ],
+      "id": "3f1045c2-13c4-420d-8df6-06ced704adff",
+      "name": "MongoDB4",
+      "credentials": {
+        "mongoDb": {
+          "id": "xZYe0R0CRtWFmyv7",
+          "name": "MongoDB account cerebro core"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Importante: Esto se coloca dentro de un nodo \"Code\" en n8n\n\nfunction uuidv4() {\n  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {\n    const r = Math.random() * 16 | 0;\n    const v = c === 'x' ? r : (r & 0x3 | 0x8);\n    return v.toString(16);\n  });\n}\n\nreturn [\n  {\n    json: {\n      uuid: uuidv4(),\n      now: new Date().toLocaleString('es-MX', {\n  timeZone: 'America/Mexico_City'\n})\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        960,
+        -240
+      ],
+      "id": "714361d5-b6bb-4f46-aee9-34ff13710712",
+      "name": "Code1",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "collection": "user_state",
+        "updateKey": "userStateId",
+        "fields": "state, date",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1.1,
+      "position": [
+        1340,
+        -240
+      ],
+      "id": "8c3b9bc5-82ec-49c2-b3c1-351516f79c48",
+      "name": "MongoDB5",
+      "credentials": {
+        "mongoDb": {
+          "id": "xZYe0R0CRtWFmyv7",
+          "name": "MongoDB account cerebro core"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f07b7183-62a0-4d4a-90a7-ad93e7acd220",
+              "name": "date",
+              "value": "={{ $('Code1').item.json.now }}",
+              "type": "string"
+            },
+            {
+              "id": "e5baae19-924c-4972-8a51-b4d87aad8bad",
+              "name": "state",
+              "value": "={{ $('When Executed by Another Workflow').item.json.state }}",
+              "type": "string"
+            },
+            {
+              "id": "127efdf6-7193-4011-a155-fa072b66e80f",
+              "name": "userStateId",
+              "value": "={{ $('When Executed by Another Workflow').item.json.userStateId }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1160,
+        -240
+      ],
+      "id": "cb12897e-213d-41b1-930e-bf71480dc920",
+      "name": "Edit Fields4"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        600,
+        240
+      ],
+      "id": "db2c5269-a65d-4cbd-ba77-02377e42e985",
+      "name": "Execute Workflow"
+    },
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "state"
+            },
+            {
+              "name": "userId"
+            },
+            {
+              "name": "userStateId"
+            },
+            {
+              "name": "info"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        760,
+        -240
+      ],
+      "id": "c4cc66de-e835-4e05-8941-1674ed6d7741",
+      "name": "When Executed by Another Workflow"
     }
   ],
   "connections": {
     "Set Variables": {
       "main": [
-        [
-          {
-            "node": "Auth Guardian",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "Auth Guardian": {
       "main": [
-        [
-          {
-            "node": "IF - Auth Success",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "IF - Auth Success": {
       "main": [
-        [
-          {
-            "node": "Main Logic Placeholder",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "Main Logic Placeholder": {
       "main": [
-        [
-          {
-            "node": "MongoDB",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "MongoDB": {
       "main": [
-        [
-          {
-            "node": "If",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "If": {
       "main": [
-        [
-          {
-            "node": "typing indicator1",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "typing indicator2",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        [],
+        []
       ]
     },
     "MongoDB1": {
       "main": [
-        [
-          {
-            "node": "MongoDB2",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "Edit Fields": {
       "main": [
-        [
-          {
-            "node": "MongoDB1",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "WhatsApp Trigger": {
@@ -950,35 +1371,17 @@
     },
     "MongoDB2": {
       "main": [
-        [
-          {
-            "node": "Edit Fields2",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "Edit Fields1": {
       "main": [
-        [
-          {
-            "node": "If9",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "Edit Fields2": {
       "main": [
-        [
-          {
-            "node": "If10",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "Switch1": {
@@ -1029,35 +1432,17 @@
     },
     "Code": {
       "main": [
-        [
-          {
-            "node": "Edit Fields",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "typing indicator1": {
       "main": [
-        [
-          {
-            "node": "Edit Fields1",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "typing indicator2": {
       "main": [
-        [
-          {
-            "node": "Code",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "Variables Wp": {
@@ -1065,6 +1450,76 @@
         [
           {
             "node": "Switch1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If9": {
+      "main": [
+        []
+      ]
+    },
+    "If10": {
+      "main": [
+        []
+      ]
+    },
+    "Edit Fields3": {
+      "main": [
+        [
+          {
+            "node": "MongoDB4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MongoDB4": {
+      "main": [
+        []
+      ]
+    },
+    "Code1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields4": {
+      "main": [
+        [
+          {
+            "node": "MongoDB5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Code1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MongoDB5": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields3",
             "type": "main",
             "index": 0
           }
@@ -1078,7 +1533,7 @@
   "staticData": null,
   "meta": null,
   "pinData": {},
-  "versionId": "ea6c8677-f70e-4b65-af7b-f03d7b132c54",
+  "versionId": "92633799-eb3b-4f44-a0d2-c988427d71cd",
   "triggerCount": 1,
   "shared": [
     {
