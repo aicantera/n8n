@@ -1,112 +1,195 @@
 {
-  "createdAt": "2025-06-25T23:51:43.844Z",
-  "updatedAt": "2025-06-25T23:51:43.844Z",
-  "id": "agrxFvpdTY9DBR1t",
+  "createdAt": "2025-06-27T01:13:43.309Z",
+  "updatedAt": "2025-06-27T01:35:38.000Z",
+  "id": "eYjFNF45Ls5DZQmc",
   "name": "My workflow 32",
   "active": false,
   "nodes": [
     {
       "parameters": {
-        "workflowInputs": {
-          "values": [
-            {
-              "name": "nombre_cliente"
-            },
-            {
-              "name": "email_cliente"
-            },
-            {
-              "name": "telefono_cliente"
-            },
-            {
-              "name": "nombre_empresa"
-            },
-            {
-              "name": "requerimiento_cliente"
-            },
-            {
-              "name": "perfilado_de_cliente"
-            },
-            {
-              "name": "resumen_propuesta"
-            },
-            {
-              "name": "type_lead"
-            }
-          ]
-        }
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
       },
-      "type": "n8n-nodes-base.executeWorkflowTrigger",
-      "typeVersion": 1.1,
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
       "position": [
-        -420,
-        -40
+        0,
+        0
       ],
-      "id": "916efb8c-4cd7-41fc-af2c-41478e0f2d95",
-      "name": "When Executed by Another Workflow"
+      "id": "4da419cd-890d-46c3-8684-0b1768e211d5",
+      "name": "Telegram Trigger",
+      "webhookId": "ec82b922-d663-49ae-b0f6-712924ead742",
+      "credentials": {
+        "telegramApi": {
+          "id": "QwDm9RUUs1cAGbSv",
+          "name": "Telegram account contenido Alexandra"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.9,
+      "position": [
+        220,
+        0
+      ],
+      "id": "285332f6-936a-43df-87bc-61160c8a18a3",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        260,
+        220
+      ],
+      "id": "8207c09c-9781-4f29-a262-d2217363bf79",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "kN8CVraho0i9hYUQ",
+          "name": "OpenAi account Alexandra Trujillo"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        540,
+        -20
+      ],
+      "id": "77a6bd6b-7fa8-4f04-8b8a-2566dfd9d4d8",
+      "name": "Telegram",
+      "webhookId": "5b1b6bdc-1a62-49e8-b724-b8a20aca7835",
+      "credentials": {
+        "telegramApi": {
+          "id": "QwDm9RUUs1cAGbSv",
+          "name": "Telegram account contenido Alexandra"
+        }
+      }
     }
   ],
-  "connections": {},
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
   "settings": {
     "executionOrder": "v1"
   },
   "staticData": null,
-  "meta": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
   "pinData": {},
-  "versionId": "e2cac4c2-0b34-43fa-aa6c-2bc81938659a",
-  "triggerCount": 0,
+  "versionId": "393af816-0f73-4fe6-a083-373092b3f557",
+  "triggerCount": 1,
   "shared": [
     {
-      "createdAt": "2025-06-25T23:51:43.846Z",
-      "updatedAt": "2025-06-25T23:51:43.846Z",
+      "createdAt": "2025-06-27T01:13:43.313Z",
+      "updatedAt": "2025-06-27T01:13:43.313Z",
       "role": "workflow:owner",
-      "workflowId": "agrxFvpdTY9DBR1t",
-      "projectId": "BZ9Ta5yhe4RhzY78",
+      "workflowId": "eYjFNF45Ls5DZQmc",
+      "projectId": "UPXsxNbEdAC5wodw",
       "project": {
-        "createdAt": "2025-05-13T15:56:28.209Z",
-        "updatedAt": "2025-05-13T16:18:54.372Z",
-        "id": "BZ9Ta5yhe4RhzY78",
-        "name": "CANTERA ADMIN <canteradigital7@gmail.com>",
+        "createdAt": "2025-05-30T21:50:35.802Z",
+        "updatedAt": "2025-05-30T21:51:22.504Z",
+        "id": "UPXsxNbEdAC5wodw",
+        "name": "Alexandra  Trujillo  <alexandra.trujillo@canteradigital.mx>",
         "type": "personal",
         "icon": null,
         "projectRelations": [
           {
-            "createdAt": "2025-05-13T15:56:28.209Z",
-            "updatedAt": "2025-05-13T15:56:28.209Z",
+            "createdAt": "2025-05-30T21:50:35.804Z",
+            "updatedAt": "2025-05-30T21:50:35.804Z",
             "role": "project:personalOwner",
-            "userId": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
-            "projectId": "BZ9Ta5yhe4RhzY78",
+            "userId": "65d58894-4572-495d-8c41-0b8ea4c5b71f",
+            "projectId": "UPXsxNbEdAC5wodw",
             "user": {
-              "createdAt": "2025-05-13T15:56:27.880Z",
-              "updatedAt": "2025-05-27T17:38:25.272Z",
-              "id": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
-              "email": "canteradigital7@gmail.com",
-              "firstName": "CANTERA",
-              "lastName": "ADMIN",
+              "createdAt": "2025-05-30T21:50:35.800Z",
+              "updatedAt": "2025-06-12T00:59:16.255Z",
+              "id": "65d58894-4572-495d-8c41-0b8ea4c5b71f",
+              "email": "alexandra.trujillo@canteradigital.mx",
+              "firstName": "Alexandra ",
+              "lastName": "Trujillo ",
               "personalizationAnswers": {
                 "version": "v4",
-                "personalization_survey_submitted_at": "2025-05-13T16:19:25.161Z",
+                "personalization_survey_submitted_at": "2025-05-30T21:52:04.811Z",
                 "personalization_survey_n8n_version": "1.92.2",
-                "companySize": "<20",
-                "companyType": "saas",
-                "role": "customer-support",
-                "reportedSource": "event"
+                "automationGoalDevops": [
+                  "data-syncing",
+                  "ticketing-systems-integrations",
+                  "ci-cd",
+                  "monitoring-alerting",
+                  "reporting",
+                  "incident-response"
+                ],
+                "companyType": "systems-integrator",
+                "role": "it"
               },
               "settings": {
-                "userActivated": true,
-                "firstSuccessfulWorkflowId": "PTbESRzX3rguwQN8",
-                "userActivatedAt": 1747154580970,
                 "easyAIWorkflowOnboarded": true,
+                "firstSuccessfulWorkflowId": "bmdwVJ36IDZozHoU",
+                "userActivated": true,
+                "userActivatedAt": 1749246625266,
                 "npsSurvey": {
                   "responded": true,
-                  "lastShownAt": 1748367494893
+                  "lastShownAt": 1749689952085
                 }
               },
-              "role": "global:owner",
+              "role": "global:member",
               "disabled": false,
               "mfaEnabled": false,
               "isPending": false,
-              "isOwner": true
+              "isOwner": false
             }
           }
         ]
