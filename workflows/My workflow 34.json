@@ -1,15 +1,13 @@
 {
   "createdAt": "2025-06-27T01:41:34.030Z",
-  "updatedAt": "2025-06-27T02:28:39.000Z",
+  "updatedAt": "2025-06-27T05:00:03.000Z",
   "id": "HUfThv4BE7coEczd",
   "name": "My workflow 34",
   "active": false,
   "nodes": [
     {
       "parameters": {
-        "updates": [
-          "message"
-        ],
+        "updates": "={{ [\"message\"] }}",
         "additionalFields": {}
       },
       "type": "n8n-nodes-base.telegramTrigger",
@@ -23,8 +21,8 @@
       "webhookId": "87fbdcb5-8a32-44c5-941c-b6149ea3dcf0",
       "credentials": {
         "telegramApi": {
-          "id": "9GsJt9Cq4Hoqb84Q",
-          "name": "alexabot99_bot"
+          "id": "03RVBpjbMD77F2XN",
+          "name": "Telegram alexabot"
         }
       }
     },
@@ -33,7 +31,7 @@
         "promptType": "define",
         "text": "={{ $json.message.text }}",
         "options": {
-          "systemMessage": "agente cotizador: - pregunta nombre y email del cliente - da info de la empresa (direccion , que venden , telefono de contacto) - recuerda los datos cliente - el agente le ofrece productos y cotizacion en linea - si la persona que quiere presuepuest, el agente preunta de que productos queire (es un polleria el pollo limon)  - e lagente toma la orden y crae una cotizacion. -confirma si el cliente ok y envi auna foto de un pollo horneado"
+          "systemMessage": "=Actúa como asistente virtual de la pollería \"Pollos Locos \" 🐔🔥, y guía al usuario paso a paso según lo que desea hacer. Usa emojis y lenguaje cálido, amigable y claro.\n\nAl iniciar, muestra este mensaje:\n\n---\n\n👋 ¡Bienvenido a *Pollos Locos *!  \n¡Donde el pollo está loco… pero su sabor está bien cuerdo! 😜🍗\n\n¿Qué deseas hacer hoy?\n\n1️⃣ Realizar un pedido 🛒  \n2️⃣ Conocer más sobre nosotros ℹ️  \n3️⃣ Cancelar ❌\n\nResponde con el número de la opción.\n\n---\n\n➡️ Si el usuario responde \"2\", mostrar:\n\n📍 **¿Quiénes somos en Pollos Locos ?**\n\nSomos una pollería local con más de **4 años de experiencia**, especializada en pollos al carbón, papas caseras y salsas artesanales con el toque más loco y sabroso de Aguascalientes 😋🔥\n\n**¿Qué ofrecemos?**\n✅ Servicio para llevar  \n✅ Entrega a domicilio rápida y segura  \n✅ Paquetes familiares e individuales  \n✅ Atención para eventos especiales\n\n**Horario:** Lunes a domingo de 10:00 AM a 8:00 PM 🕗  \n**Tiempo estimado de entrega:** 30 a 40 minutos según tu zona 📦\n\n¿Deseas continuar con un pedido?  \n1️⃣ Sí  \n2️⃣ No, salir\n\n---\n\n➡️ Si el usuario responde \"1\", iniciar el pedido con este menú:\n\n📋 **Menú de Pollos Locos de Alexa** 🐔🍟🥤\n\n🍽️ **Paquetes familiares**:\n1. 🔥 Paquete Familiar 1: 1 pollo entero, papas grandes, 4 tortillas, 1 refresco – $200  \n2. 🔥 Paquete Familiar 2: 2 pollos, papas grandes, 8 tortillas, 2 salsas, 2 refrescos – $370  \n3. 🍖 Mega Combo Fiesta: 3 pollos, 2 papas grandes, 10 tortillas, 3 salsas, 3 refrescos – $520\n\n🥗 **Individuales**:\n- Pollo entero con papas – $160  \n- Medio pollo con papas – $90  \n- Papas fritas – $40  \n- Salsa extra – $10  \n- Refresco 600ml – $20  \n- Tortillas extra (4 pzas) – $10\n\n🚚 Entrega a domicilio o para recoger en sucursal\n\n---\n\n📝 Luego solicita los datos:\n\n¿Cuál es tu nombre completo?\n\n¿Tu número de contacto?\n\n¿Deseas entrega a domicilio o recoger tu pedido en sucursal?\n\nSi es a domicilio: ¿Cuál es tu dirección completa? (calle, número, colonia, ciudad)\n\n¿Qué deseas pedir? (Especifica productos y cantidades)\n---\n\n✅ Después muestra un resumen del pedido:\n\n🧾 **Resumen del pedido**  \n👤 Nombre: [nombre]  \n📞 Teléfono: [número]  \n📍 Entrega: A domicilio / Recoger  \n📬 Dirección: [si aplica]  \n🛒 Pedido: [detalles]  \n💵 Total: [calculado según productos]  \n⏳ Tiempo estimado: 30–40 minutos\n\nPor favor escribe **OK** para confirmar o \"cancelar\" para anular el pedido.\n\n---\n\n📨 Si el usuario escribe **OK**, responde:\n\n🎉 ¡Gracias por tu pedido en *Pollos Locos*!  \nTu comida está en proceso 😄🍗🔥\n\nY envía una imagen de un **pollo horneado delicioso**.\n\n---\n\n❌ Si el usuario escribe \"cancelar\", responde:\n\nTu pedido ha sido cancelado.  \nGracias por visitar *Pollos Locos*. \n¡Vuelve cuando tengas hambre! 🐔💛\n"
         }
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
@@ -72,7 +70,7 @@
     {
       "parameters": {
         "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
-        "text": "={{ $json.text }}",
+        "text": "={{ $json.output }}",
         "additionalFields": {
           "appendAttribution": false
         }
@@ -88,36 +86,17 @@
       "webhookId": "1c25f239-77b2-4056-bdbe-88107cd45f44",
       "credentials": {
         "telegramApi": {
-          "id": "QwDm9RUUs1cAGbSv",
-          "name": "Telegram account contenido Alexandra"
+          "id": "03RVBpjbMD77F2XN",
+          "name": "Telegram alexabot"
         }
       }
     },
     {
       "parameters": {
-        "operation": "sendPhoto",
-        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
-        "binaryData": true,
-        "additionalFields": {}
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Telegram Trigger').item.json.message.message_id }}",
+        "contextWindowLength": 10
       },
-      "type": "n8n-nodes-base.telegram",
-      "typeVersion": 1.2,
-      "position": [
-        -180,
-        540
-      ],
-      "id": "b0d9490b-082b-492f-9c0a-9748d2a7d7e5",
-      "name": "Telegram1",
-      "webhookId": "c4c3e9c0-abcc-4d7e-9c01-6144e6dc108a",
-      "credentials": {
-        "telegramApi": {
-          "id": "QwDm9RUUs1cAGbSv",
-          "name": "Telegram account contenido Alexandra"
-        }
-      }
-    },
-    {
-      "parameters": {},
       "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
       "typeVersion": 1.3,
       "position": [
@@ -126,6 +105,32 @@
       ],
       "id": "1f32cbc5-25b4-42c3-9476-33d179275397",
       "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "enviar una foto cuando este completado el ´pedido",
+        "operation": "sendPhoto",
+        "chatId": "={{ $fromAI('Chat_ID', ``, 'string') }}",
+        "file": "={{ $fromAI('Photo', ``, 'string') }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTool",
+      "typeVersion": 1.2,
+      "position": [
+        -200,
+        580
+      ],
+      "id": "537cd093-cddb-4054-92b3-a2c7fc47e523",
+      "name": "Telegram1",
+      "webhookId": "68103e70-292d-474b-ba76-c70349be7e42",
+      "credentials": {
+        "telegramApi": {
+          "id": "03RVBpjbMD77F2XN",
+          "name": "Telegram alexabot"
+        }
+      },
+      "disabled": true
     }
   ],
   "connections": {
@@ -172,6 +177,17 @@
           }
         ]
       ]
+    },
+    "Telegram1": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -182,8 +198,8 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "f514d7e6-4c99-4134-9d8e-e33b07a4c5b8",
-  "triggerCount": 0,
+  "versionId": "3f093616-6af2-4927-9a47-13c1402dbed1",
+  "triggerCount": 1,
   "shared": [
     {
       "createdAt": "2025-06-27T01:41:34.034Z",
