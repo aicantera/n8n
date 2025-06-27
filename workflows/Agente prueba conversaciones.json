@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-06-26T19:46:17.010Z",
-  "updatedAt": "2025-06-26T20:00:42.000Z",
+  "updatedAt": "2025-06-27T00:44:12.000Z",
   "id": "LOGWfvEF1hsYrRR3",
   "name": "Agente prueba conversaciones",
   "active": true,
@@ -53,6 +53,7 @@
       ],
       "id": "904fad48-fe2e-4816-9e57-65b1deb083f2",
       "name": "Supabase",
+      "alwaysOutputData": true,
       "credentials": {
         "supabaseApi": {
           "id": "ty0KiXsEYP1uJ8t9",
@@ -171,8 +172,8 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 1.9,
       "position": [
-        640,
-        -160
+        920,
+        -40
       ],
       "id": "2d3c33ca-2be5-41a1-9c55-cfee54f862cd",
       "name": "AI Agent"
@@ -189,8 +190,8 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.2,
       "position": [
-        680,
-        60
+        960,
+        180
       ],
       "id": "5e6425db-c91a-474c-98bd-84dc81285023",
       "name": "OpenAI Chat Model",
@@ -228,8 +229,8 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        1260,
-        -300
+        1540,
+        -180
       ],
       "id": "225f1877-660e-410a-99f5-d2662c8a0478",
       "name": "Supabase2",
@@ -268,8 +269,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        1020,
-        -160
+        1300,
+        -40
       ],
       "id": "344ed7e6-aa8a-4cfb-b0b8-aca1cb6456c3",
       "name": "If1"
@@ -285,11 +286,163 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        1480,
-        -300
+        1760,
+        -180
       ],
       "id": "74946d3e-b73b-4f3d-842c-a0c88d367c72",
       "name": "Telegram",
+      "webhookId": "db7b90ad-efca-4609-8aae-0c946cdf7520",
+      "credentials": {
+        "telegramApi": {
+          "id": "vg5d9USBva9ntYwd",
+          "name": "Telegram account prueba conversaciones"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "69bf7b83-0b7f-4dee-b026-47f7c7b65f8c",
+              "name": "numero_id_insert",
+              "value": "={{ $('Telegram Trigger').item.json.message.from.id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        140,
+        160
+      ],
+      "id": "3574ff94-5dce-499d-962a-a93335e04ff7",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "tableId": "chats",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "numero_id",
+              "fieldValue": "={{ $json.numero_id_insert }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        360,
+        160
+      ],
+      "id": "ea004bfc-8467-401f-ade8-2e86c1ad7192",
+      "name": "crear nuevo chat",
+      "credentials": {
+        "supabaseApi": {
+          "id": "ty0KiXsEYP1uJ8t9",
+          "name": "Supabase account - CANTERA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "tableId": "agente_leads_convversations",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "conversacion_id",
+              "fieldValue": "={{ $json.id }}"
+            },
+            {
+              "fieldId": "chat_id",
+              "fieldValue": "={{ $json.numero_id }}"
+            },
+            {
+              "fieldId": "type",
+              "fieldValue": "human"
+            },
+            {
+              "fieldId": "message",
+              "fieldValue": "={{ $('Telegram Trigger').item.json.message.text }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        620,
+        160
+      ],
+      "id": "e0816236-091b-42a4-8628-fb4cbd2e4320",
+      "name": "Supabase3",
+      "credentials": {
+        "supabaseApi": {
+          "id": "ty0KiXsEYP1uJ8t9",
+          "name": "Supabase account - CANTERA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "tableId": "agente_leads_convversations",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "conversacion_id",
+              "fieldValue": "={{ $('crear nuevo chat').item.json.id }}"
+            },
+            {
+              "fieldId": "chat_id",
+              "fieldValue": "={{ $('crear nuevo chat').item.json.numero_id }}"
+            },
+            {
+              "fieldId": "type",
+              "fieldValue": "agent"
+            },
+            {
+              "fieldId": "message",
+              "fieldValue": "={{ $json.output }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        1560,
+        20
+      ],
+      "id": "17e80d6e-6f52-4628-8fb9-a8c37a86dad0",
+      "name": "Supabase4",
+      "credentials": {
+        "supabaseApi": {
+          "id": "ty0KiXsEYP1uJ8t9",
+          "name": "Supabase account - CANTERA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.from.id }}",
+        "text": "={{ $('AI Agent').item.json.output }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1760,
+        20
+      ],
+      "id": "be3ca4a9-0b46-4bb9-b869-7d9f81c86feb",
+      "name": "Telegram1",
       "webhookId": "db7b90ad-efca-4609-8aae-0c946cdf7520",
       "credentials": {
         "telegramApi": {
@@ -327,6 +480,13 @@
         [
           {
             "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields1",
             "type": "main",
             "index": 0
           }
@@ -385,6 +545,13 @@
             "type": "main",
             "index": 0
           }
+        ],
+        [
+          {
+            "node": "Supabase4",
+            "type": "main",
+            "index": 0
+          }
         ]
       ]
     },
@@ -393,6 +560,50 @@
         [
           {
             "node": "Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "crear nuevo chat",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "crear nuevo chat": {
+      "main": [
+        [
+          {
+            "node": "Supabase3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase3": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase4": {
+      "main": [
+        [
+          {
+            "node": "Telegram1",
             "type": "main",
             "index": 0
           }
@@ -407,8 +618,34 @@
   "meta": {
     "templateCredsSetupCompleted": true
   },
-  "pinData": {},
-  "versionId": "0f69e8c0-20bf-499c-896e-3771aa6bdb94",
+  "pinData": {
+    "Telegram Trigger": [
+      {
+        "json": {
+          "update_id": 8900895,
+          "message": {
+            "message_id": 3,
+            "from": {
+              "id": 775456693,
+              "is_bot": false,
+              "first_name": "Ricardo",
+              "last_name": "Correa",
+              "language_code": "es"
+            },
+            "chat": {
+              "id": 775456693,
+              "first_name": "Ricardo",
+              "last_name": "Correa",
+              "type": "private"
+            },
+            "date": 1750967986,
+            "text": "hola soy ricardo"
+          }
+        }
+      }
+    ]
+  },
+  "versionId": "7d9d9790-3d58-4a0f-b702-ebb8ab718d2c",
   "triggerCount": 1,
   "shared": [
     {
