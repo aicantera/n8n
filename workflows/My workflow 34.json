@@ -1,0 +1,252 @@
+{
+  "createdAt": "2025-06-27T01:41:34.030Z",
+  "updatedAt": "2025-06-27T01:58:14.000Z",
+  "id": "HUfThv4BE7coEczd",
+  "name": "My workflow 34",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -680,
+        340
+      ],
+      "id": "267faad2-cc89-46df-9e04-ce27dd9bb398",
+      "name": "Telegram Trigger",
+      "webhookId": "87fbdcb5-8a32-44c5-941c-b6149ea3dcf0",
+      "credentials": {
+        "telegramApi": {
+          "id": "QwDm9RUUs1cAGbSv",
+          "name": "Telegram account contenido Alexandra"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.message.text }}",
+        "options": {
+          "systemMessage": "agente cotizador: - pregunta nombre y email del cliente - da info de la empresa (direccion , que venden , telefono de contacto) - recuerda los datos cliente - el agente le ofrece productos y cotizacion en linea - si la persona que quiere presuepuest, el agente preunta de que productos queire (es un polleria el pollo limon)  - e lagente toma la orden y crae una cotizacion. -confirma si el cliente ok y envi auna foto de un pollo horneado"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.9,
+      "position": [
+        -460,
+        340
+      ],
+      "id": "4b790a69-2e4a-4c83-9f2a-6b510c5110ac",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -540,
+        540
+      ],
+      "id": "f08b0c68-5c16-460b-98e8-974a89119e0e",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "kN8CVraho0i9hYUQ",
+          "name": "OpenAi account Alexandra Trujillo"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "={{ $json.text }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        320,
+        120
+      ],
+      "id": "df3417bb-606e-41ab-8fae-16b168d742ac",
+      "name": "Telegram",
+      "webhookId": "1c25f239-77b2-4056-bdbe-88107cd45f44",
+      "credentials": {
+        "telegramApi": {
+          "id": "QwDm9RUUs1cAGbSv",
+          "name": "Telegram account contenido Alexandra"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "sendPhoto",
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "binaryData": true,
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -200,
+        500
+      ],
+      "id": "b0d9490b-082b-492f-9c0a-9748d2a7d7e5",
+      "name": "Telegram1",
+      "webhookId": "c4c3e9c0-abcc-4d7e-9c01-6144e6dc108a",
+      "credentials": {
+        "telegramApi": {
+          "id": "QwDm9RUUs1cAGbSv",
+          "name": "Telegram account contenido Alexandra"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -400,
+        620
+      ],
+      "id": "1f32cbc5-25b4-42c3-9476-33d179275397",
+      "name": "Simple Memory"
+    }
+  ],
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "319a6523-fab7-4e42-a97a-4be3777a7e38",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "createdAt": "2025-06-27T01:41:34.034Z",
+      "updatedAt": "2025-06-27T01:41:34.034Z",
+      "role": "workflow:owner",
+      "workflowId": "HUfThv4BE7coEczd",
+      "projectId": "UPXsxNbEdAC5wodw",
+      "project": {
+        "createdAt": "2025-05-30T21:50:35.802Z",
+        "updatedAt": "2025-05-30T21:51:22.504Z",
+        "id": "UPXsxNbEdAC5wodw",
+        "name": "Alexandra  Trujillo  <alexandra.trujillo@canteradigital.mx>",
+        "type": "personal",
+        "icon": null,
+        "projectRelations": [
+          {
+            "createdAt": "2025-05-30T21:50:35.804Z",
+            "updatedAt": "2025-05-30T21:50:35.804Z",
+            "role": "project:personalOwner",
+            "userId": "65d58894-4572-495d-8c41-0b8ea4c5b71f",
+            "projectId": "UPXsxNbEdAC5wodw",
+            "user": {
+              "createdAt": "2025-05-30T21:50:35.800Z",
+              "updatedAt": "2025-06-12T00:59:16.255Z",
+              "id": "65d58894-4572-495d-8c41-0b8ea4c5b71f",
+              "email": "alexandra.trujillo@canteradigital.mx",
+              "firstName": "Alexandra ",
+              "lastName": "Trujillo ",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-05-30T21:52:04.811Z",
+                "personalization_survey_n8n_version": "1.92.2",
+                "automationGoalDevops": [
+                  "data-syncing",
+                  "ticketing-systems-integrations",
+                  "ci-cd",
+                  "monitoring-alerting",
+                  "reporting",
+                  "incident-response"
+                ],
+                "companyType": "systems-integrator",
+                "role": "it"
+              },
+              "settings": {
+                "easyAIWorkflowOnboarded": true,
+                "firstSuccessfulWorkflowId": "bmdwVJ36IDZozHoU",
+                "userActivated": true,
+                "userActivatedAt": 1749246625266,
+                "npsSurvey": {
+                  "responded": true,
+                  "lastShownAt": 1749689952085
+                }
+              },
+              "role": "global:member",
+              "disabled": false,
+              "mfaEnabled": false,
+              "isPending": false,
+              "isOwner": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": []
+}
