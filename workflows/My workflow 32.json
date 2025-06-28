@@ -1,26 +1,24 @@
 {
   "createdAt": "2025-06-28T00:43:51.105Z",
-  "updatedAt": "2025-06-28T00:43:51.105Z",
+  "updatedAt": "2025-06-28T02:01:13.000Z",
   "id": "HU4dEdOTs91juxoc",
   "name": "My workflow 32",
-  "active": false,
+  "active": true,
   "nodes": [
     {
       "parameters": {
-        "updates": [
-          "message"
-        ],
+        "updates": "={{ [\"message\"] }}",
         "additionalFields": {}
       },
       "type": "n8n-nodes-base.telegramTrigger",
       "typeVersion": 1.2,
       "position": [
-        -500,
-        20
+        0,
+        0
       ],
-      "id": "f12923f3-0607-4589-af04-cd193738d4d9",
+      "id": "19983e7d-6260-41ca-b5d6-92f0fb6a39ce",
       "name": "Telegram Trigger",
-      "webhookId": "ea4d26f1-d23f-417c-b260-c7a6cb3c5ba3",
+      "webhookId": "87fbdcb5-8a32-44c5-941c-b6149ea3dcf0",
       "credentials": {
         "telegramApi": {
           "id": "03RVBpjbMD77F2XN",
@@ -30,7 +28,341 @@
     },
     {
       "parameters": {
-        "url": "https://serpapi.com/search",
+        "promptType": "define",
+        "text": "={{ $json.message.text }}",
+        "options": {
+          "systemMessage": "=Actúa como asistente virtual llamadado alexandra de la pollería \"Crazy Chicken\" 🐔🔥, y guía al usuario paso a paso según lo que desea hacer. Usa emojis y lenguaje cálido, amigable y claro.\n\nAl iniciar, muestra este mensaje:\n\n---\n\n👋 ¡Bienvenido a *Crazy Chicken*!  \n¡Donde el pollo está loco… pero el sabor está bien cuerdo! 😜🍗\n\n¿Qué deseas hacer hoy?\n\n1️⃣ Realizar un pedido 🛒  \n2️⃣ Conocer más sobre nosotros ℹ️  \n3️⃣ Cancelar ❌\n\nResponde con el número de la opción.\n\n---\n\n➡️ Si el usuario responde \"2\", mostrar:\n\n📍 **¿Quiénes somos en Crazy Chicken?**\n\nSomos una pollería local con más de **4 años de experiencia** cuya, especializada en pollos al carbón, papas caseras y salsas artesanales con el toque más loco y sabroso de *Aguascalientes* con dos localiciones matriz ubicada en avenida maravillas culinarias #6537 C.P 9999 colonia gula alegre y sucursal en avenida quita el hambre #768 colonia panza llena C.P 7615  😋🔥\n\n**¿Qué ofrecemos?**  \n✅ Servicio para llevar  \n✅ Entrega a domicilio rápida y segura  \n✅ Paquetes familiares e individuales  \n✅ Atención para eventos especiales\n\n🕗 **Horario:** Lunes a domingo de 10:00 AM a 8:00 PM\n\n¿Deseas continuar con un pedido?  \n1️⃣ Sí  \n2️⃣ No, salir\n\n---\n\n➡️ Si el usuario responde \"1\" (desde el inicio o después de conocer la info), primero solicita los datos del cliente **antes del menú**:\n\n📝 Por favor proporcióname los siguientes datos:\n\n**importante** si pone datos como no poner un nombre de persona, que el numero de contacto lleve letras, que el correo no contenga @gmail, @outlook, @hotmail @icloud o sitios registrados de instituciones o educativos, o no indique si es a domicilio o para recoger **mostrar error de datos invalidos señalando que dato puso mal*+\n\n- ¿Cuál es tu **nombre completo**?  \n- ¿Tu **número de contacto**?  \n- ¿Cuál es tu **correo electrónico**?  \n- ¿Deseas **entrega a domicilio** o **recoger** \n\n---\n\n➡️ Si el cliente elige **entrega a domicilio**, también solicita:\n\n- ¿Cuál es tu **dirección completa**? (calle, número, colonia)\n\n- Si el cliente elige **recoger** tambien solicita: si recogera en matriz o sucursal\n---\n\n✅ Luego de capturar esos datos, **muéstrale el menú**:\n\n📋 **Menú de Crazy Chicken** 🐔🍟🥤\n\n🍽️ **Paquetes familiares**:\n1. 🔥 Paquete Familiar 1: 1 pollo entero, papas grandes, 4 tortillas, 1 refresco – $200  \n2. 🔥 Paquete Familiar 2: 2 pollos, papas grandes, 8 tortillas, 2 salsas, 2 refrescos – $370  \n3. 🍖 Mega Combo Fiesta: 3 pollos, 2 papas grandes, 10 tortillas, 3 salsas, 3 refrescos – $520\n\n🥗 **Productos individuales**:\n- Pollo entero con papas – $160  \n- Medio pollo con papas – $90  \n- Papas fritas – $40  \n- Salsa extra – $10  \n- Refresco 2L – $40 \n- Tortillas extra (1/2 kg) – $15\n\n\n---\n\n🛒 Ahora dime, ¿qué deseas pedir? (Especifica productos y cantidades)\n\n---\n\n➡️ Luego de que el cliente envíe el pedido, solicita:\n\n **Si el cliente en el pedido solo pone un numero pregunta si es por un paquete o producctos indivuduales**\n\n⏳ El tiempo estimado de preparación es de **30 a 45 minutos**, y te notificaremos por correo cuando esté listo para recoger o en camino, según la opción que elegiste.\n\n---\n\n✅ Después responde con el resumen del pedido:\n\n🧾 **Resumen del pedido**  \n👤 Nombre: [nombre]  \n📞 Teléfono: [número]  \n📧 Email: [correo electrónico]  \n📍 Entrega: A domicilio / Recoger  \n📬 Dirección: [si aplica]  \n🛒 Pedido: [detalles]  \n💵 Total: [calculado]  \n⏳ Tiempo estimado: 30–45 minutos\n\nPor favor escribe **OK** para confirmar tu pedido o \"cancelar\" si deseas anularlo.\n\n---\n\n📨 Si el usuario escribe **OK**, responde:\n\n🎉 ¡Gracias por tu pedido en *Crazy Chicken*!  \nTu comida está en proceso y llegará pronto (o estará lista para recoger).  \n¡Buen provecho! 😄🍗🔥\n\nEnvía una imagen de un pollo horneado delicioso 🍗.\n\n---\n\n❌ Si el usuario escribe \"cancelar\", responde:\n-pregunta los datos con los que registro pedido y despues de registrarlos enviale:\n\nTu pedido ha sido cancelado.  \nGracias por visitar *Crazy Chicken*.  \n¡Vuelve cuando tengas hambre! 🐔💛\n\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.9,
+      "position": [
+        220,
+        0
+      ],
+      "id": "b2879840-8d51-436f-970e-5a2686b27f13",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        140,
+        200
+      ],
+      "id": "dca34bfa-71b5-4655-a8cd-08e671bc542d",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "kN8CVraho0i9hYUQ",
+          "name": "OpenAi account Alexandra Trujillo"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "={{ $json.output }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        680,
+        40
+      ],
+      "id": "701e0ba7-1967-468d-8bf1-72484d84db91",
+      "name": "Telegram",
+      "webhookId": "1c25f239-77b2-4056-bdbe-88107cd45f44",
+      "credentials": {
+        "telegramApi": {
+          "id": "03RVBpjbMD77F2XN",
+          "name": "Telegram alexabot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json }}",
+        "contextWindowLength": 15
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        280,
+        280
+      ],
+      "id": "ff59521c-e188-443b-a647-357da683e8d0",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "enviar una foto cuando este completado el ´pedido",
+        "operation": "sendPhoto",
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "binaryData": "={{ false }}",
+        "file": "=",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTool",
+      "typeVersion": 1.2,
+      "position": [
+        480,
+        240
+      ],
+      "id": "aa47455c-914b-4476-8267-99cdccaece36",
+      "name": "Telegram1",
+      "webhookId": "68103e70-292d-474b-ba76-c70349be7e42",
+      "credentials": {
+        "telegramApi": {
+          "id": "03RVBpjbMD77F2XN",
+          "name": "Telegram alexabot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "updates": "={{ [\"message\"] }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        80,
+        80
+      ],
+      "id": "26bf698c-79e2-45f0-a24f-e06f7bea7327",
+      "name": "Telegram Trigger1",
+      "webhookId": "87fbdcb5-8a32-44c5-941c-b6149ea3dcf0",
+      "credentials": {
+        "telegramApi": {
+          "id": "03RVBpjbMD77F2XN",
+          "name": "Telegram alexabot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.message.text }}",
+        "options": {
+          "systemMessage": "=Actúa como asistente virtual llamadado alexandra de la pollería \"Crazy Chicken\" 🐔🔥, y guía al usuario paso a paso según lo que desea hacer. Usa emojis y lenguaje cálido, amigable y claro.\n\nAl iniciar, muestra este mensaje:\n\n---\n\n👋 ¡Bienvenido a *Crazy Chicken*!  \n¡Donde el pollo está loco… pero el sabor está bien cuerdo! 😜🍗\n\n¿Qué deseas hacer hoy?\n\n1️⃣ Realizar un pedido 🛒  \n2️⃣ Conocer más sobre nosotros ℹ️  \n3️⃣ Cancelar ❌\n\nResponde con el número de la opción.\n\n---\n\n➡️ Si el usuario responde \"2\", mostrar:\n\n📍 **¿Quiénes somos en Crazy Chicken?**\n\nSomos una pollería local con más de **4 años de experiencia** cuya, especializada en pollos al carbón, papas caseras y salsas artesanales con el toque más loco y sabroso de *Aguascalientes* con dos localiciones matriz ubicada en avenida maravillas culinarias #6537 C.P 9999 colonia gula alegre y sucursal en avenida quita el hambre #768 colonia panza llena C.P 7615  😋🔥\n\n**¿Qué ofrecemos?**  \n✅ Servicio para llevar  \n✅ Entrega a domicilio rápida y segura  \n✅ Paquetes familiares e individuales  \n✅ Atención para eventos especiales\n\n🕗 **Horario:** Lunes a domingo de 10:00 AM a 8:00 PM\n\n¿Deseas continuar con un pedido?  \n1️⃣ Sí  \n2️⃣ No, salir\n\n---\n\n➡️ Si el usuario responde \"1\" (desde el inicio o después de conocer la info), primero solicita los datos del cliente **antes del menú**:\n\n📝 Por favor proporcióname los siguientes datos:\n\n**importante** si pone datos como no poner un nombre de persona, que el numero de contacto lleve letras, que el correo no contenga @gmail, @outlook, @hotmail @icloud o sitios registrados de instituciones o educativos, o no indique si es a domicilio o para recoger **mostrar error de datos invalidos señalando que dato puso mal*+\n\n- ¿Cuál es tu **nombre completo**?  \n- ¿Tu **número de contacto**?  \n- ¿Cuál es tu **correo electrónico**?  \n- ¿Deseas **entrega a domicilio** o **recoger** \n\n---\n\n➡️ Si el cliente elige **entrega a domicilio**, también solicita:\n\n- ¿Cuál es tu **dirección completa**? (calle, número, colonia)\n\n- Si el cliente elige **recoger** tambien solicita: si recogera en matriz o sucursal\n---\n\n✅ Luego de capturar esos datos, **muéstrale el menú**:\n\n📋 **Menú de Crazy Chicken** 🐔🍟🥤\n\n🍽️ **Paquetes familiares**:\n1. 🔥 Paquete Familiar 1: 1 pollo entero, papas grandes, 4 tortillas, 1 refresco – $200  \n2. 🔥 Paquete Familiar 2: 2 pollos, papas grandes, 8 tortillas, 2 salsas, 2 refrescos – $370  \n3. 🍖 Mega Combo Fiesta: 3 pollos, 2 papas grandes, 10 tortillas, 3 salsas, 3 refrescos – $520\n\n🥗 **Productos individuales**:\n- Pollo entero con papas – $160  \n- Medio pollo con papas – $90  \n- Papas fritas – $40  \n- Salsa extra – $10  \n- Refresco 2L – $40 \n- Tortillas extra (1/2 kg) – $15\n\n\n---\n\n🛒 Ahora dime, ¿qué deseas pedir? (Especifica productos y cantidades)\n\n---\n\n➡️ Luego de que el cliente envíe el pedido, solicita:\n\n **Si el cliente en el pedido solo pone un numero pregunta si es por un paquete o producctos indivuduales**\n\n⏳ El tiempo estimado de preparación es de **30 a 45 minutos**, y te notificaremos por correo cuando esté listo para recoger o en camino, según la opción que elegiste.\n\n---\n\n✅ Después responde con el resumen del pedido:\n\n🧾 **Resumen del pedido**  \n👤 Nombre: [nombre]  \n📞 Teléfono: [número]  \n📧 Email: [correo electrónico]  \n📍 Entrega: A domicilio / Recoger  \n📬 Dirección: [si aplica]  \n🛒 Pedido: [detalles]  \n💵 Total: [calculado]  \n⏳ Tiempo estimado: 30–45 minutos\n\nPor favor escribe **OK** para confirmar tu pedido o \"cancelar\" si deseas anularlo.\n\n---\n\n📨 Si el usuario escribe **OK**, responde:\n\n🎉 ¡Gracias por tu pedido en *Crazy Chicken*!  \nTu comida está en proceso y llegará pronto (o estará lista para recoger).  \n¡Buen provecho! 😄🍗🔥\n\nEnvía una imagen de un pollo horneado delicioso 🍗.\n\n---\n\n❌ Si el usuario escribe \"cancelar\", responde:\n-pregunta los datos con los que registro pedido y despues de registrarlos enviale:\n\nTu pedido ha sido cancelado.  \nGracias por visitar *Crazy Chicken*.  \n¡Vuelve cuando tengas hambre! 🐔💛\n\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.9,
+      "position": [
+        300,
+        80
+      ],
+      "id": "13146557-2f21-490c-a4f5-2c39e8a2792b",
+      "name": "AI Agent1"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        300,
+        360
+      ],
+      "id": "85ddcd2f-049e-4504-a6d8-5079a3e9e687",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "kN8CVraho0i9hYUQ",
+          "name": "OpenAi account Alexandra Trujillo"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger1').item.json.message.chat.id }}",
+        "text": "={{ $json.output }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        760,
+        120
+      ],
+      "id": "76ed600a-f456-43d5-8be8-fdf0a99c97bc",
+      "name": "Telegram2",
+      "webhookId": "1c25f239-77b2-4056-bdbe-88107cd45f44",
+      "credentials": {
+        "telegramApi": {
+          "id": "03RVBpjbMD77F2XN",
+          "name": "Telegram alexabot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json }}",
+        "contextWindowLength": 15
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        440,
+        440
+      ],
+      "id": "c60542c6-9d4e-48ee-bafc-6184a726ca71",
+      "name": "Simple Memory1"
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "enviar una foto cuando este completado el ´pedido",
+        "operation": "sendPhoto",
+        "chatId": "={{ $('Telegram Trigger1').item.json.message.chat.id }}",
+        "binaryData": "={{ false }}",
+        "file": "=",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTool",
+      "typeVersion": 1.2,
+      "position": [
+        560,
+        320
+      ],
+      "id": "40745a6d-da71-4000-8938-00d0417428ea",
+      "name": "Telegram3",
+      "webhookId": "68103e70-292d-474b-ba76-c70349be7e42",
+      "credentials": {
+        "telegramApi": {
+          "id": "03RVBpjbMD77F2XN",
+          "name": "Telegram alexabot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -1300,
+        40
+      ],
+      "id": "fa37b2fa-4457-41f3-9017-64ccfc09e969",
+      "name": "OpenAI Chat Model2",
+      "credentials": {
+        "openAiApi": {
+          "id": "kN8CVraho0i9hYUQ",
+          "name": "OpenAi account Alexandra Trujillo"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json }}",
+        "contextWindowLength": 15
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -1120,
+        80
+      ],
+      "id": "baee1631-bd32-4420-ba4e-e59a2b90e69c",
+      "name": "Simple Memory2"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger2').item.json.message.chat.id }}",
+        "text": "={{ $json.output }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -760,
+        -120
+      ],
+      "id": "a93631c9-11bc-4649-8c47-53fad5cf0bd0",
+      "name": "Telegram5",
+      "webhookId": "1c25f239-77b2-4056-bdbe-88107cd45f44",
+      "credentials": {
+        "telegramApi": {
+          "id": "03RVBpjbMD77F2XN",
+          "name": "Telegram alexabot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "updates": "={{ [\"message\"] }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -1440,
+        -160
+      ],
+      "id": "59b9f880-208e-4d44-8f75-0a359a50bcf2",
+      "name": "Telegram Trigger2",
+      "webhookId": "87fbdcb5-8a32-44c5-941c-b6149ea3dcf0",
+      "credentials": {
+        "telegramApi": {
+          "id": "03RVBpjbMD77F2XN",
+          "name": "Telegram alexabot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.message.text }}",
+        "options": {
+          "systemMessage": "=eres un vendedor que ofrece productos electronicos y  que cuando el cliente quiera saber que productos hay ejecuta el tool de que productos que hay, ademas agregas cuando el cliente lo pida con el tool agregar producto y borras con el tool caundo el cliente lo escriba\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.9,
+      "position": [
+        -1220,
+        -160
+      ],
+      "id": "7e9013d6-13a3-49be-85f3-8cdd7f8deb5b",
+      "name": "AI Agent2"
+    },
+    {
+      "parameters": {
+        "url": "https://restful-api.dev/",
         "sendQuery": true,
         "queryParameters": {
           "parameters": [
@@ -61,11 +393,86 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -220,
-        20
+        -580,
+        280
       ],
       "id": "0e369158-7a84-4fd9-9faa-17302fbf0f84",
-      "name": "HTTP Request3"
+      "name": "HTTP Request2"
+    },
+    {
+      "parameters": {
+        "toolDescription": "es un tool para listar productos",
+        "url": "https://restful-api.dev/",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "name",
+              "value": "={{ $fromAI('parameters0_Value', ``, 'string') }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.2,
+      "position": [
+        -820,
+        80
+      ],
+      "id": "40a1a327-2ceb-4e04-b85f-45fbb48c284e",
+      "name": "listar"
+    },
+    {
+      "parameters": {
+        "toolDescription": "es un tool para agregar productos",
+        "url": "https://restful-api.dev/",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "name",
+              "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('parameters0_Value', `es agregardo por el usuario \n`, 'string') }}"
+            },
+            {
+              "value": "el nombre del producto te lo dice el usuario"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.2,
+      "position": [
+        -960,
+        60
+      ],
+      "id": "9a355da0-378b-40c4-8152-637f613a890f",
+      "name": "agregar producto"
+    },
+    {
+      "parameters": {
+        "toolDescription": "ers un tool para borrar productos",
+        "url": "https://restful-api.dev/",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "name",
+              "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('parameters0_Value', `es el nombre del producto que dio el usuarioo `, 'string') }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.2,
+      "position": [
+        -660,
+        60
+      ],
+      "id": "c327e50f-8069-49c2-9bbc-4671683a27bc",
+      "name": "borra productos"
     }
   ],
   "connections": {
@@ -73,8 +480,184 @@
       "main": [
         [
           {
-            "node": "HTTP Request3",
+            "node": "AI Agent",
             "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram1": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Trigger1": {
+      "main": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent1": {
+      "main": [
+        [
+          {
+            "node": "Telegram2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory1": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram3": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent2",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory2": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent2",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Trigger2": {
+      "main": [
+        [
+          {
+            "node": "AI Agent2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent2": {
+      "main": [
+        [
+          {
+            "node": "Telegram5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "listar": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent2",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "agregar producto": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent2",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "borra productos": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent2",
+            "type": "ai_tool",
             "index": 0
           }
         ]
@@ -89,8 +672,8 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "9d8ccc98-7b34-46ab-b984-953725ea8c1d",
-  "triggerCount": 0,
+  "versionId": "11853c6e-48bd-4f88-b385-e7054a45322d",
+  "triggerCount": 3,
   "shared": [
     {
       "createdAt": "2025-06-28T00:43:51.109Z",
