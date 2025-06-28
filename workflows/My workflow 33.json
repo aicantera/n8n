@@ -1,7 +1,7 @@
 {
-  "createdAt": "2025-06-27T01:36:34.511Z",
-  "updatedAt": "2025-06-27T01:37:37.000Z",
-  "id": "YByFug2Bn8TMwQdK",
+  "createdAt": "2025-06-28T02:04:47.274Z",
+  "updatedAt": "2025-06-28T02:04:47.274Z",
+  "id": "Pz5Zm6DRXho5O32F",
   "name": "My workflow 33",
   "active": false,
   "nodes": [
@@ -15,133 +15,37 @@
       "type": "n8n-nodes-base.telegramTrigger",
       "typeVersion": 1.2,
       "position": [
-        -500,
-        -180
+        0,
+        0
       ],
-      "id": "31115f04-a4ba-4544-88c0-f7e273849453",
+      "id": "c62bf0e4-a613-4b62-be05-d2b917af8a07",
       "name": "Telegram Trigger",
-      "webhookId": "87fbdcb5-8a32-44c5-941c-b6149ea3dcf0",
+      "webhookId": "d7b9dda8-8340-4360-9e69-c929539ac772",
       "credentials": {
         "telegramApi": {
-          "id": "QwDm9RUUs1cAGbSv",
-          "name": "Telegram account contenido Alexandra"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "promptType": "define",
-        "text": "={{ $json.message.text }}",
-        "options": {
-          "systemMessage": "=**Instructions for n8n Parent Agent: Social Media Post Creator**\n \n**Objective:** To orchestrate the workflow for creating social media posts by calling upon two child agents: \"agente_scrappyng\" for information retrieval and \"agente_copy\" for image generation. The parent agent will then combine the scraped information and the generated image to produce a complete social media post.\n \n**Workflow:**\n \n1.  **Receive User Request:** The parent agent will receive a user's request specifying the topic or keywords for the social media post.\n \n2.  **Call \"agente_scrappyng\":**\n    * The parent agent will invoke the \"agente_scrappyng\" agent.\n    * It will pass the user's input (topic/keywords) as the search query for \"agente_scrappyng\".\n    * It will instruct \"agente_scrappyng\" to perform web scraping to find relevant information based on the query.\n    * It will expect \"agente_scrappyng\" to return a summary of the findings in two short paragraphs (maximum 500 characters per paragraph), as previously defined.\n \n3.  **Receive Scraped Information:** The parent agent will receive the summarized information from \"agente_scrappyng\".\n \n4.  **Call \"agente_copy\" (Image Generation):**\n    * The parent agent will invoke the \"agente_copy\" agent (assuming this is the designated name for the image generation agent).\n    * It will pass the summarized information received from \"agente_scrappyng\" as context for the image generation.\n    * It will instruct \"agente_copy\" to generate a relevant and visually appealing image that complements the scraped information and is suitable for social media.\n    * It will expect \"agente_copy\" to return the generated image (e.g., as a file path or data URL).\n \n5.  **Receive Generated Image:** The parent agent will receive the image from \"agente_copy\".\n \n6.  **Construct Social Media Post:**\n    * The parent agent will combine the summarized information from \"agente_scrappyng\" and the generated image from \"agente_copy\".\n    * It will format this information into a complete social media post, considering best practices for engagement and readability on social media platforms.\n    * This may involve:\n        * Writing a compelling caption that incorporates key findings from the scraped information.\n        * Ensuring the caption is engaging, informative, and includes a call to action (if appropriate).\n        * Attaching the generated image to the post.\n        * Suggesting relevant hashtags.\n \n7.  **Output Social Media Post:** The parent agent will output the complete social media post (text and image).\n \n**Output Format (in Spanish):**\n \n```markdown\n**Post para Redes Sociales:**\n \n**Imagen:** [Aquí se adjuntaría la imagen generada por el agente_copy]\n \n**Texto:**\n \n[Párrafo 1 del resumen del agente_scrappyng]\n \n[Párrafo 2 del resumen del agente_scrappyng]\n \n[Texto adicional para redes sociales: titular llamativo, llamada a la acción, etc. - aplicando principios de copywriting]\n \n**Hashtags sugeridos:** #[Hashtag1] #[Hashtag2] #[HashtagRelacionado]\n \n{{ new Date().toISOString() }}"
-        }
-      },
-      "type": "@n8n/n8n-nodes-langchain.agent",
-      "typeVersion": 1.9,
-      "position": [
-        -160,
-        -180
-      ],
-      "id": "346b6a9f-056a-4693-b457-6b564023864c",
-      "name": "AI Agent"
-    },
-    {
-      "parameters": {
-        "model": {
-          "__rl": true,
-          "mode": "list",
-          "value": "gpt-4o-mini"
-        },
-        "options": {}
-      },
-      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
-      "typeVersion": 1.2,
-      "position": [
-        -300,
-        40
-      ],
-      "id": "6a194b7a-3bd4-4540-ad8e-3dc7212b0830",
-      "name": "OpenAI Chat Model",
-      "credentials": {
-        "openAiApi": {
-          "id": "kN8CVraho0i9hYUQ",
-          "name": "OpenAi account Alexandra Trujillo"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "operation": "sendPhoto",
-        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
-        "binaryData": true,
-        "additionalFields": {}
-      },
-      "type": "n8n-nodes-base.telegram",
-      "typeVersion": 1.2,
-      "position": [
-        200,
-        -160
-      ],
-      "id": "d20cb860-53e8-4f41-bfbb-344b00f3e7ed",
-      "name": "Telegram1",
-      "webhookId": "c4c3e9c0-abcc-4d7e-9c01-6144e6dc108a",
-      "credentials": {
-        "telegramApi": {
-          "id": "QwDm9RUUs1cAGbSv",
-          "name": "Telegram account contenido Alexandra"
+          "id": "03RVBpjbMD77F2XN",
+          "name": "Telegram alexabot"
         }
       }
     }
   ],
-  "connections": {
-    "Telegram Trigger": {
-      "main": [
-        [
-          {
-            "node": "AI Agent",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "AI Agent": {
-      "main": [
-        [
-          {
-            "node": "Telegram1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "OpenAI Chat Model": {
-      "ai_languageModel": [
-        [
-          {
-            "node": "AI Agent",
-            "type": "ai_languageModel",
-            "index": 0
-          }
-        ]
-      ]
-    }
-  },
+  "connections": {},
   "settings": {
     "executionOrder": "v1"
   },
   "staticData": null,
-  "meta": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
   "pinData": {},
-  "versionId": "44ae1b12-a2ad-4a46-8265-858cb7bca629",
+  "versionId": "402c801d-10e8-49b3-89e3-d56b709ad14f",
   "triggerCount": 0,
   "shared": [
     {
-      "createdAt": "2025-06-27T01:36:34.515Z",
-      "updatedAt": "2025-06-27T01:36:34.515Z",
+      "createdAt": "2025-06-28T02:04:47.278Z",
+      "updatedAt": "2025-06-28T02:04:47.278Z",
       "role": "workflow:owner",
-      "workflowId": "YByFug2Bn8TMwQdK",
+      "workflowId": "Pz5Zm6DRXho5O32F",
       "projectId": "UPXsxNbEdAC5wodw",
       "project": {
         "createdAt": "2025-05-30T21:50:35.802Z",
