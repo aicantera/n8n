@@ -1,9 +1,9 @@
 {
   "createdAt": "2025-05-13T16:37:03.099Z",
-  "updatedAt": "2025-06-27T22:55:17.000Z",
+  "updatedAt": "2025-06-27T23:53:38.000Z",
   "id": "PTbESRzX3rguwQN8",
   "name": "Agente Cantera",
-  "active": false,
+  "active": true,
   "nodes": [
     {
       "parameters": {
@@ -134,6 +134,16 @@
                 "type": "boolean",
                 "operation": "exists",
                 "singleValue": true
+              }
+            },
+            {
+              "id": "8af6a9f4-1dbe-4bfd-aef0-53d0c7ad7f04",
+              "leftValue": "={{ $json.messages[0].type }}",
+              "rightValue": "document",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
               }
             }
           ],
@@ -1545,6 +1555,31 @@
               },
               "renameOutput": true,
               "outputKey": "audio"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "8b77da66-de34-4956-bd6d-baf661fe6806",
+                    "leftValue": "={{ $('WhatsApp Trigger').item.json.messages[0].type }}",
+                    "rightValue": "document",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "documento"
             }
           ]
         },
@@ -1589,6 +1624,315 @@
       ],
       "id": "ff557f84-20db-4089-b6aa-ca5ec83cbfea",
       "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "resource": "media",
+        "operation": "mediaUrlGet",
+        "mediaGetId": "={{ $json.messages[0].document.id }}"
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1,
+      "position": [
+        -340,
+        700
+      ],
+      "id": "12b0f310-3dfc-4ae2-95f9-577a994bdec9",
+      "name": "WhatsApp Business Cloud3",
+      "webhookId": "d823ddf2-6417-4fc3-8d67-a12d9832818f",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "wss31GmBkFCO7IfF",
+          "name": "WhatsApp account - AGENTE CANTERA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.url }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -120,
+        700
+      ],
+      "id": "f8aa25fd-5dfe-4aeb-9cf9-b46930704e2c",
+      "name": "Obtiene el binary file del documento de whatsapp1",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "hdgRz1dlOhzbfO0N",
+          "name": "Header Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        340,
+        700
+      ],
+      "id": "7f51f735-3e4c-48c2-b677-25fc3958bb7d",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.mime_type }}",
+                    "rightValue": "application/pdf",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "4a10f36f-5bd0-4363-bc94-26e704cc390b"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "pdf"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "2728b8ab-14de-4d93-a657-589626c9a48d",
+                    "leftValue": "={{ $json.mime_type }}",
+                    "rightValue": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "word"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        100,
+        700
+      ],
+      "id": "3187a4e4-ced4-470c-a1fd-f5d4ece4ff45",
+      "name": "Switch1"
+    },
+    {
+      "parameters": {
+        "name": "={{ $('WhatsApp Trigger').item.json.messages[0].document.filename }} - {{ $('WhatsApp Trigger').item.json.contacts[0].profile.name }} - {{ $('WhatsApp Trigger').item.json.messages[0].from }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1fbeYGWI56Mozorxqwclm0zfF_5ivYEi5",
+          "mode": "list",
+          "cachedResultName": "documentos leads",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1fbeYGWI56Mozorxqwclm0zfF_5ivYEi5"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        440,
+        920
+      ],
+      "id": "357d9669-15dd-40b3-b44b-09fbf6948aae",
+      "name": "Google Drive",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "PKQpxniTUryv7dE9",
+          "name": "Google Drive account - DRIVE CANTERA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1kN2oLcVbFQpBGWzii95gKByZ652ziKeDhlmc5L4T4_s",
+          "mode": "list",
+          "cachedResultName": "Leads cantera",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1kN2oLcVbFQpBGWzii95gKByZ652ziKeDhlmc5L4T4_s/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 230853568,
+          "mode": "list",
+          "cachedResultName": "Hoja 2",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1kN2oLcVbFQpBGWzii95gKByZ652ziKeDhlmc5L4T4_s/edit#gid=230853568"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "date": "={{ $now.minus({ hours: 0 }).setLocale('es').toFormat(\"dd 'de' LLLL 'de' yyyy HH:mm\") }}",
+            "chat_id": "={{ $('WhatsApp Trigger').item.json.messages[0].from }}",
+            "type": "human",
+            "message": "={{ $json.webViewLink }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "date",
+              "displayName": "date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "chat_id",
+              "displayName": "chat_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "type",
+              "displayName": "type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "message",
+              "displayName": "message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        660,
+        920
+      ],
+      "id": "d783385c-4932-454f-a8d6-9e8d5a09fbe1",
+      "name": "Google Sheets4",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "VrznAZQXjQh9WpvY",
+          "name": "Google Sheets - Cantera"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d104f47b-bc06-4522-9690-bdaf69823ae7",
+              "name": "mensaje",
+              "value": "={{ $json.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        540,
+        700
+      ],
+      "id": "5014d739-1676-41f8-8aa0-a62d02185b26",
+      "name": "Edit Fields2"
+    },
+    {
+      "parameters": {
+        "operation": "text",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        660,
+        1140
+      ],
+      "id": "b8a0720a-8416-42b6-8111-97a13c445905",
+      "name": "Extract from File1"
+    },
+    {
+      "parameters": {
+        "operation": "toText",
+        "sourceProperty": "data",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        440,
+        1140
+      ],
+      "id": "2ba54fee-bb73-41b6-81fd-49fd433bdb47",
+      "name": "Convert to File",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "content": "## Ruta de documento\n**con esta parte descargamos el documento que el cliente nos mande y lo analizamos**",
+        "height": 760,
+        "width": 1320,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -440,
+        600
+      ],
+      "id": "a5d41c8f-b103-446a-a578-1c11b01b2280",
+      "name": "Sticky Note4"
     }
   ],
   "connections": {
@@ -1897,7 +2241,102 @@
             "type": "main",
             "index": 0
           }
+        ],
+        [
+          {
+            "node": "WhatsApp Business Cloud3",
+            "type": "main",
+            "index": 0
+          }
         ]
+      ]
+    },
+    "WhatsApp Business Cloud3": {
+      "main": [
+        [
+          {
+            "node": "Obtiene el binary file del documento de whatsapp1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtiene el binary file del documento de whatsapp1": {
+      "main": [
+        [
+          {
+            "node": "Switch1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch1": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Google Drive",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Google Drive",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Drive": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields2": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File1": {
+      "main": [
+        []
       ]
     }
   },
@@ -1939,9 +2378,43 @@
           "executionMode": "production"
         }
       }
+    ],
+    "WhatsApp Trigger": [
+      {
+        "json": {
+          "messaging_product": "whatsapp",
+          "metadata": {
+            "display_phone_number": "5214431866819",
+            "phone_number_id": "676686782186843"
+          },
+          "contacts": [
+            {
+              "profile": {
+                "name": "Rick"
+              },
+              "wa_id": "5214434901193"
+            }
+          ],
+          "messages": [
+            {
+              "from": "5214434901193",
+              "id": "wamid.HBgNNTIxNDQzNDkwMTE5MxUCABIYFjNFQjAxQzBGOTNERDcxNjg5RTJEMjQA",
+              "timestamp": "1751067591",
+              "type": "document",
+              "document": {
+                "filename": "01. Pre cotización.docx",
+                "mime_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                "sha256": "VnNbPRb95Kefo8KKOLZv+IsbeNP7xKYS3xC/wAMZsIE=",
+                "id": "3087009298120490"
+              }
+            }
+          ],
+          "field": "messages"
+        }
+      }
     ]
   },
-  "versionId": "bce07d08-58ca-4322-a058-1bb696ac8f41",
+  "versionId": "1938f3f9-c4c2-4e65-8421-ae117953ebf9",
   "triggerCount": 1,
   "shared": [
     {
