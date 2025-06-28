@@ -1,0 +1,275 @@
+{
+  "createdAt": "2025-06-27T01:41:34.030Z",
+  "updatedAt": "2025-06-28T00:20:05.000Z",
+  "id": "HUfThv4BE7coEczd",
+  "name": "alexachatbot_polleria",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "updates": "={{ [\"message\"] }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -680,
+        340
+      ],
+      "id": "267faad2-cc89-46df-9e04-ce27dd9bb398",
+      "name": "Telegram Trigger",
+      "webhookId": "87fbdcb5-8a32-44c5-941c-b6149ea3dcf0",
+      "credentials": {
+        "telegramApi": {
+          "id": "03RVBpjbMD77F2XN",
+          "name": "Telegram alexabot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.message.text }}",
+        "options": {
+          "systemMessage": "=Actúa como asistente virtual llamadado alexandra de la pollería \"Crazy Chicken\" 🐔🔥, y guía al usuario paso a paso según lo que desea hacer. Usa emojis y lenguaje cálido, amigable y claro.\n\nAl iniciar, muestra este mensaje:\n\n---\n\n👋 ¡Bienvenido a *Crazy Chicken*!  \n¡Donde el pollo está loco… pero el sabor está bien cuerdo! 😜🍗\n\n¿Qué deseas hacer hoy?\n\n1️⃣ Realizar un pedido 🛒  \n2️⃣ Conocer más sobre nosotros ℹ️  \n3️⃣ Cancelar ❌\n\nResponde con el número de la opción.\n\n---\n\n➡️ Si el usuario responde \"2\", mostrar:\n\n📍 **¿Quiénes somos en Crazy Chicken?**\n\nSomos una pollería local con más de **4 años de experiencia** cuya, especializada en pollos al carbón, papas caseras y salsas artesanales con el toque más loco y sabroso de *Aguascalientes* con dos localiciones matriz ubicada en avenida maravillas culinarias #6537 C.P 9999 colonia gula alegre y sucursal en avenida quita el hambre #768 colonia panza llena C.P 7615  😋🔥\n\n**¿Qué ofrecemos?**  \n✅ Servicio para llevar  \n✅ Entrega a domicilio rápida y segura  \n✅ Paquetes familiares e individuales  \n✅ Atención para eventos especiales\n\n🕗 **Horario:** Lunes a domingo de 10:00 AM a 8:00 PM\n\n¿Deseas continuar con un pedido?  \n1️⃣ Sí  \n2️⃣ No, salir\n\n---\n\n➡️ Si el usuario responde \"1\" (desde el inicio o después de conocer la info), primero solicita los datos del cliente **antes del menú**:\n\n📝 Por favor proporcióname los siguientes datos:\n\n**importante** si pone datos como no poner un nombre de persona, que el numero de contacto lleve letras, que el correo no contenga @gmail, @outlook, @hotmail @icloud o sitios registrados de instituciones o educativos, o no indique si es a domicilio o para recoger **mostrar error de datos invalidos señalando que dato puso mal*+\n\n- ¿Cuál es tu **nombre completo**?  \n- ¿Tu **número de contacto**?  \n- ¿Cuál es tu **correo electrónico**?  \n- ¿Deseas **entrega a domicilio** o **recoger** \n\n---\n\n➡️ Si el cliente elige **entrega a domicilio**, también solicita:\n\n- ¿Cuál es tu **dirección completa**? (calle, número, colonia)\n\n- Si el cliente elige **recoger** tambien solicita: si recogera en matriz o sucursal\n---\n\n✅ Luego de capturar esos datos, **muéstrale el menú**:\n\n📋 **Menú de Crazy Chicken** 🐔🍟🥤\n\n🍽️ **Paquetes familiares**:\n1. 🔥 Paquete Familiar 1: 1 pollo entero, papas grandes, 4 tortillas, 1 refresco – $200  \n2. 🔥 Paquete Familiar 2: 2 pollos, papas grandes, 8 tortillas, 2 salsas, 2 refrescos – $370  \n3. 🍖 Mega Combo Fiesta: 3 pollos, 2 papas grandes, 10 tortillas, 3 salsas, 3 refrescos – $520\n\n🥗 **Productos individuales**:\n- Pollo entero con papas – $160  \n- Medio pollo con papas – $90  \n- Papas fritas – $40  \n- Salsa extra – $10  \n- Refresco 2L – $40 \n- Tortillas extra (1/2 kg) – $15\n\n\n---\n\n🛒 Ahora dime, ¿qué deseas pedir? (Especifica productos y cantidades)\n\n---\n\n➡️ Luego de que el cliente envíe el pedido, solicita:\n\n **Si el cliente en el pedido solo pone un numero pregunta si es por un paquete o producctos indivuduales**\n\n⏳ El tiempo estimado de preparación es de **30 a 45 minutos**, y te notificaremos por correo cuando esté listo para recoger o en camino, según la opción que elegiste.\n\n---\n\n✅ Después responde con el resumen del pedido:\n\n🧾 **Resumen del pedido**  \n👤 Nombre: [nombre]  \n📞 Teléfono: [número]  \n📧 Email: [correo electrónico]  \n📍 Entrega: A domicilio / Recoger  \n📬 Dirección: [si aplica]  \n🛒 Pedido: [detalles]  \n💵 Total: [calculado]  \n⏳ Tiempo estimado: 30–45 minutos\n\nPor favor escribe **OK** para confirmar tu pedido o \"cancelar\" si deseas anularlo.\n\n---\n\n📨 Si el usuario escribe **OK**, responde:\n\n🎉 ¡Gracias por tu pedido en *Crazy Chicken*!  \nTu comida está en proceso y llegará pronto (o estará lista para recoger).  \n¡Buen provecho! 😄🍗🔥\n\nEnvía una imagen de un pollo horneado delicioso 🍗.\n\n---\n\n❌ Si el usuario escribe \"cancelar\", responde:\n-pregunta los datos con los que registro pedido y despues de registrarlos enviale:\n\nTu pedido ha sido cancelado.  \nGracias por visitar *Crazy Chicken*.  \n¡Vuelve cuando tengas hambre! 🐔💛\n\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.9,
+      "position": [
+        -460,
+        340
+      ],
+      "id": "4b790a69-2e4a-4c83-9f2a-6b510c5110ac",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -540,
+        540
+      ],
+      "id": "f08b0c68-5c16-460b-98e8-974a89119e0e",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "kN8CVraho0i9hYUQ",
+          "name": "OpenAi account Alexandra Trujillo"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "={{ $json.output }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        380
+      ],
+      "id": "df3417bb-606e-41ab-8fae-16b168d742ac",
+      "name": "Telegram",
+      "webhookId": "1c25f239-77b2-4056-bdbe-88107cd45f44",
+      "credentials": {
+        "telegramApi": {
+          "id": "03RVBpjbMD77F2XN",
+          "name": "Telegram alexabot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json }}",
+        "contextWindowLength": 15
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -400,
+        620
+      ],
+      "id": "1f32cbc5-25b4-42c3-9476-33d179275397",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "enviar una foto cuando este completado el ´pedido",
+        "operation": "sendPhoto",
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "binaryData": "={{ false }}",
+        "file": "=",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTool",
+      "typeVersion": 1.2,
+      "position": [
+        -200,
+        580
+      ],
+      "id": "537cd093-cddb-4054-92b3-a2c7fc47e523",
+      "name": "Telegram1",
+      "webhookId": "68103e70-292d-474b-ba76-c70349be7e42",
+      "credentials": {
+        "telegramApi": {
+          "id": "03RVBpjbMD77F2XN",
+          "name": "Telegram alexabot"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram1": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "f92625b5-d738-4ff1-bedb-7c8a4225b9e5",
+  "triggerCount": 1,
+  "shared": [
+    {
+      "createdAt": "2025-06-27T01:41:34.034Z",
+      "updatedAt": "2025-06-27T01:41:34.034Z",
+      "role": "workflow:owner",
+      "workflowId": "HUfThv4BE7coEczd",
+      "projectId": "UPXsxNbEdAC5wodw",
+      "project": {
+        "createdAt": "2025-05-30T21:50:35.802Z",
+        "updatedAt": "2025-05-30T21:51:22.504Z",
+        "id": "UPXsxNbEdAC5wodw",
+        "name": "Alexandra  Trujillo  <alexandra.trujillo@canteradigital.mx>",
+        "type": "personal",
+        "icon": null,
+        "projectRelations": [
+          {
+            "createdAt": "2025-05-30T21:50:35.804Z",
+            "updatedAt": "2025-05-30T21:50:35.804Z",
+            "role": "project:personalOwner",
+            "userId": "65d58894-4572-495d-8c41-0b8ea4c5b71f",
+            "projectId": "UPXsxNbEdAC5wodw",
+            "user": {
+              "createdAt": "2025-05-30T21:50:35.800Z",
+              "updatedAt": "2025-06-12T00:59:16.255Z",
+              "id": "65d58894-4572-495d-8c41-0b8ea4c5b71f",
+              "email": "alexandra.trujillo@canteradigital.mx",
+              "firstName": "Alexandra ",
+              "lastName": "Trujillo ",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-05-30T21:52:04.811Z",
+                "personalization_survey_n8n_version": "1.92.2",
+                "automationGoalDevops": [
+                  "data-syncing",
+                  "ticketing-systems-integrations",
+                  "ci-cd",
+                  "monitoring-alerting",
+                  "reporting",
+                  "incident-response"
+                ],
+                "companyType": "systems-integrator",
+                "role": "it"
+              },
+              "settings": {
+                "easyAIWorkflowOnboarded": true,
+                "firstSuccessfulWorkflowId": "bmdwVJ36IDZozHoU",
+                "userActivated": true,
+                "userActivatedAt": 1749246625266,
+                "npsSurvey": {
+                  "responded": true,
+                  "lastShownAt": 1749689952085
+                }
+              },
+              "role": "global:member",
+              "disabled": false,
+              "mfaEnabled": false,
+              "isPending": false,
+              "isOwner": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": [
+    {
+      "createdAt": "2025-06-27T00:25:01.593Z",
+      "updatedAt": "2025-06-27T00:25:01.593Z",
+      "id": "EhKjbf1KOTatvCCF",
+      "name": "clase"
+    }
+  ]
+}
