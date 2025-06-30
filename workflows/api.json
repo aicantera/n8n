@@ -1,9 +1,9 @@
 {
   "createdAt": "2025-06-28T02:04:47.274Z",
-  "updatedAt": "2025-06-30T18:40:54.000Z",
+  "updatedAt": "2025-06-30T19:55:31.000Z",
   "id": "Pz5Zm6DRXho5O32F",
   "name": "api",
-  "active": false,
+  "active": true,
   "nodes": [
     {
       "parameters": {
@@ -47,7 +47,7 @@
         "promptType": "define",
         "text": "={{ $json.message.text }}",
         "options": {
-          "systemMessage": "eres un vendedor de producctos de una tienda de electronicos, ofrece los productos "
+          "systemMessage": "eres un asistente de administracion de inventario y tu trabajo es agregar productos a un listado de productos pero debes preguntarle al usuario: nombre del producto.\n\nuna ves tengas el nombre usa el tool agregar productos \npara insertar el producto dale gracias al usuario y muestra el listado de productos "
         }
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
@@ -100,13 +100,17 @@
     },
     {
       "parameters": {
-        "additionalFields": {}
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "={{ $json.output }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
       },
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        60,
-        -120
+        140,
+        -180
       ],
       "id": "d07206a7-68c7-4b70-960f-0df3e6aa20d2",
       "name": "Telegram",
@@ -117,6 +121,71 @@
           "name": "Telegram alexabot"
         }
       }
+    },
+    {
+      "parameters": {
+        "toolDescription": "eres un tool para agregar productos ",
+        "method": "POST",
+        "url": "https://api.restful-api.dev/objects",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "name",
+              "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('parameters0_Value', `el nombre del producto te lo dice el usuario `, 'string') }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.2,
+      "position": [
+        60,
+        200
+      ],
+      "id": "84cdf4a0-ab97-46d7-9db8-6988acf67d17",
+      "name": "agregar productos"
+    },
+    {
+      "parameters": {
+        "toolDescription": "este tool devuelve el listado de productos ejecutalo cuando el usuario quiera saber que productos hay ",
+        "url": "https://api.restful-api.dev/objects",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.2,
+      "position": [
+        -120,
+        200
+      ],
+      "id": "7668b8f2-0274-4849-a94f-6f4cd6c19a61",
+      "name": "lista de productos"
+    },
+    {
+      "parameters": {
+        "toolDescription": "eres un tool para borrar productos ",
+        "method": "DELETE",
+        "url": "https://api.restful-api.dev/objects/6",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "name",
+              "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('parameters0_Value', `el producto a borrar te lo dice el usuario `, 'string') }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.2,
+      "position": [
+        180,
+        80
+      ],
+      "id": "af3335db-fbe7-4d3e-9674-64fe2845e0a7",
+      "name": "borrar producto"
     }
   ],
   "connections": {
@@ -163,6 +232,39 @@
           }
         ]
       ]
+    },
+    "agregar productos": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "lista de productos": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "borrar producto": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -172,9 +274,37 @@
   "meta": {
     "templateCredsSetupCompleted": true
   },
-  "pinData": {},
-  "versionId": "b2d6306f-2d09-4f69-b7ce-c6de8f98ef9f",
-  "triggerCount": 0,
+  "pinData": {
+    "Telegram Trigger": [
+      {
+        "json": {
+          "update_id": 536929073,
+          "message": {
+            "message_id": 252,
+            "from": {
+              "id": 7344396579,
+              "is_bot": false,
+              "first_name": "Alexandra Viridiana",
+              "last_name": "Trujillo Rubalcava",
+              "username": "alexatr99",
+              "language_code": "es"
+            },
+            "chat": {
+              "id": 7344396579,
+              "first_name": "Alexandra Viridiana",
+              "last_name": "Trujillo Rubalcava",
+              "username": "alexatr99",
+              "type": "private"
+            },
+            "date": 1751310118,
+            "text": "hola"
+          }
+        }
+      }
+    ]
+  },
+  "versionId": "fa24016b-9bbb-4f9e-a37c-edab6a0d44f1",
+  "triggerCount": 1,
   "shared": [
     {
       "createdAt": "2025-06-28T02:04:47.278Z",
