@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-06-28T02:04:47.274Z",
-  "updatedAt": "2025-06-30T19:55:31.000Z",
+  "updatedAt": "2025-06-30T20:12:20.000Z",
   "id": "Pz5Zm6DRXho5O32F",
   "name": "api",
   "active": true,
@@ -47,7 +47,7 @@
         "promptType": "define",
         "text": "={{ $json.message.text }}",
         "options": {
-          "systemMessage": "eres un asistente de administracion de inventario y tu trabajo es agregar productos a un listado de productos pero debes preguntarle al usuario: nombre del producto.\n\nuna ves tengas el nombre usa el tool agregar productos \npara insertar el producto dale gracias al usuario y muestra el listado de productos "
+          "systemMessage": "eres un asistente de administracion de inventario y tu trabajo es agregar productos a un listado de productos pero debes preguntarle al usuario: nombre del producto.\n\nuna ves tengas el nombre usa el tool agregar productos \npara insertar el producto dale gracias al usuario y muestra el listado de productos\ntambien debes poder eliminar productos de la lista para esto debes preguntarle el nombre del producto al usuario que desea eliminar \nuna ves tengas el nombre usa el tool eliminar producto\npara borrar el producto dale gracias al usuario y muestra el listado de productos\n"
         }
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
@@ -151,6 +151,15 @@
       "parameters": {
         "toolDescription": "este tool devuelve el listado de productos ejecutalo cuando el usuario quiera saber que productos hay ",
         "url": "https://api.restful-api.dev/objects",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "name",
+              "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('parameters0_Value', `el usuario te indicara cual producto eliminar`, 'string') }}"
+            }
+          ]
+        },
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequestTool",
@@ -167,15 +176,6 @@
         "toolDescription": "eres un tool para borrar productos ",
         "method": "DELETE",
         "url": "https://api.restful-api.dev/objects/6",
-        "sendBody": true,
-        "bodyParameters": {
-          "parameters": [
-            {
-              "name": "name",
-              "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('parameters0_Value', `el producto a borrar te lo dice el usuario `, 'string') }}"
-            }
-          ]
-        },
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequestTool",
@@ -303,7 +303,7 @@
       }
     ]
   },
-  "versionId": "fa24016b-9bbb-4f9e-a37c-edab6a0d44f1",
+  "versionId": "45337603-0bd6-46e6-9323-eeb9d010fd5d",
   "triggerCount": 1,
   "shared": [
     {
