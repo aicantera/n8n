@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-06-24T22:28:19.611Z",
-  "updatedAt": "2025-06-27T19:00:28.000Z",
+  "updatedAt": "2025-06-30T15:00:27.000Z",
   "id": "PetXIW4fDRVoHgK5",
   "name": "chatbot sales",
   "active": false,
@@ -1603,8 +1603,8 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.2,
       "position": [
-        3940,
-        -1940
+        4580,
+        -2240
       ],
       "id": "bfea1332-db16-4ee4-a51f-7c1b159fe33f",
       "name": "Switch2"
@@ -1746,8 +1746,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        4480,
-        -2520
+        5120,
+        -2820
       ],
       "id": "534ac9e6-3f4e-43e6-ad26-c280eb6ac82e",
       "name": "envio de mensaje ubicación"
@@ -1815,8 +1815,8 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        4880,
-        -2520
+        5520,
+        -2820
       ],
       "id": "40198380-24dc-4fc3-8c6b-a7f86f6360ff",
       "name": "Execute Workflow1"
@@ -1850,8 +1850,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        4700,
-        -2520
+        5340,
+        -2820
       ],
       "id": "53b0a1f3-6429-4275-bea6-806adf88504b",
       "name": "body datos ubicacion"
@@ -1881,8 +1881,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        4480,
-        -2320
+        5120,
+        -2620
       ],
       "id": "21276aeb-dd6f-431b-a022-b2b305f1b7f2",
       "name": "envio de mensaje ubicación1"
@@ -1950,8 +1950,8 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        4940,
-        -2320
+        5580,
+        -2620
       ],
       "id": "317d7de1-3be6-4ea1-8936-fd94951c0415",
       "name": "Execute Workflow2",
@@ -1986,11 +1986,147 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        4720,
-        -2320
+        5360,
+        -2620
       ],
       "id": "4dd81662-7e81-46eb-bb22-1b65041dac53",
       "name": "body datos costos"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v22.0/{{ $('Variables Wp').item.json.clienteIdWp }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ $('Variables Wp').item.json.tokenWp }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"Nuestro colegio cuenta con horario extendido hasta las 18:00 hrs.\\nDurante este horario los alumnos pueden comer, tomar una actividad deportiva, taller de tareas, certificaciones de inglés y más 😉 🔝\\nPara conocer las actividades que se ofrecen te invitamos a consultar el siguiente documento:\\nhttps://www.colegioreims.edu.mx/actividades-extraescolares\\nPermite que uno de nuestros especialistas te contacte para darte más información sobre nuestro proyecto educativo.\\nSelecciona la opción deseada escribiendo el número:\\n1️⃣ Sí, quiero hablar con alguien!\\n2️⃣ Muchas gracias, por el momento es todo\"\n  }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        5120,
+        -2420
+      ],
+      "id": "fdaa6942-a1b6-47cf-9935-b5ea30e65146",
+      "name": "envio de mensaje ubicación2"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "PetXIW4fDRVoHgK5",
+          "mode": "list",
+          "cachedResultName": "chatbot sales"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "state": "esperando_respuesta_menu_horario",
+            "userStateId": "={{ $json.userStateId }}",
+            "userId": "={{ $json.userId }}",
+            "info": "={{ $json.info }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "state",
+              "displayName": "state",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "userId",
+              "displayName": "userId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "userStateId",
+              "displayName": "userStateId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "info",
+              "displayName": "info",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        5580,
+        -2420
+      ],
+      "id": "13217905-8dce-4ec6-965d-c4010cbc6ac0",
+      "name": "Execute Workflow3",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "cb5bf561-971f-493b-8312-772ff7f21da3",
+              "name": "userStateId",
+              "value": "={{ $('Code2').item.json.user_state_final }}",
+              "type": "string"
+            },
+            {
+              "id": "1356aa24-d7f3-4700-9568-aa9b6ece9b4c",
+              "name": "info",
+              "value": "se presenta horario extendido y menú",
+              "type": "string"
+            },
+            {
+              "id": "6b9a8f55-16af-4e52-b897-0ac1cfca6083",
+              "name": "userId",
+              "value": "={{ $('Code2').item.json.user_id_finded || $('Code2').item.json.user_id_edited }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        5360,
+        -2420
+      ],
+      "id": "eb87b902-9a49-485c-bd9f-780d663200ad",
+      "name": "body datos costos1"
     }
   ],
   "connections": {
@@ -2418,7 +2554,13 @@
             "index": 0
           }
         ],
-        []
+        [
+          {
+            "node": "envio de mensaje ubicación2",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     },
     "envio de mensaje ubicación": {
@@ -2464,6 +2606,28 @@
           }
         ]
       ]
+    },
+    "body datos costos1": {
+      "main": [
+        [
+          {
+            "node": "Execute Workflow3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "envio de mensaje ubicación2": {
+      "main": [
+        [
+          {
+            "node": "body datos costos1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -2494,7 +2658,7 @@
               "id": "wamid.HBgNNTIxNDQzNDkwMTE5MxUCABIYFjNFQjA4QzY1MDQ4QjQwNTMyMUE3NTIA",
               "timestamp": "1751040242",
               "text": {
-                "body": "3"
+                "body": "4"
               },
               "type": "text"
             }
@@ -2504,7 +2668,7 @@
       }
     ]
   },
-  "versionId": "28180e3b-d6a2-422a-b949-ec6ea5011d43",
+  "versionId": "3e9a957a-86d0-48f1-8563-ad602927bee0",
   "triggerCount": 1,
   "shared": [
     {
