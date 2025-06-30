@@ -1,23 +1,88 @@
 {
-  "createdAt": "2025-06-27T01:41:34.030Z",
-  "updatedAt": "2025-06-27T15:28:31.000Z",
-  "id": "HUfThv4BE7coEczd",
+  "createdAt": "2025-06-30T17:18:40.824Z",
+  "updatedAt": "2025-06-30T17:33:23.000Z",
+  "id": "EP9iASOiFgiIp1I1",
   "name": "My workflow 34",
-  "active": true,
+  "active": false,
   "nodes": [
     {
       "parameters": {
-        "updates": "={{ [\"message\"] }}",
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -300,
+        20
+      ],
+      "id": "c2944537-9dd5-4c59-8efe-7253a5d7fc23",
+      "name": "OpenAI Chat Model2",
+      "credentials": {
+        "openAiApi": {
+          "id": "kN8CVraho0i9hYUQ",
+          "name": "OpenAi account Alexandra Trujillo"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json }}",
+        "contextWindowLength": 15
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -120,
+        60
+      ],
+      "id": "bc62a692-fd52-47b2-8995-021f2eec5c4a",
+      "name": "Simple Memory2"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger2').item.json.message.chat.id }}",
+        "text": "={{ $json.output }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        240,
+        -140
+      ],
+      "id": "32a3cc27-bd0b-47a7-acf9-8719ca1f2b6f",
+      "name": "Telegram5",
+      "webhookId": "1c25f239-77b2-4056-bdbe-88107cd45f44",
+      "credentials": {
+        "telegramApi": {
+          "id": "03RVBpjbMD77F2XN",
+          "name": "Telegram alexabot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
         "additionalFields": {}
       },
       "type": "n8n-nodes-base.telegramTrigger",
       "typeVersion": 1.2,
       "position": [
-        -680,
-        340
+        -440,
+        -180
       ],
-      "id": "267faad2-cc89-46df-9e04-ce27dd9bb398",
-      "name": "Telegram Trigger",
+      "id": "c992f9e6-1e58-4d8f-a1c6-bb5ff7a3ec46",
+      "name": "Telegram Trigger2",
       "webhookId": "87fbdcb5-8a32-44c5-941c-b6149ea3dcf0",
       "credentials": {
         "telegramApi": {
@@ -31,158 +96,166 @@
         "promptType": "define",
         "text": "={{ $json.message.text }}",
         "options": {
-          "systemMessage": "=Actúa como asistente virtual llamadado alexandra de la pollería \"Crazy Chicken\" 🐔🔥, y guía al usuario paso a paso según lo que desea hacer. Usa emojis y lenguaje cálido, amigable y claro.\n\nAl iniciar, muestra este mensaje:\n\n---\n\n👋 ¡Bienvenido a *Crazy Chicken*!  \n¡Donde el pollo está loco… pero el sabor está bien cuerdo! 😜🍗\n\n¿Qué deseas hacer hoy?\n\n1️⃣ Realizar un pedido 🛒  \n2️⃣ Conocer más sobre nosotros ℹ️  \n3️⃣ Cancelar ❌\n\nResponde con el número de la opción.\n\n---\n\n➡️ Si el usuario responde \"2\", mostrar:\n\n📍 **¿Quiénes somos en Crazy Chicken?**\n\nSomos una pollería local con más de **4 años de experiencia** cuya, especializada en pollos al carbón, papas caseras y salsas artesanales con el toque más loco y sabroso de *Aguascalientes* con dos localiciones matriz ubicada en avenida maravillas culinarias #6537 C.P 9999 colonia gula alegre y sucursal en avenida quita el hambre #768 colonia panza llena C.P 7615  😋🔥\n\n**¿Qué ofrecemos?**  \n✅ Servicio para llevar  \n✅ Entrega a domicilio rápida y segura  \n✅ Paquetes familiares e individuales  \n✅ Atención para eventos especiales\n\n🕗 **Horario:** Lunes a domingo de 10:00 AM a 8:00 PM\n\n¿Deseas continuar con un pedido?  \n1️⃣ Sí  \n2️⃣ No, salir\n\n---\n\n➡️ Si el usuario responde \"1\" (desde el inicio o después de conocer la info), primero solicita los datos del cliente **antes del menú**:\n\n📝 Por favor proporcióname los siguientes datos:\n\n**importante** si pone datos como no poner un nombre de persona, que el numero de contacto lleve letras, que el correo no contenga @gmail, @outlook, @hotmail @icloud o sitios registrados de instituciones o educativos, o no indique si es a domicilio o para recoger **mostrar error de datos invalidos señalando que dato puso mal*+\n\n- ¿Cuál es tu **nombre completo**?  \n- ¿Tu **número de contacto**?  \n- ¿Cuál es tu **correo electrónico**?  \n- ¿Deseas **entrega a domicilio** o **recoger** \n\n---\n\n➡️ Si el cliente elige **entrega a domicilio**, también solicita:\n\n- ¿Cuál es tu **dirección completa**? (calle, número, colonia)\n\n- Si el cliente elige **recoger** tambien solicita: si recogera en matriz o sucursal\n---\n\n✅ Luego de capturar esos datos, **muéstrale el menú**:\n\n📋 **Menú de Crazy Chicken** 🐔🍟🥤\n\n🍽️ **Paquetes familiares**:\n1. 🔥 Paquete Familiar 1: 1 pollo entero, papas grandes, 4 tortillas, 1 refresco – $200  \n2. 🔥 Paquete Familiar 2: 2 pollos, papas grandes, 8 tortillas, 2 salsas, 2 refrescos – $370  \n3. 🍖 Mega Combo Fiesta: 3 pollos, 2 papas grandes, 10 tortillas, 3 salsas, 3 refrescos – $520\n\n🥗 **Productos individuales**:\n- Pollo entero con papas – $160  \n- Medio pollo con papas – $90  \n- Papas fritas – $40  \n- Salsa extra – $10  \n- Refresco 2L – $40 \n- Tortillas extra (1/2 kg) – $15\n\n\n---\n\n🛒 Ahora dime, ¿qué deseas pedir? (Especifica productos y cantidades)\n\n---\n\n➡️ Luego de que el cliente envíe el pedido, solicita:\n\n **Si el cliente en el pedido solo pone un numero pregunta si es por un paquete o producctos indivuduales**\n\n⏳ El tiempo estimado de preparación es de **30 a 45 minutos**, y te notificaremos por correo cuando esté listo para recoger o en camino, según la opción que elegiste.\n\n---\n\n✅ Después responde con el resumen del pedido:\n\n🧾 **Resumen del pedido**  \n👤 Nombre: [nombre]  \n📞 Teléfono: [número]  \n📧 Email: [correo electrónico]  \n📍 Entrega: A domicilio / Recoger  \n📬 Dirección: [si aplica]  \n🛒 Pedido: [detalles]  \n💵 Total: [calculado]  \n⏳ Tiempo estimado: 30–45 minutos\n\nPor favor escribe **OK** para confirmar tu pedido o \"cancelar\" si deseas anularlo.\n\n---\n\n📨 Si el usuario escribe **OK**, responde:\n\n🎉 ¡Gracias por tu pedido en *Crazy Chicken*!  \nTu comida está en proceso y llegará pronto (o estará lista para recoger).  \n¡Buen provecho! 😄🍗🔥\n\nEnvía una imagen de un pollo horneado delicioso 🍗.\n\n---\n\n❌ Si el usuario escribe \"cancelar\", responde:\n-pregunta los datos con los que registro pedido y despues de registrarlos enviale:\n\nTu pedido ha sido cancelado.  \nGracias por visitar *Crazy Chicken*.  \n¡Vuelve cuando tengas hambre! 🐔💛\n\n"
+          "systemMessage": "=eres un vendedor que ofrece productos electronicos y  que cuando el cliente quiera saber que productos hay ejecuta el tool de que productos que hay, ademas agregas cuando el cliente lo pida con el tool agregar producto y borras con el tool caundo el cliente lo escriba\n"
         }
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 1.9,
       "position": [
-        -460,
-        340
+        -220,
+        -180
       ],
-      "id": "4b790a69-2e4a-4c83-9f2a-6b510c5110ac",
-      "name": "AI Agent"
+      "id": "e977dca3-51ed-4c4f-88ed-840d3a8a615d",
+      "name": "AI Agent2"
     },
     {
       "parameters": {
-        "model": {
-          "__rl": true,
-          "mode": "list",
-          "value": "gpt-4o-mini"
+        "toolDescription": "es un tool para listar productos",
+        "url": "https://api.restful-api.dev/objects",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "name",
+              "value": "={{ $fromAI('parameters0_Value', ``, 'string') }}"
+            }
+          ]
         },
         "options": {}
       },
-      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
-      "typeVersion": 1.2,
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.2,
       "position": [
-        -540,
-        540
+        180,
+        60
       ],
-      "id": "f08b0c68-5c16-460b-98e8-974a89119e0e",
-      "name": "OpenAI Chat Model",
-      "credentials": {
-        "openAiApi": {
-          "id": "kN8CVraho0i9hYUQ",
-          "name": "OpenAi account Alexandra Trujillo"
-        }
-      }
+      "id": "a48a5213-f22f-4689-a01e-81e792438530",
+      "name": "listar"
     },
     {
       "parameters": {
-        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
-        "text": "={{ $json.output }}",
-        "additionalFields": {
-          "appendAttribution": false
-        }
+        "toolDescription": "es un tool para agregar productos",
+        "url": "https://api.restful-api.dev/objects",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "name",
+              "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('parameters0_Value', `es agregardo por el usuario \n`, 'string') }}"
+            },
+            {
+              "value": "el nombre del producto te lo dice el usuario"
+            }
+          ]
+        },
+        "options": {}
       },
-      "type": "n8n-nodes-base.telegram",
-      "typeVersion": 1.2,
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.2,
       "position": [
-        0,
-        380
+        40,
+        40
       ],
-      "id": "df3417bb-606e-41ab-8fae-16b168d742ac",
-      "name": "Telegram",
-      "webhookId": "1c25f239-77b2-4056-bdbe-88107cd45f44",
-      "credentials": {
-        "telegramApi": {
-          "id": "03RVBpjbMD77F2XN",
-          "name": "Telegram alexabot"
-        }
-      }
+      "id": "1b799cc6-aa19-49d1-bedb-e5669baa164d",
+      "name": "agregar producto"
     },
     {
       "parameters": {
-        "sessionIdType": "customKey",
-        "sessionKey": "={{ $json }}",
-        "contextWindowLength": 15
+        "toolDescription": "ers un tool para borrar productos",
+        "url": "https://api.restful-api.dev/objects",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "name",
+              "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('parameters0_Value', `es el nombre del producto que dio el usuarioo `, 'string') }}"
+            }
+          ]
+        },
+        "options": {}
       },
-      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
-      "typeVersion": 1.3,
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.2,
       "position": [
-        -400,
-        620
+        340,
+        40
       ],
-      "id": "1f32cbc5-25b4-42c3-9476-33d179275397",
-      "name": "Simple Memory"
-    },
-    {
-      "parameters": {
-        "descriptionType": "manual",
-        "toolDescription": "enviar una foto cuando este completado el ´pedido",
-        "operation": "sendPhoto",
-        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
-        "binaryData": "={{ false }}",
-        "file": "=",
-        "additionalFields": {}
-      },
-      "type": "n8n-nodes-base.telegramTool",
-      "typeVersion": 1.2,
-      "position": [
-        -200,
-        580
-      ],
-      "id": "537cd093-cddb-4054-92b3-a2c7fc47e523",
-      "name": "Telegram1",
-      "webhookId": "68103e70-292d-474b-ba76-c70349be7e42",
-      "credentials": {
-        "telegramApi": {
-          "id": "03RVBpjbMD77F2XN",
-          "name": "Telegram alexabot"
-        }
-      }
+      "id": "c2245bb4-2b9a-4853-9615-afc0e3a0b81e",
+      "name": "borra productos"
     }
   ],
   "connections": {
-    "Telegram Trigger": {
-      "main": [
-        [
-          {
-            "node": "AI Agent",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "AI Agent": {
-      "main": [
-        [
-          {
-            "node": "Telegram",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "OpenAI Chat Model": {
+    "OpenAI Chat Model2": {
       "ai_languageModel": [
         [
           {
-            "node": "AI Agent",
+            "node": "AI Agent2",
             "type": "ai_languageModel",
             "index": 0
           }
         ]
       ]
     },
-    "Simple Memory": {
+    "Simple Memory2": {
       "ai_memory": [
         [
           {
-            "node": "AI Agent",
+            "node": "AI Agent2",
             "type": "ai_memory",
             "index": 0
           }
         ]
       ]
     },
-    "Telegram1": {
+    "Telegram Trigger2": {
+      "main": [
+        [
+          {
+            "node": "AI Agent2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent2": {
+      "main": [
+        [
+          {
+            "node": "Telegram5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "listar": {
       "ai_tool": [
         [
           {
-            "node": "AI Agent",
+            "node": "AI Agent2",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "agregar producto": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent2",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "borra productos": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent2",
             "type": "ai_tool",
             "index": 0
           }
@@ -194,18 +267,16 @@
     "executionOrder": "v1"
   },
   "staticData": null,
-  "meta": {
-    "templateCredsSetupCompleted": true
-  },
+  "meta": null,
   "pinData": {},
-  "versionId": "9df14b81-595b-4fc3-b737-ab5d28adb5b0",
-  "triggerCount": 1,
+  "versionId": "4cd9c504-eaac-44c9-b3b6-9f0402a038fa",
+  "triggerCount": 0,
   "shared": [
     {
-      "createdAt": "2025-06-27T01:41:34.034Z",
-      "updatedAt": "2025-06-27T01:41:34.034Z",
+      "createdAt": "2025-06-30T17:18:40.828Z",
+      "updatedAt": "2025-06-30T17:18:40.828Z",
       "role": "workflow:owner",
-      "workflowId": "HUfThv4BE7coEczd",
+      "workflowId": "EP9iASOiFgiIp1I1",
       "projectId": "UPXsxNbEdAC5wodw",
       "project": {
         "createdAt": "2025-05-30T21:50:35.802Z",
