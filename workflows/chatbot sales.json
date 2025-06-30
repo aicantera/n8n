@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-06-24T22:28:19.611Z",
-  "updatedAt": "2025-06-30T15:49:07.000Z",
+  "updatedAt": "2025-06-30T16:13:36.000Z",
   "id": "PetXIW4fDRVoHgK5",
   "name": "chatbot sales",
   "active": false,
@@ -2002,8 +2002,7 @@
         -2620
       ],
       "id": "317d7de1-3be6-4ea1-8936-fd94951c0415",
-      "name": "Execute Workflow2",
-      "disabled": true
+      "name": "Execute Workflow2"
     },
     {
       "parameters": {
@@ -2138,8 +2137,7 @@
         -2420
       ],
       "id": "13217905-8dce-4ec6-965d-c4010cbc6ac0",
-      "name": "Execute Workflow3",
-      "disabled": true
+      "name": "Execute Workflow3"
     },
     {
       "parameters": {
@@ -2305,8 +2303,7 @@
         -2240
       ],
       "id": "5c393447-19be-4ba5-a6d4-558cf57ce1f9",
-      "name": "Execute Workflow4",
-      "disabled": true
+      "name": "Execute Workflow4"
     },
     {
       "parameters": {
@@ -2410,8 +2407,7 @@
         -2080
       ],
       "id": "9458b8f3-ebee-4d81-9d4a-05140d58b98b",
-      "name": "Execute Workflow5",
-      "disabled": true
+      "name": "Execute Workflow5"
     },
     {
       "parameters": {
@@ -2450,7 +2446,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// Nodo “Function” de n8n\n// Valida items[0].json.selection y retorna status con mensajes amistosos\n\n// 1. Leer la selección del nodo Set anterior\nconst raw = items[0].json.selection;\nconst sel = Number(raw);\n\n// 2. Preparar la respuesta con mensajes descriptivos\nlet result;\n\nif (Number.isNaN(sel)) {\n  // No es un número\n  result = {\n    status: 'error',\n    message: `Ups, parece que tu elección “${raw}” no es un número. Por favor escribe un número del 1 al 7 para continuar.`\n  };\n} else if (!Number.isInteger(sel)) {\n  // No es entero\n  result = {\n    status: 'error',\n    message: `Veo que has ingresado ${sel}, pero necesitamos un número entero. Por favor elige un número sin decimales entre 1 y 6.`\n  };\n} else if (sel < 1 || sel > 6) {\n  // Fuera de rango\n  result = {\n    status: 'error',\n    message: `Tu selección es ${sel}, pero debe estar entre 1 y 6. Intenta de nuevo con un número dentro de ese rango.`\n  };\n} else {\n  // OK\n  result = {\n    status: 'success',\n    message: `¡Genial! Has seleccionado la opción número ${sel}.`,\n    selection: sel\n  };\n}\n\n// 3. Devolver el resultado para usar en nodos siguientes\nreturn [\n  {\n    json: result\n  }\n];\n"
+        "jsCode": "// 1. Leer la selección del nodo Set anterior\nconst raw = items[0].json.selection;\nconst sel = parseInt(raw, 10);\n\n// 2. Preparar la respuesta con mensajes descriptivos y mapeo de tipos\nlet result;\n\nif (isNaN(sel)) {\n  // No es un número\n  result = {\n    status: 'error',\n    message: `Ups, parece que tu elección “${raw}” no es un número. Por favor escribe un número del 1 al 5 para continuar.`\n  };\n} else if (!Number.isInteger(sel)) {\n  // No es entero\n  result = {\n    status: 'error',\n    message: `Veo que has ingresado ${raw}, pero necesitamos un número entero. Por favor elige un número sin decimales entre 1 y 5.`\n  };\n} else if (sel < 1 || sel > 5) {\n  // Fuera de rango\n  result = {\n    status: 'error',\n    message: `Tu selección es ${sel}, pero debe estar entre 1 y 5. Intenta de nuevo con un número dentro de ese rango.`\n  };\n} else {\n  // OK: asignar tipo según selección\n  const typeMap = {\n    1: 'maternal',\n    2: 'preescolar',\n    3: 'primaria',\n    4: 'secundaria',\n    5: 'bachillerato',\n  };\n  result = {\n    status: 'success',\n    message: `¡Genial! Has seleccionado la opción número ${sel}.`,\n    selection: sel,\n    type: typeMap[sel],\n  };\n}\n\n// 3. Devolver el resultado para usar en nodos siguientes\nreturn [\n  {\n    json: result\n  }\n];\n"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -2643,7 +2639,7 @@
                 "combinator": "and"
               },
               "renameOutput": true,
-              "outputKey": "ubicación"
+              "outputKey": "preescolar"
             },
             {
               "conditions": {
@@ -2667,7 +2663,7 @@
                 "combinator": "and"
               },
               "renameOutput": true,
-              "outputKey": "costos"
+              "outputKey": "primaria"
             },
             {
               "conditions": {
@@ -2691,7 +2687,7 @@
                 "combinator": "and"
               },
               "renameOutput": true,
-              "outputKey": "horario extendido"
+              "outputKey": "secundaria"
             },
             {
               "conditions": {
@@ -2715,31 +2711,7 @@
                 "combinator": "and"
               },
               "renameOutput": true,
-              "outputKey": "bilingue"
-            },
-            {
-              "conditions": {
-                "options": {
-                  "caseSensitive": true,
-                  "leftValue": "",
-                  "typeValidation": "strict",
-                  "version": 2
-                },
-                "conditions": [
-                  {
-                    "id": "5a785880-a238-46e6-8136-51648cfe3639",
-                    "leftValue": "={{ $json.selection }}",
-                    "rightValue": 6,
-                    "operator": {
-                      "type": "number",
-                      "operation": "equals"
-                    }
-                  }
-                ],
-                "combinator": "and"
-              },
-              "renameOutput": true,
-              "outputKey": "contactame"
+              "outputKey": "bachillerato"
             }
           ]
         },
@@ -2779,11 +2751,271 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        5120,
-        -1780
+        5180,
+        -1860
       ],
       "id": "b88d9328-e2f9-4585-a92c-259e22ff9652",
-      "name": "calendario eventos3"
+      "name": "calendario maternal"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v22.0/{{ $('Variables Wp').item.json.clienteIdWp }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ $('Variables Wp').item.json.tokenWp }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"type\": \"image\",\n  \"image\": {\n    \"link\": \"https://andreavallejo.kommo.com/54153def-9649-4054-93a3-be79747992f7\",\n    \"caption\": \"Queremos conocerte y presentarte nuestro proyecto!\\n*Costos sujetos a ajuste sin previo aviso\\n\\nConoce nuestro proyecto\\nhttps://www.colegioreims.edu.mx/proyecto-educativo\"\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        5180,
+        -1700
+      ],
+      "id": "c70e5a13-42a0-4dd8-bbe4-f5dc97a6a007",
+      "name": "calendario pre escolar"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v22.0/{{ $('Variables Wp').item.json.clienteIdWp }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ $('Variables Wp').item.json.tokenWp }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"type\": \"image\",\n  \"image\": {\n    \"link\": \"https://andreavallejo.kommo.com/54153def-9649-4054-93a3-be79747992f7\",\n    \"caption\": \"Queremos conocerte y presentarte nuestro proyecto!\\n*Costos sujetos a ajuste sin previo aviso\\n\\nConoce nuestro proyecto\\nhttps://www.colegioreims.edu.mx/proyecto-educativo\"\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        5180,
+        -1540
+      ],
+      "id": "62e53aef-f6b2-4891-b39b-f7c467a065c5",
+      "name": "calendario primaria"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v22.0/{{ $('Variables Wp').item.json.clienteIdWp }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ $('Variables Wp').item.json.tokenWp }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"type\": \"image\",\n  \"image\": {\n    \"link\": \"https://andreavallejo.kommo.com/54153def-9649-4054-93a3-be79747992f7\",\n    \"caption\": \"Queremos conocerte y presentarte nuestro proyecto!\\n*Costos sujetos a ajuste sin previo aviso\\n\\nConoce nuestro proyecto\\nhttps://www.colegioreims.edu.mx/proyecto-educativo\"\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        5180,
+        -1380
+      ],
+      "id": "177be801-3376-4fe1-8a3d-2fce3528c251",
+      "name": "calendario secundaria"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v22.0/{{ $('Variables Wp').item.json.clienteIdWp }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ $('Variables Wp').item.json.tokenWp }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"type\": \"image\",\n  \"image\": {\n    \"link\": \"https://andreavallejo.kommo.com/54153def-9649-4054-93a3-be79747992f7\",\n    \"caption\": \"Queremos conocerte y presentarte nuestro proyecto!\\n*Costos sujetos a ajuste sin previo aviso\\n\\nConoce nuestro proyecto\\nhttps://www.colegioreims.edu.mx/proyecto-educativo\"\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        5180,
+        -1220
+      ],
+      "id": "b23116b8-10a3-469a-97aa-8bd63b4fd461",
+      "name": "calendario bachillerato"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "PetXIW4fDRVoHgK5",
+          "mode": "list",
+          "cachedResultName": "chatbot sales"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "state": "esperando_respuesta_menu_contacto_costos",
+            "userStateId": "={{ $json.userStateId }}",
+            "userId": "={{ $json.userId }}",
+            "info": "={{ $json.info }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "state",
+              "displayName": "state",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "userId",
+              "displayName": "userId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "userStateId",
+              "displayName": "userStateId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "info",
+              "displayName": "info",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        6020,
+        -1560
+      ],
+      "id": "1d386c50-7770-4e0b-a307-149d26caafc0",
+      "name": "Execute Workflow6",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "cb5bf561-971f-493b-8312-772ff7f21da3",
+              "name": "userStateId",
+              "value": "={{ $('Code2').item.json.user_state_final }}",
+              "type": "string"
+            },
+            {
+              "id": "1356aa24-d7f3-4700-9568-aa9b6ece9b4c",
+              "name": "info",
+              "value": "=se presenta informacion de costo {{ $('Code4').item.json.type }}",
+              "type": "string"
+            },
+            {
+              "id": "6b9a8f55-16af-4e52-b897-0ac1cfca6083",
+              "name": "userId",
+              "value": "={{ $('Code2').item.json.user_id_finded || $('Code2').item.json.user_id_edited }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        5800,
+        -1560
+      ],
+      "id": "d3ea2255-7841-4ada-8323-27783d4e98d6",
+      "name": "body datos costos4"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v22.0/{{ $('Variables Wp').item.json.clienteIdWp }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ $('Variables Wp').item.json.tokenWp }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"Selecciona la opción deseada escribiendo el número:\\n1️⃣ Sí, quiero hablar con alguien!\\n2️⃣ Muchas gracias, por el momento es todo\"\n  }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        5560,
+        -1560
+      ],
+      "id": "a9234e23-113c-407d-9ab9-a8e0a1020910",
+      "name": "envio de mensaje ubicación5"
     }
   ],
   "connections": {
@@ -3426,7 +3658,112 @@
       "main": [
         [
           {
-            "node": "calendario eventos3",
+            "node": "calendario maternal",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "calendario pre escolar",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "calendario primaria",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "calendario secundaria",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "calendario bachillerato",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "body datos costos4": {
+      "main": [
+        [
+          {
+            "node": "Execute Workflow6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "calendario maternal": {
+      "main": [
+        [
+          {
+            "node": "envio de mensaje ubicación5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "calendario pre escolar": {
+      "main": [
+        [
+          {
+            "node": "envio de mensaje ubicación5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "calendario primaria": {
+      "main": [
+        [
+          {
+            "node": "envio de mensaje ubicación5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "calendario secundaria": {
+      "main": [
+        [
+          {
+            "node": "envio de mensaje ubicación5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "calendario bachillerato": {
+      "main": [
+        [
+          {
+            "node": "envio de mensaje ubicación5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "envio de mensaje ubicación5": {
+      "main": [
+        [
+          {
+            "node": "body datos costos4",
             "type": "main",
             "index": 0
           }
@@ -3472,7 +3809,7 @@
       }
     ]
   },
-  "versionId": "d9cbc9e7-7c8d-4b95-8214-a925ef93ec5b",
+  "versionId": "048082a3-d573-426f-91a5-bba201475baa",
   "triggerCount": 1,
   "shared": [
     {
