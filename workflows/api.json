@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-06-28T02:04:47.274Z",
-  "updatedAt": "2025-06-30T20:12:20.000Z",
+  "updatedAt": "2025-06-30T21:44:35.000Z",
   "id": "Pz5Zm6DRXho5O32F",
   "name": "api",
   "active": true,
@@ -47,7 +47,7 @@
         "promptType": "define",
         "text": "={{ $json.message.text }}",
         "options": {
-          "systemMessage": "eres un asistente de administracion de inventario y tu trabajo es agregar productos a un listado de productos pero debes preguntarle al usuario: nombre del producto.\n\nuna ves tengas el nombre usa el tool agregar productos \npara insertar el producto dale gracias al usuario y muestra el listado de productos\ntambien debes poder eliminar productos de la lista para esto debes preguntarle el nombre del producto al usuario que desea eliminar \nuna ves tengas el nombre usa el tool eliminar producto\npara borrar el producto dale gracias al usuario y muestra el listado de productos\n"
+          "systemMessage": "eres un asistente de administracion de inventario y tu trabajo es agregar productos a un listado de productos pero debes preguntarle al usuario: nombre del producto.\n\nuna ves tengas el nombre usa el tool agregar productos \npara insertar el producto dale gracias al usuario y muestra el listado de productos\ntambien debes poder eliminar productos de la lista para esto debes preguntarle el nombre del producto que desea eliminar al usuario  \nuna ves tengas el nombre usa el tool eliminar producto\npara borrar el producto dile echo al usuario y muestra el listado de productos\n"
         }
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
@@ -71,7 +71,7 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.2,
       "position": [
-        -360,
+        -480,
         80
       ],
       "id": "a4c48229-f4c3-4b38-a96b-cdd60b585ed2",
@@ -92,7 +92,7 @@
       "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
       "typeVersion": 1.3,
       "position": [
-        -220,
+        -300,
         100
       ],
       "id": "79cb1078-686c-47d0-a263-174847d5a016",
@@ -141,8 +141,8 @@
       "type": "n8n-nodes-base.httpRequestTool",
       "typeVersion": 4.2,
       "position": [
-        60,
-        200
+        40,
+        80
       ],
       "id": "84cdf4a0-ab97-46d7-9db8-6988acf67d17",
       "name": "agregar productos"
@@ -166,7 +166,7 @@
       "typeVersion": 4.2,
       "position": [
         -120,
-        200
+        100
       ],
       "id": "7668b8f2-0274-4849-a94f-6f4cd6c19a61",
       "name": "lista de productos"
@@ -175,14 +175,14 @@
       "parameters": {
         "toolDescription": "eres un tool para borrar productos ",
         "method": "DELETE",
-        "url": "https://api.restful-api.dev/objects/6",
+        "url": "=https://api.restful-api.dev/objects/{{ $fromAI('parameters3_Value', 'el id del producto que dice el usuario', 'string') }}",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequestTool",
       "typeVersion": 4.2,
       "position": [
-        180,
-        80
+        220,
+        20
       ],
       "id": "af3335db-fbe7-4d3e-9674-64fe2845e0a7",
       "name": "borrar producto"
@@ -303,7 +303,7 @@
       }
     ]
   },
-  "versionId": "45337603-0bd6-46e6-9323-eeb9d010fd5d",
+  "versionId": "6f091a74-9efe-4e99-8646-005930dd2cf0",
   "triggerCount": 1,
   "shared": [
     {
