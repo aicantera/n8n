@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-06-24T22:28:19.611Z",
-  "updatedAt": "2025-07-01T15:54:48.000Z",
+  "updatedAt": "2025-07-01T16:19:12.000Z",
   "id": "PetXIW4fDRVoHgK5",
   "name": "chatbot sales",
   "active": false,
@@ -1753,7 +1753,8 @@
         -1800
       ],
       "id": "40198380-24dc-4fc3-8c6b-a7f86f6360ff",
-      "name": "Execute Workflow1"
+      "name": "Execute Workflow1",
+      "disabled": true
     },
     {
       "parameters": {
@@ -1857,7 +1858,8 @@
         -1600
       ],
       "id": "317d7de1-3be6-4ea1-8936-fd94951c0415",
-      "name": "Execute Workflow2"
+      "name": "Execute Workflow2",
+      "disabled": true
     },
     {
       "parameters": {
@@ -3094,8 +3096,8 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.2,
       "position": [
-        4620,
-        -1420
+        4500,
+        -1280
       ],
       "id": "5921e1e5-b69d-4f22-9e43-cfcbc9ae173b",
       "name": "Switch4"
@@ -3361,8 +3363,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        4100,
-        -900
+        3940,
+        -1080
       ],
       "id": "8ecc907d-1dac-4b77-9a78-2ffb6bd9cd1e",
       "name": "Error seleccion menu invalida2"
@@ -3372,45 +3374,11 @@
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
       "position": [
-        4320,
-        -900
+        4160,
+        -1080
       ],
       "id": "43d78ec7-0fcb-4307-b5a3-cdc67924b605",
       "name": "No Operation, do nothing2"
-    },
-    {
-      "parameters": {
-        "conditions": {
-          "options": {
-            "caseSensitive": true,
-            "leftValue": "",
-            "typeValidation": "strict",
-            "version": 2
-          },
-          "conditions": [
-            {
-              "id": "7de3bb2b-748d-4491-8fd4-8953493f36a3",
-              "leftValue": "",
-              "rightValue": "",
-              "operator": {
-                "type": "string",
-                "operation": "equals",
-                "name": "filter.operator.equals"
-              }
-            }
-          ],
-          "combinator": "and"
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 2.2,
-      "position": [
-        3840,
-        -1180
-      ],
-      "id": "97db9c00-8dc4-4d31-b2e3-50a458d6f73e",
-      "name": "If1"
     },
     {
       "parameters": {
@@ -3535,6 +3503,202 @@
       ],
       "id": "5d83ee6b-c89f-4982-8e76-b3e4ba480349",
       "name": "envio de mensaje contactame"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "7de3bb2b-748d-4491-8fd4-8953493f36a3",
+              "leftValue": "={{ $json.selection }}",
+              "rightValue": 6,
+              "operator": {
+                "type": "number",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        3580,
+        -1320
+      ],
+      "id": "97db9c00-8dc4-4d31-b2e3-50a458d6f73e",
+      "name": "revisamos que ya esta hablando con alguien"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v22.0/{{ $('Variables Wp').item.json.clienteIdWp }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ $('Variables Wp').item.json.tokenWp }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"¡Perfecto! Me alegra saber que ya estás en contacto. Si necesitas algo más, aquí estoy. 😊\"\n  }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3760,
+        -1520
+      ],
+      "id": "f1e19fa5-1f69-43f2-becd-6d93d0aa014f",
+      "name": "Error seleccion menu invalida3"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "PetXIW4fDRVoHgK5",
+          "mode": "list",
+          "cachedResultName": "chatbot sales"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "state": "menuInicial",
+            "userStateId": "={{ $json.userStateId }}",
+            "userId": "={{ $json.userId }}",
+            "info": "={{ $json.info }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "state",
+              "displayName": "state",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "userId",
+              "displayName": "userId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "userStateId",
+              "displayName": "userStateId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "info",
+              "displayName": "info",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "sub_menu",
+              "displayName": "sub_menu",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        4200,
+        -1520
+      ],
+      "id": "07862417-f5a2-4629-8e79-8d2e6dcf74ba",
+      "name": "Execute Workflow9"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "cb5bf561-971f-493b-8312-772ff7f21da3",
+              "name": "userStateId",
+              "value": "={{ $('Code2').item.json.user_state_final }}",
+              "type": "string"
+            },
+            {
+              "id": "1356aa24-d7f3-4700-9568-aa9b6ece9b4c",
+              "name": "info",
+              "value": "el usuario ya esta hablando con un asesor",
+              "type": "string"
+            },
+            {
+              "id": "6b9a8f55-16af-4e52-b897-0ac1cfca6083",
+              "name": "userId",
+              "value": "={{ $('Code2').item.json.user_id_finded || $('Code2').item.json.user_id_edited }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        3980,
+        -1520
+      ],
+      "id": "2420f821-7e2b-412e-a4eb-9de37899b467",
+      "name": "body datos costos4"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:8000/sales/available-slots-chatbot",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"tenant_id\": \"fe8f5abe-abda-4223-8ab0-c81247aa9cec\",\n  \"current_datetime\": \"03/07/2025 14:30:00\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        5080,
+        -2580
+      ],
+      "id": "f54bd586-11d6-4572-adea-5b23219499ef",
+      "name": "HTTP Request"
     }
   ],
   "connections": {
@@ -3965,7 +4129,13 @@
             "index": 0
           }
         ],
-        []
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     },
     "envio de mensaje ubicación": {
@@ -4300,7 +4470,7 @@
       "main": [
         [
           {
-            "node": "If1",
+            "node": "revisamos que ya esta hablando con alguien",
             "type": "main",
             "index": 0
           }
@@ -4328,17 +4498,6 @@
     "No Operation, do nothing2": {
       "main": [
         []
-      ]
-    },
-    "If1": {
-      "main": [
-        [
-          {
-            "node": "Switch4",
-            "type": "main",
-            "index": 0
-          }
-        ]
       ]
     },
     "Switch4": {
@@ -4423,6 +4582,46 @@
           }
         ]
       ]
+    },
+    "revisamos que ya esta hablando con alguien": {
+      "main": [
+        [
+          {
+            "node": "Error seleccion menu invalida3",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Switch4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "body datos costos4": {
+      "main": [
+        [
+          {
+            "node": "Execute Workflow9",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Error seleccion menu invalida3": {
+      "main": [
+        [
+          {
+            "node": "body datos costos4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -4430,40 +4629,8 @@
   },
   "staticData": null,
   "meta": null,
-  "pinData": {
-    "WhatsApp Trigger": [
-      {
-        "json": {
-          "messaging_product": "whatsapp",
-          "metadata": {
-            "display_phone_number": "5215665139893",
-            "phone_number_id": "669848086217681"
-          },
-          "contacts": [
-            {
-              "profile": {
-                "name": "Rick"
-              },
-              "wa_id": "5214434901193"
-            }
-          ],
-          "messages": [
-            {
-              "from": "5214434901193",
-              "id": "wamid.HBgNNTIxNDQzNDkwMTE5MxUCABIYFjNFQjA4QzY1MDQ4QjQwNTMyMUE3NTIA",
-              "timestamp": "1751040242",
-              "text": {
-                "body": "1"
-              },
-              "type": "text"
-            }
-          ],
-          "field": "messages"
-        }
-      }
-    ]
-  },
-  "versionId": "a4ad3870-760c-4eb2-94c4-880ee658cc94",
+  "pinData": {},
+  "versionId": "d1548283-b936-47a9-9489-16554bfd9f5a",
   "triggerCount": 1,
   "shared": [
     {
