@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-06-09T16:34:20.833Z",
-  "updatedAt": "2025-07-01T17:00:59.000Z",
+  "updatedAt": "2025-07-01T17:57:44.000Z",
   "id": "k6PApGOzpLKtnZ0q",
   "name": "chatbot cerebro",
   "active": true,
@@ -153,7 +153,7 @@
                 },
                 "conditions": [
                   {
-                    "leftValue": "={{ $json.state_edited ? $json.state_edited : $json.state_finded}}",
+                    "leftValue": "={{ $json.state_final }}",
                     "rightValue": "menuInicial",
                     "operator": {
                       "type": "string",
@@ -178,7 +178,7 @@
                 "conditions": [
                   {
                     "id": "49660bd6-0c53-49b6-a272-353eae4acf80",
-                    "leftValue": "={{ $json.state_edited ? $json.state_edited : $json.state_finded}}",
+                    "leftValue": "={{ $json.state_final }}",
                     "rightValue": "espera_respuesta_menu_inicial",
                     "operator": {
                       "type": "string",
@@ -203,7 +203,7 @@
                 "conditions": [
                   {
                     "id": "e63b8bcb-ffae-47fd-be83-4460047ee4f3",
-                    "leftValue": "={{ $json.state_edited ? $json.state_edited : $json.state_finded}}",
+                    "leftValue": "={{ $json.state_final }}",
                     "rightValue": "espera_respuesta_menu_calendario",
                     "operator": {
                       "type": "string",
@@ -228,7 +228,7 @@
                 "conditions": [
                   {
                     "id": "faed8982-b54d-4cc9-85df-45c31ad392ec",
-                    "leftValue": "={{ $json.state_edited ? $json.state_edited : $json.state_finded}}",
+                    "leftValue": "={{ $json.state_final }}",
                     "rightValue": "espera_respuesta_faq",
                     "operator": {
                       "type": "string",
@@ -253,7 +253,7 @@
                 "conditions": [
                   {
                     "id": "5d560ba0-a11a-45f3-9d2d-d13049d4df4c",
-                    "leftValue": "={{ $json.state_edited ? $json.state_edited : $json.state_finded}}",
+                    "leftValue": "={{ $json.state_final }}",
                     "rightValue": "seleccion_alumno",
                     "operator": {
                       "type": "string",
@@ -278,7 +278,7 @@
                 "conditions": [
                   {
                     "id": "7ba99368-0eb6-48ed-af01-77c7c4768b41",
-                    "leftValue": "={{ $json.state_edited ? $json.state_edited : $json.state_finded}}",
+                    "leftValue": "={{ $json.state_final }}",
                     "rightValue": "espera_respuesta_evento_calendario",
                     "operator": {
                       "type": "string",
@@ -303,7 +303,7 @@
                 "conditions": [
                   {
                     "id": "2d803248-e0f9-4478-8ff0-768db480b95d",
-                    "leftValue": "={{ $json.state_edited ? $json.state_edited : $json.state_finded}}",
+                    "leftValue": "={{ $json.state_final }}",
                     "rightValue": "espera_respuesta_evento_informacion_calendario",
                     "operator": {
                       "type": "string",
@@ -328,7 +328,7 @@
                 "conditions": [
                   {
                     "id": "5f2b8eb8-dca7-40cc-9d86-1ed8f85b1027",
-                    "leftValue": "={{ $json.state_edited ? $json.state_edited : $json.state_finded}}",
+                    "leftValue": "={{ $json.state_final }}",
                     "rightValue": "espera_respuesta_academico",
                     "operator": {
                       "type": "string",
@@ -353,7 +353,7 @@
                 "conditions": [
                   {
                     "id": "c17a27fb-f67a-48af-ab13-a78c9f77e4f8",
-                    "leftValue": "={{ $json.state_edited ? $json.state_edited : $json.state_finded}}",
+                    "leftValue": "={{ $json.state_final }}",
                     "rightValue": "espera_respuesta_informacion_academico",
                     "operator": {
                       "type": "string",
@@ -378,7 +378,7 @@
                 "conditions": [
                   {
                     "id": "e897eb9e-7845-4596-b7e4-6e6299e2de6c",
-                    "leftValue": "={{ $json.state_edited ? $json.state_edited : $json.state_finded}}",
+                    "leftValue": "={{ $json.state_final }}",
                     "rightValue": "proceso_justificacion",
                     "operator": {
                       "type": "string",
@@ -403,7 +403,7 @@
                 "conditions": [
                   {
                     "id": "59c5aacd-d431-4d88-a74c-4511477b8cfa",
-                    "leftValue": "={{ $json.state_edited ? $json.state_edited : $json.state_finded}}",
+                    "leftValue": "={{ $json.state_final }}",
                     "rightValue": "proceso_calificaciones_estudiante",
                     "operator": {
                       "type": "string",
@@ -424,8 +424,8 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.2,
       "position": [
-        -2260,
-        1500
+        -2160,
+        1480
       ],
       "id": "3806a1c2-a484-48b9-b5d6-7224dc66f95d",
       "name": "Switch"
@@ -629,6 +629,12 @@
               "name": "student_selected",
               "value": "={{ $json.student_id }}",
               "type": "string"
+            },
+            {
+              "id": "5e756b48-a297-45a3-8f93-f26da1fef71e",
+              "name": "user_state_id_finded",
+              "value": "={{ $('MongoDB').item.json.userStateId }}",
+              "type": "string"
             }
           ]
         },
@@ -663,6 +669,12 @@
               "id": "78d840a2-ae29-44c0-b0fc-1dcd3b44ff00",
               "name": "type_conversation_edited",
               "value": "={{ $json.type_conversation }}",
+              "type": "string"
+            },
+            {
+              "id": "ff6a2921-8c68-4206-b2b3-72090991987e",
+              "name": "user_state_id_edited",
+              "value": "={{ $json.userStateId }}",
               "type": "string"
             }
           ]
@@ -1934,7 +1946,7 @@
             {
               "id": "127efdf6-7193-4011-a155-fa072b66e80f",
               "name": "userStateId",
-              "value": "={{ $('MongoDB').first().json.userStateId }}",
+              "value": "={{ $('datosFinalesUser').item.json.user_state_id_final }}",
               "type": "string"
             }
           ]
@@ -2189,7 +2201,7 @@
             {
               "id": "127efdf6-7193-4011-a155-fa072b66e80f",
               "name": "userStateId",
-              "value": "={{ $('MongoDB').item.json.userStateId }}",
+              "value": "={{ $('datosFinalesUser').item.json.user_state_id_final }}",
               "type": "string"
             }
           ]
@@ -2283,7 +2295,7 @@
             {
               "id": "127efdf6-7193-4011-a155-fa072b66e80f",
               "name": "userStateId",
-              "value": "={{ $('MongoDB').item.json.userStateId }}",
+              "value": "={{ $('datosFinalesUser').item.json.user_state_id_final }}",
               "type": "string"
             }
           ]
@@ -3042,8 +3054,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        -2480,
-        1526
+        -2500,
+        1340
       ],
       "id": "8082561b-763c-4210-b518-2a6fea2d4f5d",
       "name": "If9"
@@ -3060,7 +3072,7 @@
           "conditions": [
             {
               "id": "9b562075-a550-4abf-b109-c329dec77be5",
-              "leftValue": "={{ $json.type_conversation_edited }}",
+              "leftValue": "={{ $json.type_conversation_final }}",
               "rightValue": "chatbot",
               "operator": {
                 "type": "string",
@@ -3076,8 +3088,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        -2480,
-        1726
+        -2380,
+        1620
       ],
       "id": "dc823677-94ac-440e-b92d-d238e040bba5",
       "name": "If10"
@@ -3189,7 +3201,7 @@
       "typeVersion": 1.1,
       "position": [
         1000,
-        2620
+        2140
       ],
       "id": "2436caaa-6e6f-478e-b439-b9ec56b0c44e",
       "name": "MongoDB18",
@@ -3708,13 +3720,13 @@
     },
     {
       "parameters": {
-        "jsCode": "return items.map(item => {\n  // 1. Leer y convertir a número\n  const raw = item.json.userInput;           \n  const userInput = Number(raw);\n\n  let outputText;\n  switch (userInput) {\n    case 1:\n      outputText = '1';\n      break;\n    case 2:\n      outputText = '2';\n      break;\n    case 3:\n      outputText = '3';\n      break;\n    case 4:\n      outputText = '4';\n      break;\n    default:\n      outputText = `Error`;\n  }\n\n  return {\n    json: {\n      ...item.json,\n      response: outputText\n    }\n  };\n});\n"
+        "jsCode": "return items.map(item => {\n  // 1. Leer y convertir a número\n  const raw = item.json.userInput;           \n  const userInput = Number(raw);\n\n  let outputText;\n  switch (userInput) {\n    case 1:\n      outputText = '1';\n      break;\n    case 2:\n      outputText = '2';\n      break;\n    case 3:\n      outputText = '3';\n      break;\n    case 4:\n      outputText = '4';\n      break;\n    case 5:\n      outputText = '5';\n      break;\n    default:\n      outputText = `Error`;\n  }\n\n  return {\n    json: {\n      ...item.json,\n      response: outputText\n    }\n  };\n});\n"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
         -1600,
-        3247
+        3240
       ],
       "id": "08987ca2-c92c-4a19-b5f2-f01386d2be33",
       "name": "Revisamos que el valor este dentro de lo permitido"
@@ -4338,14 +4350,14 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"No hay actividaes para esta semana\"\n  }\n}\n\n\n\n",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"No hay actividades para esta semana\"\n  }\n}\n\n\n\n",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        1000,
-        2440
+        1280,
+        2460
       ],
       "id": "0c318e05-dad1-4625-920e-9b5dc0ece855",
       "name": "mensaje de sin actividades"
@@ -6985,6 +6997,47 @@
       ],
       "id": "1834a186-ed7f-47e4-ba94-961683190881",
       "name": "respuesta preguta frecuente1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a10d127b-47b9-4007-bd48-996eb052af15",
+              "name": "phoneNumber_final",
+              "value": "={{ $json.phoneNumber_edited || $json.phoneNumber_finded }}",
+              "type": "string"
+            },
+            {
+              "id": "8da211fa-6c03-4bf0-9db4-1b1725aa9940",
+              "name": "state_final",
+              "value": "={{ $json.state_edited || $json.state_finded }}",
+              "type": "string"
+            },
+            {
+              "id": "3d79bd72-44b3-47c1-95b1-2c0e7d8fa771",
+              "name": "type_conversation_final",
+              "value": "={{ $json.type_conversation_edited || $json.type_conversation_finded }}",
+              "type": "string"
+            },
+            {
+              "id": "965c36fb-3748-4fd6-8a3a-9890cab3858e",
+              "name": "user_state_id_final",
+              "value": "={{ $json.user_state_id_edited || $json.user_state_id_finded }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -2560,
+        1620
+      ],
+      "id": "a62a6e0f-2118-4cef-9584-7e63254ae5e9",
+      "name": "datosFinalesUser"
     }
   ],
   "connections": {
@@ -7190,7 +7243,7 @@
       "main": [
         [
           {
-            "node": "If9",
+            "node": "datosFinalesUser",
             "type": "main",
             "index": 0
           }
@@ -7201,7 +7254,7 @@
       "main": [
         [
           {
-            "node": "If10",
+            "node": "datosFinalesUser",
             "type": "main",
             "index": 0
           }
@@ -8035,13 +8088,7 @@
     },
     "If9": {
       "main": [
-        [
-          {
-            "node": "Switch",
-            "type": "main",
-            "index": 0
-          }
-        ],
+        [],
         []
       ]
     },
@@ -9415,6 +9462,17 @@
       "main": [
         []
       ]
+    },
+    "datosFinalesUser": {
+      "main": [
+        [
+          {
+            "node": "If10",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -9424,40 +9482,8 @@
   "meta": {
     "templateCredsSetupCompleted": true
   },
-  "pinData": {
-    "WhatsApp Trigger": [
-      {
-        "json": {
-          "messaging_product": "whatsapp",
-          "metadata": {
-            "display_phone_number": "5215612472568",
-            "phone_number_id": "626839230509107"
-          },
-          "contacts": [
-            {
-              "profile": {
-                "name": "Rick"
-              },
-              "wa_id": "5214434901193"
-            }
-          ],
-          "messages": [
-            {
-              "from": "5214434901193",
-              "id": "wamid.HBgNNTIxNDQzNDkwMTE5MxUCABIYFjNFQjA2NjM0RUIzMTVFNzlCM0M5OUUA",
-              "timestamp": "1751388901",
-              "text": {
-                "body": "1"
-              },
-              "type": "text"
-            }
-          ],
-          "field": "messages"
-        }
-      }
-    ]
-  },
-  "versionId": "503d33fb-d1da-407f-93ab-9ac90a5cf021",
+  "pinData": {},
+  "versionId": "fdd31220-ddec-40e8-9836-093555facc76",
   "triggerCount": 1,
   "shared": [
     {
