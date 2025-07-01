@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-06-24T22:28:19.611Z",
-  "updatedAt": "2025-06-30T18:32:21.000Z",
+  "updatedAt": "2025-07-01T15:54:48.000Z",
   "id": "PetXIW4fDRVoHgK5",
   "name": "chatbot sales",
   "active": false,
@@ -834,6 +834,10 @@
             {
               "name": "tokenWp",
               "value": "Bearer EAAUX8tBNibUBO5oRM8xn7QQMJ949BYO49fUoAtXQZBkvdNqCZAbZC4sHTXZC0wyUBMLT2CvP0GpNdSaF3yd0F43HZC7m6ubsYitZBvzksq11tqPZC8omLgJlj5kSPHjhT1sIod9jsuW9z2i0rGu2xmIp7WD9I6ZCUhosuM31ANSp1tI554IQQbSVAyoIvoI6B1rohwZDZD"
+            },
+            {
+              "name": "tenant_id",
+              "value": "fe8f5abe-abda-4223-8ab0-c81247aa9cec"
             }
           ]
         },
@@ -913,7 +917,7 @@
                   {
                     "id": "e63b8bcb-ffae-47fd-be83-4460047ee4f3",
                     "leftValue": "={{ $json.state_edited ? $json.state_edited : $json.state_finded}}",
-                    "rightValue": "espera_respuesta_menu_calendario",
+                    "rightValue": "esperando_respuesta_menu_informes",
                     "operator": {
                       "type": "string",
                       "operation": "equals",
@@ -924,7 +928,7 @@
                 "combinator": "and"
               },
               "renameOutput": true,
-              "outputKey": "re_m_calendario"
+              "outputKey": "rsp_informes"
             },
             {
               "conditions": {
@@ -1272,6 +1276,12 @@
               "name": "userStateId",
               "value": "={{ $('flujo de actualización base de datos').item.json.userStateId }}",
               "type": "string"
+            },
+            {
+              "id": "3cdecd72-e504-4219-92a9-223f2c61783a",
+              "name": "sub_menu",
+              "value": "={{ $('flujo de actualización base de datos').item.json.sub_menu }}",
+              "type": "string"
             }
           ]
         },
@@ -1349,42 +1359,11 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        3680,
-        -2160
+        3660,
+        -2280
       ],
       "id": "db2c5269-a65d-4cbd-ba77-02377e42e985",
       "name": "Execute Workflow"
-    },
-    {
-      "parameters": {
-        "method": "POST",
-        "url": "=https://graph.facebook.com/v22.0/{{ $('Variables Wp').item.json.clienteIdWp }}/messages",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "Authorization",
-              "value": "={{ $('Variables Wp').item.json.tokenWp }}"
-            },
-            {
-              "name": "Content-Type",
-              "value": "application/json"
-            }
-          ]
-        },
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"Hola! Bienvenid@ al Colegio Reims! 😃\\n\\n¿En qué te podemos ayudar? Escribe el número de la opción que deseas: \\n\\n1️⃣ Informes\\n2️⃣ Ubicación \\n3️⃣ Costos\\n4️⃣ Horario Extendido\\n5️⃣ Programa Bilingüe\\n6️⃣ Contáctame 📲\\n\\n7️⃣ Gracias, ya estoy hablando con un asesor ✅\"\n  }\n}\n",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        3020,
-        -2160
-      ],
-      "id": "82f639a3-d94d-4dfd-979c-7b3170f9b635",
-      "name": "Error mensaje de voz1"
     },
     {
       "parameters": {
@@ -1401,6 +1380,9 @@
             },
             {
               "name": "info"
+            },
+            {
+              "name": "sub_menu"
             }
           ]
         }
@@ -1477,8 +1459,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        3460,
-        -2160
+        3440,
+        -2280
       ],
       "id": "f077b3b3-bd2e-4f68-9176-5800a3cdc48a",
       "name": "Edit Fields5"
@@ -1546,103 +1528,7 @@
                 "combinator": "and"
               },
               "renameOutput": true,
-              "outputKey": "ubicación"
-            },
-            {
-              "conditions": {
-                "options": {
-                  "caseSensitive": true,
-                  "leftValue": "",
-                  "typeValidation": "strict",
-                  "version": 2
-                },
-                "conditions": [
-                  {
-                    "id": "dd4a50a5-f08c-4bf7-b9c2-7d4626ba2cc2",
-                    "leftValue": "={{ $json.selection }}",
-                    "rightValue": 3,
-                    "operator": {
-                      "type": "number",
-                      "operation": "equals"
-                    }
-                  }
-                ],
-                "combinator": "and"
-              },
-              "renameOutput": true,
-              "outputKey": "costos"
-            },
-            {
-              "conditions": {
-                "options": {
-                  "caseSensitive": true,
-                  "leftValue": "",
-                  "typeValidation": "strict",
-                  "version": 2
-                },
-                "conditions": [
-                  {
-                    "id": "5e69f0a7-cb9f-4330-99d2-e637322242a1",
-                    "leftValue": "={{ $json.selection }}",
-                    "rightValue": 4,
-                    "operator": {
-                      "type": "number",
-                      "operation": "equals"
-                    }
-                  }
-                ],
-                "combinator": "and"
-              },
-              "renameOutput": true,
-              "outputKey": "horario extendido"
-            },
-            {
-              "conditions": {
-                "options": {
-                  "caseSensitive": true,
-                  "leftValue": "",
-                  "typeValidation": "strict",
-                  "version": 2
-                },
-                "conditions": [
-                  {
-                    "id": "3812c246-c17e-4583-8a0f-e0117828aca1",
-                    "leftValue": "={{ $json.selection }}",
-                    "rightValue": 5,
-                    "operator": {
-                      "type": "number",
-                      "operation": "equals"
-                    }
-                  }
-                ],
-                "combinator": "and"
-              },
-              "renameOutput": true,
-              "outputKey": "bilingue"
-            },
-            {
-              "conditions": {
-                "options": {
-                  "caseSensitive": true,
-                  "leftValue": "",
-                  "typeValidation": "strict",
-                  "version": 2
-                },
-                "conditions": [
-                  {
-                    "id": "5a785880-a238-46e6-8136-51648cfe3639",
-                    "leftValue": "={{ $json.selection }}",
-                    "rightValue": 6,
-                    "operator": {
-                      "type": "number",
-                      "operation": "equals"
-                    }
-                  }
-                ],
-                "combinator": "and"
-              },
-              "renameOutput": true,
-              "outputKey": "contactame"
+              "outputKey": "Citas"
             }
           ]
         },
@@ -1794,8 +1680,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        5200,
-        -3180
+        5100,
+        -1800
       ],
       "id": "534ac9e6-3f4e-43e6-ad26-c280eb6ac82e",
       "name": "envio de mensaje ubicación"
@@ -1863,8 +1749,8 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        5600,
-        -3180
+        5500,
+        -1800
       ],
       "id": "40198380-24dc-4fc3-8c6b-a7f86f6360ff",
       "name": "Execute Workflow1"
@@ -1898,42 +1784,11 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        5420,
-        -3180
+        5320,
+        -1800
       ],
       "id": "53b0a1f3-6429-4275-bea6-806adf88504b",
       "name": "body datos ubicacion"
-    },
-    {
-      "parameters": {
-        "method": "POST",
-        "url": "=https://graph.facebook.com/v22.0/{{ $('Variables Wp').item.json.clienteIdWp }}/messages",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "Authorization",
-              "value": "={{ $('Variables Wp').item.json.tokenWp }}"
-            },
-            {
-              "name": "Content-Type",
-              "value": "application/json"
-            }
-          ]
-        },
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"¿Para qué grado estás interesad@? Escribe el número de la opción que deseas:\\n1️⃣ Maternal\\n2️⃣ Preescolar\\n3️⃣ Primaria\\n4️⃣ Secundaria\\n5️⃣ Bachillerato\\n\\n-----------------------------------------------------\\n\\n6️⃣  Regresar al menú anterior:\"\n  }\n}\n",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        5200,
-        -2980
-      ],
-      "id": "21276aeb-dd6f-431b-a022-b2b305f1b7f2",
-      "name": "envio de mensaje ubicación1"
     },
     {
       "parameters": {
@@ -1998,8 +1853,8 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        5660,
-        -2980
+        5560,
+        -1600
       ],
       "id": "317d7de1-3be6-4ea1-8936-fd94951c0415",
       "name": "Execute Workflow2"
@@ -2033,42 +1888,11 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        5440,
-        -2980
+        5340,
+        -1600
       ],
       "id": "4dd81662-7e81-46eb-bb22-1b65041dac53",
       "name": "body datos costos"
-    },
-    {
-      "parameters": {
-        "method": "POST",
-        "url": "=https://graph.facebook.com/v22.0/{{ $('Variables Wp').item.json.clienteIdWp }}/messages",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "Authorization",
-              "value": "={{ $('Variables Wp').item.json.tokenWp }}"
-            },
-            {
-              "name": "Content-Type",
-              "value": "application/json"
-            }
-          ]
-        },
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"Nuestro colegio cuenta con horario extendido hasta las 18:00 hrs.\\nDurante este horario los alumnos pueden comer, tomar una actividad deportiva, taller de tareas, certificaciones de inglés y más 😉 🔝\\nPara conocer las actividades que se ofrecen te invitamos a consultar el siguiente documento:\\nhttps://www.colegioreims.edu.mx/actividades-extraescolares\\nPermite que uno de nuestros especialistas te contacte para darte más información sobre nuestro proyecto educativo.\\nSelecciona la opción deseada escribiendo el número:\\n1️⃣ Sí, quiero hablar con alguien!\\n2️⃣ Muchas gracias, por el momento es todo\"\n  }\n}\n",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        5200,
-        -2780
-      ],
-      "id": "fdaa6942-a1b6-47cf-9935-b5ea30e65146",
-      "name": "envio de mensaje ubicación2"
     },
     {
       "parameters": {
@@ -2133,8 +1957,8 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        5660,
-        -2780
+        5560,
+        -1400
       ],
       "id": "13217905-8dce-4ec6-965d-c4010cbc6ac0",
       "name": "Execute Workflow3",
@@ -2169,73 +1993,11 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        5440,
-        -2780
+        5340,
+        -1400
       ],
       "id": "eb87b902-9a49-485c-bd9f-780d663200ad",
       "name": "body datos costos1"
-    },
-    {
-      "parameters": {
-        "method": "POST",
-        "url": "=https://graph.facebook.com/v22.0/{{ $('Variables Wp').item.json.clienteIdWp }}/messages",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "Authorization",
-              "value": "={{ $('Variables Wp').item.json.tokenWp }}"
-            },
-            {
-              "name": "Content-Type",
-              "value": "application/json"
-            }
-          ]
-        },
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"Nuestro colegio ofrece inglés para todos los niveles.\\nA partir de Preprimaria (4 años) hasta 6to de primaria los alumn@s tienen mitad del día inglés y mitad del día español.\\nSecundaria y Bachillerato toman las clases por niveles y un aproximado de 5 hrs por semana.\\nTenemos certificaciones con Cambridge English:\\n🔴 Key (KET) ó A2 Key 🔵 Preliminary (PET) ó B1 Preliminary 🔴 First (FCE) ó B2 First 🔵 Advanced (CAE)\"\n  }\n}\n",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        5200,
-        -2600
-      ],
-      "id": "f75385ae-59ea-4183-8b60-f038121efcdc",
-      "name": "envio de mensaje ubicación3"
-    },
-    {
-      "parameters": {
-        "method": "POST",
-        "url": "=https://graph.facebook.com/v22.0/{{ $('Variables Wp').item.json.clienteIdWp }}/messages",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "Authorization",
-              "value": "={{ $('Variables Wp').item.json.tokenWp }}"
-            },
-            {
-              "name": "Content-Type",
-              "value": "application/json"
-            }
-          ]
-        },
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"Te gustaría una llamada telefónica para platicarte de nuestro Proyecto Educativo o Agendar una visita? Escribe el número de la opción que deseas: \\n\\n1️⃣ Llamada telefónica \\n2️⃣ Agendar visita \\n------------------------------------------------------\\n3️⃣ Regresar al menú anterior\"\n  }\n}\n",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        5200,
-        -2440
-      ],
-      "id": "5d83ee6b-c89f-4982-8e76-b3e4ba480349",
-      "name": "envio de mensaje ubicación4"
     },
     {
       "parameters": {
@@ -2300,8 +2062,8 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        5660,
-        -2600
+        5560,
+        -1220
       ],
       "id": "5c393447-19be-4ba5-a6d4-558cf57ce1f9",
       "name": "Execute Workflow4",
@@ -2336,8 +2098,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        5440,
-        -2600
+        5340,
+        -1220
       ],
       "id": "c59506fd-b9ae-4cbb-956f-66fea1e948f2",
       "name": "body datos costos2"
@@ -2405,8 +2167,8 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        5660,
-        -2440
+        5560,
+        -1060
       ],
       "id": "9458b8f3-ebee-4d81-9d4a-05140d58b98b",
       "name": "Execute Workflow5",
@@ -2441,8 +2203,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        5440,
-        -2440
+        5340,
+        -1060
       ],
       "id": "df57bd22-a620-4084-9c39-e4689dc8fe11",
       "name": "body datos costos3"
@@ -2454,8 +2216,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        3460,
-        -1360
+        4460,
+        -240
       ],
       "id": "a7afe98b-490b-4535-814d-edec5edaf877",
       "name": "Code4"
@@ -2488,8 +2250,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        3680,
-        -1360
+        4680,
+        -240
       ],
       "id": "c5f9bd5c-a751-4e44-8c26-c296803b1a6d",
       "name": "verificamos que la seleccion sea valida1"
@@ -2519,8 +2281,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        3920,
-        -1340
+        4920,
+        -220
       ],
       "id": "27d2d750-962a-4428-8bd3-bb6122635bcf",
       "name": "Error seleccion menu invalida1"
@@ -2530,8 +2292,8 @@
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
       "position": [
-        4140,
-        -1340
+        5140,
+        -220
       ],
       "id": "be451cd9-1c33-412c-8e88-ab687df04b11",
       "name": "No Operation, do nothing1"
@@ -2553,8 +2315,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        3200,
-        -1360
+        4200,
+        -240
       ],
       "id": "3ed5b812-09b7-49cd-9392-c8993c8e9f5f",
       "name": "obtenemos la respuesta del menu costos"
@@ -2586,8 +2348,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        4440,
-        -1580
+        7100,
+        -480
       ],
       "id": "b80d1be7-a3e9-4931-8431-26c7603f3b3c",
       "name": "validamos si se selecciono menu anterior desde costos"
@@ -2723,8 +2485,8 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.2,
       "position": [
-        4700,
-        -1600
+        7360,
+        -500
       ],
       "id": "ea01d23c-df13-4225-95d5-7d719dc4d6cd",
       "name": "Switch3"
@@ -2792,8 +2554,8 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        6020,
-        -1560
+        8680,
+        -460
       ],
       "id": "1d386c50-7770-4e0b-a307-149d26caafc0",
       "name": "Execute Workflow6",
@@ -2824,8 +2586,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        5180,
-        -1860
+        7840,
+        -760
       ],
       "id": "b88d9328-e2f9-4585-a92c-259e22ff9652",
       "name": "info costo maternal"
@@ -2855,8 +2617,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        5180,
-        -1700
+        7840,
+        -600
       ],
       "id": "c70e5a13-42a0-4dd8-bbe4-f5dc97a6a007",
       "name": "info costo pre escolar"
@@ -2886,8 +2648,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        5180,
-        -1540
+        7840,
+        -440
       ],
       "id": "62e53aef-f6b2-4891-b39b-f7c467a065c5",
       "name": "info costo primaria"
@@ -2917,8 +2679,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        5180,
-        -1380
+        7840,
+        -280
       ],
       "id": "177be801-3376-4fe1-8a3d-2fce3528c251",
       "name": "info costo secundaria"
@@ -2948,8 +2710,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        5180,
-        -1220
+        7840,
+        -120
       ],
       "id": "b23116b8-10a3-469a-97aa-8bd63b4fd461",
       "name": "info costo bachillerato"
@@ -2979,8 +2741,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        5560,
-        -1560
+        8220,
+        -460
       ],
       "id": "a9234e23-113c-407d-9ab9-a8e0a1020910",
       "name": "envio de mensaje contacto costos"
@@ -3014,8 +2776,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        5800,
-        -1560
+        8460,
+        -460
       ],
       "id": "d3ea2255-7841-4ada-8323-27783d4e98d6",
       "name": "body datos contacto costos"
@@ -3083,8 +2845,8 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        3760,
-        -1020
+        4760,
+        100
       ],
       "id": "de903a34-fda7-491f-b785-2195d922039f",
       "name": "Execute Workflow7"
@@ -3118,8 +2880,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        3500,
-        -1020
+        4500,
+        100
       ],
       "id": "fa3bb810-bec0-4007-86f7-844a97030ed2",
       "name": "Edit Fields6"
@@ -3149,22 +2911,22 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        3240,
-        -1020
+        4240,
+        100
       ],
       "id": "4f171c7e-846e-4964-853c-64394fe782c1",
       "name": "Error mensaje contacto costos"
     },
     {
       "parameters": {
-        "content": "## Primer menú para el cliente\n* Aquí se seleccionan datos de informacion, costos, direccion, contactos entre otras cosas *\nHola! Bienvenid@ al Colegio Reims! 😃\n\n¿En qué te podemos ayudar? Escribe el número de la opción que deseas: \n\n1️⃣ Informes\n2️⃣ Ubicación \n3️⃣ Costos\n4️⃣ Horario Extendido\n5️⃣ Programa Bilingüe\n6️⃣ Contáctame 📲\n\n7️⃣ Gracias, ya estoy hablando con un asesor ✅",
+        "content": "## Primer menú para el cliente\n* Aquí se seleccionan datos de informacion, costos, direccion, contactos entre otras cosas *\nHola! Bienvenid@ al Colegio Reims! 😃\n\n¿En qué te podemos ayudar? Escribe el número de la opción que deseas: \n1️⃣ Informes\n2️⃣ Ubicación \n\n\n\n\n// anterior\n1️⃣ Ubicación\n2️⃣ Costos \n3️⃣ Horario Extendido\n4️⃣ Programa Bilingüe\n5️⃣ Contáctame 📲\n\n6️⃣ Gracias, ya estoy hablando con un asesor ✅\n",
         "height": 1140,
         "width": 1360
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        4500,
-        -3380
+        3020,
+        -3880
       ],
       "typeVersion": 1,
       "id": "62df9d47-0fa6-43ce-85b0-4fdeeb4ee4bb",
@@ -3179,8 +2941,8 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        4420,
-        -2020
+        7080,
+        -920
       ],
       "typeVersion": 1,
       "id": "ac2d81ae-ab3f-4180-963d-c06e170d6d1a",
@@ -3200,6 +2962,579 @@
       "typeVersion": 1,
       "id": "9374c8ca-a6f2-4032-ba04-2d2bbfbcc6a7",
       "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "5a969ce2-2d9e-400d-9058-e9686ab50d02",
+                    "leftValue": "={{ $json.selection }}",
+                    "rightValue": 1,
+                    "operator": {
+                      "type": "number",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "ubicación"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "dd4a50a5-f08c-4bf7-b9c2-7d4626ba2cc2",
+                    "leftValue": "={{ $json.selection }}",
+                    "rightValue": 2,
+                    "operator": {
+                      "type": "number",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "costos"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "5e69f0a7-cb9f-4330-99d2-e637322242a1",
+                    "leftValue": "={{ $json.selection }}",
+                    "rightValue": 3,
+                    "operator": {
+                      "type": "number",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "horario extendido"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "3812c246-c17e-4583-8a0f-e0117828aca1",
+                    "leftValue": "={{ $json.selection }}",
+                    "rightValue": 4,
+                    "operator": {
+                      "type": "number",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "bilingue"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "5a785880-a238-46e6-8136-51648cfe3639",
+                    "leftValue": "={{ $json.selection }}",
+                    "rightValue": 5,
+                    "operator": {
+                      "type": "number",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "contactame"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        4620,
+        -1420
+      ],
+      "id": "5921e1e5-b69d-4f22-9e43-cfcbc9ae173b",
+      "name": "Switch4"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v22.0/{{ $('Variables Wp').item.json.clienteIdWp }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ $('Variables Wp').item.json.tokenWp }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"Hola! Bienvenid@ al Colegio Reims! 😃\\n\\n¿En qué te podemos ayudar? Escribe el número de la opción que deseas: \\n\\n1️⃣ Informes\\n2️⃣ Citas\"\n  }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3020,
+        -2160
+      ],
+      "id": "82f639a3-d94d-4dfd-979c-7b3170f9b635",
+      "name": "Mensaje menu inicial"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v22.0/{{ $('Variables Wp').item.json.clienteIdWp }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ $('Variables Wp').item.json.tokenWp }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"Gracias por solicitar información, ¿Sobre que necesitas saber?\\n\\n1️⃣ Ubicación\\n2️⃣ Costos \\n3️⃣ Horario Extendido\\n4️⃣ Programa Bilingüe\\n5️⃣ Contáctame 📲\\n\\n6️⃣ Gracias, ya estoy hablando con un asesor ✅\"\n  }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        5080,
+        -2920
+      ],
+      "id": "e8c40544-7e42-4734-8f46-99657fc61a97",
+      "name": "Mensaje menu información"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "PetXIW4fDRVoHgK5",
+          "mode": "list",
+          "cachedResultName": "chatbot sales"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "state": "esperando_respuesta_menu_informes",
+            "userStateId": "={{ $json.userStateId }}",
+            "userId": "={{ $json.userId }}",
+            "info": "={{ $json.info }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "state",
+              "displayName": "state",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "userId",
+              "displayName": "userId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "userStateId",
+              "displayName": "userStateId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "info",
+              "displayName": "info",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        5480,
+        -2920
+      ],
+      "id": "1e54dff7-f359-472d-8742-d8dc0d07b6bb",
+      "name": "Execute Workflow8"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "cb5bf561-971f-493b-8312-772ff7f21da3",
+              "name": "userStateId",
+              "value": "={{ $('Code2').item.json.user_state_final }}",
+              "type": "string"
+            },
+            {
+              "id": "1356aa24-d7f3-4700-9568-aa9b6ece9b4c",
+              "name": "info",
+              "value": "se presenta menu de informes",
+              "type": "string"
+            },
+            {
+              "id": "6b9a8f55-16af-4e52-b897-0ac1cfca6083",
+              "name": "userId",
+              "value": "={{ $('Code2').item.json.user_id_finded || $('Code2').item.json.user_id_edited }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        5300,
+        -2920
+      ],
+      "id": "12a9b213-23ee-4a16-9f29-90aff1bcafcd",
+      "name": "body datos menu información"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Nodo “Function” de n8n\n// Valida items[0].json.selection y retorna status con mensajes amistosos\n\n// 1. Leer la selección del nodo Set anterior\nconst raw = items[0].json.selection;\nconst sel = Number(raw);\n\n// 2. Preparar la respuesta con mensajes descriptivos\nlet result;\n\nif (Number.isNaN(sel)) {\n  // No es un número\n  result = {\n    status: 'error',\n    message: `Ups, parece que tu elección “${raw}” no es un número. Por favor escribe un número del 1 al 7 para continuar.`\n  };\n} else if (!Number.isInteger(sel)) {\n  // No es entero\n  result = {\n    status: 'error',\n    message: `Veo que has ingresado ${sel}, pero necesitamos un número entero. Por favor elige un número sin decimales entre 1 y 6.`\n  };\n} else if (sel < 1 || sel > 6) {\n  // Fuera de rango\n  result = {\n    status: 'error',\n    message: `Tu selección es ${sel}, pero debe estar entre 1 y 6. Intenta de nuevo con un número dentro de ese rango.`\n  };\n} else {\n  // OK\n  result = {\n    status: 'success',\n    message: `¡Genial! Has seleccionado la opción número ${sel}.`,\n    selection: sel\n  };\n}\n\n// 3. Devolver el resultado para usar en nodos siguientes\nreturn [\n  {\n    json: result\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3400,
+        -1080
+      ],
+      "id": "dee5d6ec-1b49-4048-93c4-af91585d7652",
+      "name": "Code5"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "967bc904-1e28-4f4e-af20-bde631bb863a",
+              "name": "selection",
+              "value": "={{ $('WhatsApp Trigger').item.json.messages[0].text.body }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        3140,
+        -1080
+      ],
+      "id": "e92e68fd-fa61-4266-bd27-ce1f140dd140",
+      "name": "obtenemos la respuesta del menu inicial1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "1b2792b2-4d4e-4e50-af12-cb3d4c3e0e08",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "success",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        3620,
+        -1080
+      ],
+      "id": "7033fa3e-af6c-4b08-8c30-789292335ce7",
+      "name": "verificamos que la seleccion sea valida2"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v22.0/{{ $('Variables Wp').item.json.clienteIdWp }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ $('Variables Wp').item.json.tokenWp }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"{{ $json.message }}\"\n  }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        4100,
+        -900
+      ],
+      "id": "8ecc907d-1dac-4b77-9a78-2ffb6bd9cd1e",
+      "name": "Error seleccion menu invalida2"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        4320,
+        -900
+      ],
+      "id": "43d78ec7-0fcb-4307-b5a3-cdc67924b605",
+      "name": "No Operation, do nothing2"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "7de3bb2b-748d-4491-8fd4-8953493f36a3",
+              "leftValue": "",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        3840,
+        -1180
+      ],
+      "id": "97db9c00-8dc4-4d31-b2e3-50a458d6f73e",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v22.0/{{ $('Variables Wp').item.json.clienteIdWp }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ $('Variables Wp').item.json.tokenWp }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"¿Para qué grado estás interesad@? Escribe el número de la opción que deseas:\\n1️⃣ Maternal\\n2️⃣ Preescolar\\n3️⃣ Primaria\\n4️⃣ Secundaria\\n5️⃣ Bachillerato\\n\\n-----------------------------------------------------\\n\\n6️⃣  Regresar al menú anterior:\"\n  }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        5100,
+        -1600
+      ],
+      "id": "21276aeb-dd6f-431b-a022-b2b305f1b7f2",
+      "name": "envio de mensaje costo"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v22.0/{{ $('Variables Wp').item.json.clienteIdWp }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ $('Variables Wp').item.json.tokenWp }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"Nuestro colegio cuenta con horario extendido hasta las 18:00 hrs.\\nDurante este horario los alumnos pueden comer, tomar una actividad deportiva, taller de tareas, certificaciones de inglés y más 😉 🔝\\nPara conocer las actividades que se ofrecen te invitamos a consultar el siguiente documento:\\nhttps://www.colegioreims.edu.mx/actividades-extraescolares\\nPermite que uno de nuestros especialistas te contacte para darte más información sobre nuestro proyecto educativo.\\nSelecciona la opción deseada escribiendo el número:\\n1️⃣ Sí, quiero hablar con alguien!\\n2️⃣ Muchas gracias, por el momento es todo\"\n  }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        5100,
+        -1400
+      ],
+      "id": "fdaa6942-a1b6-47cf-9935-b5ea30e65146",
+      "name": "envio de mensaje horario"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v22.0/{{ $('Variables Wp').item.json.clienteIdWp }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ $('Variables Wp').item.json.tokenWp }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"Nuestro colegio ofrece inglés para todos los niveles.\\nA partir de Preprimaria (4 años) hasta 6to de primaria los alumn@s tienen mitad del día inglés y mitad del día español.\\nSecundaria y Bachillerato toman las clases por niveles y un aproximado de 5 hrs por semana.\\nTenemos certificaciones con Cambridge English:\\n🔴 Key (KET) ó A2 Key 🔵 Preliminary (PET) ó B1 Preliminary 🔴 First (FCE) ó B2 First 🔵 Advanced (CAE)\"\n  }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        5100,
+        -1220
+      ],
+      "id": "f75385ae-59ea-4183-8b60-f038121efcdc",
+      "name": "envio de mensaje bilingüe"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v22.0/{{ $('Variables Wp').item.json.clienteIdWp }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ $('Variables Wp').item.json.tokenWp }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"Te gustaría una llamada telefónica para platicarte de nuestro Proyecto Educativo o Agendar una visita? Escribe el número de la opción que deseas: \\n\\n1️⃣ Llamada telefónica \\n2️⃣ Agendar visita \\n------------------------------------------------------\\n3️⃣ Regresar al menú anterior\"\n  }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        5100,
+        -1060
+      ],
+      "id": "5d83ee6b-c89f-4982-8e76-b3e4ba480349",
+      "name": "envio de mensaje contactame"
     }
   ],
   "connections": {
@@ -3490,7 +3825,7 @@
       "main": [
         [
           {
-            "node": "Error mensaje de voz1",
+            "node": "Mensaje menu inicial",
             "type": "main",
             "index": 0
           }
@@ -3502,7 +3837,13 @@
             "index": 0
           }
         ],
-        [],
+        [
+          {
+            "node": "obtenemos la respuesta del menu inicial1",
+            "type": "main",
+            "index": 0
+          }
+        ],
         [],
         [
           {
@@ -3514,17 +3855,6 @@
         [
           {
             "node": "Error mensaje contacto costos",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Error mensaje de voz1": {
-      "main": [
-        [
-          {
-            "node": "revisamos si ya existia",
             "type": "main",
             "index": 0
           }
@@ -3628,42 +3958,14 @@
     },
     "Switch2": {
       "main": [
-        [],
         [
           {
-            "node": "envio de mensaje ubicación",
+            "node": "Mensaje menu información",
             "type": "main",
             "index": 0
           }
         ],
-        [
-          {
-            "node": "envio de mensaje ubicación1",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "envio de mensaje ubicación2",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "envio de mensaje ubicación3",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "envio de mensaje ubicación4",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "envio de mensaje ubicación": {
@@ -3682,17 +3984,6 @@
         [
           {
             "node": "Execute Workflow1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "envio de mensaje ubicación1": {
-      "main": [
-        [
-          {
-            "node": "body datos costos",
             "type": "main",
             "index": 0
           }
@@ -3721,17 +4012,6 @@
         ]
       ]
     },
-    "envio de mensaje ubicación2": {
-      "main": [
-        [
-          {
-            "node": "body datos costos1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "body datos costos2": {
       "main": [
         [
@@ -3743,33 +4023,11 @@
         ]
       ]
     },
-    "envio de mensaje ubicación3": {
-      "main": [
-        [
-          {
-            "node": "body datos costos2",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "body datos costos3": {
       "main": [
         [
           {
             "node": "Execute Workflow5",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "envio de mensaje ubicación4": {
-      "main": [
-        [
-          {
-            "node": "body datos costos3",
             "type": "main",
             "index": 0
           }
@@ -3831,7 +4089,7 @@
       "main": [
         [
           {
-            "node": "Error mensaje de voz1",
+            "node": "Mensaje menu inicial",
             "type": "main",
             "index": 0
           }
@@ -3982,6 +4240,189 @@
           }
         ]
       ]
+    },
+    "Mensaje menu inicial": {
+      "main": [
+        [
+          {
+            "node": "revisamos si ya existia",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mensaje menu información": {
+      "main": [
+        [
+          {
+            "node": "body datos menu información",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "body datos menu información": {
+      "main": [
+        [
+          {
+            "node": "Execute Workflow8",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code5": {
+      "main": [
+        [
+          {
+            "node": "verificamos que la seleccion sea valida2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "obtenemos la respuesta del menu inicial1": {
+      "main": [
+        [
+          {
+            "node": "Code5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "verificamos que la seleccion sea valida2": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Error seleccion menu invalida2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Error seleccion menu invalida2": {
+      "main": [
+        [
+          {
+            "node": "No Operation, do nothing2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "No Operation, do nothing2": {
+      "main": [
+        []
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Switch4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch4": {
+      "main": [
+        [
+          {
+            "node": "envio de mensaje ubicación",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "envio de mensaje costo",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "envio de mensaje horario",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "envio de mensaje bilingüe",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "envio de mensaje contactame",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "envio de mensaje costo": {
+      "main": [
+        [
+          {
+            "node": "body datos costos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "envio de mensaje horario": {
+      "main": [
+        [
+          {
+            "node": "body datos costos1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "envio de mensaje bilingüe": {
+      "main": [
+        [
+          {
+            "node": "body datos costos2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "envio de mensaje contactame": {
+      "main": [
+        [
+          {
+            "node": "body datos costos3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -4022,7 +4463,7 @@
       }
     ]
   },
-  "versionId": "2d251ab5-eed5-4378-b679-0559e4d08e9f",
+  "versionId": "a4ad3870-760c-4eb2-94c4-880ee658cc94",
   "triggerCount": 1,
   "shared": [
     {
