@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-06-24T22:28:19.611Z",
-  "updatedAt": "2025-07-01T16:19:12.000Z",
+  "updatedAt": "2025-07-01T18:41:06.000Z",
   "id": "PetXIW4fDRVoHgK5",
   "name": "chatbot sales",
   "active": false,
@@ -942,7 +942,7 @@
                   {
                     "id": "faed8982-b54d-4cc9-85df-45c31ad392ec",
                     "leftValue": "={{ $json.state_edited ? $json.state_edited : $json.state_finded}}",
-                    "rightValue": "espera_respuesta_faq",
+                    "rightValue": "esperando_respuesta_dia_cita",
                     "operator": {
                       "type": "string",
                       "operation": "equals",
@@ -953,7 +953,7 @@
                 "combinator": "and"
               },
               "renameOutput": true,
-              "outputKey": "espera_respuesta_faq"
+              "outputKey": "cita_rsp"
             },
             {
               "conditions": {
@@ -3685,10 +3685,10 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "http://localhost:8000/sales/available-slots-chatbot",
+        "url": "={{ $('Set Variables').item.json.currentEnvironment }}/sales/available-slots-chatbot",
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"tenant_id\": \"fe8f5abe-abda-4223-8ab0-c81247aa9cec\",\n  \"current_datetime\": \"03/07/2025 14:30:00\"\n}",
+        "jsonBody": "={\n  \"tenant_id\": \"{{ $('Variables Wp').item.json.tenant_id }}\",\n  \"current_datetime\": \"{{ \n  (() => {\n    const d = new Date();\n    const pad = n => n.toString().padStart(2,'0');\n    return `${pad(d.getDate())}/${pad(d.getMonth()+1)}/${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;\n  })()\n}}\"\n}",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
@@ -3699,6 +3699,358 @@
       ],
       "id": "f54bd586-11d6-4572-adea-5b23219499ef",
       "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v22.0/{{ $('Variables Wp').item.json.clienteIdWp }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ $('Variables Wp').item.json.tokenWp }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"{{ $json.whatsapp_message.replace(/\\r?\\n/g, \"\\\\n\").replace(/^\\\\n+|\\\\n+$/g, \"\") }}\"\n  }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        5320,
+        -2580
+      ],
+      "id": "7e8100f5-ecb0-4e6d-959a-e316ac9eabab",
+      "name": "Mensaje menu información1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v22.0/{{ $('Variables Wp').item.json.clienteIdWp }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ $('Variables Wp').item.json.tokenWp }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"type\": \"interactive\",\n  \"interactive\": {\n    \"type\": \"button\",\n    \"body\": {\n      \"text\": \"Para regresar, pulsa Menú anterior\"\n    },\n    \"action\": {\n      \"buttons\": [\n        {\n          \"type\": \"reply\",\n          \"reply\": {\n            \"id\": \"menu_anterior\",\n            \"title\": \"Menú anterior\"\n          }\n        }\n      ]\n    }\n  }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        5520,
+        -2580
+      ],
+      "id": "1b269b42-4d40-4159-82b0-277a2ae92a27",
+      "name": "menu principal4"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "PetXIW4fDRVoHgK5",
+          "mode": "list",
+          "cachedResultName": "chatbot sales"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "state": "esperando_respuesta_dia_cita",
+            "userStateId": "={{ $json.userStateId }}",
+            "userId": "={{ $json.userId }}",
+            "info": "={{ $json.info }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "state",
+              "displayName": "state",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "userId",
+              "displayName": "userId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "userStateId",
+              "displayName": "userStateId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "info",
+              "displayName": "info",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "sub_menu",
+              "displayName": "sub_menu",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        5940,
+        -2580
+      ],
+      "id": "0cbd2232-12ce-4008-a72c-83787f7125b2",
+      "name": "Execute Workflow10"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "cb5bf561-971f-493b-8312-772ff7f21da3",
+              "name": "userStateId",
+              "value": "={{ $('Code2').item.json.user_state_final }}",
+              "type": "string"
+            },
+            {
+              "id": "1356aa24-d7f3-4700-9568-aa9b6ece9b4c",
+              "name": "info",
+              "value": "se presentan horarios de citas disponibles ",
+              "type": "string"
+            },
+            {
+              "id": "6b9a8f55-16af-4e52-b897-0ac1cfca6083",
+              "name": "userId",
+              "value": "={{ $('Code2').item.json.user_id_finded || $('Code2').item.json.user_id_edited }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        5720,
+        -2580
+      ],
+      "id": "a5d2ada4-6a50-4d78-99e3-8b2b25a3e82e",
+      "name": "body datos menu información1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "e734ff39-596a-4ecf-a624-74aa06e0cfb8",
+              "leftValue": "={{ $('WhatsApp Trigger').item.json.messages[0].type }}",
+              "rightValue": "text",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        2820,
+        -80
+      ],
+      "id": "c02aabe9-94e3-4460-a8a6-f973c0a5e9b1",
+      "name": "revisamos si viene boton de menu anterior"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Set Variables').item.json.currentEnvironment }}/sales/available-slots-chatbot",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"tenant_id\": \"{{ $('Variables Wp').item.json.tenant_id }}\",\n  \"current_datetime\": \"{{ \n  (() => {\n    const d = new Date();\n    const pad = n => n.toString().padStart(2,'0');\n    return `${pad(d.getDate())}/${pad(d.getMonth()+1)}/${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;\n  })()\n}}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3060,
+        -60
+      ],
+      "id": "bd172ae7-3326-40d8-adaf-b95b1561b75a",
+      "name": "HTTP Request2"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "476fc6ff-5525-40d1-a018-dac9c590f287",
+              "name": "available_slots",
+              "value": "={{ $json.available_slots }}",
+              "type": "array"
+            },
+            {
+              "id": "bcaa87d7-34f9-47b2-b2c2-cce72f7b4951",
+              "name": "selection",
+              "value": "={{ $('WhatsApp Trigger').item.json.messages[0].text.body }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        3280,
+        -60
+      ],
+      "id": "e4d470fe-858a-4334-8175-b6eb8d3ef6d5",
+      "name": "datos para seleccionar dia de cita"
+    },
+    {
+      "parameters": {
+        "jsCode": "// 1) Leer del JSON de entrada\nconst { available_slots, selection } = items[0].json;\n\n// 2) Validar que selection sea un número\nconst sel = parseInt(selection, 10);\nif (isNaN(sel)) {\n  return [{\n    json: {\n      status: 'error',\n      message: `Ups, “${selection}” no es un número válido. Por favor responde con un número entre 1 y ${available_slots.length}.`\n    }\n  }];\n}\n\n// 3) Validar rango\nconst total = Array.isArray(available_slots) ? available_slots.length : 0;\nif (sel < 1 || sel > total) {\n  return [{\n    json: {\n      status: 'error',\n      message: `Tu selección es ${sel}, pero solo hay ${total} opciones. Elige un número entre 1 y ${total}.`\n    }\n  }];\n}\n\n// 4) Obtener el slot correspondiente (1 → índice 0)\nconst chosenSlot = available_slots[sel - 1];\n\n// 5) Devolver éxito con el slot seleccionado\nreturn [{\n  json: {\n    status: 'success',\n    message: `Has seleccionado la opción ${sel}. Aquí los datos del espacio:`,\n    selected_slot: chosenSlot\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3500,
+        -60
+      ],
+      "id": "830cac52-39fc-4c39-bed5-e47c411b1a56",
+      "name": "obtenemos el slot solicitado"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "c52600bf-d904-4d31-95ff-ab5e4f15bb0b",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "error",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        3720,
+        -60
+      ],
+      "id": "faf5f785-5d80-4a20-a5aa-afb11205b286",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v22.0/{{ $('Variables Wp').item.json.clienteIdWp }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ $('Variables Wp').item.json.tokenWp }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"{{ $json.message }}\"\n  }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        4000,
+        -160
+      ],
+      "id": "8e64b5d8-8633-4189-92dd-c322365ffbb8",
+      "name": "error de seleccion de dia"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Set Variables').item.json.currentEnvironment }}/sales/book-appointment-chatbot",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"tenant_id\": \"{{ $('Variables Wp').item.json.tenant_id }}\",\n  \"phone_number\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\", \n  \"selection_number\": {{ $json.selected_slot.selection_number }},\n  \"selected_date\": \"{{ $json.selected_slot.date }}\",\n  \"selected_time\": \"{{ $json.selected_slot.start_time }}\",\n  \"vendor_id\": \"{{ $json.selected_slot.vendor_id }}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3940,
+        40
+      ],
+      "id": "5c47f6bc-5bb1-438d-bbdc-6d0c8e96711f",
+      "name": "guardamos la cita"
     }
   ],
   "connections": {
@@ -4008,7 +4360,13 @@
             "index": 0
           }
         ],
-        [],
+        [
+          {
+            "node": "revisamos si viene boton de menu anterior",
+            "type": "main",
+            "index": 0
+          }
+        ],
         [
           {
             "node": "obtenemos la respuesta del menu costos",
@@ -4622,6 +4980,119 @@
           }
         ]
       ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Mensaje menu información1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mensaje menu información1": {
+      "main": [
+        [
+          {
+            "node": "menu principal4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "body datos menu información1": {
+      "main": [
+        [
+          {
+            "node": "Execute Workflow10",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "menu principal4": {
+      "main": [
+        [
+          {
+            "node": "body datos menu información1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "revisamos si viene boton de menu anterior": {
+      "main": [
+        [
+          {
+            "node": "Mensaje menu inicial",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "HTTP Request2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request2": {
+      "main": [
+        [
+          {
+            "node": "datos para seleccionar dia de cita",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "datos para seleccionar dia de cita": {
+      "main": [
+        [
+          {
+            "node": "obtenemos el slot solicitado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "obtenemos el slot solicitado": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "error de seleccion de dia",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "guardamos la cita",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -4630,7 +5101,7 @@
   "staticData": null,
   "meta": null,
   "pinData": {},
-  "versionId": "d1548283-b936-47a9-9489-16554bfd9f5a",
+  "versionId": "a372c892-7dc7-4d6f-814e-520c271a3f3c",
   "triggerCount": 1,
   "shared": [
     {
