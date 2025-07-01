@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-06-09T16:34:20.833Z",
-  "updatedAt": "2025-07-01T17:57:44.000Z",
+  "updatedAt": "2025-07-01T22:22:03.000Z",
   "id": "k6PApGOzpLKtnZ0q",
   "name": "chatbot cerebro",
   "active": true,
@@ -6079,13 +6079,13 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"type\": \"interactive\",\n  \"interactive\": {\n    \"type\": \"button\",\n    \"body\": {\n      \"text\": \"{{$('get_courses_by_student_id').item.json.data.whatsapp_message.replace(/\\r?\\n/g, \"\\\\n\")\n    .replace(/^\\\\n+|\\\\n+$/g, \"\") }}\\n\\nEscribe el número del curso que quieres buscar.\\n\\nPara salir del proceso, presiona el botón Volver al Menú\"\n    },\n    \"action\": {\n      \"buttons\": [\n        {\n          \"type\": \"reply\",\n          \"reply\": {\n            \"id\": \"menu_inicial\",\n            \"title\": \"Volver al menú\"\n          }\n        }\n      ]\n    }\n } }\n\n",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"type\": \"interactive\",\n  \"interactive\": {\n    \"type\": \"button\",\n    \"body\": {\n      \"text\": \"Para salir del proceso, presiona el botón Volver al Menú\"\n    },\n    \"action\": {\n      \"buttons\": [\n        {\n          \"type\": \"reply\",\n          \"reply\": {\n            \"id\": \"menu_inicial\",\n            \"title\": \"Volver al menú\"\n          }\n        }\n      ]\n    }\n } }\n\n",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        1900,
+        2140,
         3780
       ],
       "id": "c81e6e8d-e23a-4c64-a463-6629eeaeb436",
@@ -7038,6 +7038,37 @@
       ],
       "id": "a62a6e0f-2118-4cef-9584-7e63254ae5e9",
       "name": "datosFinalesUser"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v22.0/626839230509107/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer EAAHeSgKjRYEBOZBi0kUskW4k3L6ZCO8EhqsGNjWLyfJ3U1NZCbDyQp9WSoX0Ouh8hh44Jue9ev7TMlygkZAMoqMReAJL9cNZBQZCZB508HXZB84HCNFZBIRlSa9cXFs0dXmR31XoO0iUZBOTx4VSnErdZC9OD1sQDKprPHpbK7NBrTZAWy8D6pvNi9w0w4c9pt2KE3stGwZDZD"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"{{$('get_courses_by_student_id').item.json.data.whatsapp_message.replace(/\\r?\\n/g, \"\\\\n\")\n    .replace(/^\\\\n+|\\\\n+$/g, \"\") }}\\n\\nEscribe el número del curso que quieres buscar.\"\n  }\n}\n\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1900,
+        3780
+      ],
+      "id": "464d9f55-a635-4336-973c-7a3cb466c12b",
+      "name": "no hay actividades en la semana para enviar1"
     }
   ],
   "connections": {
@@ -9123,7 +9154,7 @@
       "main": [
         [
           {
-            "node": "comienzo con el porceso de calificaciones (cursos)",
+            "node": "no hay actividades en la semana para enviar1",
             "type": "main",
             "index": 0
           }
@@ -9473,6 +9504,17 @@
           }
         ]
       ]
+    },
+    "no hay actividades en la semana para enviar1": {
+      "main": [
+        [
+          {
+            "node": "comienzo con el porceso de calificaciones (cursos)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -9482,8 +9524,40 @@
   "meta": {
     "templateCredsSetupCompleted": true
   },
-  "pinData": {},
-  "versionId": "fdd31220-ddec-40e8-9836-093555facc76",
+  "pinData": {
+    "WhatsApp Trigger": [
+      {
+        "json": {
+          "messaging_product": "whatsapp",
+          "metadata": {
+            "display_phone_number": "5215612472568",
+            "phone_number_id": "626839230509107"
+          },
+          "contacts": [
+            {
+              "profile": {
+                "name": "Damian Gamboa"
+              },
+              "wa_id": "5218123476311"
+            }
+          ],
+          "messages": [
+            {
+              "from": "5218123476311",
+              "id": "wamid.HBgNNTIxODEyMzQ3NjMxMRUCABIYFDNBODZCNDU3NEM0OTFCMTUxRkUwAA==",
+              "timestamp": "1751408292",
+              "text": {
+                "body": "3"
+              },
+              "type": "text"
+            }
+          ],
+          "field": "messages"
+        }
+      }
+    ]
+  },
+  "versionId": "60efaefd-d326-4aaf-89d5-9af3bd42f51e",
   "triggerCount": 1,
   "shared": [
     {
