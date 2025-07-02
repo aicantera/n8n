@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-07-01T23:56:39.068Z",
-  "updatedAt": "2025-07-01T23:56:39.068Z",
+  "updatedAt": "2025-07-02T00:07:05.000Z",
   "id": "NESaPYaOPrbi2jS8",
   "name": "Agente Edukai",
   "active": false,
@@ -10,8 +10,7 @@
         "updates": [
           "messages"
         ],
-        "options": {},
-        "path": "07414902-c1b0-4d8e-85ba-4841a6391a07"
+        "options": {}
       },
       "type": "n8n-nodes-base.whatsAppTrigger",
       "typeVersion": 1,
@@ -57,7 +56,12 @@
       ],
       "id": "535d21af-49e7-4d75-9ae8-7fb60ce8d031",
       "name": "OpenAI Chat Model",
-      "credentials": {}
+      "credentials": {
+        "openAiApi": {
+          "id": "nFhq9424Dw9eFpNq",
+          "name": "OpenAi Agente Edukai"
+        }
+      }
     },
     {
       "parameters": {
@@ -65,8 +69,7 @@
         "phoneNumberId": "676686782186843",
         "recipientPhoneNumber": "={{ $('WhatsApp Trigger').item.json.messages[0].from }}",
         "textBody": "={{ $('AI Agent').item.json.output }}",
-        "additionalFields": {},
-        "path": "6976b0ae-f7e5-46f3-9d29-350365d2b0bd"
+        "additionalFields": {}
       },
       "type": "n8n-nodes-base.whatsApp",
       "typeVersion": 1,
@@ -149,7 +152,7 @@
       "parameters": {
         "sessionIdType": "customKey",
         "sessionKey": "={{ $('WhatsApp Trigger').item.json.messages[0].from }}",
-        "tableName": "n8n_chat_histories_agente_nova",
+        "tableName": "n8n_chat_histories_agente_edukai",
         "contextWindowLength": 20
       },
       "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
@@ -160,7 +163,12 @@
       ],
       "id": "6e172890-dd8c-4854-bb95-69d9f7a552a8",
       "name": "Postgres Chat Memory",
-      "credentials": {}
+      "credentials": {
+        "postgres": {
+          "id": "njbkeKSjlbP7oPba",
+          "name": "Postgres Cuenta Aaron"
+        }
+      }
     },
     {
       "parameters": {},
@@ -184,7 +192,7 @@
         },
         "table": {
           "__rl": true,
-          "value": "n8n_chat_histories_agente_nova",
+          "value": "n8n_chat_histories_agente_edukai",
           "mode": "name"
         },
         "options": {}
@@ -197,24 +205,29 @@
       ],
       "id": "a8d09146-0e0c-470e-8ecc-b938fa6ae7dd",
       "name": "Postgres",
-      "credentials": {}
+      "credentials": {
+        "postgres": {
+          "id": "njbkeKSjlbP7oPba",
+          "name": "Postgres Cuenta Aaron"
+        }
+      }
     },
     {
       "parameters": {
         "operation": "append",
         "documentId": {
           "__rl": true,
-          "value": "1VTU99uzTY-xNwStf2sXjv8mu2Lqo5clRmw-XC-nZNHk",
+          "value": "129wQRvNwASMkTd4BEJ4G7HmIA76j0Vft6_g8T7pzJdY",
           "mode": "list",
-          "cachedResultName": "Nova - Calificación de Leads",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1VTU99uzTY-xNwStf2sXjv8mu2Lqo5clRmw-XC-nZNHk/edit?usp=drivesdk"
+          "cachedResultName": "Edukai - Calificación de Leads",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/129wQRvNwASMkTd4BEJ4G7HmIA76j0Vft6_g8T7pzJdY/edit?usp=drivesdk"
         },
         "sheetName": {
           "__rl": true,
           "value": "gid=0",
           "mode": "list",
-          "cachedResultName": "Hoja 1",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1kN2oLcVbFQpBGWzii95gKByZ652ziKeDhlmc5L4T4_s/edit#gid=0"
+          "cachedResultName": "Leads",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/129wQRvNwASMkTd4BEJ4G7HmIA76j0Vft6_g8T7pzJdY/edit#gid=0"
         },
         "columns": {
           "mappingMode": "defineBelow",
@@ -359,7 +372,12 @@
       ],
       "id": "cb0e788f-0f63-496c-99fb-2b412482e165",
       "name": "clasificacion_leads",
-      "credentials": {}
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "VrznAZQXjQh9WpvY",
+          "name": "Google Sheets - Cantera"
+        }
+      }
     },
     {
       "parameters": {
@@ -526,17 +544,17 @@
         "operation": "append",
         "documentId": {
           "__rl": true,
-          "value": "1VTU99uzTY-xNwStf2sXjv8mu2Lqo5clRmw-XC-nZNHk",
+          "value": "129wQRvNwASMkTd4BEJ4G7HmIA76j0Vft6_g8T7pzJdY",
           "mode": "list",
-          "cachedResultName": "Nova - Calificación de Leads",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1VTU99uzTY-xNwStf2sXjv8mu2Lqo5clRmw-XC-nZNHk/edit?usp=drivesdk"
+          "cachedResultName": "Edukai - Calificación de Leads",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/129wQRvNwASMkTd4BEJ4G7HmIA76j0Vft6_g8T7pzJdY/edit?usp=drivesdk"
         },
         "sheetName": {
           "__rl": true,
-          "value": 230853568,
+          "value": 27151383,
           "mode": "list",
-          "cachedResultName": "Hoja 2",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1kN2oLcVbFQpBGWzii95gKByZ652ziKeDhlmc5L4T4_s/edit#gid=230853568"
+          "cachedResultName": "Conversación",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/129wQRvNwASMkTd4BEJ4G7HmIA76j0Vft6_g8T7pzJdY/edit#gid=27151383"
         },
         "columns": {
           "mappingMode": "defineBelow",
@@ -598,24 +616,29 @@
       ],
       "id": "2456a0ea-80dd-4d93-a836-daaef69c67f9",
       "name": "Google Sheets",
-      "credentials": {}
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "VrznAZQXjQh9WpvY",
+          "name": "Google Sheets - Cantera"
+        }
+      }
     },
     {
       "parameters": {
         "operation": "append",
         "documentId": {
           "__rl": true,
-          "value": "1VTU99uzTY-xNwStf2sXjv8mu2Lqo5clRmw-XC-nZNHk",
+          "value": "129wQRvNwASMkTd4BEJ4G7HmIA76j0Vft6_g8T7pzJdY",
           "mode": "list",
-          "cachedResultName": "Nova - Calificación de Leads",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1VTU99uzTY-xNwStf2sXjv8mu2Lqo5clRmw-XC-nZNHk/edit?usp=drivesdk"
+          "cachedResultName": "Edukai - Calificación de Leads",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/129wQRvNwASMkTd4BEJ4G7HmIA76j0Vft6_g8T7pzJdY/edit?usp=drivesdk"
         },
         "sheetName": {
           "__rl": true,
-          "value": 230853568,
+          "value": 27151383,
           "mode": "list",
-          "cachedResultName": "Hoja 2",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1kN2oLcVbFQpBGWzii95gKByZ652ziKeDhlmc5L4T4_s/edit#gid=230853568"
+          "cachedResultName": "Conversación",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/129wQRvNwASMkTd4BEJ4G7HmIA76j0Vft6_g8T7pzJdY/edit#gid=27151383"
         },
         "columns": {
           "mappingMode": "defineBelow",
@@ -677,7 +700,12 @@
       ],
       "id": "7285e77c-201a-4933-8c78-3035a328baa5",
       "name": "Google Sheets1",
-      "credentials": {}
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "VrznAZQXjQh9WpvY",
+          "name": "Google Sheets - Cantera"
+        }
+      }
     },
     {
       "parameters": {
@@ -704,19 +732,19 @@
         "operation": "delete",
         "documentId": {
           "__rl": true,
-          "value": "1VTU99uzTY-xNwStf2sXjv8mu2Lqo5clRmw-XC-nZNHk",
+          "value": "129wQRvNwASMkTd4BEJ4G7HmIA76j0Vft6_g8T7pzJdY",
           "mode": "list",
-          "cachedResultName": "Nova - Calificación de Leads",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1VTU99uzTY-xNwStf2sXjv8mu2Lqo5clRmw-XC-nZNHk/edit?usp=drivesdk"
+          "cachedResultName": "Edukai - Calificación de Leads",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/129wQRvNwASMkTd4BEJ4G7HmIA76j0Vft6_g8T7pzJdY/edit?usp=drivesdk"
         },
         "sheetName": {
           "__rl": true,
           "value": 27151383,
           "mode": "list",
           "cachedResultName": "Conversación",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1VTU99uzTY-xNwStf2sXjv8mu2Lqo5clRmw-XC-nZNHk/edit#gid=27151383"
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/129wQRvNwASMkTd4BEJ4G7HmIA76j0Vft6_g8T7pzJdY/edit#gid=27151383"
         },
-        "numberToDelete": 800000
+        "numberToDelete": 80000
       },
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.5,
@@ -726,7 +754,12 @@
       ],
       "id": "cfb4828d-c098-468c-91ec-889ba0b394f8",
       "name": "Google Sheets2",
-      "credentials": {}
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "VrznAZQXjQh9WpvY",
+          "name": "Google Sheets - Cantera"
+        }
+      }
     },
     {
       "parameters": {
@@ -763,8 +796,7 @@
       "parameters": {
         "resource": "media",
         "operation": "mediaUrlGet",
-        "mediaGetId": "={{ $json.messages[0].audio.id }}",
-        "path": "01db2cf9-dd5e-4da3-a6c8-a27b929e205c"
+        "mediaGetId": "={{ $json.messages[0].audio.id }}"
       },
       "type": "n8n-nodes-base.whatsApp",
       "typeVersion": 1,
@@ -790,7 +822,12 @@
       ],
       "id": "4092b4b4-1372-4ecc-977c-28414486263b",
       "name": "OpenAI",
-      "credentials": {}
+      "credentials": {
+        "openAiApi": {
+          "id": "nFhq9424Dw9eFpNq",
+          "name": "OpenAi Agente Edukai"
+        }
+      }
     },
     {
       "parameters": {
@@ -828,17 +865,17 @@
         "operation": "append",
         "documentId": {
           "__rl": true,
-          "value": "1VTU99uzTY-xNwStf2sXjv8mu2Lqo5clRmw-XC-nZNHk",
+          "value": "129wQRvNwASMkTd4BEJ4G7HmIA76j0Vft6_g8T7pzJdY",
           "mode": "list",
-          "cachedResultName": "Nova - Calificación de Leads",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1VTU99uzTY-xNwStf2sXjv8mu2Lqo5clRmw-XC-nZNHk/edit?usp=drivesdk"
+          "cachedResultName": "Edukai - Calificación de Leads",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/129wQRvNwASMkTd4BEJ4G7HmIA76j0Vft6_g8T7pzJdY/edit?usp=drivesdk"
         },
         "sheetName": {
           "__rl": true,
-          "value": 230853568,
+          "value": 27151383,
           "mode": "list",
-          "cachedResultName": "Hoja 2",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1kN2oLcVbFQpBGWzii95gKByZ652ziKeDhlmc5L4T4_s/edit#gid=230853568"
+          "cachedResultName": "Conversación",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/129wQRvNwASMkTd4BEJ4G7HmIA76j0Vft6_g8T7pzJdY/edit#gid=27151383"
         },
         "columns": {
           "mappingMode": "defineBelow",
@@ -900,7 +937,12 @@
       ],
       "id": "ff069203-6754-4118-b8be-05b559085613",
       "name": "Google Sheets3",
-      "credentials": {}
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "VrznAZQXjQh9WpvY",
+          "name": "Google Sheets - Cantera"
+        }
+      }
     },
     {
       "parameters": {
@@ -1074,8 +1116,7 @@
       "parameters": {
         "resource": "media",
         "operation": "mediaUrlGet",
-        "mediaGetId": "={{ $json.messages[0].document.id }}",
-        "path": "2f7de662-b22a-4491-b9f5-c4ab96b4897d"
+        "mediaGetId": "={{ $json.messages[0].document.id }}"
       },
       "type": "n8n-nodes-base.whatsApp",
       "typeVersion": 1,
@@ -1193,10 +1234,10 @@
         },
         "folderId": {
           "__rl": true,
-          "value": "1JbMNF75gG_aG9qtY9QYC5Wyk-F16H6wx",
+          "value": "1Clxm5Dg21G9eqJWMOj9ANCOvHXqh8Qjy",
           "mode": "list",
-          "cachedResultName": "Nova - Archivos",
-          "cachedResultUrl": "https://drive.google.com/drive/folders/1JbMNF75gG_aG9qtY9QYC5Wyk-F16H6wx"
+          "cachedResultName": "Edukai - Archivos",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1Clxm5Dg21G9eqJWMOj9ANCOvHXqh8Qjy"
         },
         "options": {}
       },
@@ -1208,7 +1249,12 @@
       ],
       "id": "2bd0aa36-5fd1-4711-bf36-17d70649c434",
       "name": "Google Drive",
-      "credentials": {}
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "PKQpxniTUryv7dE9",
+          "name": "Google Drive account - DRIVE CANTERA"
+        }
+      }
     },
     {
       "parameters": {
@@ -1268,7 +1314,12 @@
       ],
       "id": "867ec405-bd5a-467d-b531-5218ae6aba27",
       "name": "generamos una copia de google docs del archivo original",
-      "credentials": {}
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "PKQpxniTUryv7dE9",
+          "name": "Google Drive account - DRIVE CANTERA"
+        }
+      }
     },
     {
       "parameters": {
@@ -1285,7 +1336,12 @@
       ],
       "id": "b0659158-0e80-4e76-803a-515201d6c2f5",
       "name": "convertimos el archivo a un pdf para sacar datos",
-      "credentials": {}
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "PKQpxniTUryv7dE9",
+          "name": "Google Drive account - DRIVE CANTERA"
+        }
+      }
     },
     {
       "parameters": {
@@ -1311,10 +1367,10 @@
         },
         "folderId": {
           "__rl": true,
-          "value": "1JbMNF75gG_aG9qtY9QYC5Wyk-F16H6wx",
+          "value": "1Clxm5Dg21G9eqJWMOj9ANCOvHXqh8Qjy",
           "mode": "list",
-          "cachedResultName": "Nova - Archivos",
-          "cachedResultUrl": "https://drive.google.com/drive/folders/1JbMNF75gG_aG9qtY9QYC5Wyk-F16H6wx"
+          "cachedResultName": "Edukai - Archivos",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1Clxm5Dg21G9eqJWMOj9ANCOvHXqh8Qjy"
         },
         "options": {}
       },
@@ -1326,7 +1382,12 @@
       ],
       "id": "0c88bfed-5ac4-418d-8005-fe620116fb2d",
       "name": "guardamos el archivo original",
-      "credentials": {}
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "PKQpxniTUryv7dE9",
+          "name": "Google Drive account - DRIVE CANTERA"
+        }
+      }
     },
     {
       "parameters": {
@@ -1346,7 +1407,12 @@
       ],
       "id": "7bb7248b-f197-4746-bc00-b02442327597",
       "name": "borramos el archivo original",
-      "credentials": {}
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "PKQpxniTUryv7dE9",
+          "name": "Google Drive account - DRIVE CANTERA"
+        }
+      }
     },
     {
       "parameters": {
@@ -1368,24 +1434,29 @@
       ],
       "id": "a893bfba-1cad-4afa-a40a-28ef02fbb6a8",
       "name": "buscamos el archivo copia que procesamos",
-      "credentials": {}
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "PKQpxniTUryv7dE9",
+          "name": "Google Drive account - DRIVE CANTERA"
+        }
+      }
     },
     {
       "parameters": {
         "operation": "append",
         "documentId": {
           "__rl": true,
-          "value": "1VTU99uzTY-xNwStf2sXjv8mu2Lqo5clRmw-XC-nZNHk",
+          "value": "129wQRvNwASMkTd4BEJ4G7HmIA76j0Vft6_g8T7pzJdY",
           "mode": "list",
-          "cachedResultName": "Nova - Calificación de Leads",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1VTU99uzTY-xNwStf2sXjv8mu2Lqo5clRmw-XC-nZNHk/edit?usp=drivesdk"
+          "cachedResultName": "Edukai - Calificación de Leads",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/129wQRvNwASMkTd4BEJ4G7HmIA76j0Vft6_g8T7pzJdY/edit?usp=drivesdk"
         },
         "sheetName": {
           "__rl": true,
-          "value": 230853568,
+          "value": 27151383,
           "mode": "list",
-          "cachedResultName": "Hoja 2",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1kN2oLcVbFQpBGWzii95gKByZ652ziKeDhlmc5L4T4_s/edit#gid=230853568"
+          "cachedResultName": "Conversación",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/129wQRvNwASMkTd4BEJ4G7HmIA76j0Vft6_g8T7pzJdY/edit#gid=27151383"
         },
         "columns": {
           "mappingMode": "defineBelow",
@@ -1447,7 +1518,12 @@
       ],
       "id": "52928f4a-af54-41f1-83ab-ba594df13a91",
       "name": "guardamos al interaccion en la base de datos",
-      "credentials": {}
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "VrznAZQXjQh9WpvY",
+          "name": "Google Sheets - Cantera"
+        }
+      }
     },
     {
       "parameters": {
@@ -2032,7 +2108,7 @@
       }
     ]
   },
-  "versionId": "fd3c62ef-e582-4160-9e37-4d6b23698f3d",
+  "versionId": "8a9ffc1b-c5e9-439e-9449-5c189a4ecc02",
   "triggerCount": 1,
   "shared": [
     {
