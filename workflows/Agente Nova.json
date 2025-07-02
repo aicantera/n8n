@@ -1,7 +1,7 @@
 {
-  "createdAt": "2025-07-01T22:35:10.030Z",
-  "updatedAt": "2025-07-01T22:59:40.000Z",
-  "id": "LUKSw5LmZEeaJfDm",
+  "createdAt": "2025-07-01T23:15:33.480Z",
+  "updatedAt": "2025-07-01T23:50:20.000Z",
+  "id": "me6Ty6YdJdvI6EDG",
   "name": "Agente Nova",
   "active": false,
   "nodes": [
@@ -18,9 +18,9 @@
         -1000,
         0
       ],
-      "id": "3d1fcbc8-ac0a-4cc7-a2d3-4e933de6f555",
+      "id": "20fe20e0-df42-4833-968a-f07953140607",
       "name": "WhatsApp Trigger",
-      "webhookId": "1399fa16-a75f-4946-9d3a-ffe2bea7d631"
+      "webhookId": "15b8441a-c254-4857-96f7-708288629054"
     },
     {
       "parameters": {
@@ -33,10 +33,10 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 1.9,
       "position": [
-        1980,
-        0
+        1460,
+        20
       ],
-      "id": "56e2c7b6-e4c0-4542-958f-6096ccb59b32",
+      "id": "9d1538ad-2f16-478d-9b37-5e3fff63b627",
       "name": "AI Agent"
     },
     {
@@ -51,11 +51,17 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.2,
       "position": [
-        1860,
-        300
+        1280,
+        320
       ],
-      "id": "0cd9f4be-6168-45e9-8ab9-a76d7a617db5",
-      "name": "OpenAI Chat Model"
+      "id": "8001f0a3-6498-49ae-a33f-aebd2dc065be",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "1JKgSV0LKM1wbzk3",
+          "name": "OpenAi Agente Nova"
+        }
+      }
     },
     {
       "parameters": {
@@ -68,12 +74,12 @@
       "type": "n8n-nodes-base.whatsApp",
       "typeVersion": 1,
       "position": [
-        2740,
-        0
+        2380,
+        20
       ],
-      "id": "06b1c72d-f41c-4ad0-8991-283a72a14e39",
+      "id": "45f0443e-e5ab-4471-857a-1ec4b5d15031",
       "name": "WhatsApp Business Cloud",
-      "webhookId": "6ba5d9f0-482c-4e22-b7b4-26d690a05a22"
+      "webhookId": "01695f75-665c-445e-b524-85f00cf6aadf"
     },
     {
       "parameters": {
@@ -82,10 +88,10 @@
       "type": "@n8n/n8n-nodes-langchain.toolThink",
       "typeVersion": 1,
       "position": [
-        2520,
-        300
+        2240,
+        480
       ],
-      "id": "5d75d289-16b0-4601-bc68-d6e0e52789c7",
+      "id": "177babca-55af-4dd4-ae3e-8df1dba151c4",
       "name": "Think"
     },
     {
@@ -136,188 +142,43 @@
       "type": "n8n-nodes-base.filter",
       "typeVersion": 2.2,
       "position": [
-        -820,
-        -20
+        -780,
+        0
       ],
-      "id": "34b07fcd-c509-4aaa-a0d2-da1c7bfd7d1a",
+      "id": "c35bd01a-0739-4692-823a-3d51613ed177",
       "name": "Filter"
-    },
-    {
-      "parameters": {
-        "description": "call this tool to schedule a meeting ",
-        "workflowId": {
-          "__rl": true,
-          "value": "A97j1NIcV31TR5Mn",
-          "mode": "list",
-          "cachedResultName": "Agente Cantera - Agenda Meet"
-        },
-        "workflowInputs": {
-          "mappingMode": "defineBelow",
-          "value": {
-            "time_zone": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('time_zone', `time zon of the customer`, 'string') }}",
-            "nombre_cliente": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('nombre_cliente', `full name of the customer`, 'string') }}",
-            "email_cliente": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('email_cliente', `email of the customer`, 'string') }}",
-            "telefono_cliente": "={{ $('WhatsApp Trigger').item.json.messages[0].from }}",
-            "nombre_empresa": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('nombre_empresa', `name of the business`, 'string') }}",
-            "dia_meet": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('dia_meet', `date of the meeting in format dd/mm/yyyy`, 'string') }}",
-            "hora_inicio_meet": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('hora_inicio_meet', `start hour of the meeting in 24 hours format like this hh:ii , example 13:15`, 'string') }}",
-            "requerimiento_cliente": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('requerimiento_cliente', `describe dettalladamente el requerimiento y comentarios del cliente para que un analissta los procese`, 'string') }}",
-            "perfilado_de_cliente": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('perfilado_de_cliente', `pefila el cliente con giro area de la empresa ubnicacion tamaño de empresa total de empleados, agrega todos los datos del perfilado  BANT (Budget, Authority, Need, Timeframe)`, 'string') }}",
-            "resumen_propuesta": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('resumen_propuesta', `propuesta generada por el ai al requerimiento del cliente`, 'string') }}"
-          },
-          "matchingColumns": [],
-          "schema": [
-            {
-              "id": "time_zone",
-              "displayName": "time_zone",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "canBeUsedToMatch": true,
-              "type": "string"
-            },
-            {
-              "id": "nombre_cliente",
-              "displayName": "nombre_cliente",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "canBeUsedToMatch": true,
-              "type": "string"
-            },
-            {
-              "id": "email_cliente",
-              "displayName": "email_cliente",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "canBeUsedToMatch": true,
-              "type": "string"
-            },
-            {
-              "id": "telefono_cliente",
-              "displayName": "telefono_cliente",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "canBeUsedToMatch": true,
-              "type": "string"
-            },
-            {
-              "id": "nombre_empresa",
-              "displayName": "nombre_empresa",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "canBeUsedToMatch": true,
-              "type": "string"
-            },
-            {
-              "id": "dia_meet",
-              "displayName": "dia_meet",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "canBeUsedToMatch": true,
-              "type": "string"
-            },
-            {
-              "id": "hora_inicio_meet",
-              "displayName": "hora_inicio_meet",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "canBeUsedToMatch": true,
-              "type": "string"
-            },
-            {
-              "id": "requerimiento_cliente",
-              "displayName": "requerimiento_cliente",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "canBeUsedToMatch": true,
-              "type": "string",
-              "removed": false
-            },
-            {
-              "id": "perfilado_de_cliente",
-              "displayName": "perfilado_de_cliente",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "canBeUsedToMatch": true,
-              "type": "string",
-              "removed": false
-            },
-            {
-              "id": "resumen_propuesta",
-              "displayName": "resumen_propuesta",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "canBeUsedToMatch": true,
-              "type": "string",
-              "removed": false
-            }
-          ],
-          "attemptToConvertTypes": false,
-          "convertFieldsToString": false
-        }
-      },
-      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
-      "typeVersion": 2.2,
-      "position": [
-        2820,
-        320
-      ],
-      "id": "605a71c0-8b62-4183-9d37-0b298d2d64e6",
-      "name": "Call n8n Workflow Tool",
-      "disabled": true
     },
     {
       "parameters": {
         "sessionIdType": "customKey",
         "sessionKey": "={{ $('WhatsApp Trigger').item.json.messages[0].from }}",
-        "tableName": "n8n_chat_histories_agente_cantera4",
+        "tableName": "n8n_chat_histories_agente_nova",
         "contextWindowLength": 20
       },
       "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
       "typeVersion": 1.3,
       "position": [
-        2040,
+        1500,
         300
       ],
-      "id": "6c2027f2-8b6f-4281-b8e4-0edeb9b4f930",
-      "name": "Postgres Chat Memory"
-    },
-    {
-      "parameters": {
-        "httpMethod": "POST",
-        "path": "c790352e-33ce-4a69-ade5-c1d3b6feebe6",
-        "responseMode": "responseNode",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.webhook",
-      "typeVersion": 2,
-      "position": [
-        -760,
-        -600
-      ],
-      "id": "33f753e9-8ffe-4e4c-bc02-d6127b3c4b7b",
-      "name": "Webhook",
-      "webhookId": "c790352e-33ce-4a69-ade5-c1d3b6feebe6",
-      "disabled": true
+      "id": "bac16ee6-248a-4dea-971c-679ac6adada1",
+      "name": "Postgres Chat Memory",
+      "credentials": {
+        "postgres": {
+          "id": "CFNWnFQx8hqQIegZ",
+          "name": "Postgres account"
+        }
+      }
     },
     {
       "parameters": {},
       "type": "n8n-nodes-base.manualTrigger",
       "typeVersion": 1,
       "position": [
-        1060,
-        -180
+        1420,
+        -220
       ],
-      "id": "8485adf8-eef5-4692-8e30-2f09b9598e84",
+      "id": "76ffef1e-8b00-4546-a472-71e2aab48bc7",
       "name": "When clicking ‘Test workflow’"
     },
     {
@@ -331,70 +192,35 @@
         },
         "table": {
           "__rl": true,
-          "value": "n8n_chat_histories_agente_cantera4",
-          "mode": "list",
-          "cachedResultName": "n8n_chat_histories_agente_cantera4"
+          "value": "n8n_chat_histories_agente_nova",
+          "mode": "name"
         },
-        "deleteCommand": "drop",
         "options": {}
       },
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        1280,
-        -180
+        1640,
+        -220
       ],
-      "id": "e32781cc-72ec-4183-9265-5ce4f7d4aec3",
-      "name": "Postgres"
-    },
-    {
-      "parameters": {
-        "mode": "retrieve-as-tool",
-        "toolName": "kb_cantera_leads",
-        "toolDescription": "esta es una base de conocimiento sobre todo lo que hace cantera digital",
-        "tableName": {
-          "__rl": true,
-          "value": "documents_cantera_leads",
-          "mode": "list",
-          "cachedResultName": "documents_cantera_leads"
-        },
-        "options": {
-          "queryName": "documents_cantera_leads"
+      "id": "23752a1d-5c72-4a61-8854-941564d0568b",
+      "name": "Postgres",
+      "credentials": {
+        "postgres": {
+          "id": "CFNWnFQx8hqQIegZ",
+          "name": "Postgres account"
         }
-      },
-      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
-      "typeVersion": 1.1,
-      "position": [
-        1700,
-        960
-      ],
-      "id": "cbba20b9-0282-4a40-9b3e-66d7b84c9037",
-      "name": "kb_cantera_leads",
-      "disabled": true
-    },
-    {
-      "parameters": {
-        "options": {}
-      },
-      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
-      "typeVersion": 1.2,
-      "position": [
-        1780,
-        1280
-      ],
-      "id": "0c7ee010-016e-41d6-b3b7-166daf5d650f",
-      "name": "Embeddings OpenAI",
-      "disabled": true
+      }
     },
     {
       "parameters": {
         "operation": "append",
         "documentId": {
           "__rl": true,
-          "value": "1kN2oLcVbFQpBGWzii95gKByZ652ziKeDhlmc5L4T4_s",
+          "value": "1VTU99uzTY-xNwStf2sXjv8mu2Lqo5clRmw-XC-nZNHk",
           "mode": "list",
-          "cachedResultName": "Leads cantera",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1kN2oLcVbFQpBGWzii95gKByZ652ziKeDhlmc5L4T4_s/edit?usp=drivesdk"
+          "cachedResultName": "Nova - Calificación de Leads",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1VTU99uzTY-xNwStf2sXjv8mu2Lqo5clRmw-XC-nZNHk/edit?usp=drivesdk"
         },
         "sheetName": {
           "__rl": true,
@@ -541,42 +367,17 @@
       "type": "n8n-nodes-base.googleSheetsTool",
       "typeVersion": 4.5,
       "position": [
-        2220,
-        300
+        1780,
+        480
       ],
-      "id": "dfed020f-3f33-431f-bfb4-0466bf776550",
-      "name": "clasificacion_leads"
-    },
-    {
-      "parameters": {
-        "method": "POST",
-        "url": "https://graph.facebook.com/v22.0/676686782186843/messages",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "Authorization",
-              "value": "Bearer EAAOSUjk3gmABOx7ZAgc9TMHnn05ABRdRT5xtOoUytxvNe3iUZBy1fggu3Bmvn5B5adGm4QEmgnpZBfvZAOZBoW32hgUiZBACae0k888w7MvD6r2darX6C4yF3WnZBODzHwEbpTjZCXgfpqx2hHsA9QEHQFjZCMIGOTdstw8qOj1afxKuLVpH9oFIxjjTftJMrkicvC1aqqAZDZD"
-            },
-            {
-              "name": "Content-Type",
-              "value": "application/json"
-            }
-          ]
-        },
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"status\":\"read\",\n  \"message_id\":\"{{ $('WhatsApp Trigger').item.json.contacts[0].wa_id }}\",\n  \"typing_indicator\": {\n    \"type\":\"text\"\n  }\n}\n",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        300,
-        -600
-      ],
-      "id": "6e103465-6af9-4fad-ba71-4aa0ecec189a",
-      "name": "HTTP Request"
+      "id": "6138bfa7-057e-427a-b994-29f0942598c1",
+      "name": "clasificacion_leads",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "VrznAZQXjQh9WpvY",
+          "name": "Google Sheets - Cantera"
+        }
+      }
     },
     {
       "parameters": {
@@ -606,7 +407,7 @@
         160,
         -20
       ],
-      "id": "596b602e-f174-49fb-ab90-f6e084609d9e",
+      "id": "4a79ec1e-aba4-4fe4-92c5-d8be65c2e945",
       "name": "typing indicator1"
     },
     {
@@ -614,9 +415,9 @@
         "description": "call this tool to schedule a meeting ",
         "workflowId": {
           "__rl": true,
-          "value": "aJIJlLEOEfejYf81",
+          "value": "9vBAEbP1lBMNbUVD",
           "mode": "list",
-          "cachedResultName": "agente cantera ingreso"
+          "cachedResultName": "Agente Nova Confirmacion"
         },
         "workflowInputs": {
           "mappingMode": "defineBelow",
@@ -716,26 +517,26 @@
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 2.2,
       "position": [
-        2400,
-        400
+        2020,
+        480
       ],
-      "id": "9ddd73e8-c0ad-4895-8039-7f710e0a4978",
+      "id": "b1adc9f7-4d00-4bd4-bba0-ea0a595bbe9d",
       "name": "ingreso_teams"
     },
     {
       "parameters": {
         "content": "# Agente Calificador de Leads",
         "height": 80,
-        "width": 680,
+        "width": 520,
         "color": 4
       },
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        -600,
-        -340
+        -620,
+        -280
       ],
-      "id": "f8ac2826-3f22-4a63-b0f2-9a48f199cf6a",
+      "id": "b10cf696-cc8c-4a8a-b7ac-d87c8f64b65d",
       "name": "Sticky Note"
     },
     {
@@ -743,10 +544,10 @@
         "operation": "append",
         "documentId": {
           "__rl": true,
-          "value": "1kN2oLcVbFQpBGWzii95gKByZ652ziKeDhlmc5L4T4_s",
+          "value": "1VTU99uzTY-xNwStf2sXjv8mu2Lqo5clRmw-XC-nZNHk",
           "mode": "list",
-          "cachedResultName": "Leads cantera",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1kN2oLcVbFQpBGWzii95gKByZ652ziKeDhlmc5L4T4_s/edit?usp=drivesdk"
+          "cachedResultName": "Nova - Calificación de Leads",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1VTU99uzTY-xNwStf2sXjv8mu2Lqo5clRmw-XC-nZNHk/edit?usp=drivesdk"
         },
         "sheetName": {
           "__rl": true,
@@ -813,18 +614,24 @@
         -240,
         -20
       ],
-      "id": "c651c6f2-5ce2-4e68-ad20-bc142c7dfad0",
-      "name": "Google Sheets"
+      "id": "bd5ec3b2-b8aa-452b-84c6-b015502f919a",
+      "name": "Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "VrznAZQXjQh9WpvY",
+          "name": "Google Sheets - Cantera"
+        }
+      }
     },
     {
       "parameters": {
         "operation": "append",
         "documentId": {
           "__rl": true,
-          "value": "1kN2oLcVbFQpBGWzii95gKByZ652ziKeDhlmc5L4T4_s",
+          "value": "1VTU99uzTY-xNwStf2sXjv8mu2Lqo5clRmw-XC-nZNHk",
           "mode": "list",
-          "cachedResultName": "Leads cantera",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1kN2oLcVbFQpBGWzii95gKByZ652ziKeDhlmc5L4T4_s/edit?usp=drivesdk"
+          "cachedResultName": "Nova - Calificación de Leads",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1VTU99uzTY-xNwStf2sXjv8mu2Lqo5clRmw-XC-nZNHk/edit?usp=drivesdk"
         },
         "sheetName": {
           "__rl": true,
@@ -888,11 +695,17 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.5,
       "position": [
-        2400,
-        0
+        2160,
+        20
       ],
-      "id": "3a6b8ddc-c0ec-4a14-98f4-a2c574c53716",
-      "name": "Google Sheets1"
+      "id": "c1f6b919-66d1-408c-b113-9756e1852525",
+      "name": "Google Sheets1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "VrznAZQXjQh9WpvY",
+          "name": "Google Sheets - Cantera"
+        }
+      }
     },
     {
       "parameters": {
@@ -910,7 +723,7 @@
         -1580,
         -300
       ],
-      "id": "cbb1ccf0-e673-43c2-bc2b-d9d326231402",
+      "id": "6fd4b60b-ac05-45e5-b228-fa0419d97af4",
       "name": "Schedule Trigger",
       "disabled": true
     },
@@ -919,19 +732,19 @@
         "operation": "delete",
         "documentId": {
           "__rl": true,
-          "value": "1kN2oLcVbFQpBGWzii95gKByZ652ziKeDhlmc5L4T4_s",
+          "value": "1VTU99uzTY-xNwStf2sXjv8mu2Lqo5clRmw-XC-nZNHk",
           "mode": "list",
-          "cachedResultName": "Leads cantera",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1kN2oLcVbFQpBGWzii95gKByZ652ziKeDhlmc5L4T4_s/edit?usp=drivesdk"
+          "cachedResultName": "Nova - Calificación de Leads",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1VTU99uzTY-xNwStf2sXjv8mu2Lqo5clRmw-XC-nZNHk/edit?usp=drivesdk"
         },
         "sheetName": {
           "__rl": true,
-          "value": 230853568,
+          "value": 27151383,
           "mode": "list",
-          "cachedResultName": "Hoja 2",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1kN2oLcVbFQpBGWzii95gKByZ652ziKeDhlmc5L4T4_s/edit#gid=230853568"
+          "cachedResultName": "Conversación",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1VTU99uzTY-xNwStf2sXjv8mu2Lqo5clRmw-XC-nZNHk/edit#gid=27151383"
         },
-        "numberToDelete": 180000
+        "numberToDelete": 800000
       },
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.5,
@@ -939,8 +752,14 @@
         -1360,
         -300
       ],
-      "id": "dea53eaf-63c6-4f00-8212-9a953c6c09c0",
-      "name": "Google Sheets2"
+      "id": "0dbd72dd-6b11-45aa-9399-3e73d062189a",
+      "name": "Google Sheets2",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "VrznAZQXjQh9WpvY",
+          "name": "Google Sheets - Cantera"
+        }
+      }
     },
     {
       "parameters": {
@@ -954,67 +773,8 @@
         -1680,
         -480
       ],
-      "id": "98f38428-ad2e-4120-bb29-ec2dd9cbf90c",
+      "id": "ac31a6a9-ef9b-411b-942c-a6f9cce5fca3",
       "name": "Sticky Note1"
-    },
-    {
-      "parameters": {
-        "method": "POST",
-        "url": "https://api.openai.com/v1/audio/transcriptions",
-        "authentication": "predefinedCredentialType",
-        "nodeCredentialType": "openAiApi",
-        "sendBody": true,
-        "contentType": "multipart-form-data",
-        "bodyParameters": {
-          "parameters": [
-            {
-              "name": "model",
-              "value": "whisper-1"
-            },
-            {
-              "parameterType": "formBinaryData",
-              "name": "file",
-              "inputDataFieldName": "data"
-            },
-            {
-              "name": "language",
-              "value": "es"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        -260,
-        -600
-      ],
-      "id": "8cb350bd-8d2b-4b51-be42-353964ba4957",
-      "name": "Transcripción audios"
-    },
-    {
-      "parameters": {
-        "url": "=https://graph.facebook.com/v16.0/{{ $('WhatsApp Trigger').item.json.messages[0].audio.id }}?fields=url",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "Authorization",
-              "value": "Bearer EAAOSUjk3gmABOx7ZAgc9TMHnn05ABRdRT5xtOoUytxvNe3iUZBy1fggu3Bmvn5B5adGm4QEmgnpZBfvZAOZBoW32hgUiZBACae0k888w7MvD6r2darX6C4yF3WnZBODzHwEbpTjZCXgfpqx2hHsA9QEHQFjZCMIGOTdstw8qOj1afxKuLVpH9oFIxjjTftJMrkicvC1aqqAZDZD"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        40,
-        -600
-      ],
-      "id": "029bb517-a48d-49f5-9e22-590fc1427d41",
-      "name": "obtener datos del audio"
     },
     {
       "parameters": {
@@ -1029,118 +789,8 @@
         -120,
         320
       ],
-      "id": "489c8ba5-f22c-4be9-a3ee-755b91400beb",
+      "id": "21430c2d-c640-4ae6-8644-2649ef2b0448",
       "name": "Obtiene el binary file del audio de whatsapp"
-    },
-    {
-      "parameters": {
-        "description": "LLama a este nodo cuando necesites saber el tipo de perfilado de un lead antes de almacenar la informacion del usuario",
-        "workflowId": {
-          "__rl": true,
-          "value": "agrxFvpdTY9DBR1t",
-          "mode": "list",
-          "cachedResultName": "agente cantera perfilador"
-        },
-        "workflowInputs": {
-          "mappingMode": "defineBelow",
-          "value": {
-            "nombre_cliente": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('nombre_cliente', ``, 'string') }}",
-            "email_cliente": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('email_cliente', ``, 'string') }}",
-            "telefono_cliente": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('telefono_cliente', ``, 'string') }}",
-            "nombre_empresa": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('nombre_empresa', ``, 'string') }}",
-            "requerimiento_cliente": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('requerimiento_cliente', ``, 'string') }}",
-            "perfilado_de_cliente": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('perfilado_de_cliente', ``, 'string') }}",
-            "resumen_propuesta": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('resumen_propuesta', ``, 'string') }}",
-            "presupuesto_cliente": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('presupuesto_cliente', ``, 'string') }}"
-          },
-          "matchingColumns": [],
-          "schema": [
-            {
-              "id": "nombre_cliente",
-              "displayName": "nombre_cliente",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "canBeUsedToMatch": true,
-              "type": "string"
-            },
-            {
-              "id": "email_cliente",
-              "displayName": "email_cliente",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "canBeUsedToMatch": true,
-              "type": "string"
-            },
-            {
-              "id": "telefono_cliente",
-              "displayName": "telefono_cliente",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "canBeUsedToMatch": true,
-              "type": "string"
-            },
-            {
-              "id": "nombre_empresa",
-              "displayName": "nombre_empresa",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "canBeUsedToMatch": true,
-              "type": "string"
-            },
-            {
-              "id": "requerimiento_cliente",
-              "displayName": "requerimiento_cliente",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "canBeUsedToMatch": true,
-              "type": "string"
-            },
-            {
-              "id": "perfilado_de_cliente",
-              "displayName": "perfilado_de_cliente",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "canBeUsedToMatch": true,
-              "type": "string"
-            },
-            {
-              "id": "resumen_propuesta",
-              "displayName": "resumen_propuesta",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "canBeUsedToMatch": true,
-              "type": "string"
-            },
-            {
-              "id": "presupuesto_cliente",
-              "displayName": "presupuesto_cliente",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "canBeUsedToMatch": true,
-              "type": "string"
-            }
-          ],
-          "attemptToConvertTypes": false,
-          "convertFieldsToString": false
-        }
-      },
-      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
-      "typeVersion": 2.2,
-      "position": [
-        -440,
-        -600
-      ],
-      "id": "f3a66f7d-f65a-4564-b9c3-8f65e096eb39",
-      "name": "perfilador",
-      "disabled": true
     },
     {
       "parameters": {
@@ -1154,9 +804,9 @@
         -320,
         320
       ],
-      "id": "18bdb39a-79ef-4ba6-af07-e8e3e82ddfaa",
+      "id": "9b8f3e34-8b58-48b6-9f2f-f4b50ec47bbe",
       "name": "WhatsApp Business Cloud1",
-      "webhookId": "195ed9fa-5901-44fb-9ef4-1b06718897c0"
+      "webhookId": "4030d970-889e-45e1-97d2-3660a96b4274"
     },
     {
       "parameters": {
@@ -1170,8 +820,14 @@
         60,
         320
       ],
-      "id": "07492ac7-24a4-4d73-80b5-9e682c4ef08e",
-      "name": "OpenAI"
+      "id": "4e6ccc8a-532b-41d2-a314-cacffc1c56ea",
+      "name": "OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "1JKgSV0LKM1wbzk3",
+          "name": "OpenAi Agente Nova"
+        }
+      }
     },
     {
       "parameters": {
@@ -1201,7 +857,7 @@
         440,
         320
       ],
-      "id": "8a3d78ae-9427-4c53-a9b1-af57332e8ac1",
+      "id": "fbc5c26e-9843-4ab1-9d44-ee1ae8c12949",
       "name": "typing indicator"
     },
     {
@@ -1209,10 +865,10 @@
         "operation": "append",
         "documentId": {
           "__rl": true,
-          "value": "1kN2oLcVbFQpBGWzii95gKByZ652ziKeDhlmc5L4T4_s",
+          "value": "1VTU99uzTY-xNwStf2sXjv8mu2Lqo5clRmw-XC-nZNHk",
           "mode": "list",
-          "cachedResultName": "Leads cantera",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1kN2oLcVbFQpBGWzii95gKByZ652ziKeDhlmc5L4T4_s/edit?usp=drivesdk"
+          "cachedResultName": "Nova - Calificación de Leads",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1VTU99uzTY-xNwStf2sXjv8mu2Lqo5clRmw-XC-nZNHk/edit?usp=drivesdk"
         },
         "sheetName": {
           "__rl": true,
@@ -1279,8 +935,14 @@
         260,
         320
       ],
-      "id": "6080b72f-ec40-4258-8a77-a4d581e8fe83",
-      "name": "Google Sheets3"
+      "id": "6a86f0e0-e0df-45d9-94ec-b388b1ee83c0",
+      "name": "Google Sheets3",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "VrznAZQXjQh9WpvY",
+          "name": "Google Sheets - Cantera"
+        }
+      }
     },
     {
       "parameters": {
@@ -1302,7 +964,7 @@
         600,
         -20
       ],
-      "id": "26d2104f-83ae-4a13-8e5a-6cd03897b1dc",
+      "id": "9b438e45-36dd-4e6d-9acf-ff9ec657587b",
       "name": "Edit Fields"
     },
     {
@@ -1325,75 +987,8 @@
         660,
         320
       ],
-      "id": "cea35686-7c49-4c86-b7dc-57699ffb8883",
+      "id": "9212bf02-7bd4-473d-9d96-0f643586f4e3",
       "name": "Edit Fields1"
-    },
-    {
-      "parameters": {
-        "resource": "audio",
-        "input": "={{ $('AI Agent').item.json.output }}",
-        "voice": "nova",
-        "options": {}
-      },
-      "type": "@n8n/n8n-nodes-langchain.openAi",
-      "typeVersion": 1.8,
-      "position": [
-        2540,
-        240
-      ],
-      "id": "750f6507-2c36-48dc-a733-89fc8b0c5a2d",
-      "name": "OpenAI1"
-    },
-    {
-      "parameters": {
-        "conditions": {
-          "options": {
-            "caseSensitive": true,
-            "leftValue": "",
-            "typeValidation": "strict",
-            "version": 2
-          },
-          "conditions": [
-            {
-              "id": "fadfc218-a56f-439e-9152-fe7dc9643895",
-              "leftValue": "={{ $('WhatsApp Trigger').item.json.messages[0].type }}",
-              "rightValue": "voice",
-              "operator": {
-                "type": "string",
-                "operation": "equals",
-                "name": "filter.operator.equals"
-              }
-            }
-          ],
-          "combinator": "and"
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 2.2,
-      "position": [
-        2320,
-        240
-      ],
-      "id": "332cbefe-f77a-4c07-8b96-206041d4d3d6",
-      "name": "If1"
-    },
-    {
-      "parameters": {
-        "resource": "media",
-        "phoneNumberId": "736728182851111",
-        "additionalFields": {}
-      },
-      "type": "n8n-nodes-base.whatsApp",
-      "typeVersion": 1,
-      "position": [
-        2760,
-        240
-      ],
-      "id": "a207c05b-58eb-4c0e-b5b4-49362cba7b7d",
-      "name": "WhatsApp Business Cloud2",
-      "webhookId": "92f2e8d1-e47a-4d74-9cba-95f805530d64",
-      "disabled": true
     },
     {
       "parameters": {
@@ -1483,7 +1078,7 @@
         -560,
         0
       ],
-      "id": "a798bc5c-5d82-4035-8b29-ffb2c2b4d99d",
+      "id": "f12ad950-bc73-4043-b32b-3eeab7f8e72e",
       "name": "Switch"
     },
     {
@@ -1498,7 +1093,7 @@
         -440,
         240
       ],
-      "id": "806019f1-b997-4d12-9bdd-96132fb559a9",
+      "id": "c5c7eaf7-c5a6-4e6d-a630-9eb31e14d053",
       "name": "Sticky Note2"
     },
     {
@@ -1514,7 +1109,7 @@
         -400,
         -100
       ],
-      "id": "ce28ba04-4931-426a-a12e-1c5e3deebbef",
+      "id": "394c87e1-180b-4018-9ce9-9c4b372ca7e2",
       "name": "Sticky Note3"
     },
     {
@@ -1529,9 +1124,9 @@
         -420,
         800
       ],
-      "id": "cf96cf88-6d5f-4fd9-b48d-11fc5b3dde03",
+      "id": "5966969b-ef62-4d75-8bbf-60cd1eb754db",
       "name": "WhatsApp Business Cloud3",
-      "webhookId": "82473b01-68fd-48e8-8f57-60a753ed88ec"
+      "webhookId": "ba656afd-b72b-4ad7-b41b-729c0008a634"
     },
     {
       "parameters": {
@@ -1546,7 +1141,7 @@
         -80,
         800
       ],
-      "id": "8f383960-f72f-40e9-820b-4b6b78e9ae0f",
+      "id": "53c79aec-0870-4084-aef1-af09007a1a2d",
       "name": "Obtiene el binary file del documento de whatsapp1"
     },
     {
@@ -1560,7 +1155,7 @@
         780,
         800
       ],
-      "id": "bb7310d9-d61f-4530-aef6-2a3fd5f1d6c1",
+      "id": "9381d8ff-78b4-4061-934e-14cd9374e530",
       "name": "Extract from File"
     },
     {
@@ -1626,7 +1221,7 @@
         320,
         800
       ],
-      "id": "a4056016-3818-4555-ac98-9d793ccaa0b0",
+      "id": "63b20f62-d2f2-492c-af03-846431c78338",
       "name": "Switch1"
     },
     {
@@ -1639,10 +1234,10 @@
         },
         "folderId": {
           "__rl": true,
-          "value": "1fbeYGWI56Mozorxqwclm0zfF_5ivYEi5",
+          "value": "1JbMNF75gG_aG9qtY9QYC5Wyk-F16H6wx",
           "mode": "list",
-          "cachedResultName": "documentos leads",
-          "cachedResultUrl": "https://drive.google.com/drive/folders/1fbeYGWI56Mozorxqwclm0zfF_5ivYEi5"
+          "cachedResultName": "Nova - Archivos",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1JbMNF75gG_aG9qtY9QYC5Wyk-F16H6wx"
         },
         "options": {}
       },
@@ -1652,8 +1247,14 @@
         820,
         1020
       ],
-      "id": "5471cadd-08fe-49ec-9d32-d7a45c2646c1",
-      "name": "Google Drive"
+      "id": "5e1c9909-5fac-4575-86ba-24080112861e",
+      "name": "Google Drive",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "PKQpxniTUryv7dE9",
+          "name": "Google Drive account - DRIVE CANTERA"
+        }
+      }
     },
     {
       "parameters": {
@@ -1675,7 +1276,7 @@
         980,
         800
       ],
-      "id": "afb817bd-59c9-4368-879a-7d8a4dec51f4",
+      "id": "306745f7-c52b-4c06-bcec-e2f0ce50b8e0",
       "name": "Edit Fields2"
     },
     {
@@ -1691,7 +1292,7 @@
         -540,
         580
       ],
-      "id": "2f73ae15-c62f-4943-9af8-2fcad8d21ad4",
+      "id": "0c510ffc-5905-47e0-a38b-ef1171c2a412",
       "name": "Sticky Note4"
     },
     {
@@ -1711,8 +1312,14 @@
         100,
         1040
       ],
-      "id": "0f7607f5-6bde-40ce-bbc1-7b125920b467",
-      "name": "generamos una copia de google docs del archivo original"
+      "id": "54ef8d13-124a-4752-8786-0262b250a8cf",
+      "name": "generamos una copia de google docs del archivo original",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "PKQpxniTUryv7dE9",
+          "name": "Google Drive account - DRIVE CANTERA"
+        }
+      }
     },
     {
       "parameters": {
@@ -1727,8 +1334,14 @@
         320,
         1040
       ],
-      "id": "9ba2bda4-0321-40ed-bee8-e01d5445f0ae",
-      "name": "convertimos el archivo a un pdf para sacar datos"
+      "id": "aa0afe82-21f2-45f5-986b-2ea76057314d",
+      "name": "convertimos el archivo a un pdf para sacar datos",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "PKQpxniTUryv7dE9",
+          "name": "Google Drive account - DRIVE CANTERA"
+        }
+      }
     },
     {
       "parameters": {
@@ -1741,7 +1354,7 @@
         520,
         1040
       ],
-      "id": "7c549e5e-9b16-4085-ae8f-b58641e054d1",
+      "id": "2fd15916-c44c-4069-b056-140e775f1cd8",
       "name": "Extract from File2"
     },
     {
@@ -1754,10 +1367,10 @@
         },
         "folderId": {
           "__rl": true,
-          "value": "1fbeYGWI56Mozorxqwclm0zfF_5ivYEi5",
+          "value": "1JbMNF75gG_aG9qtY9QYC5Wyk-F16H6wx",
           "mode": "list",
-          "cachedResultName": "documentos leads",
-          "cachedResultUrl": "https://drive.google.com/drive/folders/1fbeYGWI56Mozorxqwclm0zfF_5ivYEi5"
+          "cachedResultName": "Nova - Archivos",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1JbMNF75gG_aG9qtY9QYC5Wyk-F16H6wx"
         },
         "options": {}
       },
@@ -1767,8 +1380,14 @@
         -340,
         1040
       ],
-      "id": "11ef2fed-4bb1-45d6-b69b-32948d824641",
-      "name": "guardamos el archivo original"
+      "id": "42f5f719-476f-4ede-bf65-113b617fd701",
+      "name": "guardamos el archivo original",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "PKQpxniTUryv7dE9",
+          "name": "Google Drive account - DRIVE CANTERA"
+        }
+      }
     },
     {
       "parameters": {
@@ -1786,8 +1405,14 @@
         -360,
         1260
       ],
-      "id": "c306c103-b6d2-4935-b262-c059437e943c",
-      "name": "borramos el archivo original"
+      "id": "a180457d-1e61-4abc-988d-231d2d3ecb69",
+      "name": "borramos el archivo original",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "PKQpxniTUryv7dE9",
+          "name": "Google Drive account - DRIVE CANTERA"
+        }
+      }
     },
     {
       "parameters": {
@@ -1807,18 +1432,24 @@
         100,
         1260
       ],
-      "id": "49cc3e9b-d17b-494b-9a70-35fcb4341d74",
-      "name": "buscamos el archivo copia que procesamos"
+      "id": "dd9ba201-532a-4100-93f8-2b01fb49c1c8",
+      "name": "buscamos el archivo copia que procesamos",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "PKQpxniTUryv7dE9",
+          "name": "Google Drive account - DRIVE CANTERA"
+        }
+      }
     },
     {
       "parameters": {
         "operation": "append",
         "documentId": {
           "__rl": true,
-          "value": "1kN2oLcVbFQpBGWzii95gKByZ652ziKeDhlmc5L4T4_s",
+          "value": "1VTU99uzTY-xNwStf2sXjv8mu2Lqo5clRmw-XC-nZNHk",
           "mode": "list",
-          "cachedResultName": "Leads cantera",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1kN2oLcVbFQpBGWzii95gKByZ652ziKeDhlmc5L4T4_s/edit?usp=drivesdk"
+          "cachedResultName": "Nova - Calificación de Leads",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1VTU99uzTY-xNwStf2sXjv8mu2Lqo5clRmw-XC-nZNHk/edit?usp=drivesdk"
         },
         "sheetName": {
           "__rl": true,
@@ -1885,8 +1516,14 @@
         820,
         1260
       ],
-      "id": "71bc406f-5234-4e7f-b63d-1b710ed8a5b0",
-      "name": "guardamos al interaccion en la base de datos"
+      "id": "a599bd40-032c-4edb-95f2-7a373c6c0408",
+      "name": "guardamos al interaccion en la base de datos",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "VrznAZQXjQh9WpvY",
+          "name": "Google Sheets - Cantera"
+        }
+      }
     },
     {
       "parameters": {
@@ -1928,7 +1565,7 @@
         380,
         660
       ],
-      "id": "192558af-0832-423c-8a98-600f4dabb86d",
+      "id": "74b78487-722f-4146-aaeb-aa6366c90121",
       "name": "If"
     },
     {
@@ -1959,8 +1596,56 @@
         620,
         640
       ],
-      "id": "3c79b86b-24fb-4242-9098-3ad77dbaab69",
+      "id": "b2cbc75f-e06b-4642-bfa1-98bb3b3aae5e",
       "name": "error documento"
+    },
+    {
+      "parameters": {
+        "content": "## Borrador de memoria\nEste nodo se encarga de eliminar la memoria de un agente cuando se hacen pruebas internas",
+        "height": 320,
+        "width": 520,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1360,
+        -340
+      ],
+      "typeVersion": 1,
+      "id": "f7fbee9d-23f4-4f4b-85fc-067932ed0d3a",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "content": "## Respuesta del agente\nEn esta sección documentamos la respuesta del agente y le mandamos el mensaje al usuario fiunal",
+        "height": 300,
+        "width": 480,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2120,
+        -100
+      ],
+      "typeVersion": 1,
+      "id": "ec38f925-0140-4a0b-ab29-91d21ffd02c9",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "content": "### Herramientas (Tool)\nen esta seccion se configuran las herramientas que tendra a su alcance nuestro agente que le ayuda a tener mejores capacidades\nen este punto se tienen configuradas \n1.- hoja de calculo donde tiene la capacidad de dar de alta leads calificadosa\n\n2.- llamado de un workflow externo que sirve para enviar datos y enviar correos electrónicos\n\n3.- Think esta herramienta ayuda a nuestro agente a ser mas eficiente",
+        "height": 360,
+        "width": 680,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1700,
+        260
+      ],
+      "typeVersion": 1,
+      "id": "61fc950f-a38f-4f5a-a1b4-d918f98a50eb",
+      "name": "Sticky Note7"
     }
   ],
   "connections": {
@@ -2019,17 +1704,6 @@
         ]
       ]
     },
-    "Call n8n Workflow Tool": {
-      "ai_tool": [
-        [
-          {
-            "node": "AI Agent",
-            "type": "ai_tool",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Postgres Chat Memory": {
       "ai_memory": [
         [
@@ -2041,33 +1715,12 @@
         ]
       ]
     },
-    "Webhook": {
-      "main": [
-        []
-      ]
-    },
     "When clicking ‘Test workflow’": {
       "main": [
         [
           {
             "node": "Postgres",
             "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "kb_cantera_leads": {
-      "ai_tool": [
-        []
-      ]
-    },
-    "Embeddings OpenAI": {
-      "ai_embedding": [
-        [
-          {
-            "node": "kb_cantera_leads",
-            "type": "ai_embedding",
             "index": 0
           }
         ]
@@ -2137,21 +1790,6 @@
             "index": 0
           }
         ]
-      ]
-    },
-    "Transcripción audios": {
-      "main": [
-        []
-      ]
-    },
-    "perfilador": {
-      "ai_tool": [
-        []
-      ]
-    },
-    "obtener datos del audio": {
-      "main": [
-        []
       ]
     },
     "WhatsApp Business Cloud1": {
@@ -2225,29 +1863,6 @@
         [
           {
             "node": "AI Agent",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "OpenAI1": {
-      "main": [
-        [
-          {
-            "node": "WhatsApp Business Cloud2",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "If1": {
-      "main": [
-        [],
-        [
-          {
-            "node": "OpenAI1",
             "type": "main",
             "index": 0
           }
@@ -2458,33 +2073,6 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {
-    "Webhook": [
-      {
-        "json": {
-          "headers": {
-            "host": "ia.canteradigital.mx",
-            "user-agent": "facebookplatform/1.0 (+http://developers.facebook.com)",
-            "accept": "*/*",
-            "accept-encoding": "deflate, gzip",
-            "x-forwarded-for": "69.171.251.125",
-            "x-forwarded-host": "ia.canteradigital.mx",
-            "x-forwarded-port": "443",
-            "x-forwarded-proto": "https",
-            "x-forwarded-server": "5e9d6c14d659",
-            "x-real-ip": "69.171.251.125"
-          },
-          "params": {},
-          "query": {
-            "hub.mode": "subscribe",
-            "hub.challenge": "466705123",
-            "hub.verify_token": "aaa"
-          },
-          "body": {},
-          "webhookUrl": "https://ia.canteradigital.mx/webhook/supercantera",
-          "executionMode": "production"
-        }
-      }
-    ],
     "WhatsApp Trigger": [
       {
         "json": {
@@ -2520,14 +2108,14 @@
       }
     ]
   },
-  "versionId": "8e0e07cf-a441-4837-bac1-dbf92c092178",
+  "versionId": "2d53c278-8cb3-4a82-89ab-8ffb8cebc58c",
   "triggerCount": 1,
   "shared": [
     {
-      "createdAt": "2025-07-01T22:35:10.034Z",
-      "updatedAt": "2025-07-01T22:35:10.034Z",
+      "createdAt": "2025-07-01T23:15:33.484Z",
+      "updatedAt": "2025-07-01T23:15:33.484Z",
       "role": "workflow:owner",
-      "workflowId": "LUKSw5LmZEeaJfDm",
+      "workflowId": "me6Ty6YdJdvI6EDG",
       "projectId": "BZ9Ta5yhe4RhzY78",
       "project": {
         "createdAt": "2025-05-13T15:56:28.209Z",
