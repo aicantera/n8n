@@ -1,0 +1,421 @@
+{
+  "createdAt": "2025-07-01T23:30:13.948Z",
+  "updatedAt": "2025-07-01T23:53:16.000Z",
+  "id": "9vBAEbP1lBMNbUVD",
+  "name": "Agente Nova Confirmacion",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4",
+          "mode": "list",
+          "cachedResultName": "GPT-4"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=datos de la empresa: {{ $('When Executed by Another Workflow').item.json.nombre_empresa }}\npropuesta :  {{ $('When Executed by Another Workflow').item.json.resumen_propuesta }}\nperfil empresa:  {{ $('When Executed by Another Workflow').item.json.perfilado_de_cliente }}\n"
+            },
+            {
+              "content": "=eres un cotizador de sistemas y proyectos de it y te voy a dar datos de una empresa, un requieriiento de IT  y  el perfil de laempresa, y tu debes estimar tres variables: 📊 Al completar el perfilado del usuario, aplica el siguiente modelo de puntuación:\n1. Asigna un valor entre 0 y 1 a cada una de estas variables, basado en las respuestas del usuario:• Claridad del proyecto (valor: claridad)• Presupuesto estimado (valor: presupuesto)• Nivel de decisión o influencia (valor: autoridad)• Plazo de decisión o de inicio del proyecto (valor: tiempo)• Compatibilidad estratégica con Cantera Digital (valor: compatibilidad)\n2. Calcula la probabilidad de cierre con esta fórmula:\nprobabilidad_cierre = (claridad × 0.25) + (presupuesto × 0.20) + (autoridad × 0.20) + (tiempo × 0.15) + (compatibilidad × 0.20)\n3. Redondea el resultado a dos decimales. Registra este valor como `probabilidad_cierre` en el sistema interno y también inclúyelo en el formato JSON para `ingreso_teams`.\n📌 Si algún valor no puede ser determinado, asigna 0.3 de manera conservadora. Este valor debe actualizarse automáticamente si luego se obtiene más información en la conversación.",
+              "role": "system"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -100,
+        -20
+      ],
+      "id": "62ad7981-b845-44da-a9ed-b700d128a782",
+      "name": "OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "1JKgSV0LKM1wbzk3",
+          "name": "OpenAi Agente Nova"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "text": "={{ $json.message.content }}",
+        "attributes": {
+          "attributes": [
+            {
+              "name": "value",
+              "type": "number",
+              "description": "integer value of the usd value estimated of the project witout money symbol only number",
+              "required": true
+            },
+            {
+              "name": "propability",
+              "type": "number",
+              "description": "value  of probality of close this deal",
+              "required": true
+            },
+            {
+              "name": "detail_of_estimation",
+              "description": "detailed explain of the estimation",
+              "required": true
+            }
+          ]
+        },
+        "options": {
+          "systemPromptTemplate": "You are an expert extraction algorithm.\nOnly extract relevant information from the text.\nIf you do not know the value of an attribute asked to extract, you may omit the attribute's value. redacta todo en español"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.informationExtractor",
+      "typeVersion": 1,
+      "position": [
+        320,
+        -20
+      ],
+      "id": "280beec1-b5ca-4ff3-a326-66456991d88a",
+      "name": "Information Extractor"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-3.5-turbo",
+          "mode": "list",
+          "cachedResultName": "gpt-3.5-turbo"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        360,
+        200
+      ],
+      "id": "b5400187-1c3c-4b9c-a935-a4575394fdcc",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "1JKgSV0LKM1wbzk3",
+          "name": "OpenAi Agente Nova"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "nombre_cliente"
+            },
+            {
+              "name": "email_cliente"
+            },
+            {
+              "name": "telefono_cliente"
+            },
+            {
+              "name": "nombre_empresa"
+            },
+            {
+              "name": "requerimiento_cliente"
+            },
+            {
+              "name": "perfilado_de_cliente"
+            },
+            {
+              "name": "resumen_propuesta"
+            },
+            {
+              "name": "type_lead"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -340,
+        -20
+      ],
+      "id": "6ea16b2f-af6e-4cc4-b1c5-13698ab0507a",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "toRecipients": "=jc@canteradigital.mx,janette.cano@canteradigital.mx,francisco@canteradigital.mx,edgar@canteradigital.mx,nathanael.solorio@canteradigital.mx,alexandra.trujillo@canteradigital.mx",
+        "subject": "Nuevo Lead",
+        "bodyContent": "=Tenemos nuevo Lead\n\nCliente:  {{ $('When Executed by Another Workflow').item.json.nombre_cliente }}\nEmpresa: {{ $('When Executed by Another Workflow').item.json.nombre_empresa }}\n\nRequerimiento: {{ $('When Executed by Another Workflow').item.json.requerimiento_cliente }}\nPropuesta: {{ $('When Executed by Another Workflow').item.json.resumen_propuesta }}\n{{ \"\\n\" }}\nPerfilado de cliente: {{ $('When Executed by Another Workflow').item.json.perfilado_de_cliente }}\n{{ \"\\n\" }}\nEstimación Inicial: {{ $json.output.detail_of_estimation }}\n{{ \"\\n\" }}\nValor del Lead: {{ $json.output.value }} USD\nProbablidad de Cierre:  {{ $json.output.propability*100 }} %\n{{ \"\\n\" }}\n\nPodemos contactar al cliente por los siguientes medios\nWhatsapp: {{ $('When Executed by Another Workflow').item.json.telefono_cliente }}\nCorreo: {{ $('When Executed by Another Workflow').item.json.email_cliente }}\n\n",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.microsoftOutlook",
+      "typeVersion": 2,
+      "position": [
+        840,
+        120
+      ],
+      "id": "6521df0f-ffb7-4048-9833-41872a21bda7",
+      "name": "Microsoft Outlook",
+      "webhookId": "30aac34b-893e-4680-907e-e3866920008d"
+    },
+    {
+      "parameters": {
+        "toRecipients": "={{ $('When Executed by Another Workflow').item.json.email_cliente }}",
+        "subject": "=En Cantera Tenemos una Porpuesta Increíble {{ $('When Executed by Another Workflow').item.json.email_cliente }}",
+        "bodyContent": "=Hola {{ $('When Executed by Another Workflow').item.json.nombre_cliente }}:\n\nNos alegra saber que podemos apoyarte en {{ $('When Executed by Another Workflow').item.json.requerimiento_cliente }}, para tu empresa {{ $('When Executed by Another Workflow').item.json.nombre_empresa }}.\n\nEn breve, un ejecutivo de cuenta se pondrá en contacto contigo para ofrecerte una consultoría personalizada.\n \nAgradecemos tu interés en Cantera Digital.\n\nSaludos cordiales,\nJanette Cano\nDirectora Comercial",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.microsoftOutlook",
+      "typeVersion": 2,
+      "position": [
+        820,
+        -360
+      ],
+      "id": "22d57a1c-596b-435a-a499-792ada3fbb17",
+      "name": "Microsoft Outlook2",
+      "webhookId": "b4679cfe-52cd-4cd9-b192-456e7c586614"
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "phoneNumberId": "676686782186843",
+        "recipientPhoneNumber": "={{ $('When Executed by Another Workflow').item.json.telefono_cliente }}",
+        "textBody": "=Perfecto! ya tenemos todos tus datos, nuestros asesores se pondran en contacto contigo.{{\"\\n\"}} Estamos seguros que te sorprenderá nuestra propuesta.",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1,
+      "position": [
+        1280,
+        -360
+      ],
+      "id": "f130b3cb-c6fe-4db9-b358-2b1dc09842a3",
+      "name": "WhatsApp Business Cloud",
+      "webhookId": "440c21df-4e3f-4f8d-8b54-f132d57a7acd"
+    },
+    {
+      "parameters": {
+        "content": "## Interpretador\nEste nodo recibe una serie de parametros del lead como nombre, necesidad, empresa, presupuesto etc.\n\nse encarga de dar una interpretación a esos datos y actua como un interprete y genera un texto con datos como probabilidad de cierre, valor del negocio, etc.",
+        "height": 400,
+        "width": 360,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -160,
+        -240
+      ],
+      "typeVersion": 1,
+      "id": "19b0a9fe-8d29-4e25-9212-6dcba33d3a6b",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Extractor\nObtiene el texto del primer nodo y toma la información que le pidamos y la retorna en variables utilizables",
+        "height": 520,
+        "width": 360,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        260,
+        -240
+      ],
+      "typeVersion": 1,
+      "id": "a92e8f83-0925-413d-b9db-9d0d930e93d2",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## Envio de información a areas comerciales\nEsta sección envia un mensaje por correo al area comercial aparte de generar un mensaje en un canal de teams para que sea visible cuando un lead llega.",
+        "height": 340,
+        "width": 600,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        780,
+        -40
+      ],
+      "typeVersion": 1,
+      "id": "4c918e8c-1f6a-4e9b-9df3-89dd82faf958",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "## Envio de correo a nuestro cliente\nEnviamos un correo electrónico independientemente que ya exista o no en nuestro crm con los datos soobre su proyecto y la promesa de contacto futuro",
+        "height": 640,
+        "width": 340,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        740,
+        -740
+      ],
+      "typeVersion": 1,
+      "id": "b79603b8-0501-468a-8509-0c43e01e4b31",
+      "name": "Sticky Note4"
+    }
+  ],
+  "connections": {
+    "OpenAI": {
+      "main": [
+        [
+          {
+            "node": "Information Extractor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Information Extractor",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "OpenAI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Information Extractor": {
+      "main": [
+        [
+          {
+            "node": "Microsoft Outlook",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Microsoft Outlook2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Microsoft Outlook": {
+      "main": [
+        []
+      ]
+    },
+    "Microsoft Outlook2": {
+      "main": [
+        [
+          {
+            "node": "WhatsApp Business Cloud",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {
+    "When Executed by Another Workflow": [
+      {
+        "json": {
+          "nombre_cliente": "Roberto Aaron Avila Valdes",
+          "email_cliente": "aaron_avival@hotmail.com",
+          "telefono_cliente": "5214432139575",
+          "nombre_empresa": "AaronCollections",
+          "requerimiento_cliente": "Desarrollo de una página web e-commerce para vender figuras coleccionables de Funko Pop, sin diseño ni equipo técnico actual. Presupuesto aproximado de $10,000. Plazo de entrega finales de julio.",
+          "perfilado_de_cliente": "Empleados: 3; Ubicación: Morelia, Michoacán; Poder de decisión en la compra.",
+          "resumen_propuesta": "Propuesta de desarrollo de página web e-commerce con diseño atractivo y funcionalidad de venta en línea.",
+          "type_lead": "hot"
+        }
+      }
+    ]
+  },
+  "versionId": "71a989ef-e72d-4394-846d-c0548216de34",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "createdAt": "2025-07-01T23:30:13.954Z",
+      "updatedAt": "2025-07-01T23:30:13.954Z",
+      "role": "workflow:owner",
+      "workflowId": "9vBAEbP1lBMNbUVD",
+      "projectId": "BZ9Ta5yhe4RhzY78",
+      "project": {
+        "createdAt": "2025-05-13T15:56:28.209Z",
+        "updatedAt": "2025-05-13T16:18:54.372Z",
+        "id": "BZ9Ta5yhe4RhzY78",
+        "name": "CANTERA ADMIN <canteradigital7@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "projectRelations": [
+          {
+            "createdAt": "2025-05-13T15:56:28.209Z",
+            "updatedAt": "2025-05-13T15:56:28.209Z",
+            "role": "project:personalOwner",
+            "userId": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
+            "projectId": "BZ9Ta5yhe4RhzY78",
+            "user": {
+              "createdAt": "2025-05-13T15:56:27.880Z",
+              "updatedAt": "2025-05-27T17:38:25.272Z",
+              "id": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
+              "email": "canteradigital7@gmail.com",
+              "firstName": "CANTERA",
+              "lastName": "ADMIN",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-05-13T16:19:25.161Z",
+                "personalization_survey_n8n_version": "1.92.2",
+                "companySize": "<20",
+                "companyType": "saas",
+                "role": "customer-support",
+                "reportedSource": "event"
+              },
+              "settings": {
+                "userActivated": true,
+                "firstSuccessfulWorkflowId": "PTbESRzX3rguwQN8",
+                "userActivatedAt": 1747154580970,
+                "easyAIWorkflowOnboarded": true,
+                "npsSurvey": {
+                  "responded": true,
+                  "lastShownAt": 1748367494893
+                }
+              },
+              "role": "global:owner",
+              "disabled": false,
+              "mfaEnabled": false,
+              "isPending": false,
+              "isOwner": true
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": [
+    {
+      "createdAt": "2025-07-01T22:35:07.961Z",
+      "updatedAt": "2025-07-01T22:35:07.961Z",
+      "id": "yb0UWGdhYRBDYUmX",
+      "name": "agente nova"
+    }
+  ]
+}
