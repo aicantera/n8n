@@ -1,0 +1,200 @@
+{
+  "createdAt": "2025-07-02T01:39:15.271Z",
+  "updatedAt": "2025-07-02T01:39:15.271Z",
+  "id": "9ddh0PSXkDqLeHQf",
+  "name": "My workflow 37",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "consulta-saldo",
+        "options": {}
+      },
+      "id": "86308dcb-8835-4764-8b45-dcbf41d8dc52",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "webhookId": "e74c5be0-5ae1-40f8-941b-e97c63fc3488"
+    },
+    {
+      "parameters": {
+        "functionCode": "const body = $json.body;\nreturn [\n  {\n    json: {\n      nombre: body.nombre,\n      numero_usuario: body.numero_usuario\n    }\n  }\n];"
+      },
+      "id": "07cd01de-fc28-40ee-a0e2-bef8727a43a4",
+      "name": "Extract Data",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        200,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT saldo FROM usuarios WHERE numero_usuario = '{{ $json[\"numero_usuario\"] }}';",
+        "additionalFields": {}
+      },
+      "id": "730b6a08-e103-422a-8b8d-1a9af943e93b",
+      "name": "Consulta Saldo",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1,
+      "position": [
+        400,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "const nombre = $json.nombre;\nconst saldo = $json.saldo || $json[0].saldo;\nreturn [{\n  json: {\n    mensaje: `Sr. ${nombre}, su saldo es de ${saldo} USD.`\n  }\n}];"
+      },
+      "id": "09d34db1-6c09-4289-979f-6df18b169c7d",
+      "name": "Generar Mensaje",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        600,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "predefinedCredentialType",
+        "url": "https://api.twilio.com/2010-04-01/Accounts/{{ $env.TWILIO_ACCOUNT_SID }}/Messages.json",
+        "options": {}
+      },
+      "id": "55886861-d887-4ce0-863e-649f8692ebcf",
+      "name": "Enviar WhatsApp",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        800,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Extract Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Data": {
+      "main": [
+        [
+          {
+            "node": "Consulta Saldo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consulta Saldo": {
+      "main": [
+        [
+          {
+            "node": "Generar Mensaje",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generar Mensaje": {
+      "main": [
+        [
+          {
+            "node": "Enviar WhatsApp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {},
+  "versionId": "065c5bb8-3055-4c57-b54d-38271449d0cc",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "createdAt": "2025-07-02T01:39:15.276Z",
+      "updatedAt": "2025-07-02T01:39:15.276Z",
+      "role": "workflow:owner",
+      "workflowId": "9ddh0PSXkDqLeHQf",
+      "projectId": "UPXsxNbEdAC5wodw",
+      "project": {
+        "createdAt": "2025-05-30T21:50:35.802Z",
+        "updatedAt": "2025-05-30T21:51:22.504Z",
+        "id": "UPXsxNbEdAC5wodw",
+        "name": "Alexandra  Trujillo  <alexandra.trujillo@canteradigital.mx>",
+        "type": "personal",
+        "icon": null,
+        "projectRelations": [
+          {
+            "createdAt": "2025-05-30T21:50:35.804Z",
+            "updatedAt": "2025-05-30T21:50:35.804Z",
+            "role": "project:personalOwner",
+            "userId": "65d58894-4572-495d-8c41-0b8ea4c5b71f",
+            "projectId": "UPXsxNbEdAC5wodw",
+            "user": {
+              "createdAt": "2025-05-30T21:50:35.800Z",
+              "updatedAt": "2025-06-12T00:59:16.255Z",
+              "id": "65d58894-4572-495d-8c41-0b8ea4c5b71f",
+              "email": "alexandra.trujillo@canteradigital.mx",
+              "firstName": "Alexandra ",
+              "lastName": "Trujillo ",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-05-30T21:52:04.811Z",
+                "personalization_survey_n8n_version": "1.92.2",
+                "automationGoalDevops": [
+                  "data-syncing",
+                  "ticketing-systems-integrations",
+                  "ci-cd",
+                  "monitoring-alerting",
+                  "reporting",
+                  "incident-response"
+                ],
+                "companyType": "systems-integrator",
+                "role": "it"
+              },
+              "settings": {
+                "easyAIWorkflowOnboarded": true,
+                "firstSuccessfulWorkflowId": "bmdwVJ36IDZozHoU",
+                "userActivated": true,
+                "userActivatedAt": 1749246625266,
+                "npsSurvey": {
+                  "responded": true,
+                  "lastShownAt": 1749689952085
+                }
+              },
+              "role": "global:member",
+              "disabled": false,
+              "mfaEnabled": false,
+              "isPending": false,
+              "isOwner": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": []
+}
