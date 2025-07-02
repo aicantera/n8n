@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-05-15T17:24:39.085Z",
-  "updatedAt": "2025-07-01T22:34:34.000Z",
+  "updatedAt": "2025-07-02T17:48:29.000Z",
   "id": "FqLw4NrJ9drMRdhD",
   "name": "Agente Glassy prod",
   "active": true,
@@ -12,8 +12,8 @@
       "type": "@n8n/n8n-nodes-langchain.chatTrigger",
       "typeVersion": 1.1,
       "position": [
-        -980,
-        480
+        -1360,
+        1160
       ],
       "id": "56b28a05-2794-4b48-9dec-51ae0d14bc0f",
       "name": "When chat message received",
@@ -100,8 +100,8 @@
       "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
       "typeVersion": 1.2,
       "position": [
-        760,
-        560
+        980,
+        760
       ],
       "id": "58252f89-96ce-4144-8324-da5c928bf74b",
       "name": "Embeddings OpenAI",
@@ -131,8 +131,8 @@
       "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
       "typeVersion": 1.1,
       "position": [
-        660,
-        440
+        720,
+        540
       ],
       "id": "8b486e6a-ab7c-4107-bdae-b6164defaf81",
       "name": "kb_glasbil",
@@ -170,8 +170,8 @@
       "type": "n8n-nodes-base.manualTrigger",
       "typeVersion": 1,
       "position": [
-        20,
-        100
+        240,
+        120
       ],
       "id": "7a79dd0e-3849-48fb-86a2-b323bfaad12b",
       "name": "When clicking ‘Test workflow’"
@@ -197,8 +197,8 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        240,
-        100
+        460,
+        120
       ],
       "id": "903f4842-f579-4691-b661-e5129e6d23d3",
       "name": "Postgres",
@@ -258,8 +258,8 @@
       "type": "n8n-nodes-base.whatsAppTrigger",
       "typeVersion": 1,
       "position": [
-        -840,
-        660
+        -1220,
+        1340
       ],
       "id": "de18ae6d-27c6-4311-ab18-4913e66bca88",
       "name": "WhatsApp Trigger",
@@ -315,8 +315,8 @@
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "typeVersion": 1.1,
       "position": [
-        -540,
-        720
+        -920,
+        1400
       ],
       "id": "8f593d05-6bc5-48dc-8e8b-084795276cfd",
       "name": "When Executed by Another Workflow",
@@ -329,7 +329,7 @@
             {
               "id": "c186aeab-a5d4-4f37-99d6-409910e705b3",
               "name": "telefono",
-              "value": "={{ $('WhatsApp Trigger1').item.json.messages[0].from }}",
+              "value": "={{ $json.messages[0].from }}",
               "type": "string"
             },
             {
@@ -367,7 +367,7 @@
       "type": "n8n-nodes-base.whatsAppTrigger",
       "typeVersion": 1,
       "position": [
-        -180,
+        -400,
         300
       ],
       "id": "52cfb319-9b50-44e5-a633-57362e65a431",
@@ -417,12 +417,66 @@
       "type": "n8n-nodes-base.filter",
       "typeVersion": 2.2,
       "position": [
-        -1220,
-        380
+        -1600,
+        1060
       ],
       "id": "ceec4b87-b496-4c0b-a168-1d72350984f8",
       "name": "Filter2",
       "disabled": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "3de5f7b2-a515-4155-b40a-1fe52ee52c87",
+              "leftValue": "={{ $json.messages[0].text.body }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "61e4632b-4096-4fb7-a09b-e32f84287653",
+              "leftValue": "={{ $json.messages[0].audio.voice }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "exists",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "8af6a9f4-1dbe-4bfd-aef0-53d0c7ad7f04",
+              "leftValue": "={{ $json.messages[0].type }}",
+              "rightValue": "document",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        -180,
+        300
+      ],
+      "id": "e97afb53-04ec-466e-b45c-b57cd4ff3956",
+      "name": "Filter"
     }
   ],
   "connections": {
@@ -555,7 +609,7 @@
       "main": [
         [
           {
-            "node": "Edit Fields",
+            "node": "Filter",
             "type": "main",
             "index": 0
           }
@@ -565,6 +619,17 @@
     "Filter2": {
       "main": [
         []
+      ]
+    },
+    "Filter": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     }
   },
@@ -584,9 +649,40 @@
           "mensaje": "hola"
         }
       }
+    ],
+    "WhatsApp Trigger1": [
+      {
+        "json": {
+          "messaging_product": "whatsapp",
+          "metadata": {
+            "display_phone_number": "5214431865276",
+            "phone_number_id": "736728182851111"
+          },
+          "contacts": [
+            {
+              "profile": {
+                "name": "Rick"
+              },
+              "wa_id": "5214434901193"
+            }
+          ],
+          "messages": [
+            {
+              "from": "5214434901193",
+              "id": "wamid.HBgNNTIxNDQzNDkwMTE5MxUCABIYFjNFQjA0REVEQTM3RkYwMkMxNDkzQUYA",
+              "timestamp": "1751478319",
+              "text": {
+                "body": "mi codigo postal es 58130"
+              },
+              "type": "text"
+            }
+          ],
+          "field": "messages"
+        }
+      }
     ]
   },
-  "versionId": "345ced72-dd9f-451d-b1ee-22f706b74d22",
+  "versionId": "8afbf8f1-2eee-4336-a026-c1f546fdbae1",
   "triggerCount": 2,
   "shared": [
     {
