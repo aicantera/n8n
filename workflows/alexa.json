@@ -1,0 +1,239 @@
+{
+  "createdAt": "2025-07-02T01:39:15.271Z",
+  "updatedAt": "2025-07-02T02:17:36.000Z",
+  "id": "9ddh0PSXkDqLeHQf",
+  "name": "alexa",
+  "active": true,
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "consulta-saldo",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -100,
+        720
+      ],
+      "id": "551c3d9b-7cd5-462f-a243-333497084ff9",
+      "name": "Entrada de Datos",
+      "webhookId": "61e5fcf7-606d-4b39-b0bb-d11725bd28ec"
+    },
+    {
+      "parameters": {
+        "functionCode": "const nombre = $json[\"nombre\"];\nconst numero = $json[\"numero_usuario\"];\n\n// Simulación de búsqueda de saldo\nconst saldo = 22;\n\nconst mensaje = `Sr(a). ${nombre}, su saldo es de ${saldo} USD`;\n\nreturn [{ json: { nombre, numero, saldo, mensaje } }];"
+      },
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        460,
+        720
+      ],
+      "id": "8814073b-6c8c-4002-b4d5-8f34fc5a62fb",
+      "name": "Consulta de Saldo"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.mensaje }}",
+        "text": "<elevenlabs-convai agent-id=\"agent_01jz483p14f2qag55pcxbz3pke\"></elevenlabs-convai><script src=\"https://unpkg.com/@elevenlabs/convai-widget-embed\" async type=\"text/javascript\"></script>",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        740,
+        640
+      ],
+      "id": "25216b9e-4afb-46e3-8dda-64ea2fbf071e",
+      "name": "Enviar Telegram",
+      "webhookId": "8270a473-d614-4693-8994-7bcdeeea8b3f",
+      "credentials": {
+        "telegramApi": {
+          "id": "03RVBpjbMD77F2XN",
+          "name": "Telegram alexabot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        640,
+        920
+      ],
+      "id": "f8cb5011-25d6-4854-95c9-367290e75089",
+      "name": "Responder al Usuario"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": " agente convesacional, que  pide nombre, numero de usaurio, y lo consulta en un \"lugar\" , y responde con el saldo y envia un telegram con esa respuesta \" sr TAL su lsaldo es de 22 usd\"\n",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.9,
+      "position": [
+        120,
+        720
+      ],
+      "id": "df62e80a-7051-4866-a20a-adbdfa02e046",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        160,
+        940
+      ],
+      "id": "a04a32bb-4f5e-4b9b-9548-fc9b6e579401",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "kN8CVraho0i9hYUQ",
+          "name": "OpenAi account Alexandra Trujillo"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Entrada de Datos": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consulta de Saldo": {
+      "main": [
+        [
+          {
+            "node": "Enviar Telegram",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Responder al Usuario",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Consulta de Saldo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "51245af6-62eb-4ee4-81e6-3bfb62f17d7b",
+  "triggerCount": 1,
+  "shared": [
+    {
+      "createdAt": "2025-07-02T01:39:15.276Z",
+      "updatedAt": "2025-07-02T01:39:15.276Z",
+      "role": "workflow:owner",
+      "workflowId": "9ddh0PSXkDqLeHQf",
+      "projectId": "UPXsxNbEdAC5wodw",
+      "project": {
+        "createdAt": "2025-05-30T21:50:35.802Z",
+        "updatedAt": "2025-05-30T21:51:22.504Z",
+        "id": "UPXsxNbEdAC5wodw",
+        "name": "Alexandra  Trujillo  <alexandra.trujillo@canteradigital.mx>",
+        "type": "personal",
+        "icon": null,
+        "projectRelations": [
+          {
+            "createdAt": "2025-05-30T21:50:35.804Z",
+            "updatedAt": "2025-05-30T21:50:35.804Z",
+            "role": "project:personalOwner",
+            "userId": "65d58894-4572-495d-8c41-0b8ea4c5b71f",
+            "projectId": "UPXsxNbEdAC5wodw",
+            "user": {
+              "createdAt": "2025-05-30T21:50:35.800Z",
+              "updatedAt": "2025-06-12T00:59:16.255Z",
+              "id": "65d58894-4572-495d-8c41-0b8ea4c5b71f",
+              "email": "alexandra.trujillo@canteradigital.mx",
+              "firstName": "Alexandra ",
+              "lastName": "Trujillo ",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-05-30T21:52:04.811Z",
+                "personalization_survey_n8n_version": "1.92.2",
+                "automationGoalDevops": [
+                  "data-syncing",
+                  "ticketing-systems-integrations",
+                  "ci-cd",
+                  "monitoring-alerting",
+                  "reporting",
+                  "incident-response"
+                ],
+                "companyType": "systems-integrator",
+                "role": "it"
+              },
+              "settings": {
+                "easyAIWorkflowOnboarded": true,
+                "firstSuccessfulWorkflowId": "bmdwVJ36IDZozHoU",
+                "userActivated": true,
+                "userActivatedAt": 1749246625266,
+                "npsSurvey": {
+                  "responded": true,
+                  "lastShownAt": 1749689952085
+                }
+              },
+              "role": "global:member",
+              "disabled": false,
+              "mfaEnabled": false,
+              "isPending": false,
+              "isOwner": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": []
+}
