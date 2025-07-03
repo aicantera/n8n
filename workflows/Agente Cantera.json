@@ -1,9 +1,9 @@
 {
   "createdAt": "2025-05-13T16:37:03.099Z",
-  "updatedAt": "2025-07-03T18:00:22.782Z",
+  "updatedAt": "2025-07-03T18:56:20.000Z",
   "id": "PTbESRzX3rguwQN8",
   "name": "Agente Cantera",
-  "active": true,
+  "active": false,
   "isArchived": false,
   "nodes": [
     {
@@ -188,8 +188,8 @@
       "type": "n8n-nodes-base.manualTrigger",
       "typeVersion": 1,
       "position": [
-        1220,
-        -180
+        420,
+        -1520
       ],
       "id": "1f2f7840-5375-46a5-b7ff-67645ad00b91",
       "name": "When clicking ‘Test workflow’"
@@ -215,8 +215,8 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        1440,
-        -180
+        640,
+        -1520
       ],
       "id": "eb2bdc86-8c48-4dbe-93b0-524af42ab2d4",
       "name": "Postgres",
@@ -735,8 +735,8 @@
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
       "position": [
-        280,
-        -420
+        -480,
+        -1580
       ],
       "id": "10fe6234-f47d-493a-8ff6-6e11b855e19a",
       "name": "Schedule Trigger",
@@ -764,8 +764,8 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.5,
       "position": [
-        500,
-        -420
+        -260,
+        -1580
       ],
       "id": "40455d24-6fce-43a0-a80c-e1ff57e655a0",
       "name": "Google Sheets2",
@@ -785,8 +785,8 @@
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        180,
-        -600
+        -580,
+        -1760
       ],
       "id": "a9ca1b75-cd79-46f4-96f5-e41f4f317549",
       "name": "Sticky Note1"
@@ -1647,8 +1647,8 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        1160,
-        -300
+        360,
+        -1640
       ],
       "typeVersion": 1,
       "id": "da8ddbcb-4b11-4049-8ef1-d5c32a11fcd3",
@@ -1688,12 +1688,47 @@
     },
     {
       "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "0e1445e6-5835-4d49-9271-aebecc6a5254",
+              "leftValue": "={{ $json.messages[0].from }}",
+              "rightValue": "5217201346482",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -1220,
+        0
+      ],
+      "id": "cc478276-b009-42d8-a928-3d0d32c1333f",
+      "name": "If1"
+    },
+    {
+      "parameters": {
         "tableId": "logs_bots",
         "fieldsUi": {
           "fieldValues": [
             {
               "fieldId": "bot_number",
-              "fieldValue": "=5214431866819"
+              "fieldValue": "+5214431866819"
             }
           ]
         }
@@ -1719,12 +1754,7 @@
       "main": [
         [
           {
-            "node": "Create a row",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Filter",
+            "node": "If1",
             "type": "main",
             "index": 0
           }
@@ -2130,6 +2160,24 @@
         ],
         []
       ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Create a row",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -2179,7 +2227,7 @@
       }
     ]
   },
-  "versionId": "546f0e77-96c3-45bf-8fbf-6c011b0bba1c",
+  "versionId": "24b01cc6-d5d9-4552-9079-dc3bdf13c2fe",
   "triggerCount": 1,
   "shared": [
     {
