@@ -1,122 +1,269 @@
 {
-  "createdAt": "2025-07-02T01:39:15.271Z",
-  "updatedAt": "2025-07-02T01:39:15.271Z",
-  "id": "9ddh0PSXkDqLeHQf",
+  "createdAt": "2025-07-02T23:49:33.262Z",
+  "updatedAt": "2025-07-02T23:49:33.262Z",
+  "id": "9dWE4cewgYQ6gSE7",
   "name": "My workflow 37",
   "active": false,
   "nodes": [
     {
       "parameters": {
-        "httpMethod": "POST",
-        "path": "consulta-saldo",
+        "operation": "pdf",
         "options": {}
       },
-      "id": "86308dcb-8835-4764-8b45-dcbf41d8dc52",
-      "name": "Webhook",
-      "type": "n8n-nodes-base.webhook",
-      "typeVersion": 1,
+      "id": "faffdbf2-36aa-4c63-af90-6fcfd55f2672",
+      "name": "Extract Document PDF",
+      "type": "n8n-nodes-base.extractFromFile",
       "position": [
-        0,
-        0
+        1480,
+        920
       ],
-      "webhookId": "e74c5be0-5ae1-40f8-941b-e97c63fc3488"
-    },
-    {
-      "parameters": {
-        "functionCode": "const body = $json.body;\nreturn [\n  {\n    json: {\n      nombre: body.nombre,\n      numero_usuario: body.numero_usuario\n    }\n  }\n];"
-      },
-      "id": "07cd01de-fc28-40ee-a0e2-bef8727a43a4",
-      "name": "Extract Data",
-      "type": "n8n-nodes-base.function",
       "typeVersion": 1,
-      "position": [
-        200,
-        0
-      ]
+      "alwaysOutputData": false
     },
     {
       "parameters": {
-        "operation": "executeQuery",
-        "query": "SELECT saldo FROM usuarios WHERE numero_usuario = '{{ $json[\"numero_usuario\"] }}';",
-        "additionalFields": {}
-      },
-      "id": "730b6a08-e103-422a-8b8d-1a9af943e93b",
-      "name": "Consulta Saldo",
-      "type": "n8n-nodes-base.postgres",
-      "typeVersion": 1,
-      "position": [
-        400,
-        0
-      ]
-    },
-    {
-      "parameters": {
-        "functionCode": "const nombre = $json.nombre;\nconst saldo = $json.saldo || $json[0].saldo;\nreturn [{\n  json: {\n    mensaje: `Sr. ${nombre}, su saldo es de ${saldo} USD.`\n  }\n}];"
-      },
-      "id": "09d34db1-6c09-4289-979f-6df18b169c7d",
-      "name": "Generar Mensaje",
-      "type": "n8n-nodes-base.function",
-      "typeVersion": 1,
-      "position": [
-        600,
-        0
-      ]
-    },
-    {
-      "parameters": {
-        "authentication": "predefinedCredentialType",
-        "url": "https://api.twilio.com/2010-04-01/Accounts/{{ $env.TWILIO_ACCOUNT_SID }}/Messages.json",
+        "url": "={{ $json.file_url }}",
         "options": {}
       },
-      "id": "55886861-d887-4ce0-863e-649f8692ebcf",
-      "name": "Enviar WhatsApp",
+      "id": "478f9d30-1389-4297-b430-0db54c72c460",
+      "name": "Download File",
       "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 1,
       "position": [
-        800,
-        0
-      ]
+        1300,
+        920
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {},
+      "id": "3057cd22-cbe0-4c85-be87-e01ca5de938c",
+      "name": "When clicking ‘Test workflow’",
+      "type": "n8n-nodes-base.manualTrigger",
+      "position": [
+        940,
+        920
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "**Add direct link to CV and Job description**",
+        "height": 80,
+        "width": 187.37066290133808
+      },
+      "id": "fe11992a-e6b8-40eb-a575-e55f8ad4fcd3",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1080,
+        800
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "### Setup\n\n1. **Download File**: Fetch the CV using its direct URL.\n2. **Extract Data**: Use N8N’s PDF or text extraction nodes to retrieve text from the CV.\n3. **Send to OpenAI**:\n - **URL**: POST to OpenAI’s API for analysis.\n - **Parameters**:\n - Include the extracted CV data and job description.\n - Use JSON Schema to structure the response.\n4. **Save Results**:\n - Store the extracted data and OpenAI's analysis in Supabase for further use.",
+        "height": 438.5821431288714,
+        "width": 280.2462120317618,
+        "color": 7
+      },
+      "id": "e00c19db-afbc-401b-b1bb-59af9b6ae6c9",
+      "name": "Sticky Note5",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        160,
+        660
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "![5min Logo](https://cflobdhpqwnoisuctsoc.supabase.co/storage/v1/object/public/my_storage/Untitled%20(1500%20x%20300%20px).png)\n## CV Screening with OpenAI\n**Made by [Mark Shcherbakov](https://www.linkedin.com/in/marklowcoding/) from community [5minAI](https://www.skool.com/5minai-2861)**\n\nThis workflow is ideal for recruitment agencies, HR professionals, and hiring managers looking to automate the initial screening of CVs. It is especially useful for organizations handling large volumes of applications and seeking to streamline their recruitment process.\n\nThis workflow automates the resume screening process using OpenAI for analysis and Supabase for structured data storage. It provides a matching score, a summary of candidate suitability, and key insights into why the candidate fits (or doesn’t fit) the job. \n\n1. **Retrieve Resume**: The workflow downloads CVs from a direct link (e.g., Supabase storage or Dropbox).\n2. **Extract Data**: Extracts text data from PDF or DOC files for analysis.\n3. **Analyze with OpenAI**: Sends the extracted data and job description to OpenAI to:\n - Generate a matching score.\n - Summarize candidate strengths and weaknesses.\n - Provide actionable insights into their suitability for the job.\n4. **Store Results in Supabase**: Saves the analysis and raw data in a structured format for further processing or integration into other tools.\n",
+        "height": 598.6675280064023,
+        "width": 636.2128494576581,
+        "color": 7
+      },
+      "id": "10b9fe14-6a9a-4644-9c31-c079d323ae5c",
+      "name": "Sticky Note6",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        160,
+        20
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "### ... or watch set up video [8 min]\n[![Youtube Thumbnail](https://cflobdhpqwnoisuctsoc.supabase.co/storage/v1/object/public/my_storage/11.png)](https://youtu.be/TWuI3dOcn0E)\n",
+        "height": 240.6839895136402,
+        "width": 330.5152611046425,
+        "color": 7
+      },
+      "id": "d0b09b14-dd12-4f64-b2a1-afb2d7778264",
+      "name": "Sticky Note2",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        460,
+        660
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "**Replace OpenAI connection**",
+        "height": 80,
+        "width": 187.37066290133808
+      },
+      "id": "c69cb0ca-4ef5-46ed-8024-2330655f566c",
+      "name": "Sticky Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1620,
+        800
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.openai.com/v1/chat/completions",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "openAiApi",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n \"model\": \"gpt-4o-mini\",\n \"messages\": [\n {\n \"role\": \"system\",\n \"content\": \"{{ $('Set Variables').item.json.prompt }}\"\n },\n {\n \"role\": \"user\",\n \"content\": {{ JSON.stringify(encodeURIComponent($json.text))}}\n }\n ],\n \"response_format\":{ \"type\": \"json_schema\", \"json_schema\": {{ $('Set Variables').item.json.json_schema }}\n\n }\n }",
+        "options": {}
+      },
+      "id": "b30bfead-fe24-4798-b3da-216a87ee3f3c",
+      "name": "OpenAI - Analyze CV",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        1660,
+        920
+      ],
+      "typeVersion": 4.2,
+      "credentials": {
+        "openAiApi": {
+          "id": "kN8CVraho0i9hYUQ",
+          "name": "OpenAi account Alexandra Trujillo"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "83274f6f-c73e-4d5e-946f-c6dfdf7ed1c4",
+              "name": "file_url",
+              "type": "string",
+              "value": "https://cflobdhpqwnoisuctsoc.supabase.co/storage/v1/object/public/my_storage/software_engineer_resume_example.pdf"
+            },
+            {
+              "id": "6e44f3e5-a0df-4337-9f7e-7cfa91b3cc37",
+              "name": "job_description",
+              "type": "string",
+              "value": "Melange is a venture-backed startup building a brand new search infrastructure for the patent system. Leveraging recent and ongoing advancements in machine learning and natural language processing, we are building systems to conduct patent search faster and more accurately than any human currently can. We are a small team with a friendly, mostly-remote culture\\n\\nAbout the team\\nMelange is currently made up of 9 people. We are remote but headquartered in Brooklyn, NY. We look for people who are curious and earnest.\\n\\nAbout the role\\nJoin the team at Melange, a startup with a focus on revolutionizing patent search through advanced technology. As a software engineer in this role, you will be responsible for developing conversation graphs, integrating grammar processes, and maintaining a robust codebase. The ideal candidate will have experience shipping products, working with cloud platforms, and have familiarity with containerization tools. Additionally, experience with prompting tools, NLP packages, and cybersecurity is a plus.\\n\\nCandidate location - the US. Strong preference if they're in NYC, Boston or SF but open to anywhere else but needs to be rockstar\\n\\nYou will \\n\\n* Ship high-quality products.\\n* Utilize prompting libraries such as Langchain and Langgraph to develop conversation graphs and evaluation flows.\\n* Collaborate with linguists to integrate our in-house grammar and entity mapping processes into an iterable patent search algorithm piloted by AI patent agents.\\n* Steward the codebase, ensuring that it remains robust as it scales.\\n\\n\\nCandidate requirements\\nMinimum requirements a candidate must meet\\nHad ownership over aspects of product development in both small and large organizations at differing points in your career.\\n\\nHave used Langchain, LangGraph, or other prompting tools in production or for personal projects.\\n\\nFamiliarity with NLP packages such as Spacy, Stanza, PyTorch, and/or Tensorflow.\\n\\nShipped a working product to users, either as part of a team or on your own. \\nThis means you have: \\nproficiency with one of AWS, Azure, or Google Cloud, \\nfamiliarity with containerization and orchestration tools like Docker and Kubernetes, and \\nbuilt and maintained CI/CD pipelines.\\n5+ years of experience as a software engineer\\n\\nNice-to-haves\\nWhat could make your candidate stand out\\nExperience with cybersecurity.\\n\\nIdeal companies\\nSuccessful b2b growth stage startups that have a strong emphasis on product and design. Orgs with competent management where talent is dense and protected.\\n\\nRamp, Rippling, Brex, Carta, Toast, Asana, Airtable, Benchling, Figma, Gusto, Stripe, Plaid, Monday.com, Smartsheet, Bill.com, Freshworks, Intercom, Sprout Social, Sisense, InsightSquared, DocuSign, Dropbox, Slack, Trello, Qualtrics, Datadog, HubSpot, Shopify, Zendesk, SurveyMonkey, Squarespace, Mixpanel, Github, Atlassian, Zapier, PagerDuty, Box, Snowflake, Greenhouse, Lever, Pendo, Lucidchart, Asana, New Relic, Kajabi, Veeva Systems, Adyen, Twilio, Workday, ServiceNow, Confluent.\\n"
+            },
+            {
+              "id": "c597c502-9a3c-48e6-a5f5-8a2a8be7282c",
+              "name": "prompt",
+              "type": "string",
+              "value": "You are the recruiter in recruiting agency, you are strict and you pay extra attention on details in a resume. You work with companies and find talents for their jobs. You asses any resume really attentively and critically. If the candidate is a jumper, you notice that and say us. You need to say if the candidate from out base is suitable for this job. Return 4 things: 1. Percentage (10% step) of matching candidate resume with job. 2. Short summary - should use simple language and be short. Provide final decision on candidate based on matching percentage and candidate skills vs job requirements. 3. Summary why this candidate suits this jobs. 4. Summary why this candidate doesn't suit this jobs."
+            },
+            {
+              "id": "1884eed1-9111-4ce1-8d07-ed176611f2d8",
+              "name": "json_schema",
+              "type": "string",
+              "value": "{ \"name\": \"candidate_evaluation\", \"description\": \"Structured data for evaluating a candidate based on experience and fit\", \"strict\": true, \"schema\": { \"type\": \"object\", \"properties\": { \"percentage\": { \"type\": \"integer\", \"description\": \"Overall suitability percentage score for the candidate\" }, \"summary\": { \"type\": \"string\", \"description\": \"A brief summary of the candidate's experience, personality, and any notable strengths or concerns\" }, \"reasons-suit\": { \"type\": \"array\", \"items\": { \"type\": \"object\", \"properties\": { \"name\": { \"type\": \"string\", \"description\": \"Title of the strength or reason for suitability\" }, \"text\": { \"type\": \"string\", \"description\": \"Description of how this experience or skill matches the job requirements\" } }, \"required\": [\"name\", \"text\"], \"additionalProperties\": false }, \"description\": \"List of reasons why the candidate is suitable for the position\" }, \"reasons-notsuit\": { \"type\": \"array\", \"items\": { \"type\": \"object\", \"properties\": { \"name\": { \"type\": \"string\", \"description\": \"Title of the concern or reason for unsuitability\" }, \"text\": { \"type\": \"string\", \"description\": \"Description of how this factor may not align with the job requirements\" } }, \"required\": [\"name\", \"text\"], \"additionalProperties\": false }, \"description\": \"List of reasons why the candidate may not be suitable for the position\" } }, \"required\": [\"percentage\", \"summary\", \"reasons-suit\", \"reasons-notsuit\"], \"additionalProperties\": false } }"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "11df1742-22a0-4899-999b-eb42a1242964",
+      "name": "Set Variables",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        1120,
+        920
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "83274f6f-c73e-4d5e-946f-c6dfdf7ed1c4",
+              "name": "json_parsed",
+              "type": "object",
+              "value": "={{ JSON.parse($json.choices[0].message.content) }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "f4ccf054-152e-4c1a-a434-a084e1200832",
+      "name": "Parsed JSON",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        1840,
+        920
+      ],
+      "typeVersion": 3.4
     }
   ],
   "connections": {
-    "Webhook": {
+    "Download File": {
       "main": [
         [
           {
-            "node": "Extract Data",
+            "node": "Extract Document PDF",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Extract Data": {
+    "Set Variables": {
       "main": [
         [
           {
-            "node": "Consulta Saldo",
+            "node": "Download File",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Consulta Saldo": {
+    "OpenAI - Analyze CV": {
       "main": [
         [
           {
-            "node": "Generar Mensaje",
+            "node": "Parsed JSON",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Generar Mensaje": {
+    "Extract Document PDF": {
       "main": [
         [
           {
-            "node": "Enviar WhatsApp",
+            "node": "OpenAI - Analyze CV",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Test workflow’": {
+      "main": [
+        [
+          {
+            "node": "Set Variables",
             "type": "main",
             "index": 0
           }
@@ -130,66 +277,60 @@
   "staticData": null,
   "meta": null,
   "pinData": {},
-  "versionId": "065c5bb8-3055-4c57-b54d-38271449d0cc",
+  "versionId": "f06e3b97-a4e3-4ce2-8e76-d3a609d774aa",
   "triggerCount": 0,
   "shared": [
     {
-      "createdAt": "2025-07-02T01:39:15.276Z",
-      "updatedAt": "2025-07-02T01:39:15.276Z",
+      "createdAt": "2025-07-02T23:49:33.264Z",
+      "updatedAt": "2025-07-02T23:49:33.264Z",
       "role": "workflow:owner",
-      "workflowId": "9ddh0PSXkDqLeHQf",
-      "projectId": "UPXsxNbEdAC5wodw",
+      "workflowId": "9dWE4cewgYQ6gSE7",
+      "projectId": "BZ9Ta5yhe4RhzY78",
       "project": {
-        "createdAt": "2025-05-30T21:50:35.802Z",
-        "updatedAt": "2025-05-30T21:51:22.504Z",
-        "id": "UPXsxNbEdAC5wodw",
-        "name": "Alexandra  Trujillo  <alexandra.trujillo@canteradigital.mx>",
+        "createdAt": "2025-05-13T15:56:28.209Z",
+        "updatedAt": "2025-05-13T16:18:54.372Z",
+        "id": "BZ9Ta5yhe4RhzY78",
+        "name": "CANTERA ADMIN <canteradigital7@gmail.com>",
         "type": "personal",
         "icon": null,
         "projectRelations": [
           {
-            "createdAt": "2025-05-30T21:50:35.804Z",
-            "updatedAt": "2025-05-30T21:50:35.804Z",
+            "createdAt": "2025-05-13T15:56:28.209Z",
+            "updatedAt": "2025-05-13T15:56:28.209Z",
             "role": "project:personalOwner",
-            "userId": "65d58894-4572-495d-8c41-0b8ea4c5b71f",
-            "projectId": "UPXsxNbEdAC5wodw",
+            "userId": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
+            "projectId": "BZ9Ta5yhe4RhzY78",
             "user": {
-              "createdAt": "2025-05-30T21:50:35.800Z",
-              "updatedAt": "2025-06-12T00:59:16.255Z",
-              "id": "65d58894-4572-495d-8c41-0b8ea4c5b71f",
-              "email": "alexandra.trujillo@canteradigital.mx",
-              "firstName": "Alexandra ",
-              "lastName": "Trujillo ",
+              "createdAt": "2025-05-13T15:56:27.880Z",
+              "updatedAt": "2025-05-27T17:38:25.272Z",
+              "id": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
+              "email": "canteradigital7@gmail.com",
+              "firstName": "CANTERA",
+              "lastName": "ADMIN",
               "personalizationAnswers": {
                 "version": "v4",
-                "personalization_survey_submitted_at": "2025-05-30T21:52:04.811Z",
+                "personalization_survey_submitted_at": "2025-05-13T16:19:25.161Z",
                 "personalization_survey_n8n_version": "1.92.2",
-                "automationGoalDevops": [
-                  "data-syncing",
-                  "ticketing-systems-integrations",
-                  "ci-cd",
-                  "monitoring-alerting",
-                  "reporting",
-                  "incident-response"
-                ],
-                "companyType": "systems-integrator",
-                "role": "it"
+                "companySize": "<20",
+                "companyType": "saas",
+                "role": "customer-support",
+                "reportedSource": "event"
               },
               "settings": {
-                "easyAIWorkflowOnboarded": true,
-                "firstSuccessfulWorkflowId": "bmdwVJ36IDZozHoU",
                 "userActivated": true,
-                "userActivatedAt": 1749246625266,
+                "firstSuccessfulWorkflowId": "PTbESRzX3rguwQN8",
+                "userActivatedAt": 1747154580970,
+                "easyAIWorkflowOnboarded": true,
                 "npsSurvey": {
                   "responded": true,
-                  "lastShownAt": 1749689952085
+                  "lastShownAt": 1748367494893
                 }
               },
-              "role": "global:member",
+              "role": "global:owner",
               "disabled": false,
               "mfaEnabled": false,
               "isPending": false,
-              "isOwner": false
+              "isOwner": true
             }
           }
         ]
