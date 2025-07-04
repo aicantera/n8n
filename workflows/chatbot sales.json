@@ -1,9 +1,9 @@
 {
   "createdAt": "2025-06-24T22:28:19.611Z",
-  "updatedAt": "2025-07-04T17:55:19.000Z",
+  "updatedAt": "2025-07-04T18:10:10.000Z",
   "id": "PetXIW4fDRVoHgK5",
   "name": "chatbot sales",
-  "active": false,
+  "active": true,
   "isArchived": false,
   "nodes": [
     {
@@ -2324,39 +2324,6 @@
     },
     {
       "parameters": {
-        "conditions": {
-          "options": {
-            "caseSensitive": true,
-            "leftValue": "",
-            "typeValidation": "strict",
-            "version": 2
-          },
-          "conditions": [
-            {
-              "id": "87b55870-39a9-4fe9-a45f-220115821760",
-              "leftValue": "={{ $json.selection }}",
-              "rightValue": 6,
-              "operator": {
-                "type": "number",
-                "operation": "equals"
-              }
-            }
-          ],
-          "combinator": "and"
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 2.2,
-      "position": [
-        7540,
-        -480
-      ],
-      "id": "b80d1be7-a3e9-4931-8431-26c7603f3b3c",
-      "name": "validamos si se selecciono menu anterior desde costos"
-    },
-    {
-      "parameters": {
         "rules": {
           "values": [
             {
@@ -2369,7 +2336,7 @@
                 },
                 "conditions": [
                   {
-                    "leftValue": "={{ $json.selection }}",
+                    "leftValue": "={{ $('Code4').item.json.selection }}",
                     "rightValue": 1,
                     "operator": {
                       "type": "number",
@@ -2394,7 +2361,7 @@
                 "conditions": [
                   {
                     "id": "5a969ce2-2d9e-400d-9058-e9686ab50d02",
-                    "leftValue": "={{ $json.selection }}",
+                    "leftValue": "={{ $('Code4').item.json.selection }}",
                     "rightValue": 2,
                     "operator": {
                       "type": "number",
@@ -2418,7 +2385,7 @@
                 "conditions": [
                   {
                     "id": "dd4a50a5-f08c-4bf7-b9c2-7d4626ba2cc2",
-                    "leftValue": "={{ $json.selection }}",
+                    "leftValue": "={{ $('Code4').item.json.selection }}",
                     "rightValue": 3,
                     "operator": {
                       "type": "number",
@@ -2442,7 +2409,7 @@
                 "conditions": [
                   {
                     "id": "5e69f0a7-cb9f-4330-99d2-e637322242a1",
-                    "leftValue": "={{ $json.selection }}",
+                    "leftValue": "={{ $('Code4').item.json.selection }}",
                     "rightValue": 4,
                     "operator": {
                       "type": "number",
@@ -2466,7 +2433,7 @@
                 "conditions": [
                   {
                     "id": "3812c246-c17e-4583-8a0f-e0117828aca1",
-                    "leftValue": "={{ $json.selection }}",
+                    "leftValue": "={{ $('Code4').item.json.selection }}",
                     "rightValue": 5,
                     "operator": {
                       "type": "number",
@@ -2486,7 +2453,7 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.2,
       "position": [
-        7800,
+        8240,
         -500
       ],
       "id": "ea01d23c-df13-4225-95d5-7d719dc4d6cd",
@@ -2555,7 +2522,7 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        9460,
+        9900,
         -860
       ],
       "id": "1d386c50-7770-4e0b-a307-149d26caafc0",
@@ -2581,13 +2548,13 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"type\": \"image\",\n  \"image\": {\n    \"link\": \"https://wbyyuljmsumarxassthc.supabase.co/storage/v1/object/public/cerebro-storage-sales/fe8f5abe-abda-4223-8ab0-c81247aa9cec/sales_repo/20250703_093707_costo_maternal.jpeg\",\n    \"caption\": \"Queremos conocerte y presentarte nuestro proyecto!\\n*Costos sujetos a ajuste sin previo aviso\\n\\nConoce nuestro proyecto\\nhttps://www.colegioreims.edu.mx/proyecto-educativo\"\n  }\n}",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"type\": \"image\",\n  \"image\": {\n    \"link\": \"{{ $json.image_url }}\",\n    \"caption\": \"Queremos conocerte y presentarte nuestro proyecto!\\n*Costos sujetos a ajuste sin previo aviso\\n\\nConoce nuestro proyecto\\nhttps://www.colegioreims.edu.mx/proyecto-educativo\"\n  }\n}",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        8860,
+        9300,
         -780
       ],
       "id": "b88d9328-e2f9-4585-a92c-259e22ff9652",
@@ -2612,13 +2579,13 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"type\": \"image\",\n  \"image\": {\n    \"link\": \"https://wbyyuljmsumarxassthc.supabase.co/storage/v1/object/public/cerebro-storage-sales/fe8f5abe-abda-4223-8ab0-c81247aa9cec/sales_repo/20250703_093906_costo_preescolar.jpeg\",\n    \"caption\": \"Queremos conocerte y presentarte nuestro proyecto!\\n*Costos sujetos a ajuste sin previo aviso\\n\\nConoce nuestro proyecto\\nhttps://www.colegioreims.edu.mx/proyecto-educativo\"\n  }\n}",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"type\": \"image\",\n  \"image\": {\n    \"link\": \"{{ $json.image_url }}\",\n    \"caption\": \"Queremos conocerte y presentarte nuestro proyecto!\\n*Costos sujetos a ajuste sin previo aviso\\n\\nConoce nuestro proyecto\\nhttps://www.colegioreims.edu.mx/proyecto-educativo\"\n  }\n}",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        8860,
+        9300,
         -620
       ],
       "id": "c70e5a13-42a0-4dd8-bbe4-f5dc97a6a007",
@@ -2643,13 +2610,13 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"type\": \"image\",\n  \"image\": {\n    \"link\": \"https://wbyyuljmsumarxassthc.supabase.co/storage/v1/object/public/cerebro-storage-sales/fe8f5abe-abda-4223-8ab0-c81247aa9cec/sales_repo/20250703_095307_costo_primaria.jpeg\",\n    \"caption\": \"Queremos conocerte y presentarte nuestro proyecto!\\n*Costos sujetos a ajuste sin previo aviso\\n\\nConoce nuestro proyecto\\nhttps://www.colegioreims.edu.mx/proyecto-educativo\"\n  }\n}",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"type\": \"image\",\n  \"image\": {\n    \"link\": \"{{ $json.image_url }}\",\n    \"caption\": \"Queremos conocerte y presentarte nuestro proyecto!\\n*Costos sujetos a ajuste sin previo aviso\\n\\nConoce nuestro proyecto\\nhttps://www.colegioreims.edu.mx/proyecto-educativo\"\n  }\n}",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        8860,
+        9300,
         -460
       ],
       "id": "62e53aef-f6b2-4891-b39b-f7c467a065c5",
@@ -2674,13 +2641,13 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"type\": \"image\",\n  \"image\": {\n    \"link\": \"https://wbyyuljmsumarxassthc.supabase.co/storage/v1/object/public/cerebro-storage-sales/fe8f5abe-abda-4223-8ab0-c81247aa9cec/sales_repo/20250703_095437_costo_secundaria.jpeg\",\n    \"caption\": \"Queremos conocerte y presentarte nuestro proyecto!\\n*Costos sujetos a ajuste sin previo aviso\\n\\nConoce nuestro proyecto\\nhttps://www.colegioreims.edu.mx/proyecto-educativo\"\n  }\n}",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"type\": \"image\",\n  \"image\": {\n    \"link\": \"{{ $json.image_url }}\",\n    \"caption\": \"Queremos conocerte y presentarte nuestro proyecto!\\n*Costos sujetos a ajuste sin previo aviso\\n\\nConoce nuestro proyecto\\nhttps://www.colegioreims.edu.mx/proyecto-educativo\"\n  }\n}",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        8860,
+        9300,
         -300
       ],
       "id": "177be801-3376-4fe1-8a3d-2fce3528c251",
@@ -2705,13 +2672,13 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"type\": \"image\",\n  \"image\": {\n    \"link\": \"https://wbyyuljmsumarxassthc.supabase.co/storage/v1/object/public/cerebro-storage-sales/fe8f5abe-abda-4223-8ab0-c81247aa9cec/sales_repo/20250703_095613_costo_bachillerato.jpeg\",\n    \"caption\": \"Queremos conocerte y presentarte nuestro proyecto!\\n*Costos sujetos a ajuste sin previo aviso\\n\\nConoce nuestro proyecto\\nhttps://www.colegioreims.edu.mx/proyecto-educativo\"\n  }\n}",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"type\": \"image\",\n  \"image\": {\n    \"link\": \"{{ $json.image_url }}\",\n    \"caption\": \"Queremos conocerte y presentarte nuestro proyecto!\\n*Costos sujetos a ajuste sin previo aviso\\n\\nConoce nuestro proyecto\\nhttps://www.colegioreims.edu.mx/proyecto-educativo\"\n  }\n}",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        8860,
+        9300,
         -140
       ],
       "id": "b23116b8-10a3-469a-97aa-8bd63b4fd461",
@@ -2742,7 +2709,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        9480,
+        9920,
         -420
       ],
       "id": "a9234e23-113c-407d-9ab9-a8e0a1020910",
@@ -2777,7 +2744,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        9480,
+        9920,
         -660
       ],
       "id": "d3ea2255-7841-4ada-8323-27783d4e98d6",
@@ -2938,7 +2905,7 @@
       "parameters": {
         "content": "## Respuesta al menú de costos\n** aquí se presentan las opciones para los costos de los diferentes tipos de servicios que se ofrecen **\n¿Para qué grado estás interesad@? Escribe el número de la opción que deseas:\n1️⃣ Maternal\n2️⃣ Preescolar\n3️⃣ Primaria\n4️⃣ Secundaria\n5️⃣ Bachillerato\n\n-----------------------------------------------------\n\n6️⃣  Regresar al menú anterior:",
         "height": 960,
-        "width": 2620,
+        "width": 3160,
         "color": 4
       },
       "type": "n8n-nodes-base.stickyNote",
@@ -4365,7 +4332,7 @@
       "type": "n8n-nodes-base.wait",
       "typeVersion": 1.1,
       "position": [
-        9160,
+        9600,
         -460
       ],
       "id": "ef705569-e08c-41ca-99c0-3a99c170e012",
@@ -4560,16 +4527,92 @@
     },
     {
       "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "87b55870-39a9-4fe9-a45f-220115821760",
+              "leftValue": "={{ $json.selection }}",
+              "rightValue": 6,
+              "operator": {
+                "type": "number",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        7100,
+        -480
+      ],
+      "id": "b80d1be7-a3e9-4931-8431-26c7603f3b3c",
+      "name": "validamos si se selecciono menu anterior desde costos"
+    },
+    {
+      "parameters": {
+        "url": "={{ $('Set Variables').item.json.currentEnvironment }}/sales/repo/records?tenant_id={{ $('Variables Wp').item.json.tenant_id }}&tags=costo",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        8020,
-        -740
+        7400,
+        -460
       ],
-      "id": "dd3e45a1-03cc-41e9-80f5-5c5cf5382185",
+      "id": "3d5eefd1-5acb-442f-b956-35861dd93c29",
       "name": "HTTP Request1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "7eaf26b7-3dbd-47aa-aed9-43cb985d79bb",
+              "name": "selection",
+              "value": "={{ $('Code4').item.json.selection }}",
+              "type": "string"
+            },
+            {
+              "id": "bebc0f2c-3b01-415f-88f3-0ca8098ee1f6",
+              "name": "records",
+              "value": "={{ $json.records }}",
+              "type": "array"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        7680,
+        -460
+      ],
+      "id": "7ba3b7c8-dbcc-435c-812d-1913fc69f360",
+      "name": "Edit Fields7"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Nodo “Function” de n8n\n\n// 1) Leer datos\nconst records   = items[0].json.records;\nconst rawSelect = items[0].json.selection;\nconst sel       = parseInt(rawSelect, 10);\n\n// 2) Validar selección\nif (isNaN(sel) || sel < 1 || sel > 5) {\n  return [{\n    json: {\n      status:  'error',\n      message: isNaN(sel)\n        ? `“${rawSelect}” no es un número válido.`\n        : `La opción ${sel} está fuera de rango. Elige un número entre 1 y 5.`\n    }\n  }];\n}\n\n// 3) Mapear número → etiqueta\nconst tagMap = {\n  1: 'maternal',\n  2: 'preescolar',\n  3: 'primaria',\n  4: 'secundaria',\n  5: 'bachillerato',\n};\nconst tag = tagMap[sel];\n\n// 4) Buscar el record que contenga esa etiqueta en su array de tags\nconst found = records.find(r => Array.isArray(r.tags) && r.tags.includes(tag));\n\nif (!found) {\n  return [{\n    json: {\n      status:  'error',\n      message: `No se encontró ninguna imagen para la etiqueta “${tag}”.`\n    }\n  }];\n}\n\n// 5) Todo OK: devolver la URL de la imagen\nreturn [{\n  json: {\n    status:    'success',\n    tag:       tag,\n    image_url: found.content.image_url,\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        7980,
+        -460
+      ],
+      "id": "5a3a87da-3030-4b2c-b1f9-1c131731bbc5",
+      "name": "Code7"
     }
   ],
   "connections": {
@@ -5132,29 +5175,11 @@
         ]
       ]
     },
-    "validamos si se selecciono menu anterior desde costos": {
-      "main": [
-        [
-          {
-            "node": "Mensaje menu inicial",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Switch3",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Switch3": {
       "main": [
         [
           {
-            "node": "HTTP Request1",
+            "node": "info costo maternal",
             "type": "main",
             "index": 0
           }
@@ -5755,11 +5780,51 @@
         ]
       ]
     },
+    "validamos si se selecciono menu anterior desde costos": {
+      "main": [
+        [
+          {
+            "node": "Mensaje menu inicial",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
     "HTTP Request1": {
       "main": [
         [
           {
-            "node": "info costo maternal",
+            "node": "Edit Fields7",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields7": {
+      "main": [
+        [
+          {
+            "node": "Code7",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code7": {
+      "main": [
+        [
+          {
+            "node": "Switch3",
             "type": "main",
             "index": 0
           }
@@ -5772,40 +5837,8 @@
   },
   "staticData": null,
   "meta": null,
-  "pinData": {
-    "WhatsApp Trigger": [
-      {
-        "json": {
-          "messaging_product": "whatsapp",
-          "metadata": {
-            "display_phone_number": "5215665139893",
-            "phone_number_id": "669848086217681"
-          },
-          "contacts": [
-            {
-              "profile": {
-                "name": "16465894168"
-              },
-              "wa_id": "16465894168"
-            }
-          ],
-          "messages": [
-            {
-              "from": "16465894168",
-              "id": "wamid.HBgLMTY0NjU4OTQxNjgVAgASGBI4MTIwRDJCNTk2RjZENkQ5MDQA",
-              "timestamp": "1751584058",
-              "text": {
-                "body": "*Start the conversation with your next customer using ads that click to WhatsApp*\n\nConnect with highly qualified leads by bringing them directly to your WhatsApp chat thread. Use ads that click to WhatsApp to engage, support, and inform customers — within the app they already know and love.\n\n*Get started:* https://www.facebook.com/business/m/ctwa"
-              },
-              "type": "text"
-            }
-          ],
-          "field": "messages"
-        }
-      }
-    ]
-  },
-  "versionId": "34d51d07-9d67-48c8-8a02-82fa53839430",
+  "pinData": {},
+  "versionId": "a434ae8f-2a5f-45ab-bbd8-73fe841dd5ec",
   "triggerCount": 1,
   "shared": [
     {
