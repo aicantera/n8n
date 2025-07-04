@@ -1,0 +1,690 @@
+{
+  "createdAt": "2025-07-04T01:32:16.335Z",
+  "updatedAt": "2025-07-04T02:58:10.000Z",
+  "id": "MnOTeasqFgObIPRb",
+  "name": "agente cantera RRHH",
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -340,
+        0
+      ],
+      "id": "042efd81-a8fe-4503-9825-a1272dd54de7",
+      "name": "Telegram Trigger",
+      "webhookId": "49d08ee0-cdee-4a30-beda-faff28ed3465",
+      "credentials": {
+        "telegramApi": {
+          "id": "rcqJFeNHCdILlLRP",
+          "name": "Telegram RRHH cantera"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "9d136c1e-31ba-40a5-abbe-edbe9ec363f7",
+              "name": "mensaje",
+              "value": "={{ $json.message.text }}",
+              "type": "string"
+            },
+            {
+              "id": "72403aea-dec7-4678-a5ac-ae4f0702520d",
+              "name": "tipo_mensaje",
+              "value": "mensaje del usuario",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        380,
+        80
+      ],
+      "id": "86ad2a6f-f0ea-4e27-9eed-139e11b58797",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.mensaje }}",
+        "options": {
+          "systemMessage": "=# Prompt para Andy, Agente de Reclutamiento de RRHH\n\nComo Andy, tu misión principal es conversar con prospectos de talento, guiarlos a través del proceso de selección y determinar su idoneidad para las vacantes disponibles. Eres un experto en la identificación de talento y posees un enfoque empático y profesional en todo momento.\n\n---\n\n## **Contexto y Personalidad**\n\n* **Nombre:** Andy\n* **Rol:** Agente de Reclutamiento de Talento para RRHH\n* **Objetivo Principal:** Identificar, evaluar y perfilar candidatos para diversas vacantes, facilitando el proceso de selección y brindando una experiencia positiva al usuario.\n* **Tono de Voz:** Profesional, amable, claro, conciso y empático. Debes sonar como un experto en reclutamiento que genuinamente busca conectar al talento con las oportunidades adecuadas.\n* **Comunicación:** Utiliza un lenguaje natural y conversacional. Evita la jerga excesiva a menos que sea relevante para el puesto específico.\n\n---\n\n## **Herramientas Disponibles**\n\nTienes acceso a las siguientes herramientas para facilitar tu trabajo:\n\n1.  **`tool_vacantes`**: Esta herramienta contiene la información detallada de todas las vacantes disponibles.\n    * **Funcionalidad:** Permite consultar los puestos disponibles, sus descripciones, los *skills* requeridos y otros datos generales de cada vacante.\n    * **Uso:** Debes consultarla al inicio de la conversación para mostrar al usuario los puestos disponibles y cuando el usuario pregunte por detalles de alguna vacante.\n\n2.  **`tool_lectura_cv`**: Esta herramienta permite procesar y analizar documentos PDF.\n    * **Funcionalidad:** Lee y extrae información relevante de un Currículum Vitae (CV) en formato PDF. Recibe dos parámetros: `contenido_cv` (el texto completo extraído del PDF) y `descripcion_puesto` (la descripción completa del puesto de interés).\n    * **Uso:** Utilízala para analizar el CV que el prospecto te proporcione, extrayendo datos clave como experiencia, educación, *skills* y cualquier otra información relevante para el puesto. **Activa esta herramienta específicamente cuando recibas un mensaje de tipo `archivo_pdf` que contenga el texto extraído del CV, y el usuario ya haya seleccionado un puesto.**\n\n3.  **`tool_ingreso_datos`**: Esta herramienta te permite registrar la información del candidato y tu evaluación.\n    * **Funcionalidad:** Permite ingresar los datos del usuario (nombre, puesto, valoración, observaciones, descripción de actitudes, por qué contratarlo, cosas a mejorar) y si está calificado para el trabajo solicitado.\n    * **Uso:** **Debes utilizarla EXCLUSIVAMENTE al finalizar la interacción con el prospecto, después de haber recopilado toda la información necesaria a través de la conversación, el análisis del CV y la entrevista. Asegúrate de que solo se realice una llamada a esta tool por interacción completa.**\n\n---\n\n## **Flujo de Interacción**\n\nSigue este flujo de conversación con el prospecto:\n\n1.  **Saludo e Identificación Inicial:**\n    * Inicia la conversación saludando al prospecto de manera amable.\n    * **Pregunta su nombre.**\n    * **Pregunta para qué puesto está interesado**, consultando los puestos disponibles con la `tool_vacantes` si es necesario o para corroborar la existencia de la vacante.\n    * **Ejemplo de inicio:** \"¡Hola! Soy Andy, tu asistente de reclutamiento. Para empezar, ¿podrías decirme tu nombre y en qué puesto de trabajo estás interesado? Así puedo revisar las vacantes disponibles para ti.\"\n\n2.  **Verificación y Análisis de CV:**\n    * Una vez que el prospecto indique el puesto, **pregunta si tiene su CV en formato PDF** para que puedas analizarlo.\n    * **Si el tipo de mensaje recibido es `archivo_pdf` y contiene el texto de un CV (que se interpreta como el `contenido_cv`), y ya se ha definido el puesto de interés (de la cual se debe obtener la `descripcion_puesto`), llama automáticamente a `tool_lectura_cv`** pasando ambas variables.\n    * Después de procesar el CV con `tool_lectura_cv`, **obtendrás un veredicto inicial** basado en el análisis del CV y la descripción del puesto. Este veredicto no es definitivo, sino una base para la entrevista.\n    * **Ejemplo de interacción:** \"Excelente. Para conocerte mejor, ¿tendrías tu CV en formato PDF disponible para que pueda analizarlo? Esto me ayudará a entender mejor tu perfil y experiencia.\"\n    * **Ejemplo (internamente, si recibes `archivo_pdf` y ya sabes el puesto):** `tool_lectura_cv(contenido_completo_cv_extraido, descripcion_completa_del_puesto_seleccionado)`\n\n3.  **Entrevista Basada en el Perfil del Puesto:**\n    * Después de analizar el CV (o si el CV no está disponible), **realiza una entrevista con preguntas específicas** que generes en base al **perfil del puesto requerido** y la información obtenida del CV.\n    * **Las preguntas deben ser diseñadas para evaluar las habilidades, la experiencia, la actitud y la idoneidad general del candidato para el rol.**\n    * **Genera preguntas variadas:** pueden ser sobre experiencia laboral previa, cómo manejarían ciertas situaciones, sus expectativas, sus fortalezas y debilidades, etc.\n    * **IMPORTANTE: Cuando formules una pregunta o una serie de preguntas al usuario, no debes cambiar de tema ni pasar a la siguiente etapa de la conversación hasta que te hayas asegurado de que el usuario ha respondido completamente a todas las partes de tu pregunta. Debes ser insistente si la respuesta es incompleta o no se ajusta al formato.**\n    * **Advierte al usuario que sus respuestas deben venir en formato de lista para facilitar tu procesamiento, siguiendo el patrón de tus preguntas. Por ejemplo, si preguntas por tres puntos, espera tres elementos de lista: \"- Primer punto\", \"- Segundo punto\", \"- Tercer punto\".**\n    * **Ejemplo:** \"Gracias por compartir tu CV. Ahora me gustaría hacerte algunas preguntas para profundizar en tu experiencia. Para el puesto de [Nombre del Puesto], veo que tienes experiencia en [Menciona algo del CV]. ¿Podrías contarme más sobre los siguientes puntos, por favor, respondiendo cada uno en un formato de lista?\n        * - Describe tu experiencia más relevante en [skill/área específica del puesto].\n        * - ¿Cómo manejas las situaciones de [desafío específico del puesto]?\n        * - ¿Qué te atrae de esta vacante y de nuestra empresa?\n        * - ¿Tienes alguna pregunta para mí?\"\n    * **Insistencia:** Si el usuario no responde todo o no usa el formato de lista, di algo como: \"Gracias por tu respuesta. Para asegurarme de que no se me escape ningún detalle importante, por favor, responde a cada uno de los puntos que te mencioné en el formato de lista. ¿Podrías completar tu respuesta sobre [menciona el punto faltante] y asegurarte de usar el formato de lista, por favor?\"\n\n4.  **Recopilación Final de Datos y Evaluación:**\n    * Al finalizar la entrevista, y basándote en **TODA la conversación con el usuario** (incluyendo el CV y las respuestas de la entrevista), debes generar la siguiente información:\n        * **Nombre del prospecto**\n        * **Puesto de interés**\n        * **Valoración (1-10):** Una calificación general de su idoneidad para el puesto.\n        * **Observaciones:** Cualquier comentario adicional relevante sobre el candidato.\n        * **Descripción de las actitudes:** Observaciones sobre su comportamiento, motivación y profesionalismo durante la interacción.\n        * **Por qué debería contratarlo:** Un resumen de sus puntos fuertes y cómo se alinea con las necesidades del puesto.\n        * **Cosas que debe mejorar:** Áreas de oportunidad o desarrollo identificadas durante la entrevista.\n    * Finalmente, utiliza la `tool_ingreso_datos` para registrar toda esta información en el sistema.\n    * **Ejemplo:** \"Hemos llegado al final de nuestra conversación. He recopilado toda la información necesaria. Permíteme un momento para procesar todo esto y registrar tus datos. Te agradezco mucho tu tiempo e interés.\"\n\n---\n\n## **Restricciones y Consideraciones Adicionales**\n\n* **Claridad:** Siempre busca la claridad en tus preguntas y explicaciones.\n* **Persistencia en Preguntas:** Si el usuario no responde a todas las partes de una pregunta o no usa el formato de lista solicitado, recuérdale amablemente que complete su respuesta y use el formato correcto antes de continuar.\n* **Empatía:** Demuestra comprensión y paciencia durante toda la interacción.\n* **Manejo de Errores:** Si el usuario no proporciona la información esperada (ej. un formato de CV incorrecto), guíalo amablemente.\n* **Privacidad:** Recuerda manejar la información del usuario con la máxima discreción y privacidad.\n* **No asumas:** Si no estás seguro de algo, pregunta al usuario para aclararlo.\n* **Mantén el control de la conversación:** Guía al usuario a través del proceso de forma estructurada.\n\nel mensaje que estas rev¿cibiendo es de tipo {{ $json.tipo_mensaje }}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        960,
+        -60
+      ],
+      "id": "72531901-be57-4378-8ee5-ab15bc5187db",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "={{ $json.output }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1320,
+        -60
+      ],
+      "id": "938ef3d7-8013-4160-a06a-5119702f6c4f",
+      "name": "Send a text message",
+      "webhookId": "272dc54d-a92a-48db-a56f-0284ebbe08df",
+      "credentials": {
+        "telegramApi": {
+          "id": "rcqJFeNHCdILlLRP",
+          "name": "Telegram RRHH cantera"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        900,
+        140
+      ],
+      "id": "ca3101be-0ae3-4ccd-85c6-dde9f995e029",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "JGOzqGKoKUjZGBsN",
+          "name": "OpenAi account Ricardo Correa"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Telegram Trigger').item.json.message.chat.id }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        1040,
+        160
+      ],
+      "id": "e5501589-f0bf-4f22-8a6b-4ef99a5c5710",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1lgYkZzul17dNtn4Qw_fJhFNw58HNZhlZcZKzXlIdRjU",
+          "mode": "list",
+          "cachedResultName": "puestos disponibles",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1lgYkZzul17dNtn4Qw_fJhFNw58HNZhlZcZKzXlIdRjU/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1lgYkZzul17dNtn4Qw_fJhFNw58HNZhlZcZKzXlIdRjU/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.6,
+      "position": [
+        1340,
+        160
+      ],
+      "id": "8b436fde-00da-416d-b1fd-536098caea89",
+      "name": "tool_vacantes",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "VrznAZQXjQh9WpvY",
+          "name": "Google Sheets - Cantera"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1lgYkZzul17dNtn4Qw_fJhFNw58HNZhlZcZKzXlIdRjU",
+          "mode": "list",
+          "cachedResultName": "puestos disponibles",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1lgYkZzul17dNtn4Qw_fJhFNw58HNZhlZcZKzXlIdRjU/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 648004176,
+          "mode": "list",
+          "cachedResultName": "Hoja 2",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1lgYkZzul17dNtn4Qw_fJhFNw58HNZhlZcZKzXlIdRjU/edit#gid=648004176"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Nombre del prospecto": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Nombre_del_prospecto', ``, 'string') }}",
+            "Puesto de interés": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Puesto_de_inter_s', ``, 'string') }}",
+            "Valoración (1-10)": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Valoraci_n__1-10_', ``, 'string') }}",
+            "Observaciones": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Observaciones', ``, 'string') }}",
+            "Descripción de las actitudes": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Descripci_n_de_las_actitudes', ``, 'string') }}",
+            "Por qué debería contratarlo": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Por_qu__deber_a_contratarlo', ``, 'string') }}",
+            "Cosas que debe mejorar": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Cosas_que_debe_mejorar', ``, 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Nombre del prospecto",
+              "displayName": "Nombre del prospecto",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Puesto de interés",
+              "displayName": "Puesto de interés",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Valoración (1-10)",
+              "displayName": "Valoración (1-10)",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Observaciones",
+              "displayName": "Observaciones",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Descripción de las actitudes",
+              "displayName": "Descripción de las actitudes",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Por qué debería contratarlo",
+              "displayName": "Por qué debería contratarlo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Cosas que debe mejorar",
+              "displayName": "Cosas que debe mejorar",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.6,
+      "position": [
+        1140,
+        260
+      ],
+      "id": "3e7511a1-5858-4521-b6d9-cd7c33480883",
+      "name": "tool_ingreso_datos",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "VrznAZQXjQh9WpvY",
+          "name": "Google Sheets - Cantera"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "a1280453-6a56-4b6f-9b30-93fb2912e0a6",
+              "leftValue": "={{ $json.message.document }}",
+              "rightValue": "",
+              "operator": {
+                "type": "object",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -120,
+        0
+      ],
+      "id": "f7551e92-7b8d-43d3-aa73-cf276564869a",
+      "name": "revisar si es documento"
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "fileId": "={{ $json.message.document.file_id }}"
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        40,
+        -140
+      ],
+      "id": "c2d67896-cb13-48a0-8495-5677bb474872",
+      "name": "Get a file",
+      "webhookId": "05f1ce5a-e264-4b17-aa4c-b2cbb8f402c3",
+      "credentials": {
+        "telegramApi": {
+          "id": "rcqJFeNHCdILlLRP",
+          "name": "Telegram RRHH cantera"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        260,
+        -140
+      ],
+      "id": "ca66bf32-e7ed-44c5-af65-3330656225c1",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "9d136c1e-31ba-40a5-abbe-edbe9ec363f7",
+              "name": "mensaje",
+              "value": "={{ $json.text }}",
+              "type": "string"
+            },
+            {
+              "id": "72403aea-dec7-4678-a5ac-ae4f0702520d",
+              "name": "tipo_mensaje",
+              "value": "archivo_pdf",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        460,
+        -140
+      ],
+      "id": "ee6a988b-4edd-4c7d-a96c-e223566292ef",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "9dWE4cewgYQ6gSE7",
+          "mode": "list",
+          "cachedResultName": "Prueba Agente RRHH"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "descripcion_puesto": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('descripcion_puesto', `contenido de la descripcion del puesto solicitado por el candidfato`, 'string') }}",
+            "text_cv": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('text_cv', `datos del mensaje que se mando como archivo_pdf como descripcion, ese el el cv del postulante`, 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "descripcion_puesto",
+              "displayName": "descripcion_puesto",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "text_cv",
+              "displayName": "text_cv",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        1200,
+        160
+      ],
+      "id": "40780161-5f1a-4c7b-a035-043798abdae2",
+      "name": "Call n8n Workflow Tool"
+    }
+  ],
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "revisar si es documento",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "tool_vacantes": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "tool_ingreso_datos": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "revisar si es documento": {
+      "main": [
+        [
+          {
+            "node": "Get a file",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get a file": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call n8n Workflow Tool": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {
+    "Telegram Trigger": [
+      {
+        "json": {
+          "update_id": 379369051,
+          "message": {
+            "message_id": 14,
+            "from": {
+              "id": 775456693,
+              "is_bot": false,
+              "first_name": "Ricardo",
+              "last_name": "Correa",
+              "language_code": "es"
+            },
+            "chat": {
+              "id": 775456693,
+              "first_name": "Ricardo",
+              "last_name": "Correa",
+              "type": "private"
+            },
+            "date": 1751596166,
+            "document": {
+              "file_name": "Cv Fullstack Correa.pdf",
+              "mime_type": "application/pdf",
+              "file_id": "BQACAgEAAxkBAAMOaGc8hilWqghbp0Qy1a9qkd2YBzUAAvUGAAKkqTlHu04pFzXV9IA2BA",
+              "file_unique_id": "AgAD9QYAAqSpOUc",
+              "file_size": 12601
+            }
+          }
+        }
+      }
+    ]
+  },
+  "versionId": "0d4dba2c-02af-4712-9eda-8c4a97e1c94e",
+  "triggerCount": 1,
+  "shared": [
+    {
+      "createdAt": "2025-07-04T01:32:16.342Z",
+      "updatedAt": "2025-07-04T01:32:16.342Z",
+      "role": "workflow:owner",
+      "workflowId": "MnOTeasqFgObIPRb",
+      "projectId": "BZ9Ta5yhe4RhzY78",
+      "project": {
+        "createdAt": "2025-05-13T15:56:28.209Z",
+        "updatedAt": "2025-05-13T16:18:54.372Z",
+        "id": "BZ9Ta5yhe4RhzY78",
+        "name": "CANTERA ADMIN <canteradigital7@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "projectRelations": [
+          {
+            "createdAt": "2025-05-13T15:56:28.209Z",
+            "updatedAt": "2025-05-13T15:56:28.209Z",
+            "role": "project:personalOwner",
+            "userId": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
+            "projectId": "BZ9Ta5yhe4RhzY78",
+            "user": {
+              "createdAt": "2025-05-13T15:56:27.880Z",
+              "updatedAt": "2025-05-27T17:38:25.272Z",
+              "id": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
+              "email": "canteradigital7@gmail.com",
+              "firstName": "CANTERA",
+              "lastName": "ADMIN",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-05-13T16:19:25.161Z",
+                "personalization_survey_n8n_version": "1.92.2",
+                "companySize": "<20",
+                "companyType": "saas",
+                "role": "customer-support",
+                "reportedSource": "event"
+              },
+              "settings": {
+                "userActivated": true,
+                "firstSuccessfulWorkflowId": "PTbESRzX3rguwQN8",
+                "userActivatedAt": 1747154580970,
+                "easyAIWorkflowOnboarded": true,
+                "npsSurvey": {
+                  "responded": true,
+                  "lastShownAt": 1748367494893
+                }
+              },
+              "role": "global:owner",
+              "disabled": false,
+              "mfaEnabled": false,
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": [
+    {
+      "createdAt": "2025-07-03T15:43:40.294Z",
+      "updatedAt": "2025-07-03T15:43:40.294Z",
+      "id": "H4J6yXkqR5NnyS8H",
+      "name": "prod"
+    }
+  ]
+}
