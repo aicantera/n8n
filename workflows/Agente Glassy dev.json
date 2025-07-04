@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-05-13T18:42:23.048Z",
-  "updatedAt": "2025-07-04T16:14:21.000Z",
+  "updatedAt": "2025-07-04T18:54:28.000Z",
   "id": "GJUKvC12lo7L8JjK",
   "name": "Agente Glassy dev",
   "active": true,
@@ -329,7 +329,12 @@
         },
         "columns": {
           "mappingMode": "defineBelow",
-          "value": {},
+          "value": {
+            "NOMBRE": "={{ $json.message.from.first_name }}",
+            "MENSAJE": "={{ $json.message.text }}",
+            "FECHA": "={{ $now.minus({ hours: 0 }).setLocale('es').toFormat(\"dd 'de' LLLL 'de' yyyy HH:mm\") }}",
+            "CHAT_ID": "={{ $json.message.from.id }}"
+          },
           "matchingColumns": [],
           "schema": [
             {
@@ -342,13 +347,14 @@
               "canBeUsedToMatch": true
             },
             {
-              "id": "TELEFONO",
-              "displayName": "TELEFONO",
+              "id": "CHAT_ID",
+              "displayName": "CHAT_ID",
               "required": false,
               "defaultMatch": false,
               "display": true,
               "type": "string",
-              "canBeUsedToMatch": true
+              "canBeUsedToMatch": true,
+              "removed": false
             },
             {
               "id": "NOMBRE",
@@ -526,7 +532,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "3212a680-417b-44fd-8f4e-50941d932667",
+  "versionId": "a9c10280-5fb0-48cb-abd0-c2c35365bfd8",
   "triggerCount": 1,
   "shared": [
     {
