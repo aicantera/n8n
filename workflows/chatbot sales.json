@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-06-24T22:28:19.611Z",
-  "updatedAt": "2025-07-07T23:16:25.000Z",
+  "updatedAt": "2025-07-08T13:51:33.000Z",
   "id": "PetXIW4fDRVoHgK5",
   "name": "chatbot sales",
   "active": false,
@@ -336,6 +336,12 @@
               "id": "192aa38a-3a34-4956-aa99-29730cc29e9c",
               "name": "user_id_finded",
               "value": "={{ $('MongoDB').item.json.userStateId }}",
+              "type": "string"
+            },
+            {
+              "id": "3b3ec60b-83b0-4883-845e-1525cd12bdfa",
+              "name": "sub_menu_finded",
+              "value": "={{ $('MongoDB').item.json.sub_menu }}",
               "type": "string"
             }
           ]
@@ -1146,164 +1152,11 @@
     },
     {
       "parameters": {
-        "assignments": {
-          "assignments": [
-            {
-              "id": "670342e3-e699-4e30-af27-04db7bace385",
-              "name": "user_id",
-              "value": "={{ $('flujo de actualización base de datos').item.json.userId }}",
-              "type": "string"
-            },
-            {
-              "id": "391a519a-9e7c-4dee-8dfc-f8b38f7f8fc7",
-              "name": "information",
-              "value": "={{ $('flujo de actualización base de datos').item.json.info }}",
-              "type": "string"
-            },
-            {
-              "id": "915b68b5-3dee-44ad-82f6-65a3d9a74629",
-              "name": "log_id",
-              "value": "={{ $('Code1').item.json.uuid }}",
-              "type": "string"
-            },
-            {
-              "id": "f07b7183-62a0-4d4a-90a7-ad93e7acd220",
-              "name": "date",
-              "value": "={{ $('Code1').item.json.now }}",
-              "type": "string"
-            },
-            {
-              "id": "e5baae19-924c-4972-8a51-b4d87aad8bad",
-              "name": "state",
-              "value": "={{ $('flujo de actualización base de datos').item.json.state }}",
-              "type": "string"
-            },
-            {
-              "id": "127efdf6-7193-4011-a155-fa072b66e80f",
-              "name": "userStateId",
-              "value": "={{ $('flujo de actualización base de datos').item.json.userStateId }}",
-              "type": "string"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
-      "position": [
-        140,
-        -960
-      ],
-      "id": "2707c8fa-70dc-41a5-956b-a5ffad36ec7a",
-      "name": "Edit Fields3"
-    },
-    {
-      "parameters": {
-        "operation": "insert",
-        "collection": "log_chatbot_sales",
-        "fields": "user_id, information,log_id, date",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.mongoDb",
-      "typeVersion": 1.1,
-      "position": [
-        360,
-        -960
-      ],
-      "id": "3f1045c2-13c4-420d-8df6-06ced704adff",
-      "name": "MongoDB4",
-      "credentials": {
-        "mongoDb": {
-          "id": "xZYe0R0CRtWFmyv7",
-          "name": "MongoDB account cerebro core"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "jsCode": "// Importante: Esto se coloca dentro de un nodo \"Code\" en n8n\n\nfunction uuidv4() {\n  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {\n    const r = Math.random() * 16 | 0;\n    const v = c === 'x' ? r : (r & 0x3 | 0x8);\n    return v.toString(16);\n  });\n}\n\nreturn [\n  {\n    json: {\n      uuid: uuidv4(),\n      now: new Date().toLocaleString('es-MX', {\n  timeZone: 'America/Mexico_City'\n})\n    }\n  }\n];\n"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        -520,
-        -960
-      ],
-      "id": "714361d5-b6bb-4f46-aee9-34ff13710712",
-      "name": "Code1",
-      "alwaysOutputData": true
-    },
-    {
-      "parameters": {
-        "operation": "update",
-        "collection": "user_state_sales",
-        "updateKey": "userStateId",
-        "fields": "state, date, sub_menu",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.mongoDb",
-      "typeVersion": 1.1,
-      "position": [
-        -80,
-        -960
-      ],
-      "id": "8c3b9bc5-82ec-49c2-b3c1-351516f79c48",
-      "name": "MongoDB5",
-      "credentials": {
-        "mongoDb": {
-          "id": "xZYe0R0CRtWFmyv7",
-          "name": "MongoDB account cerebro core"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "assignments": {
-          "assignments": [
-            {
-              "id": "f07b7183-62a0-4d4a-90a7-ad93e7acd220",
-              "name": "date",
-              "value": "={{ $('Code1').item.json.now }}",
-              "type": "string"
-            },
-            {
-              "id": "e5baae19-924c-4972-8a51-b4d87aad8bad",
-              "name": "state",
-              "value": "={{ $('flujo de actualización base de datos').item.json.state }}",
-              "type": "string"
-            },
-            {
-              "id": "127efdf6-7193-4011-a155-fa072b66e80f",
-              "name": "userStateId",
-              "value": "={{ $('flujo de actualización base de datos').item.json.userStateId }}",
-              "type": "string"
-            },
-            {
-              "id": "3cdecd72-e504-4219-92a9-223f2c61783a",
-              "name": "sub_menu",
-              "value": "={{ $('flujo de actualización base de datos').item.json.sub_menu }}",
-              "type": "string"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
-      "position": [
-        -300,
-        -960
-      ],
-      "id": "cb12897e-213d-41b1-930e-bf71480dc920",
-      "name": "Edit Fields4"
-    },
-    {
-      "parameters": {
         "workflowId": {
           "__rl": true,
-          "value": "PetXIW4fDRVoHgK5",
+          "value": "cOoCwRPN9qfk0P6y",
           "mode": "list",
-          "cachedResultName": "chatbot sales"
+          "cachedResultName": "serebro sales cambio de estatus"
         },
         "workflowInputs": {
           "mappingMode": "defineBelow",
@@ -1350,6 +1203,16 @@
               "display": true,
               "canBeUsedToMatch": true,
               "type": "string"
+            },
+            {
+              "id": "sub_menu",
+              "displayName": "sub_menu",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
             }
           ],
           "attemptToConvertTypes": false,
@@ -1365,37 +1228,6 @@
       ],
       "id": "db2c5269-a65d-4cbd-ba77-02377e42e985",
       "name": "Execute Workflow"
-    },
-    {
-      "parameters": {
-        "workflowInputs": {
-          "values": [
-            {
-              "name": "state"
-            },
-            {
-              "name": "userId"
-            },
-            {
-              "name": "userStateId"
-            },
-            {
-              "name": "info"
-            },
-            {
-              "name": "sub_menu"
-            }
-          ]
-        }
-      },
-      "type": "n8n-nodes-base.executeWorkflowTrigger",
-      "typeVersion": 1.1,
-      "position": [
-        -740,
-        -960
-      ],
-      "id": "c4cc66de-e835-4e05-8941-1674ed6d7741",
-      "name": "flujo de actualización base de datos"
     },
     {
       "parameters": {
@@ -1691,9 +1523,9 @@
       "parameters": {
         "workflowId": {
           "__rl": true,
-          "value": "PetXIW4fDRVoHgK5",
+          "value": "cOoCwRPN9qfk0P6y",
           "mode": "list",
-          "cachedResultName": "chatbot sales"
+          "cachedResultName": "serebro sales cambio de estatus"
         },
         "workflowInputs": {
           "mappingMode": "defineBelow",
@@ -1740,6 +1572,16 @@
               "display": true,
               "canBeUsedToMatch": true,
               "type": "string"
+            },
+            {
+              "id": "sub_menu",
+              "displayName": "sub_menu",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
             }
           ],
           "attemptToConvertTypes": false,
@@ -1795,9 +1637,9 @@
       "parameters": {
         "workflowId": {
           "__rl": true,
-          "value": "PetXIW4fDRVoHgK5",
+          "value": "cOoCwRPN9qfk0P6y",
           "mode": "list",
-          "cachedResultName": "chatbot sales"
+          "cachedResultName": "serebro sales cambio de estatus"
         },
         "workflowInputs": {
           "mappingMode": "defineBelow",
@@ -1844,6 +1686,16 @@
               "display": true,
               "canBeUsedToMatch": true,
               "type": "string"
+            },
+            {
+              "id": "sub_menu",
+              "displayName": "sub_menu",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
             }
           ],
           "attemptToConvertTypes": false,
@@ -1899,9 +1751,9 @@
       "parameters": {
         "workflowId": {
           "__rl": true,
-          "value": "PetXIW4fDRVoHgK5",
+          "value": "cOoCwRPN9qfk0P6y",
           "mode": "list",
-          "cachedResultName": "chatbot sales"
+          "cachedResultName": "serebro sales cambio de estatus"
         },
         "workflowInputs": {
           "mappingMode": "defineBelow",
@@ -1948,6 +1800,16 @@
               "display": true,
               "canBeUsedToMatch": true,
               "type": "string"
+            },
+            {
+              "id": "sub_menu",
+              "displayName": "sub_menu",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
             }
           ],
           "attemptToConvertTypes": false,
@@ -1962,8 +1824,7 @@
         -1660
       ],
       "id": "13217905-8dce-4ec6-965d-c4010cbc6ac0",
-      "name": "Execute Workflow3",
-      "disabled": true
+      "name": "Execute Workflow3"
     },
     {
       "parameters": {
@@ -2004,9 +1865,9 @@
       "parameters": {
         "workflowId": {
           "__rl": true,
-          "value": "PetXIW4fDRVoHgK5",
+          "value": "cOoCwRPN9qfk0P6y",
           "mode": "list",
-          "cachedResultName": "chatbot sales"
+          "cachedResultName": "serebro sales cambio de estatus"
         },
         "workflowInputs": {
           "mappingMode": "defineBelow",
@@ -2053,6 +1914,16 @@
               "display": true,
               "canBeUsedToMatch": true,
               "type": "string"
+            },
+            {
+              "id": "sub_menu",
+              "displayName": "sub_menu",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
             }
           ],
           "attemptToConvertTypes": false,
@@ -2067,8 +1938,7 @@
         -1480
       ],
       "id": "5c393447-19be-4ba5-a6d4-558cf57ce1f9",
-      "name": "Execute Workflow4",
-      "disabled": true
+      "name": "Execute Workflow4"
     },
     {
       "parameters": {
@@ -2109,9 +1979,9 @@
       "parameters": {
         "workflowId": {
           "__rl": true,
-          "value": "PetXIW4fDRVoHgK5",
+          "value": "cOoCwRPN9qfk0P6y",
           "mode": "list",
-          "cachedResultName": "chatbot sales"
+          "cachedResultName": "serebro sales cambio de estatus"
         },
         "workflowInputs": {
           "mappingMode": "defineBelow",
@@ -2158,6 +2028,16 @@
               "display": true,
               "canBeUsedToMatch": true,
               "type": "string"
+            },
+            {
+              "id": "sub_menu",
+              "displayName": "sub_menu",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
             }
           ],
           "attemptToConvertTypes": false,
@@ -2172,8 +2052,7 @@
         -1320
       ],
       "id": "9458b8f3-ebee-4d81-9d4a-05140d58b98b",
-      "name": "Execute Workflow5",
-      "disabled": true
+      "name": "Execute Workflow5"
     },
     {
       "parameters": {
@@ -2463,9 +2342,9 @@
       "parameters": {
         "workflowId": {
           "__rl": true,
-          "value": "PetXIW4fDRVoHgK5",
+          "value": "cOoCwRPN9qfk0P6y",
           "mode": "list",
-          "cachedResultName": "chatbot sales"
+          "cachedResultName": "serebro sales cambio de estatus"
         },
         "workflowInputs": {
           "mappingMode": "defineBelow",
@@ -2512,6 +2391,16 @@
               "display": true,
               "canBeUsedToMatch": true,
               "type": "string"
+            },
+            {
+              "id": "sub_menu",
+              "displayName": "sub_menu",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
             }
           ],
           "attemptToConvertTypes": false,
@@ -2526,8 +2415,7 @@
         -860
       ],
       "id": "1d386c50-7770-4e0b-a307-149d26caafc0",
-      "name": "Execute Workflow6",
-      "disabled": true
+      "name": "Execute Workflow6"
     },
     {
       "parameters": {
@@ -3135,9 +3023,9 @@
       "parameters": {
         "workflowId": {
           "__rl": true,
-          "value": "PetXIW4fDRVoHgK5",
+          "value": "cOoCwRPN9qfk0P6y",
           "mode": "list",
-          "cachedResultName": "chatbot sales"
+          "cachedResultName": "serebro sales cambio de estatus"
         },
         "workflowInputs": {
           "mappingMode": "defineBelow",
@@ -3184,6 +3072,16 @@
               "display": true,
               "canBeUsedToMatch": true,
               "type": "string"
+            },
+            {
+              "id": "sub_menu",
+              "displayName": "sub_menu",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
             }
           ],
           "attemptToConvertTypes": false,
@@ -3539,9 +3437,9 @@
       "parameters": {
         "workflowId": {
           "__rl": true,
-          "value": "PetXIW4fDRVoHgK5",
+          "value": "cOoCwRPN9qfk0P6y",
           "mode": "list",
-          "cachedResultName": "chatbot sales"
+          "cachedResultName": "serebro sales cambio de estatus"
         },
         "workflowInputs": {
           "mappingMode": "defineBelow",
@@ -3597,7 +3495,7 @@
               "display": true,
               "canBeUsedToMatch": true,
               "type": "string",
-              "removed": false
+              "removed": true
             }
           ],
           "attemptToConvertTypes": false,
@@ -3733,9 +3631,9 @@
       "parameters": {
         "workflowId": {
           "__rl": true,
-          "value": "PetXIW4fDRVoHgK5",
+          "value": "cOoCwRPN9qfk0P6y",
           "mode": "list",
-          "cachedResultName": "chatbot sales"
+          "cachedResultName": "serebro sales cambio de estatus"
         },
         "workflowInputs": {
           "mappingMode": "defineBelow",
@@ -3791,7 +3689,7 @@
               "display": true,
               "canBeUsedToMatch": true,
               "type": "string",
-              "removed": false
+              "removed": true
             }
           ],
           "attemptToConvertTypes": false,
@@ -4059,9 +3957,9 @@
       "parameters": {
         "workflowId": {
           "__rl": true,
-          "value": "PetXIW4fDRVoHgK5",
+          "value": "cOoCwRPN9qfk0P6y",
           "mode": "list",
-          "cachedResultName": "chatbot sales"
+          "cachedResultName": "serebro sales cambio de estatus"
         },
         "workflowInputs": {
           "mappingMode": "defineBelow",
@@ -4108,6 +4006,16 @@
               "display": true,
               "canBeUsedToMatch": true,
               "type": "string"
+            },
+            {
+              "id": "sub_menu",
+              "displayName": "sub_menu",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
             }
           ],
           "attemptToConvertTypes": false,
@@ -4194,9 +4102,9 @@
       "parameters": {
         "workflowId": {
           "__rl": true,
-          "value": "PetXIW4fDRVoHgK5",
+          "value": "cOoCwRPN9qfk0P6y",
           "mode": "list",
-          "cachedResultName": "chatbot sales"
+          "cachedResultName": "serebro sales cambio de estatus"
         },
         "workflowInputs": {
           "mappingMode": "defineBelow",
@@ -4243,6 +4151,16 @@
               "display": true,
               "canBeUsedToMatch": true,
               "type": "string"
+            },
+            {
+              "id": "sub_menu",
+              "displayName": "sub_menu",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
             }
           ],
           "attemptToConvertTypes": false,
@@ -5028,9 +4946,9 @@
       "parameters": {
         "workflowId": {
           "__rl": true,
-          "value": "PetXIW4fDRVoHgK5",
+          "value": "cOoCwRPN9qfk0P6y",
           "mode": "list",
-          "cachedResultName": "chatbot sales"
+          "cachedResultName": "serebro sales cambio de estatus"
         },
         "workflowInputs": {
           "mappingMode": "defineBelow",
@@ -5157,9 +5075,9 @@
       "parameters": {
         "workflowId": {
           "__rl": true,
-          "value": "PetXIW4fDRVoHgK5",
+          "value": "cOoCwRPN9qfk0P6y",
           "mode": "list",
-          "cachedResultName": "chatbot sales"
+          "cachedResultName": "serebro sales cambio de estatus"
         },
         "workflowInputs": {
           "mappingMode": "defineBelow",
@@ -5377,9 +5295,9 @@
       "parameters": {
         "workflowId": {
           "__rl": true,
-          "value": "PetXIW4fDRVoHgK5",
+          "value": "cOoCwRPN9qfk0P6y",
           "mode": "list",
-          "cachedResultName": "chatbot sales"
+          "cachedResultName": "serebro sales cambio de estatus"
         },
         "workflowInputs": {
           "mappingMode": "defineBelow",
@@ -5457,9 +5375,9 @@
       "parameters": {
         "workflowId": {
           "__rl": true,
-          "value": "PetXIW4fDRVoHgK5",
+          "value": "cOoCwRPN9qfk0P6y",
           "mode": "list",
-          "cachedResultName": "chatbot sales"
+          "cachedResultName": "serebro sales cambio de estatus"
         },
         "workflowInputs": {
           "mappingMode": "defineBelow",
@@ -5537,9 +5455,9 @@
       "parameters": {
         "workflowId": {
           "__rl": true,
-          "value": "PetXIW4fDRVoHgK5",
+          "value": "cOoCwRPN9qfk0P6y",
           "mode": "list",
-          "cachedResultName": "chatbot sales"
+          "cachedResultName": "serebro sales cambio de estatus"
         },
         "workflowInputs": {
           "mappingMode": "defineBelow",
@@ -5612,6 +5530,223 @@
       ],
       "id": "154a9a10-16bc-491a-9db1-f22d2244a08d",
       "name": "Execute Workflow17"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.sub_menu_finded }}",
+                    "rightValue": "preescolar",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "8f3713fc-b594-437b-b3a0-c3adaaf7014b"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "preescolar"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "f1933255-a295-419c-b635-1f522646b146",
+                    "leftValue": "={{ $json.sub_menu_finded }}",
+                    "rightValue": "primaria",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "primaria"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "c500d749-eaa6-4f70-bd40-73cb941f21be",
+                    "leftValue": "={{ $json.sub_menu_finded }}",
+                    "rightValue": "secundaria",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "secundaria"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "c3026eee-ebc5-4e7a-8f50-581b40d21f30",
+                    "leftValue": "={{ $json.sub_menu_finded }}",
+                    "rightValue": "bachillerato",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "bachillerato"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        2940,
+        3640
+      ],
+      "id": "eb76eb7d-b2cd-4561-86ae-7b3892a0e926",
+      "name": "revisamos sub menu para informes costos"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "aff2d5eb-178c-4255-b426-2f65ca17c7be",
+              "name": "selection",
+              "value": "={{ $('WhatsApp Trigger').item.json.messages[0].text.body }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        3160,
+        3120
+      ],
+      "id": "159dd381-ab57-4c5c-ab9a-00e6e806fe13",
+      "name": "seleccion primaria ubicacion contacto"
+    },
+    {
+      "parameters": {
+        "jsCode": "// 1) Leer la selección del Set anterior\nconst raw = items[0].json.selection;\nconst sel = parseInt(raw, 10);\n\n// 2) Validar que sea un número\nif (isNaN(sel)) {\n  return [{\n    json: {\n      status:  'error',\n      message: `El valor “${raw}” no es un número válido. Por favor ingresa un número del 1 al 4.`\n    }\n  }];\n}\n\n// 3) Validar rango 1–4\nif (sel < 1 || sel > 4) {\n  return [{\n    json: {\n      status:  'error',\n      message: `Tu selección (${sel}) está fuera del rango permitido. Por favor elige un número entre 1 y 4.`\n    }\n  }];\n}\n\n// 4) Si pasa validaciones, devolver success\nreturn [{\n  json: {\n    status:    'success',\n    selection: sel\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3380,
+        3120
+      ],
+      "id": "ade94d0c-9f27-4bb9-bdbc-984c933261c6",
+      "name": "Code8"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "4ee95437-2ebb-4ee9-ae0f-88bb2f74ece3",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "success",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        3600,
+        3120
+      ],
+      "id": "a88ab3d1-3012-46b5-ba2d-ee17a0a63b22",
+      "name": "If2"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v22.0/{{ $('Variables Wp').item.json.clienteIdWp }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ $('Variables Wp').item.json.tokenWp }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"{{ $json.message }}\"\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3880,
+        3240
+      ],
+      "id": "55aeabdc-dae1-4d2a-ac14-f328bf36dbac",
+      "name": "Error mensaje ubicacion menu1"
     }
   ],
   "connections": {
@@ -5849,55 +5984,6 @@
         []
       ]
     },
-    "Edit Fields3": {
-      "main": [
-        [
-          {
-            "node": "MongoDB4",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "MongoDB4": {
-      "main": [
-        []
-      ]
-    },
-    "Code1": {
-      "main": [
-        [
-          {
-            "node": "Edit Fields4",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Edit Fields4": {
-      "main": [
-        [
-          {
-            "node": "MongoDB5",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "MongoDB5": {
-      "main": [
-        [
-          {
-            "node": "Edit Fields3",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Switch": {
       "main": [
         [
@@ -5948,14 +6034,10 @@
             "type": "main",
             "index": 0
           }
-        ]
-      ]
-    },
-    "flujo de actualización base de datos": {
-      "main": [
+        ],
         [
           {
-            "node": "Code1",
+            "node": "revisamos sub menu para informes costos",
             "type": "main",
             "index": 0
           }
@@ -7036,6 +7118,51 @@
           }
         ]
       ]
+    },
+    "revisamos sub menu para informes costos": {
+      "main": [
+        [
+          {
+            "node": "seleccion primaria ubicacion contacto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "seleccion primaria ubicacion contacto": {
+      "main": [
+        [
+          {
+            "node": "Code8",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code8": {
+      "main": [
+        [
+          {
+            "node": "If2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If2": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Error mensaje ubicacion menu1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -7044,7 +7171,7 @@
   "staticData": null,
   "meta": null,
   "pinData": {},
-  "versionId": "bbe06722-4d23-44cf-8719-d70c3e33fd63",
+  "versionId": "ce18f8a3-e3e1-49be-8696-fad9b79a70e4",
   "triggerCount": 1,
   "shared": [
     {
