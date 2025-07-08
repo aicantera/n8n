@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-05-13T18:42:23.048Z",
-  "updatedAt": "2025-07-04T18:54:28.000Z",
+  "updatedAt": "2025-07-08T15:56:53.000Z",
   "id": "GJUKvC12lo7L8JjK",
   "name": "Agente Glassy dev",
   "active": true,
@@ -106,38 +106,13 @@
     },
     {
       "parameters": {
-        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
-        "text": "={{ $json.output.replace(/\\*\\*(.*?)\\*\\*/g, '*$1*').replace(/([_()\\[\\]~`>#+\\-=|{}.!])/g, '\\\\$1') }}",
-        "additionalFields": {
-          "appendAttribution": false,
-          "parse_mode": "MarkdownV2"
-        }
-      },
-      "type": "n8n-nodes-base.telegram",
-      "typeVersion": 1.2,
-      "position": [
-        760,
-        340
-      ],
-      "id": "6bd6762b-3062-4722-8eb6-6e005313cd28",
-      "name": "Telegram",
-      "webhookId": "5949d845-75fd-4068-9ec9-3cf5d007ad55",
-      "credentials": {
-        "telegramApi": {
-          "id": "vcUHDLkV2ZD6YfU8",
-          "name": "Telegram account - GLASSY"
-        }
-      }
-    },
-    {
-      "parameters": {
         "options": {}
       },
       "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
       "typeVersion": 1.2,
       "position": [
-        480,
-        620
+        520,
+        640
       ],
       "id": "11d9eba2-17bb-41f8-b5aa-e51113fa6364",
       "name": "Embeddings OpenAI",
@@ -168,7 +143,7 @@
       "typeVersion": 1.1,
       "position": [
         440,
-        440
+        500
       ],
       "id": "bfa9675f-99e8-4e93-b795-c5fdbd45c993",
       "name": "kb_glasbil",
@@ -330,10 +305,10 @@
         "columns": {
           "mappingMode": "defineBelow",
           "value": {
-            "NOMBRE": "={{ $json.message.from.first_name }}",
             "MENSAJE": "={{ $json.message.text }}",
             "FECHA": "={{ $now.minus({ hours: 0 }).setLocale('es').toFormat(\"dd 'de' LLLL 'de' yyyy HH:mm\") }}",
-            "CHAT_ID": "={{ $json.message.from.id }}"
+            "CHAT_ID": "={{ $json.message.from.id }}",
+            "TIPO": "Usuario"
           },
           "matchingColumns": [],
           "schema": [
@@ -357,13 +332,14 @@
               "removed": false
             },
             {
-              "id": "NOMBRE",
-              "displayName": "NOMBRE",
+              "id": "TIPO",
+              "displayName": "TIPO",
               "required": false,
               "defaultMatch": false,
               "display": true,
               "type": "string",
-              "canBeUsedToMatch": true
+              "canBeUsedToMatch": true,
+              "removed": false
             },
             {
               "id": "MENSAJE",
@@ -392,6 +368,117 @@
         "googleSheetsOAuth2Api": {
           "id": "T1b495TNgv7GQdA8",
           "name": "Google Sheets Jumperaron"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "12dLSTUHkRAhlmJfF8hcx08M0BAWfnjRTZlgGebt_FJY",
+          "mode": "list",
+          "cachedResultName": "Prueba Glassy",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/12dLSTUHkRAhlmJfF8hcx08M0BAWfnjRTZlgGebt_FJY/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/12dLSTUHkRAhlmJfF8hcx08M0BAWfnjRTZlgGebt_FJY/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "MENSAJE": "={{ $json.output }}",
+            "FECHA": "={{ $now.minus({ hours: 0 }).setLocale('es').toFormat(\"dd 'de' LLLL 'de' yyyy HH:mm\") }}",
+            "CHAT_ID": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+            "TIPO": "Agente"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "FECHA",
+              "displayName": "FECHA",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "CHAT_ID",
+              "displayName": "CHAT_ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "TIPO",
+              "displayName": "TIPO",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "MENSAJE",
+              "displayName": "MENSAJE",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        460,
+        300
+      ],
+      "id": "93f0a32b-7b8e-4741-95cb-607b73a57869",
+      "name": "Append row in sheet1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "T1b495TNgv7GQdA8",
+          "name": "Google Sheets Jumperaron"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "={{ $('AI Agent').item.json.output.replace(/\\*\\*(.*?)\\*\\*/g, '*$1*').replace(/([_()\\[\\]~`>#+\\-=|{}.!])/g, '\\\\$1') }}",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "MarkdownV2"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        720,
+        300
+      ],
+      "id": "6bd6762b-3062-4722-8eb6-6e005313cd28",
+      "name": "Send a text message",
+      "webhookId": "5949d845-75fd-4068-9ec9-3cf5d007ad55",
+      "credentials": {
+        "telegramApi": {
+          "id": "vcUHDLkV2ZD6YfU8",
+          "name": "Telegram account - GLASSY"
         }
       }
     }
@@ -439,7 +526,7 @@
       "main": [
         [
           {
-            "node": "Telegram",
+            "node": "Append row in sheet1",
             "type": "main",
             "index": 0
           }
@@ -522,6 +609,17 @@
           }
         ]
       ]
+    },
+    "Append row in sheet1": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -532,7 +630,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "a9c10280-5fb0-48cb-abd0-c2c35365bfd8",
+  "versionId": "d905ea07-374c-49ea-a5e8-dcca118048a5",
   "triggerCount": 1,
   "shared": [
     {
