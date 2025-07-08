@@ -1,9 +1,9 @@
 {
   "createdAt": "2025-06-24T22:28:19.611Z",
-  "updatedAt": "2025-07-08T14:59:56.000Z",
+  "updatedAt": "2025-07-08T15:20:03.000Z",
   "id": "PetXIW4fDRVoHgK5",
   "name": "chatbot sales",
-  "active": false,
+  "active": true,
   "isArchived": false,
   "nodes": [
     {
@@ -1099,7 +1099,7 @@
                   {
                     "id": "e897eb9e-7845-4596-b7e4-6e6299e2de6c",
                     "leftValue": "={{ $json.state_edited ? $json.state_edited : $json.state_finded}}",
-                    "rightValue": "proceso_justificacion",
+                    "rightValue": "esperando_respuesta_menu_contactame_informes",
                     "operator": {
                       "type": "string",
                       "operation": "equals",
@@ -1110,7 +1110,7 @@
                 "combinator": "and"
               },
               "renameOutput": true,
-              "outputKey": "justificacion"
+              "outputKey": "contacto_inf"
             },
             {
               "conditions": {
@@ -2092,7 +2092,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// 1. Leer la selección del nodo Set anterior\nconst raw = items[0].json.selection;\nconst sel = parseInt(raw, 10);\n\n// 2. Preparar la respuesta con mensajes descriptivos y mapeo de tipos\nlet result;\n\nif (isNaN(sel)) {\n  // No es un número\n  result = {\n    status: 'error',\n    message: `Ups, parece que tu elección “${raw}” no es un número. Por favor escribe un número del 1 al 5 para continuar.`\n  };\n} else if (!Number.isInteger(sel)) {\n  // No es entero\n  result = {\n    status: 'error',\n    message: `Veo que has ingresado ${raw}, pero necesitamos un número entero. Por favor elige un número sin decimales entre 1 y 5.`\n  };\n} else if (sel < 1 || sel > 5) {\n  // Fuera de rango\n  result = {\n    status: 'error',\n    message: `Tu selección es ${sel}, pero debe estar entre 1 y 5. Intenta de nuevo con un número dentro de ese rango.`\n  };\n} else {\n  // OK: asignar tipo según selección\n  const typeMap = {\n    1: 'maternal',\n    2: 'preescolar',\n    3: 'primaria',\n    4: 'secundaria',\n    5: 'bachillerato',\n  };\n  result = {\n    status: 'success',\n    message: `¡Genial! Has seleccionado la opción número ${sel}.`,\n    selection: sel,\n    type: typeMap[sel],\n  };\n}\n\n// 3. Devolver el resultado para usar en nodos siguientes\nreturn [\n  {\n    json: result\n  }\n];\n"
+        "jsCode": "// 1. Leer la selección del nodo Set anterior\nconst raw = items[0].json.selection;\nconst sel = parseInt(raw, 10);\n\n// 2. Preparar la respuesta con mensajes descriptivos y mapeo de tipos\nlet result;\n\nif (isNaN(sel)) {\n  // No es un número\n  result = {\n    status: 'error',\n    message: `Ups, parece que tu elección “${raw}” no es un número. Por favor escribe un número del 1 al 6 para continuar.`\n  };\n} else if (!Number.isInteger(sel)) {\n  // No es entero\n  result = {\n    status: 'error',\n    message: `Veo que has ingresado ${raw}, pero necesitamos un número entero. Por favor elige un número sin decimales entre 1 y 6.`\n  };\n} else if (sel < 1 || sel > 6) {\n  // Fuera de rango\n  result = {\n    status: 'error',\n    message: `Tu selección es ${sel}, pero debe estar entre 1 y 6. Intenta de nuevo con un número dentro de ese rango.`\n  };\n} else {\n  // OK: asignar tipo según selección\n  const typeMap = {\n    1: 'maternal',\n    2: 'preescolar',\n    3: 'primaria',\n    4: 'secundaria',\n    5: 'bachillerato',\n  };\n  result = {\n    status: 'success',\n    message: `¡Genial! Has seleccionado la opción número ${sel}.`,\n    selection: sel,\n    type: typeMap[sel],\n  };\n}\n\n// 3. Devolver el resultado para usar en nodos siguientes\nreturn [\n  {\n    json: result\n  }\n];\n"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -3402,37 +3402,6 @@
       ],
       "id": "97db9c00-8dc4-4d31-b2e3-50a458d6f73e",
       "name": "revisamos que ya esta hablando con alguien"
-    },
-    {
-      "parameters": {
-        "method": "POST",
-        "url": "=https://graph.facebook.com/v22.0/{{ $('Variables Wp').item.json.clienteIdWp }}/messages",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "Authorization",
-              "value": "={{ $('Variables Wp').item.json.tokenWp }}"
-            },
-            {
-              "name": "Content-Type",
-              "value": "application/json"
-            }
-          ]
-        },
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"¡Perfecto! Me alegra saber que ya estás en contacto. Si necesitas algo más, aquí estoy. 😊\"\n  }\n}\n",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        7200,
-        -2140
-      ],
-      "id": "f1e19fa5-1f69-43f2-becd-6d93d0aa014f",
-      "name": "Error seleccion menu invalida3"
     },
     {
       "parameters": {
@@ -6671,6 +6640,341 @@
       ],
       "id": "eb8795b3-c9e5-41bb-ac6b-ff800cf68353",
       "name": "datos ubicacion inconveniente6"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "aff2d5eb-178c-4255-b426-2f65ca17c7be",
+              "name": "selection",
+              "value": "={{ $('WhatsApp Trigger').item.json.messages[0].text.body }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2100,
+        5940
+      ],
+      "id": "29312c1b-c29e-40a1-9a4b-57445fc14c09",
+      "name": "seleccion primaria ubicacion contacto6"
+    },
+    {
+      "parameters": {
+        "jsCode": "// 1) Leer la selección del Set anterior\nconst raw = items[0].json.selection;\nconst sel = parseInt(raw, 10);\n\n// 2) Validar que sea un número\nif (isNaN(sel)) {\n  return [{\n    json: {\n      status:  'error',\n      message: `El valor “${raw}” no es un número válido. Por favor ingresa un número del 1 al 3.`\n    }\n  }];\n}\n\n// 3) Validar rango 1–4\nif (sel < 1 || sel > 3) {\n  return [{\n    json: {\n      status:  'error',\n      message: `Tu selección (${sel}) está fuera del rango permitido. Por favor elige un número entre 1 y 3.`\n    }\n  }];\n}\n\n// 4) Si pasa validaciones, devolver success\nreturn [{\n  json: {\n    status:    'success',\n    selection: sel\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2320,
+        5940
+      ],
+      "id": "e1830cb2-0326-490d-883b-e8e5c379f60c",
+      "name": "Code14"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "4ee95437-2ebb-4ee9-ae0f-88bb2f74ece3",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "success",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        2540,
+        5940
+      ],
+      "id": "cc970433-c241-4832-abe6-93ed8c3689c0",
+      "name": "If8"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v22.0/{{ $('Variables Wp').item.json.clienteIdWp }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ $('Variables Wp').item.json.tokenWp }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"{{ $json.message }}\"\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2840,
+        6100
+      ],
+      "id": "03e9f4a6-0648-45b0-961c-ad8c2ff3db42",
+      "name": "Error mensaje ubicacion menu5"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.selection }}",
+                    "rightValue": 1,
+                    "operator": {
+                      "type": "number",
+                      "operation": "equals"
+                    },
+                    "id": "2b7e0d1b-cffc-4c4b-9a5b-85806e6ce7f2"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "contactame"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "a47cb973-edb0-4cb7-bc9b-fd8ac881193f",
+                    "leftValue": "={{ $json.selection }}",
+                    "rightValue": 2,
+                    "operator": {
+                      "type": "number",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "cita"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "25aec786-5199-4395-85cb-d7d1ee600027",
+                    "leftValue": "={{ $json.selection }}",
+                    "rightValue": 3,
+                    "operator": {
+                      "type": "number",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "menú inicial"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        3080,
+        5860
+      ],
+      "id": "29c2e4cf-13a5-4fb0-bcce-ca533da4dad1",
+      "name": "Switch8"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v22.0/{{ $('Variables Wp').item.json.clienteIdWp }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ $('Variables Wp').item.json.tokenWp }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"¡Perfecto! Me alegra saber que ya estás en contacto. Si necesitas algo más, aquí estoy. 😊\"\n  }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        7200,
+        -2140
+      ],
+      "id": "f1e19fa5-1f69-43f2-becd-6d93d0aa014f",
+      "name": "mensaje despedida"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "cOoCwRPN9qfk0P6y",
+          "mode": "list",
+          "cachedResultName": "serebro sales cambio de estatus"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "state": "menuInicial",
+            "userStateId": "={{ $json.userStateId }}",
+            "userId": "={{ $json.userId }}",
+            "info": "={{ $json.info }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "state",
+              "displayName": "state",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "userId",
+              "displayName": "userId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "userStateId",
+              "displayName": "userStateId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "info",
+              "displayName": "info",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "sub_menu",
+              "displayName": "sub_menu",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        5720,
+        4080
+      ],
+      "id": "d7e1a771-20a7-44ae-9b23-004c94db23f8",
+      "name": "Execute Workflow20"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "cb5bf561-971f-493b-8312-772ff7f21da3",
+              "name": "userStateId",
+              "value": "={{ $('Code2').item.json.user_state_final }}",
+              "type": "string"
+            },
+            {
+              "id": "1356aa24-d7f3-4700-9568-aa9b6ece9b4c",
+              "name": "info",
+              "value": "usuario para llamada",
+              "type": "string"
+            },
+            {
+              "id": "6b9a8f55-16af-4e52-b897-0ac1cfca6083",
+              "name": "userId",
+              "value": "={{ $('Code2').item.json.user_id_finded || $('Code2').item.json.user_id_edited }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        5480,
+        4080
+      ],
+      "id": "cc3d41eb-1bca-4023-a902-d5b6cd490263",
+      "name": "datos ubicacion inconveniente7"
     }
   ],
   "connections": {
@@ -6969,6 +7273,13 @@
         [
           {
             "node": "seleccion primaria ubicacion contacto5",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "seleccion primaria ubicacion contacto6",
             "type": "main",
             "index": 0
           }
@@ -7508,7 +7819,7 @@
       "main": [
         [
           {
-            "node": "Error seleccion menu invalida3",
+            "node": "mensaje despedida",
             "type": "main",
             "index": 0
           }
@@ -7527,17 +7838,6 @@
         [
           {
             "node": "Execute Workflow9",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Error seleccion menu invalida3": {
-      "main": [
-        [
-          {
-            "node": "body datos costos4",
             "type": "main",
             "index": 0
           }
@@ -7774,7 +8074,7 @@
       "main": [
         [
           {
-            "node": "Error seleccion menu invalida3",
+            "node": "mensaje despedida",
             "type": "main",
             "index": 0
           }
@@ -8408,6 +8708,104 @@
           }
         ]
       ]
+    },
+    "seleccion primaria ubicacion contacto6": {
+      "main": [
+        [
+          {
+            "node": "Code14",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code14": {
+      "main": [
+        [
+          {
+            "node": "If8",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If8": {
+      "main": [
+        [
+          {
+            "node": "Switch8",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Error mensaje ubicacion menu5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch8": {
+      "main": [
+        [
+          {
+            "node": "mensaje desicion contacto/cita",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Mensaje menu inicial",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "mensaje despedida": {
+      "main": [
+        [
+          {
+            "node": "body datos costos4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "datos ubicacion inconveniente7": {
+      "main": [
+        [
+          {
+            "node": "Execute Workflow20",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "confirmación llamada": {
+      "main": [
+        [
+          {
+            "node": "datos ubicacion inconveniente7",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -8435,10 +8833,10 @@
           "messages": [
             {
               "from": "5214434901193",
-              "id": "wamid.HBgNNTIxNDQzNDkwMTE5MxUCABIYFjNFQjA0NTYzNTYwNTI3MDU0MUZCMDIA",
-              "timestamp": "1751981042",
+              "id": "wamid.HBgNNTIxNDQzNDkwMTE5MxUCABIYIDM0OEQ1RkNFQzk1MjQ5MzExOTMyMTRDMjA4NUU0NkFDAA==",
+              "timestamp": "1751987728",
               "text": {
-                "body": "2"
+                "body": "Hola"
               },
               "type": "text"
             }
@@ -8448,7 +8846,7 @@
       }
     ]
   },
-  "versionId": "02011da8-4e35-4793-9f6c-fade7e4b681f",
+  "versionId": "9f1c2136-5442-4f32-b3f4-9f3b9c6bbd5c",
   "triggerCount": 1,
   "shared": [
     {
