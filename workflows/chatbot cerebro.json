@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-06-09T16:34:20.833Z",
-  "updatedAt": "2025-07-07T18:18:40.000Z",
+  "updatedAt": "2025-07-08T18:26:55.000Z",
   "id": "k6PApGOzpLKtnZ0q",
   "name": "chatbot cerebro",
   "active": true,
@@ -3097,7 +3097,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        2180,
+        2400,
         1500
       ],
       "id": "feeed536-a469-4724-90d7-17b610783000",
@@ -3162,7 +3162,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        2900,
+        3120,
         1500
       ],
       "id": "a9b8d54c-d9bd-4768-879e-6acfafe8adc2",
@@ -3197,7 +3197,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        2680,
+        2900,
         1500
       ],
       "id": "92ca755e-9c33-46bc-bfe9-edb3f0566d42",
@@ -3263,7 +3263,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        2620,
+        2840,
         1300
       ],
       "id": "8e3c1ca9-5464-419a-a842-2ea8c4fce8f5",
@@ -3298,7 +3298,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        2400,
+        2620,
         1300
       ],
       "id": "a7e5a75b-4521-4349-be71-857432963c4f",
@@ -3444,7 +3444,7 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        1960,
+        2180,
         1400
       ],
       "id": "09e7818b-4ae6-428c-a125-d422e289c61c",
@@ -3475,7 +3475,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        2180,
+        2400,
         1300
       ],
       "id": "ae6d4762-5f5a-4fc2-b576-03470b494684",
@@ -6970,7 +6970,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        2440,
+        2660,
         1580
       ],
       "id": "1834a186-ed7f-47e4-ba94-961683190881",
@@ -7070,6 +7070,71 @@
           "name": "WhatsApp OAuth account cerebro"
         }
       }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "af32d402-fe8b-4ead-9132-caf6d5af1c0c",
+              "leftValue": "={{ $json.error }}",
+              "rightValue": "",
+              "operator": {
+                "type": "object",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1960,
+        1400
+      ],
+      "id": "c8365ee5-9ac0-4b45-8e98-ab42aa6bde15",
+      "name": "error en la peticion"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v22.0/626839230509107/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer EAAHeSgKjRYEBOZBi0kUskW4k3L6ZCO8EhqsGNjWLyfJ3U1NZCbDyQp9WSoX0Ouh8hh44Jue9ev7TMlygkZAMoqMReAJL9cNZBQZCZB508HXZB84HCNFZBIRlSa9cXFs0dXmR31XoO0iUZBOTx4VSnErdZC9OD1sQDKprPHpbK7NBrTZAWy8D6pvNi9w0w4c9pt2KE3stGwZDZD"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger 2').item.json.messages[0].from }}\",\n  \"type\": \"interactive\",\n  \"interactive\": {\n    \"type\": \"button\",\n    \"body\": {\n      \"text\": \"¡Ups! Tuvimos un problema al procesar tu pregunta. 😅\\n\\nPuedes intentar preguntar de nuevo más tarde o, si lo prefieres, presiona el botón *Volver al menú* para regresar y continuar desde allí.\\n\\n¡Gracias por tu comprensión!\"\n    },\n    \"action\": {\n      \"buttons\": [\n        {\n          \"type\": \"reply\",\n          \"reply\": {\n            \"id\": \"menu_inicial\",\n            \"title\": \"Volver al menú\"\n          }\n        }\n      ]\n    }\n } }\n\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2140,
+        1060
+      ],
+      "id": "5c58e8da-6619-4581-ad23-67279d6c0693",
+      "name": "respuesta negativa preguta frecuente1"
     }
   ],
   "connections": {
@@ -7636,7 +7701,7 @@
       "main": [
         [
           {
-            "node": "revisamos si el chat no puede responder a la pregunta",
+            "node": "error en la peticion",
             "type": "main",
             "index": 0
           }
@@ -9516,6 +9581,24 @@
           }
         ]
       ]
+    },
+    "error en la peticion": {
+      "main": [
+        [
+          {
+            "node": "respuesta negativa preguta frecuente1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "revisamos si el chat no puede responder a la pregunta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -9525,8 +9608,40 @@
   "meta": {
     "templateCredsSetupCompleted": true
   },
-  "pinData": {},
-  "versionId": "e0e334f3-0434-43e2-9731-591482481015",
+  "pinData": {
+    "WhatsApp Trigger 2": [
+      {
+        "json": {
+          "messaging_product": "whatsapp",
+          "metadata": {
+            "display_phone_number": "5215612472568",
+            "phone_number_id": "626839230509107"
+          },
+          "contacts": [
+            {
+              "profile": {
+                "name": "Charly"
+              },
+              "wa_id": "5212471183005"
+            }
+          ],
+          "messages": [
+            {
+              "from": "5212471183005",
+              "id": "wamid.HBgNNTIxMjQ3MTE4MzAwNRUCABIYFjNFQjA4RUJEMTBFQ0M4NkUzOTU3MEUA",
+              "timestamp": "1751996737",
+              "text": {
+                "body": "porque no hubo clases el 5 de mayo"
+              },
+              "type": "text"
+            }
+          ],
+          "field": "messages"
+        }
+      }
+    ]
+  },
+  "versionId": "41c84ff2-4e31-4894-a32b-50d17c6402d4",
   "triggerCount": 1,
   "shared": [
     {
