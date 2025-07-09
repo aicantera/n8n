@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-07-09T00:51:08.728Z",
-  "updatedAt": "2025-07-09T01:21:53.000Z",
+  "updatedAt": "2025-07-09T21:00:15.000Z",
   "id": "K8oTgBxQHYjHKhPI",
   "name": "Agente Glassy Buscador Productos dev",
   "active": false,
@@ -18,8 +18,8 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.2,
       "position": [
-        240,
-        -100
+        340,
+        -40
       ],
       "id": "470aa345-1154-4f84-b63c-8b35c0255644",
       "name": "OpenAI Chat Model",
@@ -101,6 +101,23 @@
       ],
       "id": "c61a46d6-a6ca-41b1-93a2-b5b9a1ffad63",
       "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.data[0] }}",
+        "options": {
+          "systemMessage": "=Tu única función es actuar como un procesador de datos JSON. Recibirás una lista de productos en el input `{{ $json.data }}`.\n\nAnaliza cada producto de la lista y, para cada uno, crea un nuevo objeto JSON que contenga exclusivamente los siguientes campos:\n1.  `nombre`: extraído del campo `name`.\n2.  `imagenURL`: extraído del campo `nag_graphic`.\n3.  `identificadores`: un objeto que contenga `external_id`, `origin` y `nag`.\n4.  `caracteristicas`: un objeto que contenga `color` y `ad_info_a` del objeto anidado `nag_info`.\n\nEl resultado final debe ser un array JSON que contenga todos los objetos procesados. Si el input está vacío, devuelve un array vacío `[]`.\n\nTu respuesta DEBE ser únicamente el array JSON válido y nada más. No incluyas texto explicativo, comentarios, ni la palabra \"json\" antes del código."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        800,
+        -280
+      ],
+      "id": "98cae108-ae9d-44b6-9601-d359a97c1428",
+      "name": "AI Agent"
     }
   ],
   "connections": {
@@ -109,6 +126,11 @@
         [
           {
             "node": "Information Extractor1",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "AI Agent",
             "type": "ai_languageModel",
             "index": 0
           }
@@ -136,6 +158,17 @@
           }
         ]
       ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -152,7 +185,7 @@
       }
     ]
   },
-  "versionId": "78c8a440-8b44-4e71-a38b-c2f9eeffc90b",
+  "versionId": "a4b85ec7-7ab5-47ce-a11d-e5c2320f6031",
   "triggerCount": 0,
   "shared": [
     {
