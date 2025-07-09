@@ -1,0 +1,192 @@
+{
+  "createdAt": "2025-07-09T00:51:08.728Z",
+  "updatedAt": "2025-07-09T00:58:52.000Z",
+  "id": "K8oTgBxQHYjHKhPI",
+  "name": "Agente Glassy Buscador Productos dev",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.query }}",
+        "options": {
+          "systemMessage": "=Eres un agente dedicado a realizzar peticiones para hacer busquedas de productos de glasbil.\nTu trabajo es hacer peticiones y poder retornar informacion todo esto usando herramientas de http request\n\ntienes acceso a esta herramienta\n\n'search_products(year,brand,model,car_type,type_glass)': con esta herramienta puedes obtener los productos disponibles dependiendo del año, marca, modelo, tipo de carro, y tipo de cristal. Es importante que los datos los tengas todos para que puedas cumplir con tu funcion. En la información que retornes de cada producto incluye lo siguientes datos: 'external_id', 'origin' y 'nag'.\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.9,
+      "position": [
+        260,
+        0
+      ],
+      "id": "7a4640fa-19cc-4dc5-b934-12aa81d8bb84",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        180,
+        220
+      ],
+      "id": "470aa345-1154-4f84-b63c-8b35c0255644",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "zZlJrTGKq8KER7gD",
+          "name": "OpenAi account - GLASSY"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "toolDescription": "Esta herramienta te ayudara a obtener los productos disponibles para un vehiculo de acuerdo a year, brand, model, car_type, type_glass ",
+        "url": "=https://butik-vidrio.canteradigital.mx/api/finder/searchProducts/filtered?year={{$fromAI('year')}}&brand={{$fromAI('brand')}}&model={{$fromAI('model')}}&car_type={{$fromAI('car_type')}}&type_glass={{$fromAI('type_glass')}}&antenna=false&encapsulated=false&hud=false&heated=false&attachment=false&request_origin=chatbot",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.2,
+      "position": [
+        480,
+        220
+      ],
+      "id": "2b4e741f-34b0-4ebc-9907-3b62c9870a25",
+      "name": "search_products"
+    },
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        60,
+        0
+      ],
+      "id": "ddbb3e8d-28b5-4e8f-a674-53cde57c79ce",
+      "name": "When Executed by Another Workflow"
+    }
+  ],
+  "connections": {
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "search_products": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {
+    "When Executed by Another Workflow": [
+      {
+        "json": {
+          "query": "solicita los productos para el año 2012, la marca Volkswagen, el modelo Jetta, el tipo de automóvil 4 Door Sedan y el tipo de cristal Windshield"
+        }
+      }
+    ]
+  },
+  "versionId": "a2ee4332-e78f-4910-a1dc-799bee177e2e",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "createdAt": "2025-07-09T00:51:08.732Z",
+      "updatedAt": "2025-07-09T00:51:08.732Z",
+      "role": "workflow:owner",
+      "workflowId": "K8oTgBxQHYjHKhPI",
+      "projectId": "BZ9Ta5yhe4RhzY78",
+      "project": {
+        "createdAt": "2025-05-13T15:56:28.209Z",
+        "updatedAt": "2025-05-13T16:18:54.372Z",
+        "id": "BZ9Ta5yhe4RhzY78",
+        "name": "CANTERA ADMIN <canteradigital7@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "projectRelations": [
+          {
+            "createdAt": "2025-05-13T15:56:28.209Z",
+            "updatedAt": "2025-05-13T15:56:28.209Z",
+            "role": "project:personalOwner",
+            "userId": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
+            "projectId": "BZ9Ta5yhe4RhzY78",
+            "user": {
+              "createdAt": "2025-05-13T15:56:27.880Z",
+              "updatedAt": "2025-07-08T21:59:22.697Z",
+              "id": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
+              "email": "canteradigital7@gmail.com",
+              "firstName": "CANTERA",
+              "lastName": "ADMIN",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-05-13T16:19:25.161Z",
+                "personalization_survey_n8n_version": "1.92.2",
+                "companySize": "<20",
+                "companyType": "saas",
+                "role": "customer-support",
+                "reportedSource": "event"
+              },
+              "settings": {
+                "userActivated": true,
+                "firstSuccessfulWorkflowId": "PTbESRzX3rguwQN8",
+                "userActivatedAt": 1747154580970,
+                "easyAIWorkflowOnboarded": true,
+                "npsSurvey": {
+                  "responded": true,
+                  "lastShownAt": 1748367494893
+                },
+                "dismissedCallouts": {
+                  "aiAgentStarterCallout": true
+                }
+              },
+              "role": "global:owner",
+              "disabled": false,
+              "mfaEnabled": false,
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": []
+}
