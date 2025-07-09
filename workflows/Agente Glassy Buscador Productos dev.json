@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-07-09T00:51:08.728Z",
-  "updatedAt": "2025-07-09T21:00:15.000Z",
+  "updatedAt": "2025-07-09T21:13:56.000Z",
   "id": "K8oTgBxQHYjHKhPI",
   "name": "Agente Glassy Buscador Productos dev",
   "active": false,
@@ -18,7 +18,7 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.2,
       "position": [
-        340,
+        560,
         -40
       ],
       "id": "470aa345-1154-4f84-b63c-8b35c0255644",
@@ -105,9 +105,9 @@
     {
       "parameters": {
         "promptType": "define",
-        "text": "={{ $json.data[0] }}",
+        "text": "={{ $json.data }}",
         "options": {
-          "systemMessage": "=Tu única función es actuar como un procesador de datos JSON. Recibirás una lista de productos en el input `{{ $json.data }}`.\n\nAnaliza cada producto de la lista y, para cada uno, crea un nuevo objeto JSON que contenga exclusivamente los siguientes campos:\n1.  `nombre`: extraído del campo `name`.\n2.  `imagenURL`: extraído del campo `nag_graphic`.\n3.  `identificadores`: un objeto que contenga `external_id`, `origin` y `nag`.\n4.  `caracteristicas`: un objeto que contenga `color` y `ad_info_a` del objeto anidado `nag_info`.\n\nEl resultado final debe ser un array JSON que contenga todos los objetos procesados. Si el input está vacío, devuelve un array vacío `[]`.\n\nTu respuesta DEBE ser únicamente el array JSON válido y nada más. No incluyas texto explicativo, comentarios, ni la palabra \"json\" antes del código."
+          "systemMessage": "=Tu única función es actuar como un procesador de datos JSON eficiente. Recibirás una lista de productos en el input `{{ $json.data }}`.\n\nTu tarea es filtrar y transformar esta lista. **Si varios productos comparten el mismo valor en el campo `nag`, solo debes procesar el primer producto que encuentres y descartar los duplicados posteriores.**\n\nPara cada producto único (según el criterio del 'nag'), crea un nuevo objeto JSON que contenga exclusivamente los siguientes campos:\n1.  `nombre`: extraído del campo `name`.\n2.  `imagenURL`: extraído del campo `nag_graphic`.\n3.  `identificadores`: un objeto que contenga `external_id`, `origin` y `nag`.\n4.  `caracteristicas`: un objeto que contenga `color` y `ad_info_a` del objeto anidado `nag_info`.\n\nEl resultado final debe ser un array JSON que contenga solo los objetos de los productos únicos y procesados. Si el input está vacío, devuelve un array vacío `[]`.\n\nTu respuesta DEBE ser únicamente el array JSON válido y nada más. No incluyas texto explicativo, comentarios, ni la palabra \"json\" antes del código."
         }
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
@@ -185,7 +185,7 @@
       }
     ]
   },
-  "versionId": "a4b85ec7-7ab5-47ce-a11d-e5c2320f6031",
+  "versionId": "585ad24d-2187-4f38-81c6-590133e49eb9",
   "triggerCount": 0,
   "shared": [
     {
