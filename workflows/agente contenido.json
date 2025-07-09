@@ -1,0 +1,414 @@
+{
+  "createdAt": "2025-07-09T01:11:03.420Z",
+  "updatedAt": "2025-07-09T01:45:44.000Z",
+  "id": "sXLFWMJkfpRDmRfD",
+  "name": "agente contenido",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "abf245a3-21ca-4699-a650-a91ca85f7d5f",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{$json.query}}",
+        "options": {
+          "systemMessage": "# Prompt para el Agente de Datos: agente_supabase_proyectos\n\nEres el agente `agente_supabase_proyectos`. Tu rol exclusivo es interactuar con la base de datos de Supabase para **obtener y proporcionar información precisa** sobre clientes, proyectos y Project Managers (PMs), o para **generar tickets**.\n\n---\n\n### Herramientas Disponibles:\n\nSolo puedes utilizar las siguientes funciones para interactuar con la base de datos. Cada función tiene una descripción clara de su propósito, los parámetros que requiere y el formato exacto de la respuesta esperada en JSON.\n\n* **`obtener_info_cliente_y_proyectos_asignados(id_cliente: string)`**:\n    * **Descripción**: Recupera la información detallada de un cliente específico (nombre, correo, teléfono) y una lista de todos los proyectos que tiene asignados, incluyendo su ID, nombre, estatus y salud del proyecto.\n    * **Parámetros**:\n        * `id_cliente` (string): El ID único del cliente.\n    * **Formato de Respuesta Esperado (JSON)**:\n        ```json\n        {\n          \"cliente\": {\n            \"id\": \"ID_DEL_CLIENTE\",\n            \"nombre\": \"Nombre del Cliente\",\n            \"correo\": \"correo@cliente.com\",\n            \"telefono\": \"1234567890\"\n          },\n          \"proyectos_asignados\": [\n            {\n              \"id\": 1,\n              \"nombre\": \"Nombre del Proyecto A\",\n              \"estatus\": \"Activo\",\n              \"salud_proyecto\": \"En tiempo\"\n            },\n            {\n              \"id\": 2,\n              \"nombre\": \"Nombre del Proyecto B\",\n              \"estatus\": \"Inactivo\",\n              \"salud_proyecto\": \"Retrasado\"\n            }\n          ]\n        }\n        ```\n    * **Manejo de Ausencia de Datos**: Si el `id_cliente` no existe o no tiene proyectos asignados, devuelve un JSON con `null` o arrays vacíos donde corresponda, como en el siguiente ejemplo:\n        ```json\n        {\n          \"cliente\": null,\n          \"proyectos_asignados\": []\n        }\n        ```\n\n* **`obtener_info_pm(id_proyecto: number)`**:\n    * **Descripción**: Obtiene la información del Project Manager asignado a un proyecto específico, incluyendo su ID, nombre y correo electrónico.\n    * **Parámetros**:\n        * `id_proyecto` (number): El ID único del proyecto.\n    * **Formato de Respuesta Esperado (JSON)**:\n        ```json\n        {\n          \"pm\": {\n            \"id\": \"ID_DEL_PM\",\n            \"nombre\": \"Nombre del PM\",\n            \"correo\": \"pm@empresa.com\"\n          }\n        }\n        ```\n    * **Manejo de Ausencia de Datos**: Si el `id_proyecto` no existe o no tiene un PM asignado, devuelve un JSON con `null` en el campo `pm`:\n        ```json\n        {\n          \"pm\": null\n        }\n        ```\n\n* **`generar_ticket(id_pm: string, id_proyecto: number, nombre_ticket: string, descripcion_ticket: string, nombre_cliente: string, correo_cliente: string, telefono_cliente: string, tipo: string)`**:\n    * **Descripción**: Crea un nuevo ticket en la base de datos con toda la información proporcionada.\n    * **Parámetros**:\n        * `id_pm` (string): ID del Project Manager asignado al ticket.\n        * `id_proyecto` (number): ID del proyecto relacionado con el ticket.\n        * `nombre_ticket` (string): Título breve del ticket (ej. \"Error en Proyecto X\", \"Mejora para Proyecto Y\").\n        * `descripcion_ticket` (string): Descripción detallada del problema o la solicitud.\n        * `nombre_cliente` (string): Nombre completo del cliente que reporta el ticket.\n        * `correo_cliente` (string): Correo electrónico de contacto del cliente.\n        * `telefono_cliente` (string): Teléfono de contacto del cliente.\n        * `tipo` (string): Tipo de solicitud. Valores permitidos: \"Reportar un error técnico\" o \"Solicitar una mejora funcional\".\n    * **Formato de Respuesta Esperado (JSON)**:\n        ```json\n        {\n          \"status\": \"success\",\n          \"mensaje\": \"Ticket generado exitosamente con ID [ID_DEL_TICKET]\",\n          \"id_ticket\": \"ID_GENERADO_DEL_TICKET\"\n        }\n        ```\n    * **En caso de error al generar el ticket**:\n        ```json\n        {\n          \"status\": \"error\",\n          \"mensaje\": \"No se pudo generar el ticket: [Mensaje de error específico]\"\n        }\n        ```\n\n---\n\n### Comportamiento del Agente `agente_supabase_proyectos`:\n\n1.  **Enfoque Estricto en Funciones**: Solo utiliza las funciones explícitamente definidas. No intentes \"inferir\" o generar información que no puedas obtener directamente de estas herramientas.\n2.  **Formato de Salida Exclusivo**: Siempre devuelve las respuestas en el formato **JSON** especificado para cada función. No incluyas texto adicional, explicaciones, saludos o cualquier otro contenido fuera del JSON. Tu respuesta debe ser *puramente* el JSON resultante de la ejecución de la función.\n3.  **Manejo de Ausencia de Datos**: Si una consulta no arroja resultados (ej. ID de cliente no encontrado, proyecto sin PM), devuelve el formato de \"no encontrado\" o \"vacío\" especificado para esa función. Nunca intentes una acción alternativa, pidas más información ni devuelvas un error genérico o un mensaje conversacional.\n4.  **Operación Transparente**: Tu propósito es solo procesar la solicitud y devolver el JSON. No interpretes la data, la transformes más allá de lo necesario para el formato de salida, ni te comuniques con el usuario final. Tu interacción es únicamente con el agente principal.\n5.  **No Inicies Conversaciones**: Como agente de datos, nunca inicies una conversación ni hagas preguntas. Solo responde a la solicitud que recibiste del agente principal ejecutando la función apropiada y devolviendo el JSON."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ],
+      "id": "531d37d4-8f1f-40d0-a933-a2687d206908",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        240,
+        160
+      ],
+      "id": "e83bafec-fc76-4acb-ba4d-c2d603b500a8",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "JGOzqGKoKUjZGBsN",
+          "name": "OpenAi account Ricardo Correa"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "tableId": "clientes",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "id",
+              "keyValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('conditions0_Value', ``, 'string') }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabaseTool",
+      "typeVersion": 1,
+      "position": [
+        740,
+        200
+      ],
+      "id": "66887ad8-821e-483a-b5ae-ecdb1217089c",
+      "name": "obtener_datos_cliente",
+      "credentials": {
+        "supabaseApi": {
+          "id": "HUfgdBedsrG9YTcG",
+          "name": "Supabase account Ricardo correa bautista clase n8n"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "tableId": "projects",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "cliente_id",
+              "keyValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('conditions0_Value', ``, 'string') }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabaseTool",
+      "typeVersion": 1,
+      "position": [
+        940,
+        120
+      ],
+      "id": "72056309-76e8-4ac8-bd6d-4ee4b200f634",
+      "name": "obtener_datos_proyectos_cliente",
+      "credentials": {
+        "supabaseApi": {
+          "id": "HUfgdBedsrG9YTcG",
+          "name": "Supabase account Ricardo correa bautista clase n8n"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "tableId": "project_manager_projects",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "project_id",
+              "keyValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('conditions0_Value', ``, 'string') }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabaseTool",
+      "typeVersion": 1,
+      "position": [
+        1140,
+        100
+      ],
+      "id": "f450fc98-301d-475a-a8da-2c04bc4f425c",
+      "name": "pm_en_proyectos",
+      "credentials": {
+        "supabaseApi": {
+          "id": "HUfgdBedsrG9YTcG",
+          "name": "Supabase account Ricardo correa bautista clase n8n"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "tableId": "tickets",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "name",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues0_Field_Value', ``, 'string') }}"
+            },
+            {
+              "fieldId": "description",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues1_Field_Value', ``, 'string') }}"
+            },
+            {
+              "fieldId": "project_id",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues2_Field_Value', ``, 'string') }}"
+            },
+            {
+              "fieldId": "type",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues3_Field_Value', ``, 'string') }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabaseTool",
+      "typeVersion": 1,
+      "position": [
+        600,
+        200
+      ],
+      "id": "f7e3f47b-8906-4f3e-8fa1-7b497ae9c48c",
+      "name": "Create a row in Supabase",
+      "credentials": {
+        "supabaseApi": {
+          "id": "HUfgdBedsrG9YTcG",
+          "name": "Supabase account Ricardo correa bautista clase n8n"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "tableId": "projects",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "name",
+              "keyValue": "={{ $fromAI('conditions0_Value', ``, 'string') }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabaseTool",
+      "typeVersion": 1,
+      "position": [
+        460,
+        260
+      ],
+      "id": "016f3a2f-e758-4d36-b698-2028ff7f88a7",
+      "name": "obtener_proyect_id_by_nombre",
+      "alwaysOutputData": false,
+      "credentials": {
+        "supabaseApi": {
+          "id": "HUfgdBedsrG9YTcG",
+          "name": "Supabase account Ricardo correa bautista clase n8n"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "tableId": "project_managers",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "id",
+              "keyValue": "={{ $fromAI('pm_id_from_project_data') }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabaseTool",
+      "typeVersion": 1,
+      "position": [
+        900,
+        320
+      ],
+      "id": "ac9b6f80-8cc5-4b60-8a13-eb869bc8974b",
+      "name": "obtener_datos_pm",
+      "credentials": {
+        "supabaseApi": {
+          "id": "HUfgdBedsrG9YTcG",
+          "name": "Supabase account Ricardo correa bautista clase n8n"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "obtener_datos_cliente": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "obtener_datos_proyectos_cliente": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "pm_en_proyectos": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a row in Supabase": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "obtener_proyect_id_by_nombre": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "obtener_datos_pm": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {
+    "When Executed by Another Workflow": [
+      {
+        "json": {
+          "query": "{\"instruccion\":\"obtener_info_pm\",\"nombre_proyecto\":\"Pollo Pechugon\",\"id_proyecto\":\"1\"}"
+        }
+      }
+    ]
+  },
+  "versionId": "d16c1a8b-3310-40b6-bc8c-db6963690796",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "createdAt": "2025-07-09T01:11:03.423Z",
+      "updatedAt": "2025-07-09T01:11:03.423Z",
+      "role": "workflow:owner",
+      "workflowId": "sXLFWMJkfpRDmRfD",
+      "projectId": "BZ9Ta5yhe4RhzY78",
+      "project": {
+        "createdAt": "2025-05-13T15:56:28.209Z",
+        "updatedAt": "2025-05-13T16:18:54.372Z",
+        "id": "BZ9Ta5yhe4RhzY78",
+        "name": "CANTERA ADMIN <canteradigital7@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "projectRelations": [
+          {
+            "createdAt": "2025-05-13T15:56:28.209Z",
+            "updatedAt": "2025-05-13T15:56:28.209Z",
+            "role": "project:personalOwner",
+            "userId": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
+            "projectId": "BZ9Ta5yhe4RhzY78",
+            "user": {
+              "createdAt": "2025-05-13T15:56:27.880Z",
+              "updatedAt": "2025-07-08T21:59:22.697Z",
+              "id": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
+              "email": "canteradigital7@gmail.com",
+              "firstName": "CANTERA",
+              "lastName": "ADMIN",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-05-13T16:19:25.161Z",
+                "personalization_survey_n8n_version": "1.92.2",
+                "companySize": "<20",
+                "companyType": "saas",
+                "role": "customer-support",
+                "reportedSource": "event"
+              },
+              "settings": {
+                "userActivated": true,
+                "firstSuccessfulWorkflowId": "PTbESRzX3rguwQN8",
+                "userActivatedAt": 1747154580970,
+                "easyAIWorkflowOnboarded": true,
+                "npsSurvey": {
+                  "responded": true,
+                  "lastShownAt": 1748367494893
+                },
+                "dismissedCallouts": {
+                  "aiAgentStarterCallout": true
+                }
+              },
+              "role": "global:owner",
+              "disabled": false,
+              "mfaEnabled": false,
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": []
+}
