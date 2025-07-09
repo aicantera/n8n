@@ -1,28 +1,11 @@
 {
   "createdAt": "2025-07-09T00:51:08.728Z",
-  "updatedAt": "2025-07-09T00:58:52.000Z",
+  "updatedAt": "2025-07-09T01:21:53.000Z",
   "id": "K8oTgBxQHYjHKhPI",
   "name": "Agente Glassy Buscador Productos dev",
   "active": false,
   "isArchived": false,
   "nodes": [
-    {
-      "parameters": {
-        "promptType": "define",
-        "text": "={{ $json.query }}",
-        "options": {
-          "systemMessage": "=Eres un agente dedicado a realizzar peticiones para hacer busquedas de productos de glasbil.\nTu trabajo es hacer peticiones y poder retornar informacion todo esto usando herramientas de http request\n\ntienes acceso a esta herramienta\n\n'search_products(year,brand,model,car_type,type_glass)': con esta herramienta puedes obtener los productos disponibles dependiendo del año, marca, modelo, tipo de carro, y tipo de cristal. Es importante que los datos los tengas todos para que puedas cumplir con tu funcion. En la información que retornes de cada producto incluye lo siguientes datos: 'external_id', 'origin' y 'nag'.\n"
-        }
-      },
-      "type": "@n8n/n8n-nodes-langchain.agent",
-      "typeVersion": 1.9,
-      "position": [
-        260,
-        0
-      ],
-      "id": "7a4640fa-19cc-4dc5-b934-12aa81d8bb84",
-      "name": "AI Agent"
-    },
     {
       "parameters": {
         "model": {
@@ -35,8 +18,8 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.2,
       "position": [
-        180,
-        220
+        240,
+        -100
       ],
       "id": "470aa345-1154-4f84-b63c-8b35c0255644",
       "name": "OpenAI Chat Model",
@@ -49,31 +32,75 @@
     },
     {
       "parameters": {
-        "toolDescription": "Esta herramienta te ayudara a obtener los productos disponibles para un vehiculo de acuerdo a year, brand, model, car_type, type_glass ",
-        "url": "=https://butik-vidrio.canteradigital.mx/api/finder/searchProducts/filtered?year={{$fromAI('year')}}&brand={{$fromAI('brand')}}&model={{$fromAI('model')}}&car_type={{$fromAI('car_type')}}&type_glass={{$fromAI('type_glass')}}&antenna=false&encapsulated=false&hud=false&heated=false&attachment=false&request_origin=chatbot",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.httpRequestTool",
-      "typeVersion": 4.2,
-      "position": [
-        480,
-        220
-      ],
-      "id": "2b4e741f-34b0-4ebc-9907-3b62c9870a25",
-      "name": "search_products"
-    },
-    {
-      "parameters": {
         "inputSource": "passthrough"
       },
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "typeVersion": 1.1,
       "position": [
         60,
-        0
+        -280
       ],
       "id": "ddbb3e8d-28b5-4e8f-a674-53cde57c79ce",
       "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "text": "={{ $json.query }}",
+        "attributes": {
+          "attributes": [
+            {
+              "name": "year",
+              "description": "año del vehiculo",
+              "required": true
+            },
+            {
+              "name": "brand",
+              "description": "marca del vehiculo",
+              "required": true
+            },
+            {
+              "name": "model",
+              "description": "modelo del vehiculo",
+              "required": true
+            },
+            {
+              "name": "car_type",
+              "description": "tipo de automóvil",
+              "required": true
+            },
+            {
+              "name": "type_glass",
+              "description": "tipo de cristal",
+              "required": true
+            }
+          ]
+        },
+        "options": {
+          "systemPromptTemplate": "You are an expert extraction algorithm.\nOnly extract relevant information from the text.\nIf you do not know the value of an attribute asked to extract, you may omit the attribute's value."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.informationExtractor",
+      "typeVersion": 1.2,
+      "position": [
+        260,
+        -280
+      ],
+      "id": "d716915f-f399-4f35-8745-0c0efd44019e",
+      "name": "Information Extractor1"
+    },
+    {
+      "parameters": {
+        "url": "=https://butik-vidrio.canteradigital.mx/api/finder/searchProducts/filtered?year={{ $json.output.year }}&brand={{ $json.output.brand }}&model={{ $json.output.model }}&car_type={{ $json.output.car_type }}&type_glass={{ $json.output.type_glass }}&antenna=false&encapsulated=false&hud=false&heated=false&attachment=false&request_origin=chatbot",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        580,
+        -280
+      ],
+      "id": "c61a46d6-a6ca-41b1-93a2-b5b9a1ffad63",
+      "name": "HTTP Request"
     }
   ],
   "connections": {
@@ -81,19 +108,8 @@
       "ai_languageModel": [
         [
           {
-            "node": "AI Agent",
+            "node": "Information Extractor1",
             "type": "ai_languageModel",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "search_products": {
-      "ai_tool": [
-        [
-          {
-            "node": "AI Agent",
-            "type": "ai_tool",
             "index": 0
           }
         ]
@@ -103,7 +119,18 @@
       "main": [
         [
           {
-            "node": "AI Agent",
+            "node": "Information Extractor1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Information Extractor1": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
             "type": "main",
             "index": 0
           }
@@ -125,7 +152,7 @@
       }
     ]
   },
-  "versionId": "a2ee4332-e78f-4910-a1dc-799bee177e2e",
+  "versionId": "78c8a440-8b44-4e71-a38b-c2f9eeffc90b",
   "triggerCount": 0,
   "shared": [
     {
