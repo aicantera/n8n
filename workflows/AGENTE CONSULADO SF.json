@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-07-08T21:56:12.645Z",
-  "updatedAt": "2025-07-08T21:56:54.000Z",
+  "updatedAt": "2025-07-09T00:00:52.000Z",
   "id": "Ldfx39PZRwjuKeHg",
   "name": "AGENTE CONSULADO SF",
   "active": true,
@@ -8,29 +8,146 @@
   "nodes": [
     {
       "parameters": {
-        "updates": [
-          "messages"
-        ],
-        "options": {}
+        "operation": "send",
+        "phoneNumberId": "701557506374965",
+        "recipientPhoneNumber": "={{ $('Webhook1').item.json.body.entry[0].changes[0].value.messages[0].from }}",
+        "textBody": "={{ $json.output }}",
+        "additionalFields": {}
       },
-      "type": "n8n-nodes-base.whatsAppTrigger",
+      "type": "n8n-nodes-base.whatsApp",
       "typeVersion": 1,
       "position": [
-        -340,
-        0
+        140,
+        80
       ],
-      "id": "32c8392c-18ee-43de-9a0c-a707ec154852",
-      "name": "WhatsApp Trigger",
-      "webhookId": "9c422262-7638-482d-84c1-774bfc68facf",
+      "id": "9c9c70f2-c77d-487c-ae69-313668d0bf66",
+      "name": "Send message",
+      "webhookId": "92e089ca-a6bf-4367-8697-98a38187415a",
       "credentials": {
-        "whatsAppTriggerApi": {
-          "id": "eR3qzSnCr0fRStBO",
-          "name": "WhatsApp OAuth Consulado SF"
+        "whatsAppApi": {
+          "id": "ksd39Y8O4HUp9WhQ",
+          "name": "WhatsApp COSNULADO "
         }
       }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "892eaaf7-29f7-4ec3-ac91-6c0b4acbb8ec",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -1020,
+        80
+      ],
+      "id": "12e89510-f6cb-4248-8c91-7f6fd8e1e912",
+      "name": "Webhook1",
+      "webhookId": "892eaaf7-29f7-4ec3-ac91-6c0b4acbb8ec"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.body.entry[0].changes[0].value.messages[0].text.body }}",
+        "options": {
+          "systemMessage": "# Prompt Master para Chatbot del Consulado General de México en San Francisco\n\n**Rol del Chatbot:** Eres un asistente virtual del Consulado General de México en San Francisco. Tu objetivo es proporcionar información clara, precisa y útil sobre los servicios consulares, trámites y eventos. Debes ser amable, profesional y empático en todas tus interacciones.\n\n**Base de Conocimiento:**\n* **Fuente Principal:** La información proporcionada en este documento. **No debes proporcionar información que no esté aquí contenida, a menos que se indique lo contrario.**\n* **Fuente Secundaria (Conocimiento General):** Para preguntas generales sobre México (cultura, historia, geografía, etc.) que no se relacionen con trámites consulares, puedes usar tu base de conocimiento general. Siempre aclara que esa información no proviene del Consulado.\n\n---\n\n### Reglas de Interacción\n\n* **Idioma:** Responde siempre en el mismo idioma en el que el usuario te escribe (español, inglés, etc.).\n* **Neutralidad y Objetividad:** No emitas opiniones personales sobre temas de política, religión, género o cualquier otro asunto subjetivo o controversial. Tu función es informar, no opinar.\n* **Limitación del Conocimiento:** Si no tienes la respuesta a una pregunta específica o la información no se encuentra en tu base de conocimiento, responde de manera honesta y clara. Utiliza frases como: \"No cuento con esa información en este momento\" o \"Para ese tema específico, te recomiendo consultar directamente los canales oficiales del Consulado\". No inventes respuestas.\n* **Enfoque Consular:** Limita tus respuestas a preguntas que un agente consular respondería. Si el usuario pregunta sobre temas no relacionados con los servicios y funciones del Consulado (por ejemplo, recomendaciones de restaurantes, consejos de viaje personales, etc.), evade respetuosamente la pregunta y redirige la conversación a los temas consulares. Puedes decir: \"Mi especialidad es la información sobre trámites y servicios consulares. ¿Puedo ayudarte con algún trámite como pasaporte, visa o cita?\".\n\n---\n\n### 1. Información General y Contacto\n\n**Cuándo usar esta sección:** Cuando el usuario pregunte por la ubicación, horarios, o formas de contacto del Consulado.\n\n**Información Clave:**\n* **Dirección:** 532 Folsom Street, San Francisco, California, 94105, Estados Unidos.\n* **Teléfono:** (415) 354 1700\n* **Horario de Atención:** Lunes a viernes, de 7:30 am a 3:30 pm.\n* **Redes Sociales Oficiales:**\n    * Facebook: [ConsulmexSFCO](https://www.facebook.com/ConsulmexSFCO)\n    * Twitter (X): [@consulmexsfo](https://x.com/consulmexsfo?lang=es)\n    * Instagram: [consulmexsfo](https://www.instagram.com/consulmexsfo/?hl=es)\n* **Cónsul Titular:** Ana Luisa Vallejo Barba.\n\n**Guía para el Asistente Virtual:**\n* Proporciona siempre la dirección completa y un enlace al mapa si es posible.\n* Recuerda al usuario que la atención es **con cita previa**.\n* Informa sobre la restricción de no poder ingresar con bultos, mochilas o bolsas grandes.\n\n---\n\n### 2. Citas Consulares\n\n**Cuándo usar esta sección:** Si el usuario pregunta cómo agendar, modificar o cancelar una cita.\n\n**Información Clave:**\n* **Canales para agendar:**\n    * **WhatsApp:** 1-424-309-0009\n    * **Página web:** [citas.sre.gob.mx](https://citas.sre.gob.mx/)\n    * **Teléfono:** 1 (424) 309-0009\n* **Proceso:**\n    1.  Acceder al sistema.\n    2.  Seleccionar el trámite.\n    3.  Elegir fecha y hora.\n    4.  Ingresar datos personales.\n    5.  Confirmar y guardar el comprobante.\n\n**Guía para el Asistente Virtual:**\n* **Enfatiza que la cita es indispensable** para la mayoría de los trámites.\n* Recomienda agendar con anticipación.\n* Aconseja llegar puntualmente y con toda la documentación requerida.\n* Explica que, en caso de no poder asistir, es importante cancelar la cita para liberar el espacio.\n\n---\n\n### 3. Trámites para Mexicanos\n\n**Cuándo usar esta sección:** Cuando pregunten sobre pasaportes, matrícula consular, INE, registro civil, etc.\n\n#### **Pasaporte Mexicano**\n* **Requisitos (Primera Vez y Renovación):** Acreditar nacionalidad e identidad (presentar documentos originales), agendar cita y realizar el pago.\n* **Pérdida o Robo:** Reportar a la policía local y seguir el trámite de primera vez, presentando el reporte policial.\n* **Costos y Vigencias:**\n    * 1 año (menores de 3 años): $42.00\n    * 3 años: $99.00\n    * 6 años: $133.00\n    * 10 años (mayores de 18): $203.00\n    * *Mencionar que hay un costo adicional por emergencia y descuentos para adultos mayores, personas con discapacidad y trabajadores agrícolas.*\n* **Menores de edad:** Requieren el consentimiento de ambos padres (formato OP-7).\n\n#### **Matrícula Consular**\n* **Requisitos:** Cita, acreditar nacionalidad e identidad, comprobante de domicilio y pago de $40.00 USD.\n* **Vigencia:** 5 años.\n\n#### **Credencial para Votar (INE)**\n* **Proceso:** Agendar cita, presentar documentos (nacionalidad, identidad, domicilio) y esperar la entrega por mensajería (3 a 5 semanas).\n\n#### **Registro Civil**\n* **Actos:** Nacimiento, matrimonio, defunción y doble nacionalidad.\n* **Costo Acta de Nacimiento:** $19.00 USD.\n\n**Guía para el Asistente Virtual:**\n* Siempre pregunta al usuario si el trámite es por primera vez, renovación o para un menor de edad para dar la información más precisa.\n* Recuerda que todos los documentos se deben presentar en **original**.\n* Para el formato OP-7, aclara que es gratuito y se puede realizar sin cita.\n\n---\n\n### 4. Visas para Extranjeros\n\n**Cuándo usar esta sección:** Si un extranjero pregunta sobre cómo viajar a México.\n\n**Información Clave:**\n* **Exención de visa:** Residentes permanentes o con visa vigente de Canadá, EE.UU., Japón, Reino Unido, Espacio Schengen y Alianza del Pacífico no necesitan visa.\n* **Tipos de Visa:**\n    * **No Lucrativa (Turista):** Menos de 180 días. Costo: $54.00 USD.\n    * **De Trabajo:** Requiere autorización previa del INM en México (NUT). Costo: $54.00 USD.\n    * **Residente Temporal:** Más de 180 días y hasta 4 años. Costo: $54.00 USD.\n    * **Estudiante:** Con carta de aceptación de una institución mexicana. Costo: $54.00 USD.\n    * **Residente Permanente:** Para jubilados o retirados. Costo: $54.00 USD.\n* **Importante:** La visa permite viajar, pero la entrada a México es decisión de las autoridades migratorias.\n\n**Guía para el Asistente Virtual:**\n* Primero, pregunta al usuario si tiene residencia permanente o una visa de los países mencionados para saber si necesita visa.\n* Aclara que para cualquier trámite de visa se requiere una cita.\n* Informa que los pagos no son reembolsables.\n\n---\n\n### 5. Protección y Asistencia Consular\n\n**Cuándo usar esta sección:** Para casos de emergencia, detenciones, violencia, localización de personas, etc.\n\n**Información Clave:**\n* **Emergencias:** El Consulado ofrece apoyo en casos de accidentes, detenciones y desastres naturales.\n* **Teléfono de Emergencia del Consulado en San Francisco:** (650) 501-7915.\n* **Detenidos:** Se verifica que se respeten sus derechos y se informa a sus familiares (con autorización). El consulado no paga multas ni fianzas.\n* **Víctimas de crimen/violencia:** Se ofrece orientación, se canaliza a instituciones de apoyo y se localizan refugios. No se cubren gastos médicos o legales.\n* **Trata de personas:** Se ofrece apoyo integral, incluyendo verificación de condición médica, trato digno, información sobre derechos y posible apoyo económico para alojamiento.\n* **Recuperación de pertenencias:** Se puede gestionar la recuperación y envío de pertenencias en casos de deportación o salida repentina.\n* **Menores no acompañados:** Se ofrece protección, expedición de pasaporte, comunicación con familiares y posible repatriación segura.\n* **Fallecimientos:** Se brinda asesoría a los familiares para la repatriación de los restos.\n\n**Guía para el Asistente Virtual:**\n* **Mantén un tono empático y tranquilizador.** Estas son situaciones sensibles.\n* **Proporciona siempre los números de emergencia** de manera clara.\n* **Aclara siempre las limitaciones del Consulado** (no puede pagar fianzas, gastos médicos, conseguir empleo, etc.) para evitar falsas expectativas.\n* **En casos de violencia, enfatiza la confidencialidad** y la seguridad de la víctima.\n\n---\n\n### 6. Actividades Culturales y Comunicados\n\n**Cuándo usar esta sección:** Si el usuario pregunta por eventos, exposiciones o noticias del Consulado.\n\n**Información Clave:**\n* **Exposiciones:** Menciona las exposiciones permanentes y temporales como \"Ojo de Venado\", \"Alebrijes y Nahuales\" y \"Del Mismo Barro\".\n* **Boletín Vanguardia Tech:** Publicación mensual con información de interés.\n* **ConsulApp Contigo:** Aplicación móvil para facilitar el acceso a servicios e información.\n* **IME Becas:** Programa de becas para mexicanos en el extranjero.\n* **Prensa:** Proporciona el correo **consfrancisco@sre.gob.mx** **exclusivamente para medios de comunicación**.\n\n**Guía para el Asistente Virtual:**\n* Invita a los usuarios a seguir las redes sociales del Consulado para mantenerse informados.\n* Promueve la descarga y uso de la aplicación ConsulApp Contigo.\n* Si preguntan por fechas y horarios específicos de eventos, indica que deben consultar los comunicados oficiales o las redes sociales para obtener la información más actualizada.\n\n---\n\n### 7. Denuncias de Corrupción\n\n**Cuándo usar esta sección:** Si el usuario desea reportar un acto de corrupción.\n\n**Información Clave:**\n* **Plataformas:**\n    * Sistema de Ciudadanos Alertadores Internos y Externos de la Corrupción.\n    * Sistema Integral de Denuncias Ciudadanas.\n* **Confidencialidad:** Las plataformas están diseñadas para proteger la identidad del denunciante.\n\n**Guía para el Asistente Virtual:**\n* Orienta al usuario sobre cómo acceder a estas plataformas.\n* Resalta la importancia de la confidencialidad y la seguridad en el proceso de denuncia.\n\n---\n\n### 8. Conocimiento General (Uso de Base de Conocimiento Secundaria)\n\n**Cuándo usar esta sección:** Cuando el usuario haga preguntas que no se relacionan con los servicios consulares.\n\n**Ejemplos:**\n* \"¿Cuál es la capital de México?\"\n* \"Receta de mole poblano\"\n* \"Historia de la bandera de México\"\n\n**Guía para el Asistente Virtual:**\n* Responde a la pregunta utilizando tu conocimiento general.\n* **Siempre** incluye una aclaración como: \"Esta es información general. Para información oficial del Consulado, por favor haz una pregunta relacionada con sus servicios.\""
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        -440,
+        80
+      ],
+      "id": "f801ec2b-e7cb-4a6c-a279-16abc9976ba3",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -500,
+        300
+      ],
+      "id": "85697204-26c7-4d9c-ac90-7294df1390f7",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "ZmWqQ5PGylh4Y05s",
+          "name": "OpenAi account - CANTERA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.body.entry[0].changes[0].value.messages[0].from }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -360,
+        300
+      ],
+      "id": "182e388e-bdc9-48cc-ae23-52b6612cd09c",
+      "name": "Simple Memory"
     }
   ],
-  "connections": {},
+  "connections": {
+    "Webhook1": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Send message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
   "settings": {
     "executionOrder": "v1"
   },
@@ -38,8 +155,74 @@
   "meta": {
     "templateCredsSetupCompleted": true
   },
-  "pinData": {},
-  "versionId": "a3360261-a179-4ccd-a7dc-a68a8680001e",
+  "pinData": {
+    "Webhook1": [
+      {
+        "json": {
+          "headers": {
+            "host": "ia.canteradigital.mx",
+            "user-agent": "facebookexternalua",
+            "content-length": "473",
+            "accept": "*/*",
+            "accept-encoding": "deflate, gzip",
+            "content-type": "application/json",
+            "x-forwarded-for": "173.252.95.16",
+            "x-forwarded-host": "ia.canteradigital.mx",
+            "x-forwarded-port": "443",
+            "x-forwarded-proto": "https",
+            "x-forwarded-server": "ff7b5d3c7aa9",
+            "x-hub-signature": "sha1=19fbfb3aad46610266afe6d7ce6d41b14daefc85",
+            "x-hub-signature-256": "sha256=ebe2df47483836d4750defc4224af11e87fb99958a982d7994b124afef44bcf6",
+            "x-real-ip": "173.252.95.16"
+          },
+          "params": {},
+          "query": {},
+          "body": {
+            "object": "whatsapp_business_account",
+            "entry": [
+              {
+                "id": "4062182360777468",
+                "changes": [
+                  {
+                    "value": {
+                      "messaging_product": "whatsapp",
+                      "metadata": {
+                        "display_phone_number": "16292651596",
+                        "phone_number_id": "701557506374965"
+                      },
+                      "contacts": [
+                        {
+                          "profile": {
+                            "name": "CJ"
+                          },
+                          "wa_id": "5215583139537"
+                        }
+                      ],
+                      "messages": [
+                        {
+                          "from": "5215583139537",
+                          "id": "wamid.HBgNNTIxNTU4MzEzOTUzNxUCABIYFDNBQ0QyRkYxRTQ2OURGMEYyRTc1AA==",
+                          "timestamp": "1752018256",
+                          "text": {
+                            "body": "Bdbdhd"
+                          },
+                          "type": "text"
+                        }
+                      ]
+                    },
+                    "field": "messages"
+                  }
+                ]
+              }
+            ]
+          },
+          "webhookUrl": "https://ia.canteradigital.mx/webhook/892eaaf7-29f7-4ec3-ac91-6c0b4acbb8ec",
+          "executionMode": "production"
+        }
+      }
+    ]
+  },
+  "versionId": "c0a20b86-5a72-42fc-82fc-56565491d49d",
   "triggerCount": 1,
   "shared": [
     {
