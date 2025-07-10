@@ -1,0 +1,228 @@
+{
+  "createdAt": "2025-07-10T21:29:12.726Z",
+  "updatedAt": "2025-07-10T21:49:38.000Z",
+  "id": "3fFKzEqyvIplosvu",
+  "name": "Agente Inmobiliario",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "c5a49a9a-e89f-4b8a-8248-5836434b6272",
+      "name": "When chat message received",
+      "webhookId": "3db1e149-5313-463c-86d4-ab9e29eff2d1"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "=# Prompt del Sistema: Asistente Inmobiliario con Herramientas\n\n## Contexto y Personalidad\n\nEres **\"Asistente Virtual Inmobiliario\"**, el chatbot de ayuda de **\"Aaron Inmobiliarias\"**.  \nTu personalidad es **amigable**, **servicial** y **muy eficiente**.  \nTienes acceso a un conjunto de herramientas para ayudarte a responder a los usuarios.\n\n---\n\n## Responsabilidades\n\n### 🏁 Ser el Primer Contacto\nSaluda amablemente y responde preguntas generales sobre nuestros servicios  \n(por ejemplo: **horarios**, **zonas de cobertura**, etc.).\n\n---\n\n### 🧠 Entender y Actuar\nIndaga activamente sobre las necesidades inmobiliarias del usuario:\n- ¿Qué busca? (casa, departamento, terreno)\n- ¿En qué zona?\n- ¿Cuál es su presupuesto?\n\n---\n\n### 🔍 Utilizar Herramientas\nUna vez tengas criterios claros por parte del usuario (como tipo de propiedad y zona),  \nusa la herramienta `propiedades_disponibles` para buscar opciones en la base de datos.\n\n---\n\n### 📋 Presentar Resultados\nMuestra al usuario los resultados obtenidos de forma clara y resumida:\n- **ID**\n- **Breve descripción**\n- **Precio**\n\nSi no hay resultados, informa al usuario amablemente y sugiere **ampliar la búsqueda**.\n\n---\n\n### 🚫 No Inventar\nNo inventes respuestas.  \nBasa tus respuestas exclusivamente en la información proporcionada por la herramienta `propiedades_disponibles`.\n\n---\n\n### 📩 Capturar el Lead\nSi el usuario muestra interés o no puedes responder algo específico:\n\n> **\"¡Excelente! Para darte todos los detalles y agendar una visita, uno de nuestros agentes expertos se pondrá en contacto contigo. ¿Podrías proporcionarme tu nombre y correo electrónico, por favor?\"**\n\n---\n\n## Estilo de Comunicación\n\n- Mantén respuestas **cortas y fáciles de leer**.\n- Usa **emojis sutiles** para un tono amigable: 🏡, 🔑, 👍.\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ],
+      "id": "30d2b4d6-fbf7-48b5-bf5c-30e21e1ee833",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        120,
+        200
+      ],
+      "id": "7a6b4490-36fb-41a4-9dc4-791e1c75c07e",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "Q8WQKibB08nTTio4",
+          "name": "OpenAi account CanteraConnect"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "contextWindowLength": 20
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        300,
+        220
+      ],
+      "id": "7b1a9ac9-f8ff-4089-b84e-62eb1504da9a",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1KumwD8bVeKVTrbjW4h23vKS9VOcUfjeZw4YNGE53Aag",
+          "mode": "list",
+          "cachedResultName": "Datos inmobiliarios",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1KumwD8bVeKVTrbjW4h23vKS9VOcUfjeZw4YNGE53Aag/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1KumwD8bVeKVTrbjW4h23vKS9VOcUfjeZw4YNGE53Aag/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.6,
+      "position": [
+        460,
+        220
+      ],
+      "id": "c22260e9-188c-4878-8dd9-966b9b278915",
+      "name": "propiedades_disponibles",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "T1b495TNgv7GQdA8",
+          "name": "Google Sheets Jumperaron"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "propiedades_disponibles": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "6c9a3264-15a2-4ffb-9289-08bc3f6ad08e",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "createdAt": "2025-07-10T21:29:12.729Z",
+      "updatedAt": "2025-07-10T21:29:12.729Z",
+      "role": "workflow:owner",
+      "workflowId": "3fFKzEqyvIplosvu",
+      "projectId": "BZ9Ta5yhe4RhzY78",
+      "project": {
+        "createdAt": "2025-05-13T15:56:28.209Z",
+        "updatedAt": "2025-05-13T16:18:54.372Z",
+        "id": "BZ9Ta5yhe4RhzY78",
+        "name": "CANTERA ADMIN <canteradigital7@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "projectRelations": [
+          {
+            "createdAt": "2025-05-13T15:56:28.209Z",
+            "updatedAt": "2025-05-13T15:56:28.209Z",
+            "role": "project:personalOwner",
+            "userId": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
+            "projectId": "BZ9Ta5yhe4RhzY78",
+            "user": {
+              "createdAt": "2025-05-13T15:56:27.880Z",
+              "updatedAt": "2025-07-08T21:59:22.697Z",
+              "id": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
+              "email": "canteradigital7@gmail.com",
+              "firstName": "CANTERA",
+              "lastName": "ADMIN",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-05-13T16:19:25.161Z",
+                "personalization_survey_n8n_version": "1.92.2",
+                "companySize": "<20",
+                "companyType": "saas",
+                "role": "customer-support",
+                "reportedSource": "event"
+              },
+              "settings": {
+                "userActivated": true,
+                "firstSuccessfulWorkflowId": "PTbESRzX3rguwQN8",
+                "userActivatedAt": 1747154580970,
+                "easyAIWorkflowOnboarded": true,
+                "npsSurvey": {
+                  "responded": true,
+                  "lastShownAt": 1748367494893
+                },
+                "dismissedCallouts": {
+                  "aiAgentStarterCallout": true
+                }
+              },
+              "role": "global:owner",
+              "disabled": false,
+              "mfaEnabled": false,
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": []
+}
