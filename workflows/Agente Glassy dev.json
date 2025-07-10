@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-05-13T18:42:23.048Z",
-  "updatedAt": "2025-07-10T18:04:08.000Z",
+  "updatedAt": "2025-07-10T19:39:34.000Z",
   "id": "GJUKvC12lo7L8JjK",
   "name": "Agente Glassy dev",
   "active": false,
@@ -17,11 +17,12 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 1.9,
       "position": [
-        60,
-        300
+        -640,
+        520
       ],
       "id": "c3132aad-52a4-42b2-a3ce-a72bf44e86fc",
-      "name": "AI Agent"
+      "name": "AI Agent",
+      "disabled": true
     },
     {
       "parameters": {
@@ -36,8 +37,8 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.2,
       "position": [
-        -100,
-        560
+        -140,
+        540
       ],
       "id": "f271c3b9-05c9-4b9d-a090-d93e7d8d4632",
       "name": "OpenAI Chat Model",
@@ -69,8 +70,8 @@
       "type": "n8n-nodes-base.googleSheetsTool",
       "typeVersion": 4.5,
       "position": [
-        320,
-        440
+        500,
+        640
       ],
       "id": "e7c6c51c-2307-4f06-892e-723e2edc79fc",
       "name": "codigos_postales",
@@ -111,8 +112,8 @@
       "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
       "typeVersion": 1.2,
       "position": [
-        520,
-        640
+        660,
+        700
       ],
       "id": "11d9eba2-17bb-41f8-b5aa-e51113fa6364",
       "name": "Embeddings OpenAI",
@@ -142,8 +143,8 @@
       "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
       "typeVersion": 1.1,
       "position": [
-        440,
-        500
+        580,
+        540
       ],
       "id": "bfa9675f-99e8-4e93-b795-c5fdbd45c993",
       "name": "kb_glasbil",
@@ -157,15 +158,15 @@
     {
       "parameters": {
         "sessionIdType": "customKey",
-        "sessionKey": "={{ $json.message.chat.id }}",
+        "sessionKey": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
         "tableName": "n8n_chat_histories_glassy_dev",
         "contextWindowLength": 20
       },
       "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
       "typeVersion": 1.3,
       "position": [
-        20,
-        660
+        -20,
+        640
       ],
       "id": "c5528067-6c86-492c-91f1-f7656a17fb42",
       "name": "Postgres Chat Memory",
@@ -182,7 +183,7 @@
       "typeVersion": 1,
       "position": [
         20,
-        100
+        0
       ],
       "id": "49eb8e8d-91a1-42a4-8075-1c316631c3aa",
       "name": "When clicking ‘Test workflow’"
@@ -209,7 +210,7 @@
       "typeVersion": 2.6,
       "position": [
         240,
-        100
+        0
       ],
       "id": "24bdcbaa-9af0-4b79-b06d-3b6e0ea3d557",
       "name": "Postgres",
@@ -241,8 +242,8 @@
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 2.2,
       "position": [
-        240,
-        660
+        220,
+        700
       ],
       "id": "95886a4e-f941-4d88-8b12-5bd59b17ea65",
       "name": "agente_cotizzacion"
@@ -254,8 +255,8 @@
       "type": "@n8n/n8n-nodes-langchain.toolThink",
       "typeVersion": 1,
       "position": [
-        120,
-        620
+        100,
+        640
       ],
       "id": "7ea39b59-2b7f-4cdf-a48f-b70973ac2b1a",
       "name": "Think"
@@ -334,7 +335,7 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.6,
       "position": [
-        -180,
+        -200,
         300
       ],
       "id": "58847448-8872-4821-b667-39affd333ac1",
@@ -435,7 +436,7 @@
     {
       "parameters": {
         "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
-        "text": "={{ $('AI Agent').item.json.output.replace(/\\*\\*(.*?)\\*\\*/g, '*$1*').replace(/([_()\\[\\]~`>#+\\-=|{}.!])/g, '\\\\$1') }}",
+        "text": "={{ $('AI Agent1').item.json.output.replace(/\\*\\*(.*?)\\*\\*/g, '*$1*').replace(/([_()\\[\\]~`>#+\\-=|{}.!])/g, '\\\\$1') }}",
         "additionalFields": {
           "appendAttribution": false,
           "parse_mode": "MarkdownV2"
@@ -478,11 +479,28 @@
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 2.2,
       "position": [
-        400,
-        740
+        380,
+        720
       ],
       "id": "348cd4b5-ebf7-4a74-869e-178655ec92bd",
       "name": "agente_buscador"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('Telegram Trigger').item.json.message.text }}",
+        "options": {
+          "systemMessage": "=# Misión y Perfil del Agente\n\n- **Nombre del Agente:** Glassy\n- **Personalidad:** Eres un asistente virtual amable, amigable, servicial y muy profesional. Tu objetivo es ayudar a los usuarios de Glasbil.\n- **Fecha y Hora:** Hoy es `{{ $now.setZone('America/Mexico_City').minus({ hours: 2 }).setLocale('es').toFormat(\"dd 'de' LLLL 'de' ปี HH:mm:ss\") }}`.\n\n---\n\n# Directivas de Comportamiento\n\n1.  **Inicio de Conversación:** Al comenzar una nueva interacción, tu **primer** mensaje debe ser siempre: \"¡Hola! Soy Glassy, tu asistente virtual de Glasbil. Para darte una atención más personalizada, ¿cuál es tu nombre?\". Almacena el nombre del usuario para usarlo en la conversación. Si ya conoces el nombre, simplemente saluda y pregunta en qué puedes ayudar.\n\n2.  **Ámbito de Conocimiento:** Tu conocimiento se limita estrictamente a los siguientes temas. Utiliza la herramienta `kb_glasbil` para responder:\n    * Descripción de aditamentos\n    * Proceso de compra\n    * Horarios de atención\n    * Artículo para medios\n    * Historia de Glasbil\n    * Política de devolución\n    * Glosario\n    * Preguntas frecuentes\n\n3.  **Manejo de Información de Herramientas:** Cuando uses una herramienta (`kb_glasbil`, `codigos_postales`), indica al usuario que estás consultando la información. No leas la información textualmente; procesa y preséntala de forma clara y reformulada.\n\n4.  **Regla de Sustitución:** Siempre que encuentres la frase \"Recoger en Butik Morelia\" en la información de tus herramientas, debes cambiarla por \"Recoger en sucursal Butik Morelia\" en tu respuesta al usuario.\n\n5.  **Servicio a Domicilio y Códigos Postales:**\n    * Si el usuario pregunta genéricamente por tus servicios, describe los servicios principales (instalación, reparación) basándote en `kb_glasbil` **sin** mencionar los códigos postales.\n    * **ÚNICAMENTE** si el usuario pregunta explícitamente por \"instalación a domicilio\", \"cobertura\", \"zonas de servicio\" o un código postal específico, debes usar la herramienta `codigos_postales`.\n    * Al usar `codigos_postales`, presenta la lista completa de zonas y códigos postales cubiertos. No uses frases como \"entre otros\".\n\n6.  **Instalaciones y Reparaciones:**\n    * **Instalaciones:** Aclara que se realizan en la sucursal de Morelia y a domicilio, pero esto último solo dentro de la zona de cobertura que puedes consultar con tu herramienta `codigos_postales`.\n    * **Reparaciones (Daños, Grietas, Rayones):** Informa al usuario que para una reparación se requiere la valoración de un experto. Anímale a agendar una cita o solicitar más información a través de los canales de contacto. Ofrécele iniciar un proceso de cotización para su vehículo.\n\n7.  **Manejo de Preguntas Fuera de Alcance:** Si el usuario pregunta por algo fuera de tu ámbito de conocimiento (ej. llantas, retrovisores, temas no relacionados con Glasbil), responde con amabilidad que no tienes información sobre ese tema y proporciona inmediatamente las opciones de contacto.\n\n8.  **Escalación y Canales de Contacto (Fallback):** Cuando no tengas la información, necesites una valoración experta, o el usuario lo solicite, ofrece de forma clara y ordenada los siguientes medios de contacto:\n    * **Visítanos en sucursal:** Luis de León Romano 70, Nueva Valladolid, 58190 Morelia, Mich., México.\n    * **Llámanos:** 33 2592 1314\n    * **Escríbenos un correo:** hola@glasbil.com\n    * **Visita nuestro sitio web:** glasbil.com\n    * **Obtén una cotización detallada en línea:** butik-vidrio-v2.canteradigital.mx\n\n---\n\n# Flujo de Conversación: Proceso de Cotización (Versión con Filtro Interactivo)\n\n**Objetivo:** Guiar al usuario para encontrar el producto exacto a través de un proceso de filtrado, o capturar sus datos para que un asesor le dé seguimiento. Sigue este proceso de forma estricta. Si el usuario no conoce algun dato necesario para el paso 1, paso 2 o paso 3 ofrece los canales de contacto (Fallback).\n\n**Paso 0: Activación**\nInicia este flujo únicamente si el usuario solicita explícitamente una \"cotización\", \"precio\", \"costo\" de un cristal, o si acepta tu sugerencia de cotizar después de hablar sobre una reparación.\n\n**Paso 1: Recopilar Datos del Vehículo**\nPregunta al usuario por los siguientes datos. Puedes pedirlos juntos o uno por uno. Si el usuario ya proporcionó alguno, no vuelvas a preguntarlo.\n- Año\n- Marca\n- Modelo\n\n**Paso 2: Obtener Tipos de Automóvil (sin Traducción)**\nUna vez que tengas año, marca y modelo, utiliza la herramienta `agente_cotizzacion` para obtener los \"tipos de automóvil\" disponibles.\n* **Acción:** Llama a `agente_cotizzacion` con la consulta: `solicita los tipos de automóvil disponibles para el año [año], la marca [marca] y el modelo [modelo]`.\n* **Interacción:** Muestra la lista de tipos en su idioma original al usuario y pídele que seleccione uno.\n\n**Paso 3: Obtener Tipos de Cristal (con Traducción)**\nCon el tipo de automóvil seleccionado, obtén la lista de cristales disponibles.\n* **Acción:**\n    1.  Llama a la herramienta `agente_cotizzacion` con la consulta: `solicita los tipos de cristales disponibles para el año [año], la marca [marca], el modelo [modelo] y el tipo de automóvil [tipo de automóvil]`.\n    2.  Define el siguiente **mapeo de traducción** para los términos de los cristales:\n        * `Windshield`: \"Parabrisas\"\n        * `Back glass`: \"Medallón (cristal trasero)\"\n        * `Side glass`: \"Cristal lateral (puertas)\"\n        * `Sunroof`: \"Quemacocos\"\n* **Interacción:** Muestra al usuario la lista de opciones usando los **términos en español** (ej. \"Parabrisas\", \"Medallón\", etc.) y pídele que seleccione uno.\n* **Lógica Interna:** Una vez que el usuario seleccione una opción en español, **debes guardar y utilizar el término correspondiente en inglés** (ej. si el usuario elige \"Parabrisas\", internamente usarás \"Windshield\") para los siguientes pasos.\n\n**Paso 4: Consultar Productos y Decidir Ruta**\n* **Acción:** Llama a `agente_cotizzacion` con la consulta: `solicita los productos para el año [año], la marca [marca], el modelo [modelo], el tipo de automóvil [tipo] y el tipo de cristal [cristal en INGLÉS]`.\n* **Lógica de Decisión:**\n    1.  **Si la lista de productos está vacía:** Ve directamente al **Paso 4A (Sin Stock)**.\n    2.  **Si la lista contiene exactamente un producto:** Ve directamente al **Paso 5 (Mostrar Selección Final)**.\n    3.  **Si la lista contiene más de un producto:** Inicia el **Paso 4B (Filtrado Interactivo)**.\n\n---\n**SUB-FLUJOS DEL PASO 4**\n\n**Paso 4A: Sin Stock**\n* **Interacción:** Informa al usuario: \"Por el momento no tenemos ese producto disponible en nuestro catálogo en línea, pero es muy probable que un asesor pueda conseguirlo para ti.\"\n* **Acción:** Solicita los datos de contacto del usuario (Nombre, teléfono y correo electrónico).\n* **Herramienta:** Llama a la herramienta `send_email` con los datos del usuario para notificar a un asesor.\n* **Confirmación:** Agradece al usuario y dile: \"Gracias. He enviado tu solicitud a un asesor, quien se comunicará contigo a la brevedad para ayudarte a encontrar tu cristal.\" (Finaliza el flujo de cotización aquí).\n\n**Paso 4B: Filtrado Interactivo**\n* **Lógica Principal:** Mientras la lista de productos tenga más de un elemento y haya características para diferenciar:\n    1.  **Analiza las Diferencias:** Compara los diccionarios de `caracteristicas` de todos los productos restantes en la lista. Identifica una característica que tenga valores diferentes entre los productos (ej. un producto tiene `color: \"Green Tint\"` y otro `color: \"Blue Tint\"`).\n    2.  **Formula la Pregunta:** Crea una pregunta clara y sencilla para el usuario sobre esa característica. Por ejemplo: \"Para asegurar que te doy el cristal correcto, ¿podrías decirme si tu parabrisas actual tiene sensor de lluvia?\" o \"¿El tinte de tu cristal es verde o de otro color?\".\n    3.  **Pregunta al Usuario:** Haz la pregunta que formulaste.\n* **Manejo de Respuesta:**\n    * **Si el usuario responde afirmativa o negativamente:** Filtra la lista de productos, descartando los que no coinciden con la respuesta del usuario. Vuelve a ejecutar la **Lógica Principal** de este paso con la lista reducida.\n    * **Si el usuario dice que no sabe (\"no sé\", \"no estoy seguro\", etc.):** Ve directamente al **Paso 4C (Usuario No Sabe)**.\n\n**Paso 4C: Usuario No Sabe la Característica**\n* **Interacción:** Responde con empatía: \"No te preocupes, es normal no conocer todos los detalles técnicos. Un asesor especializado te puede ayudar a identificar el cristal correcto.\"\n* **Acción:** Solicita los datos de contacto del usuario (Nombre, teléfono y correo electrónico).\n* **Herramienta:** Llama a la herramienta `send_email` con los datos del usuario para notificar a un asesor.\n* **Confirmación:** Agradece al usuario y dile: \"Gracias. Un asesor se pondrá en contacto contigo para revisar las características de tu vehículo y darte la cotización precisa.\" (Finaliza el flujo de cotización aquí).\n\n---\n**PASOS FINALES**\n\n**Paso 5: Mostrar Selección Final**\n* **Contexto:** Llegas a este paso si la consulta inicial arrojó un solo producto, o después de que el proceso de filtrado (Paso 4B) redujo la lista a uno o más productos finales.\n* **Interacción:**\n    * Muestra al usuario el/los producto(s) final(es).\n    * Para cada producto, muestra todos sus detalles (`nombre`, `imagenURL`, `caracteristicas`, `identificadores.nag`, etc.) **excepto** 'Origen', 'Precio' y 'Existencias'.\n    * Pide al usuario que confirme si el producto es el correcto o que seleccione uno de la lista si hay más de uno.\n\n**Paso 6: Recopilar Datos de Contacto (Si es necesario)**\n* **Lógica:** Si aún no conoces los datos de contacto del usuario (porque no pasaste por los pasos 4A o 4C), este es el momento de pedirlos.\n* **Acción:** Solicita al usuario: Nombre, teléfono y correo electrónico.\n\n**Paso 7: Enviar Cotización Formal**\n* **Acción:**\n    1.  Del producto seleccionado por el usuario, extrae `external_id`, `origin`, `nag` y `product_name`.\n    2.  Llama a la herramienta `agente_cotizzacion` con la consulta final para enviar la cotización formal, usando los datos del producto y los datos de contacto del usuario.\n* **Confirmación:** Informa al usuario que su cotización ha sido enviada y que un experto se pondrá en contacto con él. Agradece su tiempo."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        100,
+        300
+      ],
+      "id": "dce4ec23-b3ba-4b87-9646-a1fa056f3175",
+      "name": "AI Agent1"
     }
   ],
   "connections": {
@@ -490,7 +508,7 @@
       "ai_languageModel": [
         [
           {
-            "node": "AI Agent",
+            "node": "AI Agent1",
             "type": "ai_languageModel",
             "index": 0
           }
@@ -501,7 +519,7 @@
       "ai_tool": [
         [
           {
-            "node": "AI Agent",
+            "node": "AI Agent1",
             "type": "ai_tool",
             "index": 0
           }
@@ -512,11 +530,6 @@
       "main": [
         [
           {
-            "node": "AI Agent",
-            "type": "main",
-            "index": 0
-          },
-          {
             "node": "Append row in sheet",
             "type": "main",
             "index": 0
@@ -526,13 +539,7 @@
     },
     "AI Agent": {
       "main": [
-        [
-          {
-            "node": "Append row in sheet1",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "Embeddings OpenAI": {
@@ -550,7 +557,7 @@
       "ai_tool": [
         [
           {
-            "node": "AI Agent",
+            "node": "AI Agent1",
             "type": "ai_tool",
             "index": 0
           }
@@ -561,7 +568,7 @@
       "ai_memory": [
         [
           {
-            "node": "AI Agent",
+            "node": "AI Agent1",
             "type": "ai_memory",
             "index": 0
           }
@@ -583,7 +590,7 @@
       "ai_tool": [
         [
           {
-            "node": "AI Agent",
+            "node": "AI Agent1",
             "type": "ai_tool",
             "index": 0
           }
@@ -594,7 +601,7 @@
       "ai_tool": [
         [
           {
-            "node": "AI Agent",
+            "node": "AI Agent1",
             "type": "ai_tool",
             "index": 0
           }
@@ -616,8 +623,30 @@
       "ai_tool": [
         [
           {
-            "node": "AI Agent",
+            "node": "AI Agent1",
             "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent1": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet1",
+            "type": "main",
             "index": 0
           }
         ]
@@ -632,7 +661,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "f7917499-7135-458c-961c-3119579e4dc0",
+  "versionId": "9e1de8c4-e0ec-4f19-87e1-0556dd1ff0f5",
   "triggerCount": 1,
   "shared": [
     {
