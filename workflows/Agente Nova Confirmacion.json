@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-07-01T23:30:13.948Z",
-  "updatedAt": "2025-07-10T18:59:52.000Z",
+  "updatedAt": "2025-07-10T19:06:38.000Z",
   "id": "9vBAEbP1lBMNbUVD",
   "name": "Agente Nova Confirmacion",
   "active": false,
@@ -229,55 +229,47 @@
     },
     {
       "parameters": {
-        "fromEmail": "info@edukai.consulting",
-        "toEmail": "={{ $('When Executed by Another Workflow').item.json.email_cliente }}",
-        "subject": "=En Nova Tenemos una Porpuesta Increíble {{ $('When Executed by Another Workflow').item.json.email_cliente }}",
-        "emailFormat": "text",
-        "text": "=Hola {{ $('When Executed by Another Workflow').item.json.nombre_cliente }}:\n\nNos alegra saber que podemos apoyarte en {{ $('When Executed by Another Workflow').item.json.requerimiento_cliente }}, para tu empresa {{ $('When Executed by Another Workflow').item.json.nombre_empresa }}.\n\nEn breve, un ejecutivo de cuenta se pondrá en contacto contigo para ofrecerte una consultoría personalizada.\n \nAgradecemos tu interés en Nosotros.\n\nSaludos cordiales.",
-        "options": {
-          "appendAttribution": false
-        }
+        "toRecipients": "=jc@canteradigital.mx,janette.cano@canteradigital.mx,francisco@canteradigital.mx,edgar@canteradigital.mx,nathanael.solorio@canteradigital.mx,alexandra.trujillo@canteradigital.mx",
+        "subject": "Nuevo Lead",
+        "bodyContent": "=Tenemos nuevo Lead\n\nCliente:  {{ $('When Executed by Another Workflow').item.json.nombre_cliente }}\nEmpresa: {{ $('When Executed by Another Workflow').item.json.nombre_empresa }}\n\nRequerimiento: {{ $('When Executed by Another Workflow').item.json.requerimiento_cliente }}\nPropuesta: {{ $('When Executed by Another Workflow').item.json.resumen_propuesta }}\n{{ \"\\n\" }}\nPerfilado de cliente: {{ $('When Executed by Another Workflow').item.json.perfilado_de_cliente }}\n{{ \"\\n\" }}\nEstimación Inicial: {{ $json.output.detail_of_estimation }}\n{{ \"\\n\" }}\nValor del Lead: {{ $json.output.value }} USD\nProbablidad de Cierre:  {{ $json.output.propability*100 }} %\n{{ \"\\n\" }}\n\nPodemos contactar al cliente por los siguientes medios\nWhatsapp: {{ $('When Executed by Another Workflow').item.json.telefono_cliente }}\nCorreo: {{ $('When Executed by Another Workflow').item.json.email_cliente }}\n\n",
+        "additionalFields": {}
       },
-      "type": "n8n-nodes-base.emailSend",
-      "typeVersion": 2.1,
+      "type": "n8n-nodes-base.microsoftOutlook",
+      "typeVersion": 2,
       "position": [
-        840,
-        -340
+        880,
+        120
       ],
-      "id": "1fc15c4d-f7a1-4d62-9011-08236eb64f26",
-      "name": "Send email",
-      "webhookId": "97242a32-5a95-494c-bcfd-0728e1a3f2bd",
+      "id": "54f2e30c-a7f1-4494-a4f4-3159c77985d1",
+      "name": "Microsoft Outlook",
+      "webhookId": "28d91d12-609f-420c-b3d1-690bd1f2c164",
       "credentials": {
-        "smtp": {
-          "id": "SPffmP9Vo3mOZPMZ",
-          "name": "SMTP account edukai"
+        "microsoftOutlookOAuth2Api": {
+          "id": "1e9fbzjIiV9wNv2j",
+          "name": "Microsoft Outlook account - azure@canteradigital.mx"
         }
       }
     },
     {
       "parameters": {
-        "fromEmail": "info@edukai.consulting",
-        "toEmail": "=info@edukai.consulting",
-        "subject": "=Nuevo Lead",
-        "emailFormat": "text",
-        "text": "=Tenemos nuevo Lead\n\nCliente:  {{ $('When Executed by Another Workflow').item.json.nombre_cliente }}\nEmpresa: {{ $('When Executed by Another Workflow').item.json.nombre_empresa }}\n\nRequerimiento: {{ $('When Executed by Another Workflow').item.json.requerimiento_cliente }}\nPropuesta: {{ $('When Executed by Another Workflow').item.json.resumen_propuesta }}\n{{ \"\\n\" }}\nPerfilado de cliente: {{ $('When Executed by Another Workflow').item.json.perfilado_de_cliente }}\n{{ \"\\n\" }}\nEstimación Inicial: {{ $json.output.detail_of_estimation }}\n{{ \"\\n\" }}\nValor del Lead: {{ $json.output.value }} USD\nProbablidad de Cierre:  {{ $json.output.propability*100 }} %\n{{ \"\\n\" }}\n\nPodemos contactar al cliente por los siguientes medios\nWhatsapp: {{ $('When Executed by Another Workflow').item.json.telefono_cliente }}\nCorreo: {{ $('When Executed by Another Workflow').item.json.email_cliente }}\n\n",
-        "options": {
-          "appendAttribution": false
-        }
+        "toRecipients": "={{ $('When Executed by Another Workflow').item.json.email_cliente }}",
+        "subject": "=Gracias por tu interés en soluciones de IA – Cantera Digital ",
+        "bodyContent": "=Hola {{ $('When Executed by Another Workflow').item.json.nombre_cliente }}, \n\nGracias por contactarte con nosotros. Soy parte del equipo de Cantera Digital y estoy aquí para ayudarte a explorar cómo nuestras soluciones de agentes digitales inteligentes e inteligencia artificial pueden generar valor real para tu empresa. \n\nEn Cantera Digital hemos trabajado con empresas de diferentes industrias automatizando tareas, calificando prospectos, atendiendo clientes en tiempo real o transformando procesos críticos con tecnología inteligente. \n\nNos encantaría entender mejor tu caso específico para proponerte una solución a la medida. \n\n¿Te gustaría que agendemos una llamada o sesión para conocer más sobre tu necesidad? \n\nPuedes responder a este correo o compartirnos tus datos de contacto y tu disponibilidad, y con gusto coordinamos. \n\nQuedamos a tus órdenes. \n\nSaludos cordiales, \n\nJanette Cano\nDirectora Comercial\n\nEquipo Cantera Digital \n\n🌐 https://cantera.digital \n\n📱 WhatsApp:  \n \n ",
+        "additionalFields": {}
       },
-      "type": "n8n-nodes-base.emailSend",
-      "typeVersion": 2.1,
+      "type": "n8n-nodes-base.microsoftOutlook",
+      "typeVersion": 2,
       "position": [
-        860,
-        120
+        880,
+        -340
       ],
-      "id": "f77bfd56-c454-4d31-86a6-36886ee4870d",
-      "name": "Send email1",
-      "webhookId": "97242a32-5a95-494c-bcfd-0728e1a3f2bd",
+      "id": "a8658a5a-b21d-4d05-9603-e4221dbc3a8a",
+      "name": "Send a message",
+      "webhookId": "e9c53466-e64d-4a1a-b342-7e3992ecf8d7",
       "credentials": {
-        "smtp": {
-          "id": "SPffmP9Vo3mOZPMZ",
-          "name": "SMTP account edukai"
+        "microsoftOutlookOAuth2Api": {
+          "id": "hV3xyOpWUpR6z3K6",
+          "name": "Microsoft Outlook Asesor Comercial"
         }
       }
     }
@@ -320,19 +312,19 @@
       "main": [
         [
           {
-            "node": "Send email",
+            "node": "Send a message",
             "type": "main",
             "index": 0
           },
           {
-            "node": "Send email1",
+            "node": "Microsoft Outlook",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Send email": {
+    "Send a message": {
       "main": [
         [
           {
@@ -367,7 +359,7 @@
       }
     ]
   },
-  "versionId": "3908b48a-8cdc-4336-8e14-6f01e4a09fcf",
+  "versionId": "d02e1286-8825-4336-a6c0-5c03c2109368",
   "triggerCount": 0,
   "shared": [
     {
