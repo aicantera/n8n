@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-06-09T16:34:20.833Z",
-  "updatedAt": "2025-07-08T19:08:34.000Z",
+  "updatedAt": "2025-07-10T16:01:11.000Z",
   "id": "k6PApGOzpLKtnZ0q",
   "name": "chatbot cerebro",
   "active": true,
@@ -3469,7 +3469,7 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger 2').item.json.messages[0].from }}\",\n  \"type\": \"interactive\",\n  \"interactive\": {\n    \"type\": \"button\",\n    \"body\": {\n      \"text\": \"{{ $json.response }}\\n\\n si necesitas realizar otra pregunta no dudes en hacerla\\n\\n o si necesitas hablar con un agente preciona hablar con agente\"\n    },\n    \"action\": {\n      \"buttons\": [\n        {\n          \"type\": \"reply\",\n          \"reply\": {\n            \"id\": \"menu_inicial\",\n            \"title\": \"Volver al menú\"\n          }\n        },\n        {\n          \"type\": \"reply\",\n          \"reply\": {\n            \"id\": \"contacto_agente\",\n            \"title\": \"Hablar con Agente\"\n          }\n        }\n      ]\n    }\n } }\n\n",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger 2').item.json.messages[0].from }}\",\n  \"type\": \"interactive\",\n  \"interactive\": {\n    \"type\": \"button\",\n    \"body\": {\n      \"text\": \"{{ $json.response }}\\n\\n Si tienes otra pregunta, no dudes en hacerla.\\n\\nO si prefieres, presiona *Hablar con un agente* para que podamos ayudarte personalmente.\"\n    },\n    \"action\": {\n      \"buttons\": [\n        {\n          \"type\": \"reply\",\n          \"reply\": {\n            \"id\": \"menu_inicial\",\n            \"title\": \"Volver al menú\"\n          }\n        },\n        {\n          \"type\": \"reply\",\n          \"reply\": {\n            \"id\": \"contacto_agente\",\n            \"title\": \"Hablar con Agente\"\n          }\n        }\n      ]\n    }\n } }\n\n",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
@@ -3799,7 +3799,7 @@
                 "combinator": "and"
               },
               "renameOutput": true,
-              "outputKey": "1"
+              "outputKey": "clases sem"
             },
             {
               "conditions": {
@@ -3813,7 +3813,7 @@
                   {
                     "id": "39cf8e0b-a920-48a0-ac07-d4dd23bbde4f",
                     "leftValue": "={{ $json.response }}",
-                    "rightValue": "2",
+                    "rightValue": "clases email",
                     "operator": {
                       "type": "string",
                       "operation": "equals",
@@ -3824,7 +3824,7 @@
                 "combinator": "and"
               },
               "renameOutput": true,
-              "outputKey": "2"
+              "outputKey": "calificaciones"
             },
             {
               "conditions": {
@@ -3849,7 +3849,7 @@
                 "combinator": "and"
               },
               "renameOutput": true,
-              "outputKey": "3"
+              "outputKey": "justificante"
             },
             {
               "conditions": {
@@ -3897,7 +3897,7 @@
                 "combinator": "and"
               },
               "renameOutput": true,
-              "outputKey": "5"
+              "outputKey": "menú"
             }
           ]
         },
@@ -4569,37 +4569,6 @@
       ],
       "id": "8d5ea413-a153-489c-a31a-8ef88a242d16",
       "name": "no hay datos del estudiante calificaciones"
-    },
-    {
-      "parameters": {
-        "method": "POST",
-        "url": "https://graph.facebook.com/v22.0/626839230509107/messages",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "Authorization",
-              "value": "Bearer EAAHeSgKjRYEBOZBi0kUskW4k3L6ZCO8EhqsGNjWLyfJ3U1NZCbDyQp9WSoX0Ouh8hh44Jue9ev7TMlygkZAMoqMReAJL9cNZBQZCZB508HXZB84HCNFZBIRlSa9cXFs0dXmR31XoO0iUZBOTx4VSnErdZC9OD1sQDKprPHpbK7NBrTZAWy8D6pvNi9w0w4c9pt2KE3stGwZDZD"
-            },
-            {
-              "name": "Content-Type",
-              "value": "application/json"
-            }
-          ]
-        },
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger 2').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"¡Excelente! En un momento, uno de nuestros agentes se pondrá en contacto contigo. Fue un gusto ayudarte.\"\n  }\n}\n",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        1740,
-        1700
-      ],
-      "id": "64ba1bd7-bcd7-436d-ac14-bd0218b20e23",
-      "name": "calendario eventos4"
     },
     {
       "parameters": {
@@ -7135,6 +7104,52 @@
       ],
       "id": "5c58e8da-6619-4581-ad23-67279d6c0693",
       "name": "respuesta negativa preguta frecuente1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v22.0/626839230509107/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer EAAHeSgKjRYEBOZBi0kUskW4k3L6ZCO8EhqsGNjWLyfJ3U1NZCbDyQp9WSoX0Ouh8hh44Jue9ev7TMlygkZAMoqMReAJL9cNZBQZCZB508HXZB84HCNFZBIRlSa9cXFs0dXmR31XoO0iUZBOTx4VSnErdZC9OD1sQDKprPHpbK7NBrTZAWy8D6pvNi9w0w4c9pt2KE3stGwZDZD"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger 2').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"¡Excelente! En un momento, uno de nuestros agentes se pondrá en contacto contigo. Fue un gusto ayudarte.\"\n  }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1740,
+        1700
+      ],
+      "id": "64ba1bd7-bcd7-436d-ac14-bd0218b20e23",
+      "name": "mensaje atendera agente"
+    },
+    {
+      "parameters": {
+        "content": "## menu de academico\n\nBienvenido al área de Académico de Cerebro.\n\n1️⃣  Clases de la semana.\n2️⃣ Recibir clases por email.\n3️⃣ Revisar calificaciones del estudiante.\n4️⃣ Reportar Justificante\n5️⃣Menú Inicial.",
+        "height": 300,
+        "width": 400
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2760,
+        1960
+      ],
+      "typeVersion": 1,
+      "id": "92835ecd-5449-40b5-97f8-98d877192915",
+      "name": "Sticky Note2"
     }
   ],
   "connections": {
@@ -8347,7 +8362,7 @@
         ],
         [
           {
-            "node": "calendario eventos4",
+            "node": "mensaje atendera agente",
             "type": "main",
             "index": 0
           }
@@ -8692,17 +8707,6 @@
     "no hay datos del estudiante calificaciones": {
       "main": [
         []
-      ]
-    },
-    "calendario eventos4": {
-      "main": [
-        [
-          {
-            "node": "Code17",
-            "type": "main",
-            "index": 0
-          }
-        ]
       ]
     },
     "typing indicator1": {
@@ -9599,6 +9603,17 @@
           }
         ]
       ]
+    },
+    "mensaje atendera agente": {
+      "main": [
+        [
+          {
+            "node": "Code17",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -9641,7 +9656,7 @@
       }
     ]
   },
-  "versionId": "40eed272-58ed-44b0-b27a-63b1557303c9",
+  "versionId": "b2324dd1-ce3b-4dcb-898c-67c824ffc496",
   "triggerCount": 1,
   "shared": [
     {
