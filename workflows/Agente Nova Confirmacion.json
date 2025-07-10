@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-07-01T23:30:13.948Z",
-  "updatedAt": "2025-07-07T22:58:43.000Z",
+  "updatedAt": "2025-07-10T18:59:52.000Z",
   "id": "9vBAEbP1lBMNbUVD",
   "name": "Agente Nova Confirmacion",
   "active": false,
@@ -146,40 +146,6 @@
     },
     {
       "parameters": {
-        "toRecipients": "=jc@canteradigital.mx,janette.cano@canteradigital.mx,francisco@canteradigital.mx,edgar@canteradigital.mx,nathanael.solorio@canteradigital.mx,alexandra.trujillo@canteradigital.mx",
-        "subject": "Nuevo Lead",
-        "bodyContent": "=Tenemos nuevo Lead\n\nCliente:  {{ $('When Executed by Another Workflow').item.json.nombre_cliente }}\nEmpresa: {{ $('When Executed by Another Workflow').item.json.nombre_empresa }}\n\nRequerimiento: {{ $('When Executed by Another Workflow').item.json.requerimiento_cliente }}\nPropuesta: {{ $('When Executed by Another Workflow').item.json.resumen_propuesta }}\n{{ \"\\n\" }}\nPerfilado de cliente: {{ $('When Executed by Another Workflow').item.json.perfilado_de_cliente }}\n{{ \"\\n\" }}\nEstimación Inicial: {{ $json.output.detail_of_estimation }}\n{{ \"\\n\" }}\nValor del Lead: {{ $json.output.value }} USD\nProbablidad de Cierre:  {{ $json.output.propability*100 }} %\n{{ \"\\n\" }}\n\nPodemos contactar al cliente por los siguientes medios\nWhatsapp: {{ $('When Executed by Another Workflow').item.json.telefono_cliente }}\nCorreo: {{ $('When Executed by Another Workflow').item.json.email_cliente }}\n\n",
-        "additionalFields": {}
-      },
-      "type": "n8n-nodes-base.microsoftOutlook",
-      "typeVersion": 2,
-      "position": [
-        840,
-        120
-      ],
-      "id": "6521df0f-ffb7-4048-9833-41872a21bda7",
-      "name": "Microsoft Outlook",
-      "webhookId": "30aac34b-893e-4680-907e-e3866920008d"
-    },
-    {
-      "parameters": {
-        "toRecipients": "={{ $('When Executed by Another Workflow').item.json.email_cliente }}",
-        "subject": "=En Cantera Tenemos una Porpuesta Increíble {{ $('When Executed by Another Workflow').item.json.email_cliente }}",
-        "bodyContent": "=Hola {{ $('When Executed by Another Workflow').item.json.nombre_cliente }}:\n\nNos alegra saber que podemos apoyarte en {{ $('When Executed by Another Workflow').item.json.requerimiento_cliente }}, para tu empresa {{ $('When Executed by Another Workflow').item.json.nombre_empresa }}.\n\nEn breve, un ejecutivo de cuenta se pondrá en contacto contigo para ofrecerte una consultoría personalizada.\n \nAgradecemos tu interés en Cantera Digital.\n\nSaludos cordiales,\nJanette Cano\nDirectora Comercial",
-        "additionalFields": {}
-      },
-      "type": "n8n-nodes-base.microsoftOutlook",
-      "typeVersion": 2,
-      "position": [
-        820,
-        -360
-      ],
-      "id": "22d57a1c-596b-435a-a499-792ada3fbb17",
-      "name": "Microsoft Outlook2",
-      "webhookId": "b4679cfe-52cd-4cd9-b192-456e7c586614"
-    },
-    {
-      "parameters": {
         "operation": "send",
         "phoneNumberId": "676686782186843",
         "recipientPhoneNumber": "={{ $('When Executed by Another Workflow').item.json.telefono_cliente }}",
@@ -260,6 +226,60 @@
       "typeVersion": 1,
       "id": "b79603b8-0501-468a-8509-0c43e01e4b31",
       "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "fromEmail": "info@edukai.consulting",
+        "toEmail": "={{ $('When Executed by Another Workflow').item.json.email_cliente }}",
+        "subject": "=En Nova Tenemos una Porpuesta Increíble {{ $('When Executed by Another Workflow').item.json.email_cliente }}",
+        "emailFormat": "text",
+        "text": "=Hola {{ $('When Executed by Another Workflow').item.json.nombre_cliente }}:\n\nNos alegra saber que podemos apoyarte en {{ $('When Executed by Another Workflow').item.json.requerimiento_cliente }}, para tu empresa {{ $('When Executed by Another Workflow').item.json.nombre_empresa }}.\n\nEn breve, un ejecutivo de cuenta se pondrá en contacto contigo para ofrecerte una consultoría personalizada.\n \nAgradecemos tu interés en Nosotros.\n\nSaludos cordiales.",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        840,
+        -340
+      ],
+      "id": "1fc15c4d-f7a1-4d62-9011-08236eb64f26",
+      "name": "Send email",
+      "webhookId": "97242a32-5a95-494c-bcfd-0728e1a3f2bd",
+      "credentials": {
+        "smtp": {
+          "id": "SPffmP9Vo3mOZPMZ",
+          "name": "SMTP account edukai"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "info@edukai.consulting",
+        "toEmail": "=info@edukai.consulting",
+        "subject": "=Nuevo Lead",
+        "emailFormat": "text",
+        "text": "=Tenemos nuevo Lead\n\nCliente:  {{ $('When Executed by Another Workflow').item.json.nombre_cliente }}\nEmpresa: {{ $('When Executed by Another Workflow').item.json.nombre_empresa }}\n\nRequerimiento: {{ $('When Executed by Another Workflow').item.json.requerimiento_cliente }}\nPropuesta: {{ $('When Executed by Another Workflow').item.json.resumen_propuesta }}\n{{ \"\\n\" }}\nPerfilado de cliente: {{ $('When Executed by Another Workflow').item.json.perfilado_de_cliente }}\n{{ \"\\n\" }}\nEstimación Inicial: {{ $json.output.detail_of_estimation }}\n{{ \"\\n\" }}\nValor del Lead: {{ $json.output.value }} USD\nProbablidad de Cierre:  {{ $json.output.propability*100 }} %\n{{ \"\\n\" }}\n\nPodemos contactar al cliente por los siguientes medios\nWhatsapp: {{ $('When Executed by Another Workflow').item.json.telefono_cliente }}\nCorreo: {{ $('When Executed by Another Workflow').item.json.email_cliente }}\n\n",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        860,
+        120
+      ],
+      "id": "f77bfd56-c454-4d31-86a6-36886ee4870d",
+      "name": "Send email1",
+      "webhookId": "97242a32-5a95-494c-bcfd-0728e1a3f2bd",
+      "credentials": {
+        "smtp": {
+          "id": "SPffmP9Vo3mOZPMZ",
+          "name": "SMTP account edukai"
+        }
+      }
     }
   ],
   "connections": {
@@ -300,24 +320,19 @@
       "main": [
         [
           {
-            "node": "Microsoft Outlook",
+            "node": "Send email",
             "type": "main",
             "index": 0
           },
           {
-            "node": "Microsoft Outlook2",
+            "node": "Send email1",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Microsoft Outlook": {
-      "main": [
-        []
-      ]
-    },
-    "Microsoft Outlook2": {
+    "Send email": {
       "main": [
         [
           {
@@ -352,7 +367,7 @@
       }
     ]
   },
-  "versionId": "ee853e08-ca69-4526-a703-c1007f55d12f",
+  "versionId": "3908b48a-8cdc-4336-8e14-6f01e4a09fcf",
   "triggerCount": 0,
   "shared": [
     {
