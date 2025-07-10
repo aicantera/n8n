@@ -1,47 +1,11 @@
 {
   "createdAt": "2025-07-02T00:07:35.911Z",
-  "updatedAt": "2025-07-02T00:08:10.000Z",
+  "updatedAt": "2025-07-10T19:24:14.000Z",
   "id": "uXmZvPw4HonDoJtb",
   "name": "Agente Edukai Confirmacion",
   "active": false,
   "isArchived": false,
   "nodes": [
-    {
-      "parameters": {
-        "modelId": {
-          "__rl": true,
-          "value": "gpt-4",
-          "mode": "list",
-          "cachedResultName": "GPT-4"
-        },
-        "messages": {
-          "values": [
-            {
-              "content": "=datos de la empresa: {{ $('When Executed by Another Workflow').item.json.nombre_empresa }}\npropuesta :  {{ $('When Executed by Another Workflow').item.json.resumen_propuesta }}\nperfil empresa:  {{ $('When Executed by Another Workflow').item.json.perfilado_de_cliente }}\n"
-            },
-            {
-              "content": "=eres un cotizador de sistemas y proyectos de it y te voy a dar datos de una empresa, un requieriiento de IT  y  el perfil de laempresa, y tu debes estimar tres variables: 📊 Al completar el perfilado del usuario, aplica el siguiente modelo de puntuación:\n1. Asigna un valor entre 0 y 1 a cada una de estas variables, basado en las respuestas del usuario:• Claridad del proyecto (valor: claridad)• Presupuesto estimado (valor: presupuesto)• Nivel de decisión o influencia (valor: autoridad)• Plazo de decisión o de inicio del proyecto (valor: tiempo)• Compatibilidad estratégica con Cantera Digital (valor: compatibilidad)\n2. Calcula la probabilidad de cierre con esta fórmula:\nprobabilidad_cierre = (claridad × 0.25) + (presupuesto × 0.20) + (autoridad × 0.20) + (tiempo × 0.15) + (compatibilidad × 0.20)\n3. Redondea el resultado a dos decimales. Registra este valor como `probabilidad_cierre` en el sistema interno y también inclúyelo en el formato JSON para `ingreso_teams`.\n📌 Si algún valor no puede ser determinado, asigna 0.3 de manera conservadora. Este valor debe actualizarse automáticamente si luego se obtiene más información en la conversación.",
-              "role": "system"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "type": "@n8n/n8n-nodes-langchain.openAi",
-      "typeVersion": 1.8,
-      "position": [
-        -100,
-        -20
-      ],
-      "id": "011d60ad-b506-476a-8d21-84027274b790",
-      "name": "OpenAI",
-      "credentials": {
-        "openAiApi": {
-          "id": "nFhq9424Dw9eFpNq",
-          "name": "OpenAi Agente Edukai"
-        }
-      }
-    },
     {
       "parameters": {
         "text": "={{ $json.message.content }}",
@@ -63,6 +27,10 @@
               "name": "detail_of_estimation",
               "description": "detailed explain of the estimation",
               "required": true
+            },
+            {
+              "name": "type_lead",
+              "description": "type lead based in the message HOT_LEAD, WARM_LEAD, COLD_LEAD "
             }
           ]
         },
@@ -146,40 +114,6 @@
     },
     {
       "parameters": {
-        "toRecipients": "=jc@canteradigital.mx,janette.cano@canteradigital.mx,francisco@canteradigital.mx,edgar@canteradigital.mx,nathanael.solorio@canteradigital.mx,alexandra.trujillo@canteradigital.mx",
-        "subject": "Nuevo Lead",
-        "bodyContent": "=Tenemos nuevo Lead\n\nCliente:  {{ $('When Executed by Another Workflow').item.json.nombre_cliente }}\nEmpresa: {{ $('When Executed by Another Workflow').item.json.nombre_empresa }}\n\nRequerimiento: {{ $('When Executed by Another Workflow').item.json.requerimiento_cliente }}\nPropuesta: {{ $('When Executed by Another Workflow').item.json.resumen_propuesta }}\n{{ \"\\n\" }}\nPerfilado de cliente: {{ $('When Executed by Another Workflow').item.json.perfilado_de_cliente }}\n{{ \"\\n\" }}\nEstimación Inicial: {{ $json.output.detail_of_estimation }}\n{{ \"\\n\" }}\nValor del Lead: {{ $json.output.value }} USD\nProbablidad de Cierre:  {{ $json.output.propability*100 }} %\n{{ \"\\n\" }}\n\nPodemos contactar al cliente por los siguientes medios\nWhatsapp: {{ $('When Executed by Another Workflow').item.json.telefono_cliente }}\nCorreo: {{ $('When Executed by Another Workflow').item.json.email_cliente }}\n\n",
-        "additionalFields": {}
-      },
-      "type": "n8n-nodes-base.microsoftOutlook",
-      "typeVersion": 2,
-      "position": [
-        840,
-        120
-      ],
-      "id": "8ab492aa-9546-43b4-b4cc-4ea337a40eb6",
-      "name": "Microsoft Outlook",
-      "webhookId": "72c7773f-2ced-4a70-b58f-b664ff57874f"
-    },
-    {
-      "parameters": {
-        "toRecipients": "={{ $('When Executed by Another Workflow').item.json.email_cliente }}",
-        "subject": "=En Cantera Tenemos una Porpuesta Increíble {{ $('When Executed by Another Workflow').item.json.email_cliente }}",
-        "bodyContent": "=Hola {{ $('When Executed by Another Workflow').item.json.nombre_cliente }}:\n\nNos alegra saber que podemos apoyarte en {{ $('When Executed by Another Workflow').item.json.requerimiento_cliente }}, para tu empresa {{ $('When Executed by Another Workflow').item.json.nombre_empresa }}.\n\nEn breve, un ejecutivo de cuenta se pondrá en contacto contigo para ofrecerte una consultoría personalizada.\n \nAgradecemos tu interés en Cantera Digital.\n\nSaludos cordiales,\nJanette Cano\nDirectora Comercial",
-        "additionalFields": {}
-      },
-      "type": "n8n-nodes-base.microsoftOutlook",
-      "typeVersion": 2,
-      "position": [
-        820,
-        -360
-      ],
-      "id": "f0c8d2d5-2732-41c8-a60f-f9acf9a6fde4",
-      "name": "Microsoft Outlook2",
-      "webhookId": "b9dcd138-48aa-48df-885a-afe977deb592"
-    },
-    {
-      "parameters": {
         "operation": "send",
         "phoneNumberId": "676686782186843",
         "recipientPhoneNumber": "={{ $('When Executed by Another Workflow').item.json.telefono_cliente }}",
@@ -194,7 +128,8 @@
       ],
       "id": "1848d160-faf6-4044-b9b4-e477226e6d33",
       "name": "WhatsApp Business Cloud",
-      "webhookId": "ebac2d4e-ceda-484c-a1b7-c7841588399d"
+      "webhookId": "ebac2d4e-ceda-484c-a1b7-c7841588399d",
+      "disabled": true
     },
     {
       "parameters": {
@@ -259,20 +194,99 @@
       "typeVersion": 1,
       "id": "349aca8e-a8e5-4b21-8816-d7c6c594e429",
       "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "fromEmail": "info@edukai.consulting",
+        "toEmail": "={{ $('When Executed by Another Workflow').item.json.email_cliente }}",
+        "subject": "=En Edukai Tenemos una Porpuesta Increíble {{ $('When Executed by Another Workflow').item.json.email_cliente }}",
+        "emailFormat": "text",
+        "text": "=Hola {{ $('When Executed by Another Workflow').item.json.nombre_cliente }}:\n\nNos alegra saber que podemos apoyarte en {{ $('When Executed by Another Workflow').item.json.requerimiento_cliente }}, para tu empresa {{ $('When Executed by Another Workflow').item.json.nombre_empresa }}.\n\nEn breve, un ejecutivo de cuenta se pondrá en contacto contigo para ofrecerte una consultoría personalizada.\n \nAgradecemos tu interés en Nosotros.\n\nSaludos cordiales.",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        860,
+        -340
+      ],
+      "id": "e2079a92-434e-4c95-af6d-3848210e2fe5",
+      "name": "Send email",
+      "webhookId": "97242a32-5a95-494c-bcfd-0728e1a3f2bd",
+      "credentials": {
+        "smtp": {
+          "id": "SPffmP9Vo3mOZPMZ",
+          "name": "SMTP account edukai"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "info@edukai.consulting",
+        "toEmail": "=info@edukai.consulting",
+        "subject": "=Nuevo Lead",
+        "emailFormat": "text",
+        "text": "=Tenemos nuevo Lead\n\nCliente:  {{ $('When Executed by Another Workflow').item.json.nombre_cliente }}\nEmpresa: {{ $('When Executed by Another Workflow').item.json.nombre_empresa }}\n\nRequerimiento: {{ $('When Executed by Another Workflow').item.json.requerimiento_cliente }}\nPropuesta: {{ $('When Executed by Another Workflow').item.json.resumen_propuesta }}\n{{ \"\\n\" }}\nPerfilado de cliente: {{ $('When Executed by Another Workflow').item.json.perfilado_de_cliente }}\n{{ \"\\n\" }}\nEstimación Inicial: {{ $json.output.detail_of_estimation }}\n{{ \"\\n\" }}\nValor del Lead: {{ $json.output.value }} USD\nProbablidad de Cierre:  {{ $json.output.propability*100 }} %\n{{ \"\\n\" }}\n\nPodemos contactar al cliente por los siguientes medios\nWhatsapp: {{ $('When Executed by Another Workflow').item.json.telefono_cliente }}\nCorreo: {{ $('When Executed by Another Workflow').item.json.email_cliente }}\n\n",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        880,
+        120
+      ],
+      "id": "f8c24cdf-c7f3-4320-b500-5ebfa0628280",
+      "name": "Send email1",
+      "webhookId": "97242a32-5a95-494c-bcfd-0728e1a3f2bd",
+      "credentials": {
+        "smtp": {
+          "id": "SPffmP9Vo3mOZPMZ",
+          "name": "SMTP account edukai"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4",
+          "mode": "list",
+          "cachedResultName": "GPT-4"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=datos de la empresa: {{ $('When Executed by Another Workflow').item.json.nombre_empresa }}\npropuesta :  {{ $('When Executed by Another Workflow').item.json.resumen_propuesta }}\nperfil empresa:  {{ $('When Executed by Another Workflow').item.json.perfilado_de_cliente }}\nlead_type: {{ $json.type_lead }}\n"
+            },
+            {
+              "content": "=eres un cotizador de sistemas y proyectos de it y te voy a dar datos de una empresa, un requieriiento de IT  y  el perfil de laempresa, y tu debes estimar tres variables: 📊 Al completar el perfilado del usuario, aplica el siguiente modelo de puntuación:\n1. Asigna un valor entre 0 y 1 a cada una de estas variables, basado en las respuestas del usuario:• Claridad del proyecto (valor: claridad)• Presupuesto estimado (valor: presupuesto)• Nivel de decisión o influencia (valor: autoridad)• Plazo de decisión o de inicio del proyecto (valor: tiempo)• Compatibilidad estratégica con Cantera Digital (valor: compatibilidad)\n2. Calcula la probabilidad de cierre con esta fórmula:\nprobabilidad_cierre = (claridad × 0.25) + (presupuesto × 0.20) + (autoridad × 0.20) + (tiempo × 0.15) + (compatibilidad × 0.20)\n3. Redondea el resultado a dos decimales. Registra este valor como `probabilidad_cierre` en el sistema interno y también inclúyelo en el formato JSON para `ingreso_teams`.\n4. Genera un valor como HOT_LEAD, WARM_LEAD, COLD_LEAD de acuerdo al parametro de lead_type\n📌 Si algún valor no puede ser determinado, asigna 0.3 de manera conservadora. Este valor debe actualizarse automáticamente si luego se obtiene más información en la conversación.",
+              "role": "system"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -100,
+        -20
+      ],
+      "id": "011d60ad-b506-476a-8d21-84027274b790",
+      "name": "Message a model",
+      "credentials": {
+        "openAiApi": {
+          "id": "nFhq9424Dw9eFpNq",
+          "name": "OpenAi Agente Edukai"
+        }
+      }
     }
   ],
   "connections": {
-    "OpenAI": {
-      "main": [
-        [
-          {
-            "node": "Information Extractor",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "OpenAI Chat Model1": {
       "ai_languageModel": [
         [
@@ -288,7 +302,7 @@
       "main": [
         [
           {
-            "node": "OpenAI",
+            "node": "Message a model",
             "type": "main",
             "index": 0
           }
@@ -299,28 +313,34 @@
       "main": [
         [
           {
-            "node": "Microsoft Outlook",
+            "node": "Send email",
             "type": "main",
             "index": 0
           },
           {
-            "node": "Microsoft Outlook2",
+            "node": "Send email1",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Microsoft Outlook": {
-      "main": [
-        []
-      ]
-    },
-    "Microsoft Outlook2": {
+    "Send email": {
       "main": [
         [
           {
             "node": "WhatsApp Business Cloud",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Information Extractor",
             "type": "main",
             "index": 0
           }
@@ -351,7 +371,7 @@
       }
     ]
   },
-  "versionId": "6dd2b99c-3004-44a3-8c8a-86398ffc1a31",
+  "versionId": "ac70f988-b34f-480e-810f-42c7826730b4",
   "triggerCount": 0,
   "shared": [
     {
