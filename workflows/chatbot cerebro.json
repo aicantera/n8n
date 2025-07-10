@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-06-09T16:34:20.833Z",
-  "updatedAt": "2025-07-10T16:01:11.000Z",
+  "updatedAt": "2025-07-10T16:41:01.000Z",
   "id": "k6PApGOzpLKtnZ0q",
   "name": "chatbot cerebro",
   "active": true,
@@ -2537,7 +2537,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// 1) Leer input\nconst input = items[0].json;\n\n// 2) Orden de meses\nconst monthOrder = [\n  \"Enero\",\"Febrero\",\"Marzo\",\"Abril\",\"Mayo\",\"Junio\",\n  \"Julio\",\"Agosto\",\"Septiembre\",\"Octubre\",\"Noviembre\",\"Diciembre\",\n];\n\n// 3) Helper: parsear MonthlyGuide indiferente si viene string u objeto\nlet monthlyGuideData = [];\ntry {\n  const raw = input.MonthlyGuide;\n  const parsed = typeof raw === \"string\" ? JSON.parse(raw) : raw;\n  monthlyGuideData = Array.isArray(parsed)\n    ? parsed\n    : parsed.MonthlyGuide || [];\n} catch (e) {\n  console.log(\"Error parseando MonthlyGuide:\", e.message);\n}\n\n// 4) Helper: listado de eventos\nfunction createEventList(data, currentMonth) {\n  let message = `*¡Eventos de ${currentMonth}!* 📅\\n\\n`;\n  const monthEvents = data.filter(i => i.month === currentMonth);\n  const eventDaysDictionary = {};\n  let counter = 1;\n  const seen = new Set();\n\n  if (!monthEvents.length) {\n    message += `No hay eventos programados para ${currentMonth}.\\n\\n`;\n  } else {\n    message += \"*Eventos del mes:*\\n\";\n\n    // 4.1 individuales únicos y ordenados\n    const indivs = monthEvents\n      .filter(e => e.type === \"individual\" && !seen.has(e.content.title))\n      .map(e => ({ day: e.content.day, title: e.content.title }));\n    indivs.sort((a, b) => a.day - b.day);\n    indivs.forEach(ev => {\n      seen.add(ev.title);\n      eventDaysDictionary[String(counter)] = String(ev.day);\n      message += `${counter}. 🗓 Día ${ev.day}: \"${ev.title}\"\\n`;\n      counter++;\n    });\n\n    // 4.2 globals\n    monthEvents\n      .filter(e => e.type === \"global\" && e.content.events)\n      .forEach(e => {\n        Object.keys(e.content.events).forEach(title => {\n          if (!seen.has(title)) {\n            seen.add(title);\n            eventDaysDictionary[String(counter)] = \"0\";\n            message += `${counter}. 🌍 \"${title}\"\\n`;\n            counter++;\n          }\n        });\n      });\n  }\n\n  message += `\\n*¿Qué evento te gustaría conocer más a fondo?* *Escribe* el número correspondiente.`;\n  return { message, eventDaysDictionary };\n}\n\n// 5) Mes actual e invocar\nconst currentMonth = monthOrder[new Date().getMonth()];\nconst { message, eventDaysDictionary } =\n  createEventList(monthlyGuideData, currentMonth);\n\n// 6) Devolver resultados\nreturn [{\n  json: {\n    salida_whatsapp_guardian_function: {\n      mensaje_guardian_options: message,\n      dias_eventos_enumerados: eventDaysDictionary,\n    }\n  }\n}];\n"
+        "jsCode": "// 1) Leer input\nconst input = items[0].json;\n\n// 2) Orden de meses\nconst monthOrder = [\n  \"Enero\",\"Febrero\",\"Marzo\",\"Abril\",\"Mayo\",\"Junio\",\n  \"Julio\",\"Agosto\",\"Septiembre\",\"Octubre\",\"Noviembre\",\"Diciembre\",\n];\n\n// 3) Helper: parsear MonthlyGuide indiferente si viene string u objeto\nlet monthlyGuideData = [];\ntry {\n  const raw = input.MonthlyGuide;\n  const parsed = typeof raw === \"string\" ? JSON.parse(raw) : raw;\n  monthlyGuideData = Array.isArray(parsed)\n    ? parsed\n    : parsed.MonthlyGuide || [];\n} catch (e) {\n  console.log(\"Error parseando MonthlyGuide:\", e.message);\n}\n\n// 4) Helper: listado de eventos\nfunction createEventList(data, currentMonth) {\n  let message = `*¡Eventos de ${currentMonth}!* 📅\\n\\n`;\n  const monthEvents = data.filter(i => i.month === currentMonth);\n  const eventDaysDictionary = {};\n  let counter = 1;\n  const seen = new Set();\n\n  if (!monthEvents.length) {\n    message += `No hay eventos programados para ${currentMonth}.\\n\\n`;\n  } else {\n    message += \"*Eventos del mes:*\\n\";\n\n    // 4.1 individuales únicos y ordenados\n    const indivs = monthEvents\n      .filter(e => e.type === \"individual\" && !seen.has(e.content.title))\n      .map(e => ({ day: e.content.day, title: e.content.title }));\n    indivs.sort((a, b) => a.day - b.day);\n    indivs.forEach(ev => {\n      seen.add(ev.title);\n      eventDaysDictionary[String(counter)] = String(ev.day);\n      message += `${counter}. 🗓 Día ${ev.day}: \"${ev.title}\"\\n`;\n      counter++;\n    });\n\n    // 4.2 globals\n    monthEvents\n      .filter(e => e.type === \"global\" && e.content.events)\n      .forEach(e => {\n        Object.keys(e.content.events).forEach(title => {\n          if (!seen.has(title)) {\n            seen.add(title);\n            eventDaysDictionary[String(counter)] = \"0\";\n            message += `${counter}. 🌍 \"${title}\"\\n`;\n            counter++;\n          }\n        });\n      });\n  }\n\n  message += `\\n*¿Qué evento te gustaría conocer más a fondo?* Escribe el número correspondiente.`;\n  return { message, eventDaysDictionary };\n}\n\n// 5) Mes actual e invocar\nconst currentMonth = monthOrder[new Date().getMonth()];\nconst { message, eventDaysDictionary } =\n  createEventList(monthlyGuideData, currentMonth);\n\n// 6) Devolver resultados\nreturn [{\n  json: {\n    salida_whatsapp_guardian_function: {\n      mensaje_guardian_options: message,\n      dias_eventos_enumerados: eventDaysDictionary,\n    }\n  }\n}];\n"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -3813,7 +3813,7 @@
                   {
                     "id": "39cf8e0b-a920-48a0-ac07-d4dd23bbde4f",
                     "leftValue": "={{ $json.response }}",
-                    "rightValue": "clases email",
+                    "rightValue": "2",
                     "operator": {
                       "type": "string",
                       "operation": "equals",
@@ -3824,7 +3824,7 @@
                 "combinator": "and"
               },
               "renameOutput": true,
-              "outputKey": "calificaciones"
+              "outputKey": "clases email"
             },
             {
               "conditions": {
@@ -3849,7 +3849,7 @@
                 "combinator": "and"
               },
               "renameOutput": true,
-              "outputKey": "justificante"
+              "outputKey": "calificaciones"
             },
             {
               "conditions": {
@@ -3872,7 +3872,9 @@
                   }
                 ],
                 "combinator": "and"
-              }
+              },
+              "renameOutput": true,
+              "outputKey": "justificante"
             },
             {
               "conditions": {
@@ -4799,7 +4801,7 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger 2').item.json.messages[0].from }}\",\n  \"type\": \"interactive\",\n  \"interactive\": {\n    \"type\": \"button\",\n    \"body\": {\n      \"text\": \"¡De acuerdo! Comencemos con el proceso para crear un justificante.\\n\\nPara iniciar selecciona el numero de dia en el que se va a generar el justificante 📝\\n\\n{{$json.formattedBody.replace(/\\r?\\n/g, \"\\\\n\")\n    .replace(/^\\\\n+|\\\\n+$/g, \"\") }}\\n\\nPara salir del proceso, presiona el botón Volver al Menú\"\n    },\n    \"action\": {\n      \"buttons\": [\n        {\n          \"type\": \"reply\",\n          \"reply\": {\n            \"id\": \"menu_inicial\",\n            \"title\": \"Volver al menú\"\n          }\n        }\n      ]\n    }\n } }\n\n",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger 2').item.json.messages[0].from }}\",\n  \"type\": \"interactive\",\n  \"interactive\": {\n    \"type\": \"button\",\n    \"body\": {\n      \"text\": \"¡De acuerdo! Comencemos con el proceso para crear tu justificante.\\n\\nPara empezar, selecciona el número del día para el que se generará el justificante 📝\\n\\n{{$json.formattedBody.replace(/\\r?\\n/g, \"\\\\n\")\n    .replace(/^\\\\n+|\\\\n+$/g, \"\") }}\\n\\nPara salir del proceso, presiona el botón Volver al Menú\"\n    },\n    \"action\": {\n      \"buttons\": [\n        {\n          \"type\": \"reply\",\n          \"reply\": {\n            \"id\": \"menu_inicial\",\n            \"title\": \"Volver al menú\"\n          }\n        }\n      ]\n    }\n } }\n\n",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
@@ -9656,7 +9658,7 @@
       }
     ]
   },
-  "versionId": "b2324dd1-ce3b-4dcb-898c-67c824ffc496",
+  "versionId": "5e8e575b-296a-42b2-a09b-796511989c8e",
   "triggerCount": 1,
   "shared": [
     {
