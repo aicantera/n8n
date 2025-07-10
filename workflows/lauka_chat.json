@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-06-05T02:22:24.606Z",
-  "updatedAt": "2025-06-10T00:33:25.000Z",
+  "updatedAt": "2025-07-10T18:02:25.000Z",
   "id": "1RCUwQw4PrzwGHpK",
   "name": "lauka_chat",
   "active": true,
@@ -8,282 +8,72 @@
   "nodes": [
     {
       "parameters": {
-        "sessionIdType": "customKey",
-        "sessionKey": "={{ $json.message.chat.id }}",
-        "tableName": "n8n_chat_histories_lauka",
-        "contextWindowLength": 10
+        "path": "productos",
+        "responseMode": "responseNode",
+        "options": {}
       },
-      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
-      "typeVersion": 1.3,
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
       "position": [
-        80,
-        260
+        -480,
+        -80
       ],
-      "id": "ed4318b2-2bad-4351-b388-1daa2d4a0201",
-      "name": "Postgres Chat Memory",
-      "credentials": {
-        "postgres": {
-          "id": "CFNWnFQx8hqQIegZ",
-          "name": "Postgres account"
-        }
-      }
+      "id": "8e4d29e0-3c3d-41bc-8b2d-1e7fd1e0fa86",
+      "name": "Webhook",
+      "webhookId": "feeed3af-fe88-42f7-910b-3f3b619e4dac"
     },
     {
-      "parameters": {},
-      "type": "n8n-nodes-base.manualTrigger",
+      "parameters": {
+        "operation": "getAll",
+        "tableId": "productos_enriquecidos"
+      },
+      "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        -500,
-        -220
+        -180,
+        -80
       ],
-      "id": "85b992f8-9f12-47aa-bfe6-fd851db3a316",
-      "name": "When clicking ‘Test workflow’"
-    },
-    {
-      "parameters": {
-        "promptType": "define",
-        "text": "={{ $json.message.text }}",
-        "options": {
-          "systemMessage": "=# 🧪 Asesor Experto de Productos de Laboratorio – S Lauka\n\n## 🎯 Rol del agente:\nEres un asesor experto en productos de laboratorio de **S Lauka**. Tu objetivo es ayudar al usuario a encontrar el producto ideal según su necesidad específica, **usando únicamente la base de conocimiento y lista de productos proporcionada**.\n\n---\n\n## ✅ Flujo de conversación:\n\nHaz preguntas clave al usuario para entender su necesidad y poder hacer recomendaciones precisas:\n\n1. **Tipo de prueba o análisis**\n   - Pregunta: `¿Para qué tipo de pruebas o análisis necesitas el producto? (Ej. pruebas de pH, microbiología, titulación, etc.)`\n\n2. **Preferencia de marca**\n   - Pregunta: `¿Tienes alguna marca preferida o prefieres que te recomiende una opción?`\n\n3. **Especificaciones técnicas**\n   - Pregunta: `¿Qué características necesitas? (capacidad, volumen, material, tamaño, resistencia, etc.)`\n\n---\n\n## 🔍 Recomendaciones de productos:\n\nCuando encuentres coincidencias, sugiérelas en este formato enriquecido. Si hay **muchos productos coincidentes**, realiza una **pregunta de refinamiento** basada en los atributos encontrados (por ejemplo, capacidad, marca, tipo de material, etc.).\n\n### Ejemplo:\nHe encontrado 12 productos compatibles. ¿Te interesa que filtre por capacidad (100ml, 250ml, 500ml) o por marca (Lauka, Pyrex, VWR)?\n\n---\n\n## 📦 Formato de respuesta para cada producto encontrado:\n\n*Número de artículo*: [Código o SKU]\n*Marca*: [Marca del producto]\n*Descripción del artículo*: [Descripción clara y técnica]\n\n*Casos de uso*: [Ejemplos relacionados con la necesidad del cliente o aplicaciones típicas]\n\n*Productos relacionados:* [Insumos, consumibles, accesorios compatibles o productos complementarios de la base]\n\n*Especificaciones Técnicas*: [Agrega detalles técnicos adicionales si están disponibles: material, rangos de temperatura, resistencia química, certificaciones, normas técnicas, compatibilidades, tips de uso, etc.]\n\nCódigo NCM:\nFamilia y Subfamilia:\n---\n\n## ℹ️ Información adicional bajo solicitud:\n\nSi el usuario elige un producto o muestra interés por uno específico, ofrécele automáticamente más detalles:\n\n> *“¿Deseas conocer más detalles técnicos sobre este producto (material, temperatura, certificaciones, resistencia, etc.)?”*\n\n---\n\n## 🛠️ Si no se encuentra el producto adecuado:\n\nPide estos datos para escalar la solicitud al equipo de consultores:\n\n- Nombre completo  \n- Correo electrónico  \n- Nombre de la empresa o institución  \n- Cantidad de piezas requeridas\n\n---\n\n## 🛑 Reglas estrictas:\n\n- 🚫 No des opiniones personales ni recomendaciones fuera de la base de conocimiento.\n- responde con emoticonos y usa markdown legacy para telegram. \n- formatea los titulos con negritas. \n- 🚫 No respondas sobre temas ajenos a productos de laboratorio.\n- 🚫 No inventes productos ni datos no incluidos en la base.\n- ✅ Solo continúa conversaciones relacionadas con el uso de productos de laboratorio.\n\n---\n\n## 🧠 Valor agregado (enriquecimiento):\n\nSiempre que sea posible, añade información técnica adicional y recomendaciones relevantes, como:\n- Certificaciones ISO u otras normas\n- Compatibilidad con otros productos\n- Ventajas frente a modelos similares\n- Recomendaciones de uso profesional"
-        }
-      },
-      "type": "@n8n/n8n-nodes-langchain.agent",
-      "typeVersion": 1.9,
-      "position": [
-        -80,
-        0
-      ],
-      "id": "f77d0c67-80d2-44d5-82ca-f5cf411b6690",
-      "name": "AI Agent"
-    },
-    {
-      "parameters": {
-        "model": {
-          "__rl": true,
-          "value": "gpt-4.1",
-          "mode": "list",
-          "cachedResultName": "gpt-4.1"
-        },
-        "options": {}
-      },
-      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
-      "typeVersion": 1.2,
-      "position": [
-        -100,
-        260
-      ],
-      "id": "a55f7fff-3e2a-4f7f-9029-33041de245de",
-      "name": "OpenAI Chat Model",
-      "credentials": {
-        "openAiApi": {
-          "id": "Q8WQKibB08nTTio4",
-          "name": "OpenAi account CanteraConnect"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "mode": "retrieve-as-tool",
-        "toolName": "lauka_products",
-        "toolDescription": "busqueda de productos de laboratorio",
-        "tableName": {
-          "__rl": true,
-          "value": "documents_lauka2",
-          "mode": "list",
-          "cachedResultName": "documents_lauka2"
-        },
-        "topK": 5,
-        "options": {
-          "queryName": "match_documents_lauka2"
-        }
-      },
-      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
-      "typeVersion": 1.1,
-      "position": [
-        360,
-        300
-      ],
-      "id": "3ad058ad-11c8-4b61-9954-174e1a64a1d8",
-      "name": "Supabase Vector Store",
+      "id": "dea16e1f-053b-4143-80f4-b1c588e74823",
+      "name": "Get many rows",
       "credentials": {
         "supabaseApi": {
-          "id": "ty0KiXsEYP1uJ8t9",
-          "name": "Supabase account - CANTERA"
+          "id": "YkMNoFk7VC7sBrAd",
+          "name": "SUAPBASE LAUKA"
         }
       }
     },
     {
       "parameters": {
+        "respondWith": "allIncomingItems",
         "options": {}
       },
-      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
-      "typeVersion": 1.2,
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
       "position": [
-        360,
-        520
+        40,
+        -80
       ],
-      "id": "aa8735b4-3c39-4374-ae95-d42c21a27b8f",
-      "name": "Embeddings OpenAI",
-      "credentials": {
-        "openAiApi": {
-          "id": "Q8WQKibB08nTTio4",
-          "name": "OpenAi account CanteraConnect"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "operation": "deleteTable",
-        "schema": {
-          "__rl": true,
-          "mode": "list",
-          "value": "public"
-        },
-        "table": {
-          "__rl": true,
-          "value": "n8n_chat_histories_lauka",
-          "mode": "list",
-          "cachedResultName": "n8n_chat_histories_lauka"
-        },
-        "restartSequences": true,
-        "options": {}
-      },
-      "type": "n8n-nodes-base.postgres",
-      "typeVersion": 2.6,
-      "position": [
-        -280,
-        -220
-      ],
-      "id": "ff172b03-c378-4e89-9bc2-c2aacd6e6b27",
-      "name": "Postgres",
-      "credentials": {
-        "postgres": {
-          "id": "CFNWnFQx8hqQIegZ",
-          "name": "Postgres account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "updates": [
-          "message"
-        ],
-        "additionalFields": {}
-      },
-      "type": "n8n-nodes-base.telegramTrigger",
-      "typeVersion": 1.2,
-      "position": [
-        -420,
-        0
-      ],
-      "id": "763e653b-e8bd-4c88-aba6-eff316ef8242",
-      "name": "Telegram Trigger",
-      "webhookId": "4b9f661a-1867-464e-966d-edbccfa67354",
-      "credentials": {
-        "telegramApi": {
-          "id": "ONgZ2dcQXZmW2GFy",
-          "name": "Telegram Lauka"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
-        "text": "={{ $json.output }}",
-        "additionalFields": {
-          "appendAttribution": false,
-          "parse_mode": "Markdown"
-        }
-      },
-      "type": "n8n-nodes-base.telegram",
-      "typeVersion": 1.2,
-      "position": [
-        360,
-        0
-      ],
-      "id": "0c5b5f8d-d8df-45cf-bc03-0aafe79d0495",
-      "name": "Telegram",
-      "webhookId": "389be987-0541-4edc-a7ea-41d776474a4f",
-      "credentials": {
-        "telegramApi": {
-          "id": "ONgZ2dcQXZmW2GFy",
-          "name": "Telegram Lauka"
-        }
-      }
+      "id": "7f349f34-1058-44d3-b0a6-6bf9fba3a3ac",
+      "name": "Respond to Webhook"
     }
   ],
   "connections": {
-    "Postgres Chat Memory": {
-      "ai_memory": [
-        [
-          {
-            "node": "AI Agent",
-            "type": "ai_memory",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "When clicking ‘Test workflow’": {
+    "Webhook": {
       "main": [
         [
           {
-            "node": "Postgres",
+            "node": "Get many rows",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "OpenAI Chat Model": {
-      "ai_languageModel": [
-        [
-          {
-            "node": "AI Agent",
-            "type": "ai_languageModel",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Supabase Vector Store": {
-      "ai_tool": [
-        [
-          {
-            "node": "AI Agent",
-            "type": "ai_tool",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Embeddings OpenAI": {
-      "ai_embedding": [
-        [
-          {
-            "node": "Supabase Vector Store",
-            "type": "ai_embedding",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Telegram Trigger": {
+    "Get many rows": {
       "main": [
         [
           {
-            "node": "AI Agent",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "AI Agent": {
-      "main": [
-        [
-          {
-            "node": "Telegram",
+            "node": "Respond to Webhook",
             "type": "main",
             "index": 0
           }
@@ -298,36 +88,8 @@
   "meta": {
     "templateCredsSetupCompleted": true
   },
-  "pinData": {
-    "Telegram Trigger": [
-      {
-        "json": {
-          "update_id": 223968952,
-          "message": {
-            "message_id": 2,
-            "from": {
-              "id": 1053303956,
-              "is_bot": false,
-              "first_name": "vladimir",
-              "last_name": "diaz",
-              "username": "Vdiaz3",
-              "language_code": "en"
-            },
-            "chat": {
-              "id": 1053303956,
-              "first_name": "vladimir",
-              "last_name": "diaz",
-              "username": "Vdiaz3",
-              "type": "private"
-            },
-            "date": 1749092277,
-            "text": "a"
-          }
-        }
-      }
-    ]
-  },
-  "versionId": "aaa2c6e7-9978-4e2c-89a0-d3f7edad8336",
+  "pinData": {},
+  "versionId": "aba943fc-3774-4312-a0fa-ba640843d15c",
   "triggerCount": 1,
   "shared": [
     {
