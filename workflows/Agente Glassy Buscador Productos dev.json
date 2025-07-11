@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-07-09T00:51:08.728Z",
-  "updatedAt": "2025-07-09T21:13:56.000Z",
+  "updatedAt": "2025-07-11T00:36:28.000Z",
   "id": "K8oTgBxQHYjHKhPI",
   "name": "Agente Glassy Buscador Productos dev",
   "active": false,
@@ -18,8 +18,8 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.2,
       "position": [
-        560,
-        -40
+        520,
+        0
       ],
       "id": "470aa345-1154-4f84-b63c-8b35c0255644",
       "name": "OpenAI Chat Model",
@@ -118,6 +118,99 @@
       ],
       "id": "98cae108-ae9d-44b6-9601-d359a97c1428",
       "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "text": "={{ $json.output }}",
+        "attributes": {
+          "attributes": [
+            {
+              "name": "cantidad_productos",
+              "type": "number",
+              "description": "Cuenta la cantidad de productos",
+              "required": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.informationExtractor",
+      "typeVersion": 1.2,
+      "position": [
+        1160,
+        -280
+      ],
+      "id": "15c98d4d-7fc7-441b-b9d9-dd17dd4a27fe",
+      "name": "Information Extractor"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "dbc67929-5076-4086-9cf7-a0ce31903029",
+              "leftValue": "={{ $json.output.cantidad_productos }}",
+              "rightValue": 1,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1520,
+        -280
+      ],
+      "id": "60d5bfe0-4e09-4f7b-bc48-a2ffff136143",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "Filtrado Interactivo**\n* **Lógica Principal:** Mientras la lista de productos tenga más de un elemento y haya características para diferenciar:\n    1.  **Analiza las Diferencias:** Compara los diccionarios de `caracteristicas` de todos los productos restantes en la lista. Identifica una característica que tenga valores diferentes entre los productos (ej. un producto tiene `color: \"Green Tint\"` y otro `color: \"Blue Tint\"`).\n    2.  **Formula la Pregunta:** Crea una pregunta clara y sencilla para el usuario sobre esa característica. Por ejemplo: \"Para asegurar que te doy el cristal correcto, ¿podrías decirme si tu parabrisas actual tiene sensor de lluvia?\" o \"¿El tinte de tu cristal es verde o de otro color?\".\n    3.  **Pregunta al Usuario:** Haz la pregunta que formulaste.\n* **Manejo de Respuesta:**\n    * **Si el usuario responde afirmativa o negativamente:** Filtra la lista de productos, descartando los que no coinciden con la respuesta del usuario. Vuelve a ejecutar la **Lógica Principal** de este paso con la lista reducida.",
+              "role": "system"
+            },
+            {
+              "content": "={{ $('AI Agent').item.json.output }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        1740,
+        -380
+      ],
+      "id": "40856dd2-116c-4590-b75d-7772249163f1",
+      "name": "Message a model",
+      "credentials": {
+        "openAiApi": {
+          "id": "Q8WQKibB08nTTio4",
+          "name": "OpenAi account CanteraConnect"
+        }
+      }
     }
   ],
   "connections": {
@@ -131,6 +224,11 @@
           },
           {
             "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Information Extractor",
             "type": "ai_languageModel",
             "index": 0
           }
@@ -169,13 +267,48 @@
           }
         ]
       ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Information Extractor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Information Extractor": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
     "executionOrder": "v1"
   },
   "staticData": null,
-  "meta": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
   "pinData": {
     "When Executed by Another Workflow": [
       {
@@ -185,7 +318,7 @@
       }
     ]
   },
-  "versionId": "585ad24d-2187-4f38-81c6-590133e49eb9",
+  "versionId": "4cf92e22-5f70-4599-ad00-09893e6b541b",
   "triggerCount": 0,
   "shared": [
     {
