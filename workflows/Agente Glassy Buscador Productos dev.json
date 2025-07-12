@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-07-09T00:51:08.728Z",
-  "updatedAt": "2025-07-11T22:53:05.000Z",
+  "updatedAt": "2025-07-11T23:18:21.000Z",
   "id": "K8oTgBxQHYjHKhPI",
   "name": "Agente Glassy Buscador Productos dev",
   "active": false,
@@ -137,8 +137,8 @@
       "type": "@n8n/n8n-nodes-langchain.informationExtractor",
       "typeVersion": 1.2,
       "position": [
-        1120,
-        -80
+        1140,
+        -280
       ],
       "id": "15c98d4d-7fc7-441b-b9d9-dd17dd4a27fe",
       "name": "Information Extractor"
@@ -187,7 +187,7 @@
         "messages": {
           "values": [
             {
-              "content": "Filtrado Interactivo**\n* **Lógica Principal:** Mientras la lista de productos tenga más de un elemento y haya características para diferenciar:\n    1.  **Analiza las Diferencias:** Compara los diccionarios de `caracteristicas` de todos los productos restantes en la lista. Identifica una característica que tenga valores diferentes entre los productos (ej. un producto tiene `color: \"Green Tint\"` y otro `color: \"Blue Tint\"`).\n    2.  **Formula la Pregunta:** Crea una pregunta clara y sencilla para el usuario sobre esa característica. Por ejemplo: \"Para asegurar que te doy el cristal correcto, ¿podrías decirme si tu parabrisas actual tiene sensor de lluvia?\" o \"¿El tinte de tu cristal es verde o de otro color?\".\n    3.  **Pregunta al Usuario:** Haz la pregunta que formulaste.\n* **Manejo de Respuesta:**\n    * **Si el usuario responde afirmativa o negativamente:** Filtra la lista de productos, descartando los que no coinciden con la respuesta del usuario. Vuelve a ejecutar la **Lógica Principal** de este paso con la lista reducida.",
+              "content": "=Filtrado Interactivo**\n* **Lógica Principal:** Mientras la lista de productos tenga más de un elemento y haya características para diferenciar:\n**Analiza las Diferencias:** Compara los diccionarios de `caracteristicas` de todos los productos restantes en la lista. Identifica una característica que tenga valores diferentes entre los productos (ej. un producto tiene `color: \"Green Tint\"` y otro `color: \"Blue Tint\"`).\n**Respuesta** Responde con el valor de las caracteristicas que tenga valores diferentes",
               "role": "system"
             },
             {
@@ -270,7 +270,13 @@
     },
     "AI Agent": {
       "main": [
-        []
+        [
+          {
+            "node": "Information Extractor",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     },
     "Information Extractor": {
@@ -294,6 +300,11 @@
           }
         ]
       ]
+    },
+    "Message a model": {
+      "main": [
+        []
+      ]
     }
   },
   "settings": {
@@ -312,7 +323,7 @@
       }
     ]
   },
-  "versionId": "6253e748-06de-45d4-a782-7a5d7058ced9",
+  "versionId": "6ec43def-6562-459c-a0d5-b162566f1980",
   "triggerCount": 0,
   "shared": [
     {
