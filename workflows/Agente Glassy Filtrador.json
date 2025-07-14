@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-07-11T00:12:57.473Z",
-  "updatedAt": "2025-07-14T18:02:52.000Z",
+  "updatedAt": "2025-07-14T19:49:56.000Z",
   "id": "hqoczQMD5PHVvfTp",
   "name": "Agente Glassy Filtrador",
   "active": false,
@@ -72,6 +72,11 @@
               "name": "type_glass",
               "description": "tipo de cristal",
               "required": true
+            },
+            {
+              "name": "caracteristicas",
+              "description": "características",
+              "required": true
             }
           ]
         },
@@ -118,6 +123,99 @@
       ],
       "id": "cb88db9b-3b40-4c29-916b-8d07e3e0e483",
       "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "text": "={{ $json.output }}",
+        "attributes": {
+          "attributes": [
+            {
+              "name": "cantidad_productos",
+              "type": "number",
+              "description": "Cuenta la cantidad de productos",
+              "required": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.informationExtractor",
+      "typeVersion": 1.2,
+      "position": [
+        1020,
+        0
+      ],
+      "id": "f80af617-bdec-4f1a-a4eb-2dfaaa3f070d",
+      "name": "Information Extractor"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "dbc67929-5076-4086-9cf7-a0ce31903029",
+              "leftValue": "={{ $json.output.cantidad_productos }}",
+              "rightValue": 1,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1400,
+        0
+      ],
+      "id": "271f7805-9d58-4c0f-8a6a-0fbd942976c3",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=**Objetivo:** Filtrar una lista de productos basándose en las características de vidrio especificadas por el usuario.\n\n**Descripción de la Tarea:**\nEres un nodo de n8n que recibe una lista de productos en el flujo de trabajo. Cada producto es un objeto JSON que incluye sus propias características. También recibes la variable {{ $('Information Extractor1').item.json.output.caracteristicas }}, que contiene los atributos que el vidrio del producto final debe tener.\n\nTu única función es comparar {{ $('Information Extractor1').item.json.output.caracteristicas }} con las características de cada producto en la lista y devolver una nueva lista que contenga **únicamente** los productos que coincidan con **todos** los criterios especificados.\n",
+              "role": "system"
+            },
+            {
+              "content": "={{ $('AI Agent').item.json.output }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        1620,
+        -100
+      ],
+      "id": "036ecec6-55c2-4dac-a4f6-53c6ec05c708",
+      "name": "Message a model",
+      "credentials": {
+        "openAiApi": {
+          "id": "zZlJrTGKq8KER7gD",
+          "name": "OpenAi account - GLASSY"
+        }
+      }
     }
   ],
   "connections": {
@@ -142,6 +240,11 @@
           },
           {
             "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Information Extractor",
             "type": "ai_languageModel",
             "index": 0
           }
@@ -169,6 +272,39 @@
           }
         ]
       ]
+    },
+    "Information Extractor": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Information Extractor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -182,12 +318,12 @@
     "When Executed by Another Workflow": [
       {
         "json": {
-          "query": "solicita los productos para el año 2012, la marca Volkswagen, el modelo Jetta, el tipo de automóvil 4 Door Sedan, el tipo de cristal Windshield y las siguientes características: color verde, sensor de lluvia"
+          "query": "solicita los productos para el año 2012, la marca Volkswagen, el modelo Jetta, el tipo de automóvil 4 Door Sedan, el tipo de cristal Windshield y las siguientes características: color verde, sensor de lluvia."
         }
       }
     ]
   },
-  "versionId": "73c41103-7a43-4900-af07-d5a123b6673f",
+  "versionId": "3fb2315d-fc80-4898-828d-f0b2605e1dec",
   "triggerCount": 0,
   "shared": [
     {
