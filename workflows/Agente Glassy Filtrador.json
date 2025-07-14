@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-07-11T00:12:57.473Z",
-  "updatedAt": "2025-07-11T00:14:11.000Z",
+  "updatedAt": "2025-07-14T17:56:28.000Z",
   "id": "hqoczQMD5PHVvfTp",
   "name": "Agente Glassy Filtrador",
   "active": false,
@@ -8,13 +8,7 @@
   "nodes": [
     {
       "parameters": {
-        "workflowInputs": {
-          "values": [
-            {
-              "name": "listado_productos"
-            }
-          ]
-        }
+        "inputSource": "passthrough"
       },
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "typeVersion": 1.1,
@@ -27,39 +21,103 @@
     },
     {
       "parameters": {
-        "modelId": {
+        "model": {
           "__rl": true,
-          "value": "gpt-4o-mini",
           "mode": "list",
-          "cachedResultName": "GPT-4O-MINI"
-        },
-        "messages": {
-          "values": [
-            {
-              "content": "= Filtrado Interactivo**\n* **Lógica Principal:** Mientras la lista de productos tenga más de un elemento y haya características para diferenciar:\n    1.  **Analiza las Diferencias:** Compara los diccionarios de `caracteristicas` de todos los productos restantes en la lista. Identifica una característica que tenga valores diferentes entre los productos (ej. un producto tiene `color: \"Green Tint\"` y otro `color: \"Blue Tint\"`).\n    2.  **Formula la Pregunta:** Crea una pregunta clara y sencilla para el usuario sobre esa característica. Por ejemplo: \"Para asegurar que te doy el cristal correcto, ¿podrías decirme si tu parabrisas actual tiene sensor de lluvia?\" o \"¿El tinte de tu cristal es verde o de otro color?\".\n    3.  **Pregunta al Usuario:** Haz la pregunta que formulaste.\n* **Manejo de Respuesta:**\n    * **Si el usuario responde afirmativa o negativamente:** Filtra la lista de productos, descartando los que no coinciden con la respuesta del usuario. Vuelve a ejecutar la **Lógica Principal** de este paso con la lista reducida.\n    ",
-              "role": "system"
-            },
-            {
-              "content": "=1. FW03316GTY PBS VW JETTA A6 4P SEDAN 10-12 (BICENTENARIO)\n   - Características:\n     - Color: Green Tint\n     - Información Adicional: 3rd Visor Frit\n   - ![Imagen](https://glasbilbutik.com/img/vehicleGraphics/046I0093.png)\n\n2. FW03317GTY PBS VW JETTA A6 4P SEDAN 10-18 RS\n   - Características:\n     - Color: Green Tint\n     - Información Adicional: Rain Sensor/3rd Visor Frit\n   - ![Imagen](https://glasbilbutik.com/img/vehicleGraphics/046I0093.png)"
-            }
-          ]
+          "value": "gpt-4o-mini"
         },
         "options": {}
       },
-      "type": "@n8n/n8n-nodes-langchain.openAi",
-      "typeVersion": 1.8,
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
       "position": [
-        220,
-        0
+        460,
+        240
       ],
-      "id": "2f7faf53-7811-48e3-94cd-897becc72583",
-      "name": "Message a model",
+      "id": "355dec35-1e94-42e6-8d7e-ffbc4929e189",
+      "name": "OpenAI Chat Model",
       "credentials": {
         "openAiApi": {
-          "id": "Q8WQKibB08nTTio4",
-          "name": "OpenAi account CanteraConnect"
+          "id": "zZlJrTGKq8KER7gD",
+          "name": "OpenAi account - GLASSY"
         }
       }
+    },
+    {
+      "parameters": {
+        "text": "={{ $json.query }}",
+        "attributes": {
+          "attributes": [
+            {
+              "name": "year",
+              "description": "año del vehiculo",
+              "required": true
+            },
+            {
+              "name": "brand",
+              "description": "marca del vehiculo",
+              "required": true
+            },
+            {
+              "name": "model",
+              "description": "modelo del vehiculo",
+              "required": true
+            },
+            {
+              "name": "car_type",
+              "description": "tipo de automóvil",
+              "required": true
+            },
+            {
+              "name": "type_glass",
+              "description": "tipo de cristal",
+              "required": true
+            }
+          ]
+        },
+        "options": {
+          "systemPromptTemplate": "You are an expert extraction algorithm.\nOnly extract relevant information from the text.\nIf you do not know the value of an attribute asked to extract, you may omit the attribute's value."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.informationExtractor",
+      "typeVersion": 1.2,
+      "position": [
+        200,
+        0
+      ],
+      "id": "7af2fd4f-2215-4944-b889-5f8e09449621",
+      "name": "Information Extractor1"
+    },
+    {
+      "parameters": {
+        "url": "=https://butik-vidrio.canteradigital.mx/api/finder/searchProducts/filtered?year={{ $json.output.year }}&brand={{ $json.output.brand }}&model={{ $json.output.model }}&car_type={{ $json.output.car_type }}&type_glass={{ $json.output.type_glass }}&antenna=false&encapsulated=false&hud=false&heated=false&attachment=false&request_origin=chatbot",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        500,
+        0
+      ],
+      "id": "a8a722e0-0b93-4ff3-aab6-ad31e22ff90b",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.data }}",
+        "options": {
+          "systemMessage": "=Tu única función es actuar como un procesador de datos JSON eficiente. Recibirás una lista de productos en el input `{{ $json.data }}`.\n\nTu tarea es filtrar y transformar esta lista. **Si varios productos comparten el mismo valor en el campo `nag`, solo debes procesar el primer producto que encuentres y descartar los duplicados posteriores.**\n\nPara cada producto único (según el criterio del 'nag'), crea un nuevo objeto JSON que contenga exclusivamente los siguientes campos:\n1.  `nombre`: extraído del campo `name`.\n2.  `imagenURL`: extraído del campo `nag_graphic`.\n3.  `identificadores`: un objeto que contenga `external_id`, `origin` y `nag`.\n4.  `caracteristicas`: un objeto que contenga `color` y `ad_info_a` del objeto anidado `nag_info`.\n\nEl resultado final debe ser un array JSON que contenga solo los objetos de los productos únicos y procesados. Si el input está vacío, devuelve un array vacío `[]`.\n\nTu respuesta DEBE ser únicamente el array JSON válido y nada más. No incluyas texto explicativo, comentarios, ni la palabra \"json\" antes del código."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        680,
+        0
+      ],
+      "id": "cb88db9b-3b40-4c29-916b-8d07e3e0e483",
+      "name": "AI Agent"
     }
   ],
   "connections": {
@@ -67,7 +125,45 @@
       "main": [
         [
           {
-            "node": "Message a model",
+            "node": "Information Extractor1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Information Extractor1",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Information Extractor1": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
             "type": "main",
             "index": 0
           }
@@ -82,8 +178,16 @@
   "meta": {
     "templateCredsSetupCompleted": true
   },
-  "pinData": {},
-  "versionId": "d7c82f88-63c4-45ab-9874-0c33eba073fb",
+  "pinData": {
+    "When Executed by Another Workflow": [
+      {
+        "json": {
+          "query": "solicita los productos para el año 2012, la marca Volkswagen, el modelo Jetta, el tipo de automóvil 4 Door Sedan, el tipo de cristal y las siguientes características: color verde, sensor de lluvia"
+        }
+      }
+    ]
+  },
+  "versionId": "543c3d56-13a6-4030-a141-9d3ba9d4772c",
   "triggerCount": 0,
   "shared": [
     {
