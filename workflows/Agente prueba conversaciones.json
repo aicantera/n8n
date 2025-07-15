@@ -1,9 +1,9 @@
 {
   "createdAt": "2025-06-26T19:46:17.010Z",
-  "updatedAt": "2025-06-27T00:44:12.000Z",
+  "updatedAt": "2025-07-15T19:21:44.000Z",
   "id": "LOGWfvEF1hsYrRR3",
   "name": "Agente prueba conversaciones",
-  "active": true,
+  "active": false,
   "isArchived": false,
   "nodes": [
     {
@@ -26,39 +26,6 @@
         "telegramApi": {
           "id": "vg5d9USBva9ntYwd",
           "name": "Telegram account prueba conversaciones"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "operation": "get",
-        "tableId": "chats",
-        "filters": {
-          "conditions": [
-            {
-              "keyName": "numero_id",
-              "keyValue": "={{ $json.message.from.id }}"
-            },
-            {
-              "keyName": "estatus",
-              "keyValue": "activo"
-            }
-          ]
-        }
-      },
-      "type": "n8n-nodes-base.supabase",
-      "typeVersion": 1,
-      "position": [
-        -240,
-        -60
-      ],
-      "id": "904fad48-fe2e-4816-9e57-65b1deb083f2",
-      "name": "Supabase",
-      "alwaysOutputData": true,
-      "credentials": {
-        "supabaseApi": {
-          "id": "ty0KiXsEYP1uJ8t9",
-          "name": "Supabase account - CANTERA"
         }
       }
     },
@@ -119,7 +86,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        200,
+        180,
         -160
       ],
       "id": "e3a9c98f-038d-4fc6-9f9c-11c19db73619",
@@ -152,7 +119,7 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        420,
+        640,
         -160
       ],
       "id": "67d0f781-e303-4672-8452-79ce94ac36b3",
@@ -173,7 +140,7 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 1.9,
       "position": [
-        920,
+        1140,
         -40
       ],
       "id": "2d3c33ca-2be5-41a1-9c55-cfee54f862cd",
@@ -191,90 +158,17 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.2,
       "position": [
-        960,
+        1180,
         180
       ],
       "id": "5e6425db-c91a-474c-98bd-84dc81285023",
       "name": "OpenAI Chat Model",
       "credentials": {
         "openAiApi": {
-          "id": "jgUWOLNsMtib1FUP",
-          "name": "OpenAi account Selene Ibarra"
+          "id": "JGOzqGKoKUjZGBsN",
+          "name": "OpenAi account Ricardo Correa"
         }
       }
-    },
-    {
-      "parameters": {
-        "tableId": "agente_leads_convversations",
-        "fieldsUi": {
-          "fieldValues": [
-            {
-              "fieldId": "conversacion_id",
-              "fieldValue": "={{ $('Edit Fields').item.json.id_find }}"
-            },
-            {
-              "fieldId": "chat_id",
-              "fieldValue": "={{ $('Edit Fields').item.json.numero_id_find }}"
-            },
-            {
-              "fieldId": "type",
-              "fieldValue": "agent"
-            },
-            {
-              "fieldId": "message",
-              "fieldValue": "={{ $json.output }}"
-            }
-          ]
-        }
-      },
-      "type": "n8n-nodes-base.supabase",
-      "typeVersion": 1,
-      "position": [
-        1540,
-        -180
-      ],
-      "id": "225f1877-660e-410a-99f5-d2662c8a0478",
-      "name": "Supabase2",
-      "credentials": {
-        "supabaseApi": {
-          "id": "ty0KiXsEYP1uJ8t9",
-          "name": "Supabase account - CANTERA"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "conditions": {
-          "options": {
-            "caseSensitive": true,
-            "leftValue": "",
-            "typeValidation": "strict",
-            "version": 2
-          },
-          "conditions": [
-            {
-              "id": "1e20a387-a075-4a8e-af13-1151571dd11e",
-              "leftValue": "={{ $('Supabase').item.json.id }}",
-              "rightValue": "",
-              "operator": {
-                "type": "number",
-                "operation": "exists",
-                "singleValue": true
-              }
-            }
-          ],
-          "combinator": "and"
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 2.2,
-      "position": [
-        1300,
-        -40
-      ],
-      "id": "344ed7e6-aa8a-4cfb-b0b8-aca1cb6456c3",
-      "name": "If1"
     },
     {
       "parameters": {
@@ -287,7 +181,7 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        1760,
+        2200,
         -180
       ],
       "id": "74946d3e-b73b-4f3d-842c-a0c88d367c72",
@@ -309,6 +203,18 @@
               "name": "numero_id_insert",
               "value": "={{ $('Telegram Trigger').item.json.message.from.id }}",
               "type": "string"
+            },
+            {
+              "id": "99a14231-245e-4d66-8c08-a01af8e9364a",
+              "name": "project_id_insert",
+              "value": "1",
+              "type": "string"
+            },
+            {
+              "id": "7f7fd41d-88be-43a0-b009-88784cfa80b3",
+              "name": "name_insert",
+              "value": "={{ $('Telegram Trigger').item.json.message.from.first_name }}",
+              "type": "string"
             }
           ]
         },
@@ -325,12 +231,20 @@
     },
     {
       "parameters": {
-        "tableId": "chats",
+        "tableId": "contacts",
         "fieldsUi": {
           "fieldValues": [
             {
               "fieldId": "numero_id",
               "fieldValue": "={{ $json.numero_id_insert }}"
+            },
+            {
+              "fieldId": "project_id",
+              "fieldValue": "1"
+            },
+            {
+              "fieldId": "name_whatsapp",
+              "fieldValue": "={{ $json.name_insert }}"
             }
           ]
         }
@@ -352,11 +266,72 @@
     },
     {
       "parameters": {
-        "tableId": "agente_leads_convversations",
+        "chatId": "={{ $('Telegram Trigger').item.json.message.from.id }}",
+        "text": "={{ $('AI Agent').item.json.output }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1980,
+        20
+      ],
+      "id": "be3ca4a9-0b46-4bb9-b869-7d9f81c86feb",
+      "name": "Telegram1",
+      "webhookId": "db7b90ad-efca-4609-8aae-0c946cdf7520",
+      "credentials": {
+        "telegramApi": {
+          "id": "vg5d9USBva9ntYwd",
+          "name": "Telegram account prueba conversaciones"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "tableId": "contacts",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "numero_id",
+              "keyValue": "={{ $json.message.from.id }}"
+            },
+            {
+              "keyName": "estatus",
+              "keyValue": "activo"
+            },
+            {
+              "keyName": "project_id",
+              "keyValue": "1"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        -240,
+        -60
+      ],
+      "id": "904fad48-fe2e-4816-9e57-65b1deb083f2",
+      "name": "Get a row",
+      "alwaysOutputData": true,
+      "credentials": {
+        "supabaseApi": {
+          "id": "ty0KiXsEYP1uJ8t9",
+          "name": "Supabase account - CANTERA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "tableId": "conversation",
         "fieldsUi": {
           "fieldValues": [
             {
-              "fieldId": "conversacion_id",
+              "fieldId": "contact_id",
               "fieldValue": "={{ $json.id }}"
             },
             {
@@ -377,11 +352,11 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        620,
+        680,
         160
       ],
       "id": "e0816236-091b-42a4-8628-fb4cbd2e4320",
-      "name": "Supabase3",
+      "name": "guadamos el mensaje",
       "credentials": {
         "supabaseApi": {
           "id": "ty0KiXsEYP1uJ8t9",
@@ -391,11 +366,11 @@
     },
     {
       "parameters": {
-        "tableId": "agente_leads_convversations",
+        "tableId": "conversation",
         "fieldsUi": {
           "fieldValues": [
             {
-              "fieldId": "conversacion_id",
+              "fieldId": "contact_id",
               "fieldValue": "={{ $('crear nuevo chat').item.json.id }}"
             },
             {
@@ -416,11 +391,11 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        1560,
+        1780,
         20
       ],
       "id": "17e80d6e-6f52-4628-8fb9-a8c37a86dad0",
-      "name": "Supabase4",
+      "name": "Create a row",
       "credentials": {
         "supabaseApi": {
           "id": "ty0KiXsEYP1uJ8t9",
@@ -430,25 +405,454 @@
     },
     {
       "parameters": {
-        "chatId": "={{ $('Telegram Trigger').item.json.message.from.id }}",
-        "text": "={{ $('AI Agent').item.json.output }}",
-        "additionalFields": {
-          "appendAttribution": false
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ecf80736-69d7-491b-a19e-434601bc7eaa",
+              "name": "chat_final",
+              "value": "={{ [$('Get a row').item.json.id,$('crear nuevo chat').item.json.id].join(\"\") }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1500,
+        -40
+      ],
+      "id": "f4bcb25d-b66b-412c-b19b-783f8ee827e9",
+      "name": "Edit Fields2"
+    },
+    {
+      "parameters": {
+        "tableId": "conversation",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "contact_id",
+              "fieldValue": "={{ $json.chat_final }}"
+            },
+            {
+              "fieldId": "chat_id",
+              "fieldValue": "={{ [$('Edit Fields1').item.json.numero_id_insert].join(\"\") }}"
+            },
+            {
+              "fieldId": "type",
+              "fieldValue": "agent"
+            },
+            {
+              "fieldId": "message",
+              "fieldValue": "={{ $('AI Agent').item.json.output }}"
+            }
+          ]
         }
       },
-      "type": "n8n-nodes-base.telegram",
-      "typeVersion": 1.2,
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
       "position": [
-        1760,
-        20
+        1840,
+        -180
       ],
-      "id": "be3ca4a9-0b46-4bb9-b869-7d9f81c86feb",
-      "name": "Telegram1",
-      "webhookId": "db7b90ad-efca-4609-8aae-0c946cdf7520",
+      "id": "225f1877-660e-410a-99f5-d2662c8a0478",
+      "name": "Create a row1",
       "credentials": {
-        "telegramApi": {
-          "id": "vg5d9USBva9ntYwd",
-          "name": "Telegram account prueba conversaciones"
+        "supabaseApi": {
+          "id": "ty0KiXsEYP1uJ8t9",
+          "name": "Supabase account - CANTERA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "1e20a387-a075-4a8e-af13-1151571dd11e",
+              "leftValue": "={{ $json.id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "number",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -320,
+        1040
+      ],
+      "id": "c860765f-2b65-44e4-86cf-3ecf17884d9d",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "69bf7b83-0b7f-4dee-b026-47f7c7b65f8c",
+              "name": "numero_id",
+              "value": "={{ $('When Executed by Another Workflow').item.json.number }}",
+              "type": "string"
+            },
+            {
+              "id": "99a14231-245e-4d66-8c08-a01af8e9364a",
+              "name": "project_id",
+              "value": "={{ $('When Executed by Another Workflow').item.json.project_id }}",
+              "type": "string"
+            },
+            {
+              "id": "7f7fd41d-88be-43a0-b009-88784cfa80b3",
+              "name": "name",
+              "value": "={{ $('When Executed by Another Workflow').item.json.contact_name }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -160,
+        1260
+      ],
+      "id": "e47160de-d7b7-4845-ab9e-5af179257d3f",
+      "name": "Edit Fields4"
+    },
+    {
+      "parameters": {
+        "tableId": "contacts",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "numero_id",
+              "fieldValue": "={{ $json.numero_id }}"
+            },
+            {
+              "fieldId": "project_id",
+              "fieldValue": "={{ $json.project_id }}"
+            },
+            {
+              "fieldId": "name_whatsapp",
+              "fieldValue": "={{ $json.name }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        60,
+        1260
+      ],
+      "id": "04d05334-a5d5-437d-9e59-4b32b0f56792",
+      "name": "crear nuevo chat1",
+      "credentials": {
+        "supabaseApi": {
+          "id": "ty0KiXsEYP1uJ8t9",
+          "name": "Supabase account - CANTERA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "tableId": "contacts",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "numero_id",
+              "keyValue": "={{ $json.number }}"
+            },
+            {
+              "keyName": "estatus",
+              "keyValue": "activo"
+            },
+            {
+              "keyName": "project_id",
+              "keyValue": "={{ $json.project_id }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        -540,
+        1040
+      ],
+      "id": "d98b9b43-5d12-432e-8705-a53322c67d02",
+      "name": "Get a row1",
+      "alwaysOutputData": true,
+      "credentials": {
+        "supabaseApi": {
+          "id": "ty0KiXsEYP1uJ8t9",
+          "name": "Supabase account - CANTERA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "tableId": "conversation",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "contact_id",
+              "fieldValue": "={{ $json.id }}"
+            },
+            {
+              "fieldId": "chat_id",
+              "fieldValue": "={{ $json.numero_id }}"
+            },
+            {
+              "fieldId": "type",
+              "fieldValue": "human"
+            },
+            {
+              "fieldId": "message",
+              "fieldValue": "={{ $('When Executed by Another Workflow').item.json.human_messaage }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        360,
+        1260
+      ],
+      "id": "ab1188f7-673f-4520-88e1-251173544c58",
+      "name": "guadamos el mensaje1",
+      "credentials": {
+        "supabaseApi": {
+          "id": "ty0KiXsEYP1uJ8t9",
+          "name": "Supabase account - CANTERA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ecf80736-69d7-491b-a19e-434601bc7eaa",
+              "name": "chat_final",
+              "value": "={{ [$('Get a row').item.json.id,$('crear nuevo chat').item.json.id].join(\"\") }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        480,
+        720
+      ],
+      "id": "4d2b1833-d8d2-4e6b-a404-99a33493ca16",
+      "name": "Edit Fields5"
+    },
+    {
+      "parameters": {
+        "tableId": "conversation",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "contact_id",
+              "fieldValue": "={{ $json.chat_final }}"
+            },
+            {
+              "fieldId": "chat_id",
+              "fieldValue": "={{ [$('Edit Fields1').item.json.numero_id_insert].join(\"\") }}"
+            },
+            {
+              "fieldId": "type",
+              "fieldValue": "agent"
+            },
+            {
+              "fieldId": "message",
+              "fieldValue": "={{ $('AI Agent').item.json.output }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        820,
+        580
+      ],
+      "id": "ae86cb4e-75a1-4610-950a-4b14d1b0098b",
+      "name": "Create a row2",
+      "credentials": {
+        "supabaseApi": {
+          "id": "ty0KiXsEYP1uJ8t9",
+          "name": "Supabase account - CANTERA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "number"
+            },
+            {
+              "name": "project_id",
+              "type": "number"
+            },
+            {
+              "name": "human_messaage"
+            },
+            {
+              "name": "agent_message"
+            },
+            {
+              "name": "contact_name"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -760,
+        1040
+      ],
+      "id": "98103658-8607-4fd6-b75b-300c3b870c41",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "tableId": "conversation",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "contact_id",
+              "fieldValue": "={{ $('crear nuevo chat1').item.json.id }}"
+            },
+            {
+              "fieldId": "chat_id",
+              "fieldValue": "={{ $('Edit Fields4').item.json.numero_id }}"
+            },
+            {
+              "fieldId": "type",
+              "fieldValue": "agent"
+            },
+            {
+              "fieldId": "message",
+              "fieldValue": "={{ $('When Executed by Another Workflow').item.json.agent_message }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        580,
+        1260
+      ],
+      "id": "584bc8fc-17a8-4a35-9e58-f26e823cd0cc",
+      "name": "guadamos el mensaje2",
+      "credentials": {
+        "supabaseApi": {
+          "id": "ty0KiXsEYP1uJ8t9",
+          "name": "Supabase account - CANTERA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "tableId": "conversation",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "contact_id",
+              "fieldValue": "={{ $json.id }}"
+            },
+            {
+              "fieldId": "chat_id",
+              "fieldValue": "={{ $json.numero_id }}"
+            },
+            {
+              "fieldId": "type",
+              "fieldValue": "human"
+            },
+            {
+              "fieldId": "message",
+              "fieldValue": "={{ $('When Executed by Another Workflow').item.json.human_messaage }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        100,
+        960
+      ],
+      "id": "637ad161-3106-46db-a7da-56d83b78e90c",
+      "name": "guadamos el mensaje3",
+      "credentials": {
+        "supabaseApi": {
+          "id": "ty0KiXsEYP1uJ8t9",
+          "name": "Supabase account - CANTERA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "tableId": "conversation",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "contact_id",
+              "fieldValue": "={{ $('Get a row1').item.json.id }}"
+            },
+            {
+              "fieldId": "chat_id",
+              "fieldValue": "={{ $('Get a row1').item.json.numero_id }}"
+            },
+            {
+              "fieldId": "type",
+              "fieldValue": "agent"
+            },
+            {
+              "fieldId": "message",
+              "fieldValue": "={{ $('When Executed by Another Workflow').item.json.agent_message }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        320,
+        960
+      ],
+      "id": "90635f94-633d-4ae6-998e-7f1261d0806f",
+      "name": "guadamos el mensaje4",
+      "credentials": {
+        "supabaseApi": {
+          "id": "ty0KiXsEYP1uJ8t9",
+          "name": "Supabase account - CANTERA"
         }
       }
     }
@@ -458,18 +862,7 @@
       "main": [
         [
           {
-            "node": "Supabase",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Supabase": {
-      "main": [
-        [
-          {
-            "node": "If",
+            "node": "Get a row",
             "type": "main",
             "index": 0
           }
@@ -531,36 +924,7 @@
       "main": [
         [
           {
-            "node": "If1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "If1": {
-      "main": [
-        [
-          {
-            "node": "Supabase2",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Supabase4",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Supabase2": {
-      "main": [
-        [
-          {
-            "node": "Telegram",
+            "node": "Edit Fields2",
             "type": "main",
             "index": 0
           }
@@ -582,14 +946,25 @@
       "main": [
         [
           {
-            "node": "Supabase3",
+            "node": "guadamos el mensaje",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Supabase3": {
+    "Get a row": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "guadamos el mensaje": {
       "main": [
         [
           {
@@ -600,11 +975,128 @@
         ]
       ]
     },
-    "Supabase4": {
+    "Create a row": {
       "main": [
         [
           {
             "node": "Telegram1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields2": {
+      "main": [
+        [
+          {
+            "node": "Create a row1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a row1": {
+      "main": [
+        [
+          {
+            "node": "Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "guadamos el mensaje3",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields4": {
+      "main": [
+        [
+          {
+            "node": "crear nuevo chat1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "crear nuevo chat1": {
+      "main": [
+        [
+          {
+            "node": "guadamos el mensaje1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get a row1": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields5": {
+      "main": [
+        [
+          {
+            "node": "Create a row2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "guadamos el mensaje1": {
+      "main": [
+        [
+          {
+            "node": "guadamos el mensaje2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Get a row1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "guadamos el mensaje3": {
+      "main": [
+        [
+          {
+            "node": "guadamos el mensaje4",
             "type": "main",
             "index": 0
           }
@@ -644,9 +1136,20 @@
           }
         }
       }
+    ],
+    "When Executed by Another Workflow": [
+      {
+        "json": {
+          "number": "5214434901193",
+          "project_id": 1,
+          "human_messaage": "hola",
+          "agent_message": "hola soy tu agente de ia",
+          "contact_name": "RTicardo"
+        }
+      }
     ]
   },
-  "versionId": "7d9d9790-3d58-4a0f-b702-ebb8ab718d2c",
+  "versionId": "4ce5b4e1-208f-4aba-9df7-b9d42e83ddb1",
   "triggerCount": 1,
   "shared": [
     {
