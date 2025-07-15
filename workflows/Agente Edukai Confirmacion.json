@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-07-02T00:07:35.911Z",
-  "updatedAt": "2025-07-10T19:24:14.000Z",
+  "updatedAt": "2025-07-14T23:33:17.000Z",
   "id": "uXmZvPw4HonDoJtb",
   "name": "Agente Edukai Confirmacion",
   "active": false,
@@ -124,11 +124,17 @@
       "typeVersion": 1,
       "position": [
         1280,
-        -360
+        -620
       ],
       "id": "1848d160-faf6-4044-b9b4-e477226e6d33",
       "name": "WhatsApp Business Cloud",
       "webhookId": "ebac2d4e-ceda-484c-a1b7-c7841588399d",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "ksd39Y8O4HUp9WhQ",
+          "name": "WhatsApp COSNULADO "
+        }
+      },
       "disabled": true
     },
     {
@@ -225,7 +231,7 @@
     {
       "parameters": {
         "fromEmail": "info@edukai.consulting",
-        "toEmail": "=info@edukai.consulting",
+        "toEmail": "=luisfragoso55@gmail.com",
         "subject": "=Nuevo Lead",
         "emailFormat": "text",
         "text": "=Tenemos nuevo Lead\n\nCliente:  {{ $('When Executed by Another Workflow').item.json.nombre_cliente }}\nEmpresa: {{ $('When Executed by Another Workflow').item.json.nombre_empresa }}\n\nRequerimiento: {{ $('When Executed by Another Workflow').item.json.requerimiento_cliente }}\nPropuesta: {{ $('When Executed by Another Workflow').item.json.resumen_propuesta }}\n{{ \"\\n\" }}\nPerfilado de cliente: {{ $('When Executed by Another Workflow').item.json.perfilado_de_cliente }}\n{{ \"\\n\" }}\nEstimación Inicial: {{ $json.output.detail_of_estimation }}\n{{ \"\\n\" }}\nValor del Lead: {{ $json.output.value }} USD\nProbablidad de Cierre:  {{ $json.output.propability*100 }} %\n{{ \"\\n\" }}\n\nPodemos contactar al cliente por los siguientes medios\nWhatsapp: {{ $('When Executed by Another Workflow').item.json.telefono_cliente }}\nCorreo: {{ $('When Executed by Another Workflow').item.json.email_cliente }}\n\n",
@@ -284,6 +290,30 @@
           "name": "OpenAi Agente Edukai"
         }
       }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('When Executed by Another Workflow').item.json.telefono_cliente }}",
+        "text": "=Perfecto! ya tenemos todos tus datos, nuestros asesores se pondran en contacto contigo.{{\"\\n\"}} Estamos seguros que te sorprenderá nuestra propuesta.",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1140,
+        -340
+      ],
+      "id": "8ee9a520-da7a-4418-b546-3e116691d3c8",
+      "name": "Send a text message",
+      "webhookId": "aaa41d72-96bd-440c-bdd7-30c515abe0f3",
+      "credentials": {
+        "telegramApi": {
+          "id": "mcukdpP03xMLgfnh",
+          "name": "Telegram Agente Edukai"
+        }
+      }
     }
   ],
   "connections": {
@@ -329,7 +359,7 @@
       "main": [
         [
           {
-            "node": "WhatsApp Business Cloud",
+            "node": "Send a text message",
             "type": "main",
             "index": 0
           }
@@ -345,6 +375,11 @@
             "index": 0
           }
         ]
+      ]
+    },
+    "WhatsApp Business Cloud": {
+      "main": [
+        []
       ]
     }
   },
@@ -371,7 +406,7 @@
       }
     ]
   },
-  "versionId": "ac70f988-b34f-480e-810f-42c7826730b4",
+  "versionId": "734fe918-b8f4-4cfc-8cf4-c788626b1dc6",
   "triggerCount": 0,
   "shared": [
     {
