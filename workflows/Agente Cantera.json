@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-05-13T16:37:03.099Z",
-  "updatedAt": "2025-07-15T00:51:25.000Z",
+  "updatedAt": "2025-07-15T01:03:54.000Z",
   "id": "PTbESRzX3rguwQN8",
   "name": "Agente Cantera",
   "active": false,
@@ -851,8 +851,8 @@
       "name": "OpenAI",
       "credentials": {
         "openAiApi": {
-          "id": "jgUWOLNsMtib1FUP",
-          "name": "OpenAi account Selene Ibarra"
+          "id": "ZmWqQ5PGylh4Y05s",
+          "name": "OpenAi account - CANTERA"
         }
       }
     },
@@ -1771,27 +1771,6 @@
     },
     {
       "parameters": {
-        "operation": "push",
-        "list": "={{ $('WhatsApp Trigger').item.json.messages[0].from }}",
-        "messageData": "={{ $json.mensaje_final }}"
-      },
-      "type": "n8n-nodes-base.redis",
-      "typeVersion": 1,
-      "position": [
-        320,
-        -40
-      ],
-      "id": "a1accfc3-9fb6-4e1e-a5df-872b56c63826",
-      "name": "Redis",
-      "credentials": {
-        "redis": {
-          "id": "D8enpdVeoS0YaHLV",
-          "name": "Redis cantera"
-        }
-      }
-    },
-    {
-      "parameters": {
         "assignments": {
           "assignments": [
             {
@@ -1807,11 +1786,117 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        40,
+        -660,
         -40
       ],
       "id": "5b7f59d6-de9b-4532-87ed-5e06938ff20d",
       "name": "Edit Fields3"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "14d45c9a-45b5-48c3-83d0-8f8265026b9f",
+              "name": "mensaje_final",
+              "value": "={{ $('OpenAI').item.json.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -660,
+        140
+      ],
+      "id": "cb2bab91-15f2-40bf-b8ef-bf2ccf4825ea",
+      "name": "Edit Fields4"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "key": "={{ $('WhatsApp Trigger').item.json.messages[0].from }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        80,
+        -40
+      ],
+      "id": "32023a75-4371-4eb1-ae13-17c12f53b698",
+      "name": "obtenemos los datos del buffer",
+      "credentials": {
+        "redis": {
+          "id": "D8enpdVeoS0YaHLV",
+          "name": "Redis cantera"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "push",
+        "list": "={{ $('WhatsApp Trigger').item.json.messages[0].from }}",
+        "messageData": "={{ JSON.stringify({\n'message':$json.mensaje_final ,\n'sessionId': $('WhatsApp Trigger').item.json.messages[0].id ,\n'date_time': $('WhatsApp Trigger').item.json.messages[0].timestamp.toDateTime('s').toLocal() \n}) }}"
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        -300,
+        -40
+      ],
+      "id": "a1accfc3-9fb6-4e1e-a5df-872b56c63826",
+      "name": "añadimos al buffer",
+      "credentials": {
+        "redis": {
+          "id": "D8enpdVeoS0YaHLV",
+          "name": "Redis cantera"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "26a6c0bf-90d7-43af-9207-f9902669d575"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "ignorar"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        300,
+        -40
+      ],
+      "id": "8e162ca6-feeb-46aa-8b00-4ca1a21ba42b",
+      "name": "Switch2"
     }
   ],
   "connections": {
@@ -1984,7 +2069,7 @@
       "main": [
         [
           {
-            "node": "typing indicator",
+            "node": "Edit Fields4",
             "type": "main",
             "index": 0
           }
@@ -2253,7 +2338,40 @@
       "main": [
         [
           {
-            "node": "Redis",
+            "node": "añadimos al buffer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields4": {
+      "main": [
+        [
+          {
+            "node": "añadimos al buffer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "añadimos al buffer": {
+      "main": [
+        [
+          {
+            "node": "obtenemos los datos del buffer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "obtenemos los datos del buffer": {
+      "main": [
+        [
+          {
+            "node": "Switch2",
             "type": "main",
             "index": 0
           }
@@ -2307,7 +2425,7 @@
       }
     ]
   },
-  "versionId": "012f3e57-ece4-4991-b6b7-2c8453742803",
+  "versionId": "7ebb22b5-c18d-41c4-b3bd-b255c4f5bfc7",
   "triggerCount": 1,
   "shared": [
     {
