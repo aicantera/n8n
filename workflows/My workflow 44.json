@@ -1,0 +1,385 @@
+{
+  "createdAt": "2025-07-16T20:05:27.980Z",
+  "updatedAt": "2025-07-16T20:21:02.000Z",
+  "id": "gP8Gtd9h6QvTjFGk",
+  "name": "My workflow 44",
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "agentes_user_generator",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -400,
+        20
+      ],
+      "id": "035d6425-d7a0-4001-ad21-e3f683502e4d",
+      "name": "Webhook",
+      "webhookId": "c13d527c-954c-421f-b131-40d4a5664ab7"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"status\": \"success\",\n  \"message\":\"Usuario agregado con éxito\"\n}",
+        "options": {
+          "responseCode": 201
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        1740,
+        0
+      ],
+      "id": "6f0e22da-67f9-4934-8f93-cbcd87de51d0",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Usa bcryptjs para generar hash\nconst bcrypt = require('bcryptjs');\n\nconst password = $json.password || \"MiClaveSegura123!\";\nconst salt = bcrypt.genSaltSync(10);\nconst hashedPassword = bcrypt.hashSync(password, salt);\n\nreturn [\n  {\n    json: {\n      ...$json,\n      hashed_password: hashedPassword\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        280,
+        -300
+      ],
+      "id": "40ebe7bb-4332-4741-837f-7141e7211b87",
+      "name": "Code",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d4453ae7-e889-4961-9b2d-32ca8660b714",
+              "name": "password",
+              "value": "={{ $json.body.password }}",
+              "type": "string"
+            },
+            {
+              "id": "d4dc3b6b-5fa9-4034-b1af-df48345e7989",
+              "name": "email",
+              "value": "={{ $json.body.email }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -140,
+        0
+      ],
+      "id": "65bd832d-b5df-4804-a935-c9fc50419ec7",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "tableId": "clientes_usuario",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "full_name",
+              "fieldValue": "={{ $('Webhook').item.json.body.full_name }}"
+            },
+            {
+              "fieldId": "session_name",
+              "fieldValue": "={{ $('Webhook').item.json.body.session_name }}"
+            },
+            {
+              "fieldId": "email",
+              "fieldValue": "={{ $('Webhook').item.json.body.email }}"
+            },
+            {
+              "fieldId": "whatsapp_number",
+              "fieldValue": "={{ $('Webhook').item.json.body.whatsapp_number }}"
+            },
+            {
+              "fieldId": "password",
+              "fieldValue": "={{ $('Webhook').item.json.body.password }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        1220,
+        0
+      ],
+      "id": "cbc65b96-06ca-486c-81d9-cfd2586cf795",
+      "name": "Create a row",
+      "credentials": {
+        "supabaseApi": {
+          "id": "ty0KiXsEYP1uJ8t9",
+          "name": "Supabase account - CANTERA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "tableId": "clientes_usuario",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "email",
+              "keyValue": "={{ $json.email }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        80,
+        0
+      ],
+      "id": "c3e1cf49-8c70-4d0d-a9ea-71f115e6c24f",
+      "name": "Get a row",
+      "credentials": {
+        "supabaseApi": {
+          "id": "ty0KiXsEYP1uJ8t9",
+          "name": "Supabase account - CANTERA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "3a2ff843-8992-492b-8f47-e14b99d49420",
+              "leftValue": "={{ $json.id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "number",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        300,
+        0
+      ],
+      "id": "241ff0b4-10b7-4d41-b684-7c5c961b1fef",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"status\": \"error\",\n  \"message\":\"Usuario ya registrado\"\n}",
+        "options": {
+          "responseCode": 403
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        700,
+        -260
+      ],
+      "id": "f4145161-2fd6-4424-854b-7e579fbad76e",
+      "name": "Respond to Webhook1"
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        []
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Get a row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a row": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get a row": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Create a row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {
+    "Webhook": [
+      {
+        "json": {
+          "headers": {
+            "host": "ia.canteradigital.mx",
+            "user-agent": "PostmanRuntime/7.37.3",
+            "content-length": "201",
+            "accept": "*/*",
+            "accept-encoding": "gzip, deflate, br",
+            "cache-control": "no-cache",
+            "content-type": "application/json",
+            "postman-token": "f82769e0-42fd-4f24-885d-5e31faf0c164",
+            "x-forwarded-for": "177.240.130.78",
+            "x-forwarded-host": "ia.canteradigital.mx",
+            "x-forwarded-port": "443",
+            "x-forwarded-proto": "https",
+            "x-forwarded-server": "ff7b5d3c7aa9",
+            "x-real-ip": "177.240.130.78"
+          },
+          "params": {},
+          "query": {},
+          "body": {
+            "full_name": "Juan Pérez",
+            "session_name": "juan_session_001",
+            "email": "juan.perez@example.com",
+            "whatsapp_number": "+5215551234567",
+            "password": "MiClaveSegura123!",
+            "project_id": 1
+          },
+          "webhookUrl": "https://ia.canteradigital.mx/webhook-test/agentes_user_generator",
+          "executionMode": "test"
+        }
+      }
+    ]
+  },
+  "versionId": "9a4df498-727c-40cd-b23d-dd180c88d29d",
+  "triggerCount": 1,
+  "shared": [
+    {
+      "createdAt": "2025-07-16T20:05:27.984Z",
+      "updatedAt": "2025-07-16T20:05:27.984Z",
+      "role": "workflow:owner",
+      "workflowId": "gP8Gtd9h6QvTjFGk",
+      "projectId": "BZ9Ta5yhe4RhzY78",
+      "project": {
+        "createdAt": "2025-05-13T15:56:28.209Z",
+        "updatedAt": "2025-05-13T16:18:54.372Z",
+        "id": "BZ9Ta5yhe4RhzY78",
+        "name": "CANTERA ADMIN <canteradigital7@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "projectRelations": [
+          {
+            "createdAt": "2025-05-13T15:56:28.209Z",
+            "updatedAt": "2025-05-13T15:56:28.209Z",
+            "role": "project:personalOwner",
+            "userId": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
+            "projectId": "BZ9Ta5yhe4RhzY78",
+            "user": {
+              "createdAt": "2025-05-13T15:56:27.880Z",
+              "updatedAt": "2025-07-08T21:59:22.697Z",
+              "id": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
+              "email": "canteradigital7@gmail.com",
+              "firstName": "CANTERA",
+              "lastName": "ADMIN",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-05-13T16:19:25.161Z",
+                "personalization_survey_n8n_version": "1.92.2",
+                "companySize": "<20",
+                "companyType": "saas",
+                "role": "customer-support",
+                "reportedSource": "event"
+              },
+              "settings": {
+                "userActivated": true,
+                "firstSuccessfulWorkflowId": "PTbESRzX3rguwQN8",
+                "userActivatedAt": 1747154580970,
+                "easyAIWorkflowOnboarded": true,
+                "npsSurvey": {
+                  "responded": true,
+                  "lastShownAt": 1748367494893
+                },
+                "dismissedCallouts": {
+                  "aiAgentStarterCallout": true
+                }
+              },
+              "role": "global:owner",
+              "disabled": false,
+              "mfaEnabled": false,
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": []
+}
