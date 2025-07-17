@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-06-18T02:56:28.104Z",
-  "updatedAt": "2025-06-24T16:53:01.000Z",
+  "updatedAt": "2025-07-17T19:30:20.000Z",
   "id": "lvEmEanFbdDwGFYm",
   "name": "revisar datos de usuarios chatbot",
   "active": true,
@@ -179,6 +179,185 @@
       ],
       "id": "bab60f53-de59-4bb1-b131-94862afea762",
       "name": "If"
+    },
+    {
+      "parameters": {
+        "content": "## Flujo de actualización de estado de usuarios\n\nEste flujo revisa cada 20 minutos la colección `user_state` de MongoDB. Para cada usuario que lleve más de 30 minutos inactivo y cuyo estado no sea `menuInicial`, actualiza `state` a `menuInicial` y actualiza `date` al momento actual en formato `D/M/YYYY, h:mm:ss a`.",
+        "height": 220,
+        "width": 450
+      },
+      "name": "Workflow Overview1",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        240,
+        720
+      ],
+      "id": "19990682-d680-4cdf-b123-530ffc528f97",
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "triggerTimes": {
+          "values": [],
+          "item": [
+            {
+              "mode": "everyX",
+              "value": 10,
+              "unit": "minutes"
+            }
+          ]
+        }
+      },
+      "name": "Inactivity Cron1",
+      "type": "n8n-nodes-base.cron",
+      "position": [
+        140,
+        1040
+      ],
+      "id": "061e9760-6d42-47e2-9b67-aca23a0d84f9",
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "collection": "user_state_sales",
+        "options": {
+          "skip": 0,
+          "sort": "{}",
+          "projection": "{}"
+        }
+      },
+      "name": "Find Users1",
+      "type": "n8n-nodes-base.mongoDb",
+      "position": [
+        400,
+        1040
+      ],
+      "id": "98591443-7b43-411f-991d-2ce46e48e2c4",
+      "typeVersion": 1.2,
+      "credentials": {
+        "mongoDb": {
+          "id": "xZYe0R0CRtWFmyv7",
+          "name": "MongoDB account cerebro core"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "const results = [];\nconst nowUtcMs = Date.now();\nconst offsetMs = 6 * 60 * 60 * 1000; // UTC-6\nfor (const item of items) {\n  const data = item.json;\n  // Sólo conversaciones de tipo chatbot\n  if (data.type_conversation !== 'chatbot') continue;\n  const dateStr = data.date;\n  if (!dateStr) continue;\n  // Parsear fecha y hora\n  const [datePart, timePart] = dateStr.split(', ');\n  const [day, month, year] = datePart.split('/').map(Number);\n  let [timeStr, meridiem] = timePart.split(' ');\n  meridiem = meridiem.toLowerCase();\n  let [hour, minute, second] = timeStr.split(':').map(Number);\n  if (meridiem === 'p.m.' && hour < 12) hour += 12;\n  if (meridiem === 'a.m.' && hour === 12) hour = 0;\n  // Última interacción en UTC (sumar 6 horas a hora local)\n  const lastUtcMs = Date.UTC(year, month - 1, day, hour + 6, minute, second);\n  const diffMin = (nowUtcMs - lastUtcMs) / 60000;\n  // Si inactivo >30min y no está en menuInicial\n  if (diffMin > 20 && data.state !== 'menuInicial') {\n    // Calcular fecha actual en UTC-6\n    const nowMexicoUtcMs = nowUtcMs - offsetMs;\n    const d = new Date(nowMexicoUtcMs);\n    const D = d.getUTCDate();\n    const M = d.getUTCMonth() + 1;\n    const Y = d.getUTCFullYear();\n    let h2 = d.getUTCHours();\n    const m2 = String(d.getUTCMinutes()).padStart(2, '0');\n    const s2 = String(d.getUTCSeconds()).padStart(2, '0');\n    const ampm2 = h2 >= 12 ? 'p.m.' : 'a.m.';\n    h2 = h2 % 12 === 0 ? 12 : h2 % 12;\n    const newDateStr = `${D}/${M}/${Y}, ${h2}:${m2}:${s2} ${ampm2}`;\n    results.push({\n      json: {\n        _id: data._id,\n        state: 'menuInicial',\n        date: newDateStr,\n        phoneNumber: data.phoneNumber\n      }\n    });\n  }\n}\nreturn results;"
+      },
+      "name": "Filter Inactive Users1",
+      "type": "n8n-nodes-base.function",
+      "position": [
+        640,
+        1040
+      ],
+      "id": "fcc2ab3f-c478-4af3-9df9-e963c88e875e",
+      "alwaysOutputData": true,
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "collection": "user_state_sales",
+        "updateKey": "_id",
+        "fields": "state,date",
+        "options": {
+          "dateFields": "",
+          "useDotNotation": false
+        }
+      },
+      "name": "Update User State1",
+      "type": "n8n-nodes-base.mongoDb",
+      "position": [
+        860,
+        880
+      ],
+      "id": "a1685ac6-50da-4d77-b2db-22d0067a4dea",
+      "typeVersion": 1.2,
+      "credentials": {
+        "mongoDb": {
+          "id": "xZYe0R0CRtWFmyv7",
+          "name": "MongoDB account cerebro core"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v22.0/669848086217681/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer EAAUX8tBNibUBO5oRM8xn7QQMJ949BYO49fUoAtXQZBkvdNqCZAbZC4sHTXZC0wyUBMLT2CvP0GpNdSaF3yd0F43HZC7m6ubsYitZBvzksq11tqPZC8omLgJlj5kSPHjhT1sIod9jsuW9z2i0rGu2xmIp7WD9I6ZCUhosuM31ANSp1tI554IQQbSVAyoIvoI6B1rohwZDZD"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{$json.phoneNumber}}\",\n  \"text\": {\n    \"body\": \"Entendemos que puedes estar ocupado en este momento 😊. Como no recibimos respuesta, cerraremos esta conversación por ahora. Si necesitas algo más, no dudes en escribirnos 📩.\"\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1580,
+        1100
+      ],
+      "id": "b9eeaa54-0670-47f6-8336-24296f4ea99f",
+      "name": "mensaje de confirmación de cierre de sesion1"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        880,
+        1080
+      ],
+      "id": "348da8c6-6150-4a7b-b758-98cdca07df86",
+      "name": "Loop Over Items1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "1612e11b-a829-4752-a5b9-c44f8525858b",
+              "leftValue": "={{$json.phoneNumber}}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1220,
+        1100
+      ],
+      "id": "b670ddab-6475-4b7d-9cd3-bc2223c4f5a4",
+      "name": "If1"
     }
   ],
   "connections": {
@@ -265,6 +444,85 @@
           }
         ]
       ]
+    },
+    "Inactivity Cron1": {
+      "main": [
+        [
+          {
+            "node": "Find Users1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Find Users1": {
+      "main": [
+        [
+          {
+            "node": "Filter Inactive Users1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter Inactive Users1": {
+      "main": [
+        [
+          {
+            "node": "Update User State1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Loop Over Items1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "mensaje de confirmación de cierre de sesion1": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items1": {
+      "main": [
+        [],
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "mensaje de confirmación de cierre de sesion1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Loop Over Items1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -279,10 +537,15 @@
       {
         "json": {}
       }
+    ],
+    "Inactivity Cron1": [
+      {
+        "json": {}
+      }
     ]
   },
-  "versionId": "18d70459-2600-4d6b-ace0-dad519924127",
-  "triggerCount": 1,
+  "versionId": "ebb6be77-735f-4c74-9b67-99ffb15d809d",
+  "triggerCount": 2,
   "shared": [
     {
       "createdAt": "2025-06-18T02:56:28.108Z",
