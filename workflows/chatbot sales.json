@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-06-24T22:28:19.611Z",
-  "updatedAt": "2025-07-14T22:27:28.000Z",
+  "updatedAt": "2025-07-17T19:16:29.000Z",
   "id": "PetXIW4fDRVoHgK5",
   "name": "chatbot sales",
   "active": true,
@@ -1378,7 +1378,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// Nodo “Function” de n8n\n// Valida items[0].json.selection y retorna status con mensajes amistosos\n\n// 1. Leer la selección del nodo Set anterior\nconst raw = items[0].json.selection;\nconst sel = Number(raw);\n\n// 2. Preparar la respuesta con mensajes descriptivos\nlet result;\n\nif (Number.isNaN(sel)) {\n  // No es un número\n  result = {\n    status: 'error',\n    message: `Ups, parece que tu elección “${raw}” no es un número. Por favor escribe un número del 1 al 7 para continuar.`\n  };\n} else if (!Number.isInteger(sel)) {\n  // No es entero\n  result = {\n    status: 'error',\n    message: `Veo que has ingresado ${sel}, pero necesitamos un número entero. Por favor elige un número sin decimales entre 1 y 7.`\n  };\n} else if (sel < 1 || sel > 7) {\n  // Fuera de rango\n  result = {\n    status: 'error',\n    message: `Tu selección es ${sel}, pero debe estar entre 1 y 7. Intenta de nuevo con un número dentro de ese rango.`\n  };\n} else {\n  // OK\n  result = {\n    status: 'success',\n    message: `¡Genial! Has seleccionado la opción número ${sel}.`,\n    selection: sel\n  };\n}\n\n// 3. Devolver el resultado para usar en nodos siguientes\nreturn [\n  {\n    json: result\n  }\n];\n"
+        "jsCode": "// Nodo “Function” de n8n\n// Valida items[0].json.selection y retorna status con mensajes amistosos\n\n// 1. Leer la selección del nodo Set anterior\nconst raw = items[0].json.selection;\nconst sel = Number(raw);\n\n// 2. Preparar la respuesta con mensajes descriptivos\nlet result;\n\nif (Number.isNaN(sel)) {\n  // No es un número\n  result = {\n    status: 'error',\n    message: `Ups, parece que tu elección “${raw}” no es un número. Por favor escribe un número del 1 al 7 para continuar.`\n  };\n} else if (!Number.isInteger(sel)) {\n  // No es entero\n  result = {\n    status: 'error',\n    message: `Veo que has ingresado ${sel}, pero necesitamos un número entero. Por favor elige un número sin decimales entre 1 y 2.`\n  };\n} else if (sel < 1 || sel > 2) {\n  // Fuera de rango\n  result = {\n    status: 'error',\n    message: `Tu selección es ${sel}, pero debe estar entre 1 y 2. Intenta de nuevo con un número dentro de ese rango.`\n  };\n} else {\n  // OK\n  result = {\n    status: 'success',\n    message: `¡Genial! Has seleccionado la opción número ${sel}.`,\n    selection: sel\n  };\n}\n\n// 3. Devolver el resultado para usar en nodos siguientes\nreturn [\n  {\n    json: result\n  }\n];\n"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -4330,8 +4330,8 @@
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
       "position": [
-        4140,
-        1140
+        4560,
+        1100
       ],
       "id": "8681ae66-d40f-4216-8ed0-4fdfdc579335",
       "name": "No Operation, do nothing4"
@@ -6975,6 +6975,151 @@
       ],
       "id": "cc3d41eb-1bca-4023-a902-d5b6cd490263",
       "name": "datos ubicacion inconveniente7"
+    },
+    {
+      "parameters": {
+        "method": "=POST",
+        "url": "=https://graph.facebook.com/v22.0/{{ $('Variables Wp').item.json.clienteIdWp }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ $('Variables Wp').item.json.tokenWp }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"En breve te contactaremos por llamada 📞😁\"\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3880,
+        1100
+      ],
+      "id": "016571e9-a40e-4250-b8cf-a505e0f5c946",
+      "name": "confirmación llamada1"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "cOoCwRPN9qfk0P6y",
+          "mode": "list",
+          "cachedResultName": "serebro sales cambio de estatus"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "state": "menuInicial",
+            "userStateId": "={{ $json.userStateId }}",
+            "userId": "={{ $json.userId }}",
+            "info": "={{ $json.info }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "state",
+              "displayName": "state",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "userId",
+              "displayName": "userId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "userStateId",
+              "displayName": "userStateId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "info",
+              "displayName": "info",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "sub_menu",
+              "displayName": "sub_menu",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        4320,
+        1100
+      ],
+      "id": "7e4c35d4-c102-4eea-98bd-da466fe7c3f6",
+      "name": "Execute Workflow21"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "cb5bf561-971f-493b-8312-772ff7f21da3",
+              "name": "userStateId",
+              "value": "={{ $('Code2').item.json.user_state_final }}",
+              "type": "string"
+            },
+            {
+              "id": "1356aa24-d7f3-4700-9568-aa9b6ece9b4c",
+              "name": "info",
+              "value": "usuario para llamada",
+              "type": "string"
+            },
+            {
+              "id": "6b9a8f55-16af-4e52-b897-0ac1cfca6083",
+              "name": "userId",
+              "value": "={{ $('Code2').item.json.user_id_finded || $('Code2').item.json.user_id_edited }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        4080,
+        1100
+      ],
+      "id": "42aac2c3-91ef-43be-a946-7a9e2e07c9e7",
+      "name": "datos ubicacion inconveniente8"
     }
   ],
   "connections": {
@@ -8081,7 +8226,7 @@
         ],
         [
           {
-            "node": "No Operation, do nothing4",
+            "node": "confirmación llamada1",
             "type": "main",
             "index": 0
           }
@@ -8806,6 +8951,28 @@
           }
         ]
       ]
+    },
+    "confirmación llamada1": {
+      "main": [
+        [
+          {
+            "node": "datos ubicacion inconveniente8",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "datos ubicacion inconveniente8": {
+      "main": [
+        [
+          {
+            "node": "Execute Workflow21",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -8825,18 +8992,18 @@
           "contacts": [
             {
               "profile": {
-                "name": "Charly"
+                "name": "Rick"
               },
-              "wa_id": "5212471183005"
+              "wa_id": "5214434901193"
             }
           ],
           "messages": [
             {
-              "from": "5212471183005",
-              "id": "wamid.HBgNNTIxMjQ3MTE4MzAwNRUCABIYFjNFQjAxNzdBNjA5N0RBNzk2MDA1NUUA",
-              "timestamp": "1752528870",
+              "from": "5214434901193",
+              "id": "wamid.HBgNNTIxNDQzNDkwMTE5MxUCABIYFjNFQjBCOTQ2MDQ3QkQwNkM2MzE3MzIA",
+              "timestamp": "1752779432",
               "text": {
-                "body": "6"
+                "body": "1"
               },
               "type": "text"
             }
@@ -8846,7 +9013,7 @@
       }
     ]
   },
-  "versionId": "a081583d-286f-425d-b72b-003607adc553",
+  "versionId": "96c3762f-f1c8-40b2-af78-14dd9f13ad89",
   "triggerCount": 1,
   "shared": [
     {
