@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-07-15T21:21:56.344Z",
-  "updatedAt": "2025-07-17T20:17:03.000Z",
+  "updatedAt": "2025-07-18T18:06:18.000Z",
   "id": "hYIL4H3KPAgpe1K1",
   "name": "Extraer Datos Excel",
   "active": false,
@@ -22,11 +22,85 @@
         0,
         0
       ],
-      "id": "b4130dc4-85be-4e38-8273-d22673a8d90e",
+      "id": "7466c3cb-5fd0-4405-af59-b87cfe4ce6a3",
       "name": "Schedule Trigger"
     },
     {
       "parameters": {
+        "resource": "worksheet",
+        "workbook": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        },
+        "returnAll": true,
+        "filters": {
+          "fields": ""
+        }
+      },
+      "type": "n8n-nodes-base.microsoftExcel",
+      "typeVersion": 2.1,
+      "position": [
+        560,
+        40
+      ],
+      "id": "6da28805-5572-4005-980d-284f3c81a8d8",
+      "name": "Leer datos",
+      "credentials": {
+        "microsoftExcelOAuth2Api": {
+          "id": "87tgg3FCCrGpWNZt",
+          "name": "Microsoft Excel account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        840,
+        20
+      ],
+      "id": "95f067b5-f951-4514-b488-2aae4e6405a8",
+      "name": "Combinar datos"
+    },
+    {
+      "parameters": {
+        "resource": "worksheet",
+        "operation": "append",
+        "workbook": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        },
+        "worksheet": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.microsoftExcel",
+      "typeVersion": 2.1,
+      "position": [
+        1080,
+        40
+      ],
+      "id": "c40e3cb8-7142-4ce1-bbec-28597cbc7531",
+      "name": "Crear nuevo archivo",
+      "credentials": {
+        "microsoftExcelOAuth2Api": {
+          "id": "87tgg3FCCrGpWNZt",
+          "name": "Microsoft Excel account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "upload",
         "site": {
           "__rl": true,
           "mode": "list",
@@ -37,11 +111,54 @@
       "type": "n8n-nodes-base.microsoftSharePoint",
       "typeVersion": 1,
       "position": [
-        220,
-        0
+        1540,
+        20
       ],
-      "id": "4ad93fc7-3822-451d-bbb6-3f57d15fb345",
-      "name": "Download file"
+      "id": "0f940334-a9a8-442c-93ab-f1bc6e7af69e",
+      "name": "Subir archivo",
+      "credentials": {
+        "microsoftSharePointOAuth2Api": {
+          "id": "HOs6xOyIvZc38XVE",
+          "name": "Microsoft SharePoint account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "site": {
+          "__rl": true,
+          "value": "canteradigitalsa.sharepoint.com,6934373b-e270-4c87-acd6-9191f790a4ef,7036f0a6-e6d4-47d1-b05d-443cce9d6ec2",
+          "mode": "list",
+          "cachedResultName": "n8n_Pruebas_Excel"
+        },
+        "folder": {
+          "__rl": true,
+          "value": "016VVRIWW5OCQMKON6FJAISTKCL4IEE4VQ",
+          "mode": "list",
+          "cachedResultName": "rentabilidad"
+        },
+        "file": {
+          "__rl": true,
+          "value": "016VVRIWQBL2QUPTWOOVG2JPYHTOOMBVZL",
+          "mode": "list",
+          "cachedResultName": "Rentabilidad_Cantera_Interno.xlsx"
+        },
+        "requestOptions": {}
+      },
+      "type": "n8n-nodes-base.microsoftSharePoint",
+      "typeVersion": 1,
+      "position": [
+        260,
+        20
+      ],
+      "id": "685f15d4-99cd-489c-b395-3da1cf7bc395",
+      "name": "Download file",
+      "credentials": {
+        "microsoftSharePointOAuth2Api": {
+          "id": "HOs6xOyIvZc38XVE",
+          "name": "Microsoft SharePoint account"
+        }
+      }
     }
   ],
   "connections": {
@@ -50,6 +167,50 @@
         [
           {
             "node": "Download file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Leer datos": {
+      "main": [
+        [
+          {
+            "node": "Combinar datos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Combinar datos": {
+      "main": [
+        [
+          {
+            "node": "Crear nuevo archivo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Crear nuevo archivo": {
+      "main": [
+        [
+          {
+            "node": "Subir archivo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download file": {
+      "main": [
+        [
+          {
+            "node": "Leer datos",
             "type": "main",
             "index": 0
           }
@@ -65,7 +226,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "b7aa3e82-1070-492d-b50c-b6b60830cd48",
+  "versionId": "1adba416-cc4e-426d-b43a-51b971d2f5da",
   "triggerCount": 0,
   "shared": [
     {
