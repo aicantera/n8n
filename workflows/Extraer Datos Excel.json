@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-07-15T21:21:56.344Z",
-  "updatedAt": "2025-07-18T18:06:18.000Z",
+  "updatedAt": "2025-07-21T18:26:31.000Z",
   "id": "hYIL4H3KPAgpe1K1",
   "name": "Extraer Datos Excel",
   "active": false,
@@ -27,70 +27,67 @@
     },
     {
       "parameters": {
-        "resource": "worksheet",
-        "workbook": {
+        "resource": "item",
+        "site": {
           "__rl": true,
+          "value": "canteradigitalsa.sharepoint.com,6934373b-e270-4c87-acd6-9191f790a4ef,7036f0a6-e6d4-47d1-b05d-443cce9d6ec2",
           "mode": "list",
-          "value": ""
+          "cachedResultName": "n8n_Pruebas_Excel"
+        },
+        "list": {
+          "__rl": true,
+          "value": "6c3c1b0a-8f87-4048-a05b-560d8c21d832",
+          "mode": "list",
+          "cachedResultName": "Documents"
         },
         "returnAll": true,
-        "filters": {
-          "fields": ""
-        }
+        "options": {},
+        "requestOptions": {}
       },
-      "type": "n8n-nodes-base.microsoftExcel",
-      "typeVersion": 2.1,
+      "type": "n8n-nodes-base.microsoftSharePoint",
+      "typeVersion": 1,
       "position": [
-        560,
-        40
+        220,
+        0
       ],
-      "id": "6da28805-5572-4005-980d-284f3c81a8d8",
-      "name": "Leer datos",
+      "id": "fc6d2ac7-e2e4-48e7-bd5d-83da51cb1efd",
+      "name": "Listar archivos",
       "credentials": {
-        "microsoftExcelOAuth2Api": {
-          "id": "87tgg3FCCrGpWNZt",
-          "name": "Microsoft Excel account"
+        "microsoftSharePointOAuth2Api": {
+          "id": "HOs6xOyIvZc38XVE",
+          "name": "Microsoft SharePoint account"
         }
       }
     },
     {
       "parameters": {
-        "mode": "combine",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.merge",
-      "typeVersion": 3.2,
-      "position": [
-        840,
-        20
-      ],
-      "id": "95f067b5-f951-4514-b488-2aae4e6405a8",
-      "name": "Combinar datos"
-    },
-    {
-      "parameters": {
         "resource": "worksheet",
-        "operation": "append",
+        "operation": "update",
         "workbook": {
           "__rl": true,
+          "value": "01IFTEMG3E3VLVZ5TXWRGKEVS7NYJGOQM6",
           "mode": "list",
-          "value": ""
+          "cachedResultName": "Rentabilidad_unificado",
+          "cachedResultUrl": "https://canteradigitalsa-my.sharepoint.com/personal/gael_graciano_canteradigital_mx/_layouts/15/Doc.aspx?sourcedoc=%7B5C57DD64-77F6-4CB4-A256-5F6E1267419E%7D&file=Rentabilidad_unificado.xlsx&action=default&mobileredirect=true&DefaultItemOpen=1"
         },
         "worksheet": {
           "__rl": true,
+          "value": "{00000000-0001-0000-0000-000000000000}",
           "mode": "list",
-          "value": ""
+          "cachedResultName": "Hoja1",
+          "cachedResultUrl": "https://canteradigitalsa-my.sharepoint.com/personal/gael_graciano_canteradigital_mx/_layouts/15/Doc.aspx?sourcedoc=%7B5C57DD64-77F6-4CB4-A256-5F6E1267419E%7D&file=Libro.xlsx&action=default&mobileredirect=true&DefaultItemOpen=1&activeCell=Hoja1!A1"
         },
+        "dataMode": "autoMap",
         "options": {}
       },
       "type": "n8n-nodes-base.microsoftExcel",
       "typeVersion": 2.1,
       "position": [
-        1080,
-        40
+        680,
+        -20
       ],
-      "id": "c40e3cb8-7142-4ce1-bbec-28597cbc7531",
-      "name": "Crear nuevo archivo",
+      "id": "5d66a5d5-8b15-4adc-b10d-2cdb1a82444d",
+      "name": "Escribir excel unificado",
       "credentials": {
         "microsoftExcelOAuth2Api": {
           "id": "87tgg3FCCrGpWNZt",
@@ -103,6 +100,12 @@
         "operation": "upload",
         "site": {
           "__rl": true,
+          "value": "canteradigitalsa.sharepoint.com,6934373b-e270-4c87-acd6-9191f790a4ef,7036f0a6-e6d4-47d1-b05d-443cce9d6ec2",
+          "mode": "list",
+          "cachedResultName": "n8n_Pruebas_Excel"
+        },
+        "folder": {
+          "__rl": true,
           "mode": "list",
           "value": ""
         },
@@ -111,17 +114,41 @@
       "type": "n8n-nodes-base.microsoftSharePoint",
       "typeVersion": 1,
       "position": [
-        1540,
-        20
+        900,
+        -20
       ],
-      "id": "0f940334-a9a8-442c-93ab-f1bc6e7af69e",
-      "name": "Subir archivo",
+      "id": "f1de6627-7ce7-4a01-b790-5dfebba6e9f6",
+      "name": "Subir excel unificado",
       "credentials": {
         "microsoftSharePointOAuth2Api": {
           "id": "HOs6xOyIvZc38XVE",
           "name": "Microsoft SharePoint account"
         }
       }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        460,
+        0
+      ],
+      "id": "728ed340-a61b-4940-aea0-5de44c45f1b9",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "name": "Replace Me",
+      "typeVersion": 1,
+      "position": [
+        1340,
+        160
+      ],
+      "id": "aaf2a7b1-ce4d-4542-a37b-4a3764bbec25"
     },
     {
       "parameters": {
@@ -148,17 +175,31 @@
       "type": "n8n-nodes-base.microsoftSharePoint",
       "typeVersion": 1,
       "position": [
-        260,
-        20
+        660,
+        160
       ],
-      "id": "685f15d4-99cd-489c-b395-3da1cf7bc395",
-      "name": "Download file",
+      "id": "d8533e5d-2bca-4f18-9d68-9966caa26a99",
+      "name": "Descargar archivo2",
       "credentials": {
         "microsoftSharePointOAuth2Api": {
           "id": "HOs6xOyIvZc38XVE",
           "name": "Microsoft SharePoint account"
         }
       }
+    },
+    {
+      "parameters": {
+        "operation": "xlsx",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        1060,
+        160
+      ],
+      "id": "c08ba926-1655-45ba-ae38-e0caee968079",
+      "name": "Extraer del archivo2"
     }
   ],
   "connections": {
@@ -166,51 +207,80 @@
       "main": [
         [
           {
-            "node": "Download file",
+            "node": "Listar archivos",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Leer datos": {
+    "Listar archivos": {
       "main": [
         [
           {
-            "node": "Combinar datos",
+            "node": "Loop Over Items",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Combinar datos": {
+    "Escribir excel unificado": {
       "main": [
         [
           {
-            "node": "Crear nuevo archivo",
+            "node": "Subir excel unificado",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Crear nuevo archivo": {
+    "Loop Over Items": {
       "main": [
         [
           {
-            "node": "Subir archivo",
+            "node": "Escribir excel unificado",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Descargar archivo2",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Download file": {
+    "Replace Me": {
       "main": [
         [
           {
-            "node": "Leer datos",
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extraer del archivo2": {
+      "main": [
+        [
+          {
+            "node": "Replace Me",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Descargar archivo2": {
+      "main": [
+        [
+          {
+            "node": "Extraer del archivo2",
             "type": "main",
             "index": 0
           }
@@ -226,7 +296,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "1adba416-cc4e-426d-b43a-51b971d2f5da",
+  "versionId": "053eb3a6-ccda-4995-ab47-0bb845b4d947",
   "triggerCount": 0,
   "shared": [
     {
