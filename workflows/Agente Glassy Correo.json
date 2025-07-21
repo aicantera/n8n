@@ -1,0 +1,245 @@
+{
+  "createdAt": "2025-07-21T20:07:14.532Z",
+  "updatedAt": "2025-07-21T21:01:40.000Z",
+  "id": "fbP9gBIoe7FaAPRG",
+  "name": "Agente Glassy Correo",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "08bac7f3-fe9e-46d3-8105-738ca521e7c9",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "text": "={{ $json.query }}",
+        "attributes": {
+          "attributes": [
+            {
+              "name": "year",
+              "type": "number",
+              "description": "Año del vehículo",
+              "required": true
+            },
+            {
+              "name": "brand",
+              "description": "Marca del vehículo",
+              "required": true
+            },
+            {
+              "name": "model",
+              "description": "Modelo del vehículo",
+              "required": true
+            },
+            {
+              "name": "car_type",
+              "description": "Tipo de automovil",
+              "required": true
+            },
+            {
+              "name": "glass_type",
+              "description": "tipo de cristal",
+              "required": true
+            },
+            {
+              "name": "user_name",
+              "description": "Nombre del usuario",
+              "required": true
+            },
+            {
+              "name": "chat_id",
+              "description": "Identificador del chat",
+              "required": true
+            }
+          ]
+        },
+        "options": {
+          "systemPromptTemplate": "You are an expert extraction algorithm.\nOnly extract relevant information from the text.\nIf you do not know the value of an attribute asked to extract, you may omit the attribute's value."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.informationExtractor",
+      "typeVersion": 1.2,
+      "position": [
+        220,
+        0
+      ],
+      "id": "67b6c9bc-00b6-4def-8917-58402cce8111",
+      "name": "Information Extractor"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        180,
+        160
+      ],
+      "id": "75cf6483-6494-4109-a0d9-4fb12f7092df",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "zZlJrTGKq8KER7gD",
+          "name": "OpenAi account - GLASSY"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "aaron_avival@hotmail.com",
+        "subject": "Solicitud de cotización",
+        "emailType": "text",
+        "message": "=Hola Betty,\n\nTe comparto la información de un nuevo cliente que está solicitando una cotización para un parabrisas.\n\nEl objetivo es que te comuniques con él a la brevedad para darle seguimiento y brindarle la asesoría necesaria.\n\nDatos del Cliente:\n\nNombre: {{ $json.output.user_name }}\n\nTeléfono: {{ $json.output.chat_id }}\n\nDatos del Vehículo Solicitado:\n\nTipo de cristal: {{ $json.output.glass_type }}\n\nMarca: {{ $json.output.brand }}\n\nModelo: {{ $json.output.model }}\n\nAño: {{ $json.output.year }}\n\nTipo de automóvil: {{ $json.output.car_type }}\n\nSaludos.",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        580,
+        0
+      ],
+      "id": "b4c8efa9-37eb-4041-b0f3-702a46284439",
+      "name": "Send a message",
+      "webhookId": "72148adb-d0a0-4a63-82a5-9ea909cb5114",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "I97E42GKdPjszGha",
+          "name": "Gmail account Aaron"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Information Extractor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Information Extractor",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Information Extractor": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {
+    "When Executed by Another Workflow": [
+      {
+        "json": {
+          "query": "enviar correo con los siguientes datos del vehículo: año 2012, marca Volkswagen, modelo Jetta, tipo de automovil 4 Door Sedan, tipo de cristal Windshield, nombre del usuario Aaron y chatID 1526474745"
+        }
+      }
+    ]
+  },
+  "versionId": "cbf801dd-19cb-43e0-b9be-a321a52f064e",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "createdAt": "2025-07-21T20:07:14.537Z",
+      "updatedAt": "2025-07-21T20:07:14.537Z",
+      "role": "workflow:owner",
+      "workflowId": "fbP9gBIoe7FaAPRG",
+      "projectId": "BZ9Ta5yhe4RhzY78",
+      "project": {
+        "createdAt": "2025-05-13T15:56:28.209Z",
+        "updatedAt": "2025-05-13T16:18:54.372Z",
+        "id": "BZ9Ta5yhe4RhzY78",
+        "name": "CANTERA ADMIN <canteradigital7@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "projectRelations": [
+          {
+            "createdAt": "2025-05-13T15:56:28.209Z",
+            "updatedAt": "2025-05-13T15:56:28.209Z",
+            "role": "project:personalOwner",
+            "userId": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
+            "projectId": "BZ9Ta5yhe4RhzY78",
+            "user": {
+              "createdAt": "2025-05-13T15:56:27.880Z",
+              "updatedAt": "2025-07-08T21:59:22.697Z",
+              "id": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
+              "email": "canteradigital7@gmail.com",
+              "firstName": "CANTERA",
+              "lastName": "ADMIN",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-05-13T16:19:25.161Z",
+                "personalization_survey_n8n_version": "1.92.2",
+                "companySize": "<20",
+                "companyType": "saas",
+                "role": "customer-support",
+                "reportedSource": "event"
+              },
+              "settings": {
+                "userActivated": true,
+                "firstSuccessfulWorkflowId": "PTbESRzX3rguwQN8",
+                "userActivatedAt": 1747154580970,
+                "easyAIWorkflowOnboarded": true,
+                "npsSurvey": {
+                  "responded": true,
+                  "lastShownAt": 1748367494893
+                },
+                "dismissedCallouts": {
+                  "aiAgentStarterCallout": true
+                }
+              },
+              "role": "global:owner",
+              "disabled": false,
+              "mfaEnabled": false,
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": []
+}
