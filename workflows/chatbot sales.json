@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-06-24T22:28:19.611Z",
-  "updatedAt": "2025-07-22T15:43:17.000Z",
+  "updatedAt": "2025-07-22T16:13:17.000Z",
   "id": "PetXIW4fDRVoHgK5",
   "name": "chatbot sales",
   "active": true,
@@ -3569,37 +3569,6 @@
     },
     {
       "parameters": {
-        "method": "POST",
-        "url": "=https://graph.facebook.com/v22.0/{{ $('Variables Wp').item.json.clienteIdWp }}/messages",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "Authorization",
-              "value": "={{ $('Variables Wp').item.json.tokenWp }}"
-            },
-            {
-              "name": "Content-Type",
-              "value": "application/json"
-            }
-          ]
-        },
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"type\": \"interactive\",\n  \"interactive\": {\n    \"type\": \"button\",\n    \"body\": {\n      \"text\": \"Para regresar, pulsa Menú anterior\"\n    },\n    \"action\": {\n      \"buttons\": [\n        {\n          \"type\": \"reply\",\n          \"reply\": {\n            \"id\": \"menu_anterior\",\n            \"title\": \"Menú anterior\"\n          }\n        }\n      ]\n    }\n  }\n}\n",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        6400,
-        -2460
-      ],
-      "id": "1b269b42-4d40-4159-82b0-277a2ae92a27",
-      "name": "menu principal4"
-    },
-    {
-      "parameters": {
         "workflowId": {
           "__rl": true,
           "value": "cOoCwRPN9qfk0P6y",
@@ -7122,6 +7091,96 @@
       ],
       "id": "42aac2c3-91ef-43be-a946-7a9e2e07c9e7",
       "name": "datos ubicacion inconveniente8"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "Wkj11csSAzzIdiy0",
+          "mode": "list",
+          "cachedResultName": "chatbot notificacion error sales"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "type_error": "endpoint /sales/available-slots-chatbot",
+            "message": "={{ $json.error.message }}",
+            "data": "={{ $json.error.stack }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "type_error",
+              "displayName": "type_error",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "message",
+              "displayName": "message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "data",
+              "displayName": "data",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        6200,
+        -2260
+      ],
+      "id": "689235fe-6802-4b35-bea5-51d7babef4c9",
+      "name": "Execute Workflow22"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v22.0/{{ $('Variables Wp').item.json.clienteIdWp }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ $('Variables Wp').item.json.tokenWp }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"type\": \"interactive\",\n  \"interactive\": {\n    \"type\": \"button\",\n    \"body\": {\n      \"text\": \"Para regresar, pulsa Menú anterior\"\n    },\n    \"action\": {\n      \"buttons\": [\n        {\n          \"type\": \"reply\",\n          \"reply\": {\n            \"id\": \"menu_anterior\",\n            \"title\": \"Menú anterior\"\n          }\n        }\n      ]\n    }\n  }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        6400,
+        -2460
+      ],
+      "id": "1b269b42-4d40-4159-82b0-277a2ae92a27",
+      "name": "mesaje_regresar_menu"
     }
   ],
   "connections": {
@@ -7999,6 +8058,13 @@
             "type": "main",
             "index": 0
           }
+        ],
+        [
+          {
+            "node": "Execute Workflow22",
+            "type": "main",
+            "index": 0
+          }
         ]
       ]
     },
@@ -8006,7 +8072,7 @@
       "main": [
         [
           {
-            "node": "menu principal4",
+            "node": "mesaje_regresar_menu",
             "type": "main",
             "index": 0
           }
@@ -8018,17 +8084,6 @@
         [
           {
             "node": "Execute Workflow10",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "menu principal4": {
-      "main": [
-        [
-          {
-            "node": "body datos menu información1",
             "type": "main",
             "index": 0
           }
@@ -8975,6 +9030,17 @@
           }
         ]
       ]
+    },
+    "mesaje_regresar_menu": {
+      "main": [
+        [
+          {
+            "node": "body datos menu información1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -9015,7 +9081,7 @@
       }
     ]
   },
-  "versionId": "fc9cdbfc-4ac4-45b8-a017-61e00de13a59",
+  "versionId": "62f8b586-25c2-4d30-9404-1b4c50a1bcb1",
   "triggerCount": 1,
   "shared": [
     {
