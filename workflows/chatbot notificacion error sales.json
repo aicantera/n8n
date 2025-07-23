@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-07-22T16:09:11.487Z",
-  "updatedAt": "2025-07-23T15:56:40.000Z",
+  "updatedAt": "2025-07-23T16:29:04.000Z",
   "id": "Wkj11csSAzzIdiy0",
   "name": "chatbot notificacion error sales",
   "active": false,
@@ -42,7 +42,7 @@
       "parameters": {
         "sendTo": "ricardocorreabautista@gmail.com",
         "subject": "Error en chatbot sales",
-        "message": "=Tuvimos un problema del tipo {{ $json.type_error }}. {{ \"\\n\" }}\nEl error fue el siguiente: {{ $json.message }}. {{ \"\\n\" }}\nte dejo mas información: {{ $json.data }}, {{ \"\\n\" }}\nel estatus fue: {{ $json.status }}\n",
+        "message": "=<html>\n  <body style=\"font-family: Arial, sans-serif; background-color: #f9f9f9; padding: 20px;\">\n    <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"max-width: 600px; margin: auto; background-color: #ffffff; border: 1px solid #ddd; border-radius: 8px;\">\n      <tr>\n        <td style=\"padding: 20px;\">\n          <h2 style=\"color: #d9534f;\">🚨 ¡Se ha producido un error!</h2>\n\n          <p style=\"font-size: 16px; color: #333333;\">\n            <strong>Tipo de error:</strong><br>\n            {{ $json.type_error }}\n          </p>\n\n          <p style=\"font-size: 16px; color: #333333;\">\n            <strong>Mensaje del error:</strong><br>\n            <pre style=\"background-color: #fff3cd; color: #856404; padding: 10px; border-radius: 4px; font-size: 14px; white-space: pre-wrap; word-break: break-word; border: 1px solid #ffeeba;\">\n{{ $json.message }}\n            </pre>\n          </p>\n\n          <p style=\"font-size: 16px; color: #333333;\">\n            <strong>Más información:</strong><br>\n            <pre style=\"background-color: #f4f4f4; padding: 10px; border-radius: 4px; font-size: 13px; color: #555555; white-space: pre-wrap; word-break: break-word;\">\n{{ $json.data }}\n            </pre>\n          </p>\n\n          <p style=\"font-size: 16px; color: #333333;\">\n            <strong>Estatus:</strong> {{ $json.status }}\n          </p>\n\n          <hr style=\"border: none; border-top: 1px solid #eeeeee; margin: 20px 0;\">\n\n          <p style=\"font-size: 14px; color: #888888;\">\n            Este mensaje fue generado automáticamente por el sistema de monitoreo de errores.\n          </p>\n        </td>\n      </tr>\n    </table>\n  </body>\n</html>\n",
         "options": {
           "appendAttribution": false
         }
@@ -50,7 +50,7 @@
       "type": "n8n-nodes-base.gmail",
       "typeVersion": 2.1,
       "position": [
-        60,
+        480,
         -140
       ],
       "id": "876e8c63-c372-436e-938e-703001295ef2",
@@ -104,7 +104,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        20,
+        240,
         140
       ],
       "id": "51300fc7-fbc5-45e3-a433-e0be1013e1c2",
@@ -120,7 +120,7 @@
       "type": "n8n-nodes-base.mongoDb",
       "typeVersion": 1.2,
       "position": [
-        240,
+        460,
         140
       ],
       "id": "e66ce647-7949-4c24-a513-26045ebbd058",
@@ -131,6 +131,19 @@
           "name": "MongoDB account cerebro core"
         }
       }
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{\n  json: {\n    ...items[0].json,\n    message: items[0].json.message.replace(/\\\\n/g, '\\n').replace(/\\\\\"/g, '\"'),\n    data: items[0].json.data.replace(/\\\\n/g, '\\n').replace(/\\\\\"/g, '\"'),\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        240,
+        -120
+      ],
+      "id": "f538312c-968d-4c8c-a36e-f2cf15d785d9",
+      "name": "Code"
     }
   ],
   "connections": {
@@ -138,12 +151,12 @@
       "main": [
         [
           {
-            "node": "Send a message",
+            "node": "Edit Fields",
             "type": "main",
             "index": 0
           },
           {
-            "node": "Edit Fields",
+            "node": "Code",
             "type": "main",
             "index": 0
           }
@@ -160,6 +173,17 @@
           }
         ]
       ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -169,8 +193,20 @@
   "meta": {
     "templateCredsSetupCompleted": true
   },
-  "pinData": {},
-  "versionId": "035f5236-60dd-495c-94af-507a656998f7",
+  "pinData": {
+    "When Executed by Another Workflow": [
+      {
+        "json": {
+          "type_error": "endpoint /sales/upsert_sale_by_phone",
+          "message": "401 - \"<!doctype html>\\n<html lang=en>\\n<title>401 Unauthorized</title>\\n<h1>Unauthorized</h1>\\n<p>Subdominio no proporcionado en el header X-Tenant</p>\\n\"",
+          "data": "AxiosError: Request failed with status code 401\n    at settle (/usr/local/lib/node_modules/n8n/node_modules/.pnpm/axios@1.8.3/node_modules/axios/lib/core/settle.js:19:12)\n    at RedirectableRequest.handleResponse (/usr/local/lib/node_modules/n8n/node_modules/.pnpm/axios@1.8.3/node_modules/axios/lib/adapters/http.js:547:9)\n    at RedirectableRequest.emit (node:events:530:35)\n    at RedirectableRequest._processResponse (/usr/local/lib/node_modules/n8n/node_modules/.pnpm/follow-redirects@1.15.9/node_modules/follow-redirects/index.js:409:10)\n    at ClientRequest.RedirectableRequest._onNativeResponse (/usr/local/lib/node_modules/n8n/node_modules/.pnpm/follow-redirects@1.15.9/node_modules/follow-redirects/index.js:102:12)\n    at Object.onceWrapper (node:events:633:26)\n    at ClientRequest.emit (node:events:518:28)\n    at HTTPParser.parserOnIncomingClient (node:_http_client:716:27)\n    at HTTPParser.parserOnHeadersComplete (node:_http_common:117:17)\n    at TLSSocket.socketOnData (node:_http_client:558:22)\n    at TLSSocket.emit (node:events:518:28)\n    at addChunk (node:internal/streams/readable:561:12)\n    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)\n    at TLSSocket.Readable.push (node:internal/streams/readable:392:5)\n    at TLSWrap.onStreamRead (node:internal/stream_base_commons:189:23)\n    at TLSWrap.callbackTrampoline (node:internal/async_hooks:130:17)\n    at Axios.request (/usr/local/lib/node_modules/n8n/node_modules/.pnpm/axios@1.8.3/node_modules/axios/lib/core/Axios.js:45:41)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at invokeAxios (/usr/local/lib/node_modules/n8n/node_modules/.pnpm/n8n-core@file+packages+core_openai@4.103.0_encoding@0.1.13_ws@8.17.1_zod@3.25.67_/node_modules/n8n-core/src/execution-engine/node-execution-context/utils/request-helper-functions.ts:315:10)\n    at proxyRequestToAxios (/usr/local/lib/node_modules/n8n/node_modules/.pnpm/n8n-core@file+packages+core_openai@4.103.0_encoding@0.1.13_ws@8.17.1_zod@3.25.67_/node_modules/n8n-core/src/execution-engine/node-execution-context/utils/request-helper-functions.ts:707:20)\n    at Object.request (/usr/local/lib/node_modules/n8n/node_modules/.pnpm/n8n-core@file+packages+core_openai@4.103.0_encoding@0.1.13_ws@8.17.1_zod@3.25.67_/node_modules/n8n-core/src/execution-engine/node-execution-context/utils/request-helper-functions.ts:1753:4)",
+          "status": 401,
+          "tenant": "fe8f5abe-abda-4223-8ab0-c81247aa9cec"
+        }
+      }
+    ]
+  },
+  "versionId": "dc0a7a26-9858-4bec-9003-ae9c61b4f41f",
   "triggerCount": 0,
   "shared": [
     {
