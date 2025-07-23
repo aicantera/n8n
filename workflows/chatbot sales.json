@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-06-24T22:28:19.611Z",
-  "updatedAt": "2025-07-23T15:54:40.000Z",
+  "updatedAt": "2025-07-23T16:21:57.000Z",
   "id": "PetXIW4fDRVoHgK5",
   "name": "chatbot sales",
   "active": true,
@@ -3731,7 +3731,8 @@
         -60
       ],
       "id": "bd172ae7-3326-40d8-adaf-b95b1561b75a",
-      "name": "HTTP Request2"
+      "name": "HTTP Request2",
+      "onError": "continueErrorOutput"
     },
     {
       "parameters": {
@@ -4458,7 +4459,8 @@
         1160
       ],
       "id": "2ece1371-00e5-40d3-a02f-fb84520d897d",
-      "name": "upsert_sale_by_phone"
+      "name": "upsert_sale_by_phone",
+      "onError": "continueErrorOutput"
     },
     {
       "parameters": {
@@ -7198,8 +7200,8 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        10640,
-        -2380
+        7640,
+        1380
       ],
       "id": "689235fe-6802-4b35-bea5-51d7babef4c9",
       "name": "notificar error"
@@ -7211,8 +7213,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        6180,
-        -2360
+        6840,
+        1460
       ],
       "id": "dec253d8-1d38-40fc-b528-ce12bf05fede",
       "name": "homologar /available-slots-chatbot"
@@ -7242,11 +7244,37 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        10860,
-        -2380
+        7860,
+        1380
       ],
       "id": "9dd977ff-494f-407f-8ed7-2b416831b602",
       "name": "Error seleccion menu invalida3"
+    },
+    {
+      "parameters": {
+        "jsCode": "const err = items[0].json.error || {};\n\nreturn [{\n  json: {\n    type_error: \"endpoint /sales/book-appointment-chatbot\",\n    message: typeof err.message === \"string\" ? err.message : \"Error desconocido\",\n    data: typeof err.stack === \"string\" ? err.stack : JSON.stringify(err, null, 2),\n    status: typeof err.status === \"number\" ? err.status : 500\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        6840,
+        1320
+      ],
+      "id": "c30b1e03-7749-4490-bcc9-9fb78de82420",
+      "name": "homologar /sales/book-appointment-chatbot"
+    },
+    {
+      "parameters": {
+        "jsCode": "const err = items[0].json.error || {};\n\nreturn [{\n  json: {\n    type_error: \"endpoint /sales/upsert_sale_by_phone\",\n    message: typeof err.message === \"string\" ? err.message : \"Error desconocido\",\n    data: typeof err.stack === \"string\" ? err.stack : JSON.stringify(err, null, 2),\n    status: typeof err.status === \"number\" ? err.status : 500\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        6840,
+        1660
+      ],
+      "id": "60cc8768-4e44-4701-9271-7ec1b90ed3f1",
+      "name": "homologar /sales/upsert_sale_by_phone"
     }
   ],
   "connections": {
@@ -8182,6 +8210,13 @@
             "type": "main",
             "index": 0
           }
+        ],
+        [
+          {
+            "node": "homologar /available-slots-chatbot",
+            "type": "main",
+            "index": 0
+          }
         ]
       ]
     },
@@ -8241,6 +8276,11 @@
         [
           {
             "node": "error usuario no registrado",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "homologar /sales/book-appointment-chatbot",
             "type": "main",
             "index": 0
           }
@@ -8412,6 +8452,13 @@
         [
           {
             "node": "MongoDB",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "homologar /sales/upsert_sale_by_phone",
             "type": "main",
             "index": 0
           }
@@ -9129,6 +9176,28 @@
           }
         ]
       ]
+    },
+    "homologar /sales/book-appointment-chatbot": {
+      "main": [
+        [
+          {
+            "node": "notificar error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "homologar /sales/upsert_sale_by_phone": {
+      "main": [
+        [
+          {
+            "node": "notificar error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -9169,7 +9238,7 @@
       }
     ]
   },
-  "versionId": "cafa8a97-a5ee-4ab4-8a75-7aaf4c6deb67",
+  "versionId": "67f55377-8def-495a-84c0-1cca01e59dcd",
   "triggerCount": 1,
   "shared": [
     {
