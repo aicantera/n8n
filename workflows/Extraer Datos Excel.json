@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-07-15T21:21:56.344Z",
-  "updatedAt": "2025-07-23T16:45:49.000Z",
+  "updatedAt": "2025-07-23T21:57:56.000Z",
   "id": "hYIL4H3KPAgpe1K1",
   "name": "Extraer Datos Excel",
   "active": false,
@@ -61,21 +61,14 @@
     },
     {
       "parameters": {
-        "operation": "addWorksheet",
-        "workbook": {
-          "__rl": true,
-          "value": "01IFTEMG3E3VLVZ5TXWRGKEVS7NYJGOQM6",
-          "mode": "list",
-          "cachedResultName": "Rentabilidad_unificado",
-          "cachedResultUrl": "https://canteradigitalsa-my.sharepoint.com/personal/gael_graciano_canteradigital_mx/_layouts/15/Doc.aspx?sourcedoc=%7B5C57DD64-77F6-4CB4-A256-5F6E1267419E%7D&file=Rentabilidad_unificado.xlsx&action=default&mobileredirect=true&DefaultItemOpen=1"
-        },
-        "additionalFields": {}
+        "returnAll": true,
+        "filters": {}
       },
       "type": "n8n-nodes-base.microsoftExcel",
       "typeVersion": 2.1,
       "position": [
-        680,
-        -20
+        1040,
+        -340
       ],
       "id": "5d66a5d5-8b15-4adc-b10d-2cdb1a82444d",
       "name": "Escribir excel unificado",
@@ -84,7 +77,8 @@
           "id": "87tgg3FCCrGpWNZt",
           "name": "Microsoft Excel account"
         }
-      }
+      },
+      "disabled": true
     },
     {
       "parameters": {
@@ -102,13 +96,14 @@
           "cachedResultName": "rentabilidad"
         },
         "fileName": "Rentabilidad Unificado",
+        "fileContents": "Rentabilidad Unificado",
         "requestOptions": {}
       },
       "type": "n8n-nodes-base.microsoftSharePoint",
       "typeVersion": 1,
       "position": [
-        900,
-        -20
+        1120,
+        -100
       ],
       "id": "f1de6627-7ce7-4a01-b790-5dfebba6e9f6",
       "name": "Subir excel unificado",
@@ -126,7 +121,7 @@
       "type": "n8n-nodes-base.splitInBatches",
       "typeVersion": 3,
       "position": [
-        460,
+        540,
         0
       ],
       "id": "728ed340-a61b-4940-aea0-5de44c45f1b9",
@@ -159,20 +154,20 @@
         },
         "file": {
           "__rl": true,
-          "value": "016VVRIWQBL2QUPTWOOVG2JPYHTOOMBVZL",
+          "value": "016VVRIWWQDYDSCFH5NJE3DA53FLWXWUZG",
           "mode": "list",
-          "cachedResultName": "Rentabilidad_Cantera_Interno.xlsx"
+          "cachedResultName": "Rentabilidad_Glasbil.xlsx"
         },
         "requestOptions": {}
       },
       "type": "n8n-nodes-base.microsoftSharePoint",
       "typeVersion": 1,
       "position": [
-        660,
+        760,
         160
       ],
       "id": "d8533e5d-2bca-4f18-9d68-9966caa26a99",
-      "name": "Descargar archivo2",
+      "name": "Descargar archivo",
       "credentials": {
         "microsoftSharePointOAuth2Api": {
           "id": "HOs6xOyIvZc38XVE",
@@ -192,7 +187,22 @@
         160
       ],
       "id": "c08ba926-1655-45ba-ae38-e0caee968079",
-      "name": "Extraer del archivo2"
+      "name": "Extraer del archivo"
+    },
+    {
+      "parameters": {
+        "operation": "xlsx",
+        "binaryPropertyName": "Rentabilidad Unificado",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        820,
+        -100
+      ],
+      "id": "d89d4050-bfe3-405c-84d8-7aa6fec7a2a4",
+      "name": "Convertir a archivo excel"
     }
   ],
   "connections": {
@@ -220,27 +230,21 @@
     },
     "Escribir excel unificado": {
       "main": [
-        [
-          {
-            "node": "Subir excel unificado",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "Loop Over Items": {
       "main": [
         [
           {
-            "node": "Escribir excel unificado",
+            "node": "Convertir a archivo excel",
             "type": "main",
             "index": 0
           }
         ],
         [
           {
-            "node": "Descargar archivo2",
+            "node": "Descargar archivo",
             "type": "main",
             "index": 0
           }
@@ -258,7 +262,18 @@
         ]
       ]
     },
-    "Extraer del archivo2": {
+    "Descargar archivo": {
+      "main": [
+        [
+          {
+            "node": "Extraer del archivo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extraer del archivo": {
       "main": [
         [
           {
@@ -269,11 +284,11 @@
         ]
       ]
     },
-    "Descargar archivo2": {
+    "Convertir a archivo excel": {
       "main": [
         [
           {
-            "node": "Extraer del archivo2",
+            "node": "Subir excel unificado",
             "type": "main",
             "index": 0
           }
@@ -289,7 +304,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "dd8650fb-f808-4117-9382-c62cd970089d",
+  "versionId": "feb0b246-9807-4c19-ada5-076625bd30e8",
   "triggerCount": 0,
   "shared": [
     {
