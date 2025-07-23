@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-07-22T16:09:11.487Z",
-  "updatedAt": "2025-07-22T16:09:22.000Z",
+  "updatedAt": "2025-07-23T15:56:40.000Z",
   "id": "Wkj11csSAzzIdiy0",
   "name": "chatbot notificacion error sales",
   "active": false,
@@ -18,6 +18,13 @@
             },
             {
               "name": "data"
+            },
+            {
+              "name": "status",
+              "type": "number"
+            },
+            {
+              "name": "tenant"
             }
           ]
         }
@@ -35,7 +42,7 @@
       "parameters": {
         "sendTo": "ricardocorreabautista@gmail.com",
         "subject": "Error en chatbot sales",
-        "message": "=Tuvimos un problema del tipo {{ $json.type_error }}. {{ \"\\n\" }}\nEl error fue el siguiente: {{ $json.message }}. {{ \"\\n\" }}\nte dejo mas información: {{ $json.data }}",
+        "message": "=Tuvimos un problema del tipo {{ $json.type_error }}. {{ \"\\n\" }}\nEl error fue el siguiente: {{ $json.message }}. {{ \"\\n\" }}\nte dejo mas información: {{ $json.data }}, {{ \"\\n\" }}\nel estatus fue: {{ $json.status }}\n",
         "options": {
           "appendAttribution": false
         }
@@ -43,12 +50,87 @@
       "type": "n8n-nodes-base.gmail",
       "typeVersion": 2.1,
       "position": [
-        80,
-        80
+        60,
+        -140
       ],
       "id": "876e8c63-c372-436e-938e-703001295ef2",
       "name": "Send a message",
-      "webhookId": "1eb9f24b-2e92-4693-b1b8-059c035075de"
+      "webhookId": "1eb9f24b-2e92-4693-b1b8-059c035075de",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "iWesvtiVejStxiao",
+          "name": "Gmail account cerebro sales (ricardo)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "89dabd7f-2d29-4f98-83b2-5022b3801037",
+              "name": "type_error",
+              "value": "={{ $json.type_error }}",
+              "type": "string"
+            },
+            {
+              "id": "1ec4f2db-a0b9-4e35-8d16-c2c3ba454c59",
+              "name": "message",
+              "value": "={{ $json.message }}",
+              "type": "string"
+            },
+            {
+              "id": "0a8db16a-ea43-4dea-90a8-4adcaf364f44",
+              "name": "data",
+              "value": "={{ $json.data }}",
+              "type": "string"
+            },
+            {
+              "id": "7ab151e1-bbd8-4120-b9a9-d0dff753fd68",
+              "name": "status",
+              "value": "={{ $json.status }}",
+              "type": "string"
+            },
+            {
+              "id": "07aed48b-f050-4732-aa9f-83d1a4b9704a",
+              "name": "tenant",
+              "value": "={{ $json.tenant }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        20,
+        140
+      ],
+      "id": "51300fc7-fbc5-45e3-a433-e0be1013e1c2",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "collection": "chatbot_sales_error_log",
+        "fields": "=type_error,message,data,status,tenant",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1.2,
+      "position": [
+        240,
+        140
+      ],
+      "id": "e66ce647-7949-4c24-a513-26045ebbd058",
+      "name": "MongoDB",
+      "credentials": {
+        "mongoDb": {
+          "id": "xZYe0R0CRtWFmyv7",
+          "name": "MongoDB account cerebro core"
+        }
+      }
     }
   ],
   "connections": {
@@ -57,6 +139,22 @@
         [
           {
             "node": "Send a message",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "MongoDB",
             "type": "main",
             "index": 0
           }
@@ -68,9 +166,11 @@
     "executionOrder": "v1"
   },
   "staticData": null,
-  "meta": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
   "pinData": {},
-  "versionId": "ad751fa4-715a-4429-b618-ef1f04a4e9d3",
+  "versionId": "035f5236-60dd-495c-94af-507a656998f7",
   "triggerCount": 0,
   "shared": [
     {
