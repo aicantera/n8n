@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-06-24T22:28:19.611Z",
-  "updatedAt": "2025-07-22T18:54:30.000Z",
+  "updatedAt": "2025-07-23T15:54:40.000Z",
   "id": "PetXIW4fDRVoHgK5",
   "name": "chatbot sales",
   "active": true,
@@ -3561,7 +3561,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        6200,
+        6420,
         -2460
       ],
       "id": "7e8100f5-ecb0-4e6d-959a-e316ac9eabab",
@@ -3640,7 +3640,7 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        6820,
+        7040,
         -2460
       ],
       "id": "0cbd2232-12ce-4008-a72c-83787f7125b2",
@@ -3676,7 +3676,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        6600,
+        6820,
         -2460
       ],
       "id": "a5d2ada4-6a50-4d78-99e3-8b2b25a3e82e",
@@ -7094,6 +7094,37 @@
     },
     {
       "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v22.0/{{ $('Variables Wp').item.json.clienteIdWp }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ $('Variables Wp').item.json.tokenWp }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"type\": \"interactive\",\n  \"interactive\": {\n    \"type\": \"button\",\n    \"body\": {\n      \"text\": \"Para regresar, pulsa Menú anterior\"\n    },\n    \"action\": {\n      \"buttons\": [\n        {\n          \"type\": \"reply\",\n          \"reply\": {\n            \"id\": \"menu_anterior\",\n            \"title\": \"Menú anterior\"\n          }\n        }\n      ]\n    }\n  }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        6620,
+        -2460
+      ],
+      "id": "1b269b42-4d40-4159-82b0-277a2ae92a27",
+      "name": "mesaje_regresar_menu"
+    },
+    {
+      "parameters": {
         "workflowId": {
           "__rl": true,
           "value": "Wkj11csSAzzIdiy0",
@@ -7103,9 +7134,11 @@
         "workflowInputs": {
           "mappingMode": "defineBelow",
           "value": {
-            "type_error": "endpoint /sales/available-slots-chatbot",
-            "message": "={{ $json.error.message }}",
-            "data": "={{ $json.error.stack }}"
+            "message": "={{ $json.message }}",
+            "data": "={{ $json.data }}",
+            "type_error": "={{ $json.type_error }}",
+            "status": "={{ $json.status }}",
+            "tenant": "={{ $('Variables Wp').item.json.tenant_id }}"
           },
           "matchingColumns": [],
           "schema": [
@@ -7135,6 +7168,26 @@
               "display": true,
               "canBeUsedToMatch": true,
               "type": "string"
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "number",
+              "removed": false
+            },
+            {
+              "id": "tenant",
+              "displayName": "tenant",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
             }
           ],
           "attemptToConvertTypes": false,
@@ -7145,11 +7198,24 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        6220,
-        -2220
+        10640,
+        -2380
       ],
       "id": "689235fe-6802-4b35-bea5-51d7babef4c9",
-      "name": "Execute Workflow22"
+      "name": "notificar error"
+    },
+    {
+      "parameters": {
+        "jsCode": "const err = items[0].json.error || {};\n\nreturn [{\n  json: {\n    type_error: \"endpoint /sales/available-slots-chatbot\",\n    message: typeof err.message === \"string\" ? err.message : \"Error desconocido\",\n    data: typeof err.stack === \"string\" ? err.stack : JSON.stringify(err, null, 2),\n    status: typeof err.status === \"number\" ? err.status : 500\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        6180,
+        -2360
+      ],
+      "id": "dec253d8-1d38-40fc-b528-ce12bf05fede",
+      "name": "homologar /available-slots-chatbot"
     },
     {
       "parameters": {
@@ -7170,17 +7236,17 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"type\": \"interactive\",\n  \"interactive\": {\n    \"type\": \"button\",\n    \"body\": {\n      \"text\": \"Para regresar, pulsa Menú anterior\"\n    },\n    \"action\": {\n      \"buttons\": [\n        {\n          \"type\": \"reply\",\n          \"reply\": {\n            \"id\": \"menu_anterior\",\n            \"title\": \"Menú anterior\"\n          }\n        }\n      ]\n    }\n  }\n}\n",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"Ups… parece que algo no salió bien. Por favor, intenta de nuevo en unos minutos 🙏\"\n  }\n}\n",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        6400,
-        -2460
+        10860,
+        -2380
       ],
-      "id": "1b269b42-4d40-4159-82b0-277a2ae92a27",
-      "name": "mesaje_regresar_menu"
+      "id": "9dd977ff-494f-407f-8ed7-2b416831b602",
+      "name": "Error seleccion menu invalida3"
     }
   ],
   "connections": {
@@ -8061,7 +8127,7 @@
         ],
         [
           {
-            "node": "Execute Workflow22",
+            "node": "homologar /available-slots-chatbot",
             "type": "main",
             "index": 0
           }
@@ -9041,6 +9107,28 @@
           }
         ]
       ]
+    },
+    "homologar /available-slots-chatbot": {
+      "main": [
+        [
+          {
+            "node": "notificar error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "notificar error": {
+      "main": [
+        [
+          {
+            "node": "Error seleccion menu invalida3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -9081,7 +9169,7 @@
       }
     ]
   },
-  "versionId": "863057af-b40f-45b7-9a82-dfa740c78638",
+  "versionId": "cafa8a97-a5ee-4ab4-8a75-7aaf4c6deb67",
   "triggerCount": 1,
   "shared": [
     {
