@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-07-24T23:14:47.720Z",
-  "updatedAt": "2025-07-24T23:54:17.000Z",
+  "updatedAt": "2025-07-25T00:24:58.000Z",
   "id": "2q6lJSSQE2edsFBc",
   "name": "Agente Edukai Prod",
   "active": false,
@@ -1467,8 +1467,8 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        4880,
-        340
+        5220,
+        -260
       ],
       "typeVersion": 1,
       "id": "082e53ad-0f2d-4955-81cd-ba8df47eb7ee",
@@ -1566,8 +1566,8 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.5,
       "position": [
-        4920,
-        460
+        5260,
+        -140
       ],
       "id": "11903582-4891-437d-bbc0-ef88341357a3",
       "name": "Append row in sheet1",
@@ -1589,8 +1589,8 @@
       "type": "n8n-nodes-base.whatsApp",
       "typeVersion": 1,
       "position": [
-        5160,
-        460
+        5500,
+        -140
       ],
       "id": "a18c8af4-ea6e-4634-a5bf-9994602d414f",
       "name": "Send message",
@@ -1796,6 +1796,336 @@
           "name": "Google Sheets - Cantera"
         }
       }
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "VCLg3xyOMNJgn1zp",
+          "mode": "list",
+          "cachedResultName": "asistente inserta mensajes"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "number": "={{ $('WhatsApp Trigger').item.json.messages[0].from }}",
+            "human_messaage": "={{ $('Guardamos el pdf').item.json.webViewLink }}",
+            "agent_message": "={{ $('AI Agent').item.json.output }}",
+            "contact_name": "={{ $('WhatsApp Trigger').item.json.contacts[0].profile.name }}",
+            "project_id": 6
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "number",
+              "displayName": "number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "project_id",
+              "displayName": "project_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "number"
+            },
+            {
+              "id": "human_messaage",
+              "displayName": "human_messaage",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "agent_message",
+              "displayName": "agent_message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "contact_name",
+              "displayName": "contact_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        5700,
+        360
+      ],
+      "id": "49151b39-5fb5-4ba9-ad6b-34f650209ccf",
+      "name": "Execute Workflow"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('WhatsApp Trigger').item.json.messages[0].type }}",
+                    "rightValue": "document",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "a247cc34-e341-4f90-a236-c39e85bf65cd"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "documento"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra",
+          "renameFallbackOutput": "texto/audio"
+        }
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        5300,
+        600
+      ],
+      "id": "de5f6551-fbdc-4543-89eb-8da62ebed44c",
+      "name": "Switch3"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "eb0c902c-3e8e-49b4-82ab-fa86ba0984c4",
+              "leftValue": "={{ $('Guardamos el pdf') }}",
+              "rightValue": "",
+              "operator": {
+                "type": "object",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        5480,
+        460
+      ],
+      "id": "5663c7ef-beb0-48e2-b008-6cc2fa5090ea",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "VCLg3xyOMNJgn1zp",
+          "mode": "list",
+          "cachedResultName": "asistente inserta mensajes"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "number": "={{ $('WhatsApp Trigger').item.json.messages[0].from }}",
+            "human_messaage": "={{ $('buscamos el archivo copia que procesamos').item.json.webViewLink }}",
+            "agent_message": "={{ $('AI Agent').item.json.output }}",
+            "contact_name": "={{ $('WhatsApp Trigger').item.json.contacts[0].profile.name }}",
+            "project_id": 6
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "number",
+              "displayName": "number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "project_id",
+              "displayName": "project_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "number"
+            },
+            {
+              "id": "human_messaage",
+              "displayName": "human_messaage",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "agent_message",
+              "displayName": "agent_message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "contact_name",
+              "displayName": "contact_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        5700,
+        580
+      ],
+      "id": "891ea88a-22a4-4a0e-b01c-7452f6769df0",
+      "name": "Execute Workflow1"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "VCLg3xyOMNJgn1zp",
+          "mode": "list",
+          "cachedResultName": "asistente inserta mensajes"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "number": "={{ $('WhatsApp Trigger').item.json.messages[0].from }}",
+            "human_messaage": "={{ $('Edit Fields').item.json.mensaje }}",
+            "agent_message": "={{ $('AI Agent').item.json.output }}",
+            "contact_name": "={{ $('WhatsApp Trigger').item.json.contacts[0].profile.name }}",
+            "project_id": 6
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "number",
+              "displayName": "number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "project_id",
+              "displayName": "project_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "number"
+            },
+            {
+              "id": "human_messaage",
+              "displayName": "human_messaage",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "agent_message",
+              "displayName": "agent_message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "contact_name",
+              "displayName": "contact_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        5700,
+        820
+      ],
+      "id": "7ad068f2-1f2f-4813-9b08-5682d988b2fb",
+      "name": "Execute Workflow2"
+    },
+    {
+      "parameters": {
+        "content": "## Proceso del guardado de información de la conversación",
+        "height": 900,
+        "width": 740
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        5220,
+        160
+      ],
+      "typeVersion": 1,
+      "id": "6e3306d5-e1d4-4a71-96a8-ac25a2b1a971",
+      "name": "Sticky Note9"
     }
   ],
   "connections": {
@@ -2155,6 +2485,11 @@
             "node": "Append row in sheet1",
             "type": "main",
             "index": 0
+          },
+          {
+            "node": "Switch3",
+            "type": "main",
+            "index": 0
           }
         ]
       ]
@@ -2279,6 +2614,42 @@
           }
         ]
       ]
+    },
+    "Switch3": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Execute Workflow2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Execute Workflow",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Execute Workflow1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -2321,7 +2692,7 @@
       }
     ]
   },
-  "versionId": "3e73f524-3809-4c2d-b342-37012d87c07c",
+  "versionId": "c0e044ba-7721-48e9-972c-80ff56292409",
   "triggerCount": 0,
   "shared": [
     {
