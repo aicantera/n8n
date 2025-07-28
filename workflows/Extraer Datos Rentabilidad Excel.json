@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-07-15T21:21:56.344Z",
-  "updatedAt": "2025-07-28T17:43:20.000Z",
+  "updatedAt": "2025-07-28T18:51:21.000Z",
   "id": "hYIL4H3KPAgpe1K1",
   "name": "Extraer Datos Rentabilidad Excel",
   "active": false,
@@ -63,42 +63,6 @@
     },
     {
       "parameters": {
-        "resource": "worksheet",
-        "operation": "update",
-        "workbook": {
-          "__rl": true,
-          "value": "01IFTEMG3E3VLVZ5TXWRGKEVS7NYJGOQM6",
-          "mode": "list",
-          "cachedResultName": "Rentabilidad_unificado",
-          "cachedResultUrl": "https://canteradigitalsa-my.sharepoint.com/personal/gael_graciano_canteradigital_mx/_layouts/15/Doc.aspx?sourcedoc=%7B5C57DD64-77F6-4CB4-A256-5F6E1267419E%7D&file=Rentabilidad_unificado.xlsx&action=default&mobileredirect=true&DefaultItemOpen=1"
-        },
-        "worksheet": {
-          "__rl": true,
-          "value": "{00000000-0001-0000-0000-000000000000}",
-          "mode": "list",
-          "cachedResultName": "Hoja1",
-          "cachedResultUrl": "https://canteradigitalsa-my.sharepoint.com/personal/gael_graciano_canteradigital_mx/_layouts/15/Doc.aspx?sourcedoc=%7B5C57DD64-77F6-4CB4-A256-5F6E1267419E%7D&file=Rentabilidad_unificado.xlsx&action=default&mobileredirect=true&DefaultItemOpen=1&activeCell=Hoja1!A1"
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.microsoftExcel",
-      "typeVersion": 2.1,
-      "position": [
-        1040,
-        -300
-      ],
-      "id": "5d66a5d5-8b15-4adc-b10d-2cdb1a82444d",
-      "name": "Escribir excel unificado",
-      "credentials": {
-        "microsoftExcelOAuth2Api": {
-          "id": "fYei2LmkCnYUz7es",
-          "name": "Microsoft Excel account 2"
-        }
-      },
-      "disabled": true
-    },
-    {
-      "parameters": {
         "operation": "upload",
         "site": {
           "__rl": true,
@@ -112,14 +76,14 @@
           "mode": "list",
           "cachedResultName": "rentabilidad_unificados"
         },
-        "fileName": "Rentabilidad",
+        "fileName": "=Rentabilidad_{{ $('Code').item.json.mes }}_{{ $('Code').item.json.anio }}.xlsx",
         "fileContents": "Rentabilidad Unificado",
         "requestOptions": {}
       },
       "type": "n8n-nodes-base.microsoftSharePoint",
       "typeVersion": 1,
       "position": [
-        1300,
+        1520,
         -100
       ],
       "id": "f1de6627-7ce7-4a01-b790-5dfebba6e9f6",
@@ -160,16 +124,15 @@
         },
         "file": {
           "__rl": true,
-          "value": "016VVRIWQBL2QUPTWOOVG2JPYHTOOMBVZL",
-          "mode": "list",
-          "cachedResultName": "Rentabilidad_Cantera_Interno.xlsx"
+          "value": "=",
+          "mode": "id"
         },
         "requestOptions": {}
       },
       "type": "n8n-nodes-base.microsoftSharePoint",
       "typeVersion": 1,
       "position": [
-        800,
+        1020,
         160
       ],
       "id": "d8533e5d-2bca-4f18-9d68-9966caa26a99",
@@ -189,7 +152,7 @@
       "type": "n8n-nodes-base.extractFromFile",
       "typeVersion": 1,
       "position": [
-        1060,
+        1280,
         160
       ],
       "id": "c08ba926-1655-45ba-ae38-e0caee968079",
@@ -205,7 +168,7 @@
       "type": "n8n-nodes-base.convertToFile",
       "typeVersion": 1.1,
       "position": [
-        820,
+        1040,
         -100
       ],
       "id": "d89d4050-bfe3-405c-84d8-7aa6fec7a2a4",
@@ -221,6 +184,19 @@
       ],
       "id": "b6d79736-ad90-427f-853f-b4ad63de948f",
       "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Obtener la fecha actual\nconst fecha = new Date();\n \n// Arreglo de nombres de los meses en español\nconst meses = [\n  'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',\n  'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'\n];\n \n// Obtener nombre del mes y año\nconst mesTexto = meses[fecha.getMonth()];\nconst anio = fecha.getFullYear();\n \n// Retornar como salida\nreturn [\n  {\n    json: {\n      mes: mesTexto,\n      anio\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        760,
+        -100
+      ],
+      "id": "2e26863b-f92a-490d-9a7d-5a05b45276c6",
+      "name": "Code"
     }
   ],
   "connections": {
@@ -240,16 +216,11 @@
         ]
       ]
     },
-    "Escribir excel unificado": {
-      "main": [
-        []
-      ]
-    },
     "Loop Over Items": {
       "main": [
         [
           {
-            "node": "Convertir a archivo excel",
+            "node": "Code",
             "type": "main",
             "index": 0
           }
@@ -292,11 +263,6 @@
             "node": "Subir excel unificado",
             "type": "main",
             "index": 0
-          },
-          {
-            "node": "Escribir excel unificado",
-            "type": "main",
-            "index": 0
           }
         ]
       ]
@@ -316,6 +282,17 @@
           }
         ]
       ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Convertir a archivo excel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -326,7 +303,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "affcd8ce-3fe5-40ef-8c06-6589abc38a5e",
+  "versionId": "da3a79b1-93bf-4dfa-af92-cf4a1aa43f21",
   "triggerCount": 0,
   "shared": [
     {
