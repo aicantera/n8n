@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-07-15T21:21:56.344Z",
-  "updatedAt": "2025-07-25T23:13:02.000Z",
+  "updatedAt": "2025-07-28T17:43:20.000Z",
   "id": "hYIL4H3KPAgpe1K1",
   "name": "Extraer Datos Rentabilidad Excel",
   "active": false,
@@ -21,8 +21,8 @@
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
       "position": [
-        0,
-        0
+        80,
+        -200
       ],
       "id": "7466c3cb-5fd0-4405-af59-b87cfe4ce6a3",
       "name": "Schedule Trigger"
@@ -63,8 +63,23 @@
     },
     {
       "parameters": {
-        "returnAll": true,
-        "filters": {}
+        "resource": "worksheet",
+        "operation": "update",
+        "workbook": {
+          "__rl": true,
+          "value": "01IFTEMG3E3VLVZ5TXWRGKEVS7NYJGOQM6",
+          "mode": "list",
+          "cachedResultName": "Rentabilidad_unificado",
+          "cachedResultUrl": "https://canteradigitalsa-my.sharepoint.com/personal/gael_graciano_canteradigital_mx/_layouts/15/Doc.aspx?sourcedoc=%7B5C57DD64-77F6-4CB4-A256-5F6E1267419E%7D&file=Rentabilidad_unificado.xlsx&action=default&mobileredirect=true&DefaultItemOpen=1"
+        },
+        "worksheet": {
+          "__rl": true,
+          "value": "{00000000-0001-0000-0000-000000000000}",
+          "mode": "list",
+          "cachedResultName": "Hoja1",
+          "cachedResultUrl": "https://canteradigitalsa-my.sharepoint.com/personal/gael_graciano_canteradigital_mx/_layouts/15/Doc.aspx?sourcedoc=%7B5C57DD64-77F6-4CB4-A256-5F6E1267419E%7D&file=Rentabilidad_unificado.xlsx&action=default&mobileredirect=true&DefaultItemOpen=1&activeCell=Hoja1!A1"
+        },
+        "options": {}
       },
       "type": "n8n-nodes-base.microsoftExcel",
       "typeVersion": 2.1,
@@ -79,7 +94,8 @@
           "id": "fYei2LmkCnYUz7es",
           "name": "Microsoft Excel account 2"
         }
-      }
+      },
+      "disabled": true
     },
     {
       "parameters": {
@@ -96,7 +112,7 @@
           "mode": "list",
           "cachedResultName": "rentabilidad_unificados"
         },
-        "fileName": "Rentabilidad_Julio",
+        "fileName": "Rentabilidad",
         "fileContents": "Rentabilidad Unificado",
         "requestOptions": {}
       },
@@ -129,17 +145,6 @@
       "name": "Loop Over Items"
     },
     {
-      "parameters": {},
-      "type": "n8n-nodes-base.noOp",
-      "name": "Replace Me",
-      "typeVersion": 1,
-      "position": [
-        1340,
-        160
-      ],
-      "id": "aaf2a7b1-ce4d-4542-a37b-4a3764bbec25"
-    },
-    {
       "parameters": {
         "site": {
           "__rl": true,
@@ -155,9 +160,9 @@
         },
         "file": {
           "__rl": true,
-          "value": "016VVRIWWQDYDSCFH5NJE3DA53FLWXWUZG",
+          "value": "016VVRIWQBL2QUPTWOOVG2JPYHTOOMBVZL",
           "mode": "list",
-          "cachedResultName": "Rentabilidad_Glasbil.xlsx"
+          "cachedResultName": "Rentabilidad_Cantera_Interno.xlsx"
         },
         "requestOptions": {}
       },
@@ -205,18 +210,23 @@
       ],
       "id": "d89d4050-bfe3-405c-84d8-7aa6fec7a2a4",
       "name": "Convertir a archivo excel"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        20,
+        0
+      ],
+      "id": "b6d79736-ad90-427f-853f-b4ad63de948f",
+      "name": "When clicking ‘Execute workflow’"
     }
   ],
   "connections": {
     "Schedule Trigger": {
       "main": [
-        [
-          {
-            "node": "Listar archivos",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "Listar archivos": {
@@ -253,17 +263,6 @@
         ]
       ]
     },
-    "Replace Me": {
-      "main": [
-        [
-          {
-            "node": "Loop Over Items",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Descargar archivo": {
       "main": [
         [
@@ -279,7 +278,7 @@
       "main": [
         [
           {
-            "node": "Replace Me",
+            "node": "Loop Over Items",
             "type": "main",
             "index": 0
           }
@@ -306,6 +305,17 @@
       "main": [
         []
       ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Listar archivos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -316,7 +326,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "ddd8fef7-e179-4684-9ec9-590024796616",
+  "versionId": "affcd8ce-3fe5-40ef-8c06-6589abc38a5e",
   "triggerCount": 0,
   "shared": [
     {
