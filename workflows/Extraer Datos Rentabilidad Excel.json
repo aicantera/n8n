@@ -1,32 +1,11 @@
 {
   "createdAt": "2025-07-15T21:21:56.344Z",
-  "updatedAt": "2025-07-28T23:12:27.000Z",
+  "updatedAt": "2025-07-29T01:10:56.000Z",
   "id": "hYIL4H3KPAgpe1K1",
   "name": "Extraer Datos Rentabilidad Excel",
   "active": false,
   "isArchived": false,
   "nodes": [
-    {
-      "parameters": {
-        "rule": {
-          "interval": [
-            {
-              "field": "months",
-              "triggerAtDayOfMonth": 30,
-              "triggerAtHour": 12
-            }
-          ]
-        }
-      },
-      "type": "n8n-nodes-base.scheduleTrigger",
-      "typeVersion": 1.2,
-      "position": [
-        80,
-        -200
-      ],
-      "id": "7466c3cb-5fd0-4405-af59-b87cfe4ce6a3",
-      "name": "Schedule Trigger"
-    },
     {
       "parameters": {
         "resource": "item",
@@ -38,13 +17,21 @@
         },
         "list": {
           "__rl": true,
-          "value": "1666124f-f21f-4487-973b-f4b607bc7f2b",
+          "value": "85c3122a-88ec-4fc5-9d34-a1183c642abc",
           "mode": "list",
-          "cachedResultName": "Documentos"
+          "cachedResultName": "Archivos Mensuales"
         },
-        "filter": "Ends with (.xlsx)",
         "returnAll": true,
-        "options": {},
+        "options": {
+          "fields": [
+            "contentType",
+            "fields",
+            "id",
+            "parentReference",
+            "webUrl"
+          ]
+        },
+        "simplify": false,
         "requestOptions": {}
       },
       "type": "n8n-nodes-base.microsoftSharePoint",
@@ -67,17 +54,17 @@
         "operation": "upload",
         "site": {
           "__rl": true,
-          "value": "canteradigitalsa.sharepoint.com,6934373b-e270-4c87-acd6-9191f790a4ef,7036f0a6-e6d4-47d1-b05d-443cce9d6ec2",
+          "value": "canteradigitalsa.sharepoint.com,93da6720-112e-4bed-95b0-daaf6511de41,0e29c1f3-7286-4051-b0f3-f67641287928",
           "mode": "list",
-          "cachedResultName": "n8n_Pruebas_Excel"
+          "cachedResultName": "Automatizaciones"
         },
         "folder": {
           "__rl": true,
-          "value": "016VVRIWXXINZL4EDJCNALVNF6WTBZMFUN",
+          "value": "01E2QOBSQUDPTIUYRDJRAKPJPBGJWMUF4Y",
           "mode": "list",
-          "cachedResultName": "rentabilidad_unificados"
+          "cachedResultName": "Concentrado_Mensual"
         },
-        "fileName": "=Rentabilidad_{{ $('Code').item.json.mes }}_{{ $('Code').item.json.anio }}.xlsx",
+        "fileName": "=Rentabilidad.xlsx",
         "fileContents": "Rentabilidad Unificado",
         "requestOptions": {}
       },
@@ -85,14 +72,14 @@
       "typeVersion": 1,
       "position": [
         1300,
-        -100
+        -180
       ],
       "id": "f1de6627-7ce7-4a01-b790-5dfebba6e9f6",
       "name": "Subir excel unificado",
       "credentials": {
         "microsoftSharePointOAuth2Api": {
-          "id": "J8zyQ6GzmQpwiPuk",
-          "name": "Microsoft SharePoint account 2"
+          "id": "HOs6xOyIvZc38XVE",
+          "name": "Microsoft SharePoint account"
         }
       }
     },
@@ -125,16 +112,17 @@
         },
         "file": {
           "__rl": true,
-          "value": "={{ $('Listar archivos').item.json.webUrl }}",
-          "mode": ""
+          "value": "01E2QOBSWB7RAYLZOXNFGLWKKAWUDRQKGL",
+          "mode": "list",
+          "cachedResultName": "Rentabilidad_BarterFlip.csv"
         },
         "requestOptions": {}
       },
       "type": "n8n-nodes-base.microsoftSharePoint",
       "typeVersion": 1,
       "position": [
-        1020,
-        160
+        820,
+        120
       ],
       "id": "d8533e5d-2bca-4f18-9d68-9966caa26a99",
       "name": "Descargar archivo",
@@ -153,8 +141,8 @@
       "type": "n8n-nodes-base.extractFromFile",
       "typeVersion": 1,
       "position": [
-        1280,
-        160
+        1080,
+        120
       ],
       "id": "c08ba926-1655-45ba-ae38-e0caee968079",
       "name": "Extraer del archivo",
@@ -169,8 +157,8 @@
       "type": "n8n-nodes-base.convertToFile",
       "typeVersion": 1.1,
       "position": [
-        1000,
-        -100
+        880,
+        -80
       ],
       "id": "d89d4050-bfe3-405c-84d8-7aa6fec7a2a4",
       "name": "Convertir a archivo excel"
@@ -185,27 +173,9 @@
       ],
       "id": "b6d79736-ad90-427f-853f-b4ad63de948f",
       "name": "When clicking ‘Execute workflow’"
-    },
-    {
-      "parameters": {
-        "jsCode": "// Obtener la fecha actual\nconst fecha = new Date();\n \n// Arreglo de nombres de los meses en español\nconst meses = [\n  'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',\n  'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'\n];\n \n// Obtener nombre del mes y año\nconst mesTexto = meses[fecha.getMonth()];\nconst anio = fecha.getFullYear();\n \n// Retornar como salida\nreturn [\n  {\n    json: {\n      mes: mesTexto,\n      anio\n    }\n  }\n];"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        760,
-        -60
-      ],
-      "id": "2e26863b-f92a-490d-9a7d-5a05b45276c6",
-      "name": "Code"
     }
   ],
   "connections": {
-    "Schedule Trigger": {
-      "main": [
-        []
-      ]
-    },
     "Listar archivos": {
       "main": [
         [
@@ -221,7 +191,7 @@
       "main": [
         [
           {
-            "node": "Code",
+            "node": "Convertir a archivo excel",
             "type": "main",
             "index": 0
           }
@@ -283,17 +253,6 @@
           }
         ]
       ]
-    },
-    "Code": {
-      "main": [
-        [
-          {
-            "node": "Convertir a archivo excel",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
     }
   },
   "settings": {
@@ -304,7 +263,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "6fe89514-4ba4-4c5e-9d8b-8c5f185bcb4c",
+  "versionId": "08823bf0-f92b-4b60-a679-9d7a1a0dc197",
   "triggerCount": 0,
   "shared": [
     {
