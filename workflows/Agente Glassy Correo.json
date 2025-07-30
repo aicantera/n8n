@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-07-21T20:07:14.532Z",
-  "updatedAt": "2025-07-25T21:21:34.000Z",
+  "updatedAt": "2025-07-30T18:44:21.000Z",
   "id": "fbP9gBIoe7FaAPRG",
   "name": "Agente Glassy Correo",
   "active": false,
@@ -123,8 +123,8 @@
       "type": "n8n-nodes-base.gmail",
       "typeVersion": 2.1,
       "position": [
-        740,
-        0
+        760,
+        -100
       ],
       "id": "b4c8efa9-37eb-4041-b0f3-702a46284439",
       "name": "Send a message",
@@ -134,7 +134,8 @@
           "id": "I97E42GKdPjszGha",
           "name": "Gmail account Aaron"
         }
-      }
+      },
+      "disabled": true
     },
     {
       "parameters": {
@@ -154,6 +155,33 @@
         "telegramApi": {
           "id": "vcUHDLkV2ZD6YfU8",
           "name": "Telegram account - GLASSY"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "hola@glasbil.com",
+        "toEmail": "aaron_avival@hotmail.com",
+        "subject": "Solicitud de cotización",
+        "emailFormat": "text",
+        "text": "=Hola Betty,\n\nTe comparto la información de un nuevo cliente que está solicitando una cotización para un parabrisas.\n\nEl objetivo es que te comuniques con él a la brevedad para darle seguimiento y brindarle la asesoría necesaria.\n\nDatos del Cliente:\n\nNombre: {{ $('Information Extractor').item.json.output.user_name }}\n\nTeléfono: {{ $('Information Extractor').item.json.output.chat_id }}\n\nDatos del Vehículo Solicitado:\n\nTipo de cristal: {{ $('Information Extractor').item.json.output.glass_type }}\n\nMarca: {{ $('Information Extractor').item.json.output.brand }}\n\nModelo: {{ $('Information Extractor').item.json.output.model }}\n\nAño: {{ $('Information Extractor').item.json.output.year }}\n\nTipo de automóvil: {{ $('Information Extractor').item.json.output.car_type }}\n\nSaludos.",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        760,
+        100
+      ],
+      "id": "13675027-26ba-4340-8b0a-09459cbd3ff8",
+      "name": "Send email",
+      "webhookId": "f833534a-1e48-4870-ad96-ee5e0d2ddef3",
+      "credentials": {
+        "smtp": {
+          "id": "MvJdWvYA0xRNnoVS",
+          "name": "SMTP account  Glasbil"
         }
       }
     }
@@ -199,6 +227,11 @@
             "node": "Send a message",
             "type": "main",
             "index": 0
+          },
+          {
+            "node": "Send email",
+            "type": "main",
+            "index": 0
           }
         ]
       ]
@@ -220,7 +253,7 @@
       }
     ]
   },
-  "versionId": "b99056f7-138d-4fec-a5f6-0911c807560f",
+  "versionId": "0c1599ca-38d0-4496-9b42-bd460556c01e",
   "triggerCount": 0,
   "shared": [
     {
