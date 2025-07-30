@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-07-29T16:12:06.786Z",
-  "updatedAt": "2025-07-30T01:20:42.000Z",
+  "updatedAt": "2025-07-30T18:26:10.000Z",
   "id": "eeKwBNnUqO8fbL74",
   "name": "Extraer Datos por Celdas Excel",
   "active": false,
@@ -30,17 +30,13 @@
         },
         "worksheet": {
           "__rl": true,
-          "value": "{00000000-0001-0000-0000-000000000000}",
           "mode": "list",
-          "cachedResultName": "Tablas",
-          "cachedResultUrl": "https://canteradigitalsa-my.sharepoint.com/personal/gael_graciano_canteradigital_mx/_layouts/15/Doc.aspx?sourcedoc=%7B03F59F91-9196-4521-9501-0A4B0BF23349%7D&file=Tabla_Pruebas.xlsx&action=default&mobileredirect=true&DefaultItemOpen=1&activeCell=Tablas!A1"
+          "value": ""
         },
         "table": {
           "__rl": true,
-          "value": "{EE81A9FE-C649-468E-8464-DB5C8B334BC7}",
           "mode": "list",
-          "cachedResultName": "Conjunto_Top",
-          "cachedResultUrl": "https://canteradigitalsa-my.sharepoint.com/personal/gael_graciano_canteradigital_mx/_layouts/15/Doc.aspx?sourcedoc=%7B03F59F91-9196-4521-9501-0A4B0BF23349%7D&file=Tabla_Pruebas.xlsx&action=default&mobileredirect=true&DefaultItemOpen=1&activeCell=Tablas!B33:B34"
+          "value": ""
         },
         "returnAll": true,
         "filters": {}
@@ -48,8 +44,8 @@
       "type": "n8n-nodes-base.microsoftExcel",
       "typeVersion": 2.1,
       "position": [
-        200,
-        -100
+        640,
+        -120
       ],
       "id": "8bf23da2-bcb2-4ba7-a5e1-94219b92453a",
       "name": "Obtener datos de columnas",
@@ -97,8 +93,8 @@
       "type": "n8n-nodes-base.microsoftExcel",
       "typeVersion": 2.1,
       "position": [
-        440,
-        -100
+        880,
+        -120
       ],
       "id": "46e68296-28af-4615-8edd-5c640e832b43",
       "name": "Introducir datos a nueva tabla",
@@ -140,7 +136,7 @@
       "type": "n8n-nodes-base.microsoftExcel",
       "typeVersion": 2.1,
       "position": [
-        200,
+        420,
         120
       ],
       "id": "a3216b03-958f-40ee-898b-50877d564cc1",
@@ -193,7 +189,7 @@
       "type": "n8n-nodes-base.microsoftExcel",
       "typeVersion": 2.1,
       "position": [
-        440,
+        660,
         120
       ],
       "id": "fff850bd-ae09-448b-9998-a9e2d7409b61",
@@ -204,6 +200,75 @@
           "name": "Microsoft Excel account"
         }
       }
+    },
+    {
+      "parameters": {
+        "resource": "list",
+        "operation": "get",
+        "site": {
+          "__rl": true,
+          "value": "canteradigitalsa.sharepoint.com,6934373b-e270-4c87-acd6-9191f790a4ef,7036f0a6-e6d4-47d1-b05d-443cce9d6ec2",
+          "mode": "list",
+          "cachedResultName": "n8n_Pruebas_Excel"
+        },
+        "list": {
+          "__rl": true,
+          "value": "f576bf72-9f64-430c-8488-e5f4af57b4ec",
+          "mode": "list",
+          "cachedResultName": "Tablas_Excel_Prueba"
+        },
+        "requestOptions": {}
+      },
+      "type": "n8n-nodes-base.microsoftSharePoint",
+      "typeVersion": 1,
+      "position": [
+        200,
+        -120
+      ],
+      "id": "5704693b-bb3d-4cd2-bdde-f102cc9fb0ea",
+      "name": "Obtener ubicación de la tabla",
+      "credentials": {
+        "microsoftSharePointOAuth2Api": {
+          "id": "HOs6xOyIvZc38XVE",
+          "name": "Microsoft SharePoint account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "table",
+        "operation": "getColumns",
+        "workbook": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        },
+        "worksheet": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        },
+        "table": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        },
+        "returnAll": true
+      },
+      "type": "n8n-nodes-base.microsoftExcel",
+      "typeVersion": 2.1,
+      "position": [
+        420,
+        -120
+      ],
+      "id": "3fcf9fb8-cea0-4777-9557-e4d8bb611b49",
+      "name": "Get columns",
+      "credentials": {
+        "microsoftExcelOAuth2Api": {
+          "id": "fYei2LmkCnYUz7es",
+          "name": "Microsoft Excel account 2"
+        }
+      }
     }
   ],
   "connections": {
@@ -211,12 +276,12 @@
       "main": [
         [
           {
-            "node": "Obtener datos de columnas",
+            "node": "Obtener datos de columnas1",
             "type": "main",
             "index": 0
           },
           {
-            "node": "Obtener datos de columnas1",
+            "node": "Obtener ubicación de la tabla",
             "type": "main",
             "index": 0
           }
@@ -244,6 +309,28 @@
           }
         ]
       ]
+    },
+    "Obtener ubicación de la tabla": {
+      "main": [
+        [
+          {
+            "node": "Get columns",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get columns": {
+      "main": [
+        [
+          {
+            "node": "Obtener datos de columnas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -254,7 +341,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "52444324-6283-45d4-9c00-5efe48880189",
+  "versionId": "586bcaa2-bb20-4319-a6cd-3930a6a05ac7",
   "triggerCount": 0,
   "shared": [
     {
