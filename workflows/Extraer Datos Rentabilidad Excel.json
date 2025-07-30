@@ -1,9 +1,9 @@
 {
   "createdAt": "2025-07-15T21:21:56.344Z",
-  "updatedAt": "2025-07-30T19:58:26.000Z",
+  "updatedAt": "2025-07-30T21:04:05.000Z",
   "id": "hYIL4H3KPAgpe1K1",
   "name": "Extraer Datos Rentabilidad Excel",
-  "active": false,
+  "active": true,
   "isArchived": false,
   "nodes": [
     {
@@ -37,8 +37,8 @@
       "type": "n8n-nodes-base.microsoftSharePoint",
       "typeVersion": 1,
       "position": [
-        220,
-        0
+        140,
+        -440
       ],
       "id": "fc6d2ac7-e2e4-48e7-bd5d-83da51cb1efd",
       "name": "Listar archivos",
@@ -71,8 +71,8 @@
       "type": "n8n-nodes-base.microsoftSharePoint",
       "typeVersion": 1,
       "position": [
-        1520,
-        -180
+        1440,
+        -620
       ],
       "id": "f1de6627-7ce7-4a01-b790-5dfebba6e9f6",
       "name": "Subir excel unificado",
@@ -90,8 +90,8 @@
       "type": "n8n-nodes-base.splitInBatches",
       "typeVersion": 3,
       "position": [
-        720,
-        0
+        640,
+        -440
       ],
       "id": "728ed340-a61b-4940-aea0-5de44c45f1b9",
       "name": "Loop Over Items"
@@ -120,8 +120,8 @@
       "type": "n8n-nodes-base.microsoftSharePoint",
       "typeVersion": 1,
       "position": [
-        1040,
-        120
+        960,
+        -320
       ],
       "id": "d8533e5d-2bca-4f18-9d68-9966caa26a99",
       "name": "Descargar archivo",
@@ -140,8 +140,8 @@
       "type": "n8n-nodes-base.extractFromFile",
       "typeVersion": 1,
       "position": [
-        1300,
-        120
+        1220,
+        -320
       ],
       "id": "c08ba926-1655-45ba-ae38-e0caee968079",
       "name": "Extraer del archivo",
@@ -156,8 +156,8 @@
       "type": "n8n-nodes-base.convertToFile",
       "typeVersion": 1.1,
       "position": [
-        1100,
-        -80
+        1020,
+        -520
       ],
       "id": "d89d4050-bfe3-405c-84d8-7aa6fec7a2a4",
       "name": "Convertir a archivo excel"
@@ -177,8 +177,8 @@
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
       "position": [
-        -240,
-        160
+        -40,
+        -440
       ],
       "id": "3377c53c-fbeb-4127-b32d-29e75d550d38",
       "name": "Schedule Trigger"
@@ -260,8 +260,8 @@
       "type": "n8n-nodes-base.microsoftSharePoint",
       "typeVersion": 1,
       "position": [
-        480,
-        0
+        400,
+        -440
       ],
       "id": "906ac924-dfe7-40e7-a31c-7fd28a0d851c",
       "name": "Create or update item (upsert)",
@@ -285,9 +285,8 @@
         "watch": "oneSelectedFolder",
         "folderId": {
           "__rl": true,
-          "mode": "url",
-          "value": "",
-          "__regex": "https:\\/\\/onedrive.live.com(?:\\/.*id=)(.+)(?:\\&cid.*)"
+          "value": "01IFTEMGY62PZWWIVD4RB2BGES4KXIQN62",
+          "mode": "id"
         }
       },
       "type": "n8n-nodes-base.microsoftOneDriveTrigger",
@@ -298,6 +297,26 @@
       ],
       "id": "8006661a-a398-4708-9a1a-c0100465a6d1",
       "name": "Microsoft OneDrive Trigger",
+      "credentials": {
+        "microsoftOneDriveOAuth2Api": {
+          "id": "nmcBNRZloSFuI6D4",
+          "name": "Microsoft Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "folderId": "={{ $json.id }}"
+      },
+      "type": "n8n-nodes-base.microsoftOneDrive",
+      "typeVersion": 1,
+      "position": [
+        220,
+        0
+      ],
+      "id": "e679305a-b27f-4913-ac5d-430caee7aece",
+      "name": "Get items in a folder",
       "credentials": {
         "microsoftOneDriveOAuth2Api": {
           "id": "nmcBNRZloSFuI6D4",
@@ -376,7 +395,13 @@
     },
     "Schedule Trigger": {
       "main": [
-        []
+        [
+          {
+            "node": "Listar archivos",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     },
     "Create or update item (upsert)": {
@@ -394,11 +419,16 @@
       "main": [
         [
           {
-            "node": "Listar archivos",
+            "node": "Get items in a folder",
             "type": "main",
             "index": 0
           }
         ]
+      ]
+    },
+    "Get items in a folder": {
+      "main": [
+        []
       ]
     }
   },
@@ -408,14 +438,18 @@
   "staticData": {
     "node:Schedule Trigger": {
       "recurrenceRules": []
+    },
+    "node:Microsoft OneDrive Trigger": {
+      "LastLink": "https://graph.microsoft.com/v1.0/me/drive/root/delta?token=NDslMjM0OyUyMzE7MzsxMDg4MDUxMS1hMDY5LTQ0YjYtODFjOS1kYWJlZTMyMDcyNzk7NjM4ODk1MDYyNDU3MjcwMDAwOzEwMDc2MTc1Njg7JTIzOyUyMzslMjMwOyUyMw",
+      "lastTimeChecked": "2025-07-30T21:04:05.754Z"
     }
   },
   "meta": {
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "d0f5b425-c71c-4f6a-8dac-d47d63f1d8ca",
-  "triggerCount": 1,
+  "versionId": "8f588e4f-ee41-455b-a84e-02ebb892ee8c",
+  "triggerCount": 2,
   "shared": [
     {
       "createdAt": "2025-07-15T21:21:56.351Z",
