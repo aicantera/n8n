@@ -1,9 +1,9 @@
 {
   "createdAt": "2025-07-15T21:21:56.344Z",
-  "updatedAt": "2025-07-29T17:51:13.000Z",
+  "updatedAt": "2025-07-30T19:58:26.000Z",
   "id": "hYIL4H3KPAgpe1K1",
   "name": "Extraer Datos Rentabilidad Excel",
-  "active": true,
+  "active": false,
   "isArchived": false,
   "nodes": [
     {
@@ -71,7 +71,7 @@
       "type": "n8n-nodes-base.microsoftSharePoint",
       "typeVersion": 1,
       "position": [
-        1300,
+        1520,
         -180
       ],
       "id": "f1de6627-7ce7-4a01-b790-5dfebba6e9f6",
@@ -90,7 +90,7 @@
       "type": "n8n-nodes-base.splitInBatches",
       "typeVersion": 3,
       "position": [
-        500,
+        720,
         0
       ],
       "id": "728ed340-a61b-4940-aea0-5de44c45f1b9",
@@ -112,16 +112,15 @@
         },
         "file": {
           "__rl": true,
-          "value": "01E2QOBSWB7RAYLZOXNFGLWKKAWUDRQKGL",
-          "mode": "list",
-          "cachedResultName": "Rentabilidad_BarterFlip.csv"
+          "value": "=",
+          "mode": "id"
         },
         "requestOptions": {}
       },
       "type": "n8n-nodes-base.microsoftSharePoint",
       "typeVersion": 1,
       "position": [
-        820,
+        1040,
         120
       ],
       "id": "d8533e5d-2bca-4f18-9d68-9966caa26a99",
@@ -141,7 +140,7 @@
       "type": "n8n-nodes-base.extractFromFile",
       "typeVersion": 1,
       "position": [
-        1080,
+        1300,
         120
       ],
       "id": "c08ba926-1655-45ba-ae38-e0caee968079",
@@ -157,7 +156,7 @@
       "type": "n8n-nodes-base.convertToFile",
       "typeVersion": 1.1,
       "position": [
-        880,
+        1100,
         -80
       ],
       "id": "d89d4050-bfe3-405c-84d8-7aa6fec7a2a4",
@@ -178,11 +177,133 @@
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
       "position": [
-        0,
-        0
+        -240,
+        160
       ],
       "id": "3377c53c-fbeb-4127-b32d-29e75d550d38",
       "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "resource": "item",
+        "operation": "upsert",
+        "site": {
+          "__rl": true,
+          "value": "canteradigitalsa.sharepoint.com,93da6720-112e-4bed-95b0-daaf6511de41,0e29c1f3-7286-4051-b0f3-f67641287928",
+          "mode": "list",
+          "cachedResultName": "Automatizaciones"
+        },
+        "list": {
+          "__rl": true,
+          "value": "85c3122a-88ec-4fc5-9d34-a1183c642abc",
+          "mode": "list",
+          "cachedResultName": "Archivos Mensuales"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "ContentType": 0,
+            "FileLeafRef": 0,
+            "id": "="
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "ContentType",
+              "canBeUsedToMatch": false,
+              "defaultMatch": false,
+              "display": true,
+              "displayName": "Tipo de contenido",
+              "readOnly": false,
+              "required": false,
+              "type": "number"
+            },
+            {
+              "id": "FileLeafRef",
+              "canBeUsedToMatch": false,
+              "defaultMatch": false,
+              "display": true,
+              "displayName": "Nombre",
+              "readOnly": false,
+              "required": true,
+              "type": "number"
+            },
+            {
+              "id": "Title",
+              "canBeUsedToMatch": false,
+              "defaultMatch": false,
+              "display": true,
+              "displayName": "Título",
+              "readOnly": false,
+              "required": false,
+              "type": "string"
+            },
+            {
+              "id": "id",
+              "canBeUsedToMatch": true,
+              "defaultMatch": false,
+              "display": true,
+              "displayName": "ID",
+              "readOnly": true,
+              "required": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "requestOptions": {}
+      },
+      "type": "n8n-nodes-base.microsoftSharePoint",
+      "typeVersion": 1,
+      "position": [
+        480,
+        0
+      ],
+      "id": "906ac924-dfe7-40e7-a31c-7fd28a0d851c",
+      "name": "Create or update item (upsert)",
+      "credentials": {
+        "microsoftSharePointOAuth2Api": {
+          "id": "HOs6xOyIvZc38XVE",
+          "name": "Microsoft SharePoint account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "event": "folderUpdated",
+        "watch": "oneSelectedFolder",
+        "folderId": {
+          "__rl": true,
+          "mode": "url",
+          "value": "",
+          "__regex": "https:\\/\\/onedrive.live.com(?:\\/.*id=)(.+)(?:\\&cid.*)"
+        }
+      },
+      "type": "n8n-nodes-base.microsoftOneDriveTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "8006661a-a398-4708-9a1a-c0100465a6d1",
+      "name": "Microsoft OneDrive Trigger",
+      "credentials": {
+        "microsoftOneDriveOAuth2Api": {
+          "id": "nmcBNRZloSFuI6D4",
+          "name": "Microsoft Drive account"
+        }
+      }
     }
   ],
   "connections": {
@@ -190,7 +311,7 @@
       "main": [
         [
           {
-            "node": "Loop Over Items",
+            "node": "Create or update item (upsert)",
             "type": "main",
             "index": 0
           }
@@ -254,6 +375,22 @@
       ]
     },
     "Schedule Trigger": {
+      "main": [
+        []
+      ]
+    },
+    "Create or update item (upsert)": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Microsoft OneDrive Trigger": {
       "main": [
         [
           {
