@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-07-29T16:12:06.786Z",
-  "updatedAt": "2025-07-29T16:14:50.000Z",
+  "updatedAt": "2025-07-29T23:34:08.000Z",
   "id": "eeKwBNnUqO8fbL74",
   "name": "Extraer Datos por Celdas Excel",
   "active": false,
@@ -16,16 +16,137 @@
       ],
       "id": "cff72a75-b9a0-40eb-9c2a-5d1f4bda7ef8",
       "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "resource": "table",
+        "operation": "getRows",
+        "workbook": {
+          "__rl": true,
+          "value": "01IFTEMG4RT72QHFUREFCZKAIKJMF7EM2J",
+          "mode": "list",
+          "cachedResultName": "Tabla_Pruebas",
+          "cachedResultUrl": "https://canteradigitalsa-my.sharepoint.com/personal/gael_graciano_canteradigital_mx/_layouts/15/Doc.aspx?sourcedoc=%7B03F59F91-9196-4521-9501-0A4B0BF23349%7D&file=Tabla_Pruebas.xlsx&action=default&mobileredirect=true&DefaultItemOpen=1"
+        },
+        "worksheet": {
+          "__rl": true,
+          "value": "{00000000-0001-0000-0000-000000000000}",
+          "mode": "list",
+          "cachedResultName": "Tablas",
+          "cachedResultUrl": "https://canteradigitalsa-my.sharepoint.com/personal/gael_graciano_canteradigital_mx/_layouts/15/Doc.aspx?sourcedoc=%7B03F59F91-9196-4521-9501-0A4B0BF23349%7D&file=Tabla_Pruebas.xlsx&action=default&mobileredirect=true&DefaultItemOpen=1&activeCell=Tablas!A1"
+        },
+        "table": {
+          "__rl": true,
+          "value": "{73CF4830-355B-42A8-A289-98782C34516F}",
+          "mode": "list",
+          "cachedResultName": "Productos_Top",
+          "cachedResultUrl": "https://canteradigitalsa-my.sharepoint.com/personal/gael_graciano_canteradigital_mx/_layouts/15/Doc.aspx?sourcedoc=%7B03F59F91-9196-4521-9501-0A4B0BF23349%7D&file=Tabla_Pruebas.xlsx&action=default&mobileredirect=true&DefaultItemOpen=1&activeCell=Tablas!B6:C31"
+        },
+        "returnAll": true,
+        "filters": {}
+      },
+      "type": "n8n-nodes-base.microsoftExcel",
+      "typeVersion": 2.1,
+      "position": [
+        220,
+        0
+      ],
+      "id": "8bf23da2-bcb2-4ba7-a5e1-94219b92453a",
+      "name": "Get rows",
+      "credentials": {
+        "microsoftExcelOAuth2Api": {
+          "id": "87tgg3FCCrGpWNZt",
+          "name": "Microsoft Excel account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "table",
+        "workbook": {
+          "__rl": true,
+          "value": "01IFTEMG4RT72QHFUREFCZKAIKJMF7EM2J",
+          "mode": "list",
+          "cachedResultName": "Tabla_Pruebas",
+          "cachedResultUrl": "https://canteradigitalsa-my.sharepoint.com/personal/gael_graciano_canteradigital_mx/_layouts/15/Doc.aspx?sourcedoc=%7B03F59F91-9196-4521-9501-0A4B0BF23349%7D&file=Tabla_Pruebas.xlsx&action=default&mobileredirect=true&DefaultItemOpen=1"
+        },
+        "worksheet": {
+          "__rl": true,
+          "value": "{7C888DF4-A1F8-4480-BB35-18665391EFC8}",
+          "mode": "list",
+          "cachedResultName": "Resultado_Tablas",
+          "cachedResultUrl": "https://canteradigitalsa-my.sharepoint.com/personal/gael_graciano_canteradigital_mx/_layouts/15/Doc.aspx?sourcedoc=%7B03F59F91-9196-4521-9501-0A4B0BF23349%7D&file=Tabla_Pruebas.xlsx&action=default&mobileredirect=true&DefaultItemOpen=1&activeCell=Resultado_Tablas!A1"
+        },
+        "table": {
+          "__rl": true,
+          "value": "{501484A6-6ED5-4F1E-A78B-91CF7F2ABFE7}",
+          "mode": "list",
+          "cachedResultName": "Resultado_Top",
+          "cachedResultUrl": "https://canteradigitalsa-my.sharepoint.com/personal/gael_graciano_canteradigital_mx/_layouts/15/Doc.aspx?sourcedoc=%7B03F59F91-9196-4521-9501-0A4B0BF23349%7D&file=Tabla_Pruebas.xlsx&action=default&mobileredirect=true&DefaultItemOpen=1&activeCell=Resultado_Tablas!B2:B3"
+        },
+        "fieldsUi": {
+          "values": [
+            {
+              "column": "Resultado_Top",
+              "fieldValue": "={{ $json.TOP }}"
+            },
+            {
+              "column": "Resultado_Top",
+              "fieldValue": "={{ $json.Cantidad }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.microsoftExcel",
+      "typeVersion": 2.1,
+      "position": [
+        440,
+        0
+      ],
+      "id": "46e68296-28af-4615-8edd-5c640e832b43",
+      "name": "Append rows to table",
+      "credentials": {
+        "microsoftExcelOAuth2Api": {
+          "id": "87tgg3FCCrGpWNZt",
+          "name": "Microsoft Excel account"
+        }
+      }
     }
   ],
-  "connections": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Get rows",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get rows": {
+      "main": [
+        [
+          {
+            "node": "Append rows to table",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
   "settings": {
     "executionOrder": "v1"
   },
   "staticData": null,
-  "meta": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
   "pinData": {},
-  "versionId": "35399b43-6c92-48d4-aa83-aa9c5aa48064",
+  "versionId": "f3097a4e-d6f0-4996-9326-c010c495f671",
   "triggerCount": 0,
   "shared": [
     {
@@ -51,7 +172,7 @@
             "projectId": "6D91TcMmlphV2lVS",
             "user": {
               "createdAt": "2025-07-14T23:58:54.930Z",
-              "updatedAt": "2025-07-15T00:12:23.000Z",
+              "updatedAt": "2025-07-29T23:54:25.042Z",
               "id": "bff7f19f-b5be-48d6-aea2-dfc3de153ccc",
               "email": "gael.graciano@canteradigital.mx",
               "firstName": "Gael ",
@@ -70,7 +191,9 @@
                 "role": "devops",
                 "reportedSource": "event"
               },
-              "settings": null,
+              "settings": {
+                "easyAIWorkflowOnboarded": true
+              },
               "role": "global:member",
               "disabled": false,
               "mfaEnabled": false,
