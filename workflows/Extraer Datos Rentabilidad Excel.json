@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-07-15T21:21:56.344Z",
-  "updatedAt": "2025-07-31T19:00:02.000Z",
+  "updatedAt": "2025-07-31T19:56:30.000Z",
   "id": "hYIL4H3KPAgpe1K1",
   "name": "Extraer Datos Rentabilidad Excel",
   "active": false,
@@ -37,7 +37,7 @@
       "type": "n8n-nodes-base.microsoftSharePoint",
       "typeVersion": 1,
       "position": [
-        440,
+        660,
         -440
       ],
       "id": "fc6d2ac7-e2e4-48e7-bd5d-83da51cb1efd",
@@ -71,7 +71,7 @@
       "type": "n8n-nodes-base.microsoftSharePoint",
       "typeVersion": 1,
       "position": [
-        1880,
+        2100,
         -620
       ],
       "id": "f1de6627-7ce7-4a01-b790-5dfebba6e9f6",
@@ -90,7 +90,7 @@
       "type": "n8n-nodes-base.splitInBatches",
       "typeVersion": 3,
       "position": [
-        720,
+        940,
         -440
       ],
       "id": "728ed340-a61b-4940-aea0-5de44c45f1b9",
@@ -112,15 +112,15 @@
         },
         "file": {
           "__rl": true,
-          "mode": "list",
-          "value": ""
+          "value": "={{ $json.id }}",
+          "mode": "id"
         },
         "requestOptions": {}
       },
       "type": "n8n-nodes-base.microsoftSharePoint",
       "typeVersion": 1,
       "position": [
-        1120,
+        1340,
         -320
       ],
       "id": "d8533e5d-2bca-4f18-9d68-9966caa26a99",
@@ -140,7 +140,7 @@
       "type": "n8n-nodes-base.extractFromFile",
       "typeVersion": 1,
       "position": [
-        1660,
+        1880,
         -320
       ],
       "id": "c08ba926-1655-45ba-ae38-e0caee968079",
@@ -156,7 +156,7 @@
       "type": "n8n-nodes-base.convertToFile",
       "typeVersion": 1.1,
       "position": [
-        1460,
+        1680,
         -520
       ],
       "id": "d89d4050-bfe3-405c-84d8-7aa6fec7a2a4",
@@ -173,8 +173,8 @@
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
       "position": [
-        240,
-        -440
+        40,
+        -560
       ],
       "id": "3377c53c-fbeb-4127-b32d-29e75d550d38",
       "name": "Schedule Trigger"
@@ -188,7 +188,13 @@
             }
           ]
         },
-        "event": "folderUpdated"
+        "event": "folderUpdated",
+        "watch": "oneSelectedFolder",
+        "folderId": {
+          "__rl": true,
+          "value": "01IFTEMG3AMQ3GESGUSBAYKYS2VVIIDGB5",
+          "mode": "id"
+        }
       },
       "type": "n8n-nodes-base.microsoftOneDriveTrigger",
       "typeVersion": 1,
@@ -261,8 +267,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        440,
-        -180
+        -60,
+        -240
       ],
       "id": "08429e19-d6fd-4cad-91b9-f28f921d0209",
       "name": "Sacar mes y año"
@@ -274,7 +280,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1060,
+        1280,
         -520
       ],
       "id": "871c7074-06c9-44d3-b28f-4768b32b1611",
@@ -305,7 +311,8 @@
           "id": "HOs6xOyIvZc38XVE",
           "name": "Microsoft SharePoint account"
         }
-      }
+      },
+      "disabled": true
     },
     {
       "parameters": {
@@ -321,8 +328,8 @@
       "type": "n8n-nodes-base.microsoftSharePoint",
       "typeVersion": 1,
       "position": [
-        140,
-        -200
+        -160,
+        -440
       ],
       "id": "b3d02882-ac4b-47fb-a23b-91c56b479c09",
       "name": "Create or update item (upsert)",
@@ -342,7 +349,7 @@
       "type": "n8n-nodes-base.microsoftOneDrive",
       "typeVersion": 1,
       "position": [
-        1260,
+        1480,
         -680
       ],
       "id": "2b4100b5-1934-4b4d-8b37-e731fabea432",
@@ -353,6 +360,17 @@
           "name": "Microsoft Drive account"
         }
       }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        460,
+        -440
+      ],
+      "id": "569bc2e3-14ea-4089-aa43-8874e6b5987d",
+      "name": "When clicking ‘Execute workflow’"
     }
   ],
   "connections": {
@@ -425,13 +443,7 @@
     },
     "Schedule Trigger": {
       "main": [
-        [
-          {
-            "node": "Listar archivos",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "Microsoft OneDrive Trigger": {
@@ -480,13 +492,7 @@
     },
     "Sacar mes y año": {
       "main": [
-        [
-          {
-            "node": "Convertir a archivo excel1",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "Sacar mes y año1": {
@@ -504,6 +510,17 @@
           }
         ]
       ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Listar archivos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -514,15 +531,15 @@
       "recurrenceRules": []
     },
     "node:Microsoft OneDrive Trigger": {
-      "LastLink": "https://graph.microsoft.com/v1.0/me/drive/root/delta?token=NDslMjM0OyUyMzE7MzsxMDg4MDUxMS1hMDY5LTQ0YjYtODFjOS1kYWJlZTMyMDcyNzk7NjM4ODk1MTYzMzE2MzAwMDAwOzEwMDc2NDM0Mjc7JTIzOyUyMzslMjMwOyUyMw",
-      "lastTimeChecked": "2025-07-30T23:52:11.806Z"
+      "LastLink": "https://graph.microsoft.com/v1.0/me/drive/root/delta?token=NDslMjM0OyUyMzE7MzsxMDg4MDUxMS1hMDY5LTQ0YjYtODFjOS1kYWJlZTMyMDcyNzk7NjM4ODk1ODc5NTQ1NDMwMDAwOzEwMDc4Nzc0MDA7JTIzOyUyMzslMjMwOyUyMw",
+      "lastTimeChecked": "2025-07-31T19:45:54.456Z"
     }
   },
   "meta": {
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "67760456-942d-4b42-b0c1-f0c30cd5b458",
+  "versionId": "c26324d2-7caa-45a0-a117-0fe6fa0a3c98",
   "triggerCount": 2,
   "shared": [
     {
