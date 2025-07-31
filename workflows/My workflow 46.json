@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-07-31T04:45:31.953Z",
-  "updatedAt": "2025-07-31T20:27:11.000Z",
+  "updatedAt": "2025-07-31T21:16:56.000Z",
   "id": "D1AK7KCB0BCW2wEM",
   "name": "My workflow 46",
   "active": false,
@@ -32,7 +32,7 @@
     },
     {
       "parameters": {
-        "functionCode": "return items.map((item) => {\n  try {\n    const htmlContent = item.json;\n    \n    // Función auxiliar para extraer datos de forma segura\n    const extractData = (html, className) => {\n      const regex = new RegExp(`<div class=\"${className}\">([^<]+)<\\/div>`, 'i');\n      const match = html.match(regex);\n      return match ? match[1].trim() : `Sin ${className}`;\n    };\n\n    // Extracción de datos con manejo de errores\n    const equipo = extractData(htmlContent, 'equipo');\n    const categoria = extractData(htmlContent, 'categoria');\n    const estado = extractData(htmlContent, 'estado');\n\n    // Validación adicional de datos\n    const validarTexto = (texto) => texto.length > 0 ? texto : 'No especificado';\n    \n    return {\n      json: {\n        equipo: validarTexto(equipo),\n        categoria: validarTexto(categoria),\n        estado: validarTexto(estado),\n        // Metadata útil para depuración\n        _metadata: {\n          timestamp: new Date().toISOString(),\n          source: 'SportIQS'\n        }\n      }\n    };\n    \n  } catch (error) {\n    // Manejo de errores completo\n    return {\n      json: {\n        equipo: 'Error en extracción',\n        categoria: 'Error en extracción',\n        estado: 'Error en extracción',\n        _error: {\n          message: error.message,\n          stack: error.stack\n        }\n      }\n    };\n  }\n});"
+        "functionCode": "return items.map((item) => {\n  try {\n    // Asegurarnos que trabajamos con una cadena de texto\n    const htmlContent = typeof item.json === 'string' ? item.json : JSON.stringify(item.json);\n    \n    // Función mejorada para extracción con validación de tipo\n    const extractData = (html, className) => {\n      if (typeof html !== 'string') return `Error: HTML no es texto`;\n      \n      try {\n        const regex = new RegExp(`<div class=\"${className}\">([^<]+)<\\/div>`, 'i');\n        const match = html.match(regex);\n        return match ? match[1].trim() : `Sin ${className}`;\n      } catch (e) {\n        return `Error en ${className}: ${e.message}`;\n      }\n    };\n\n    // Extracción segura\n    const equipo = extractData(htmlContent, 'equipo');\n    const categoria = extractData(htmlContent, 'categoria');\n    const estado = extractData(htmlContent, 'estado');\n\n    return {\n      json: {\n        equipo: equipo,\n        categoria: categoria,\n        estado: estado,\n        _rawHtml: htmlContent.length > 500 ? htmlContent.substring(0, 500) + '...' : htmlContent\n      }\n    };\n    \n  } catch (error) {\n    return {\n      json: {\n        equipo: 'Error en procesamiento',\n        categoria: 'Error en procesamiento',\n        estado: 'Error en procesamiento',\n        _errorDetails: {\n          message: error.message,\n          type: error.name,\n          inputType: typeof item.json\n        }\n      }\n    };\n  }\n});"
       },
       "id": "cc474ad4-4be7-4c25-aa03-8b178847c9f7",
       "name": "Formatear Equipos",
@@ -91,7 +91,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "5c3d5640-fdaf-4ff5-aef6-fc52b52a3cbd",
+  "versionId": "84aa2226-4961-4558-a69a-140ea8b0c109",
   "triggerCount": 0,
   "shared": [
     {
