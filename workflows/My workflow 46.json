@@ -1,69 +1,230 @@
 {
   "createdAt": "2025-07-31T04:45:31.953Z",
-  "updatedAt": "2025-07-31T04:45:31.953Z",
+  "updatedAt": "2025-07-31T05:30:36.000Z",
   "id": "D1AK7KCB0BCW2wEM",
   "name": "My workflow 46",
   "active": false,
   "isArchived": false,
   "nodes": [
     {
-      "parameters": {
-        "url": "https://sportiqs.com.mx/usuario/equipos.php?idLiga=44452145",
-        "responseFormat": "string",
-        "options": {}
-      },
-      "id": "981a1fa2-6368-4605-a693-aff53bbe066f",
-      "name": "Obtener Equipos",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 2,
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
       "position": [
-        -140,
-        180
-      ]
+        -340,
+        -340
+      ],
+      "id": "253c8abf-3e56-4e75-8f52-1847d3722aaa"
     },
     {
       "parameters": {
         "options": {}
       },
-      "id": "948898c7-ceea-4253-8917-75504d4eec0e",
-      "name": "Extraer Equipos",
+      "name": "Scrape Liga Info",
       "type": "n8n-nodes-base.htmlExtract",
       "typeVersion": 1,
       "position": [
-        80,
-        180
-      ]
+        -140,
+        -340
+      ],
+      "id": "c652893a-82da-4e57-b230-2c7eff398797"
     },
     {
       "parameters": {
-        "functionCode": "\nreturn items.map((item, index) => {\n  const datos = item.json.text.split('\\n').map(v => v.trim()).filter(Boolean);\n  return {\n    json: {\n      equipo: datos[1] || 'Sin nombre',\n      categoria: datos[2] || 'Sin categoría',\n      estado: datos[3] || 'Sin estado'\n    }\n  };\n});\n                "
+        "functionCode": "const $ = items[0].json.$;\nconst ligaInfo = {\n  id: '44452145',\n  nombre: $('h1').text().trim() || 'Nombre no disponible',\n  descripcion: $('div.descripcion').text().trim() || 'Sin descripción',\n  fecha_creacion: $('span.fecha').text().trim() || 'Fecha no disponible'\n};\n\nreturn [{\n  json: {\n    ...items[0].json,\n    ligaInfo\n  }\n}];"
       },
-      "id": "d317004e-bb9c-4240-8c31-0ea9c0b4a745",
-      "name": "Formatear Equipos",
+      "name": "Extraer Datos Liga",
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
+        80,
+        -340
+      ],
+      "id": "c2b484a9-f689-47bc-a883-7f0eaf31e837"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "name": "Scrape Categorías",
+      "type": "n8n-nodes-base.htmlExtract",
+      "typeVersion": 1,
+      "position": [
+        -140,
+        -240
+      ],
+      "id": "65513d35-bc14-4eea-81a9-b967187bbe56"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "name": "Scrape Partidos",
+      "type": "n8n-nodes-base.htmlExtract",
+      "typeVersion": 1,
+      "position": [
+        -140,
+        -140
+      ],
+      "id": "7fcd1bba-4d5b-428e-9293-2a97fe917c71"
+    },
+    {
+      "parameters": {
+        "functionCode": "const $ = items[0].json.$;\nconst partidos = [];\n\n$('.partido-item').each((i, el) => {\n  partidos.push({\n    id: $(el).attr('id')?.split('_').pop() || '',\n    equipo_local: $(el).find('.equipo-local').text().trim() || 'Desconocido',\n    equipo_visitante: $(el).find('.equipo-visitante').text().trim() || 'Desconocido',\n    fecha: $(el).find('.fecha-partido').text().trim() || 'Fecha no disponible',\n    resultado: $(el).find('.resultado').text().trim() || 'Sin resultado'\n  });\n});\n\nreturn [{\n  json: {\n    ...items[0].json,\n    partidos\n  }\n}];"
+      },
+      "name": "Extraer Datos Partidos",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        80,
+        -140
+      ],
+      "id": "aab48114-1b01-4b32-8e83-eca21c02229e"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "name": "Scrape Equipos",
+      "type": "n8n-nodes-base.htmlExtract",
+      "typeVersion": 1,
+      "position": [
+        -140,
+        -40
+      ],
+      "id": "28cce59e-51ed-4708-872e-6c1ce739fba6"
+    },
+    {
+      "parameters": {
+        "functionCode": "const $ = items[0].json.$;\nconst equipos = [];\n\n$('.equipo-item').each((i, el) => {\n  equipos.push({\n    id: $(el).attr('id')?.split('_').pop() || '',\n    nombre: $(el).find('h3').text().trim() || 'Equipo sin nombre',\n    logo: $(el).find('img').attr('src') || '',\n    director: $(el).find('.director').text().trim() || 'Director no disponible'\n  });\n});\n\nreturn [{\n  json: {\n    ...items[0].json,\n    equipos\n  }\n}];"
+      },
+      "name": "Extraer Datos Equipos",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        80,
+        -40
+      ],
+      "id": "34d05ecf-36f7-4851-a4da-0be335b95eae"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "name": "Scrape Jugadores",
+      "type": "n8n-nodes-base.htmlExtract",
+      "typeVersion": 1,
+      "position": [
+        -140,
+        80
+      ],
+      "id": "318fc890-f443-4d2b-87f6-487b42239423"
+    },
+    {
+      "parameters": {
+        "functionCode": "const $ = items[0].json.$;\nconst jugadores = [];\n\n$('.jugador-item').each((i, el) => {\n  jugadores.push({\n    id: $(el).attr('id')?.split('_').pop() || '',\n    nombre: $(el).find('h3').text().trim() || 'Jugador sin nombre',\n    equipo: $(el).find('.equipo').text().trim() || 'Sin equipo',\n    posicion: $(el).find('.posicion').text().trim() || 'Sin posición',\n    numero: $(el).find('.numero').text().trim() || 'Sin número'\n  });\n});\n\nreturn [{\n  json: {\n    ...items[0].json,\n    jugadores\n  }\n}];"
+      },
+      "name": "Extraer Datos Jugadores",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        80,
+        80
+      ],
+      "id": "2e0b05ba-b365-403e-8c1c-6840c695e2a0"
+    },
+    {
+      "parameters": {
+        "fileName": "=datos_liga_{{ $node[\"Extraer Datos Liga\"].json.ligaInfo.nombre.replace(/[^a-z0-9]/gi, '_') }}.json",
+        "options": {}
+      },
+      "name": "Guardar JSON",
+      "type": "n8n-nodes-base.writeBinaryFile",
+      "typeVersion": 1,
+      "position": [
         280,
-        180
-      ]
+        -40
+      ],
+      "id": "c9ee3d70-a399-4d3f-8964-b91f2bc84a52"
     },
     {
       "parameters": {
         "chatId": "5657786910",
-        "text": "={{\"🏀 *Equipo:* \" + $json.equipo + \"\\n📂 Categoría: \" + $json.categoria + \"\\n📍 Estado: \" + $json.estado}}",
+        "text": "=Información de la liga scrapeada:\n\n🏆 Liga: {{ $node[\"Extraer Datos Liga\"].json.ligaInfo.nombre }}\n📂 Categorías: {{ $node[\"Extraer Datos Categorías\"].json.categorias.length }}\n⚽ Partidos: {{ $node[\"Extraer Datos Partidos\"].json.partidos.length }}\n👕 Equipos: {{ $node[\"Extraer Datos Equipos\"].json.equipos.length }}\n👤 Jugadores: {{ $node[\"Extraer Datos Jugadores\"].json.jugadores.length }}",
         "additionalFields": {
           "parse_mode": "Markdown"
         }
       },
-      "id": "7bfe239f-35d2-4d1e-83d8-ad05437b6017",
-      "name": "Enviar Telegram",
+      "name": "Enviar Resumen a Telegram",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        300,
+        -240
+      ],
+      "id": "c6124f9d-867f-4ad0-bcd3-bea27bc144ea",
+      "webhookId": "e2673d0a-47c2-4d15-b4bf-e2db598c6ffb",
+      "credentials": {
+        "telegramApi": {
+          "id": "StEym5eB0pTCPgrY",
+          "name": "Telegram account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "sendDocument",
+        "chatId": "5657786910",
+        "file": "={{ $node[\"Guardar JSON\"].json }}",
+        "additionalFields": {
+          "caption": "=Aquí tienes el archivo JSON con todos los datos de la liga {{ $node[\"Extraer Datos Liga\"].json.ligaInfo.nombre }}"
+        }
+      },
+      "name": "Enviar JSON por Telegram",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        480,
+        -40
+      ],
+      "id": "89867fa8-8337-446e-94a5-416017b96535",
+      "webhookId": "3a3e0ffb-f54a-4d2f-8f51-b0846f593d3e",
+      "credentials": {
+        "telegramApi": {
+          "id": "StEym5eB0pTCPgrY",
+          "name": "Telegram account 3"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "name": "Error Handler",
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [
+        280,
+        180
+      ],
+      "id": "d9cd3246-8780-411e-834c-40000a9f903f"
+    },
+    {
+      "parameters": {
+        "chatId": "5657786910",
+        "text": "=❌ Ocurrió un error al scrapear los datos:\n\n{{ $node[\"Error Handler\"].json.message }}",
+        "additionalFields": {
+          "parse_mode": "Markdown"
+        }
+      },
+      "name": "Notificar Error",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1,
       "position": [
         480,
         180
       ],
-      "webhookId": "4948fd0b-b79a-4da2-9689-56c1b76e8bdc",
+      "id": "08fede2d-17b3-497c-9c3b-726c28d3a06b",
+      "webhookId": "ac4f6f2c-5739-496f-916a-fb269ba1f0e7",
       "credentials": {
         "telegramApi": {
           "id": "StEym5eB0pTCPgrY",
@@ -73,33 +234,121 @@
     }
   ],
   "connections": {
-    "Obtener Equipos": {
+    "Start": {
       "main": [
         [
           {
-            "node": "Extraer Equipos",
+            "node": "Scrape Liga Info",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Extraer Equipos": {
+    "Scrape Liga Info": {
       "main": [
         [
           {
-            "node": "Formatear Equipos",
+            "node": "Extraer Datos Liga",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Formatear Equipos": {
+    "Extraer Datos Liga": {
       "main": [
         [
           {
-            "node": "Enviar Telegram",
+            "node": "Scrape Categorías",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Scrape Categorías": {
+      "main": [
+        [
+          {
+            "node": "Enviar Resumen a Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Scrape Partidos": {
+      "main": [
+        [
+          {
+            "node": "Extraer Datos Partidos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Scrape Equipos": {
+      "main": [
+        [
+          {
+            "node": "Extraer Datos Equipos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Scrape Jugadores": {
+      "main": [
+        [
+          {
+            "node": "Extraer Datos Jugadores",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Guardar JSON": {
+      "main": [
+        [
+          {
+            "node": "Enviar JSON por Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Error Handler": {
+      "main": [
+        [
+          {
+            "node": "Notificar Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extraer Datos Equipos": {
+      "main": [
+        [
+          {
+            "node": "Guardar JSON",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extraer Datos Partidos": {
+      "main": [
+        [
+          {
+            "node": "Enviar Resumen a Telegram",
             "type": "main",
             "index": 0
           }
@@ -115,7 +364,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "b43a3a57-abb1-4416-857d-f3658e827637",
+  "versionId": "e81953f1-9aea-4335-ab5c-44cd742afb30",
   "triggerCount": 0,
   "shared": [
     {
