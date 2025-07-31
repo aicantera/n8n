@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-06-16T22:51:19.635Z",
-  "updatedAt": "2025-07-07T18:18:04.000Z",
+  "updatedAt": "2025-07-31T19:57:39.000Z",
   "id": "aJIJlLEOEfejYf81",
   "name": "agente cantera Crm",
   "active": false,
@@ -178,29 +178,6 @@
         "microsoftTeamsOAuth2Api": {
           "id": "aCoVuwLpygun9hxH",
           "name": "Microsoft Teams account - cantera"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "toRecipients": "=jc@canteradigital.mx,janette.cano@canteradigital.mx,francisco@canteradigital.mx,edgar@canteradigital.mx,nathanael.solorio@canteradigital.mx,alexandra.trujillo@canteradigital.mx",
-        "subject": "Nuevo Lead",
-        "bodyContent": "=Tenemos nuevo Lead\n\nCliente:  {{ $('When Executed by Another Workflow').item.json.nombre_cliente }}\nEmpresa: {{ $('When Executed by Another Workflow').item.json.nombre_empresa }}\n\nRequerimiento: {{ $('When Executed by Another Workflow').item.json.requerimiento_cliente }}\nPropuesta: {{ $('When Executed by Another Workflow').item.json.resumen_propuesta }}\n{{ \"\\n\" }}\nPerfilado de cliente: {{ $('When Executed by Another Workflow').item.json.perfilado_de_cliente }}\n{{ \"\\n\" }}\nEstimación Inicial: {{ $json.output.detail_of_estimation }}\n{{ \"\\n\" }}\nValor del Lead: {{ $json.output.value }} USD\nProbablidad de Cierre:  {{ $json.output.propability*100 }} %\n{{ \"\\n\" }}\n\nPodemos contactar al cliente por los siguientes medios\nWhatsapp: {{ $('When Executed by Another Workflow').item.json.telefono_cliente }}\nCorreo: {{ $('When Executed by Another Workflow').item.json.email_cliente }}\n\n",
-        "additionalFields": {}
-      },
-      "type": "n8n-nodes-base.microsoftOutlook",
-      "typeVersion": 2,
-      "position": [
-        840,
-        120
-      ],
-      "id": "062c793f-44e6-429b-a06f-589ee27e5835",
-      "name": "Microsoft Outlook",
-      "webhookId": "28d91d12-609f-420c-b3d1-690bd1f2c164",
-      "credentials": {
-        "microsoftOutlookOAuth2Api": {
-          "id": "1e9fbzjIiV9wNv2j",
-          "name": "Microsoft Outlook account - azure@canteradigital.mx"
         }
       }
     },
@@ -562,6 +539,29 @@
       "typeVersion": 1,
       "id": "1289a6e9-358b-4503-9d69-131dd0a666c8",
       "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "toRecipients": "=jc@canteradigital.mx,janette.cano@canteradigital.mx,francisco@canteradigital.mx,edgar@canteradigital.mx,nathanael.solorio@canteradigital.mx,alexandra.trujillo@canteradigital.mx",
+        "subject": "Nuevo Lead",
+        "bodyContent": "=Tenemos nuevo Lead\n\nCliente:  {{ $('When Executed by Another Workflow').item.json.nombre_cliente }}\nEmpresa: {{ $('When Executed by Another Workflow').item.json.nombre_empresa }}\n\nRequerimiento: {{ $('When Executed by Another Workflow').item.json.requerimiento_cliente }}\nPropuesta: {{ $('When Executed by Another Workflow').item.json.resumen_propuesta }}\n{{ \"\\n\" }}\nPerfilado de cliente: {{ $('When Executed by Another Workflow').item.json.perfilado_de_cliente }}\n{{ \"\\n\" }}\nEstimación Inicial: {{ $json.output.detail_of_estimation }}\n{{ \"\\n\" }}\nValor del Lead: {{ $json.output.value }} MXN\nProbablidad de Cierre:  {{ $json.output.propability*100 }} %\n{{ \"\\n\" }}\n\nPodemos contactar al cliente por los siguientes medios\nWhatsapp: {{ $('When Executed by Another Workflow').item.json.telefono_cliente }}\nCorreo: {{ $('When Executed by Another Workflow').item.json.email_cliente }}\n\n",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.microsoftOutlook",
+      "typeVersion": 2,
+      "position": [
+        840,
+        120
+      ],
+      "id": "062c793f-44e6-429b-a06f-589ee27e5835",
+      "name": "Send a message",
+      "webhookId": "28d91d12-609f-420c-b3d1-690bd1f2c164",
+      "credentials": {
+        "microsoftOutlookOAuth2Api": {
+          "id": "1e9fbzjIiV9wNv2j",
+          "name": "Microsoft Outlook account - azure@canteradigital.mx"
+        }
+      }
     }
   ],
   "connections": {
@@ -602,23 +602,12 @@
       "main": [
         [
           {
-            "node": "Microsoft Outlook",
+            "node": "Send a message",
             "type": "main",
             "index": 0
           },
           {
             "node": "Pipedrive Contacto Actual",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Microsoft Outlook": {
-      "main": [
-        [
-          {
-            "node": "Microsoft Teams2",
             "type": "main",
             "index": 0
           }
@@ -730,6 +719,17 @@
           }
         ]
       ]
+    },
+    "Send a message": {
+      "main": [
+        [
+          {
+            "node": "Microsoft Teams2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -755,7 +755,7 @@
       }
     ]
   },
-  "versionId": "029f68b3-e2e7-4acd-aca1-24d5b29dfb72",
+  "versionId": "421a6432-e920-44d7-9d78-41f88d033d37",
   "triggerCount": 0,
   "shared": [
     {
