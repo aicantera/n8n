@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-07-15T21:21:56.344Z",
-  "updatedAt": "2025-07-30T21:04:05.000Z",
+  "updatedAt": "2025-07-30T23:52:11.000Z",
   "id": "hYIL4H3KPAgpe1K1",
   "name": "Extraer Datos Rentabilidad Excel",
   "active": true,
@@ -37,7 +37,7 @@
       "type": "n8n-nodes-base.microsoftSharePoint",
       "typeVersion": 1,
       "position": [
-        140,
+        440,
         -440
       ],
       "id": "fc6d2ac7-e2e4-48e7-bd5d-83da51cb1efd",
@@ -71,7 +71,7 @@
       "type": "n8n-nodes-base.microsoftSharePoint",
       "typeVersion": 1,
       "position": [
-        1440,
+        1660,
         -620
       ],
       "id": "f1de6627-7ce7-4a01-b790-5dfebba6e9f6",
@@ -90,7 +90,7 @@
       "type": "n8n-nodes-base.splitInBatches",
       "typeVersion": 3,
       "position": [
-        640,
+        860,
         -440
       ],
       "id": "728ed340-a61b-4940-aea0-5de44c45f1b9",
@@ -112,7 +112,7 @@
         },
         "file": {
           "__rl": true,
-          "value": "=",
+          "value": "={{ $json.parentReference.siteId }}",
           "mode": "id"
         },
         "requestOptions": {}
@@ -120,7 +120,7 @@
       "type": "n8n-nodes-base.microsoftSharePoint",
       "typeVersion": 1,
       "position": [
-        960,
+        1180,
         -320
       ],
       "id": "d8533e5d-2bca-4f18-9d68-9966caa26a99",
@@ -140,7 +140,7 @@
       "type": "n8n-nodes-base.extractFromFile",
       "typeVersion": 1,
       "position": [
-        1220,
+        1440,
         -320
       ],
       "id": "c08ba926-1655-45ba-ae38-e0caee968079",
@@ -156,7 +156,7 @@
       "type": "n8n-nodes-base.convertToFile",
       "typeVersion": 1.1,
       "position": [
-        1020,
+        1240,
         -520
       ],
       "id": "d89d4050-bfe3-405c-84d8-7aa6fec7a2a4",
@@ -177,100 +177,11 @@
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
       "position": [
-        -40,
+        240,
         -440
       ],
       "id": "3377c53c-fbeb-4127-b32d-29e75d550d38",
       "name": "Schedule Trigger"
-    },
-    {
-      "parameters": {
-        "resource": "item",
-        "operation": "upsert",
-        "site": {
-          "__rl": true,
-          "value": "canteradigitalsa.sharepoint.com,93da6720-112e-4bed-95b0-daaf6511de41,0e29c1f3-7286-4051-b0f3-f67641287928",
-          "mode": "list",
-          "cachedResultName": "Automatizaciones"
-        },
-        "list": {
-          "__rl": true,
-          "value": "85c3122a-88ec-4fc5-9d34-a1183c642abc",
-          "mode": "list",
-          "cachedResultName": "Archivos Mensuales"
-        },
-        "columns": {
-          "mappingMode": "defineBelow",
-          "value": {
-            "ContentType": 0,
-            "FileLeafRef": 0,
-            "id": "="
-          },
-          "matchingColumns": [
-            "id"
-          ],
-          "schema": [
-            {
-              "id": "ContentType",
-              "canBeUsedToMatch": false,
-              "defaultMatch": false,
-              "display": true,
-              "displayName": "Tipo de contenido",
-              "readOnly": false,
-              "required": false,
-              "type": "number"
-            },
-            {
-              "id": "FileLeafRef",
-              "canBeUsedToMatch": false,
-              "defaultMatch": false,
-              "display": true,
-              "displayName": "Nombre",
-              "readOnly": false,
-              "required": true,
-              "type": "number"
-            },
-            {
-              "id": "Title",
-              "canBeUsedToMatch": false,
-              "defaultMatch": false,
-              "display": true,
-              "displayName": "Título",
-              "readOnly": false,
-              "required": false,
-              "type": "string"
-            },
-            {
-              "id": "id",
-              "canBeUsedToMatch": true,
-              "defaultMatch": false,
-              "display": true,
-              "displayName": "ID",
-              "readOnly": true,
-              "required": true,
-              "type": "string",
-              "removed": false
-            }
-          ],
-          "attemptToConvertTypes": false,
-          "convertFieldsToString": false
-        },
-        "requestOptions": {}
-      },
-      "type": "n8n-nodes-base.microsoftSharePoint",
-      "typeVersion": 1,
-      "position": [
-        400,
-        -440
-      ],
-      "id": "906ac924-dfe7-40e7-a31c-7fd28a0d851c",
-      "name": "Create or update item (upsert)",
-      "credentials": {
-        "microsoftSharePointOAuth2Api": {
-          "id": "HOs6xOyIvZc38XVE",
-          "name": "Microsoft SharePoint account"
-        }
-      }
     },
     {
       "parameters": {
@@ -306,23 +217,68 @@
     },
     {
       "parameters": {
-        "resource": "folder",
-        "folderId": "={{ $json.id }}"
+        "operation": "search",
+        "query": "={{ $json.name }}"
       },
       "type": "n8n-nodes-base.microsoftOneDrive",
       "typeVersion": 1,
       "position": [
-        220,
+        260,
         0
       ],
-      "id": "e679305a-b27f-4913-ac5d-430caee7aece",
-      "name": "Get items in a folder",
+      "id": "117d6b8d-571c-4e3e-8b7f-339688a2fa28",
+      "name": "Search a file",
       "credentials": {
         "microsoftOneDriveOAuth2Api": {
           "id": "nmcBNRZloSFuI6D4",
           "name": "Microsoft Drive account"
         }
       }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        480,
+        0
+      ],
+      "id": "84e19a97-ebfe-4995-bde4-11f8dc310f5d",
+      "name": "Loop Over Items1"
+    },
+    {
+      "parameters": {
+        "operation": "download"
+      },
+      "type": "n8n-nodes-base.microsoftOneDrive",
+      "typeVersion": 1,
+      "position": [
+        800,
+        80
+      ],
+      "id": "7a6065ed-00b5-4b37-b34c-2cd12c591836",
+      "name": "Download a file",
+      "credentials": {
+        "microsoftOneDriveOAuth2Api": {
+          "id": "nmcBNRZloSFuI6D4",
+          "name": "Microsoft Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const allFiles = $json; // El output del nodo Listar es un array directo, no dentro de 'data' o 'items[0].json.data'\nconst targetFileName = \"$Rentabilidad_BarterFlip.txt\"; // <<< ¡IMPORTANTE! Reemplaza esto con el NOMBRE EXACTO de tu archivo de Google Doc/Texto Plano\nlet foundFile = null;\n\nif (Array.isArray(allFiles)) {\n    for (const file of allFiles) {\n        // El nombre del archivo se encuentra al final de la 'webUrl'\n        // Extraemos el nombre completo del archivo (ej. \"Rentabilidad_BarterFlip.csv\")\n        const fileNameFromUrl = file.webUrl ? file.webUrl.substring(file.webUrl.lastIndexOf('/') + 1) : null;\n\n        // Comparamos con el nombre que buscamos\n        if (fileNameFromUrl === targetFileName) {\n            foundFile = file;\n            break; // Encontramos el archivo, salimos del bucle\n        }\n    }\n}\n\nif (foundFile) {\n    return [{\n        json: {\n            fileId: foundFile.id,       // Extraemos el ID\n            fileName: targetFileName,   // Guardamos el nombre para referencia\n            webUrl: foundFile.webUrl    // Opcional: la URL del archivo\n        }\n    }];\n} else {\n    // Lanza un error si el archivo no se encuentra.\n    // n8n detendrá la ejecución aquí, puedes usar un nodo de manejo de errores si lo prefieres.\n    throw new Error(`El archivo '${targetFileName}' no fue encontrado en la lista de OneDrive/SharePoint.`);\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        640,
+        -440
+      ],
+      "id": "52d3bbe2-ae70-44e4-ae8a-f6f7d205ffb1",
+      "name": "Code"
     }
   ],
   "connections": {
@@ -330,7 +286,7 @@
       "main": [
         [
           {
-            "node": "Create or update item (upsert)",
+            "node": "Code",
             "type": "main",
             "index": 0
           }
@@ -404,7 +360,52 @@
         ]
       ]
     },
-    "Create or update item (upsert)": {
+    "Microsoft OneDrive Trigger": {
+      "main": [
+        [
+          {
+            "node": "Search a file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search a file": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items1": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Download a file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download a file": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
       "main": [
         [
           {
@@ -413,22 +414,6 @@
             "index": 0
           }
         ]
-      ]
-    },
-    "Microsoft OneDrive Trigger": {
-      "main": [
-        [
-          {
-            "node": "Get items in a folder",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Get items in a folder": {
-      "main": [
-        []
       ]
     }
   },
@@ -440,15 +425,15 @@
       "recurrenceRules": []
     },
     "node:Microsoft OneDrive Trigger": {
-      "LastLink": "https://graph.microsoft.com/v1.0/me/drive/root/delta?token=NDslMjM0OyUyMzE7MzsxMDg4MDUxMS1hMDY5LTQ0YjYtODFjOS1kYWJlZTMyMDcyNzk7NjM4ODk1MDYyNDU3MjcwMDAwOzEwMDc2MTc1Njg7JTIzOyUyMzslMjMwOyUyMw",
-      "lastTimeChecked": "2025-07-30T21:04:05.754Z"
+      "LastLink": "https://graph.microsoft.com/v1.0/me/drive/root/delta?token=NDslMjM0OyUyMzE7MzsxMDg4MDUxMS1hMDY5LTQ0YjYtODFjOS1kYWJlZTMyMDcyNzk7NjM4ODk1MTYzMzE2MzAwMDAwOzEwMDc2NDM0Mjc7JTIzOyUyMzslMjMwOyUyMw",
+      "lastTimeChecked": "2025-07-30T23:52:11.806Z"
     }
   },
   "meta": {
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "8f588e4f-ee41-455b-a84e-02ebb892ee8c",
+  "versionId": "5fce3681-7611-465b-a0f5-21fb0caac512",
   "triggerCount": 2,
   "shared": [
     {
