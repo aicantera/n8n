@@ -1,0 +1,175 @@
+{
+  "createdAt": "2025-07-31T04:45:31.953Z",
+  "updatedAt": "2025-07-31T04:45:31.953Z",
+  "id": "D1AK7KCB0BCW2wEM",
+  "name": "My workflow 46",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "url": "https://sportiqs.com.mx/usuario/equipos.php?idLiga=44452145",
+        "responseFormat": "string",
+        "options": {}
+      },
+      "id": "981a1fa2-6368-4605-a693-aff53bbe066f",
+      "name": "Obtener Equipos",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 2,
+      "position": [
+        -140,
+        180
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "948898c7-ceea-4253-8917-75504d4eec0e",
+      "name": "Extraer Equipos",
+      "type": "n8n-nodes-base.htmlExtract",
+      "typeVersion": 1,
+      "position": [
+        80,
+        180
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "\nreturn items.map((item, index) => {\n  const datos = item.json.text.split('\\n').map(v => v.trim()).filter(Boolean);\n  return {\n    json: {\n      equipo: datos[1] || 'Sin nombre',\n      categoria: datos[2] || 'Sin categoría',\n      estado: datos[3] || 'Sin estado'\n    }\n  };\n});\n                "
+      },
+      "id": "d317004e-bb9c-4240-8c31-0ea9c0b4a745",
+      "name": "Formatear Equipos",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        280,
+        180
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "5657786910",
+        "text": "={{\"🏀 *Equipo:* \" + $json.equipo + \"\\n📂 Categoría: \" + $json.categoria + \"\\n📍 Estado: \" + $json.estado}}",
+        "additionalFields": {
+          "parse_mode": "Markdown"
+        }
+      },
+      "id": "7bfe239f-35d2-4d1e-83d8-ad05437b6017",
+      "name": "Enviar Telegram",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        480,
+        180
+      ],
+      "webhookId": "4948fd0b-b79a-4da2-9689-56c1b76e8bdc",
+      "credentials": {
+        "telegramApi": {
+          "id": "StEym5eB0pTCPgrY",
+          "name": "Telegram account 3"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Obtener Equipos": {
+      "main": [
+        [
+          {
+            "node": "Extraer Equipos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extraer Equipos": {
+      "main": [
+        [
+          {
+            "node": "Formatear Equipos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Formatear Equipos": {
+      "main": [
+        [
+          {
+            "node": "Enviar Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "b43a3a57-abb1-4416-857d-f3658e827637",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "createdAt": "2025-07-31T04:45:31.960Z",
+      "updatedAt": "2025-07-31T04:45:31.960Z",
+      "role": "workflow:owner",
+      "workflowId": "D1AK7KCB0BCW2wEM",
+      "projectId": "NqpoyrTm14wzcIs1",
+      "project": {
+        "createdAt": "2025-07-30T22:59:12.419Z",
+        "updatedAt": "2025-07-30T23:17:33.253Z",
+        "id": "NqpoyrTm14wzcIs1",
+        "name": "Carlos Alberto Hernández Rivera <carlos.hernandez@canteradigital.mx>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "projectRelations": [
+          {
+            "createdAt": "2025-07-30T22:59:12.421Z",
+            "updatedAt": "2025-07-30T22:59:12.421Z",
+            "role": "project:personalOwner",
+            "userId": "8b90075a-7916-49b2-bbfc-7dac99c8c202",
+            "projectId": "NqpoyrTm14wzcIs1",
+            "user": {
+              "createdAt": "2025-07-30T22:59:12.416Z",
+              "updatedAt": "2025-07-31T00:02:16.793Z",
+              "id": "8b90075a-7916-49b2-bbfc-7dac99c8c202",
+              "email": "carlos.hernandez@canteradigital.mx",
+              "firstName": "Carlos Alberto",
+              "lastName": "Hernández Rivera",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-07-30T23:18:45.114Z",
+                "personalization_survey_n8n_version": "1.100.1",
+                "automationGoalDevops": [
+                  "ticketing-systems-integrations"
+                ],
+                "companySize": "20-99",
+                "companyType": "saas",
+                "role": "it",
+                "reportedSource": "youtube"
+              },
+              "settings": {
+                "easyAIWorkflowOnboarded": true
+              },
+              "role": "global:member",
+              "disabled": false,
+              "mfaEnabled": false,
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": []
+}
