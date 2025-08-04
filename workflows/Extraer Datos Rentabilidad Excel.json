@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-07-15T21:21:56.344Z",
-  "updatedAt": "2025-08-02T03:08:38.000Z",
+  "updatedAt": "2025-08-04T19:56:43.000Z",
   "id": "hYIL4H3KPAgpe1K1",
   "name": "Extraer Datos Rentabilidad Excel",
   "active": true,
@@ -47,7 +47,7 @@
       "type": "n8n-nodes-base.microsoftOneDrive",
       "typeVersion": 1,
       "position": [
-        840,
+        1060,
         120
       ],
       "id": "117d6b8d-571c-4e3e-8b7f-339688a2fa28",
@@ -66,7 +66,7 @@
       "type": "n8n-nodes-base.extractFromFile",
       "typeVersion": 1,
       "position": [
-        1080,
+        1300,
         120
       ],
       "id": "e23936e9-a8c3-42be-9e1d-b5cdff68979d",
@@ -76,30 +76,17 @@
       "parameters": {
         "operation": "xlsx",
         "options": {
-          "fileName": "=Rentabilidad"
+          "fileName": "=Rentabilidad.xlsx"
         }
       },
       "type": "n8n-nodes-base.convertToFile",
       "typeVersion": 1.1,
       "position": [
-        1420,
+        1640,
         120
       ],
       "id": "99e6b957-9393-413f-bacd-8140411c6143",
       "name": "Convertir a archivo excel1"
-    },
-    {
-      "parameters": {
-        "jsCode": "// Obtener la fecha actual\nconst fecha = new Date();\n \n// Arreglo de nombres de los meses en español\nconst meses = [\n  'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',\n  'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'\n];\n \n// Obtener nombre del mes y año\nconst mesTexto = meses[fecha.getMonth()];\nconst anio = fecha.getFullYear();\n \n// Retornar como salida\nreturn [\n  {\n    json: {\n      mes: mesTexto,\n      anio\n    }\n  }\n];"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        1240,
-        -40
-      ],
-      "id": "08429e19-d6fd-4cad-91b9-f28f921d0209",
-      "name": "Sacar mes y año"
     },
     {
       "parameters": {
@@ -123,7 +110,7 @@
       "type": "n8n-nodes-base.microsoftSharePoint",
       "typeVersion": 1,
       "position": [
-        1640,
+        1860,
         120
       ],
       "id": "61732d77-19b0-4ede-9583-10d5d5dd9eae",
@@ -133,7 +120,8 @@
           "id": "HOs6xOyIvZc38XVE",
           "name": "Gael SharePoint"
         }
-      }
+      },
+      "disabled": true
     },
     {
       "parameters": {
@@ -150,16 +138,18 @@
     },
     {
       "parameters": {
-        "operation": "search"
+        "resource": "folder",
+        "operation": "search",
+        "query": ".xlsx"
       },
       "type": "n8n-nodes-base.microsoftOneDrive",
       "typeVersion": 1,
       "position": [
-        440,
+        560,
         80
       ],
-      "id": "56eb8b0e-b989-409b-a211-8ddc2a969e96",
-      "name": "Search a file",
+      "id": "9f6b9dff-daa1-4cbc-9035-3e512be62f12",
+      "name": "Search a folder",
       "credentials": {
         "microsoftOneDriveOAuth2Api": {
           "id": "nmcBNRZloSFuI6D4",
@@ -198,11 +188,6 @@
             "node": "Convertir a archivo excel1",
             "type": "main",
             "index": 0
-          },
-          {
-            "node": "Sacar mes y año",
-            "type": "main",
-            "index": 0
           }
         ]
       ]
@@ -218,29 +203,18 @@
         ]
       ]
     },
-    "Sacar mes y año": {
-      "main": [
-        [
-          {
-            "node": "Convertir a archivo excel1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "When Executed by Another Workflow": {
       "main": [
         [
           {
-            "node": "Search a file",
+            "node": "Search a folder",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Search a file": {
+    "Search a folder": {
       "main": [
         [
           {
@@ -260,15 +234,15 @@
       "recurrenceRules": []
     },
     "node:Microsoft OneDrive Trigger": {
-      "LastLink": "https://graph.microsoft.com/v1.0/me/drive/root/delta?token=NDslMjM0OyUyMzE7MzsxMDg4MDUxMS1hMDY5LTQ0YjYtODFjOS1kYWJlZTMyMDcyNzk7NjM4ODk3MDA5MTkyMzMwMDAwOzEwMDgyODI0MzI7JTIzOyUyMzslMjMwOyUyMw",
-      "lastTimeChecked": "2025-08-02T03:08:38.905Z"
+      "LastLink": "https://graph.microsoft.com/v1.0/me/drive/root/delta?token=NDslMjM0OyUyMzE7MzsxMDg4MDUxMS1hMDY5LTQ0YjYtODFjOS1kYWJlZTMyMDcyNzk7NjM4ODk5MzQyMDM0MTcwMDAwOzEwMDkyMDk1NDk7JTIzOyUyMzslMjMwOyUyMw",
+      "lastTimeChecked": "2025-08-04T19:56:43.060Z"
     }
   },
   "meta": {
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "886ed53e-3a10-494d-b9a2-b370278be927",
+  "versionId": "dcc61f4d-f37a-4ddd-96e0-9fea645a2f41",
   "triggerCount": 1,
   "shared": [
     {
@@ -294,7 +268,7 @@
             "projectId": "6D91TcMmlphV2lVS",
             "user": {
               "createdAt": "2025-07-14T23:58:54.930Z",
-              "updatedAt": "2025-07-30T01:41:58.833Z",
+              "updatedAt": "2025-08-04T19:56:46.745Z",
               "id": "bff7f19f-b5be-48d6-aea2-dfc3de153ccc",
               "email": "gael.graciano@canteradigital.mx",
               "firstName": "Gael ",
@@ -317,7 +291,11 @@
                 "easyAIWorkflowOnboarded": true,
                 "firstSuccessfulWorkflowId": "j0Fiqu3Vwfp6hOC3",
                 "userActivated": true,
-                "userActivatedAt": 1753839716307
+                "userActivatedAt": 1753839716307,
+                "npsSurvey": {
+                  "responded": true,
+                  "lastShownAt": 1754337405043
+                }
               },
               "role": "global:member",
               "disabled": false,
