@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-07-15T21:21:56.344Z",
-  "updatedAt": "2025-08-04T21:51:41.000Z",
+  "updatedAt": "2025-08-04T22:59:59.000Z",
   "id": "hYIL4H3KPAgpe1K1",
   "name": "Extraer Datos Rentabilidad Excel",
   "active": true,
@@ -47,8 +47,8 @@
       "type": "n8n-nodes-base.microsoftOneDrive",
       "typeVersion": 1,
       "position": [
-        1060,
-        120
+        1420,
+        -60
       ],
       "id": "117d6b8d-571c-4e3e-8b7f-339688a2fa28",
       "name": "Descargar archivos",
@@ -66,8 +66,8 @@
       "type": "n8n-nodes-base.extractFromFile",
       "typeVersion": 1,
       "position": [
-        1300,
-        120
+        1720,
+        -60
       ],
       "id": "e23936e9-a8c3-42be-9e1d-b5cdff68979d",
       "name": "Extraer datos"
@@ -76,13 +76,13 @@
       "parameters": {
         "operation": "xlsx",
         "options": {
-          "fileName": "=Rentabilidad.xlsx"
+          "fileName": "={{ $json.query }}.xlsx"
         }
       },
       "type": "n8n-nodes-base.convertToFile",
       "typeVersion": 1.1,
       "position": [
-        1640,
+        1920,
         120
       ],
       "id": "99e6b957-9393-413f-bacd-8140411c6143",
@@ -110,7 +110,7 @@
       "type": "n8n-nodes-base.microsoftSharePoint",
       "typeVersion": 1,
       "position": [
-        1860,
+        2180,
         120
       ],
       "id": "61732d77-19b0-4ede-9583-10d5d5dd9eae",
@@ -188,6 +188,11 @@
             "node": "Descargar archivos",
             "type": "main",
             "index": 0
+          },
+          {
+            "node": "Convertir a archivo excel1",
+            "type": "main",
+            "index": 0
           }
         ]
       ]
@@ -201,15 +206,23 @@
       "recurrenceRules": []
     },
     "node:Microsoft OneDrive Trigger": {
-      "LastLink": "https://graph.microsoft.com/v1.0/me/drive/root/delta?token=NDslMjM0OyUyMzE7MzsxMDg4MDUxMS1hMDY5LTQ0YjYtODFjOS1kYWJlZTMyMDcyNzk7NjM4ODk5NDExMDExMjMwMDAwOzEwMDkyNzEyMTg7JTIzOyUyMzslMjMwOyUyMw",
-      "lastTimeChecked": "2025-08-04T21:51:41.036Z"
+      "LastLink": "https://graph.microsoft.com/v1.0/me/drive/root/delta?token=NDslMjM0OyUyMzE7MzsxMDg4MDUxMS1hMDY5LTQ0YjYtODFjOS1kYWJlZTMyMDcyNzk7NjM4ODk5NDUyMDAyMzAwMDAwOzEwMDkyOTIyNDk7JTIzOyUyMzslMjMwOyUyMw",
+      "lastTimeChecked": "2025-08-04T22:59:59.946Z"
     }
   },
   "meta": {
     "templateCredsSetupCompleted": true
   },
-  "pinData": {},
-  "versionId": "895c70b0-4803-4648-9a35-fe74bbfd68ac",
+  "pinData": {
+    "When Executed by Another Workflow": [
+      {
+        "json": {
+          "query": "Concentrado_Julio_2025"
+        }
+      }
+    ]
+  },
+  "versionId": "8af7300c-3523-4f2c-ae62-f43d2748ebff",
   "triggerCount": 1,
   "shared": [
     {
