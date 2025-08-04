@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-08-01T22:12:41.830Z",
-  "updatedAt": "2025-08-01T23:49:10.000Z",
+  "updatedAt": "2025-08-04T21:56:50.000Z",
   "id": "I1rDSf41u8FBituq",
   "name": "Bot_RentabilidadExcel",
   "active": true,
@@ -11,13 +11,13 @@
         "promptType": "define",
         "text": "={{ $json.message.text }}",
         "options": {
-          "systemMessage": "Eres un agente intermediario, tu propósito es preguntar al usuario si quiere generar el concentrado de archivos mensuales y el nombre del archivo, una vez que te confirme la información pasa a accionar.\nTu tono es amable, divertido y simpático. "
+          "systemMessage": "Eres un agente intermediario, tu propósito es preguntar al usuario si quiere generar el concentrado de archivos mensuales y el nombre del archivo, una vez que estes seguro de la información llama la tool.\nTu tono es amable, divertido y simpático.\nPara hacer tu tarea tienes la tool: Extraer Datos Rentabilidad que usarás cuando todo esté listo."
         }
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 2,
       "position": [
-        220,
+        660,
         0
       ],
       "id": "0e3ba792-74a3-48ad-b51e-f55ab1a72a94",
@@ -35,7 +35,7 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.2,
       "position": [
-        220,
+        660,
         180
       ],
       "id": "d8291d1a-a372-490b-a0b4-82c97474cd65",
@@ -56,7 +56,7 @@
       "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
       "typeVersion": 1.3,
       "position": [
-        320,
+        760,
         320
       ],
       "id": "0ee27bca-12f4-496f-822b-6d5560511b56",
@@ -73,7 +73,7 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        580,
+        1020,
         0
       ],
       "id": "5d6b685a-c93b-44aa-a621-52ac01c31300",
@@ -96,7 +96,7 @@
       "type": "n8n-nodes-base.telegramTrigger",
       "typeVersion": 1.2,
       "position": [
-        0,
+        -280,
         0
       ],
       "id": "0ae98a0d-c1e0-44b8-b3d4-02621a8289ce",
@@ -111,7 +111,7 @@
     },
     {
       "parameters": {
-        "description": "Llama a esta tool cuando tengas confirmación del usuario de generar el concentrado y el nombre del archivo.",
+        "description": "Llama a esta tool cuando tengas todo para generar el concentrado y el nombre del archivo.",
         "workflowId": {
           "__rl": true,
           "value": "hYIL4H3KPAgpe1K1",
@@ -130,11 +130,63 @@
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 2.2,
       "position": [
-        620,
+        1060,
         220
       ],
       "id": "16c6cf08-c895-4ad5-a855-394243b05fc8",
-      "name": "Tool - Llamar flujo de extraer datos rentabilidad"
+      "name": "Extraer Datos Rentabilidad"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "81145717-c846-4994-b521-38b433a26f12"
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -60,
+        0
+      ],
+      "id": "a240ddaf-02f7-461a-a911-c84c4ea1e4d7",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        160,
+        0
+      ],
+      "id": "2790e99e-a7d1-4345-ab0e-bbee9d1c9420",
+      "name": "Edit Fields"
     }
   ],
   "connections": {
@@ -175,19 +227,41 @@
       "main": [
         [
           {
-            "node": "AI Agent",
+            "node": "Switch",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Tool - Llamar flujo de extraer datos rentabilidad": {
+    "Extraer Datos Rentabilidad": {
       "ai_tool": [
         [
           {
             "node": "AI Agent",
             "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
             "index": 0
           }
         ]
@@ -202,7 +276,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "d084af6b-667b-4828-9deb-2b8caeb0a397",
+  "versionId": "79d669ad-f609-4432-8e1b-20098d7039af",
   "triggerCount": 1,
   "shared": [
     {
