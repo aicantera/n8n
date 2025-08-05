@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-07-15T21:21:56.344Z",
-  "updatedAt": "2025-08-05T17:45:11.000Z",
+  "updatedAt": "2025-08-05T23:00:07.000Z",
   "id": "hYIL4H3KPAgpe1K1",
   "name": "Extraer Datos Rentabilidad Excel",
   "active": true,
@@ -18,14 +18,15 @@
           ]
         },
         "event": "fileUpdated",
-        "simple": false,
         "watch": "selectedFolder",
         "folderId": {
           "__rl": true,
           "value": "01IFTEMG3AMQ3GESGUSBAYKYS2VVIIDGB5",
           "mode": "id"
         },
-        "options": {}
+        "options": {
+          "folderChild": false
+        }
       },
       "type": "n8n-nodes-base.microsoftOneDriveTrigger",
       "typeVersion": 1,
@@ -50,8 +51,8 @@
       "type": "n8n-nodes-base.microsoftOneDrive",
       "typeVersion": 1,
       "position": [
-        1420,
-        -60
+        1100,
+        -80
       ],
       "id": "117d6b8d-571c-4e3e-8b7f-339688a2fa28",
       "name": "Descargar archivos",
@@ -69,8 +70,8 @@
       "type": "n8n-nodes-base.extractFromFile",
       "typeVersion": 1,
       "position": [
-        1720,
-        -60
+        1360,
+        -80
       ],
       "id": "e23936e9-a8c3-42be-9e1d-b5cdff68979d",
       "name": "Extraer datos"
@@ -79,17 +80,18 @@
       "parameters": {
         "operation": "xlsx",
         "options": {
-          "fileName": "={{ $json.query }}.xlsx"
+          "fileName": "=Rentabilidad_{{ $json.mes }}_{{ $json.anio }}.xlsx"
         }
       },
       "type": "n8n-nodes-base.convertToFile",
       "typeVersion": 1.1,
       "position": [
-        1920,
-        120
+        2060,
+        100
       ],
       "id": "99e6b957-9393-413f-bacd-8140411c6143",
-      "name": "Convertir a archivo excel1"
+      "name": "Convertir a archivo excel1",
+      "executeOnce": false
     },
     {
       "parameters": {
@@ -106,15 +108,14 @@
           "mode": "list",
           "cachedResultName": "Concentrado_Mensual"
         },
-        "fileName": "Rentabilidad_Julio_2025.xlsx",
         "fileContents": "data",
         "requestOptions": {}
       },
       "type": "n8n-nodes-base.microsoftSharePoint",
       "typeVersion": 1,
       "position": [
-        2180,
-        120
+        2300,
+        100
       ],
       "id": "61732d77-19b0-4ede-9583-10d5d5dd9eae",
       "name": "Upload file",
@@ -123,7 +124,8 @@
           "id": "HOs6xOyIvZc38XVE",
           "name": "Gael SharePoint"
         }
-      }
+      },
+      "disabled": true
     },
     {
       "parameters": {
@@ -132,11 +134,26 @@
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "typeVersion": 1.1,
       "position": [
-        440,
-        60
+        800,
+        100
       ],
       "id": "682636a3-6374-4351-86eb-c42b1b2eb425",
-      "name": "When Executed by Another Workflow"
+      "name": "When Executed by Another Workflow",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "jsCode": "// Obtener la fecha actual\nconst fecha = new Date();\n \n// Arreglo de nombres de los meses en español\nconst meses = [\n  'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',\n  'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'\n];\n \n// Obtener nombre del mes y año\nconst mesTexto = meses[fecha.getMonth()];\nconst anio = fecha.getFullYear();\n \n// Retornar como salida\nreturn [\n  {\n    json: {\n      mes: mesTexto,\n      anio\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1800,
+        -100
+      ],
+      "id": "c1bcc4f0-242b-4d75-baee-3e79b56f451e",
+      "name": "Code",
+      "disabled": true
     }
   ],
   "connections": {
@@ -169,6 +186,11 @@
             "node": "Convertir a archivo excel1",
             "type": "main",
             "index": 0
+          },
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
           }
         ]
       ]
@@ -188,10 +210,21 @@
       "main": [
         [
           {
-            "node": "Descargar archivos",
+            "node": "Convertir a archivo excel1",
             "type": "main",
             "index": 0
           },
+          {
+            "node": "Descargar archivos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
           {
             "node": "Convertir a archivo excel1",
             "type": "main",
@@ -209,8 +242,8 @@
       "recurrenceRules": []
     },
     "node:Microsoft OneDrive Trigger": {
-      "LastLink": "https://graph.microsoft.com/v1.0/me/drive/root/delta?token=NDslMjM0OyUyMzE7MzsxMDg4MDUxMS1hMDY5LTQ0YjYtODFjOS1kYWJlZTMyMDcyNzk7NjM4OTAwMTI3MTIzNjMwMDAwOzEwMDk3MjU3OTk7JTIzOyUyMzslMjMwOyUyMw",
-      "lastTimeChecked": "2025-08-05T17:45:11.965Z"
+      "LastLink": "https://graph.microsoft.com/v1.0/me/drive/root/delta?token=NDslMjM0OyUyMzE7MzsxMDg4MDUxMS1hMDY5LTQ0YjYtODFjOS1kYWJlZTMyMDcyNzk7NjM4OTAwMzE2MDgxNDcwMDAwOzEwMDk4NTIyMDQ7JTIzOyUyMzslMjMwOyUyMw",
+      "lastTimeChecked": "2025-08-05T23:00:07.766Z"
     }
   },
   "meta": {
@@ -225,7 +258,7 @@
       }
     ]
   },
-  "versionId": "5b8d0f5c-9f3e-4900-b222-f67c698dc467",
+  "versionId": "d61c4ef7-6613-47c3-bdb2-b524819014d6",
   "triggerCount": 1,
   "shared": [
     {
