@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-07-15T21:21:56.344Z",
-  "updatedAt": "2025-08-06T19:01:16.000Z",
+  "updatedAt": "2025-08-06T19:58:13.000Z",
   "id": "hYIL4H3KPAgpe1K1",
   "name": "Extraer Datos Rentabilidad Excel",
   "active": true,
@@ -51,8 +51,8 @@
       "type": "n8n-nodes-base.microsoftOneDrive",
       "typeVersion": 1,
       "position": [
-        1060,
-        -20
+        1020,
+        -60
       ],
       "id": "117d6b8d-571c-4e3e-8b7f-339688a2fa28",
       "name": "Descargar archivos",
@@ -70,30 +70,11 @@
       "type": "n8n-nodes-base.extractFromFile",
       "typeVersion": 1,
       "position": [
-        1300,
-        -20
+        1240,
+        -60
       ],
       "id": "e23936e9-a8c3-42be-9e1d-b5cdff68979d",
       "name": "Extraer datos"
-    },
-    {
-      "parameters": {
-        "operation": "xlsx",
-        "options": {
-          "fileName": "=Rentabilidad_{{ $json.mes }}_{{ $json.anio }}.xlsx",
-          "sheetName": "Concentrado_datos"
-        }
-      },
-      "type": "n8n-nodes-base.convertToFile",
-      "typeVersion": 1.1,
-      "position": [
-        2020,
-        60
-      ],
-      "id": "99e6b957-9393-413f-bacd-8140411c6143",
-      "name": "Convertir a archivo excel1",
-      "executeOnce": true,
-      "notesInFlow": false
     },
     {
       "parameters": {
@@ -160,25 +141,11 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        1580,
-        -20
+        1500,
+        -60
       ],
       "id": "9fb8bc56-843f-4f48-9902-9123b23aeef5",
       "name": "Transformación de datos"
-    },
-    {
-      "parameters": {
-        "jsCode": "// Obtener la fecha actual\nconst fecha = new Date();\n \n// Arreglo de nombres de los meses en español\nconst meses = [\n  'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',\n  'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'\n];\n \n// Obtener nombre del mes y año\nconst mesTexto = meses[fecha.getMonth()];\nconst anio = fecha.getFullYear();\n \n// Retornar como salida\nreturn [\n  {\n    json: {\n      mes: mesTexto,\n      anio\n    }\n  }\n];"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        1440,
-        -160
-      ],
-      "id": "c1bcc4f0-242b-4d75-baee-3e79b56f451e",
-      "name": "Generar fecha",
-      "alwaysOutputData": true
     },
     {
       "parameters": {
@@ -225,14 +192,15 @@
           "mode": "list",
           "cachedResultName": "Concentrado_Mensual"
         },
+        "fileName": "Concentrado.xlsx",
         "fileContents": "data",
         "requestOptions": {}
       },
       "type": "n8n-nodes-base.microsoftSharePoint",
       "typeVersion": 1,
       "position": [
-        2300,
-        60
+        1980,
+        -60
       ],
       "id": "61732d77-19b0-4ede-9583-10d5d5dd9eae",
       "name": "Subir archivo a carpeta Concentrado_Mensual",
@@ -241,8 +209,26 @@
           "id": "HOs6xOyIvZc38XVE",
           "name": "Gael SharePoint"
         }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "xlsx",
+        "options": {
+          "fileName": "Concentrado.xlsx",
+          "sheetName": "Concentrado_datos"
+        }
       },
-      "disabled": true
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        1740,
+        -60
+      ],
+      "id": "99e6b957-9393-413f-bacd-8140411c6143",
+      "name": "Convertir a archivo excel",
+      "executeOnce": false,
+      "notesInFlow": false
     }
   ],
   "connections": {
@@ -279,33 +265,11 @@
         ]
       ]
     },
-    "Convertir a archivo excel1": {
-      "main": [
-        [
-          {
-            "node": "Subir archivo a carpeta Concentrado_Mensual",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Transformación de datos": {
       "main": [
         [
           {
-            "node": "Convertir a archivo excel1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Generar fecha": {
-      "main": [
-        [
-          {
-            "node": "Convertir a archivo excel1",
+            "node": "Convertir a archivo excel",
             "type": "main",
             "index": 0
           }
@@ -322,6 +286,17 @@
           }
         ]
       ]
+    },
+    "Convertir a archivo excel": {
+      "main": [
+        [
+          {
+            "node": "Subir archivo a carpeta Concentrado_Mensual",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -332,8 +307,8 @@
       "recurrenceRules": []
     },
     "node:Microsoft OneDrive Trigger": {
-      "LastLink": "https://graph.microsoft.com/v1.0/me/drive/root/delta?token=NDslMjM0OyUyMzE7MzsxMDg4MDUxMS1hMDY5LTQ0YjYtODFjOS1kYWJlZTMyMDcyNzk7NjM4OTAxMDM2NzU1ODMwMDAwOzEwMTAzMDc1NTM7JTIzOyUyMzslMjMwOyUyMw",
-      "lastTimeChecked": "2025-08-06T19:01:16.144Z"
+      "LastLink": "https://graph.microsoft.com/v1.0/me/drive/root/delta?token=NDslMjM0OyUyMzE7MzsxMDg4MDUxMS1hMDY5LTQ0YjYtODFjOS1kYWJlZTMyMDcyNzk7NjM4OTAxMDcwOTMzMTMwMDAwOzEwMTAzMjgxMDA7JTIzOyUyMzslMjMwOyUyMw",
+      "lastTimeChecked": "2025-08-06T19:58:13.768Z"
     }
   },
   "meta": {
@@ -348,7 +323,7 @@
       }
     ]
   },
-  "versionId": "9e233a1b-881c-47e3-8995-8cd846374f4b",
+  "versionId": "624ca523-9598-4327-866b-acd1a5798617",
   "triggerCount": 1,
   "shared": [
     {
