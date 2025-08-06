@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-07-15T21:21:56.344Z",
-  "updatedAt": "2025-08-06T16:28:51.000Z",
+  "updatedAt": "2025-08-06T19:01:16.000Z",
   "id": "hYIL4H3KPAgpe1K1",
   "name": "Extraer Datos Rentabilidad Excel",
   "active": true,
@@ -51,8 +51,8 @@
       "type": "n8n-nodes-base.microsoftOneDrive",
       "typeVersion": 1,
       "position": [
-        1100,
-        -80
+        1060,
+        -20
       ],
       "id": "117d6b8d-571c-4e3e-8b7f-339688a2fa28",
       "name": "Descargar archivos",
@@ -70,8 +70,8 @@
       "type": "n8n-nodes-base.extractFromFile",
       "typeVersion": 1,
       "position": [
-        1360,
-        -80
+        1300,
+        -20
       ],
       "id": "e23936e9-a8c3-42be-9e1d-b5cdff68979d",
       "name": "Extraer datos"
@@ -80,18 +80,135 @@
       "parameters": {
         "operation": "xlsx",
         "options": {
-          "fileName": "=Rentabilidad_{{ $json.mes }}_{{ $json.anio }}.xlsx"
+          "fileName": "=Rentabilidad_{{ $json.mes }}_{{ $json.anio }}.xlsx",
+          "sheetName": "Concentrado_datos"
         }
       },
       "type": "n8n-nodes-base.convertToFile",
       "typeVersion": 1.1,
       "position": [
-        1620,
+        2020,
         60
       ],
       "id": "99e6b957-9393-413f-bacd-8140411c6143",
       "name": "Convertir a archivo excel1",
-      "executeOnce": false
+      "executeOnce": true,
+      "notesInFlow": false
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "38b1c965-1d64-415d-9166-66fb5b4ea091",
+              "name": "﻿ID",
+              "value": "={{ $json['﻿ID'] }}",
+              "type": "string"
+            },
+            {
+              "id": "441d55ef-c5c6-4666-82fe-4373e1b48c8b",
+              "name": "Work Item Type",
+              "value": "={{ $json['Work Item Type'] }}",
+              "type": "string"
+            },
+            {
+              "id": "37f3a63a-6772-4ba8-b3aa-82ec4b300381",
+              "name": "Title",
+              "value": "={{ $json['Title'] }}",
+              "type": "string"
+            },
+            {
+              "id": "d0908705-e1ed-473d-a184-b2b07350c822",
+              "name": "Assigned To",
+              "value": "={{ $json['Assigned To'] }}",
+              "type": "string"
+            },
+            {
+              "id": "bc2ed500-7b10-48e9-9bd1-daae78e52dc4",
+              "name": "=State",
+              "value": "={{ $json['State'] }}",
+              "type": "string"
+            },
+            {
+              "id": "9c9c1600-e09c-46ac-8500-ec9dbb271ca2",
+              "name": "Completed Work",
+              "value": "={{ $json['Completed Work'] }}",
+              "type": "number"
+            },
+            {
+              "id": "5b9f07a5-06fc-4903-b947-3138eabbea71",
+              "name": "Remaining Work",
+              "value": "={{ $json[\"Remaining Work\"] }}",
+              "type": "number"
+            },
+            {
+              "id": "abe037cb-5c7b-4f2d-90dd-d0489d5808d0",
+              "name": "Created Date",
+              "value": "={{ $json['Created Date'] }}",
+              "type": "string"
+            },
+            {
+              "id": "eba65992-ce43-484c-9519-12e2d002d979",
+              "name": "Closed Date",
+              "value": "={{$json['Closed Date'] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1580,
+        -20
+      ],
+      "id": "9fb8bc56-843f-4f48-9902-9123b23aeef5",
+      "name": "Transformación de datos"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Obtener la fecha actual\nconst fecha = new Date();\n \n// Arreglo de nombres de los meses en español\nconst meses = [\n  'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',\n  'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'\n];\n \n// Obtener nombre del mes y año\nconst mesTexto = meses[fecha.getMonth()];\nconst anio = fecha.getFullYear();\n \n// Retornar como salida\nreturn [\n  {\n    json: {\n      mes: mesTexto,\n      anio\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1440,
+        -160
+      ],
+      "id": "c1bcc4f0-242b-4d75-baee-3e79b56f451e",
+      "name": "Generar fecha",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "content": "## Flujo de extracción de los archivos de rentabilidad generados durante el mes \nDescarga todos los archivos .csv colocados en una carpeta para extraer toda la información (tiene que estar estructurada aunque se puede editar) y crear con ella un nuevo archivo .xlsx que se sube a SharePoint. [Guide](https://docs.n8n.io/workflows/sticky-notes/)",
+        "height": 560,
+        "width": 1720,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        760,
+        -280
+      ],
+      "typeVersion": 1,
+      "id": "dfed71ae-8992-4052-9c0a-f8f64c87d2f3",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        800,
+        100
+      ],
+      "id": "682636a3-6374-4351-86eb-c42b1b2eb425",
+      "name": "Llamada de Bot_RentabilidadExcel",
+      "disabled": true
     },
     {
       "parameters": {
@@ -114,45 +231,17 @@
       "type": "n8n-nodes-base.microsoftSharePoint",
       "typeVersion": 1,
       "position": [
-        1860,
+        2300,
         60
       ],
       "id": "61732d77-19b0-4ede-9583-10d5d5dd9eae",
-      "name": "Upload file",
+      "name": "Subir archivo a carpeta Concentrado_Mensual",
       "credentials": {
         "microsoftSharePointOAuth2Api": {
           "id": "HOs6xOyIvZc38XVE",
           "name": "Gael SharePoint"
         }
       },
-      "disabled": true
-    },
-    {
-      "parameters": {
-        "inputSource": "passthrough"
-      },
-      "type": "n8n-nodes-base.executeWorkflowTrigger",
-      "typeVersion": 1.1,
-      "position": [
-        800,
-        100
-      ],
-      "id": "682636a3-6374-4351-86eb-c42b1b2eb425",
-      "name": "When Executed by Another Workflow",
-      "disabled": true
-    },
-    {
-      "parameters": {
-        "jsCode": "// Obtener la fecha actual\nconst fecha = new Date();\n \n// Arreglo de nombres de los meses en español\nconst meses = [\n  'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',\n  'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'\n];\n \n// Obtener nombre del mes y año\nconst mesTexto = meses[fecha.getMonth()];\nconst anio = fecha.getFullYear();\n \n// Retornar como salida\nreturn [\n  {\n    json: {\n      mes: mesTexto,\n      anio\n    }\n  }\n];"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        1900,
-        -240
-      ],
-      "id": "c1bcc4f0-242b-4d75-baee-3e79b56f451e",
-      "name": "Code",
       "disabled": true
     }
   ],
@@ -183,7 +272,7 @@
       "main": [
         [
           {
-            "node": "Convertir a archivo excel1",
+            "node": "Transformación de datos",
             "type": "main",
             "index": 0
           }
@@ -194,32 +283,44 @@
       "main": [
         [
           {
-            "node": "Upload file",
+            "node": "Subir archivo a carpeta Concentrado_Mensual",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "When Executed by Another Workflow": {
+    "Transformación de datos": {
       "main": [
         [
           {
             "node": "Convertir a archivo excel1",
             "type": "main",
             "index": 0
-          },
+          }
+        ]
+      ]
+    },
+    "Generar fecha": {
+      "main": [
+        [
           {
-            "node": "Descargar archivos",
+            "node": "Convertir a archivo excel1",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Code": {
+    "Llamada de Bot_RentabilidadExcel": {
       "main": [
-        []
+        [
+          {
+            "node": "Descargar archivos",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     }
   },
@@ -231,15 +332,15 @@
       "recurrenceRules": []
     },
     "node:Microsoft OneDrive Trigger": {
-      "LastLink": "https://graph.microsoft.com/v1.0/me/drive/root/delta?token=NDslMjM0OyUyMzE7MzsxMDg4MDUxMS1hMDY5LTQ0YjYtODFjOS1kYWJlZTMyMDcyNzk7NjM4OTAwOTQ1MzI1OTcwMDAwOzEwMTAyMjUzNTY7JTIzOyUyMzslMjMwOyUyMw",
-      "lastTimeChecked": "2025-08-06T16:28:51.152Z"
+      "LastLink": "https://graph.microsoft.com/v1.0/me/drive/root/delta?token=NDslMjM0OyUyMzE7MzsxMDg4MDUxMS1hMDY5LTQ0YjYtODFjOS1kYWJlZTMyMDcyNzk7NjM4OTAxMDM2NzU1ODMwMDAwOzEwMTAzMDc1NTM7JTIzOyUyMzslMjMwOyUyMw",
+      "lastTimeChecked": "2025-08-06T19:01:16.144Z"
     }
   },
   "meta": {
     "templateCredsSetupCompleted": true
   },
   "pinData": {
-    "When Executed by Another Workflow": [
+    "Llamada de Bot_RentabilidadExcel": [
       {
         "json": {
           "query": "Concentrado_Julio_2025"
@@ -247,7 +348,7 @@
       }
     ]
   },
-  "versionId": "085c3daa-5cc7-4d44-8b4c-39d7d9f3de93",
+  "versionId": "9e233a1b-881c-47e3-8995-8cd846374f4b",
   "triggerCount": 1,
   "shared": [
     {
