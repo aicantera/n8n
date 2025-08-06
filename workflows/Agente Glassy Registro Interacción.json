@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-08-04T18:32:45.866Z",
-  "updatedAt": "2025-08-04T21:16:24.000Z",
+  "updatedAt": "2025-08-06T20:37:00.000Z",
   "id": "tGwY3sT6JSe2WZWY",
   "name": "Agente Glassy Registro Interacción",
   "active": false,
@@ -32,6 +32,11 @@
             {
               "name": "query",
               "description": "Solicitud que hizo el usuario al agente",
+              "required": true
+            },
+            {
+              "name": "chat_id",
+              "description": "ID del chat",
               "required": true
             }
           ]
@@ -96,7 +101,8 @@
           "value": {
             "Fecha": "={{ $now.minus({ hours: 0 }).setLocale('es').toFormat(\"dd 'de' LLLL 'de' yyyy HH:mm\") }}",
             "Nombre": "={{ $json.output.name }}",
-            "Clasificación": "={{ $json.output.query }}"
+            "ChatID": "={{ $json.output.chat_id }}",
+            "Solicitud": "={{ $json.output.query }}"
           },
           "matchingColumns": [],
           "schema": [
@@ -110,6 +116,16 @@
               "canBeUsedToMatch": true
             },
             {
+              "id": "ChatID",
+              "displayName": "ChatID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
               "id": "Nombre",
               "displayName": "Nombre",
               "required": false,
@@ -119,13 +135,14 @@
               "canBeUsedToMatch": true
             },
             {
-              "id": "Clasificación",
-              "displayName": "Clasificación",
+              "id": "Solicitud",
+              "displayName": "Solicitud",
               "required": false,
               "defaultMatch": false,
               "display": true,
               "type": "string",
-              "canBeUsedToMatch": true
+              "canBeUsedToMatch": true,
+              "removed": false
             }
           ],
           "attemptToConvertTypes": false,
@@ -195,12 +212,12 @@
     "When Executed by Another Workflow": [
       {
         "json": {
-          "query": "Registrar contacto. Nombre: Aaron. Solicitud: quiero información de Glasbil."
+          "query": "Registrar contacto. ChatId: 1526474745. Nombre: Aaron. Solicitud: quiero información de Glasbil."
         }
       }
     ]
   },
-  "versionId": "696c9a7d-ce98-4615-a9a5-654939f9e041",
+  "versionId": "3a556d48-71cc-4c6b-98f8-d51dafa40815",
   "triggerCount": 0,
   "shared": [
     {
