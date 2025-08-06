@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-07-15T21:21:56.344Z",
-  "updatedAt": "2025-08-06T19:58:13.000Z",
+  "updatedAt": "2025-08-06T21:40:00.000Z",
   "id": "hYIL4H3KPAgpe1K1",
   "name": "Extraer Datos Rentabilidad Excel",
   "active": true,
@@ -150,7 +150,7 @@
     {
       "parameters": {
         "content": "## Flujo de extracción de los archivos de rentabilidad generados durante el mes \nDescarga todos los archivos .csv colocados en una carpeta para extraer toda la información (tiene que estar estructurada aunque se puede editar) y crear con ella un nuevo archivo .xlsx que se sube a SharePoint. [Guide](https://docs.n8n.io/workflows/sticky-notes/)",
-        "height": 560,
+        "height": 380,
         "width": 1720,
         "color": 3
       },
@@ -171,11 +171,10 @@
       "typeVersion": 1.1,
       "position": [
         800,
-        100
+        180
       ],
       "id": "682636a3-6374-4351-86eb-c42b1b2eb425",
-      "name": "Llamada de Bot_RentabilidadExcel",
-      "disabled": true
+      "name": "Llamada de Bot_RentabilidadExcel"
     },
     {
       "parameters": {
@@ -227,6 +226,25 @@
       ],
       "id": "99e6b957-9393-413f-bacd-8140411c6143",
       "name": "Convertir a archivo excel",
+      "executeOnce": false,
+      "notesInFlow": false
+    },
+    {
+      "parameters": {
+        "operation": "xlsx",
+        "options": {
+          "fileName": "={{ $json.query }}.xlsx ",
+          "sheetName": "Concentrado_datos"
+        }
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        1140,
+        200
+      ],
+      "id": "50169325-069f-48c3-b9b4-c512543c1683",
+      "name": "Convertir a archivo excel1",
       "executeOnce": false,
       "notesInFlow": false
     }
@@ -283,6 +301,11 @@
             "node": "Descargar archivos",
             "type": "main",
             "index": 0
+          },
+          {
+            "node": "Convertir a archivo excel1",
+            "type": "main",
+            "index": 0
           }
         ]
       ]
@@ -307,8 +330,8 @@
       "recurrenceRules": []
     },
     "node:Microsoft OneDrive Trigger": {
-      "LastLink": "https://graph.microsoft.com/v1.0/me/drive/root/delta?token=NDslMjM0OyUyMzE7MzsxMDg4MDUxMS1hMDY5LTQ0YjYtODFjOS1kYWJlZTMyMDcyNzk7NjM4OTAxMDcwOTMzMTMwMDAwOzEwMTAzMjgxMDA7JTIzOyUyMzslMjMwOyUyMw",
-      "lastTimeChecked": "2025-08-06T19:58:13.768Z"
+      "LastLink": "https://graph.microsoft.com/v1.0/me/drive/root/delta?token=NDslMjM0OyUyMzE7MzsxMDg4MDUxMS1hMDY5LTQ0YjYtODFjOS1kYWJlZTMyMDcyNzk7NjM4OTAxMTMyMDEwMTMwMDAwOzEwMTAzNDkyMDg7JTIzOyUyMzslMjMwOyUyMw",
+      "lastTimeChecked": "2025-08-06T21:40:00.623Z"
     }
   },
   "meta": {
@@ -323,7 +346,7 @@
       }
     ]
   },
-  "versionId": "624ca523-9598-4327-866b-acd1a5798617",
+  "versionId": "14b537f7-94bc-47bc-9de3-0c74b5f052b3",
   "triggerCount": 1,
   "shared": [
     {
