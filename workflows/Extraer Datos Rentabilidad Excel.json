@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-07-15T21:21:56.344Z",
-  "updatedAt": "2025-08-06T21:40:00.000Z",
+  "updatedAt": "2025-08-06T22:12:17.000Z",
   "id": "hYIL4H3KPAgpe1K1",
   "name": "Extraer Datos Rentabilidad Excel",
   "active": true,
@@ -165,7 +165,16 @@
     },
     {
       "parameters": {
-        "inputSource": "passthrough"
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "fieldName"
+            },
+            {
+              "name": "id"
+            }
+          ]
+        }
       },
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "typeVersion": 1.1,
@@ -231,19 +240,172 @@
     },
     {
       "parameters": {
+        "content": "## Subflujo activado por Bot_RentabilidadExcel\n**Double click** to edit me. [Guide](https://docs.n8n.io/workflows/sticky-notes/)",
+        "height": 380,
+        "width": 1720
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        760,
+        100
+      ],
+      "typeVersion": 1,
+      "id": "b72b5e61-126e-4a02-b0a9-c0bddd1bdbe7",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": "="
+      },
+      "type": "n8n-nodes-base.microsoftOneDrive",
+      "typeVersion": 1,
+      "position": [
+        1020,
+        180
+      ],
+      "id": "b6dbcd97-af7a-4aca-883e-fefa5a2041a1",
+      "name": "Descargar archivos1",
+      "credentials": {
+        "microsoftOneDriveOAuth2Api": {
+          "id": "nmcBNRZloSFuI6D4",
+          "name": "Gael OneDrive"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        1240,
+        180
+      ],
+      "id": "a4c74898-c4cb-498d-8871-dc09d4bfbc5d",
+      "name": "Extraer datos1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "38b1c965-1d64-415d-9166-66fb5b4ea091",
+              "name": "﻿ID",
+              "value": "={{ $json['﻿ID'] }}",
+              "type": "string"
+            },
+            {
+              "id": "441d55ef-c5c6-4666-82fe-4373e1b48c8b",
+              "name": "Work Item Type",
+              "value": "={{ $json['Work Item Type'] }}",
+              "type": "string"
+            },
+            {
+              "id": "37f3a63a-6772-4ba8-b3aa-82ec4b300381",
+              "name": "Title",
+              "value": "={{ $json['Title'] }}",
+              "type": "string"
+            },
+            {
+              "id": "d0908705-e1ed-473d-a184-b2b07350c822",
+              "name": "Assigned To",
+              "value": "={{ $json['Assigned To'] }}",
+              "type": "string"
+            },
+            {
+              "id": "bc2ed500-7b10-48e9-9bd1-daae78e52dc4",
+              "name": "=State",
+              "value": "={{ $json['State'] }}",
+              "type": "string"
+            },
+            {
+              "id": "9c9c1600-e09c-46ac-8500-ec9dbb271ca2",
+              "name": "Completed Work",
+              "value": "={{ $json['Completed Work'] }}",
+              "type": "number"
+            },
+            {
+              "id": "5b9f07a5-06fc-4903-b947-3138eabbea71",
+              "name": "Remaining Work",
+              "value": "={{ $json[\"Remaining Work\"] }}",
+              "type": "number"
+            },
+            {
+              "id": "abe037cb-5c7b-4f2d-90dd-d0489d5808d0",
+              "name": "Created Date",
+              "value": "={{ $json['Created Date'] }}",
+              "type": "string"
+            },
+            {
+              "id": "eba65992-ce43-484c-9519-12e2d002d979",
+              "name": "Closed Date",
+              "value": "={{$json['Closed Date'] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1500,
+        180
+      ],
+      "id": "1585b5e0-7105-4cc8-9fe0-e42d181e2c8d",
+      "name": "Transformación de datos1"
+    },
+    {
+      "parameters": {
+        "operation": "upload",
+        "site": {
+          "__rl": true,
+          "value": "canteradigitalsa.sharepoint.com,93da6720-112e-4bed-95b0-daaf6511de41,0e29c1f3-7286-4051-b0f3-f67641287928",
+          "mode": "list",
+          "cachedResultName": "Automatizaciones"
+        },
+        "folder": {
+          "__rl": true,
+          "value": "01E2QOBSQUDPTIUYRDJRAKPJPBGJWMUF4Y",
+          "mode": "list",
+          "cachedResultName": "Concentrado_Mensual"
+        },
+        "fileName": "Concentrado.xlsx",
+        "fileContents": "data",
+        "requestOptions": {}
+      },
+      "type": "n8n-nodes-base.microsoftSharePoint",
+      "typeVersion": 1,
+      "position": [
+        1980,
+        180
+      ],
+      "id": "8c16be28-e56c-4b1a-90e5-c36a80860c0d",
+      "name": "Subir archivo a carpeta Concentrado_Mensual1",
+      "credentials": {
+        "microsoftSharePointOAuth2Api": {
+          "id": "HOs6xOyIvZc38XVE",
+          "name": "Gael SharePoint"
+        }
+      }
+    },
+    {
+      "parameters": {
         "operation": "xlsx",
         "options": {
-          "fileName": "={{ $json.query }}.xlsx ",
+          "fileName": "Concentrado.xlsx",
           "sheetName": "Concentrado_datos"
         }
       },
       "type": "n8n-nodes-base.convertToFile",
       "typeVersion": 1.1,
       "position": [
-        1140,
-        200
+        1740,
+        180
       ],
-      "id": "50169325-069f-48c3-b9b4-c512543c1683",
+      "id": "91e30baf-6be2-462f-a21b-27bc32c6253a",
       "name": "Convertir a archivo excel1",
       "executeOnce": false,
       "notesInFlow": false
@@ -298,12 +460,7 @@
       "main": [
         [
           {
-            "node": "Descargar archivos",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Convertir a archivo excel1",
+            "node": "Descargar archivos1",
             "type": "main",
             "index": 0
           }
@@ -320,6 +477,50 @@
           }
         ]
       ]
+    },
+    "Descargar archivos1": {
+      "main": [
+        [
+          {
+            "node": "Extraer datos1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extraer datos1": {
+      "main": [
+        [
+          {
+            "node": "Transformación de datos1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transformación de datos1": {
+      "main": [
+        [
+          {
+            "node": "Convertir a archivo excel1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convertir a archivo excel1": {
+      "main": [
+        [
+          {
+            "node": "Subir archivo a carpeta Concentrado_Mensual1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -330,23 +531,15 @@
       "recurrenceRules": []
     },
     "node:Microsoft OneDrive Trigger": {
-      "LastLink": "https://graph.microsoft.com/v1.0/me/drive/root/delta?token=NDslMjM0OyUyMzE7MzsxMDg4MDUxMS1hMDY5LTQ0YjYtODFjOS1kYWJlZTMyMDcyNzk7NjM4OTAxMTMyMDEwMTMwMDAwOzEwMTAzNDkyMDg7JTIzOyUyMzslMjMwOyUyMw",
-      "lastTimeChecked": "2025-08-06T21:40:00.623Z"
+      "LastLink": "https://graph.microsoft.com/v1.0/me/drive/root/delta?token=NDslMjM0OyUyMzE7MzsxMDg4MDUxMS1hMDY5LTQ0YjYtODFjOS1kYWJlZTMyMDcyNzk7NjM4OTAxMTUxMzc3NTcwMDAwOzEwMTAzNTM0ODc7JTIzOyUyMzslMjMwOyUyMw",
+      "lastTimeChecked": "2025-08-06T22:12:17.440Z"
     }
   },
   "meta": {
     "templateCredsSetupCompleted": true
   },
-  "pinData": {
-    "Llamada de Bot_RentabilidadExcel": [
-      {
-        "json": {
-          "query": "Concentrado_Julio_2025"
-        }
-      }
-    ]
-  },
-  "versionId": "14b537f7-94bc-47bc-9de3-0c74b5f052b3",
+  "pinData": {},
+  "versionId": "ba994e6d-00ea-44eb-90ae-115810a24a16",
   "triggerCount": 1,
   "shared": [
     {
