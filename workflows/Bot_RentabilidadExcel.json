@@ -1,17 +1,19 @@
 {
   "createdAt": "2025-08-01T22:12:41.830Z",
-  "updatedAt": "2025-08-06T22:58:47.000Z",
+  "updatedAt": "2025-08-06T23:43:28.000Z",
   "id": "I1rDSf41u8FBituq",
   "name": "Bot_RentabilidadExcel",
-  "active": true,
+  "active": false,
   "isArchived": false,
   "nodes": [
     {
       "parameters": {
         "promptType": "define",
         "text": "={{ $json.text }}",
+        "hasOutputParser": true,
         "options": {
-          "systemMessage": "Eres un agente intermediario, tu propósito es preguntar al usuario si quiere generar el concentrado de archivos mensuales y el nombre del archivo, una vez que estes seguro de la información llama la tool.\nTu tono es amable, divertido y simpático.\nPara hacer tu tarea tienes la tool: Extraer Datos Rentabilidad que usarás cuando todo esté listo."
+          "systemMessage": "Eres un agente intermediario, tu propósito es preguntar al usuario si quiere generar el concentrado de archivos mensuales y el nombre del archivo, una vez que estes seguro de la información llama la tool.\nTu tono es amable, divertido y simpático.\nPara hacer tu tarea tienes la tool: Extraer Datos Rentabilidad que usarás cuando todo esté listo.",
+          "returnIntermediateSteps": true
         }
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
@@ -22,30 +24,6 @@
       ],
       "id": "0e3ba792-74a3-48ad-b51e-f55ab1a72a94",
       "name": "AI Agent"
-    },
-    {
-      "parameters": {
-        "model": {
-          "__rl": true,
-          "mode": "list",
-          "value": "gpt-4.1-mini"
-        },
-        "options": {}
-      },
-      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
-      "typeVersion": 1.2,
-      "position": [
-        600,
-        160
-      ],
-      "id": "d8291d1a-a372-490b-a0b4-82c97474cd65",
-      "name": "OpenAI Chat Model",
-      "credentials": {
-        "openAiApi": {
-          "id": "0PNoojfjNHHXEtdv",
-          "name": "Test_Agente_Soporte_Gael"
-        }
-      }
     },
     {
       "parameters": {
@@ -93,57 +71,6 @@
           "name": "Bot_RentabilidadExcel"
         }
       }
-    },
-    {
-      "parameters": {
-        "description": "Llama a esta tool cuando tengas todo para generar el concentrado y el nombre del archivo.",
-        "workflowId": {
-          "__rl": true,
-          "value": "hYIL4H3KPAgpe1K1",
-          "mode": "list",
-          "cachedResultName": "Extraer Datos Rentabilidad Excel"
-        },
-        "workflowInputs": {
-          "mappingMode": "defineBelow",
-          "value": {
-            "id": "01IFTEMG3AMQ3GESGUSBAYKYS2VVIIDGB5",
-            "fieldName": "={{ $fromAI(\"query\") }}"
-          },
-          "matchingColumns": [],
-          "schema": [
-            {
-              "id": "fieldName",
-              "displayName": "fieldName",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "canBeUsedToMatch": true,
-              "type": "string",
-              "removed": false
-            },
-            {
-              "id": "id",
-              "displayName": "id",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "canBeUsedToMatch": true,
-              "type": "string",
-              "removed": false
-            }
-          ],
-          "attemptToConvertTypes": false,
-          "convertFieldsToString": false
-        }
-      },
-      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
-      "typeVersion": 2.2,
-      "position": [
-        940,
-        200
-      ],
-      "id": "16c6cf08-c895-4ad5-a855-394243b05fc8",
-      "name": "Extraer Datos Rentabilidad"
     },
     {
       "parameters": {
@@ -279,31 +206,120 @@
     },
     {
       "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        620,
+        180
+      ],
+      "id": "05e741b5-fceb-4723-8dc4-f3e1d799449a",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "0PNoojfjNHHXEtdv",
+          "name": "Test_Agente_Soporte_Gael"
+        }
+      }
+    },
+    {
+      "parameters": {
         "sessionIdType": "customKey",
         "sessionKey": "={{ $('Trigger - Recibir mensaje').item.json.message.chat.id }}"
       },
       "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
       "typeVersion": 1.3,
       "position": [
-        740,
+        680,
+        340
+      ],
+      "id": "711dbeab-c8bc-4e19-98d8-1c4cc2ada7d4",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "description": "Llama a esta tool cuando tengas todo para generar el concentrado y el nombre del archivo.",
+        "workflowId": {
+          "__rl": true,
+          "value": "hYIL4H3KPAgpe1K1",
+          "mode": "list",
+          "cachedResultName": "Extraer Datos Rentabilidad Excel"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "fieldName",
+              "displayName": "fieldName",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        780,
         220
       ],
-      "id": "5c8c3a8c-ddc7-42dd-b69b-6d8349d41eb5",
-      "name": "Simple Memory"
+      "id": "4d34b67f-940e-4e30-bb48-c0fe44d72b0c",
+      "name": "Extraer Datos Rentabilidad"
+    },
+    {
+      "parameters": {
+        "options": {
+          "separator": "\\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserItemList",
+      "typeVersion": 1,
+      "position": [
+        920,
+        220
+      ],
+      "id": "9b17bd95-2399-490c-b560-0f2f84397697",
+      "name": "Item List Output Parser"
+    },
+    {
+      "parameters": {
+        "content": "## ChatBot para la Rentabilidad de Excel\n**Función principal; llama la tool que activa el flujo Extraer Datos Rentabilidad Excel. [Guide](https://docs.n8n.io/workflows/sticky-notes/)",
+        "height": 600,
+        "width": 1520
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -320,
+        -140
+      ],
+      "typeVersion": 1,
+      "id": "c4802ce6-21e3-4d5e-be4e-de31ca0cac12",
+      "name": "Sticky Note"
     }
   ],
   "connections": {
-    "OpenAI Chat Model": {
-      "ai_languageModel": [
-        [
-          {
-            "node": "AI Agent",
-            "type": "ai_languageModel",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "AI Agent": {
       "main": [
         [
@@ -321,17 +337,6 @@
           {
             "node": "Switch",
             "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Extraer Datos Rentabilidad": {
-      "ai_tool": [
-        [
-          {
-            "node": "AI Agent",
-            "type": "ai_tool",
             "index": 0
           }
         ]
@@ -388,12 +393,45 @@
         ]
       ]
     },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
     "Simple Memory": {
       "ai_memory": [
         [
           {
             "node": "AI Agent",
             "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extraer Datos Rentabilidad": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Item List Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_outputParser",
             "index": 0
           }
         ]
@@ -408,7 +446,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "a6b21a7d-a9e2-4d39-b227-5e830377851e",
+  "versionId": "e27b336d-d5cf-4416-bec6-a2ef9bfaced6",
   "triggerCount": 1,
   "shared": [
     {
@@ -434,7 +472,7 @@
             "projectId": "6D91TcMmlphV2lVS",
             "user": {
               "createdAt": "2025-07-14T23:58:54.930Z",
-              "updatedAt": "2025-08-04T19:56:46.745Z",
+              "updatedAt": "2025-08-06T23:15:33.615Z",
               "id": "bff7f19f-b5be-48d6-aea2-dfc3de153ccc",
               "email": "gael.graciano@canteradigital.mx",
               "firstName": "Gael ",
@@ -461,6 +499,9 @@
                 "npsSurvey": {
                   "responded": true,
                   "lastShownAt": 1754337405043
+                },
+                "dismissedCallouts": {
+                  "aiAgentStarterCallout": true
                 }
               },
               "role": "global:member",
