@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-08-01T22:12:41.830Z",
-  "updatedAt": "2025-08-08T19:29:35.000Z",
+  "updatedAt": "2025-08-08T20:45:49.000Z",
   "id": "I1rDSf41u8FBituq",
   "name": "Bot_RentabilidadExcel",
   "active": true,
@@ -10,17 +10,16 @@
       "parameters": {
         "promptType": "define",
         "text": "={{ $json.text }}",
-        "hasOutputParser": true,
         "options": {
-          "systemMessage": "Eres un agente intermediario, tu propósito es preguntar al usuario si quiere generar el concentrado de archivos mensuales y el nombre del archivo, una vez que estes seguro de la información llama la tool.\nTu tono es amable, divertido y simpático, responderás con normalidad cuando solo estes intercambiando diálogo con el usuario.\nPara hacer tu tarea tienes la tool: Extraer Datos Rentabilidad que usarás cuando el usuario te el nombre del archivo, hasta este momento es que tienes que usar una estructura JSON para activar el subflujo, para eso sigue la estructura del Output Parser.",
+          "systemMessage": "=Eres un asistente de chatbot especializado en la gestión de archivos y reportes. Tu propósito es ayudar a los usuarios a generar un nuevo archivo de rentabilidad.\n\nTienes acceso a una herramienta llamada `extraer_datos_rentabilidad` que puedes utilizar para procesar esta solicitud. Para usar esta herramienta, necesitas el ID de una carpeta de origen donde se encuentran los archivos (este ID es un valor estático que tú ya conoces y no debes pedirle al usuario) y el nombre que el usuario quiere para el nuevo archivo de rentabilidad.\n\nTu flujo de trabajo es el siguiente:\n1.  **Escuchar la intención del usuario:** El usuario te pedirá generar un archivo de rentabilidad y te proporcionará el nombre que desea para este nuevo archivo.\n2.  **Preparar la llamada a la herramienta:** Utiliza el nombre de archivo que te da el usuario y el ID estático de la carpeta de origen que ya tienes definido. El ID de la carpeta es `01IFTEMG3AMQ3GESGUSBAYKYS2VVIIDGB5`. No menciones este ID en tu conversación con el usuario.\n3.  **Llamar a la herramienta:** Llama a la herramienta `extraer_datos_rentabilidad` con el nombre del nuevo archivo y el ID de la carpeta.\n\nSi el usuario hace una pregunta no relacionada con tu propósito (como sobre religión, política o temas delicados), debes responder amablemente que solo puedes ayudar con solicitudes relacionadas con la gestión de archivos y reportes.\n\n**Herramientas Disponibles:**\n\n**Nombre:** `extraer_datos_rentabilidad`\n**Descripción:** Genera un nuevo reporte de rentabilidad en formato de archivo.\n**Parámetros:**\n* `nombre_nuevo_archivo`: (String, requerido) El nombre que se le asignará al nuevo archivo.\n* `id_carpeta_origen`: (String, requerido) El ID de la carpeta donde se encuentran los archivos para el reporte.\n```",
           "returnIntermediateSteps": false
         }
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 2,
       "position": [
-        660,
-        0
+        640,
+        -60
       ],
       "id": "0e3ba792-74a3-48ad-b51e-f55ab1a72a94",
       "name": "AI Agent",
@@ -38,8 +37,8 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        1020,
-        0
+        1000,
+        -60
       ],
       "id": "5d6b685a-c93b-44aa-a621-52ac01c31300",
       "name": "Mandar mensaje",
@@ -218,8 +217,8 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.2,
       "position": [
-        620,
-        180
+        580,
+        100
       ],
       "id": "05e741b5-fceb-4723-8dc4-f3e1d799449a",
       "name": "OpenAI Chat Model",
@@ -238,8 +237,8 @@
       "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
       "typeVersion": 1.3,
       "position": [
-        680,
-        340
+        640,
+        300
       ],
       "id": "711dbeab-c8bc-4e19-98d8-1c4cc2ada7d4",
       "name": "Simple Memory"
@@ -256,8 +255,8 @@
         "workflowInputs": {
           "mappingMode": "defineBelow",
           "value": {
-            "fileName": "={{ $json.output.fieldName }}",
-            "id": "={{ $json.output.id }}"
+            "fileName": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fileName', ``, 'string') }}",
+            "id": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('id', ``, 'string') }}"
           },
           "matchingColumns": [],
           "schema": [
@@ -288,8 +287,8 @@
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 2.2,
       "position": [
-        800,
-        240
+        780,
+        200
       ],
       "id": "4d34b67f-940e-4e30-bb48-c0fe44d72b0c",
       "name": "Extraer Datos Rentabilidad"
@@ -308,19 +307,6 @@
       "typeVersion": 1,
       "id": "c4802ce6-21e3-4d5e-be4e-de31ca0cac12",
       "name": "Sticky Note"
-    },
-    {
-      "parameters": {
-        "jsonSchemaExample": "{\n  \"fieldName\": \"concentrado_ventas_julio.xlsx\",\n  \"id\": \"1aBcDeFgHiJkLmNoPqRsT\"\n}"
-      },
-      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
-      "typeVersion": 1.3,
-      "position": [
-        1020,
-        220
-      ],
-      "id": "6fbcd9b1-e430-4767-8f56-8b50e4e72308",
-      "name": "Ejemplo de JSON para activar subflujo"
     }
   ],
   "connections": {
@@ -429,17 +415,6 @@
           }
         ]
       ]
-    },
-    "Ejemplo de JSON para activar subflujo": {
-      "ai_outputParser": [
-        [
-          {
-            "node": "AI Agent",
-            "type": "ai_outputParser",
-            "index": 0
-          }
-        ]
-      ]
     }
   },
   "settings": {
@@ -449,32 +424,8 @@
   "meta": {
     "templateCredsSetupCompleted": true
   },
-  "pinData": {
-    "Trigger - Recibir mensaje": [
-      {
-        "json": {
-          "update_id": 356746623,
-          "message": {
-            "message_id": 78,
-            "from": {
-              "id": 7992375339,
-              "is_bot": false,
-              "first_name": "Gael",
-              "language_code": "es"
-            },
-            "chat": {
-              "id": 7992375339,
-              "first_name": "Gael",
-              "type": "private"
-            },
-            "date": 1754600665,
-            "text": "holahola"
-          }
-        }
-      }
-    ]
-  },
-  "versionId": "9ddbba8a-318c-4bff-8df0-20111c42c6bc",
+  "pinData": {},
+  "versionId": "8847df03-39fe-448c-999a-8a914cbc6812",
   "triggerCount": 1,
   "shared": [
     {
