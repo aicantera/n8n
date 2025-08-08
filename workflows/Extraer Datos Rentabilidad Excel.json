@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-07-15T21:21:56.344Z",
-  "updatedAt": "2025-08-07T22:32:41.000Z",
+  "updatedAt": "2025-08-08T20:49:27.000Z",
   "id": "hYIL4H3KPAgpe1K1",
   "name": "Extraer Datos Rentabilidad Excel",
   "active": true,
@@ -256,12 +256,12 @@
     {
       "parameters": {
         "operation": "download",
-        "fileId": "=01IFTEMG3AMQ3GESGUSBAYKYS2VVIIDGB5"
+        "fileId": "={{ $json.id }}"
       },
       "type": "n8n-nodes-base.microsoftOneDrive",
       "typeVersion": 1,
       "position": [
-        1040,
+        1280,
         220
       ],
       "id": "b6dbcd97-af7a-4aca-883e-fefa5a2041a1",
@@ -280,7 +280,7 @@
       "type": "n8n-nodes-base.extractFromFile",
       "typeVersion": 1,
       "position": [
-        1260,
+        1500,
         220
       ],
       "id": "a4c74898-c4cb-498d-8871-dc09d4bfbc5d",
@@ -351,7 +351,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        1520,
+        1720,
         220
       ],
       "id": "1585b5e0-7105-4cc8-9fe0-e42d181e2c8d",
@@ -372,14 +372,14 @@
           "mode": "list",
           "cachedResultName": "Concentrado_Mensual"
         },
-        "fileName": "Concentrado.xlsx",
+        "fileName": "={{ $('Llamada de Bot_RentabilidadExcel').item.json.fileName }}.xlsx",
         "fileContents": "data",
         "requestOptions": {}
       },
       "type": "n8n-nodes-base.microsoftSharePoint",
       "typeVersion": 1,
       "position": [
-        2000,
+        2200,
         220
       ],
       "id": "8c16be28-e56c-4b1a-90e5-c36a80860c0d",
@@ -395,20 +395,40 @@
       "parameters": {
         "operation": "xlsx",
         "options": {
-          "fileName": "Concentrado.xlsx",
+          "fileName": "={{ $('Llamada de Bot_RentabilidadExcel').item.json.fileName }}.xlsx",
           "sheetName": "Concentrado_datos"
         }
       },
       "type": "n8n-nodes-base.convertToFile",
       "typeVersion": 1.1,
       "position": [
-        1760,
+        1980,
         220
       ],
       "id": "91e30baf-6be2-462f-a21b-27bc32c6253a",
       "name": "Convertir a archivo excel1",
       "executeOnce": false,
       "notesInFlow": false
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "folderId": "={{ $json.id }}"
+      },
+      "type": "n8n-nodes-base.microsoftOneDrive",
+      "typeVersion": 1,
+      "position": [
+        1040,
+        220
+      ],
+      "id": "84d7d406-d636-43fd-ba9f-5b7f2bfa6896",
+      "name": "Obtener contenido de la carpeta",
+      "credentials": {
+        "microsoftOneDriveOAuth2Api": {
+          "id": "nmcBNRZloSFuI6D4",
+          "name": "Gael OneDrive"
+        }
+      }
     }
   ],
   "connections": {
@@ -460,7 +480,7 @@
       "main": [
         [
           {
-            "node": "Descargar archivos1",
+            "node": "Obtener contenido de la carpeta",
             "type": "main",
             "index": 0
           }
@@ -521,6 +541,17 @@
           }
         ]
       ]
+    },
+    "Obtener contenido de la carpeta": {
+      "main": [
+        [
+          {
+            "node": "Descargar archivos1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -531,15 +562,15 @@
       "recurrenceRules": []
     },
     "node:Microsoft OneDrive Trigger": {
-      "LastLink": "https://graph.microsoft.com/v1.0/me/drive/root/delta?token=NDslMjM0OyUyMzE7MzsxMDg4MDUxMS1hMDY5LTQ0YjYtODFjOS1kYWJlZTMyMDcyNzk7NjM4OTAyMDI3NjE2MTAwMDAwOzEwMTA4NDE3MjI7JTIzOyUyMzslMjMwOyUyMw",
-      "lastTimeChecked": "2025-08-07T22:32:41.322Z"
+      "LastLink": "https://graph.microsoft.com/v1.0/me/drive/root/delta?token=NDslMjM0OyUyMzE7MzsxMDg4MDUxMS1hMDY5LTQ0YjYtODFjOS1kYWJlZTMyMDcyNzk7NjM4OTAyODI5Njc4MTcwMDAwOzEwMTEwOTA5OTI7JTIzOyUyMzslMjMwOyUyMw",
+      "lastTimeChecked": "2025-08-08T20:49:27.555Z"
     }
   },
   "meta": {
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "541881f0-2a9a-48a2-bd9b-447bad7edd84",
+  "versionId": "ec1e5b6f-3e6b-4c48-9b0a-00016f3b4bd7",
   "triggerCount": 1,
   "shared": [
     {
