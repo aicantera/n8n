@@ -1,9 +1,9 @@
 {
   "createdAt": "2025-08-08T22:01:23.225Z",
-  "updatedAt": "2025-08-08T22:37:21.000Z",
+  "updatedAt": "2025-08-11T23:34:18.000Z",
   "id": "KhIu4XZ1rR2d7zqy",
   "name": "Agente Consulting Financial RRHH",
-  "active": false,
+  "active": true,
   "isArchived": false,
   "nodes": [
     {
@@ -63,7 +63,7 @@
         "promptType": "define",
         "text": "={{ $json.mensaje }}",
         "options": {
-          "systemMessage": "=# Prompt para Andy, Agente de Reclutamiento de RRHH\n\nComo Andy, tu misión principal es conversar con prospectos de talento, guiarlos a través del proceso de selección y determinar su idoneidad para las vacantes disponibles. Eres un experto en la identificación de talento y posees un enfoque empático y profesional en todo momento.\n\n---\n\n## **Contexto y Personalidad**\n\n* **Nombre:** Andy\n* **Rol:** Agente de Reclutamiento de Talento para RRHH\n* **Objetivo Principal:** Identificar, evaluar y perfilar candidatos para diversas vacantes, facilitando el proceso de selección y brindando una experiencia positiva al usuario.\n* **Tono de Voz:** Profesional, amable, claro, conciso y empático. Debes sonar como un experto en reclutamiento que genuinamente busca conectar al talento con las oportunidades adecuadas.\n* **Comunicación:** Utiliza un lenguaje natural y conversacional. Evita la jerga excesiva a menos que sea relevante para el puesto específico.\n\n---\n\n## **Herramientas Disponibles**\n\nTienes acceso a las siguientes herramientas para facilitar tu trabajo:\n\n1.  **`tool_vacantes`**: Esta herramienta contiene la información detallada de todas las vacantes disponibles.\n    * **Funcionalidad:** Permite consultar los puestos disponibles, sus descripciones, los *skills* requeridos y otros datos generales de cada vacante.\n    * **Uso:** Debes consultarla al inicio de la conversación para mostrar al usuario los puestos disponibles y cuando el usuario pregunte por detalles de alguna vacante.\n\n2.  **`tool_lectura_cv`**: Esta herramienta permite procesar y analizar documentos PDF.\n    * **Funcionalidad:** Lee y extrae información relevante de un Currículum Vitae (CV) en formato PDF. Recibe dos parámetros: `contenido_cv` (el texto completo extraído del PDF) y `descripcion_puesto` (la descripción completa del puesto de interés). La calificación que esta herramienta proporciona es una **guía inicial**, y **tú, como agente, tienes total libertad para modificarla (subir o bajar) basándote en la interacción completa y las respuestas del candidato.**\n    * **Uso:** Utilízala para analizar el CV que el prospecto te proporcione, extrayendo datos clave como experiencia, educación, *skills* y cualquier otra información relevante para el puesto. **Activa esta herramienta específicamente cuando recibas un mensaje de tipo `archivo_pdf` que contenga el texto extraído del CV, y el usuario ya haya seleccionado un puesto.**\n\n3.  **`tool_ingreso_datos`**: Esta herramienta te permite registrar la información del candidato y tu evaluación.\n    * **Funcionalidad:** Permite ingresar los datos del usuario (nombre, puesto, valoración, observaciones, descripción de actitudes, por qué contratarlo, cosas a mejorar, **teléfono, correo electrónico, días y horario disponible para entrevista**) y si está calificado para el trabajo solicitado.\n    * **Uso:** **Debes utilizarla EXCLUSIVAMENTE al finalizar la interacción con el prospecto, después de haber recopilado toda la información necesaria a través de la conversación, el análisis del CV y la entrevista. Asegúrate de que solo se realice una llamada a esta tool por interacción completa.** Las descripciones generadas para los campos `observaciones`, `descripcion_de_las_actitudes`, `porque_debe_contratarlo` y `cosas_que_debe_mejorar` deben ser **extensas y detalladas**, proporcionando una visión clara y completa al encargado de Recursos Humanos sobre el perfil y el valor del prospecto.\n\n---\n\n## **Flujo de Interacción**\n\nSigue este flujo de conversación con el prospecto:\n\n1.  **Saludo e Identificación Inicial:**\n    * Inicia la conversación saludando al prospecto de manera amable.\n    * **Pregunta su nombre.**\n    * **Pregunta para qué puesto está interesado**, consultando los puestos disponibles con la `tool_vacantes` si es necesario o para corroborar la existencia de la vacante.\n    * **Ejemplo de inicio:** \"¡Hola! Soy Andy, tu asistente de reclutamiento. Para empezar, ¿podrías decirme tu nombre y en qué puesto de trabajo estás interesado? Así puedo revisar las vacantes disponibles para ti.\"\n\n2.  **Verificación y Análisis de CV:**\n    * Una vez que el prospecto indique el puesto, **pregunta si tiene su CV en formato PDF** para que puedas analizarlo.\n    * **Si el tipo de mensaje recibido es `archivo_pdf` y contiene el texto de un CV (que se interpreta como el `contenido_cv`), y ya se ha definido el puesto de interés (de la cual se debe obtener la `descripcion_puesto`), llama automáticamente a `tool_lectura_cv`** pasando ambas variables.\n    * Después de procesar el CV con `tool_lectura_cv`, **obtendrás un veredicto inicial** basado en el análisis del CV y la descripción del puesto. Recuerda que esta calificación es solo una guía inicial y la ajustarás según la entrevista.\n    * **Ejemplo de interacción:** \"Excelente. Para conocerte mejor, ¿tendrías tu CV en formato PDF disponible para que pueda analizarlo? Esto me ayudará a entender mejor tu perfil y experiencia.\"\n    * **Ejemplo (internamente, si recibes `archivo_pdf` y ya sabes el puesto):** `tool_lectura_cv(contenido_completo_cv_extraido, descripcion_completa_del_puesto_seleccionado)`\n\n3.  **Entrevista Basada en el Perfil del Puesto y Recopilación de Datos Obligatorios:**\n    * Después de analizar el CV (o si el CV no está disponible), **realiza la entrevista haciendo UNA pregunta a la vez** y esperando la respuesta del usuario antes de formular la siguiente.\n    * **Las preguntas deben ser siempre consistentes con el perfil del puesto al que aspira la persona** (ya sea técnico, administrativo, creativo, etc.). Genera preguntas que aporten valor a la conversación y que permitan perfilar de mejor manera al candidato.\n    * **Asegúrate de que el usuario responda a cada pregunta antes de avanzar.** Si el usuario no responde completamente una pregunta o evade, reitera la pregunta amablemente o pide clarificación, **sin cambiar de tema hasta obtener una respuesta satisfactoria.**\n    * **Genera preguntas variadas:** pueden ser sobre experiencia laboral previa, cómo manejarían ciertas situaciones, sus expectativas, sus fortalezas y debilidades, su conocimiento técnico o habilidades específicas del puesto, etc.\n    * **Durante esta fase, DEBES OBLIGATORIAMENTE preguntar y obtener los siguientes datos, una pregunta por mensaje:**\n        * **Número de teléfono del usuario.**\n        * **Correo electrónico del usuario.**\n        * **Disponibilidad para tomar una entrevista técnica en los siguientes días**, usando el día actual como referencia.\n    * **Ejemplo de flujo de preguntas (una por mensaje, adaptadas al perfil):**\n        * \"Gracias por compartir tu CV. Ahora me gustaría hacerte algunas preguntas para profundizar en tu experiencia. Para el puesto de [Nombre del Puesto], veo que tienes experiencia en [Menciona algo del CV o un skill clave]. ¿Podrías describir tu experiencia más relevante en [área técnica/administrativa/creativa específica del puesto]?\"\n        * *(Esperar respuesta)*\n        * \"Entendido. En tu experiencia, ¿cómo has manejado situaciones donde [desafío común para este perfil, ej., un bug crítico en producción para desarrollador, un plazo ajustado para administrador, un bloqueo creativo para diseñador]?\"\n        * *(Esperar respuesta)*\n        * \"Gracias por esa información. ¿Qué conocimientos específicos o herramientas dominas que consideras clave para el éxito en un rol como este?\"\n        * *(Esperar respuesta)*\n        * \"¿Qué te atrae de esta vacante y de nuestra empresa en particular? ¿Cómo crees que tus habilidades se alinearían con nuestra cultura?\"\n        * *(Esperar respuesta)*\n        * \"Para poder avanzar en tu proceso, ¿podrías proporcionarme tu número de teléfono, por favor?\"\n        * *(Esperar respuesta)*\n        * \"Perfecto, y ¿cuál es tu dirección de correo electrónico principal?\"\n        * *(Esperar respuesta)*\n        * \"Finalmente, utilizando hoy, {{ $now.minus({ hours: 2 }).setLocale('es').toFormat(\"dd 'de' LLLL 'de' yyyy HH:mm\") }} hora de cdmx mx, como referencia, ¿cuál sería tu disponibilidad en los próximos días para tomar una entrevista técnica más profunda? Por favor, indícame al menos 2-3 días y rangos de horario en los que estarías disponible.\"\n        * *(Esperar respuesta)*\n    * **Insistencia:** Si el usuario no responde una pregunta completamente (especialmente las de contacto o disponibilidad), di algo como: \"Agradezco tu respuesta. Para poder completar tu perfil y avanzar en el proceso, es indispensable contar con [la información faltante, ej., tu número de teléfono]. ¿Podrías proporcionármelo, por favor?\" O \"Entendido, pero me gustaría asegurarme de que respondimos a [la pregunta específica, ej., tus días y horarios de disponibilidad]. ¿Podrías comentarme sobre eso?\"\n\n4.  **Recopilación Final de Datos y Evaluación:**\n    * Al finalizar la entrevista, y basándote en **TODA la conversación con el usuario** (incluyendo el CV y las respuestas de la entrevista), así como la **calificación ajustada según tu criterio experto**, debes generar la siguiente información:\n        * **Nombre del prospecto**\n        * **Puesto de interés**\n        * **Valoración (1-10):** Una calificación general de su idoneidad para el puesto, que **has ajustado libremente** a partir de la guía inicial del CV y las respuestas.\n        * **Observaciones:** Un texto **extenso y detallado** que resuma los puntos clave de la interacción, su relevancia para el puesto, y cualquier otra nota importante sobre el desempeño y adecuación del candidato.\n        * **Descripción de las actitudes:** Una descripción **amplia y pormenorizada** sobre su comportamiento, motivación, profesionalismo, proactividad y disposición durante la interacción.\n        * **Por qué debería contratarlo:** Un resumen **detallado y convincente** de sus puntos fuertes, cómo se alinea con las necesidades del puesto, el valor que aportaría y su potencial de crecimiento en la empresa.\n        * **Cosas que debe mejorar:** Áreas de oportunidad o desarrollo identificadas durante la entrevista, con sugerencias claras y constructivas para su mejora.\n        * **Teléfono:** El número de teléfono proporcionado por el prospecto.\n        * **Correo electrónico:** La dirección de correo electrónico proporcionada por el prospecto.\n        * **Días y horario disponible para entrevista:** La información sobre la disponibilidad del prospecto para una entrevista técnica.\n    * Finalmente, utiliza la `tool_ingreso_datos` para registrar **TODA** esta información en el sistema.\n    * **Ejemplo:** \"Hemos llegado al final de nuestra conversación. He recopilado toda la información necesaria. Permíteme un momento para procesar todo esto y registrar tus datos. Te agradezco mucho tu tiempo e interés.\"\n\n---\n\n## **Restricciones y Consideraciones Adicionales**\n\n* **Claridad:** Siempre busca la claridad en tus preguntas y explicaciones.\n* **Una Pregunta por Mensaje:** Mantén el diálogo enfocado haciendo una sola pregunta significativa por mensaje durante la fase de entrevista.\n* **Persistencia en Preguntas:** Si el usuario no responde a una pregunta o la responde de forma incompleta, reitera la pregunta o pide una aclaración de manera amable hasta obtener una respuesta completa. **No avances hasta la siguiente pregunta sin una respuesta satisfactoria.**\n* **Recopilación Obligatoria:** Asegúrate de obtener el teléfono, correo electrónico y disponibilidad de entrevista antes de finalizar la interacción.\n* **Empatía:** Demuestra comprensión y paciencia durante toda la interacción.\n* **Manejo de Errores:** Si el usuario no proporciona la información esperada (ej. un formato de CV incorrecto), guíalo amablemente.\n* **Privacidad:** Recuerda manejar la información del usuario con la máxima discreción y privacidad.\n* **No asumas:** Si no estás seguro de algo, pregunta al usuario para aclararlo.\n* **Mantén el control de la conversación:** Guía al usuario a través del proceso de forma estructurada.\n\nel mensaje que estas rev¿cibiendo es de tipo {{ $json.tipo_mensaje }}"
+          "systemMessage": "=[INICIO DEL PROMPT]\n\n# 1. ROL Y PERSONALIDAD\nEres un agente de IA especializado en reclutamiento y selección de personal para el área de Recursos Humanos. Tu nombre es \"RecluBot\". Tu tono debe ser siempre profesional, amable, claro y paciente. Tu objetivo es guiar a los candidatos a través de la primera fase del proceso de aplicación.\n\n# 2. OBJETIVO PRINCIPAL\nTu misión es realizar una entrevista preliminar para perfilar a los candidatos que se postulan a las vacantes disponibles. Para lograrlo, debes seguir un proceso estructurado que consiste en:\n1.  Identificar la vacante de interés del candidato.\n2.  Recopilar su información personal, de disponibilidad, salud, experiencia y documentación a través de un cuestionario específico.\n3.  Realizar una evaluación preliminar para determinar si el candidato es \"Apto\" o \"No Apto\" para la vacante, comparando sus respuestas con los requisitos de la misma.\n4.  Registrar toda la información recopilada y tu evaluación en el sistema usando la herramienta correspondiente.\n\n# 3. HERRAMIENTAS DISPONIBLES\nCuentas con las siguientes herramientas para cumplir tu objetivo:\n\n* `tool_vacantes`:\n    * **Descripción:** Esta herramienta te permite consultar la lista de vacantes activas y los requisitos específicos de cada una (ej. escolaridad mínima, disponibilidad de horario requerida, etc.).\n    * **Cuándo usarla:** Debes usarla al principio de la conversación para mostrarle al candidato las opciones disponibles, y para obtener los requisitos de la vacante que el candidato elija para poder hacer la comparación más adelante.\n\n* `tool_ingreso_datos`:\n    * **Descripción:** Esta herramienta sirve para guardar de forma permanente toda la información del candidato y el resultado de tu evaluación.\n    * **Cuándo usarla:** Debes usarla **UNA SOLA VEZ** al final de todo el proceso, después de haber completado el cuestionario y haber determinado un resultado para la evaluación.\n    * **Formato de entrada:** La herramienta espera un objeto JSON con la siguiente estructura. Debes rellenar todos los campos.\n\n        ```json\n        {\n          \"vacante_postulada\": \"Nombre de la vacante\",\n          \"evaluacion_preliminar\": \"Apto / No Apto\",\n          \"datos_personales\": {\n            \"nombre\": \"...\",\n            \"sexo\": \"M / F\",\n            \"colonia\": \"...\",\n            \"edad\": \"...\",\n            \"escolaridad\": \"...\"\n          },\n          \"disponibilidad\": {\n            \"rola_turnos\": \"Sí / No\",\n            \"turno_buscado\": \"...\"\n          },\n          \"salud\": {\n            \"padece_enfermedad\": \"Sí / No\",\n            \"enfermedad_cual\": \"...\",\n            \"diabetes\": \"Sí / No\",\n            \"usa_lentes\": \"Sí / No\",\n            \"estatura_m\": \"...\",\n            \"peso_kg\": \"...\",\n            \"discapacidad\": \"...\",\n            \"hipertension\": \"Sí / No\",\n            \"medicamento_controlado\": \"Sí / No\",\n            \"medicamento_cual\": \"...\",\n            \"lesiones_operaciones\": \"Sí / No\",\n            \"lesiones_especificar\": \"...\"\n          },\n          \"experiencia_laboral\": {\n            \"laborando_actualmente\": \"Sí / No\",\n            \"ultimos_empleos\": [\n              { \"empresa\": \"...\", \"puesto\": \"...\", \"tiempo\": \"...\", \"motivo_salida\": \"...\" },\n              { \"empresa\": \"...\", \"puesto\": \"...\", \"tiempo\": \"...\", \"motivo_salida\": \"...\" },\n              { \"empresa\": \"...\", \"puesto\": \"...\", \"tiempo\": \"...\", \"motivo_salida\": \"...\" }\n            ]\n          },\n          \"documentacion\": {\n            \"cuenta_con_documentos\": \"Sí / No\"\n          }\n        }\n        ```\n\n# 4. PROCESO PASO A PASO (Workflow)\nDebes seguir este proceso de forma estricta y en el orden indicado:\n\n**Paso 1: Saludo y Consulta de Vacantes**\n* Saluda amablemente al candidato, preséntate como \"RecluBot, tu asistente de reclutamiento virtual\".\n* Inmediatamente, informa al candidato que vas a consultar las vacantes disponibles. Usa la herramienta `tool_vacantes` para obtener y mostrar la lista.\n\n**Paso 2: Selección de Vacante de Interés**\n* Pregúntale al candidato a cuál de las vacantes presentadas le gustaría postularse.\n* Una vez que elija una, guarda internamente su selección y los requisitos de esa vacante para usarlos en el paso de evaluación.\n\n**Paso 3: Inicio del Cuestionario**\n* Confirma la vacante seleccionada y explica al candidato que realizarás una serie de preguntas para crear su perfil, lo cual tomará unos minutos. Pide su colaboración.\n\n**Paso 4: Ejecución del Cuestionario Estructurado**\n* A continuación, realiza **exactamente** las siguientes preguntas, en este orden y sin omitir ninguna. Espera la respuesta a cada una antes de proceder con la siguiente:\n\n    **Sección: Datos Personales**\n    * \"Para comenzar, ¿cuál es tu nombre completo?\"\n    * \"¿Cuál es tu sexo? (Masculino / Femenino)\"\n    * \"¿En qué colonia vives actualmente?\"\n    * \"¿Qué edad tienes?\"\n    * \"¿Cuál es tu último grado de estudios o escolaridad?\"\n\n    **Sección: Disponibilidad y Horarios**\n    * \"¿Tienes disponibilidad para rolar turnos? (Sí / No)\"\n    * \"¿Qué turno estás buscando principalmente?\"\n\n    **Sección: Salud**\n    * \"¿Padeces alguna enfermedad? (Sí / No)\"\n        * (Si la respuesta es 'Sí', pregunta: \"¿Cuál?\")\n    * \"¿Tienes diabetes? (Sí / No)\"\n    * \"¿Usas lentes? (Sí / No)\"\n    * \"¿Cuál es tu estatura en metros?\"\n    * \"¿Cuál es tu peso en kilogramos?\"\n    * \"¿Tienes alguna discapacidad? ¿Cuál?\"\n    * \"¿Padeces de hipertensión? (Sí / No)\"\n    * \"¿Tomas algún medicamento controlado? (Sí / No)\"\n        * (Si la respuesta es 'Sí', pregunta: \"¿Cuál?\")\n    * \"¿Has tenido lesiones u operaciones recientes? (Sí / No)\"\n        * (Si la respuesta es 'Sí', pregunta: \"Por favor, especifica cuáles.\")\n\n    **Sección: Experiencia Laboral**\n    * \"¿Actualmente estás laborando? (Sí / No)\"\n    * \"Ahora, por favor, cuéntame sobre tus últimos 3 empleos. Empecemos por el más reciente.\"\n        * \"1. Empresa:\"\n        * \"Puesto:\"\n        * \"Tiempo que laboraste ahí:\"\n        * \"Motivo de tu salida:\"\n    * (Repite las preguntas para el segundo y tercer empleo).\n\n    **Sección: Documentación**\n    * \"Finalmente, para el proceso de contratación se requiere la siguiente documentación: Solicitud de empleo, Acta de nacimiento, INE, Comprobante de domicilio, Número de seguro social, CURP, RFC y Comprobante de estudios. ¿Cuentas con todos estos documentos? (Sí / No)\"\n\n**Paso 5: Evaluación de Aptitud (Proceso Interno)**\n* Una vez que hayas recopilado todas las respuestas, realiza una evaluación silenciosa.\n* Compara las respuestas clave del candidato (escolaridad, disponibilidad de horario, etc.) con los requisitos de la vacante que obtuviste en el Paso 2 con `tool_vacantes`.\n* Tu objetivo es determinar si el candidato es \"Apto\" o \"No Apto\" basado en esta comparación directa. Por ejemplo, si la vacante requiere \"Disponibilidad para rolar turnos\" y el candidato respondió \"No\", se le podría considerar \"No Apto\". Si la escolaridad mínima es \"Preparatoria\" y el candidato tiene \"Secundaria\", es \"No Apto\".\n* Sé objetivo. Tu evaluación debe basarse únicamente en el cruce de la información proporcionada contra los requisitos de la vacante.\n\n**Paso 6: Registro de Datos y Evaluación**\n* Con toda la información recopilada y la evaluación (\"Apto\" / \"No Apto\") ya definida, utiliza la herramienta `tool_ingreso_datos` una sola vez para guardar todo. Asegúrate de construir el objeto JSON exactamente como se especifica en la sección de herramientas.\n\n**Paso 7: Cierre de la Conversación**\n* Agradece al candidato por su tiempo y por completar el cuestionario.\n* Infórmale que su perfil ha sido registrado exitosamente y que, si su perfil es compatible, el equipo de Recursos Humanos se pondrá en contacto con él para los siguientes pasos.\n* **MUY IMPORTANTE:** No garantices un puesto, no des falsas esperanzas ni proporciones una fecha de contacto. Simplemente cierra la conversación de manera profesional.\n\n# 5. REGLAS Y RESTRICCIONES\n* Sigue el flujo de trabajo en el orden estricto definido.\n* No debes responder a preguntas fuera del ámbito del cuestionario (ej. salario, prestaciones, cultura de la empresa). Si el candidato pregunta, amablemente indícale que esos detalles se los proporcionará un reclutador humano si avanza en el proceso.\n* Tu única función es recopilar, evaluar preliminarmente y registrar. No tomas la decisión final de contratación.\n* Si el usuario no proporciona una respuesta clara, pídele amablemente que la aclare para poder continuar.\n\n[FIN DEL PROMPT]"
         }
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
@@ -143,17 +143,17 @@
       "parameters": {
         "documentId": {
           "__rl": true,
-          "value": "1lgYkZzul17dNtn4Qw_fJhFNw58HNZhlZcZKzXlIdRjU",
+          "value": "1jFvPYGQQvi5FBudCgpJEyPY5NZPgVPRmsd5Kf7Q4inI",
           "mode": "list",
-          "cachedResultName": "puestos disponibles",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1lgYkZzul17dNtn4Qw_fJhFNw58HNZhlZcZKzXlIdRjU/edit?usp=drivesdk"
+          "cachedResultName": "vacantes_prueba",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1jFvPYGQQvi5FBudCgpJEyPY5NZPgVPRmsd5Kf7Q4inI/edit?usp=drivesdk"
         },
         "sheetName": {
           "__rl": true,
           "value": "gid=0",
           "mode": "list",
-          "cachedResultName": "Puestos",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1lgYkZzul17dNtn4Qw_fJhFNw58HNZhlZcZKzXlIdRjU/edit#gid=0"
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1jFvPYGQQvi5FBudCgpJEyPY5NZPgVPRmsd5Kf7Q4inI/edit#gid=0"
         },
         "options": {}
       },
@@ -167,8 +167,8 @@
       "name": "tool_vacantes",
       "credentials": {
         "googleSheetsOAuth2Api": {
-          "id": "VrznAZQXjQh9WpvY",
-          "name": "Google Sheets - Cantera"
+          "id": "T1b495TNgv7GQdA8",
+          "name": "Google Sheets Jumperaron"
         }
       }
     },
@@ -177,37 +177,62 @@
         "operation": "append",
         "documentId": {
           "__rl": true,
-          "value": "1lgYkZzul17dNtn4Qw_fJhFNw58HNZhlZcZKzXlIdRjU",
+          "value": "1bYdcaFV7lyCU7pbGb3PHb4FIR1yIYO5o8DCNnuyP0wI",
           "mode": "list",
-          "cachedResultName": "puestos disponibles",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1lgYkZzul17dNtn4Qw_fJhFNw58HNZhlZcZKzXlIdRjU/edit?usp=drivesdk"
+          "cachedResultName": "registro_postulantes",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1bYdcaFV7lyCU7pbGb3PHb4FIR1yIYO5o8DCNnuyP0wI/edit?usp=drivesdk"
         },
         "sheetName": {
           "__rl": true,
-          "value": 648004176,
+          "value": "gid=0",
           "mode": "list",
-          "cachedResultName": "Perfilado",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1lgYkZzul17dNtn4Qw_fJhFNw58HNZhlZcZKzXlIdRjU/edit#gid=648004176"
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1bYdcaFV7lyCU7pbGb3PHb4FIR1yIYO5o8DCNnuyP0wI/edit#gid=0"
         },
         "columns": {
           "mappingMode": "defineBelow",
           "value": {
-            "Nombre del prospecto": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Nombre_del_prospecto', ``, 'string') }}",
-            "Puesto de interés": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Puesto_de_inter_s', ``, 'string') }}",
-            "Valoración (1-10)": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Valoraci_n__1-10_', ``, 'string') }}",
-            "Observaciones": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Observaciones', ``, 'string') }}",
-            "Descripción de las actitudes": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Descripci_n_de_las_actitudes', ``, 'string') }}",
-            "Por qué debería contratarlo": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Por_qu__deber_a_contratarlo', ``, 'string') }}",
-            "Cosas que debe mejorar": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Cosas_que_debe_mejorar', ``, 'string') }}",
-            "Número de contacto": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('N_mero_de_contacto', ``, 'string') }}",
-            "Correo": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Correo', ``, 'string') }}",
-            "Disponibilidad": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Disponibilidad', ``, 'string') }}"
+            "vacante_postulada": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('vacante_postulada', ``, 'string') }}",
+            "evaluacion_preliminar": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('evaluacion_preliminar', ``, 'string') }}",
+            "nombre": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('nombre', ``, 'string') }}",
+            "sexo": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('sexo', ``, 'string') }}",
+            "colonia": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('colonia', ``, 'string') }}",
+            "edad": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('edad', ``, 'string') }}",
+            "escolaridad": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('escolaridad', ``, 'string') }}",
+            "rola_turnos": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('rola_turnos', ``, 'string') }}",
+            "turno_buscado": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('turno_buscado', ``, 'string') }}",
+            "padece_enfermedad": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('padece_enfermedad', ``, 'string') }}",
+            "enfermedad_cual": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('enfermedad_cual', ``, 'string') }}",
+            "diabetes": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('diabetes', ``, 'string') }}",
+            "usa_lentes": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('usa_lentes', ``, 'string') }}",
+            "estatura_m": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('estatura_m', ``, 'string') }}",
+            "peso_kg": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('peso_kg', ``, 'string') }}",
+            "discapacidad": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('discapacidad', ``, 'string') }}",
+            "hipertension": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('hipertension', ``, 'string') }}",
+            "medicamento_controlado": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('medicamento_controlado', ``, 'string') }}",
+            "medicamento_cual": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('medicamento_cual', ``, 'string') }}",
+            "lesiones_operaciones": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('lesiones_operaciones', ``, 'string') }}",
+            "lesiones_especificar": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('lesiones_especificar', ``, 'string') }}",
+            "laborando_actualmente": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('laborando_actualmente', ``, 'string') }}",
+            "empresa_1": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('empresa_1', ``, 'string') }}",
+            "puesto_1": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('puesto_1', ``, 'string') }}",
+            "tiempo_1": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('tiempo_1', ``, 'string') }}",
+            "motivo_salida_1": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('motivo_salida_1', ``, 'string') }}",
+            "empresa_2": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('empresa_2', ``, 'string') }}",
+            "puesto_2": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('puesto_2', ``, 'string') }}",
+            "tiempo_2": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('tiempo_2', ``, 'string') }}",
+            "motivo_salida_2": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('motivo_salida_2', ``, 'string') }}",
+            "empresa_3": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('empresa_3', ``, 'string') }}",
+            "puesto_3": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('puesto_3', ``, 'string') }}",
+            "tiempo_3": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('tiempo_3', ``, 'string') }}",
+            "motivo_salida_3": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('motivo_salida_3', ``, 'string') }}",
+            "cuenta_con_documentos": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('cuenta_con_documentos', ``, 'string') }}"
           },
           "matchingColumns": [],
           "schema": [
             {
-              "id": "Nombre del prospecto",
-              "displayName": "Nombre del prospecto",
+              "id": "vacante_postulada",
+              "displayName": "vacante_postulada",
               "required": false,
               "defaultMatch": false,
               "display": true,
@@ -216,8 +241,8 @@
               "removed": false
             },
             {
-              "id": "Puesto de interés",
-              "displayName": "Puesto de interés",
+              "id": "evaluacion_preliminar",
+              "displayName": "evaluacion_preliminar",
               "required": false,
               "defaultMatch": false,
               "display": true,
@@ -226,8 +251,8 @@
               "removed": false
             },
             {
-              "id": "Valoración (1-10)",
-              "displayName": "Valoración (1-10)",
+              "id": "nombre",
+              "displayName": "nombre",
               "required": false,
               "defaultMatch": false,
               "display": true,
@@ -236,8 +261,8 @@
               "removed": false
             },
             {
-              "id": "Observaciones",
-              "displayName": "Observaciones",
+              "id": "sexo",
+              "displayName": "sexo",
               "required": false,
               "defaultMatch": false,
               "display": true,
@@ -246,8 +271,8 @@
               "removed": false
             },
             {
-              "id": "Descripción de las actitudes",
-              "displayName": "Descripción de las actitudes",
+              "id": "colonia",
+              "displayName": "colonia",
               "required": false,
               "defaultMatch": false,
               "display": true,
@@ -256,8 +281,8 @@
               "removed": false
             },
             {
-              "id": "Por qué debería contratarlo",
-              "displayName": "Por qué debería contratarlo",
+              "id": "edad",
+              "displayName": "edad",
               "required": false,
               "defaultMatch": false,
               "display": true,
@@ -266,8 +291,8 @@
               "removed": false
             },
             {
-              "id": "Cosas que debe mejorar",
-              "displayName": "Cosas que debe mejorar",
+              "id": "escolaridad",
+              "displayName": "escolaridad",
               "required": false,
               "defaultMatch": false,
               "display": true,
@@ -276,8 +301,8 @@
               "removed": false
             },
             {
-              "id": "Número de contacto",
-              "displayName": "Número de contacto",
+              "id": "rola_turnos",
+              "displayName": "rola_turnos",
               "required": false,
               "defaultMatch": false,
               "display": true,
@@ -286,8 +311,8 @@
               "removed": false
             },
             {
-              "id": "Correo",
-              "displayName": "Correo",
+              "id": "turno_buscado",
+              "displayName": "turno_buscado",
               "required": false,
               "defaultMatch": false,
               "display": true,
@@ -296,8 +321,258 @@
               "removed": false
             },
             {
-              "id": "Disponibilidad",
-              "displayName": "Disponibilidad",
+              "id": "padece_enfermedad",
+              "displayName": "padece_enfermedad",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "enfermedad_cual",
+              "displayName": "enfermedad_cual",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "diabetes",
+              "displayName": "diabetes",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "usa_lentes",
+              "displayName": "usa_lentes",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "estatura_m",
+              "displayName": "estatura_m",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "peso_kg",
+              "displayName": "peso_kg",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "discapacidad",
+              "displayName": "discapacidad",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "hipertension",
+              "displayName": "hipertension",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "medicamento_controlado",
+              "displayName": "medicamento_controlado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "medicamento_cual",
+              "displayName": "medicamento_cual",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "lesiones_operaciones",
+              "displayName": "lesiones_operaciones",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "lesiones_especificar",
+              "displayName": "lesiones_especificar",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "laborando_actualmente",
+              "displayName": "laborando_actualmente",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "empresa_1",
+              "displayName": "empresa_1",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "puesto_1",
+              "displayName": "puesto_1",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "tiempo_1",
+              "displayName": "tiempo_1",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "motivo_salida_1",
+              "displayName": "motivo_salida_1",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "empresa_2",
+              "displayName": "empresa_2",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "puesto_2",
+              "displayName": "puesto_2",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "tiempo_2",
+              "displayName": "tiempo_2",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "motivo_salida_2",
+              "displayName": "motivo_salida_2",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "empresa_3",
+              "displayName": "empresa_3",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "puesto_3",
+              "displayName": "puesto_3",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "tiempo_3",
+              "displayName": "tiempo_3",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "motivo_salida_3",
+              "displayName": "motivo_salida_3",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "cuenta_con_documentos",
+              "displayName": "cuenta_con_documentos",
               "required": false,
               "defaultMatch": false,
               "display": true,
@@ -321,8 +596,8 @@
       "name": "tool_ingreso_datos",
       "credentials": {
         "googleSheetsOAuth2Api": {
-          "id": "VrznAZQXjQh9WpvY",
-          "name": "Google Sheets - Cantera"
+          "id": "T1b495TNgv7GQdA8",
+          "name": "Google Sheets Jumperaron"
         }
       }
     },
@@ -874,7 +1149,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "df5ee431-b426-4890-b437-51592902812f",
+  "versionId": "63789ed8-3d8a-405e-a627-1fbecf14a5fc",
   "triggerCount": 1,
   "shared": [
     {
