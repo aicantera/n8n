@@ -1,0 +1,294 @@
+{
+  "createdAt": "2025-08-13T21:35:41.973Z",
+  "updatedAt": "2025-08-13T23:12:32.000Z",
+  "id": "E3jC2DHrsaaxxTlc",
+  "name": "Bot Parsear Datos PDF",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "1Wa7_7R-dYMvBL8scgygR9Fj75w1Gkh8s",
+          "mode": "list",
+          "cachedResultName": "FARMACIAS GDL VESPERTINO-1-1.pdf",
+          "cachedResultUrl": "https://drive.google.com/file/d/1Wa7_7R-dYMvBL8scgygR9Fj75w1Gkh8s/view?usp=drivesdk"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        280,
+        200
+      ],
+      "id": "26189c09-aa08-4da5-bace-70c050f810dd",
+      "name": "Download file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "1P9PgyGmxd7ggSGM",
+          "name": "Gael Extraer Datos PDF"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        540,
+        200
+      ],
+      "id": "ebcc44c1-f4c5-4a60-abcc-d003a88b06cd",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "fcdc6651-7788-45cd-a2ea-a848e7ef2afc",
+              "name": "text",
+              "value": "={{ $json.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        800,
+        200
+      ],
+      "id": "a99259f2-3048-4dc9-a9a3-b87f935dcf3f",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        240,
+        -200
+      ],
+      "id": "b2780838-fb3a-4bce-b4a0-7ffe805b6de4",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        160,
+        -40
+      ],
+      "id": "05256a36-b5f1-4f56-9faa-0ca6cb0c7e82",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "0PNoojfjNHHXEtdv",
+          "name": "Test_Agente_Soporte_Gael"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "contextWindowLength": 10
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        280,
+        0
+      ],
+      "id": "e2652b5c-1842-4ec8-a1d8-0af271ce2b96",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -80,
+        -100
+      ],
+      "id": "9d10f35b-faf5-41be-8a2e-2fce6f572dc2",
+      "name": "When chat message received",
+      "webhookId": "e0f45482-17b3-4a8a-9471-73f7404414cf"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        100,
+        200
+      ],
+      "id": "673562ea-4997-4a08-aa65-ffdedf7c9c40",
+      "name": "When clicking ‘Execute workflow’"
+    }
+  ],
+  "connections": {
+    "Download file": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Download file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "4f30841d-a82e-4906-9e07-1cb8ed103748",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "createdAt": "2025-08-13T21:35:41.981Z",
+      "updatedAt": "2025-08-13T21:35:41.981Z",
+      "role": "workflow:owner",
+      "workflowId": "E3jC2DHrsaaxxTlc",
+      "projectId": "6D91TcMmlphV2lVS",
+      "project": {
+        "createdAt": "2025-07-14T23:58:54.932Z",
+        "updatedAt": "2025-07-15T00:03:17.549Z",
+        "id": "6D91TcMmlphV2lVS",
+        "name": "Gael  Graciano <gael.graciano@canteradigital.mx>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "projectRelations": [
+          {
+            "createdAt": "2025-07-14T23:58:54.935Z",
+            "updatedAt": "2025-07-14T23:58:54.935Z",
+            "role": "project:personalOwner",
+            "userId": "bff7f19f-b5be-48d6-aea2-dfc3de153ccc",
+            "projectId": "6D91TcMmlphV2lVS",
+            "user": {
+              "createdAt": "2025-07-14T23:58:54.930Z",
+              "updatedAt": "2025-08-06T23:15:33.615Z",
+              "id": "bff7f19f-b5be-48d6-aea2-dfc3de153ccc",
+              "email": "gael.graciano@canteradigital.mx",
+              "firstName": "Gael ",
+              "lastName": "Graciano",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-07-15T00:12:22.917Z",
+                "personalization_survey_n8n_version": "1.100.1",
+                "automationGoalDevops": [
+                  "other",
+                  "ticketing-systems-integrations",
+                  "cloud-infrastructure-orchestration"
+                ],
+                "companySize": "100-499",
+                "companyType": "saas",
+                "role": "devops",
+                "reportedSource": "event"
+              },
+              "settings": {
+                "easyAIWorkflowOnboarded": true,
+                "firstSuccessfulWorkflowId": "j0Fiqu3Vwfp6hOC3",
+                "userActivated": true,
+                "userActivatedAt": 1753839716307,
+                "npsSurvey": {
+                  "responded": true,
+                  "lastShownAt": 1754337405043
+                },
+                "dismissedCallouts": {
+                  "aiAgentStarterCallout": true
+                }
+              },
+              "role": "global:member",
+              "disabled": false,
+              "mfaEnabled": false,
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": []
+}
