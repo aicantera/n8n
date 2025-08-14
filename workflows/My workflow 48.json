@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-08-14T18:57:43.269Z",
-  "updatedAt": "2025-08-14T18:57:43.269Z",
+  "updatedAt": "2025-08-14T21:59:19.000Z",
   "id": "TLetb6BQ5KiTftsQ",
   "name": "My workflow 48",
   "active": false,
@@ -19,7 +19,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// Simulate the JSON payload that would come from your Flask app\nconst mockPayload = {\n  \"conversation_target\": {\n    \"phone_number\": \"+1234567890\",\n    \"user_id\": \"user_123\", \n    \"name\": \"John Doe\"\n  },\n  \"conversation_config\": {\n    \"goal\": \"collect_product_feedback\",\n    \"prompt\": \"Collect detailed feedback about our new mobile app including rating, specific features used, and improvement suggestions\",\n    \"max_turns\": 8,\n    \"timeout_hours\": 24,\n    \"conversation_id\": \"conv_\" + Date.now()\n  },\n  \"context\": {\n    \"product_name\": \"MobileApp Pro\",\n    \"purchase_date\": \"2025-01-15\",\n    \"previous_interactions\": []\n  },\n  \"callback_config\": {\n    \"webhook_url\": \"https://your-flask-app.com/api/conversation-complete\",\n    \"auth_token\": \"bearer_token_here\"\n  }\n};\n\nreturn [{ json: mockPayload }];"
+        "jsCode": "// Simulate the JSON payload for parent satisfaction survey\nconst mockPayload = {\n  \"conversation_target\": {\n    \"phone_number\": \"+1234567890\",\n    \"user_id\": \"parent_123\", \n    \"name\": \"Ignacio Rosales\"\n  },\n  \"conversation_config\": {\n    \"goal\": \"collect_parent_satisfaction_feedback\",\n    \"prompt\": \"Converse con los padres para comprender su satisfacción general con la experiencia escolar de su hijo. Analice aspectos como el nivel académico, la comunicación, las instalaciones, las actividades extracurriculares y cualquier inquietud o sugerencia de mejora.\",\n    \"max_turns\": 10,\n    \"timeout_hours\": 48,\n    \"conversation_id\": \"parent_survey_\" + Date.now()\n  },\n  \"context\": {\n    \"school_name\": \"Colegio La Salle\",\n    \"child_name\": \"Janeth Rosales\",\n    \"grade_level\": \"5to\",\n    \"enrollment_year\": \"2022\",\n    \"teacher_name\": \"Ms. Rodriguez\",\n    \"survey_type\": \"quarterly_satisfaction\"\n  },\n  \"callback_config\": {\n    \"webhook_url\": \"https://cerebrolabs.ai/api/v1/parent-feedback\",\n    \"auth_token\": \"school_bearer_token_here\"\n  }\n};\n\nreturn [{ json: mockPayload }];"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -32,7 +32,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// Extract the key information from the payload\nconst payload = $input.first().json;\n\n// Extract recipient information\nconst recipient = {\n  phone: payload.conversation_target.phone_number,\n  userId: payload.conversation_target.user_id,\n  name: payload.conversation_target.name\n};\n\n// Extract goal and prompt information\nconst conversationGoal = {\n  goal: payload.conversation_config.goal,\n  prompt: payload.conversation_config.prompt,\n  maxTurns: payload.conversation_config.max_turns,\n  conversationId: payload.conversation_config.conversation_id\n};\n\n// Extract context for personalization\nconst context = payload.context;\n\n// Return structured data for next steps\nreturn [{\n  json: {\n    recipient: recipient,\n    conversationGoal: conversationGoal,\n    context: context,\n    originalPayload: payload // Keep original for reference\n  }\n}];"
+        "jsCode": "// Extract the key information from the parent survey payload\nconst payload = $input.first().json;\n\n// Extract parent information\nconst parent = {\n  phone: payload.conversation_target.phone_number,\n  userId: payload.conversation_target.user_id,\n  name: payload.conversation_target.name\n};\n\n// Extract survey goal and configuration\nconst surveyGoal = {\n  goal: payload.conversation_config.goal,\n  prompt: payload.conversation_config.prompt,\n  maxTurns: payload.conversation_config.max_turns,\n  conversationId: payload.conversation_config.conversation_id,\n  surveyType: payload.context.survey_type\n};\n\n// Extract school and child context for personalization\nconst schoolContext = {\n  schoolName: payload.context.school_name,\n  childName: payload.context.child_name,\n  gradeLevel: payload.context.grade_level,\n  teacherName: payload.context.teacher_name,\n  enrollmentYear: payload.context.enrollment_year\n};\n\n// Return structured data for LLM processing\nreturn [{\n  json: {\n    parent: parent,\n    surveyGoal: surveyGoal,\n    schoolContext: schoolContext,\n    originalPayload: payload // Keep original for reference\n  }\n}];"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -42,6 +42,41 @@
       ],
       "id": "8cc7021c-31e9-4a39-9bc2-0bb267f7ffea",
       "name": "Code1"
+    },
+    {
+      "parameters": {
+        "recipientPhoneNumber": "={{ $json.recipient.phone }}"
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1,
+      "position": [
+        1000,
+        0
+      ],
+      "id": "e011749f-7084-4aa9-9eda-65e7b61aa1e0",
+      "name": "Send template",
+      "webhookId": "500ecf8c-a857-4a34-8419-4575d48dcdcc",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "os3EXuN7rVvVrdJX",
+          "name": "WhatsApp account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are helping craft a personalized, warm outreach message for a parent satisfaction survey. \n\nCreate a friendly, professional introduction message that:\n- Feels personal and specific to this family\n- Mentions their child by name naturally\n- References their school experience contextually\n- Invites them to participate in feedback without being pushy\n- Keeps it conversational and warm\n\nContext:\n- Parent: {{ $json.parent.name }}\n- Child: {{ $json.schoolContext.childName }}\n- Grade: {{ $json.schoolContext.gradeLevel }}\n- Teacher: {{ $json.schoolContext.teacherName }}\n- School: {{ $json.schoolContext.schoolName }}\n- Survey goal: {{ $json.surveyGoal.goal }}\n\nGenerate ONLY the personalized introduction message (2-3 sentences max). Do not include buttons or calls to action - just the warm, personal greeting.",
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        660,
+        0
+      ],
+      "id": "86c51af2-45c2-44cb-aa41-5f5c8003407b",
+      "name": "Basic LLM Chain"
     }
   ],
   "connections": {
@@ -66,15 +101,39 @@
           }
         ]
       ]
+    },
+    "Code1": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Send template",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
     "executionOrder": "v1"
   },
   "staticData": null,
-  "meta": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
   "pinData": {},
-  "versionId": "6fdaa6f2-2ebf-4dce-9bba-fa0a2b954981",
+  "versionId": "0120ff7a-b0f2-4acf-a7ae-eb37d10e027c",
   "triggerCount": 0,
   "shared": [
     {
@@ -100,7 +159,7 @@
             "projectId": "BsYMJSPwury6TiTn",
             "user": {
               "createdAt": "2025-06-06T20:24:22.275Z",
-              "updatedAt": "2025-06-18T03:10:17.057Z",
+              "updatedAt": "2025-08-14T21:54:59.548Z",
               "id": "f9268337-0922-4cba-994c-bf6b40332731",
               "email": "adolfocuentas123@gmail.com",
               "firstName": "adolfo",
@@ -121,7 +180,8 @@
                 "npsSurvey": {
                   "responded": true,
                   "lastShownAt": 1750216203399
-                }
+                },
+                "easyAIWorkflowOnboarded": true
               },
               "role": "global:member",
               "disabled": false,
