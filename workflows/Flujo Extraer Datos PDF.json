@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-08-13T23:10:33.236Z",
-  "updatedAt": "2025-08-13T23:14:03.000Z",
+  "updatedAt": "2025-08-14T19:36:11.000Z",
   "id": "sjQ9mMNiU99d8ckC",
   "name": "Flujo Extraer Datos PDF",
   "active": false,
@@ -59,6 +59,32 @@
       ],
       "id": "965bd9c8-f106-4fcd-af2c-a81ba7b76010",
       "name": "Extract from File"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Obtenemos el texto plano que llega del nodo anterior.\nconst rawText = $input.first().json.text;\n\n// Array final donde guardaremos los resultados.\nconst finalResults = [];\n\n// 1. EXTRAER INFORMACIÓN GLOBAL (TURNO Y HORARIOS)\nconst headerMatch = rawText.match(\n  /(?<turno>FARMACIAS GDL \\w+)\\s*\\(entrada\\s*(?<entrada>\\d{2}:\\d{2})\\s*y\\s*salida\\s*(?<salida>\\d{2}:\\d{2})\\)/i\n);\nconst globalInfo = headerMatch ? headerMatch.groups : {};\n\n\n// 2. DIVIDIR EL TEXTO EN BLOQUES POR CADA RUTA\nconst routeBlocks = rawText.split(/(?=\\n\\d+\\nRUTA \\d+)/);\n\n\n// 3. PROCESAR CADA BLOQUE DE RUTA INDIVIDUALMENTE\nconst processableBlocks = routeBlocks[0].includes('CRUCE') ? routeBlocks : routeBlocks.slice(1);\n\nfor (const block of processableBlocks) {\n  const routeData = {\n    turno: (globalInfo.turno || '').trim(),\n    horario_entrada: (globalInfo.entrada || '').trim(),\n    horario_salida: (globalInfo.salida || '').trim(),\n    nombre_ruta: '',\n    descripcion_recorrido: '',\n    paradas: []\n  };\n\n  // 4. EXTRAER NOMBRE DE LA RUTA\n  const routeNameMatch = block.match(/RUTA\\s(\\d+)/);\n  if (routeNameMatch) {\n    routeData.nombre_ruta = `RUTA ${routeNameMatch[1]}`;\n  }\n\n  // 5. EXTRAER LA DESCRIPCIÓN DEL RECORRIDO\n  const descriptionMatch = block.match(/SALE DE:\\s*([\\s\\S]*?)(?=\\n[A-ZÁÉÍÓÚ\\s]+ \\d{2}:\\d{2})/);\n  if (descriptionMatch) {\n    routeData.descripcion_recorrido = descriptionMatch[1].replace(/\\n/g, ' ').replace(/\\s+/g, ' ').trim();\n  }\n\n  // 6. EXTRAER LA LISTA DE PARADAS Y HORARIOS\n  const stopsRegex = /^(.+)\\s(\\d{2}:\\d{2})$/gm;\n  let match;\n  while ((match = stopsRegex.exec(block)) !== null) {\n    const cruce = match[1].trim();\n    if (cruce !== 'CRUCE' && !cruce.includes('SALE DE:')) {\n      routeData.paradas.push({\n        cruce: cruce,\n        hora: match[2].trim()\n      });\n    }\n  }\n  \n  finalResults.push({ json: routeData });\n}\n\n// Devolvemos el array de objetos estructurados.\nreturn finalResults;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        0
+      ],
+      "id": "843bc593-2bcb-4625-a7d0-d52224cd3645",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.informationExtractor",
+      "typeVersion": 1.2,
+      "position": [
+        880,
+        0
+      ],
+      "id": "9b8b1922-3310-4fa7-9d79-71025fe168d6",
+      "name": "Information Extractor"
     }
   ],
   "connections": {
@@ -83,6 +109,28 @@
           }
         ]
       ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Information Extractor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -93,7 +141,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "cd1e2550-d0ae-4a9f-b0cd-1507c88892c4",
+  "versionId": "67e48af1-da9a-4276-ab5a-d57c9c319616",
   "triggerCount": 0,
   "shared": [
     {
