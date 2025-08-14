@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-08-13T21:35:41.973Z",
-  "updatedAt": "2025-08-13T23:12:32.000Z",
+  "updatedAt": "2025-08-14T00:06:12.000Z",
   "id": "E3jC2DHrsaaxxTlc",
   "name": "Bot Parsear Datos PDF",
   "active": false,
@@ -21,8 +21,8 @@
       "type": "n8n-nodes-base.googleDrive",
       "typeVersion": 3,
       "position": [
-        280,
-        200
+        860,
+        -80
       ],
       "id": "26189c09-aa08-4da5-bace-70c050f810dd",
       "name": "Download file",
@@ -41,8 +41,8 @@
       "type": "n8n-nodes-base.extractFromFile",
       "typeVersion": 1,
       "position": [
-        540,
-        200
+        1120,
+        -80
       ],
       "id": "ebcc44c1-f4c5-4a60-abcc-d003a88b06cd",
       "name": "Extract from File"
@@ -59,20 +59,24 @@
             }
           ]
         },
+        "includeOtherFields": true,
+        "include": "except",
         "options": {}
       },
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        800,
-        200
+        1380,
+        -80
       ],
       "id": "a99259f2-3048-4dc9-a9a3-b87f935dcf3f",
       "name": "Edit Fields"
     },
     {
       "parameters": {
-        "options": {}
+        "options": {
+          "systemMessage": "=Eres un agente de **Recursos Humanos** en la empresa **\"Quick-Trip\"**. Tu rol es filtrar a los postulantes, pero tu verdadera función es actuar como un **buscador de rutas de transporte público**. Tu personalidad debe ser **amable y profesional**, pero con un toque de urgencia, ya que los usuarios necesitan la información de forma rápida. Debes actuar como si estuvieras evaluando su capacidad para obtener información crucial de manera eficiente.\n\n### Tu misión principal es:\n\n* **Actuar como un entrevistador** de Recursos Humanos, manteniendo un tono profesional y amable.\n* **Hacer preguntas** que te permitan obtener la **ubicación actual del usuario**.\n* **Extraer información** de una base de datos de rutas de transporte.\n* **Filtrar la información** para proporcionar únicamente las **rutas más cercanas y relevantes** a la ubicación del usuario.\n* Si el usuario no especifica su ubicación, pídele que la proporcione de una manera que parezca una pregunta de entrevista (por ejemplo: \"*¿Podrías indicarme tu dirección o punto de referencia más cercano para evaluar la logística de tu trayecto?*\").\n* Si te pregunta por un horario específico, responde como si evaluaras su flexibilidad (por ejemplo: \"*Para encontrar la mejor opción para ti, ¿a qué hora necesitas comenzar tu trayecto?*\").\n* Presenta la información de forma clara y concisa, como si fueran los resultados de tu \"evaluación\".\n* Si la ubicación del usuario no tiene una ruta cercana, explícalo de manera diplomática, como si \"no hubiera opciones logísticas adecuadas por el momento\".\n* **No pases el archivo completo**, solo las respuestas que coincidan con la ubicación del usuario.\n\n### Retos que enfrentarás:\n\n* El usuario puede ser **impaciente**.\n* El usuario puede no entender el \"juego de roles\". En ese caso, mantén tu personaje, pero sé más directo con la información para no frustrarlo.\n* La base de datos podría no tener información para la ubicación del usuario. Debes responder con **empatía** pero sin ofrecer información falsa.\n* El usuario puede dar **información incompleta**, lo que te obligará a hacer preguntas de seguimiento.\n\n### Ejemplo de interacción:\n\n* **Usuario:** \"*Hola, ¿me puedes decir qué ruta pasa cerca de la calle Madero?*\"\n* **Tú:** \"*Hola, bienvenido a Quick-Trip. Para poder evaluar la mejor opción para tu traslado, necesito tu ubicación exacta. ¿Podrías darme un punto de referencia o tu dirección completa?*\"\n\n**Recuerda, tu objetivo final es proporcionar la información de la ruta de transporte, pero a través del filtro de una entrevista de Recursos Humanos.**"
+        }
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 2,
@@ -122,28 +126,60 @@
     },
     {
       "parameters": {
-        "options": {}
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
       },
-      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
-      "typeVersion": 1.1,
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
       "position": [
-        -80,
-        -100
+        40,
+        -200
       ],
-      "id": "9d10f35b-faf5-41be-8a2e-2fce6f572dc2",
-      "name": "When chat message received",
-      "webhookId": "e0f45482-17b3-4a8a-9471-73f7404414cf"
+      "id": "a3c2477c-170b-4ee7-9358-c4b36df72c48",
+      "name": "Telegram Trigger",
+      "webhookId": "188e14b8-b829-446b-a646-b2f825af97e1",
+      "credentials": {
+        "telegramApi": {
+          "id": "qBBCv0YcYdci711O",
+          "name": "Bot_RentabilidadExcel"
+        }
+      }
     },
     {
-      "parameters": {},
-      "type": "n8n-nodes-base.manualTrigger",
-      "typeVersion": 1,
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "1Wa7_7R-dYMvBL8scgygR9Fj75w1Gkh8s",
+          "mode": "list",
+          "cachedResultName": "FARMACIAS GDL VESPERTINO-1-1.pdf",
+          "cachedResultUrl": "https://drive.google.com/file/d/1Wa7_7R-dYMvBL8scgygR9Fj75w1Gkh8s/view?usp=drivesdk"
+        },
+        "options": {
+          "binaryPropertyName": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Put_Output_File_in_Field', ``, 'string') }}",
+          "googleFileConversion": {
+            "conversion": {
+              "docsToFormat": "text/plain"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.googleDriveTool",
+      "typeVersion": 3,
       "position": [
-        100,
-        200
+        520,
+        20
       ],
-      "id": "673562ea-4997-4a08-aa65-ffdedf7c9c40",
-      "name": "When clicking ‘Execute workflow’"
+      "id": "8dfd6927-1648-4fc2-8d33-72abc506fb43",
+      "name": "Documento de rutas",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "1P9PgyGmxd7ggSGM",
+          "name": "Gael Extraer Datos PDF"
+        }
+      }
     }
   ],
   "connections": {
@@ -191,7 +227,12 @@
         ]
       ]
     },
-    "When chat message received": {
+    "AI Agent": {
+      "main": [
+        []
+      ]
+    },
+    "Telegram Trigger": {
       "main": [
         [
           {
@@ -202,12 +243,12 @@
         ]
       ]
     },
-    "When clicking ‘Execute workflow’": {
-      "main": [
+    "Documento de rutas": {
+      "ai_tool": [
         [
           {
-            "node": "Download file",
-            "type": "main",
+            "node": "AI Agent",
+            "type": "ai_tool",
             "index": 0
           }
         ]
@@ -222,7 +263,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "4f30841d-a82e-4906-9e07-1cb8ed103748",
+  "versionId": "9244932e-2cbe-4182-a12a-00d4a4b7d10d",
   "triggerCount": 0,
   "shared": [
     {
