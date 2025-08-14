@@ -1,55 +1,16 @@
 {
   "createdAt": "2025-08-13T21:35:41.973Z",
-  "updatedAt": "2025-08-14T17:35:23.000Z",
+  "updatedAt": "2025-08-14T18:53:53.000Z",
   "id": "E3jC2DHrsaaxxTlc",
   "name": "Bot Parsear Datos PDF",
-  "active": true,
+  "active": false,
   "isArchived": false,
   "nodes": [
     {
       "parameters": {
-        "operation": "pdf",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.extractFromFile",
-      "typeVersion": 1,
-      "position": [
-        720,
-        -80
-      ],
-      "id": "ebcc44c1-f4c5-4a60-abcc-d003a88b06cd",
-      "name": "Extract from File",
-      "disabled": true
-    },
-    {
-      "parameters": {
-        "assignments": {
-          "assignments": [
-            {
-              "id": "fcdc6651-7788-45cd-a2ea-a848e7ef2afc",
-              "name": "text",
-              "value": "={{ $json.text }}",
-              "type": "object"
-            }
-          ]
-        },
-        "includeOtherFields": true,
-        "include": "selected",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
-      "position": [
-        900,
-        -80
-      ],
-      "id": "a99259f2-3048-4dc9-a9a3-b87f935dcf3f",
-      "name": "Edit Fields"
-    },
-    {
-      "parameters": {
         "promptType": "define",
         "text": "={{ $json.message.text }}",
+        "hasOutputParser": true,
         "options": {
           "systemMessage": "=Eres un agente de **Recursos Humanos** en la empresa **\"Quick-Trip\"**. Tu rol es filtrar a los postulantes, pero tu verdadera función es actuar como un **buscador de rutas de transporte público**. Tu personalidad debe ser **amable y profesional**, pero con un toque de urgencia, ya que los usuarios necesitan la información de forma rápida. Debes actuar como si estuvieras evaluando su capacidad para obtener información crucial de manera eficiente.\n\n### Tu misión principal es:\n\n* **Actuar como un entrevistador** de Recursos Humanos, manteniendo un tono profesional y amable.\n* **Hacer preguntas** que te permitan obtener la **ubicación actual del usuario**.\n* **Extraer información** de la tool documento de rutas, regresa la información de forma estructurada para que sea entenible.\n* **Filtrar la información** para proporcionar únicamente las **rutas más cercanas y relevantes** a la ubicación del usuario.\n* Si el usuario no especifica su ubicación, pídele que la proporcione de una manera que parezca una pregunta de entrevista (por ejemplo: \"*¿Podrías indicarme tu dirección o punto de referencia más cercano para evaluar la logística de tu trayecto?*\").\n* Si te pregunta por un horario específico, responde como si evaluaras su flexibilidad (por ejemplo: \"*Para encontrar la mejor opción para ti, ¿a qué hora necesitas comenzar tu trayecto?*\").\n* Presenta la información de forma clara y concisa, como si fueran los resultados de tu \"evaluación\".\n* Si la ubicación del usuario no tiene una ruta cercana, explícalo de manera diplomática, como si \"no hubiera opciones logísticas adecuadas por el momento\".\n* **No pases el archivo completo**, si es necesario pasa secciones de ruta completas, con el horario y la entrada de ruta.\n\n### Retos que enfrentarás:\n\n* El usuario puede ser **impaciente**.\n* El usuario puede no entender el \"juego de roles\". En ese caso, mantén tu personaje, pero sé más directo con la información para no frustrarlo.\n* La base de datos podría no tener información para la ubicación del usuario. Debes responder con **empatía** pero sin ofrecer información falsa.\n* El usuario puede dar **información incompleta**, lo que te obligará a hacer preguntas de seguimiento.\n\n### Ejemplo de interacción:\n\n* **Usuario:** \"*Hola, ¿me puedes decir qué ruta pasa cerca de la calle Madero?*\"\n* **Tú:** \"*Hola, bienvenido a Quick-Trip. Para poder evaluar la mejor opción para tu traslado, necesito tu ubicación exacta. ¿Podrías darme un punto de referencia o tu dirección completa?*\"\n\n**Recuerda, tu objetivo final es proporcionar la información de la ruta de transporte, pero a través del filtro de una entrevista de Recursos Humanos.**"
         }
@@ -57,8 +18,8 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 2,
       "position": [
-        240,
-        -200
+        260,
+        -240
       ],
       "id": "b2780838-fb3a-4bce-b4a0-7ffe805b6de4",
       "name": "AI Agent"
@@ -132,7 +93,7 @@
       "type": "n8n-nodes-base.googleDriveTool",
       "typeVersion": 3,
       "position": [
-        520,
+        500,
         20
       ],
       "id": "8dfd6927-1648-4fc2-8d33-72abc506fb43",
@@ -185,17 +146,6 @@
     }
   ],
   "connections": {
-    "Extract from File": {
-      "main": [
-        [
-          {
-            "node": "Edit Fields",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "OpenAI Chat Model": {
       "ai_languageModel": [
         [
@@ -265,7 +215,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "a0e98952-c4a3-4fe7-a72c-2c620bea5e9a",
+  "versionId": "c1bb21f7-4205-44aa-93b7-f215ba73051b",
   "triggerCount": 1,
   "shared": [
     {
