@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-08-14T18:57:43.269Z",
-  "updatedAt": "2025-08-14T21:59:19.000Z",
+  "updatedAt": "2025-08-14T22:20:15.000Z",
   "id": "TLetb6BQ5KiTftsQ",
   "name": "My workflow 48",
   "active": false,
@@ -19,39 +19,13 @@
     },
     {
       "parameters": {
-        "jsCode": "// Simulate the JSON payload for parent satisfaction survey\nconst mockPayload = {\n  \"conversation_target\": {\n    \"phone_number\": \"+1234567890\",\n    \"user_id\": \"parent_123\", \n    \"name\": \"Ignacio Rosales\"\n  },\n  \"conversation_config\": {\n    \"goal\": \"collect_parent_satisfaction_feedback\",\n    \"prompt\": \"Converse con los padres para comprender su satisfacción general con la experiencia escolar de su hijo. Analice aspectos como el nivel académico, la comunicación, las instalaciones, las actividades extracurriculares y cualquier inquietud o sugerencia de mejora.\",\n    \"max_turns\": 10,\n    \"timeout_hours\": 48,\n    \"conversation_id\": \"parent_survey_\" + Date.now()\n  },\n  \"context\": {\n    \"school_name\": \"Colegio La Salle\",\n    \"child_name\": \"Janeth Rosales\",\n    \"grade_level\": \"5to\",\n    \"enrollment_year\": \"2022\",\n    \"teacher_name\": \"Ms. Rodriguez\",\n    \"survey_type\": \"quarterly_satisfaction\"\n  },\n  \"callback_config\": {\n    \"webhook_url\": \"https://cerebrolabs.ai/api/v1/parent-feedback\",\n    \"auth_token\": \"school_bearer_token_here\"\n  }\n};\n\nreturn [{ json: mockPayload }];"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        220,
-        0
-      ],
-      "id": "5b67d418-8bda-41e7-9eb6-6a04b12e7da2",
-      "name": "Code"
-    },
-    {
-      "parameters": {
-        "jsCode": "// Extract the key information from the parent survey payload\nconst payload = $input.first().json;\n\n// Extract parent information\nconst parent = {\n  phone: payload.conversation_target.phone_number,\n  userId: payload.conversation_target.user_id,\n  name: payload.conversation_target.name\n};\n\n// Extract survey goal and configuration\nconst surveyGoal = {\n  goal: payload.conversation_config.goal,\n  prompt: payload.conversation_config.prompt,\n  maxTurns: payload.conversation_config.max_turns,\n  conversationId: payload.conversation_config.conversation_id,\n  surveyType: payload.context.survey_type\n};\n\n// Extract school and child context for personalization\nconst schoolContext = {\n  schoolName: payload.context.school_name,\n  childName: payload.context.child_name,\n  gradeLevel: payload.context.grade_level,\n  teacherName: payload.context.teacher_name,\n  enrollmentYear: payload.context.enrollment_year\n};\n\n// Return structured data for LLM processing\nreturn [{\n  json: {\n    parent: parent,\n    surveyGoal: surveyGoal,\n    schoolContext: schoolContext,\n    originalPayload: payload // Keep original for reference\n  }\n}];"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        440,
-        0
-      ],
-      "id": "8cc7021c-31e9-4a39-9bc2-0bb267f7ffea",
-      "name": "Code1"
-    },
-    {
-      "parameters": {
         "recipientPhoneNumber": "={{ $json.recipient.phone }}"
       },
       "type": "n8n-nodes-base.whatsApp",
       "typeVersion": 1,
       "position": [
-        1000,
-        0
+        1260,
+        20
       ],
       "id": "e011749f-7084-4aa9-9eda-65e7b61aa1e0",
       "name": "Send template",
@@ -72,11 +46,76 @@
       "type": "@n8n/n8n-nodes-langchain.chainLlm",
       "typeVersion": 1.7,
       "position": [
-        660,
-        0
+        640,
+        20
       ],
       "id": "86c51af2-45c2-44cb-aa41-5f5c8003407b",
       "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Mock LLM response for personalized intro in Mexican Spanish\nconst data = $input.first().json;\n\n// Simulate what an LLM would generate for a warm, personalized intro\nconst mockResponses = [\n  `¡Hola ${data.parent.name}! Esperamos que ${data.schoolContext.childName} esté disfrutando mucho el ${data.schoolContext.gradeLevel} con ${data.schoolContext.teacherName}. Nos encantaría conocer su experiencia familiar en ${data.schoolContext.schoolName}.`,\n  \n  `¡Buenas tardes ${data.parent.name}! Sabemos que ${data.schoolContext.childName} ha estado participando activamente en ${data.schoolContext.gradeLevel}. Nos gustaría saber cómo se sienten con el progreso en ${data.schoolContext.schoolName}.`,\n  \n  `Estimada ${data.parent.name}, esperamos que ${data.schoolContext.childName} esté teniendo una excelente experiencia en ${data.schoolContext.gradeLevel} con ${data.schoolContext.teacherName}. Su opinión sobre ${data.schoolContext.schoolName} es muy valiosa para nosotros.`\n];\n\n// Select a response (in real implementation, this would be LLM-generated)\nconst selectedResponse = mockResponses[0]; // Using first one for consistency\n\n// Simulate LLM processing time\nconst processingDelay = Math.random() * 500 + 200; // 200-700ms delay\n\nreturn [{\n  json: {\n    text: selectedResponse,\n    mockProcessingTime: processingDelay,\n    language: \"es-MX\",\n    generatedAt: new Date().toISOString()\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        700,
+        -180
+      ],
+      "id": "af418633-96bd-43bd-ba90-fa33873e9707",
+      "name": "Mock LLM - Generate Personalized Intro"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Simulate the JSON payload for parent satisfaction survey\nconst mockPayload = {\n  \"conversation_target\": {\n    \"phone_number\": \"+1234567890\",\n    \"user_id\": \"parent_123\", \n    \"name\": \"Ignacio Rosales\"\n  },\n  \"conversation_config\": {\n    \"goal\": \"collect_parent_satisfaction_feedback\",\n    \"prompt\": \"Converse con los padres para comprender su satisfacción general con la experiencia escolar de su hijo. Analice aspectos como el nivel académico, la comunicación, las instalaciones, las actividades extracurriculares y cualquier inquietud o sugerencia de mejora.\",\n    \"max_turns\": 10,\n    \"timeout_hours\": 48,\n    \"conversation_id\": \"parent_survey_\" + Date.now()\n  },\n  \"context\": {\n    \"school_name\": \"Colegio La Salle\",\n    \"child_name\": \"Janeth Rosales\",\n    \"grade_level\": \"5to\",\n    \"enrollment_year\": \"2022\",\n    \"teacher_name\": \"Ms. Rodriguez\",\n    \"survey_type\": \"quarterly_satisfaction\"\n  },\n  \"callback_config\": {\n    \"webhook_url\": \"https://cerebrolabs.ai/api/v1/parent-feedback\",\n    \"auth_token\": \"school_bearer_token_here\"\n  }\n};\n\nreturn [{ json: mockPayload }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ],
+      "id": "5b67d418-8bda-41e7-9eb6-6a04b12e7da2",
+      "name": "Payload from Flask arrives"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extract the key information from the parent survey payload\nconst payload = $input.first().json;\n\n// Extract parent information\nconst parent = {\n  phone: payload.conversation_target.phone_number,\n  userId: payload.conversation_target.user_id,\n  name: payload.conversation_target.name\n};\n\n// Extract survey goal and configuration\nconst surveyGoal = {\n  goal: payload.conversation_config.goal,\n  prompt: payload.conversation_config.prompt,\n  maxTurns: payload.conversation_config.max_turns,\n  conversationId: payload.conversation_config.conversation_id,\n  surveyType: payload.context.survey_type\n};\n\n// Extract school and child context for personalization\nconst schoolContext = {\n  schoolName: payload.context.school_name,\n  childName: payload.context.child_name,\n  gradeLevel: payload.context.grade_level,\n  teacherName: payload.context.teacher_name,\n  enrollmentYear: payload.context.enrollment_year\n};\n\n// Return structured data for LLM processing\nreturn [{\n  json: {\n    parent: parent,\n    surveyGoal: surveyGoal,\n    schoolContext: schoolContext,\n    originalPayload: payload // Keep original for reference\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        0
+      ],
+      "id": "8cc7021c-31e9-4a39-9bc2-0bb267f7ffea",
+      "name": "Extract key information"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Combine the mock LLM-generated intro with our structured data\nconst originalData = $('Extract key information').first().json;\nconst generatedIntro = $input.first().json.text; // The mock LLM output\n\nreturn [{\n  json: {\n    ...originalData, // Spread all the original extracted data\n    personalizedIntro: generatedIntro, // Add the mock LLM-generated intro\n    language: \"es-MX\",\n    generatedAt: new Date().toISOString()\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1020,
+        0
+      ],
+      "id": "d94ea521-9ce5-427a-9594-bddfe396e2ea",
+      "name": "Combine Generated Intro with Data"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Simulate what the WhatsApp template message would look like in Spanish\nconst data = $input.first().json;\n\n// Use the mock LLM-generated intro in Spanish\nconst templateMessage = {\n  to: data.parent.phone,\n  type: \"template\",\n  template: {\n    name: \"encuesta_satisfaccion_padres\", // Spanish template name\n    language: { code: \"es_MX\" },\n    components: [\n      {\n        type: \"body\", \n        parameters: [\n          { type: \"text\", text: data.personalizedIntro },\n          { type: \"text\", text: \"3-4 minutos\" } // Survey duration in Spanish\n        ]\n      }\n    ]\n  }\n};\n\n// What the parent would actually see in Spanish:\nconst actualMessage = `${data.personalizedIntro}\n\nEsta breve encuesta toma solo 3-4 minutos y nos ayuda a mejorar nuestra comunidad escolar.\n\n¿Le gustaría compartir su experiencia?\n\n[Comenzar Encuesta] [Tal vez después]`;\n\nreturn [{\n  json: {\n    whatsappTemplate: templateMessage,\n    messagePreview: actualMessage,\n    status: \"template_would_be_sent\",\n    language: \"es-MX\",\n    timestamp: new Date().toISOString()\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1260,
+        -140
+      ],
+      "id": "d265f125-8e6d-4620-afd4-274ef0d83d21",
+      "name": "Mock WhatsApp send template"
     }
   ],
   "connections": {
@@ -84,29 +123,7 @@
       "main": [
         [
           {
-            "node": "Code",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Code": {
-      "main": [
-        [
-          {
-            "node": "Code1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Code1": {
-      "main": [
-        [
-          {
-            "node": "Basic LLM Chain",
+            "node": "Payload from Flask arrives",
             "type": "main",
             "index": 0
           }
@@ -115,9 +132,47 @@
     },
     "Basic LLM Chain": {
       "main": [
+        []
+      ]
+    },
+    "Payload from Flask arrives": {
+      "main": [
         [
           {
-            "node": "Send template",
+            "node": "Extract key information",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract key information": {
+      "main": [
+        [
+          {
+            "node": "Mock LLM - Generate Personalized Intro",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mock LLM - Generate Personalized Intro": {
+      "main": [
+        [
+          {
+            "node": "Combine Generated Intro with Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Combine Generated Intro with Data": {
+      "main": [
+        [
+          {
+            "node": "Mock WhatsApp send template",
             "type": "main",
             "index": 0
           }
@@ -133,7 +188,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "0120ff7a-b0f2-4acf-a7ae-eb37d10e027c",
+  "versionId": "06fe0707-d912-4b93-83e5-b8013010a9fc",
   "triggerCount": 0,
   "shared": [
     {
