@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-08-13T21:35:41.973Z",
-  "updatedAt": "2025-08-14T18:53:53.000Z",
+  "updatedAt": "2025-08-14T21:18:41.000Z",
   "id": "E3jC2DHrsaaxxTlc",
   "name": "Bot Parsear Datos PDF",
   "active": false,
@@ -73,40 +73,6 @@
     },
     {
       "parameters": {
-        "operation": "download",
-        "fileId": {
-          "__rl": true,
-          "value": "1Wa7_7R-dYMvBL8scgygR9Fj75w1Gkh8s",
-          "mode": "list",
-          "cachedResultName": "FARMACIAS GDL VESPERTINO-1-1.pdf",
-          "cachedResultUrl": "https://drive.google.com/file/d/1Wa7_7R-dYMvBL8scgygR9Fj75w1Gkh8s/view?usp=drivesdk"
-        },
-        "options": {
-          "binaryPropertyName": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Put_Output_File_in_Field', ``, 'string') }}",
-          "googleFileConversion": {
-            "conversion": {
-              "docsToFormat": "text/plain"
-            }
-          }
-        }
-      },
-      "type": "n8n-nodes-base.googleDriveTool",
-      "typeVersion": 3,
-      "position": [
-        500,
-        20
-      ],
-      "id": "8dfd6927-1648-4fc2-8d33-72abc506fb43",
-      "name": "Documento de rutas",
-      "credentials": {
-        "googleDriveOAuth2Api": {
-          "id": "1P9PgyGmxd7ggSGM",
-          "name": "Gael Extraer Datos PDF"
-        }
-      }
-    },
-    {
-      "parameters": {
         "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
         "text": "={{ $json.output }}",
         "additionalFields": {
@@ -143,6 +109,79 @@
       "id": "aef41900-f1ef-46f9-bd50-39664ca65ad0",
       "name": "Simple Memory",
       "disabled": true
+    },
+    {
+      "parameters": {
+        "operation": "sendPhoto",
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "binaryData": true,
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        860,
+        -100
+      ],
+      "id": "8571234c-372c-42e4-b2a7-3e681ba78bab",
+      "name": "Send a photo message",
+      "webhookId": "dfc827e6-a764-46b5-af0a-66e67f7df3dc",
+      "credentials": {
+        "telegramApi": {
+          "id": "M4yT4PHnQvsP26j3",
+          "name": "Bot_Pruebas_Gael"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "1Wa7_7R-dYMvBL8scgygR9Fj75w1Gkh8s",
+          "mode": "list",
+          "cachedResultName": "FARMACIAS GDL VESPERTINO-1-1.pdf",
+          "cachedResultUrl": "https://drive.google.com/file/d/1Wa7_7R-dYMvBL8scgygR9Fj75w1Gkh8s/view?usp=drivesdk"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        600,
+        -100
+      ],
+      "id": "f2f78c8c-ffb6-4e32-aa14-e6267df76321",
+      "name": "Download file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "1P9PgyGmxd7ggSGM",
+          "name": "Gael Extraer Datos PDF"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "sendDocument",
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "binaryData": true,
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        860,
+        60
+      ],
+      "id": "90cdfd96-5128-4297-926a-2cc8b5e12eb4",
+      "name": "Send a document",
+      "webhookId": "a4458d21-5c5d-4a27-89ea-c4aebd5e406c",
+      "credentials": {
+        "telegramApi": {
+          "id": "M4yT4PHnQvsP26j3",
+          "name": "Bot_Pruebas_Gael"
+        }
+      }
     }
   ],
   "connections": {
@@ -164,6 +203,11 @@
             "node": "Send a text message",
             "type": "main",
             "index": 0
+          },
+          {
+            "node": "Download file",
+            "type": "main",
+            "index": 0
           }
         ]
       ]
@@ -174,17 +218,6 @@
           {
             "node": "AI Agent",
             "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Documento de rutas": {
-      "ai_tool": [
-        [
-          {
-            "node": "AI Agent",
-            "type": "ai_tool",
             "index": 0
           }
         ]
@@ -205,6 +238,32 @@
           }
         ]
       ]
+    },
+    "Send a photo message": {
+      "main": [
+        []
+      ]
+    },
+    "Download file": {
+      "main": [
+        [
+          {
+            "node": "Send a document",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send a photo message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a document": {
+      "main": [
+        []
+      ]
     }
   },
   "settings": {
@@ -215,7 +274,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "c1bb21f7-4205-44aa-93b7-f215ba73051b",
+  "versionId": "da9424ee-6f6b-4ffc-b7fb-94a2fd54dd46",
   "triggerCount": 1,
   "shared": [
     {
