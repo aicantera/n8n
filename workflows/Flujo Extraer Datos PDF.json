@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-08-13T23:10:33.236Z",
-  "updatedAt": "2025-08-14T19:36:11.000Z",
+  "updatedAt": "2025-08-14T21:57:07.000Z",
   "id": "sjQ9mMNiU99d8ckC",
   "name": "Flujo Extraer Datos PDF",
   "active": false,
@@ -62,7 +62,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// Obtenemos el texto plano que llega del nodo anterior.\nconst rawText = $input.first().json.text;\n\n// Array final donde guardaremos los resultados.\nconst finalResults = [];\n\n// 1. EXTRAER INFORMACIÓN GLOBAL (TURNO Y HORARIOS)\nconst headerMatch = rawText.match(\n  /(?<turno>FARMACIAS GDL \\w+)\\s*\\(entrada\\s*(?<entrada>\\d{2}:\\d{2})\\s*y\\s*salida\\s*(?<salida>\\d{2}:\\d{2})\\)/i\n);\nconst globalInfo = headerMatch ? headerMatch.groups : {};\n\n\n// 2. DIVIDIR EL TEXTO EN BLOQUES POR CADA RUTA\nconst routeBlocks = rawText.split(/(?=\\n\\d+\\nRUTA \\d+)/);\n\n\n// 3. PROCESAR CADA BLOQUE DE RUTA INDIVIDUALMENTE\nconst processableBlocks = routeBlocks[0].includes('CRUCE') ? routeBlocks : routeBlocks.slice(1);\n\nfor (const block of processableBlocks) {\n  const routeData = {\n    turno: (globalInfo.turno || '').trim(),\n    horario_entrada: (globalInfo.entrada || '').trim(),\n    horario_salida: (globalInfo.salida || '').trim(),\n    nombre_ruta: '',\n    descripcion_recorrido: '',\n    paradas: []\n  };\n\n  // 4. EXTRAER NOMBRE DE LA RUTA\n  const routeNameMatch = block.match(/RUTA\\s(\\d+)/);\n  if (routeNameMatch) {\n    routeData.nombre_ruta = `RUTA ${routeNameMatch[1]}`;\n  }\n\n  // 5. EXTRAER LA DESCRIPCIÓN DEL RECORRIDO\n  const descriptionMatch = block.match(/SALE DE:\\s*([\\s\\S]*?)(?=\\n[A-ZÁÉÍÓÚ\\s]+ \\d{2}:\\d{2})/);\n  if (descriptionMatch) {\n    routeData.descripcion_recorrido = descriptionMatch[1].replace(/\\n/g, ' ').replace(/\\s+/g, ' ').trim();\n  }\n\n  // 6. EXTRAER LA LISTA DE PARADAS Y HORARIOS\n  const stopsRegex = /^(.+)\\s(\\d{2}:\\d{2})$/gm;\n  let match;\n  while ((match = stopsRegex.exec(block)) !== null) {\n    const cruce = match[1].trim();\n    if (cruce !== 'CRUCE' && !cruce.includes('SALE DE:')) {\n      routeData.paradas.push({\n        cruce: cruce,\n        hora: match[2].trim()\n      });\n    }\n  }\n  \n  finalResults.push({ json: routeData });\n}\n\n// Devolvemos el array de objetos estructurados.\nreturn finalResults;"
+        "jsCode": "// Obtenemos el texto plano que llega del nodo anterior.\nconst rawText = items[0].json.text;\n\n// Array final donde guardaremos los resultados.\nconst finalResults = [];\n\n// 1. EXTRAER INFORMACIÓN GLOBAL (TURNO Y HORARIOS)\nconst headerMatch = rawText.match(\n  /(?<turno>FARMACIAS GDL \\w+)\\s*\\(entrada\\s*(?<entrada>\\d{2}:\\d{2})\\s*y\\s*salida\\s*(?<salida>\\d{2}:\\d{2})\\)/i\n);\nconst globalInfo = headerMatch ? headerMatch.groups : {};\n\n// 2. DIVIDIR EL TEXTO EN BLOQUES POR CADA RUTA\n// El split ahora es más robusto para capturar el inicio de cada nueva ruta.\n// Se usa una \"mirada hacia adelante\" para encontrar el patrón de \"número_de_ruta\\nRUTA número_de_ruta\".\nconst routeBlocks = rawText.split(/(?=\\n\\d+\\nRUTA \\d+)/);\n\n// 3. PROCESAR CADA BLOQUE DE RUTA INDIVIDUALMENTE\n// `routeBlocks[0]` a veces contiene el encabezado global, por lo que lo omitimos si no tiene una ruta.\nconst processableBlocks = routeBlocks[0].includes('CRUCE') ? routeBlocks : routeBlocks.slice(1);\n\nfor (const block of processableBlocks) {\n  const routeData = {\n    turno: (globalInfo.turno || '').trim(),\n    horario_entrada: (globalInfo.entrada || '').trim(),\n    horario_salida: (globalInfo.salida || '').trim(),\n    numero_ruta: '',\n    nombre_ruta: '',\n    descripcion_recorrido: '',\n    paradas: []\n  };\n\n  // 4. EXTRAER EL NÚMERO Y NOMBRE DE LA RUTA\n  // El regex modificado captura mejor los títulos de ruta complejos y la información que podría estar en varias líneas.\n  const routeNameMatch = block.match(/\\n\\s*(\\d+)\\nRUTA\\s*(\\d+)\\s*(.*)/i);\n  if (routeNameMatch) {\n    routeData.numero_ruta = routeNameMatch[2];\n    routeData.nombre_ruta = `RUTA ${routeNameMatch[2]}${routeNameMatch[3] ? ` ${routeNameMatch[3].replace(/\\n/g, ' ').replace(/\\s+/g, ' ').trim()}` : ''}`;\n  }\n\n  // 5. EXTRAER LA DESCRIPCIÓN DEL RECORRIDO\n  // Esta expresión regular es más precisa para encontrar el recorrido.\n  // Busca el texto que va después de \"SALE DE:\" y se detiene justo antes del \"CRUCE\" o \"DE SALIDA\".\n  const descriptionMatch = block.match(/SALE DE:\\s*([\\s\\S]*?)(?=\\nCRUCE|HORA|\\n?INDEPENDECIA\\sY\\sPRIVADA|PROLONGACION GIGANTES|BLVRD NUEVO MÉXICO)/i);\n  if (descriptionMatch) {\n    routeData.descripcion_recorrido = descriptionMatch[1].replace(/\\n/g, ' ').replace(/\\s+/g, ' ').trim();\n  } else {\n    // Para el caso de la ruta 13 que no tiene el \"CRUCE\" o \"DE SALIDA\" después de la descripción.\n    const fallbackDescriptionMatch = block.match(/SALE DE:\\s*([\\s\\S]*?)(?=\\nAV. MALECON Y HEBRON)/i);\n    if (fallbackDescriptionMatch) {\n      routeData.descripcion_recorrido = fallbackDescriptionMatch[1].replace(/\\n/g, ' ').replace(/\\s+/g, ' ').trim();\n    }\n  }\n\n  // 6. EXTRAER LA LISTA DE PARADAS Y HORARIOS\n  // Usamos una expresión regular global y multilínea para encontrar todas las paradas.\n  // Ahora también maneja paradas que tienen texto adicional después de la hora.\n  const stopsRegex = /^(.+)\\s(\\d{2}:\\d{2})\\s*$/gm;\n  let match;\n  while ((match = stopsRegex.exec(block)) !== null) {\n    const cruce = match[1].trim();\n    // Filtramos líneas no deseadas.\n    if (cruce !== 'CRUCE' && cruce !== 'HORA' && !cruce.includes('SALE DE:') && !cruce.includes('(DE SALIDA')) {\n      routeData.paradas.push({\n        cruce: cruce,\n        hora: match[2].trim()\n      });\n    }\n  }\n\n// 7. Manejar la ruta 7 que tiene un formato de paradas más irregular.\n  // Se agrega una lógica específica para la última parada \"CEDIS\" que a veces no está en la línea correcta.\n  if (routeData.numero_ruta === \"7\" && routeData.paradas.length > 0 && routeData.paradas[routeData.paradas.length - 1].cruce !== 'CEDIS') {\n      const cedisMatch = block.match(/CEDIS\\s+(\\d{2}:\\d{2})$/m);\n      if (cedisMatch) {\n          routeData.paradas.push({\n              cruce: 'CEDIS',\n              hora: cedisMatch[1].trim()\n          });\n      }\n  }\n\n\n  finalResults.push({ json: routeData });\n}\n\n// 8. Devolvemos el array de objetos estructurados a n8n.\nreturn finalResults;"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -72,19 +72,6 @@
       ],
       "id": "843bc593-2bcb-4625-a7d0-d52224cd3645",
       "name": "Code"
-    },
-    {
-      "parameters": {
-        "options": {}
-      },
-      "type": "@n8n/n8n-nodes-langchain.informationExtractor",
-      "typeVersion": 1.2,
-      "position": [
-        880,
-        0
-      ],
-      "id": "9b8b1922-3310-4fa7-9d79-71025fe168d6",
-      "name": "Information Extractor"
     }
   ],
   "connections": {
@@ -123,13 +110,7 @@
     },
     "Code": {
       "main": [
-        [
-          {
-            "node": "Information Extractor",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     }
   },
@@ -141,7 +122,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "67e48af1-da9a-4276-ab5a-d57c9c319616",
+  "versionId": "b9bb0879-3cf0-49f6-b4b0-cb5316d7a1ae",
   "triggerCount": 0,
   "shared": [
     {
