@@ -1,110 +1,67 @@
 {
-  "createdAt": "2025-08-13T21:35:41.973Z",
-  "updatedAt": "2025-08-13T21:45:33.000Z",
-  "id": "E3jC2DHrsaaxxTlc",
+  "createdAt": "2025-08-14T18:57:43.269Z",
+  "updatedAt": "2025-08-14T18:57:43.269Z",
+  "id": "TLetb6BQ5KiTftsQ",
   "name": "My workflow 48",
   "active": false,
   "isArchived": false,
   "nodes": [
     {
-      "parameters": {
-        "options": {}
-      },
-      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
-      "typeVersion": 1.1,
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
       "position": [
         0,
         0
       ],
-      "id": "5968c1c0-0b53-4f71-b92a-70ef0a412fba",
-      "name": "When chat message received",
-      "webhookId": "93b23b06-7b22-4058-90b7-2d37d627bf53"
+      "id": "8dfea5e1-62da-442d-a85d-c772406f7120",
+      "name": "When clicking ‘Execute workflow’"
     },
     {
       "parameters": {
-        "options": {}
+        "jsCode": "// Simulate the JSON payload that would come from your Flask app\nconst mockPayload = {\n  \"conversation_target\": {\n    \"phone_number\": \"+1234567890\",\n    \"user_id\": \"user_123\", \n    \"name\": \"John Doe\"\n  },\n  \"conversation_config\": {\n    \"goal\": \"collect_product_feedback\",\n    \"prompt\": \"Collect detailed feedback about our new mobile app including rating, specific features used, and improvement suggestions\",\n    \"max_turns\": 8,\n    \"timeout_hours\": 24,\n    \"conversation_id\": \"conv_\" + Date.now()\n  },\n  \"context\": {\n    \"product_name\": \"MobileApp Pro\",\n    \"purchase_date\": \"2025-01-15\",\n    \"previous_interactions\": []\n  },\n  \"callback_config\": {\n    \"webhook_url\": \"https://your-flask-app.com/api/conversation-complete\",\n    \"auth_token\": \"bearer_token_here\"\n  }\n};\n\nreturn [{ json: mockPayload }];"
       },
-      "type": "@n8n/n8n-nodes-langchain.agent",
+      "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
         220,
         0
       ],
-      "id": "c56dbb26-ab3c-46b4-bae8-a8930274c4ef",
-      "name": "AI Agent"
+      "id": "5b67d418-8bda-41e7-9eb6-6a04b12e7da2",
+      "name": "Code"
     },
     {
       "parameters": {
-        "model": {
-          "__rl": true,
-          "mode": "list",
-          "value": "gpt-4.1-mini"
-        },
-        "options": {}
+        "jsCode": "// Extract the key information from the payload\nconst payload = $input.first().json;\n\n// Extract recipient information\nconst recipient = {\n  phone: payload.conversation_target.phone_number,\n  userId: payload.conversation_target.user_id,\n  name: payload.conversation_target.name\n};\n\n// Extract goal and prompt information\nconst conversationGoal = {\n  goal: payload.conversation_config.goal,\n  prompt: payload.conversation_config.prompt,\n  maxTurns: payload.conversation_config.max_turns,\n  conversationId: payload.conversation_config.conversation_id\n};\n\n// Extract context for personalization\nconst context = payload.context;\n\n// Return structured data for next steps\nreturn [{\n  json: {\n    recipient: recipient,\n    conversationGoal: conversationGoal,\n    context: context,\n    originalPayload: payload // Keep original for reference\n  }\n}];"
       },
-      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
-      "typeVersion": 1.2,
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
       "position": [
-        160,
-        200
+        440,
+        0
       ],
-      "id": "75db408c-b91d-40eb-a9f4-2c6efac5e390",
-      "name": "OpenAI Chat Model",
-      "credentials": {
-        "openAiApi": {
-          "id": "0PNoojfjNHHXEtdv",
-          "name": "Test_Agente_Soporte_Gael"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "contextWindowLength": 10
-      },
-      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
-      "typeVersion": 1.3,
-      "position": [
-        300,
-        220
-      ],
-      "id": "09c4527d-affb-4725-a55b-163d089253b6",
-      "name": "Simple Memory"
+      "id": "8cc7021c-31e9-4a39-9bc2-0bb267f7ffea",
+      "name": "Code1"
     }
   ],
   "connections": {
-    "When chat message received": {
+    "When clicking ‘Execute workflow’": {
       "main": [
         [
           {
-            "node": "AI Agent",
+            "node": "Code",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "AI Agent": {
+    "Code": {
       "main": [
-        []
-      ]
-    },
-    "OpenAI Chat Model": {
-      "ai_languageModel": [
         [
           {
-            "node": "AI Agent",
-            "type": "ai_languageModel",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Simple Memory": {
-      "ai_memory": [
-        [
-          {
-            "node": "AI Agent",
-            "type": "ai_memory",
+            "node": "Code1",
+            "type": "main",
             "index": 0
           }
         ]
@@ -115,66 +72,55 @@
     "executionOrder": "v1"
   },
   "staticData": null,
-  "meta": {
-    "templateCredsSetupCompleted": true
-  },
+  "meta": null,
   "pinData": {},
-  "versionId": "185f0e21-6e54-4039-8589-1d718104a11c",
+  "versionId": "6fdaa6f2-2ebf-4dce-9bba-fa0a2b954981",
   "triggerCount": 0,
   "shared": [
     {
-      "createdAt": "2025-08-13T21:35:41.981Z",
-      "updatedAt": "2025-08-13T21:35:41.981Z",
+      "createdAt": "2025-08-14T18:57:43.284Z",
+      "updatedAt": "2025-08-14T18:57:43.284Z",
       "role": "workflow:owner",
-      "workflowId": "E3jC2DHrsaaxxTlc",
-      "projectId": "6D91TcMmlphV2lVS",
+      "workflowId": "TLetb6BQ5KiTftsQ",
+      "projectId": "BsYMJSPwury6TiTn",
       "project": {
-        "createdAt": "2025-07-14T23:58:54.932Z",
-        "updatedAt": "2025-07-15T00:03:17.549Z",
-        "id": "6D91TcMmlphV2lVS",
-        "name": "Gael  Graciano <gael.graciano@canteradigital.mx>",
+        "createdAt": "2025-06-06T20:24:22.277Z",
+        "updatedAt": "2025-06-06T21:09:46.835Z",
+        "id": "BsYMJSPwury6TiTn",
+        "name": "adolfo huerta <adolfocuentas123@gmail.com>",
         "type": "personal",
         "icon": null,
         "description": null,
         "projectRelations": [
           {
-            "createdAt": "2025-07-14T23:58:54.935Z",
-            "updatedAt": "2025-07-14T23:58:54.935Z",
+            "createdAt": "2025-06-06T20:24:22.278Z",
+            "updatedAt": "2025-06-06T20:24:22.278Z",
             "role": "project:personalOwner",
-            "userId": "bff7f19f-b5be-48d6-aea2-dfc3de153ccc",
-            "projectId": "6D91TcMmlphV2lVS",
+            "userId": "f9268337-0922-4cba-994c-bf6b40332731",
+            "projectId": "BsYMJSPwury6TiTn",
             "user": {
-              "createdAt": "2025-07-14T23:58:54.930Z",
-              "updatedAt": "2025-08-06T23:15:33.615Z",
-              "id": "bff7f19f-b5be-48d6-aea2-dfc3de153ccc",
-              "email": "gael.graciano@canteradigital.mx",
-              "firstName": "Gael ",
-              "lastName": "Graciano",
+              "createdAt": "2025-06-06T20:24:22.275Z",
+              "updatedAt": "2025-06-18T03:10:17.057Z",
+              "id": "f9268337-0922-4cba-994c-bf6b40332731",
+              "email": "adolfocuentas123@gmail.com",
+              "firstName": "adolfo",
+              "lastName": "huerta",
               "personalizationAnswers": {
                 "version": "v4",
-                "personalization_survey_submitted_at": "2025-07-15T00:12:22.917Z",
-                "personalization_survey_n8n_version": "1.100.1",
-                "automationGoalDevops": [
-                  "other",
-                  "ticketing-systems-integrations",
-                  "cloud-infrastructure-orchestration"
-                ],
-                "companySize": "100-499",
+                "personalization_survey_submitted_at": "2025-06-06T21:09:59.993Z",
+                "personalization_survey_n8n_version": "1.92.2",
+                "companySize": "<20",
                 "companyType": "saas",
-                "role": "devops",
-                "reportedSource": "event"
+                "role": "business-owner",
+                "reportedSource": "twitter"
               },
               "settings": {
-                "easyAIWorkflowOnboarded": true,
-                "firstSuccessfulWorkflowId": "j0Fiqu3Vwfp6hOC3",
+                "firstSuccessfulWorkflowId": "k6PApGOzpLKtnZ0q",
                 "userActivated": true,
-                "userActivatedAt": 1753839716307,
+                "userActivatedAt": 1749594629341,
                 "npsSurvey": {
                   "responded": true,
-                  "lastShownAt": 1754337405043
-                },
-                "dismissedCallouts": {
-                  "aiAgentStarterCallout": true
+                  "lastShownAt": 1750216203399
                 }
               },
               "role": "global:member",
