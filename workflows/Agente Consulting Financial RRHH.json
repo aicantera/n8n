@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-08-08T22:01:23.225Z",
-  "updatedAt": "2025-08-12T23:39:17.000Z",
+  "updatedAt": "2025-08-15T18:11:52.000Z",
   "id": "KhIu4XZ1rR2d7zqy",
   "name": "Agente Consulting Financial RRHH",
   "active": true,
@@ -16,8 +16,8 @@
       "type": "n8n-nodes-base.telegramTrigger",
       "typeVersion": 1.2,
       "position": [
-        120,
-        20
+        640,
+        -60
       ],
       "id": "3ab7a0d5-a23a-4191-ba42-9d07cac4c816",
       "name": "Telegram Trigger",
@@ -28,35 +28,6 @@
           "name": "Telegram Consulting Financial RRHH"
         }
       }
-    },
-    {
-      "parameters": {
-        "assignments": {
-          "assignments": [
-            {
-              "id": "9d136c1e-31ba-40a5-abbe-edbe9ec363f7",
-              "name": "mensaje",
-              "value": "={{ $json.message.text }}",
-              "type": "string"
-            },
-            {
-              "id": "72403aea-dec7-4678-a5ac-ae4f0702520d",
-              "name": "tipo_mensaje",
-              "value": "mensaje del usuario",
-              "type": "string"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
-      "position": [
-        740,
-        80
-      ],
-      "id": "85fa88f1-659c-4784-9d16-531fddbd9b95",
-      "name": "Edit Fields"
     },
     {
       "parameters": {
@@ -603,104 +574,6 @@
     },
     {
       "parameters": {
-        "conditions": {
-          "options": {
-            "caseSensitive": true,
-            "leftValue": "",
-            "typeValidation": "strict",
-            "version": 2
-          },
-          "conditions": [
-            {
-              "id": "a1280453-6a56-4b6f-9b30-93fb2912e0a6",
-              "leftValue": "={{ $json.message.document }}",
-              "rightValue": "",
-              "operator": {
-                "type": "object",
-                "operation": "exists",
-                "singleValue": true
-              }
-            }
-          ],
-          "combinator": "and"
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 2.2,
-      "position": [
-        320,
-        -80
-      ],
-      "id": "47e522e4-bca1-4ca4-99d6-4b0c315a42c7",
-      "name": "revisar si es documento"
-    },
-    {
-      "parameters": {
-        "resource": "file",
-        "fileId": "={{ $json.message.document.file_id }}"
-      },
-      "type": "n8n-nodes-base.telegram",
-      "typeVersion": 1.2,
-      "position": [
-        560,
-        -220
-      ],
-      "id": "a0fea460-0a97-41e0-a35f-3f96d150db0f",
-      "name": "Get a file",
-      "webhookId": "316beac9-3844-464f-87f5-bffec2ef3454",
-      "credentials": {
-        "telegramApi": {
-          "id": "mIaRqusXRT4FiDP4",
-          "name": "Telegram Consulting Financial RRHH"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "operation": "pdf",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.extractFromFile",
-      "typeVersion": 1,
-      "position": [
-        780,
-        -300
-      ],
-      "id": "1031ae6d-16fe-4888-8adf-c9639881ea09",
-      "name": "Extract from File"
-    },
-    {
-      "parameters": {
-        "assignments": {
-          "assignments": [
-            {
-              "id": "9d136c1e-31ba-40a5-abbe-edbe9ec363f7",
-              "name": "mensaje",
-              "value": "={{ $json.text }}",
-              "type": "string"
-            },
-            {
-              "id": "72403aea-dec7-4678-a5ac-ae4f0702520d",
-              "name": "tipo_mensaje",
-              "value": "archivo_pdf",
-              "type": "string"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
-      "position": [
-        740,
-        -60
-      ],
-      "id": "e6209aa2-4273-4be8-ba39-8a56fa8d287a",
-      "name": "Edit Fields1"
-    },
-    {
-      "parameters": {
         "workflowId": {
           "__rl": true,
           "value": "yKKCgAN0FO4B96Bn",
@@ -745,31 +618,8 @@
         280
       ],
       "id": "99a02419-e2a4-4346-b970-45ee8568d94a",
-      "name": "Call n8n Workflow Tool"
-    },
-    {
-      "parameters": {
-        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
-        "text": "¡Perfecto! Dame un momento, estoy revisando tu CV y en seguida te digo 😊",
-        "additionalFields": {
-          "appendAttribution": false
-        }
-      },
-      "type": "n8n-nodes-base.telegram",
-      "typeVersion": 1.2,
-      "position": [
-        560,
-        -420
-      ],
-      "id": "c2c3510a-2a3f-4506-977c-74d405e8187e",
-      "name": "Send a text message1",
-      "webhookId": "824a539f-813a-4268-919c-aa71182b3aa5",
-      "credentials": {
-        "telegramApi": {
-          "id": "mIaRqusXRT4FiDP4",
-          "name": "Telegram Consulting Financial RRHH"
-        }
-      }
+      "name": "Call n8n Workflow Tool",
+      "disabled": true
     },
     {
       "parameters": {
@@ -972,17 +822,6 @@
       "main": [
         [
           {
-            "node": "revisar si es documento",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Edit Fields": {
-      "main": [
-        [
-          {
             "node": "AI Agent",
             "type": "main",
             "index": 0
@@ -1050,62 +889,6 @@
         ]
       ]
     },
-    "revisar si es documento": {
-      "main": [
-        [
-          {
-            "node": "Get a file",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Send a text message1",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Edit Fields",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Get a file": {
-      "main": [
-        [
-          {
-            "node": "Extract from File",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Extract from File": {
-      "main": [
-        [
-          {
-            "node": "Edit Fields1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Edit Fields1": {
-      "main": [
-        [
-          {
-            "node": "AI Agent",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Call n8n Workflow Tool": {
       "ai_tool": [
         [
@@ -1149,7 +932,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "390163a3-ea22-4211-9746-f880165741fa",
+  "versionId": "ea82bd0e-4aa3-41fb-8be3-4d4c9258f207",
   "triggerCount": 1,
   "shared": [
     {
