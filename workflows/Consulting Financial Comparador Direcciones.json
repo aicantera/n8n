@@ -1,19 +1,118 @@
 {
   "createdAt": "2025-08-15T18:12:56.636Z",
-  "updatedAt": "2025-08-15T18:12:56.636Z",
+  "updatedAt": "2025-08-15T19:47:15.000Z",
   "id": "VFvEQwvxizzpS1Wm",
   "name": "Consulting Financial Comparador Direcciones",
   "active": false,
   "isArchived": false,
-  "nodes": [],
-  "connections": {},
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "direccion_candidato"
+            },
+            {
+              "name": "direccion_empresa"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "2b3581f3-fb0d-4aa5-a158-f4d5be8ebfce",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "url": "https://maps.googleapis.com/maps/api/geocode/json",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "address",
+              "value": "=PARQUE INDUSTRIAL ADVANCE NAVE 12, POR AGAVES, Guadalajara, Jalisco, México"
+            },
+            {
+              "name": "key",
+              "value": "AIzaSyDBsA-93QjipM-2zgXhGYq1VGeBbwqUVUU"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        240,
+        100
+      ],
+      "id": "53346784-d42f-4455-b4bf-45a7f067c890",
+      "name": "Geocode Empresa"
+    },
+    {
+      "parameters": {
+        "url": "https://maps.googleapis.com/maps/api/geocode/json",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "address",
+              "value": "tlajomulco"
+            },
+            {
+              "name": "key",
+              "value": "AIzaSyDBsA-93QjipM-2zgXhGYq1VGeBbwqUVUU"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        240,
+        -80
+      ],
+      "id": "2366ce87-6a6a-4b3f-b7ad-4e1e83094e23",
+      "name": "Geocode Candidato"
+    }
+  ],
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Geocode Empresa",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Geocode Candidato",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Geocode Empresa": {
+      "main": [
+        []
+      ]
+    }
+  },
   "settings": {
     "executionOrder": "v1"
   },
   "staticData": null,
   "meta": null,
   "pinData": {},
-  "versionId": "c6f71a74-34dd-4db7-b1aa-392448411fd7",
+  "versionId": "081f1723-d37d-4c36-a13e-5f1323c84836",
   "triggerCount": 0,
   "shared": [
     {
