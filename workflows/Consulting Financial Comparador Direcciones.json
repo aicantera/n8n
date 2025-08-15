@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-08-15T18:12:56.636Z",
-  "updatedAt": "2025-08-15T19:47:15.000Z",
+  "updatedAt": "2025-08-15T20:28:15.000Z",
   "id": "VFvEQwvxizzpS1Wm",
   "name": "Consulting Financial Comparador Direcciones",
   "active": false,
@@ -36,7 +36,7 @@
           "parameters": [
             {
               "name": "address",
-              "value": "=PARQUE INDUSTRIAL ADVANCE NAVE 12, POR AGAVES, Guadalajara, Jalisco, México"
+              "value": "={{ $json.direccion_empresa }}"
             },
             {
               "name": "key",
@@ -49,8 +49,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        240,
-        100
+        260,
+        0
       ],
       "id": "53346784-d42f-4455-b4bf-45a7f067c890",
       "name": "Geocode Empresa"
@@ -63,7 +63,7 @@
           "parameters": [
             {
               "name": "address",
-              "value": "tlajomulco"
+              "value": "={{ $('When Executed by Another Workflow').item.json.direccion_candidato }}"
             },
             {
               "name": "key",
@@ -76,11 +76,79 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        240,
-        -80
+        480,
+        0
       ],
       "id": "2366ce87-6a6a-4b3f-b7ad-4e1e83094e23",
       "name": "Geocode Candidato"
+    },
+    {
+      "parameters": {
+        "url": "https://maps.googleapis.com/maps/api/distancematrix/json",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "origins",
+              "value": "={{$node[\"Geocode Candidato\"].json[\"results\"][0][\"geometry\"][\"location\"][\"lat\"]}},{{$node[\"Geocode Candidato\"].json[\"results\"][0][\"geometry\"][\"location\"][\"lng\"]}}"
+            },
+            {
+              "name": "destinations",
+              "value": "={{$node[\"Geocode Empresa\"].json[\"results\"][0][\"geometry\"][\"location\"][\"lat\"]}},{{$node[\"Geocode Empresa\"].json[\"results\"][0][\"geometry\"][\"location\"][\"lng\"]}}"
+            },
+            {
+              "name": "key",
+              "value": "AIzaSyDBsA-93QjipM-2zgXhGYq1VGeBbwqUVUU"
+            },
+            {
+              "name": "units",
+              "value": "metric"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        700,
+        0
+      ],
+      "id": "923914d5-1c46-4a51-a2d2-54ddb07aec75",
+      "name": "Calcular Distancia"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "c587ca31-072e-45c4-b799-1abc5847cb20",
+              "leftValue": "={{$node[\"Calcular Distancia\"].json[\"rows\"][0][\"elements\"][0][\"distance\"][\"value\"]}}",
+              "rightValue": 30000,
+              "operator": {
+                "type": "number",
+                "operation": "lte"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        920,
+        0
+      ],
+      "id": "21b16be9-0e78-4f5f-8d31-f24c1baf8d34",
+      "name": "If"
     }
   ],
   "connections": {
@@ -91,7 +159,13 @@
             "node": "Geocode Empresa",
             "type": "main",
             "index": 0
-          },
+          }
+        ]
+      ]
+    },
+    "Geocode Empresa": {
+      "main": [
+        [
           {
             "node": "Geocode Candidato",
             "type": "main",
@@ -100,9 +174,26 @@
         ]
       ]
     },
-    "Geocode Empresa": {
+    "Geocode Candidato": {
       "main": [
-        []
+        [
+          {
+            "node": "Calcular Distancia",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calcular Distancia": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     }
   },
@@ -111,8 +202,17 @@
   },
   "staticData": null,
   "meta": null,
-  "pinData": {},
-  "versionId": "081f1723-d37d-4c36-a13e-5f1323c84836",
+  "pinData": {
+    "When Executed by Another Workflow": [
+      {
+        "json": {
+          "direccion_candidato": "tlajomulco",
+          "direccion_empresa": "PARQUE INDUSTRIAL ADVANCE, Guadalajara"
+        }
+      }
+    ]
+  },
+  "versionId": "e5ad45fa-8c60-41df-aead-b33399c2af1e",
   "triggerCount": 0,
   "shared": [
     {
