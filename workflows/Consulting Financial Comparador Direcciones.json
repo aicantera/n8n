@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-08-15T18:12:56.636Z",
-  "updatedAt": "2025-08-16T00:48:19.000Z",
+  "updatedAt": "2025-08-16T01:29:47.000Z",
   "id": "VFvEQwvxizzpS1Wm",
   "name": "Consulting Financial Comparador Direcciones",
   "active": false,
@@ -46,7 +46,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        960,
+        1400,
         240
       ],
       "id": "53346784-d42f-4455-b4bf-45a7f067c890",
@@ -73,7 +73,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        1180,
+        1620,
         240
       ],
       "id": "2366ce87-6a6a-4b3f-b7ad-4e1e83094e23",
@@ -108,7 +108,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        1400,
+        1840,
         240
       ],
       "id": "923914d5-1c46-4a51-a2d2-54ddb07aec75",
@@ -141,7 +141,7 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        1620,
+        2060,
         240
       ],
       "id": "21b16be9-0e78-4f5f-8d31-f24c1baf8d34",
@@ -188,7 +188,7 @@
       "typeVersion": 3,
       "position": [
         440,
-        225
+        220
       ],
       "id": "c89e3698-4497-44ff-ba76-22bd741386da",
       "name": "Loop Over Items"
@@ -264,7 +264,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        740,
+        1180,
         240
       ],
       "id": "001f66f9-2d5a-4008-8abf-06ffd82c9a88",
@@ -341,7 +341,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        1860,
+        2300,
         280
       ],
       "id": "7eba5596-f1db-4f07-b115-1c42ef746bac",
@@ -418,7 +418,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        1820,
+        2260,
         500
       ],
       "id": "3ec71007-407a-4fa5-bfed-92c5a6e5d479",
@@ -441,8 +441,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        740,
-        60
+        260,
+        -160
       ],
       "id": "38e59188-a4f9-4359-ad19-e504788aab59",
       "name": "Edit Fields3"
@@ -454,7 +454,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        920,
+        460,
         -160
       ],
       "id": "9181e664-84b2-43bc-85a6-ff0da242a343",
@@ -463,50 +463,16 @@
     },
     {
       "parameters": {
-        "promptType": "define",
-        "text": "={{ $json }}",
-        "messages": {
-          "messageValues": [
-            {
-              "message": "Generame un json limpio en el cual elimines la referencia 'Data:' y me quites los arreglos que tengan datos con 'No aplica', de tal manera que el resultado final sea un json iterativo"
-            }
-          ]
-        },
-        "batching": {}
+        "jsCode": "// Crea un array vacío para guardar todos los objetos.\nconst listadoCompleto = [];\n\n// La variable 'items' contiene todos los resultados\n// que llegaron desde el bucle.\n// Recorremos cada uno de esos resultados.\nfor (const item of items) {\n  // De cada resultado, tomamos su objeto 'json' y lo\n  // añadimos a nuestro listado.\n  if(item.json.EMPRESA != \"No aplica\"){\n    listadoCompleto.push(item.json);\n  }\n  \n}\n\n// Finalmente, devolvemos un único resultado.\n// Este resultado es un objeto que contiene nuestro listado completo.\nreturn listadoCompleto.map(obj => ({ json: obj }));"
       },
-      "type": "@n8n/n8n-nodes-langchain.chainLlm",
-      "typeVersion": 1.7,
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
       "position": [
-        1080,
-        -60
-      ],
-      "id": "bc9e4d2e-3d9b-490d-ac2e-475a00240c44",
-      "name": "Basic LLM Chain"
-    },
-    {
-      "parameters": {
-        "model": {
-          "__rl": true,
-          "value": "gpt-4o-mini",
-          "mode": "list",
-          "cachedResultName": "gpt-4o-mini"
-        },
-        "options": {}
-      },
-      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
-      "typeVersion": 1.2,
-      "position": [
-        1040,
+        660,
         120
       ],
-      "id": "8cabc08b-d083-48ab-8d33-d35908b9ac6a",
-      "name": "OpenAI Chat Model",
-      "credentials": {
-        "openAiApi": {
-          "id": "1TjiA4FyreMw0tyV",
-          "name": "OpenAi Agente Consulting Financial Key "
-        }
-      }
+      "id": "9b7734aa-ede7-44e9-8fa2-be4c8fe0f7ce",
+      "name": "Code1"
     }
   ],
   "connections": {
@@ -569,7 +535,7 @@
       "main": [
         [
           {
-            "node": "Edit Fields3",
+            "node": "Code1",
             "type": "main",
             "index": 0
           }
@@ -641,24 +607,13 @@
             "node": "Code",
             "type": "main",
             "index": 0
-          },
-          {
-            "node": "Basic LLM Chain",
-            "type": "main",
-            "index": 0
           }
         ]
       ]
     },
-    "OpenAI Chat Model": {
-      "ai_languageModel": [
-        [
-          {
-            "node": "Basic LLM Chain",
-            "type": "ai_languageModel",
-            "index": 0
-          }
-        ]
+    "Code1": {
+      "main": [
+        []
       ]
     }
   },
@@ -678,7 +633,7 @@
       }
     ]
   },
-  "versionId": "5a9f075d-0c90-47fd-ad43-bed63de13f93",
+  "versionId": "9624a49f-2e31-4624-acf1-dc30afb18ff2",
   "triggerCount": 0,
   "shared": [
     {
