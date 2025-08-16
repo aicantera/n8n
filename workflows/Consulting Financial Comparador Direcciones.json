@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-08-15T18:12:56.636Z",
-  "updatedAt": "2025-08-15T20:28:15.000Z",
+  "updatedAt": "2025-08-15T23:54:38.000Z",
   "id": "VFvEQwvxizzpS1Wm",
   "name": "Consulting Financial Comparador Direcciones",
   "active": false,
@@ -12,9 +12,6 @@
           "values": [
             {
               "name": "direccion_candidato"
-            },
-            {
-              "name": "direccion_empresa"
             }
           ]
         }
@@ -36,7 +33,7 @@
           "parameters": [
             {
               "name": "address",
-              "value": "={{ $json.direccion_empresa }}"
+              "value": "={{ $json['UBICACIÓN'] }}"
             },
             {
               "name": "key",
@@ -49,8 +46,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        260,
-        0
+        660,
+        60
       ],
       "id": "53346784-d42f-4455-b4bf-45a7f067c890",
       "name": "Geocode Empresa"
@@ -76,8 +73,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        480,
-        0
+        860,
+        60
       ],
       "id": "2366ce87-6a6a-4b3f-b7ad-4e1e83094e23",
       "name": "Geocode Candidato"
@@ -111,8 +108,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        700,
-        0
+        1060,
+        60
       ],
       "id": "923914d5-1c46-4a51-a2d2-54ddb07aec75",
       "name": "Calcular Distancia"
@@ -130,7 +127,7 @@
             {
               "id": "c587ca31-072e-45c4-b799-1abc5847cb20",
               "leftValue": "={{$node[\"Calcular Distancia\"].json[\"rows\"][0][\"elements\"][0][\"distance\"][\"value\"]}}",
-              "rightValue": 30000,
+              "rightValue": 50000,
               "operator": {
                 "type": "number",
                 "operation": "lte"
@@ -144,11 +141,57 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        920,
-        0
+        1240,
+        60
       ],
       "id": "21b16be9-0e78-4f5f-8d31-f24c1baf8d34",
       "name": "If"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1jFvPYGQQvi5FBudCgpJEyPY5NZPgVPRmsd5Kf7Q4inI",
+          "mode": "list",
+          "cachedResultName": "vacantes_prueba",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1jFvPYGQQvi5FBudCgpJEyPY5NZPgVPRmsd5Kf7Q4inI/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1jFvPYGQQvi5FBudCgpJEyPY5NZPgVPRmsd5Kf7Q4inI/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        240,
+        0
+      ],
+      "id": "b86cd3d6-1d42-4415-b1c9-97c24bb35ab3",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "T1b495TNgv7GQdA8",
+          "name": "Google Sheets Jumperaron"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        460,
+        0
+      ],
+      "id": "c89e3698-4497-44ff-ba76-22bd741386da",
+      "name": "Loop Over Items"
     }
   ],
   "connections": {
@@ -156,7 +199,7 @@
       "main": [
         [
           {
-            "node": "Geocode Empresa",
+            "node": "Get row(s) in sheet",
             "type": "main",
             "index": 0
           }
@@ -195,24 +238,59 @@
           }
         ]
       ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Geocode Empresa",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
     "executionOrder": "v1"
   },
   "staticData": null,
-  "meta": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
   "pinData": {
     "When Executed by Another Workflow": [
       {
         "json": {
-          "direccion_candidato": "tlajomulco",
-          "direccion_empresa": "PARQUE INDUSTRIAL ADVANCE, Guadalajara"
+          "direccion_candidato": "tlajomulco"
         }
       }
     ]
   },
-  "versionId": "e5ad45fa-8c60-41df-aead-b33399c2af1e",
+  "versionId": "0d13e7db-39ce-44b1-9d45-a60f65d28025",
   "triggerCount": 0,
   "shared": [
     {
