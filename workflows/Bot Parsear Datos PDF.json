@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-08-13T21:35:41.973Z",
-  "updatedAt": "2025-08-14T21:18:41.000Z",
+  "updatedAt": "2025-08-15T23:17:16.000Z",
   "id": "E3jC2DHrsaaxxTlc",
   "name": "Bot Parsear Datos PDF",
   "active": false,
@@ -120,8 +120,8 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        860,
-        -100
+        1120,
+        -240
       ],
       "id": "8571234c-372c-42e4-b2a7-3e681ba78bab",
       "name": "Send a photo message",
@@ -148,8 +148,8 @@
       "type": "n8n-nodes-base.googleDrive",
       "typeVersion": 3,
       "position": [
-        600,
-        -100
+        920,
+        -260
       ],
       "id": "f2f78c8c-ffb6-4e32-aa14-e6267df76321",
       "name": "Download file",
@@ -170,8 +170,8 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        860,
-        60
+        1200,
+        -140
       ],
       "id": "90cdfd96-5128-4297-926a-2cc8b5e12eb4",
       "name": "Send a document",
@@ -180,6 +180,69 @@
         "telegramApi": {
           "id": "M4yT4PHnQvsP26j3",
           "name": "Bot_Pruebas_Gael"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "toolDescription": "",
+        "method": "POST",
+        "url": "={{ $fromAI('URL', ``, 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.2,
+      "position": [
+        460,
+        20
+      ],
+      "id": "a4909182-8552-48c1-9cb4-8b9faefe1163",
+      "name": "HTTP Request",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "1Wa7_7R-dYMvBL8scgygR9Fj75w1Gkh8s",
+          "mode": "list",
+          "cachedResultName": "FARMACIAS GDL VESPERTINO-1-1.pdf",
+          "cachedResultUrl": "https://drive.google.com/file/d/1Wa7_7R-dYMvBL8scgygR9Fj75w1Gkh8s/view?usp=drivesdk"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDriveTool",
+      "typeVersion": 3,
+      "position": [
+        620,
+        80
+      ],
+      "id": "c0caa06a-028d-4ef1-a544-d38186afb29d",
+      "name": "Download file in Google Drive",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "1P9PgyGmxd7ggSGM",
+          "name": "Gael Extraer Datos PDF"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "simple": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Simplify', ``, 'boolean') }}"
+      },
+      "type": "n8n-nodes-base.awsTextractTool",
+      "typeVersion": 1,
+      "position": [
+        780,
+        100
+      ],
+      "id": "afd3081d-5289-4813-a41e-554964169308",
+      "name": "AWS Textract",
+      "credentials": {
+        "aws": {
+          "id": "Bck8QEdgOMGYPmOn",
+          "name": "Gael AWS"
         }
       }
     }
@@ -201,11 +264,6 @@
         [
           {
             "node": "Send a text message",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Download file",
             "type": "main",
             "index": 0
           }
@@ -264,6 +322,39 @@
       "main": [
         []
       ]
+    },
+    "HTTP Request": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download file in Google Drive": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AWS Textract": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -274,7 +365,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "da9424ee-6f6b-4ffc-b7fb-94a2fd54dd46",
+  "versionId": "2132264d-a31f-4368-9e51-adc07c7aa528",
   "triggerCount": 1,
   "shared": [
     {
