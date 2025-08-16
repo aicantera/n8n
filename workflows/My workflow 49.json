@@ -1,179 +1,199 @@
 {
-  "createdAt": "2025-08-16T02:20:43.281Z",
-  "updatedAt": "2025-08-16T02:20:43.281Z",
-  "id": "nKsl8HScpAytB2m6",
+  "createdAt": "2025-08-15T17:36:38.156Z",
+  "updatedAt": "2025-08-15T17:36:38.156Z",
+  "id": "7PfXzdEUL7M1R8sj",
   "name": "My workflow 49",
   "active": false,
   "isArchived": false,
   "nodes": [
     {
-      "parameters": {},
-      "id": "47146f95-a878-4d28-bb86-750d053a4a7c",
-      "name": "On clicking 'execute'",
-      "type": "n8n-nodes-base.manualTrigger",
+      "parameters": {
+        "path": "a227afae-e16e-44c2-bb5c-e69fe553b455",
+        "options": {}
+      },
+      "id": "0d2222a1-e85c-4d63-bc95-d166561c4016",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
       "position": [
-        360,
-        140
+        220,
+        100
+      ],
+      "webhookId": "a227afae-e16e-44c2-bb5c-e69fe553b455",
+      "typeVersion": 2
+    },
+    {
+      "parameters": {},
+      "id": "16e45b6f-97bf-40fd-ba91-23ba248aba4a",
+      "name": "continue with valid token",
+      "type": "n8n-nodes-base.noOp",
+      "position": [
+        1380,
+        180
       ],
       "typeVersion": 1
     },
     {
       "parameters": {
-        "options": {}
-      },
-      "id": "9f80c3e5-aebd-4d0d-b354-7385a21ba069",
-      "name": "Loop Over Items",
-      "type": "n8n-nodes-base.splitInBatches",
-      "position": [
-        1120,
-        240
-      ],
-      "typeVersion": 3
-    },
-    {
-      "parameters": {
-        "rule": {
-          "interval": [
-            {
-              "field": "hours",
-              "hoursInterval": 5
+        "url": "http://your-api.com",
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true
             }
-          ]
+          }
         }
       },
-      "id": "a65e0fff-d437-4801-adaf-988a3cd261d6",
-      "name": "Schedule Trigger",
-      "type": "n8n-nodes-base.scheduleTrigger",
+      "id": "1dfc131a-7bf9-4e09-aacd-57ecbe5144b2",
+      "name": "get new accessToken",
+      "type": "n8n-nodes-base.httpRequest",
       "position": [
-        360,
-        340
+        920,
+        300
       ],
-      "typeVersion": 1.2,
+      "notesInFlow": false,
+      "typeVersion": 4.2,
       "disabled": true
     },
     {
       "parameters": {
-        "content": "## Flujo Inicial",
-        "height": 655,
-        "width": 1289,
-        "color": 7
+        "jsCode": "const workflowStaticData = $getWorkflowStaticData('global');\n\n// get new access token\nworkflowStaticData.accessToken = \"statuic\"\n// set timestamp of new access token\nworkflowStaticData.timestamp = $now.toISO().toString();\n\nreturn [\n  {\n      // data: $input.all(),\n      accessToken: workflowStaticData.accessToken,\n      timestamp: workflowStaticData.timestamp,\n      // today: $today\n  }\n];"
       },
-      "id": "19ba06de-f35d-44fd-8d7d-29fa27fe9776",
-      "name": "Sticky Note2",
-      "type": "n8n-nodes-base.stickyNote",
-      "position": [
-        320,
-        40
-      ],
-      "typeVersion": 1
-    },
-    {
-      "parameters": {
-        "command": "npx n8n export:credentials --all --decrypted"
-      },
-      "id": "93dcccc2-f16f-40d8-8593-0d21897a565b",
-      "name": "Execute Command",
-      "type": "n8n-nodes-base.executeCommand",
-      "position": [
-        580,
-        140
-      ],
-      "typeVersion": 1
-    },
-    {
-      "parameters": {
-        "jsCode": "// Function to beautify JSON\nfunction beautifyJson(jsonString) {\n  try {\n    // Parse the JSON string\n    const jsonObject = JSON.parse(jsonString);\n\n    // Format the JSON with indentation\n    return jsonObject; // Return the parsed object directly\n  } catch (error) {\n    // Return the error message if JSON is invalid\n    return `Invalid JSON: ${error.message}`;\n  }\n}\n\n// Retrieve the JSON object from the input data\nconst input = $input.all()[0].json;\n\n// Extract the JSON string from the stdout field\nconst jsonString = input.stdout.match(/\\[{.*}\\]/s);\n\n// Check if a valid JSON string is found\nif (!jsonString) {\n  return {\n    json: {\n      error: \"No valid JSON string found in stdout.\"\n    }\n  };\n}\n\n// Beautify the JSON\nconst beautifiedJson = beautifyJson(jsonString[0]);\n\n// Output the beautified JSON, ensuring each entry is in an object with a 'json' key\nconst output = beautifiedJson.map(entry => ({ json: entry }));\n\n// Return the output\nreturn output;\n"
-      },
-      "id": "7510de49-32a6-4824-af51-69e754c2dd2f",
-      "name": "JSON formatting",
+      "id": "a441bd81-5d05-43d6-9a34-05e6f7bb3101",
+      "name": "2. set token in static data",
       "type": "n8n-nodes-base.code",
       "position": [
-        780,
-        140
+        1140,
+        300
       ],
       "typeVersion": 2
     },
     {
       "parameters": {
-        "workflowId": "re6hWVLabWhzHoDQ",
-        "mode": "each",
-        "options": {}
+        "rule": {
+          "interval": [
+            {}
+          ]
+        }
       },
-      "id": "74b3bec9-e977-48fd-88c6-822ebce4311d",
-      "name": "Execute Workflow",
-      "type": "n8n-nodes-base.executeWorkflow",
+      "id": "17ccb34f-0d5e-4e79-8481-6477107a78be",
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
       "position": [
-        1420,
-        240
+        220,
+        260
+      ],
+      "typeVersion": 1.2
+    },
+    {
+      "parameters": {
+        "content": "# StaticData Demo\n\n\nThis workflow demonstrates how to use the [`workflowStaticData()` function](https://docs.n8n.io/code/cookbook/builtin/get-workflow-static-data/\n) to set any type of variable that will persist within workflow executions. \n\nThis can be useful for working with access tokens that expire after a certain time period. \n\nhttps://docs.n8n.io/code/cookbook/builtin/get-workflow-static-data/\n\n## Important\n\nStatic Data only persists across **_production_** executions, i.e. triggered by Webhooks or Schedule Triggers (not manual executions!)\nFor this the workflow will have to be activated. \n\n\n\n",
+        "height": 400,
+        "width": 660
+      },
+      "id": "ec598efe-b609-433c-b5e5-ad9a80b0d887",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        180,
+        460
       ],
       "typeVersion": 1
     },
     {
       "parameters": {
-        "filters": {},
-        "requestOptions": {}
+        "content": "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n### HTTP Request\n\nToggle \n`Include Response Headers and Status` \noption if access token is not sent in the body",
+        "height": 420,
+        "width": 180,
+        "color": 5
       },
-      "type": "n8n-nodes-base.n8n",
-      "typeVersion": 1,
+      "id": "1c40bc1b-de7b-442a-aed0-84e8545260d7",
+      "name": "Sticky Note1",
+      "type": "n8n-nodes-base.stickyNote",
       "position": [
-        680,
-        340
-      ],
-      "id": "46203992-104b-403f-b24b-117968938630",
-      "name": "n8n"
-    },
-    {
-      "parameters": {
-        "options": {}
-      },
-      "id": "ef625cb7-3c46-4c68-b57d-2f10d15da79f",
-      "name": "Loop Over Items1",
-      "type": "n8n-nodes-base.splitInBatches",
-      "position": [
-        1000,
-        520
-      ],
-      "typeVersion": 3
-    },
-    {
-      "parameters": {
-        "workflowId": "=re6hWVLabWhzHoDQ",
-        "mode": "each",
-        "options": {}
-      },
-      "id": "11ed2622-74ba-495c-b335-4697bad3f7dc",
-      "name": "Execute Workflow1",
-      "type": "n8n-nodes-base.executeWorkflow",
-      "position": [
-        1380,
-        480
+        860,
+        260
       ],
       "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "loose"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "65f5c979-3e7d-4e50-92c3-3ae39f1bba3d",
+              "operator": {
+                "type": "dateTime",
+                "operation": "afterOrEquals"
+              },
+              "leftValue": "={{ $json.timestamp }}",
+              "rightValue": "={{ $now.minus(1,'minute') }}"
+            }
+          ]
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "id": "f2bc739e-6642-4d7e-8fde-24e3d67faac1",
+      "name": "if token is valid",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        700,
+        180
+      ],
+      "notesInFlow": true,
+      "typeVersion": 2.2,
+      "notes": "(1 minute expiration)"
+    },
+    {
+      "parameters": {
+        "jsCode": "// initialize staticData object\nconst workflowStaticData = $getWorkflowStaticData('global');\n\n// initialize accessToken on staticData if it desn't exist yet\nif (!workflowStaticData.hasOwnProperty('accessToken')) {\n  workflowStaticData.accessToken = 0\n}\n\n// initializing any other variables on the staticData object\nif (!workflowStaticData.hasOwnProperty('timestamp')) {\n  workflowStaticData.timestamp = $now.toISO()\n}\n\nreturn [\n  {\n      // data: $input.all(),\n      accessToken: workflowStaticData.accessToken,\n      timestamp: workflowStaticData.timestamp,\n      // today: $today\n  }\n];"
+      },
+      "id": "2b112929-b61c-48c5-b4f2-0ba1b864b268",
+      "name": "1. initiate static data",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        460,
+        180
+      ],
+      "notesInFlow": false,
+      "typeVersion": 2
     }
   ],
   "connections": {
-    "On clicking 'execute'": {
+    "Webhook": {
       "main": [
         [
           {
-            "node": "n8n",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Execute Command",
+            "node": "1. initiate static data",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Loop Over Items": {
+    "get new accessToken": {
       "main": [
-        [],
         [
           {
-            "node": "Execute Workflow",
+            "node": "2. set token in static data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "2. set token in static data": {
+      "main": [
+        [
+          {
+            "node": "continue with valid token",
             "type": "main",
             "index": 0
           }
@@ -184,79 +204,36 @@
       "main": [
         [
           {
-            "node": "n8n",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Execute Command",
+            "node": "1. initiate static data",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Execute Command": {
+    "if token is valid": {
       "main": [
         [
           {
-            "node": "JSON formatting",
+            "node": "continue with valid token",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "get new accessToken",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "JSON formatting": {
+    "1. initiate static data": {
       "main": [
         [
           {
-            "node": "Loop Over Items",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Execute Workflow": {
-      "main": [
-        [
-          {
-            "node": "Loop Over Items",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "n8n": {
-      "main": [
-        [
-          {
-            "node": "Loop Over Items1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Loop Over Items1": {
-      "main": [
-        [],
-        [
-          {
-            "node": "Execute Workflow1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Execute Workflow1": {
-      "main": [
-        [
-          {
-            "node": "Loop Over Items1",
+            "node": "if token is valid",
             "type": "main",
             "index": 0
           }
@@ -270,14 +247,14 @@
   "staticData": null,
   "meta": null,
   "pinData": {},
-  "versionId": "6ed4954a-d5cd-4c84-a7c3-2d665d4d8281",
+  "versionId": "6a6d8e7f-21b0-409d-b815-af6dd8d237b7",
   "triggerCount": 0,
   "shared": [
     {
-      "createdAt": "2025-08-16T02:20:43.287Z",
-      "updatedAt": "2025-08-16T02:20:43.287Z",
+      "createdAt": "2025-08-15T17:36:38.164Z",
+      "updatedAt": "2025-08-15T17:36:38.164Z",
       "role": "workflow:owner",
-      "workflowId": "nKsl8HScpAytB2m6",
+      "workflowId": "7PfXzdEUL7M1R8sj",
       "projectId": "BZ9Ta5yhe4RhzY78",
       "project": {
         "createdAt": "2025-05-13T15:56:28.209Z",
