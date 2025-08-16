@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-08-15T18:12:56.636Z",
-  "updatedAt": "2025-08-15T23:54:38.000Z",
+  "updatedAt": "2025-08-16T00:48:19.000Z",
   "id": "VFvEQwvxizzpS1Wm",
   "name": "Consulting Financial Comparador Direcciones",
   "active": false,
@@ -20,7 +20,7 @@
       "typeVersion": 1.1,
       "position": [
         0,
-        0
+        225
       ],
       "id": "2b3581f3-fb0d-4aa5-a158-f4d5be8ebfce",
       "name": "When Executed by Another Workflow"
@@ -46,8 +46,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        660,
-        60
+        960,
+        240
       ],
       "id": "53346784-d42f-4455-b4bf-45a7f067c890",
       "name": "Geocode Empresa"
@@ -73,8 +73,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        860,
-        60
+        1180,
+        240
       ],
       "id": "2366ce87-6a6a-4b3f-b7ad-4e1e83094e23",
       "name": "Geocode Candidato"
@@ -87,11 +87,11 @@
           "parameters": [
             {
               "name": "origins",
-              "value": "={{$node[\"Geocode Candidato\"].json[\"results\"][0][\"geometry\"][\"location\"][\"lat\"]}},{{$node[\"Geocode Candidato\"].json[\"results\"][0][\"geometry\"][\"location\"][\"lng\"]}}"
+              "value": "={{ $json.results[0].geometry.location.lat }}, {{ $json.results[0].geometry.location.lng }}"
             },
             {
               "name": "destinations",
-              "value": "={{$node[\"Geocode Empresa\"].json[\"results\"][0][\"geometry\"][\"location\"][\"lat\"]}},{{$node[\"Geocode Empresa\"].json[\"results\"][0][\"geometry\"][\"location\"][\"lng\"]}}"
+              "value": "={{ $('Geocode Empresa').item.json.results[0].geometry.location.lat }}, {{ $('Geocode Empresa').item.json.results[0].geometry.location.lng }}"
             },
             {
               "name": "key",
@@ -108,8 +108,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        1060,
-        60
+        1400,
+        240
       ],
       "id": "923914d5-1c46-4a51-a2d2-54ddb07aec75",
       "name": "Calcular Distancia"
@@ -127,7 +127,7 @@
             {
               "id": "c587ca31-072e-45c4-b799-1abc5847cb20",
               "leftValue": "={{$node[\"Calcular Distancia\"].json[\"rows\"][0][\"elements\"][0][\"distance\"][\"value\"]}}",
-              "rightValue": 50000,
+              "rightValue": 32000,
               "operator": {
                 "type": "number",
                 "operation": "lte"
@@ -141,8 +141,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        1240,
-        60
+        1620,
+        240
       ],
       "id": "21b16be9-0e78-4f5f-8d31-f24c1baf8d34",
       "name": "If"
@@ -168,8 +168,8 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.6,
       "position": [
-        240,
-        0
+        220,
+        225
       ],
       "id": "b86cd3d6-1d42-4415-b1c9-97c24bb35ab3",
       "name": "Get row(s) in sheet",
@@ -187,11 +187,326 @@
       "type": "n8n-nodes-base.splitInBatches",
       "typeVersion": 3,
       "position": [
-        460,
-        0
+        440,
+        225
       ],
       "id": "c89e3698-4497-44ff-ba76-22bd741386da",
       "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "0b7ca478-bae8-43f7-a20a-6afc5130be51",
+              "name": "EMPRESA",
+              "value": "={{ $json.EMPRESA }}",
+              "type": "string"
+            },
+            {
+              "id": "2bd0cabb-064e-484f-bec8-01d4d3332ef2",
+              "name": "PUESTO",
+              "value": "={{ $json.PUESTO }}",
+              "type": "string"
+            },
+            {
+              "id": "45b006c3-d11b-4c02-849d-e5848bc4d90a",
+              "name": "UBICACIÓN",
+              "value": "={{ $json['UBICACIÓN'] }}",
+              "type": "string"
+            },
+            {
+              "id": "d91d101b-84a7-4c21-b432-02f12d23189b",
+              "name": "GIRO",
+              "value": "={{ $json.GIRO }}",
+              "type": "string"
+            },
+            {
+              "id": "2be09105-2e8b-481c-b8f7-d0d2617a7b3d",
+              "name": "SUELDO SEMANAL LIBRE",
+              "value": "={{ $json['SUELDO SEMANAL LIBRE'] }}",
+              "type": "string"
+            },
+            {
+              "id": "21aae8ec-f1a8-44c0-a0f6-cfa12bdd702c",
+              "name": "EDAD",
+              "value": "={{ $json.EDAD }}",
+              "type": "string"
+            },
+            {
+              "id": "eca9eeb1-6114-4c19-a64a-480abb5850a1",
+              "name": "GÉNERO",
+              "value": "={{ $json['GÉNERO'] }}",
+              "type": "string"
+            },
+            {
+              "id": "888d5f3c-8eb5-4baa-9d86-a68bc43b6ced",
+              "name": "ESCOLARIDAD",
+              "value": "={{ $json.ESCOLARIDAD }}",
+              "type": "string"
+            },
+            {
+              "id": "3c5da0f2-5963-4462-ad2a-8a9895139464",
+              "name": "EXPERIENCIA",
+              "value": "={{ $json.EXPERIENCIA }}",
+              "type": "string"
+            },
+            {
+              "id": "b15f06c4-e78d-4fb6-86e2-407f577a7b0d",
+              "name": "TRANSPORTE",
+              "value": "={{ $json.TRANSPORTE }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        740,
+        240
+      ],
+      "id": "001f66f9-2d5a-4008-8abf-06ffd82c9a88",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "dee78352-e3e3-4170-ac8b-872184013843",
+              "name": "EMPRESA",
+              "value": "={{ $('Edit Fields').item.json.EMPRESA }}",
+              "type": "string"
+            },
+            {
+              "id": "be617d07-0ed7-4958-8561-c2988d3fc8de",
+              "name": "PUESTO",
+              "value": "={{ $('Edit Fields').item.json.PUESTO }}",
+              "type": "string"
+            },
+            {
+              "id": "e94873b0-06cb-4f1e-acdc-9d7c6001044b",
+              "name": "UBICACIÓN",
+              "value": "={{ $('Edit Fields').item.json['UBICACIÓN'] }}",
+              "type": "string"
+            },
+            {
+              "id": "f9e7f5a9-33ac-423b-a167-2b7fc2bdacda",
+              "name": "GIRO",
+              "value": "={{ $('Edit Fields').item.json.GIRO }}",
+              "type": "string"
+            },
+            {
+              "id": "50c642d3-5b49-455b-ac5c-08a1084176c7",
+              "name": "SUELDO SEMANAL LIBRE",
+              "value": "={{ $('Edit Fields').item.json['SUELDO SEMANAL LIBRE'] }}",
+              "type": "string"
+            },
+            {
+              "id": "026c2316-1e87-4ab8-8ff8-c1842ba04f3b",
+              "name": "EDAD",
+              "value": "={{ $('Edit Fields').item.json.EDAD }}",
+              "type": "string"
+            },
+            {
+              "id": "f73eac05-6160-49af-865f-4e6ce4cf9c4d",
+              "name": "GÉNERO",
+              "value": "={{ $('Edit Fields').item.json['GÉNERO'] }}",
+              "type": "string"
+            },
+            {
+              "id": "f5f33165-61a0-45f2-8013-57e93ce9a3c4",
+              "name": "ESCOLARIDAD",
+              "value": "={{ $('Edit Fields').item.json.ESCOLARIDAD }}",
+              "type": "string"
+            },
+            {
+              "id": "a33b0a6f-9059-4794-b2c8-86ad9eaad87b",
+              "name": "EXPERIENCIA",
+              "value": "={{ $('Edit Fields').item.json.EXPERIENCIA }}",
+              "type": "string"
+            },
+            {
+              "id": "c0fb6adf-5240-45b5-a5dc-5da6188ff8da",
+              "name": "TRANSPORTE",
+              "value": "={{ $('Edit Fields').item.json.TRANSPORTE }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1860,
+        280
+      ],
+      "id": "7eba5596-f1db-4f07-b115-1c42ef746bac",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "33f04e12-3a43-404d-a5cc-fbc882bf7257",
+              "name": "EMPRESA",
+              "value": "=No aplica",
+              "type": "string"
+            },
+            {
+              "id": "b4c2e2f5-bbc2-453e-8c71-2cb9dbbc6b61",
+              "name": "PUESTO",
+              "value": "=No aplica",
+              "type": "string"
+            },
+            {
+              "id": "ef4245ce-fec6-4924-8c5d-19262d1c98cb",
+              "name": "UBICACIÓN",
+              "value": "=No aplica",
+              "type": "string"
+            },
+            {
+              "id": "f22ca35d-1ac7-4f16-89c6-eeff231e4ff9",
+              "name": "GIRO",
+              "value": "=No aplica",
+              "type": "string"
+            },
+            {
+              "id": "b2e451ae-3c96-4aae-8bc4-274a86d00117",
+              "name": "SUELDO SEMANAL LIBRE",
+              "value": "=No aplica",
+              "type": "string"
+            },
+            {
+              "id": "a690c766-4096-4fc8-9fff-4e1725a2d9d6",
+              "name": "EDAD",
+              "value": "=No aplica",
+              "type": "string"
+            },
+            {
+              "id": "e8cbbb05-3c6a-4fe9-aee4-86e1c6f4a9d7",
+              "name": "GÉNERO",
+              "value": "=No aplica",
+              "type": "string"
+            },
+            {
+              "id": "b8b7a478-1ac6-47b9-905b-29205c9f0430",
+              "name": "ESCOLARIDAD",
+              "value": "=No aplica",
+              "type": "string"
+            },
+            {
+              "id": "fa204d8e-bfc7-4a95-b9d8-b543f68ac2c7",
+              "name": "EXPERIENCIA",
+              "value": "=No aplica",
+              "type": "string"
+            },
+            {
+              "id": "524f7e1c-40d3-4454-95cd-119b5ebc7174",
+              "name": "TRANSPORTE",
+              "value": "=No aplica",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1820,
+        500
+      ],
+      "id": "3ec71007-407a-4fa5-bfed-92c5a6e5d479",
+      "name": "Edit Fields2"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "463815cd-fdc7-4ab2-ae9a-559d72274f04",
+              "name": "Data",
+              "value": "={{ $json}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        740,
+        60
+      ],
+      "id": "38e59188-a4f9-4359-ad19-e504788aab59",
+      "name": "Edit Fields3"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Supongamos que el nodo anterior se llama \"Set1\" y en el campo json almacena tu arreglo\n// Lo obtenemos desde items del flujo\nconst inputData = $json[\"Data\"]; // si es un único objeto\n// O si el Set anterior tiene la data en un campo específico\n// const inputData = $json[\"miCampo\"]; \n\n// Si tu Set anterior contiene la lista completa como JSON en un solo campo\n// asegúrate de parsearla:\nlet dataArray;\ntry {\n\tdataArray = JSON.parse(inputData); // cambia \"miLista\" por el nombre real del campo\n} catch (e) {\n\t// Si ya viene como array, no hace falta parsear\n\tdataArray = inputData;\n}\n\n// Función para validar si todos los valores son \"No aplica\"\nfunction esNoAplica(obj) {\n\treturn Object.values(obj).every(v => v.trim().toLowerCase() === \"no aplica\");\n}\n\n// Procesar datos\nconst resultado = dataArray\n\t.map(item => {\n\t\t// Cada item.Data es un string JSON → lo parseamos\n\t\tconst obj = JSON.parse(item.Data);\n\t\treturn obj;\n\t})\n\t.filter(obj => !esNoAplica(obj)); // quitamos los \"No aplica\"\n\n// Retornamos como array iterativo para n8n\nreturn resultado.map(r => ({ json: r }));\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        920,
+        -160
+      ],
+      "id": "9181e664-84b2-43bc-85a6-ff0da242a343",
+      "name": "Code",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json }}",
+        "messages": {
+          "messageValues": [
+            {
+              "message": "Generame un json limpio en el cual elimines la referencia 'Data:' y me quites los arreglos que tengan datos con 'No aplica', de tal manera que el resultado final sea un json iterativo"
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        1080,
+        -60
+      ],
+      "id": "bc9e4d2e-3d9b-490d-ac2e-475a00240c44",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        1040,
+        120
+      ],
+      "id": "8cabc08b-d083-48ab-8d33-d35908b9ac6a",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "1TjiA4FyreMw0tyV",
+          "name": "OpenAi Agente Consulting Financial Key "
+        }
+      }
     }
   ],
   "connections": {
@@ -252,10 +567,16 @@
     },
     "Loop Over Items": {
       "main": [
-        [],
         [
           {
-            "node": "Geocode Empresa",
+            "node": "Edit Fields3",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields",
             "type": "main",
             "index": 0
           }
@@ -266,8 +587,75 @@
       "main": [
         [
           {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Geocode Empresa",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
             "node": "Loop Over Items",
             "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields2": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields3": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
             "index": 0
           }
         ]
@@ -290,7 +678,7 @@
       }
     ]
   },
-  "versionId": "0d13e7db-39ce-44b1-9d45-a60f65d28025",
+  "versionId": "5a9f075d-0c90-47fd-ad43-bed63de13f93",
   "triggerCount": 0,
   "shared": [
     {
