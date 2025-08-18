@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-08-15T18:12:56.636Z",
-  "updatedAt": "2025-08-16T01:29:47.000Z",
+  "updatedAt": "2025-08-18T22:27:33.000Z",
   "id": "VFvEQwvxizzpS1Wm",
   "name": "Consulting Financial Comparador Direcciones",
   "active": false,
@@ -46,7 +46,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        1400,
+        980,
         240
       ],
       "id": "53346784-d42f-4455-b4bf-45a7f067c890",
@@ -73,7 +73,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        1620,
+        1200,
         240
       ],
       "id": "2366ce87-6a6a-4b3f-b7ad-4e1e83094e23",
@@ -108,7 +108,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        1840,
+        1420,
         240
       ],
       "id": "923914d5-1c46-4a51-a2d2-54ddb07aec75",
@@ -141,7 +141,7 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        2060,
+        1640,
         240
       ],
       "id": "21b16be9-0e78-4f5f-8d31-f24c1baf8d34",
@@ -264,7 +264,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        1180,
+        760,
         240
       ],
       "id": "001f66f9-2d5a-4008-8abf-06ffd82c9a88",
@@ -341,7 +341,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        2300,
+        1880,
         280
       ],
       "id": "7eba5596-f1db-4f07-b115-1c42ef746bac",
@@ -418,48 +418,11 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        2260,
+        1840,
         500
       ],
       "id": "3ec71007-407a-4fa5-bfed-92c5a6e5d479",
       "name": "Edit Fields2"
-    },
-    {
-      "parameters": {
-        "assignments": {
-          "assignments": [
-            {
-              "id": "463815cd-fdc7-4ab2-ae9a-559d72274f04",
-              "name": "Data",
-              "value": "={{ $json}}",
-              "type": "string"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
-      "position": [
-        260,
-        -160
-      ],
-      "id": "38e59188-a4f9-4359-ad19-e504788aab59",
-      "name": "Edit Fields3"
-    },
-    {
-      "parameters": {
-        "jsCode": "// Supongamos que el nodo anterior se llama \"Set1\" y en el campo json almacena tu arreglo\n// Lo obtenemos desde items del flujo\nconst inputData = $json[\"Data\"]; // si es un único objeto\n// O si el Set anterior tiene la data en un campo específico\n// const inputData = $json[\"miCampo\"]; \n\n// Si tu Set anterior contiene la lista completa como JSON en un solo campo\n// asegúrate de parsearla:\nlet dataArray;\ntry {\n\tdataArray = JSON.parse(inputData); // cambia \"miLista\" por el nombre real del campo\n} catch (e) {\n\t// Si ya viene como array, no hace falta parsear\n\tdataArray = inputData;\n}\n\n// Función para validar si todos los valores son \"No aplica\"\nfunction esNoAplica(obj) {\n\treturn Object.values(obj).every(v => v.trim().toLowerCase() === \"no aplica\");\n}\n\n// Procesar datos\nconst resultado = dataArray\n\t.map(item => {\n\t\t// Cada item.Data es un string JSON → lo parseamos\n\t\tconst obj = JSON.parse(item.Data);\n\t\treturn obj;\n\t})\n\t.filter(obj => !esNoAplica(obj)); // quitamos los \"No aplica\"\n\n// Retornamos como array iterativo para n8n\nreturn resultado.map(r => ({ json: r }));\n"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        460,
-        -160
-      ],
-      "id": "9181e664-84b2-43bc-85a6-ff0da242a343",
-      "name": "Code",
-      "disabled": true
     },
     {
       "parameters": {
@@ -468,8 +431,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        660,
-        120
+        680,
+        80
       ],
       "id": "9b7734aa-ede7-44e9-8fa2-be4c8fe0f7ce",
       "name": "Code1"
@@ -600,17 +563,6 @@
         ]
       ]
     },
-    "Edit Fields3": {
-      "main": [
-        [
-          {
-            "node": "Code",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Code1": {
       "main": [
         []
@@ -633,7 +585,7 @@
       }
     ]
   },
-  "versionId": "9624a49f-2e31-4624-acf1-dc30afb18ff2",
+  "versionId": "43ba7c1a-4709-4d25-b6a5-13898d1bf01f",
   "triggerCount": 0,
   "shared": [
     {
