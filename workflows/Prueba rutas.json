@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-08-19T17:40:58.211Z",
-  "updatedAt": "2025-08-19T18:47:44.000Z",
+  "updatedAt": "2025-08-19T20:22:57.000Z",
   "id": "g7AlooKZk0LNt4CY",
   "name": "Prueba rutas",
   "active": false,
@@ -11,8 +11,8 @@
       "type": "n8n-nodes-base.manualTrigger",
       "typeVersion": 1,
       "position": [
-        -500,
-        -20
+        -840,
+        340
       ],
       "id": "d2f560cd-03dc-4b6a-b332-0f4afaccf95a",
       "name": "When clicking ‘Execute workflow’"
@@ -118,6 +118,271 @@
       ],
       "id": "2a438a19-0b62-41e3-b4fe-efe7d84bc528",
       "name": "Code"
+    },
+    {
+      "parameters": {
+        "url": "https://maps.googleapis.com/maps/api/distancematrix/json",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "origins",
+              "value": "={{ $('Geocode Candidato1').item.json.results[0].geometry.location.lat }}, {{ $('Geocode Candidato1').item.json.results[0].geometry.location.lng }}"
+            },
+            {
+              "name": "destinations",
+              "value": "={{ $json.LATITUD }}, {{ $json.LONGITUD }}"
+            },
+            {
+              "name": "key",
+              "value": "AIzaSyDBsA-93QjipM-2zgXhGYq1VGeBbwqUVUU"
+            },
+            {
+              "name": "units",
+              "value": "metric"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        440,
+        360
+      ],
+      "id": "1865e280-6b2e-4313-84c3-2239b5cf6515",
+      "name": "Calcular Distancia"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "c587ca31-072e-45c4-b799-1abc5847cb20",
+              "leftValue": "={{$node[\"Calcular Distancia\"].json[\"rows\"][0][\"elements\"][0][\"distance\"][\"value\"]}}",
+              "rightValue": 1000,
+              "operator": {
+                "type": "number",
+                "operation": "lte"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        660,
+        360
+      ],
+      "id": "1aa4eafd-9fcd-40b5-8c2c-5df86c7804e1",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1FoqQqf6Uz8WU8fQa1ciXJ6HEd6Ru0FzgDZDlqzQf-RI",
+          "mode": "list",
+          "cachedResultName": "rutas axionlog",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1FoqQqf6Uz8WU8fQa1ciXJ6HEd6Ru0FzgDZDlqzQf-RI/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1310530123,
+          "mode": "list",
+          "cachedResultName": "rutas",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1FoqQqf6Uz8WU8fQa1ciXJ6HEd6Ru0FzgDZDlqzQf-RI/edit#gid=1310530123"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        -340,
+        340
+      ],
+      "id": "6e2c5a3f-00a0-4aca-8ca4-067be1b460c9",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "T1b495TNgv7GQdA8",
+          "name": "Google Sheets Jumperaron"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -60,
+        340
+      ],
+      "id": "fc5fc82f-a22e-42f9-890f-32feaed12f0f",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "0b7ca478-bae8-43f7-a20a-6afc5130be51",
+              "name": "UBICACION",
+              "value": "={{ $json.Itinerario }}",
+              "type": "string"
+            },
+            {
+              "id": "2bd0cabb-064e-484f-bec8-01d4d3332ef2",
+              "name": "REFERENCIA",
+              "value": "={{ $json.Referencia }}",
+              "type": "string"
+            },
+            {
+              "id": "45b006c3-d11b-4c02-849d-e5848bc4d90a",
+              "name": "LATITUD",
+              "value": "={{ $json.latitud }}",
+              "type": "string"
+            },
+            {
+              "id": "d91d101b-84a7-4c21-b432-02f12d23189b",
+              "name": "LONGITUD",
+              "value": "={{ $json.longitud }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        220,
+        360
+      ],
+      "id": "0439fda3-88ab-48e1-952a-3745e2b01c7b",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "dee78352-e3e3-4170-ac8b-872184013843",
+              "name": "UBICACION",
+              "value": "={{ $('Edit Fields').item.json['UBICACION'] }}",
+              "type": "string"
+            },
+            {
+              "id": "be617d07-0ed7-4958-8561-c2988d3fc8de",
+              "name": "REFERENCIA",
+              "value": "={{ $('Edit Fields').item.json.REFERENCIA }}",
+              "type": "string"
+            },
+            {
+              "id": "e94873b0-06cb-4f1e-acdc-9d7c6001044b",
+              "name": "DISTANCIA",
+              "value": "={{ $json.rows[0].elements[0].distance.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        900,
+        400
+      ],
+      "id": "e2193c50-bc58-4b55-b00a-fc044ef6ec62",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "33f04e12-3a43-404d-a5cc-fbc882bf7257",
+              "name": "UBICACION",
+              "value": "=No aplica",
+              "type": "string"
+            },
+            {
+              "id": "b4c2e2f5-bbc2-453e-8c71-2cb9dbbc6b61",
+              "name": "REFERENCIA",
+              "value": "=No aplica",
+              "type": "string"
+            },
+            {
+              "id": "ef4245ce-fec6-4924-8c5d-19262d1c98cb",
+              "name": "DISTANCIA",
+              "value": "=No aplica",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        860,
+        620
+      ],
+      "id": "2e653c21-99a6-472e-bafa-90a0a913fe3c",
+      "name": "Edit Fields2"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Crea un array vacío para guardar todos los objetos.\nconst listadoCompleto = [];\n\n// La variable 'items' contiene todos los resultados\n// que llegaron desde el bucle.\n// Recorremos cada uno de esos resultados.\nfor (const item of items) {\n  // De cada resultado, tomamos su objeto 'json' y lo\n  // añadimos a nuestro listado.\n  if(item.json.UBICACION != \"No aplica\"){\n    listadoCompleto.push(item.json);\n  }\n  \n}\n\n// Finalmente, devolvemos un único resultado.\n// Este resultado es un objeto que contiene nuestro listado completo.\nreturn listadoCompleto.map(obj => ({ json: obj }));"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        180,
+        200
+      ],
+      "id": "867065bc-70c4-4d51-a28e-b2c6371065f5",
+      "name": "Code1"
+    },
+    {
+      "parameters": {
+        "url": "https://maps.googleapis.com/maps/api/geocode/json",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "address",
+              "value": "=Paseo de los Agaves, 45675 Guadalajara, Jal."
+            },
+            {
+              "name": "key",
+              "value": "AIzaSyDBsA-93QjipM-2zgXhGYq1VGeBbwqUVUU"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -580,
+        340
+      ],
+      "id": "a7079556-2f7a-4027-83fc-af1bcc8b6f6b",
+      "name": "Geocode Candidato1"
     }
   ],
   "connections": {
@@ -136,7 +401,7 @@
       "main": [
         [
           {
-            "node": "Geocode Empresa",
+            "node": "Geocode Candidato1",
             "type": "main",
             "index": 0
           }
@@ -164,6 +429,108 @@
           }
         ]
       ]
+    },
+    "Calcular Distancia": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [
+          {
+            "node": "Code1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Calcular Distancia",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields2": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Geocode Candidato1": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -172,7 +539,7 @@
   "staticData": null,
   "meta": null,
   "pinData": {},
-  "versionId": "88bb796a-c30f-4f93-8e5a-56c6fe3a69b2",
+  "versionId": "8c54cb65-df95-40aa-9c35-8188ed2fc4ce",
   "triggerCount": 0,
   "shared": [
     {
