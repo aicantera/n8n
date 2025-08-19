@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-08-13T23:10:33.236Z",
-  "updatedAt": "2025-08-18T22:39:51.000Z",
+  "updatedAt": "2025-08-19T19:30:21.000Z",
   "id": "sjQ9mMNiU99d8ckC",
   "name": "Flujo Extraer Datos PDF",
   "active": false,
@@ -8,7 +8,19 @@
   "nodes": [
     {
       "parameters": {
-        "inputSource": "passthrough"
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "idTelegram"
+            },
+            {
+              "name": "contexto_usuario"
+            },
+            {
+              "name": "idPDF"
+            }
+          ]
+        }
       },
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "typeVersion": 1.1,
@@ -29,7 +41,15 @@
           "cachedResultName": "FARMACIAS GDL VESPERTINO-1-1.pdf",
           "cachedResultUrl": "https://drive.google.com/file/d/1Wa7_7R-dYMvBL8scgygR9Fj75w1Gkh8s/view?usp=drivesdk"
         },
-        "options": {}
+        "options": {
+          "googleFileConversion": {
+            "conversion": {
+              "docsToFormat": "text/plain",
+              "drawingsToFormat": "application/pdf",
+              "slidesToFormat": "application/pdf"
+            }
+          }
+        }
       },
       "type": "n8n-nodes-base.googleDrive",
       "typeVersion": 3,
@@ -82,7 +102,7 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        820,
+        1220,
         0
       ],
       "id": "585888cc-8807-475f-b3ed-1101b2375074",
@@ -94,6 +114,60 @@
           "name": "Bot_RentabilidadExcel"
         }
       }
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "solo responderas con la información necesaria por el "
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        840,
+        0
+      ],
+      "id": "d705eaf0-1644-428d-94e6-a0fc4b7d71c4",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {
+          "responseFormat": "text"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        800,
+        180
+      ],
+      "id": "9d0198b9-4987-4aff-9792-a4b0c6a58e9c",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "0PNoojfjNHHXEtdv",
+          "name": "Test_Agente_Soporte_Gael"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "contextWindowLength": 10
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        920,
+        220
+      ],
+      "id": "7d2a00a0-ec10-4aff-ba7d-3e8214537651",
+      "name": "Simple Memory"
     }
   ],
   "connections": {
@@ -134,8 +208,41 @@
       "main": [
         [
           {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
             "node": "Send a text message",
             "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
             "index": 0
           }
         ]
@@ -150,7 +257,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "bcc5cc7c-c41f-417b-9e36-ff5a6ee84cfe",
+  "versionId": "0f7d5fc8-0475-494d-ab1b-1560ff4b3ebf",
   "triggerCount": 0,
   "shared": [
     {
