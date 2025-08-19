@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-08-19T17:40:58.211Z",
-  "updatedAt": "2025-08-19T17:42:49.000Z",
+  "updatedAt": "2025-08-19T18:47:44.000Z",
   "id": "g7AlooKZk0LNt4CY",
   "name": "Prueba rutas",
   "active": false,
@@ -70,6 +70,54 @@
       ],
       "id": "02743a98-4ea3-4ff0-b6f9-2eaa3ed168a5",
       "name": "Geocode Candidato"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://routes.googleapis.com/directions/v2:computeRoutes",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "X-Goog-Api-Key",
+              "value": "AIzaSyDBsA-93QjipM-2zgXhGYq1VGeBbwqUVUU"
+            },
+            {
+              "name": "X-Goog-FieldMask",
+              "value": "routes.legs.steps,routes.distanceMeters"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"origin\":{\n    \"location\":{\n      \"latLng\":{\n        \"latitude\": {{ $json.results[1].geometry.location.lat }},\n        \"longitude\": {{ $json.results[0].geometry.location.lng }}\n      }\n    }\n  },\n  \"destination\":{\n    \"location\":{\n      \"latLng\":{\n        \"latitude\": {{ $('Geocode Empresa').item.json.results[0].geometry.location.lat }},\n        \"longitude\": {{ $('Geocode Empresa').item.json.results[0].geometry.location.lng }}\n      }\n    }\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        160,
+        -20
+      ],
+      "id": "26045a13-27be-4c49-a047-53767dff84e9",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "jsCode": "const instructions = [];\nconst steps = $json[\"routes\"][0][\"legs\"][0][\"steps\"];\n\nfor (let i = 0; i < steps.length; i++) {\n  if(steps[i][\"navigationInstruction\"] && steps[i][\"navigationInstruction\"][\"instructions\"]){\n    instructions.push(steps[i][\"navigationInstruction\"][\"instructions\"]);\n  }else{\n    instructions.push(\"No instructions available foo thi step\");\n  }\n}\n\nreturn [{ json: { all_instructions: instructions } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        380,
+        -20
+      ],
+      "id": "2a438a19-0b62-41e3-b4fe-efe7d84bc528",
+      "name": "Code"
     }
   ],
   "connections": {
@@ -94,6 +142,28 @@
           }
         ]
       ]
+    },
+    "Geocode Candidato": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -102,7 +172,7 @@
   "staticData": null,
   "meta": null,
   "pinData": {},
-  "versionId": "ccaa94a0-114d-4c4c-a93f-185accb79f70",
+  "versionId": "88bb796a-c30f-4f93-8e5a-56c6fe3a69b2",
   "triggerCount": 0,
   "shared": [
     {
