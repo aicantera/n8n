@@ -1,0 +1,169 @@
+{
+  "createdAt": "2025-08-19T17:40:58.211Z",
+  "updatedAt": "2025-08-19T17:42:49.000Z",
+  "id": "g7AlooKZk0LNt4CY",
+  "name": "Prueba rutas",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -500,
+        -20
+      ],
+      "id": "d2f560cd-03dc-4b6a-b332-0f4afaccf95a",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "url": "https://maps.googleapis.com/maps/api/geocode/json",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "address",
+              "value": "=Axionlog Mexico - CD Guadalajara CEDOEX, Parque Industrial Advance, Carr. Guadalajara - Chapala km 18-Nave 12, 45675 Jal."
+            },
+            {
+              "name": "key",
+              "value": "AIzaSyDBsA-93QjipM-2zgXhGYq1VGeBbwqUVUU"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -280,
+        -20
+      ],
+      "id": "ae87428c-a06c-4680-ab88-26793e0963ca",
+      "name": "Geocode Empresa"
+    },
+    {
+      "parameters": {
+        "url": "https://maps.googleapis.com/maps/api/geocode/json",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "address",
+              "value": "=Tlajomulco"
+            },
+            {
+              "name": "key",
+              "value": "AIzaSyDBsA-93QjipM-2zgXhGYq1VGeBbwqUVUU"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -60,
+        -20
+      ],
+      "id": "02743a98-4ea3-4ff0-b6f9-2eaa3ed168a5",
+      "name": "Geocode Candidato"
+    }
+  ],
+  "connections": {
+    "Geocode Empresa": {
+      "main": [
+        [
+          {
+            "node": "Geocode Candidato",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Geocode Empresa",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {},
+  "versionId": "ccaa94a0-114d-4c4c-a93f-185accb79f70",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "createdAt": "2025-08-19T17:40:58.217Z",
+      "updatedAt": "2025-08-19T17:40:58.217Z",
+      "role": "workflow:owner",
+      "workflowId": "g7AlooKZk0LNt4CY",
+      "projectId": "BZ9Ta5yhe4RhzY78",
+      "project": {
+        "createdAt": "2025-05-13T15:56:28.209Z",
+        "updatedAt": "2025-05-13T16:18:54.372Z",
+        "id": "BZ9Ta5yhe4RhzY78",
+        "name": "CANTERA ADMIN <canteradigital7@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "projectRelations": [
+          {
+            "createdAt": "2025-05-13T15:56:28.209Z",
+            "updatedAt": "2025-05-13T15:56:28.209Z",
+            "role": "project:personalOwner",
+            "userId": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
+            "projectId": "BZ9Ta5yhe4RhzY78",
+            "user": {
+              "createdAt": "2025-05-13T15:56:27.880Z",
+              "updatedAt": "2025-07-08T21:59:22.697Z",
+              "id": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
+              "email": "canteradigital7@gmail.com",
+              "firstName": "CANTERA",
+              "lastName": "ADMIN",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-05-13T16:19:25.161Z",
+                "personalization_survey_n8n_version": "1.92.2",
+                "companySize": "<20",
+                "companyType": "saas",
+                "role": "customer-support",
+                "reportedSource": "event"
+              },
+              "settings": {
+                "userActivated": true,
+                "firstSuccessfulWorkflowId": "PTbESRzX3rguwQN8",
+                "userActivatedAt": 1747154580970,
+                "easyAIWorkflowOnboarded": true,
+                "npsSurvey": {
+                  "responded": true,
+                  "lastShownAt": 1748367494893
+                },
+                "dismissedCallouts": {
+                  "aiAgentStarterCallout": true
+                }
+              },
+              "role": "global:owner",
+              "disabled": false,
+              "mfaEnabled": false,
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": []
+}
