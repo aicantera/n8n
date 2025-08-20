@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-08-13T23:10:33.236Z",
-  "updatedAt": "2025-08-19T19:30:21.000Z",
+  "updatedAt": "2025-08-20T18:41:21.000Z",
   "id": "sjQ9mMNiU99d8ckC",
   "name": "Flujo Extraer Datos PDF",
   "active": false,
@@ -15,9 +15,6 @@
             },
             {
               "name": "contexto_usuario"
-            },
-            {
-              "name": "idPDF"
             }
           ]
         }
@@ -25,7 +22,7 @@
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "typeVersion": 1.1,
       "position": [
-        0,
+        20,
         0
       ],
       "id": "1b1e9018-0131-480d-879a-f8c297599061",
@@ -36,20 +33,12 @@
         "operation": "download",
         "fileId": {
           "__rl": true,
-          "value": "1Wa7_7R-dYMvBL8scgygR9Fj75w1Gkh8s",
+          "value": "12OeFuOIfp_k9lg2Drhb26B-U_KpUSi2c",
           "mode": "list",
-          "cachedResultName": "FARMACIAS GDL VESPERTINO-1-1.pdf",
-          "cachedResultUrl": "https://drive.google.com/file/d/1Wa7_7R-dYMvBL8scgygR9Fj75w1Gkh8s/view?usp=drivesdk"
+          "cachedResultName": "Manual Perfiles 2024.docx.pdf",
+          "cachedResultUrl": "https://drive.google.com/file/d/12OeFuOIfp_k9lg2Drhb26B-U_KpUSi2c/view?usp=drivesdk"
         },
-        "options": {
-          "googleFileConversion": {
-            "conversion": {
-              "docsToFormat": "text/plain",
-              "drawingsToFormat": "application/pdf",
-              "slidesToFormat": "application/pdf"
-            }
-          }
-        }
+        "options": {}
       },
       "type": "n8n-nodes-base.googleDrive",
       "typeVersion": 3,
@@ -82,19 +71,6 @@
     },
     {
       "parameters": {
-        "jsCode": "// Obtenemos el texto plano que llega del nodo anterior.\nconst rawText = items[0].json.text;\n\n// Array final donde guardaremos los resultados.\nconst finalResults = [];\n\n// 1. EXTRAER INFORMACIÓN GLOBAL (TURNO Y HORARIOS)\nconst headerMatch = rawText.match(\n  /(?<turno>FARMACIAS GDL \\w+)\\s*\\(entrada\\s*(?<entrada>\\d{2}:\\d{2})\\s*y\\s*salida\\s*(?<salida>\\d{2}:\\d{2})\\)/i\n);\nconst globalInfo = headerMatch ? headerMatch.groups : {};\n\n// 2. DIVIDIR EL TEXTO EN BLOQUES POR CADA RUTA\n// El split ahora es más robusto para capturar el inicio de cada nueva ruta.\n// Se usa una \"mirada hacia adelante\" para encontrar el patrón de \"número_de_ruta\\nRUTA número_de_ruta\".\nconst routeBlocks = rawText.split(/(?=\\n\\d+\\nRUTA \\d+)/);\n\n// 3. PROCESAR CADA BLOQUE DE RUTA INDIVIDUALMENTE\n// `routeBlocks[0]` a veces contiene el encabezado global, por lo que lo omitimos si no tiene una ruta.\nconst processableBlocks = routeBlocks[0].includes('CRUCE') ? routeBlocks : routeBlocks.slice(1);\n\nfor (const block of processableBlocks) {\n  const routeData = {\n    turno: (globalInfo.turno || '').trim(),\n    horario_entrada: (globalInfo.entrada || '').trim(),\n    horario_salida: (globalInfo.salida || '').trim(),\n    numero_ruta: '',\n    nombre_ruta: '',\n    descripcion_recorrido: '',\n    paradas: []\n  };\n\n  // 4. EXTRAER EL NÚMERO Y NOMBRE DE LA RUTA\n  // El regex modificado captura mejor los títulos de ruta complejos y la información que podría estar en varias líneas.\n  const routeNameMatch = block.match(/\\n\\s*(\\d+)\\nRUTA\\s*(\\d+)\\s*(.*)/i);\n  if (routeNameMatch) {\n    routeData.numero_ruta = routeNameMatch[2];\n    routeData.nombre_ruta = `RUTA ${routeNameMatch[2]}${routeNameMatch[3] ? ` ${routeNameMatch[3].replace(/\\n/g, ' ').replace(/\\s+/g, ' ').trim()}` : ''}`;\n  }\n\n  // 5. EXTRAER LA DESCRIPCIÓN DEL RECORRIDO\n  // Esta expresión regular es más precisa para encontrar el recorrido.\n  // Busca el texto que va después de \"SALE DE:\" y se detiene justo antes del \"CRUCE\" o \"DE SALIDA\".\n  const descriptionMatch = block.match(/SALE DE:\\s*([\\s\\S]*?)(?=\\nCRUCE|HORA|\\n?INDEPENDECIA\\sY\\sPRIVADA|PROLONGACION GIGANTES|BLVRD NUEVO MÉXICO)/i);\n  if (descriptionMatch) {\n    routeData.descripcion_recorrido = descriptionMatch[1].replace(/\\n/g, ' ').replace(/\\s+/g, ' ').trim();\n  } else {\n    // Para el caso de la ruta 13 que no tiene el \"CRUCE\" o \"DE SALIDA\" después de la descripción.\n    const fallbackDescriptionMatch = block.match(/SALE DE:\\s*([\\s\\S]*?)(?=\\nAV. MALECON Y HEBRON)/i);\n    if (fallbackDescriptionMatch) {\n      routeData.descripcion_recorrido = fallbackDescriptionMatch[1].replace(/\\n/g, ' ').replace(/\\s+/g, ' ').trim();\n    }\n  }\n\n  // 6. EXTRAER LA LISTA DE PARADAS Y HORARIOS\n  // Usamos una expresión regular global y multilínea para encontrar todas las paradas.\n  // Ahora también maneja paradas que tienen texto adicional después de la hora.\n  const stopsRegex = /^(.+)\\s(\\d{2}:\\d{2})\\s*$/gm;\n  let match;\n  while ((match = stopsRegex.exec(block)) !== null) {\n    const cruce = match[1].trim();\n    // Filtramos líneas no deseadas.\n    if (cruce !== 'CRUCE' && cruce !== 'HORA' && !cruce.includes('SALE DE:') && !cruce.includes('(DE SALIDA')) {\n      routeData.paradas.push({\n        cruce: cruce,\n        hora: match[2].trim()\n      });\n    }\n  }\n\n// 7. Manejar la ruta 7 que tiene un formato de paradas más irregular.\n  // Se agrega una lógica específica para la última parada \"CEDIS\" que a veces no está en la línea correcta.\n  if (routeData.numero_ruta === \"7\" && routeData.paradas.length > 0 && routeData.paradas[routeData.paradas.length - 1].cruce !== 'CEDIS') {\n      const cedisMatch = block.match(/CEDIS\\s+(\\d{2}:\\d{2})$/m);\n      if (cedisMatch) {\n          routeData.paradas.push({\n              cruce: 'CEDIS',\n              hora: cedisMatch[1].trim()\n          });\n      }\n  }\n\n\n  finalResults.push({ json: routeData });\n}\n\n// 8. Devolvemos el array de objetos estructurados a n8n.\nreturn finalResults;"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        620,
-        0
-      ],
-      "id": "843bc593-2bcb-4625-a7d0-d52224cd3645",
-      "name": "Code"
-    },
-    {
-      "parameters": {
         "additionalFields": {
           "appendAttribution": true
         }
@@ -102,7 +78,7 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        1220,
+        1000,
         0
       ],
       "id": "585888cc-8807-475f-b3ed-1101b2375074",
@@ -118,13 +94,13 @@
     {
       "parameters": {
         "options": {
-          "systemMessage": "solo responderas con la información necesaria por el "
+          "systemMessage": "tu único trabajo es parsear toda la información que te llega, darle una estructura correcta y ordenada para que sea entendible y pasar al siguiente usuario"
         }
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 2,
       "position": [
-        840,
+        620,
         0
       ],
       "id": "d705eaf0-1644-428d-94e6-a0fc4b7d71c4",
@@ -144,7 +120,7 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.2,
       "position": [
-        800,
+        580,
         180
       ],
       "id": "9d0198b9-4987-4aff-9792-a4b0c6a58e9c",
@@ -163,11 +139,79 @@
       "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
       "typeVersion": 1.3,
       "position": [
-        920,
-        220
+        740,
+        200
       ],
       "id": "7d2a00a0-ec10-4aff-ba7d-3e8214537651",
       "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "10kKFsufNbPCra27hOmH3kn0VDCiUX1ig",
+          "mode": "list",
+          "cachedResultName": "Manual Perfiles 2024.docx.txt",
+          "cachedResultUrl": "https://drive.google.com/file/d/10kKFsufNbPCra27hOmH3kn0VDCiUX1ig/view?usp=drivesdk"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        200,
+        340
+      ],
+      "id": "27226ec6-31e0-447b-b636-6c6f75a3904c",
+      "name": "Download file1",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "1P9PgyGmxd7ggSGM",
+          "name": "Gael Extraer Datos PDF"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "text",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        400,
+        340
+      ],
+      "id": "a1e89082-6e68-4d42-9ae7-baf4be8a548d",
+      "name": "Extract from File1"
+    },
+    {
+      "parameters": {
+        "operation": "toJson",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        840,
+        340
+      ],
+      "id": "4e701cd5-c24f-4bae-a3bf-1ae1c167bf64",
+      "name": "Convert to File"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Obtiene el contenido del texto del nodo anterior.\nconst inputText = $input.first().json.data;\n\nif (typeof inputText !== 'string') {\n    throw new Error('La entrada del nodo no es un string.');\n}\n\n// Reemplaza los saltos de línea y múltiples espacios por uno solo para simplificar el parsing.\nconst cleanedText = inputText.replace(/\\r\\n\\s*(\\r\\n)+/g, '\\n\\n').replace(/ /g, ' ').trim();\n\n// Divide el texto en bloques de perfiles usando el separador \"USUARIO: \"\nconst profiles = cleanedText.split('USUARIO: ');\n\n// El primer elemento es el encabezado del documento, lo filtramos.\nconst structuredProfiles = profiles.filter(profileText => profileText.trim() !== '').map(profileText => {\n    \n    // Extrae el usuario y el puesto principal usando el primer y segundo salto de línea.\n    const userAndTitleMatch = profileText.match(/^(.*?)\\n(GIRO:.*?)[\\n\\r]*\\s*(.*?)\\n\\nPERFIL:/);\n    \n    let usuario = null;\n    let giro = null;\n    let ubicacion = null;\n    let puesto = null;\n\n    if (userAndTitleMatch && userAndTitleMatch[1]) {\n        usuario = userAndTitleMatch[1].trim();\n        const giroUbiMatch = userAndTitleMatch[2].match(/GIRO: (.*?)\\s*UBICACIÓN: (.*)/);\n        if (giroUbiMatch) {\n            giro = giroUbiMatch[1].trim();\n            ubicacion = giroUbiMatch[2].trim();\n        } else {\n            const giroMatch = userAndTitleMatch[2].match(/GIRO: (.*)/);\n            if (giroMatch) {\n              giro = giroMatch[1].trim();\n            }\n            const ubicacionMatch = profileText.match(/UBICACIÓN: (.*?)\\s*GIRO:/);\n            if (ubicacionMatch) {\n              ubicacion = ubicacionMatch[1].trim();\n            }\n        }\n        puesto = userAndTitleMatch[3].trim().replace(/\\r\\n/g, ' ');\n    } else {\n      // Manejo de casos alternativos si el patrón principal no coincide\n      const generalMatch = profileText.match(/(.*?)\\nGIRO:\\s*(.*?)\\s*UBICACIÓN:\\s*(.*?)\\s*(.*?)\\n\\nPERFIL:/);\n      if (generalMatch) {\n        usuario = generalMatch[1].trim();\n        giro = generalMatch[2].trim();\n        ubicacion = generalMatch[3].trim();\n        puesto = generalMatch[4].trim();\n      }\n    }\n    \n    // Secciones principales: PERFIL, OFRECE, HORARIO, OBSERVACIONES\n    const perfilMatch = profileText.match(/PERFIL:\\n([\\s\\S]*?)\\n\\nOFRECE:/);\n    const ofreceMatch = profileText.match(/OFRECE:\\n([\\s\\S]*?)\\n\\nHORARIO:/);\n    const horarioMatch = profileText.match(/HORARIO:([\\s\\S]*?)(?=\\n\\nOBSERVACIONES|\\n\\n_|$)_?$/);\n    const observacionesMatch = profileText.match(/(OBSERVACIONES.*?:)\\n([\\s\\S]*)/);\n    \n    // Creación del objeto de perfil\n    const profile = {\n        usuario: usuario,\n        giro: giro,\n        ubicacion: ubicacion,\n        puesto: puesto,\n        perfil: perfilMatch ? perfilMatch[1].trim() : null,\n        ofrece: ofreceMatch ? ofreceMatch[1].trim() : null,\n        horario: horarioMatch ? horarioMatch[1].trim() : null,\n        observaciones: observacionesMatch ? observacionesMatch[2].trim() : null\n    };\n\n    return profile;\n});\n\n// Devuelve un array de objetos, uno para cada perfil extraído.\n// Esto cumple con el formato de salida esperado por n8n.\nreturn structuredProfiles.map(profile => ({ json: profile }));"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        620,
+        340
+      ],
+      "id": "a87fd933-d7e5-445a-b691-acfad4b00880",
+      "name": "Code1"
     }
   ],
   "connections": {
@@ -176,6 +220,11 @@
         [
           {
             "node": "Download file",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Download file1",
             "type": "main",
             "index": 0
           }
@@ -194,17 +243,6 @@
       ]
     },
     "Extract from File": {
-      "main": [
-        [
-          {
-            "node": "Code",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Code": {
       "main": [
         [
           {
@@ -247,6 +285,39 @@
           }
         ]
       ]
+    },
+    "Download file1": {
+      "main": [
+        [
+          {
+            "node": "Extract from File1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File1": {
+      "main": [
+        [
+          {
+            "node": "Code1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code1": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -257,7 +328,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "0f7d5fc8-0475-494d-ab1b-1560ff4b3ebf",
+  "versionId": "48b96be4-b270-40d2-82c5-9b7305d9f152",
   "triggerCount": 0,
   "shared": [
     {
