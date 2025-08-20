@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-08-15T18:12:56.636Z",
-  "updatedAt": "2025-08-20T15:47:41.000Z",
+  "updatedAt": "2025-08-20T19:59:40.000Z",
   "id": "VFvEQwvxizzpS1Wm",
   "name": "Consulting Financial Comparador Direcciones",
   "active": false,
@@ -19,7 +19,7 @@
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "typeVersion": 1.1,
       "position": [
-        -240,
+        -1800,
         220
       ],
       "id": "2b3581f3-fb0d-4aa5-a158-f4d5be8ebfce",
@@ -46,7 +46,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        940,
+        440,
         240
       ],
       "id": "53346784-d42f-4455-b4bf-45a7f067c890",
@@ -73,7 +73,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        0,
+        -1560,
         220
       ],
       "id": "2366ce87-6a6a-4b3f-b7ad-4e1e83094e23",
@@ -108,7 +108,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        1180,
+        680,
         240
       ],
       "id": "923914d5-1c46-4a51-a2d2-54ddb07aec75",
@@ -141,7 +141,7 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        1400,
+        900,
         240
       ],
       "id": "21b16be9-0e78-4f5f-8d31-f24c1baf8d34",
@@ -168,8 +168,8 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.6,
       "position": [
-        220,
-        220
+        -240,
+        -40
       ],
       "id": "b86cd3d6-1d42-4415-b1c9-97c24bb35ab3",
       "name": "Get row(s) in sheet",
@@ -187,7 +187,7 @@
       "type": "n8n-nodes-base.splitInBatches",
       "typeVersion": 3,
       "position": [
-        440,
+        -60,
         220
       ],
       "id": "c89e3698-4497-44ff-ba76-22bd741386da",
@@ -200,61 +200,43 @@
             {
               "id": "0b7ca478-bae8-43f7-a20a-6afc5130be51",
               "name": "EMPRESA",
-              "value": "={{ $json.EMPRESA }}",
+              "value": "={{ $json.empresa_cliente }}",
               "type": "string"
             },
             {
               "id": "2bd0cabb-064e-484f-bec8-01d4d3332ef2",
               "name": "PUESTO",
-              "value": "={{ $json.PUESTO }}",
+              "value": "={{ $json.puesto }}",
               "type": "string"
             },
             {
               "id": "45b006c3-d11b-4c02-849d-e5848bc4d90a",
               "name": "UBICACIÓN",
-              "value": "={{ $json['UBICACIÓN'] }}",
+              "value": "={{ $json.ubicacion }}",
               "type": "string"
             },
             {
               "id": "d91d101b-84a7-4c21-b432-02f12d23189b",
               "name": "GIRO",
-              "value": "={{ $json.GIRO }}",
+              "value": "={{ $json.giro }}",
               "type": "string"
             },
             {
               "id": "2be09105-2e8b-481c-b8f7-d0d2617a7b3d",
               "name": "SUELDO SEMANAL LIBRE",
-              "value": "={{ $json['SUELDO SEMANAL LIBRE'] }}",
-              "type": "string"
-            },
-            {
-              "id": "21aae8ec-f1a8-44c0-a0f6-cfa12bdd702c",
-              "name": "EDAD",
-              "value": "={{ $json.EDAD }}",
-              "type": "string"
-            },
-            {
-              "id": "eca9eeb1-6114-4c19-a64a-480abb5850a1",
-              "name": "GÉNERO",
-              "value": "={{ $json['GÉNERO'] }}",
-              "type": "string"
-            },
-            {
-              "id": "888d5f3c-8eb5-4baa-9d86-a68bc43b6ced",
-              "name": "ESCOLARIDAD",
-              "value": "={{ $json.ESCOLARIDAD }}",
+              "value": "={{ $json.sueldo_semanal_libre }}",
               "type": "string"
             },
             {
               "id": "3c5da0f2-5963-4462-ad2a-8a9895139464",
-              "name": "EXPERIENCIA",
-              "value": "={{ $json.EXPERIENCIA }}",
+              "name": "HORARIO",
+              "value": "={{ $json.horario }}",
               "type": "string"
             },
             {
               "id": "b15f06c4-e78d-4fb6-86e2-407f577a7b0d",
               "name": "TRANSPORTE",
-              "value": "={{ $json.TRANSPORTE }}",
+              "value": "={{ $json.ofrece_transporte }}",
               "type": "string"
             }
           ]
@@ -264,7 +246,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        700,
+        200,
         240
       ],
       "id": "001f66f9-2d5a-4008-8abf-06ffd82c9a88",
@@ -341,7 +323,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        1640,
+        1140,
         280
       ],
       "id": "7eba5596-f1db-4f07-b115-1c42ef746bac",
@@ -349,66 +331,173 @@
     },
     {
       "parameters": {
+        "jsCode": "// Crea un array vacío para guardar todos los objetos.\nconst listadoCompleto = [];\n\n// La variable 'items' contiene todos los resultados\n// que llegaron desde el bucle.\n// Recorremos cada uno de esos resultados.\nfor (const item of items) {\n  // De cada resultado, tomamos su objeto 'json' y lo\n  // añadimos a nuestro listado.\n  if(item.json.EMPRESA != \"No aplica\"){\n    listadoCompleto.push(item.json);\n  }\n  \n}\n\n// Finalmente, devolvemos un único resultado.\n// Este resultado es un objeto que contiene nuestro listado completo.\nreturn listadoCompleto.map(obj => ({ json: obj }));"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        180,
+        80
+      ],
+      "id": "9b7734aa-ede7-44e9-8fa2-be4c8fe0f7ce",
+      "name": "Code1"
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        -1100,
+        220
+      ],
+      "id": "8034e869-8545-471e-88dd-19f4f344d1bf",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "1-mcdzvB78m9Pz0rDuzTLxDm0LOXXif5x",
+          "mode": "list",
+          "cachedResultName": "Manual Perfiles 2024.docx.pdf",
+          "cachedResultUrl": "https://drive.google.com/file/d/1-mcdzvB78m9Pz0rDuzTLxDm0LOXXif5x/view?usp=drivesdk"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -1300,
+        220
+      ],
+      "id": "209634f9-f8fc-4a0e-ba35-6322d520281d",
+      "name": "Download file2",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "qyLYDHqds4fDuWE4",
+          "name": "Google Drive Jumperaron"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.text }}",
+        "options": {
+          "systemMessage": "=# CONTEXTO\nEres un agente de IA dentro de un flujo de trabajo en n8n. Tu función es procesar un texto no estructurado que contiene descripciones de múltiples vacantes de empleo y convertirlo en un array de JSON estructurado. El objetivo es que cada elemento del array sea una vacante individual, para que el siguiente nodo (\"Split in Batches\" o loop) pueda iterar sobre cada una de ellas.\n\n# TAREA\n1.  **Analiza el texto de entrada** para identificar dónde empieza y termina la descripción de cada vacante.\n2.  **Para cada vacante identificada**, extrae toda la información relevante.\n3.  **Estructura la información** de cada vacante en un objeto JSON.\n4.  **Agrupa todos los objetos JSON** en un único array principal.\n\n# FORMATO DE SALIDA OBLIGATORIO\nLa respuesta debe ser **únicamente el código JSON** y nada más. No incluyas explicaciones, comentarios o la palabra \"json\" al principio. El array debe contener objetos con la siguiente estructura de claves:\n\n{\n  \"vacantes\": [\n    {\n      \"puesto\": \"string\", // El nombre del puesto, ej: \"AUXILIARES DE ALMACEN\"\n      \"empresa_cliente\": \"string\", // El nombre del usuario o cliente, ej: \"AXIONLOG\"\n      \"giro\": \"string\", // El giro de la empresa\n      \"ubicacion\": \"string\", // La ubicación del trabajo\n      \"perfil_requisitos\": [ // Un array de strings con cada punto del perfil\n        \"string\", \n        \"string\"\n      ],\n      \"sueldo_semanal_libre\": \"string\", // El monto y la moneda, ej: \"$1,930\"\n      \"prestaciones_beneficios\": [ // Un array de strings con todo lo que se ofrece\n        \"string\",\n        \"string\"\n      ],\n      \"horario\": \"string\", // La descripción completa del horario y los turnos\n      \"ofrece_transporte\": \"boolean\" // true si se menciona transporte, false si explícitamente no lo tiene o no se menciona\n    }\n  ]\n}\n\nAsegúrate de capturar todos los detalles de las secciones \"PERFIL\" y \"OFRECE\" dentro de los arrays correspondientes. Presta especial atención a la última vacante (\"MANIOBRISTA\") para establecer correctamente el valor de \"ofrece_transporte\" en `false`."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        -900,
+        220
+      ],
+      "id": "d0d97840-86c6-40aa-bc15-c69511b95a8b",
+      "name": "AI Agent2"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "options": {
+          "responseFormat": "text"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -940,
+        420
+      ],
+      "id": "ed0154c6-29de-4d23-86bb-45b1013065fc",
+      "name": "OpenAI Chat Model2",
+      "credentials": {
+        "openAiApi": {
+          "id": "1TjiA4FyreMw0tyV",
+          "name": "OpenAi Agente Consulting Financial Key "
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "return JSON.parse($json.output);"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -540,
+        220
+      ],
+      "id": "c765db0c-29a2-4735-b30f-1371a0958134",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "vacantes",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        -320,
+        220
+      ],
+      "id": "ef3e1187-4307-4432-86c0-ee1787fcc4b6",
+      "name": "Split Out"
+    },
+    {
+      "parameters": {
         "assignments": {
           "assignments": [
             {
-              "id": "33f04e12-3a43-404d-a5cc-fbc882bf7257",
+              "id": "0b7ca478-bae8-43f7-a20a-6afc5130be51",
               "name": "EMPRESA",
-              "value": "=No aplica",
+              "value": "No aplica",
               "type": "string"
             },
             {
-              "id": "b4c2e2f5-bbc2-453e-8c71-2cb9dbbc6b61",
+              "id": "2bd0cabb-064e-484f-bec8-01d4d3332ef2",
               "name": "PUESTO",
-              "value": "=No aplica",
+              "value": "No aplica",
               "type": "string"
             },
             {
-              "id": "ef4245ce-fec6-4924-8c5d-19262d1c98cb",
+              "id": "45b006c3-d11b-4c02-849d-e5848bc4d90a",
               "name": "UBICACIÓN",
               "value": "=No aplica",
               "type": "string"
             },
             {
-              "id": "f22ca35d-1ac7-4f16-89c6-eeff231e4ff9",
+              "id": "d91d101b-84a7-4c21-b432-02f12d23189b",
               "name": "GIRO",
-              "value": "=No aplica",
+              "value": "No aplica",
               "type": "string"
             },
             {
-              "id": "b2e451ae-3c96-4aae-8bc4-274a86d00117",
+              "id": "2be09105-2e8b-481c-b8f7-d0d2617a7b3d",
               "name": "SUELDO SEMANAL LIBRE",
-              "value": "=No aplica",
+              "value": "No aplica",
               "type": "string"
             },
             {
-              "id": "a690c766-4096-4fc8-9fff-4e1725a2d9d6",
-              "name": "EDAD",
-              "value": "=No aplica",
+              "id": "3c5da0f2-5963-4462-ad2a-8a9895139464",
+              "name": "HORARIO",
+              "value": "No aplica",
               "type": "string"
             },
             {
-              "id": "e8cbbb05-3c6a-4fe9-aee4-86e1c6f4a9d7",
-              "name": "GÉNERO",
-              "value": "=No aplica",
-              "type": "string"
-            },
-            {
-              "id": "b8b7a478-1ac6-47b9-905b-29205c9f0430",
-              "name": "ESCOLARIDAD",
-              "value": "=No aplica",
-              "type": "string"
-            },
-            {
-              "id": "fa204d8e-bfc7-4a95-b9d8-b543f68ac2c7",
-              "name": "EXPERIENCIA",
-              "value": "=No aplica",
-              "type": "string"
-            },
-            {
-              "id": "524f7e1c-40d3-4454-95cd-119b5ebc7174",
+              "id": "b15f06c4-e78d-4fb6-86e2-407f577a7b0d",
               "name": "TRANSPORTE",
-              "value": "=No aplica",
+              "value": "No aplica",
               "type": "string"
             }
           ]
@@ -418,24 +507,11 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        1600,
-        500
+        960,
+        480
       ],
-      "id": "3ec71007-407a-4fa5-bfed-92c5a6e5d479",
+      "id": "acd168ec-aff2-4f5b-a4d1-5b1a32616a5e",
       "name": "Edit Fields2"
-    },
-    {
-      "parameters": {
-        "jsCode": "// Crea un array vacío para guardar todos los objetos.\nconst listadoCompleto = [];\n\n// La variable 'items' contiene todos los resultados\n// que llegaron desde el bucle.\n// Recorremos cada uno de esos resultados.\nfor (const item of items) {\n  // De cada resultado, tomamos su objeto 'json' y lo\n  // añadimos a nuestro listado.\n  if(item.json.EMPRESA != \"No aplica\"){\n    listadoCompleto.push(item.json);\n  }\n  \n}\n\n// Finalmente, devolvemos un único resultado.\n// Este resultado es un objeto que contiene nuestro listado completo.\nreturn listadoCompleto.map(obj => ({ json: obj }));"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        680,
-        80
-      ],
-      "id": "9b7734aa-ede7-44e9-8fa2-be4c8fe0f7ce",
-      "name": "Code1"
     }
   ],
   "connections": {
@@ -465,7 +541,7 @@
       "main": [
         [
           {
-            "node": "Get row(s) in sheet",
+            "node": "Download file2",
             "type": "main",
             "index": 0
           }
@@ -485,13 +561,7 @@
     },
     "Get row(s) in sheet": {
       "main": [
-        [
-          {
-            "node": "Loop Over Items",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "Loop Over Items": {
@@ -552,7 +622,67 @@
         ]
       ]
     },
-    "Edit Fields2": {
+    "Code1": {
+      "main": [
+        []
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "AI Agent2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download file2": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent2",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent2": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
       "main": [
         [
           {
@@ -563,9 +693,15 @@
         ]
       ]
     },
-    "Code1": {
+    "Edit Fields2": {
       "main": [
-        []
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     }
   },
@@ -585,7 +721,7 @@
       }
     ]
   },
-  "versionId": "778eab15-490b-476e-8e6a-16b0b5c06bc4",
+  "versionId": "c387cfba-ba20-4809-8a1e-364002d35e9d",
   "triggerCount": 0,
   "shared": [
     {
