@@ -1,9 +1,9 @@
 {
   "createdAt": "2025-08-18T15:14:25.900Z",
-  "updatedAt": "2025-08-20T18:45:42.000Z",
+  "updatedAt": "2025-08-20T20:01:51.000Z",
   "id": "oEZHX2FF35Jfifc4",
   "name": "chatbot cerebro dev",
-  "active": true,
+  "active": false,
   "isArchived": false,
   "nodes": [
     {
@@ -989,7 +989,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        0,
+        -220,
         1380
       ],
       "id": "b94d9b13-7ed7-4cec-80f1-1010e484fae9",
@@ -1012,7 +1012,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        220,
+        -20,
         1380
       ],
       "id": "55a47a8a-9b11-4ba7-bc23-d57fd3c6263c",
@@ -1120,7 +1120,7 @@
             {
               "id": "670342e3-e699-4e30-af27-04db7bace385",
               "name": "user_id",
-              "value": "={{ $('Main Logic Placeholder').item.json.students_data[0].user_id }}",
+              "value": "={{ $('Main Logic Placeholder').item.json.user_id }}",
               "type": "string"
             },
             {
@@ -1150,7 +1150,7 @@
             {
               "id": "127efdf6-7193-4011-a155-fa072b66e80f",
               "name": "userStateId",
-              "value": "={{ $('MongoDB').item.json.userStateId }}",
+              "value": "={{ $('Main Logic Placeholder').item.json.user_id }}",
               "type": "string"
             }
           ]
@@ -1177,7 +1177,7 @@
       "typeVersion": 1.1,
       "position": [
         -220,
-        1380
+        1560
       ],
       "id": "6659afa6-3c5a-4f43-97d1-38d4f78abfcb",
       "name": "MongoDB7",
@@ -1186,7 +1186,8 @@
           "id": "xZYe0R0CRtWFmyv7",
           "name": "MongoDB account cerebro core"
         }
-      }
+      },
+      "disabled": true
     },
     {
       "parameters": {
@@ -1719,7 +1720,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// 1) Recupera tus variables del Set anterior\nconst input = items[0].json;\nconst htmlResponseBody  = JSON.parse(input.htmlResponseBody);     // string JSON con data_multi\nconst selectedStudentNo  = parseInt(input.selected_student, 10);\n\n// 2) Función principal\ntry {\n  // Parsear sólo si viene como string\n  const parsed = typeof htmlResponseBody === 'string'\n    ? JSON.parse(htmlResponseBody)\n    : htmlResponseBody;\n\n  const students = parsed.data_multi;\n  if (!Array.isArray(students) || students.length === 0) {\n    return [{\n      json: {\n        status:  \"error\",\n        message: \"No se encontraron datos de estudiantes\",\n      }\n    }];\n  }\n\n  // Validar rango\n  if (isNaN(selectedStudentNo)\n      || selectedStudentNo < 1\n      || selectedStudentNo > students.length) {\n    return [{\n      json: {\n        status:  \"error\",\n        message: `Por favor selecciona un número entre 1 y ${students.length}`,\n      }\n    }];\n  }\n\n  // Selección\n  const sel = students[selectedStudentNo - 1];\n  return [{\n    json: {\n      status:            \"success\",\n      message:           `Has seleccionado a ${sel.first_name} ${sel.last_name}`,\n      selected_student:  sel,\n    }\n  }];\n\n} catch (err) {\n  return [{\n    json: {\n      status:  \"error\",\n      message: `Error al procesar la solicitud: ${err.message}`,\n    }\n  }];\n}\n"
+        "jsCode": "// 1) Recupera tus variables del Set anterior\nconst input = items[0].json;\nconst htmlResponseBody  = JSON.parse(input.htmlResponseBody);     // string JSON con data_multi\nconst selectedStudentNo  = parseInt(input.selected_student, 10);\n\n// 2) Función principal\ntry {\n  // Parsear sólo si viene como string\n  const parsed = typeof htmlResponseBody === 'string'\n    ? JSON.parse(htmlResponseBody)\n    : htmlResponseBody;\n\n  const students = parsed.data.data_multi;\n  if (!Array.isArray(students) || students.length === 0) {\n    return [{\n      json: {\n        status:  \"error\",\n        message: \"No se encontraron datos de estudiantes\",\n      }\n    }];\n  }\n\n  // Validar rango\n  if (isNaN(selectedStudentNo)\n      || selectedStudentNo < 1\n      || selectedStudentNo > students.length) {\n    return [{\n      json: {\n        status:  \"error\",\n        message: `Por favor selecciona un número entre 1 y ${students.length}`,\n      }\n    }];\n  }\n\n  // Selección\n  const sel = students[selectedStudentNo - 1];\n  return [{\n    json: {\n      status:            \"success\",\n      message:           `Has seleccionado a ${sel.first_name} ${sel.last_name}`,\n      selected_student:  sel,\n    }\n  }];\n\n} catch (err) {\n  return [{\n    json: {\n      status:  \"error\",\n      message: `Error al procesar la solicitud: ${err.message}`,\n    }\n  }];\n}\n"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -1771,8 +1772,8 @@
       "type": "n8n-nodes-base.mongoDb",
       "typeVersion": 1.1,
       "position": [
-        880,
-        400
+        920,
+        240
       ],
       "id": "d438913f-d008-4de1-8741-0f6e22aedb13",
       "name": "MongoDB12",
@@ -1782,7 +1783,8 @@
           "id": "xZYe0R0CRtWFmyv7",
           "name": "MongoDB account cerebro core"
         }
-      }
+      },
+      "disabled": true
     },
     {
       "parameters": {
@@ -1809,7 +1811,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        2200,
+        1640,
         400
       ],
       "id": "a7fa57eb-bcca-43ef-9816-7a205151156e",
@@ -1822,7 +1824,7 @@
             {
               "id": "670342e3-e699-4e30-af27-04db7bace385",
               "name": "user_id",
-              "value": "={{ $('Main Logic Placeholder').item.json.students_data[0].user_id }}",
+              "value": "={{ $('Main Logic Placeholder').item.json.user_id }}",
               "type": "string"
             },
             {
@@ -1862,7 +1864,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        1320,
+        1120,
         400
       ],
       "id": "7af22f95-1dcd-400f-a839-1a7873361ce1",
@@ -1878,8 +1880,8 @@
       "type": "n8n-nodes-base.mongoDb",
       "typeVersion": 1.1,
       "position": [
-        1540,
-        400
+        1100,
+        180
       ],
       "id": "caf8913d-a3f4-4ecb-afa1-2fbd345c8050",
       "name": "MongoDB13",
@@ -1888,7 +1890,8 @@
           "id": "xZYe0R0CRtWFmyv7",
           "name": "MongoDB account cerebro core"
         }
-      }
+      },
+      "disabled": true
     },
     {
       "parameters": {
@@ -1897,7 +1900,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1100,
+        900,
         400
       ],
       "id": "c30c5796-bb02-4a1e-a949-96678047fdfa",
@@ -1915,8 +1918,8 @@
       "type": "n8n-nodes-base.mongoDb",
       "typeVersion": 1.1,
       "position": [
-        1980,
-        400
+        1960,
+        240
       ],
       "id": "0eef54d3-74b8-4daf-9991-b2503ab6037c",
       "name": "MongoDB14",
@@ -1956,7 +1959,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        1760,
+        1360,
         400
       ],
       "id": "1b199630-3813-4207-9d98-e5118b4651b7",
@@ -1996,8 +1999,8 @@
       "type": "n8n-nodes-base.mongoDb",
       "typeVersion": 1.1,
       "position": [
-        1760,
-        1480
+        1100,
+        1840
       ],
       "id": "4d48f5cc-3892-474f-82bc-996baceaaebb",
       "name": "MongoDB15",
@@ -2006,7 +2009,8 @@
           "id": "xZYe0R0CRtWFmyv7",
           "name": "MongoDB account cerebro core"
         }
-      }
+      },
+      "disabled": true
     },
     {
       "parameters": {
@@ -2027,7 +2031,7 @@
             {
               "id": "127efdf6-7193-4011-a155-fa072b66e80f",
               "name": "userStateId",
-              "value": "={{ $('MongoDB').item.json.userStateId }}",
+              "value": "={{ $('Main Logic Placeholder').item.json.user_id }}",
               "type": "string"
             }
           ]
@@ -6778,7 +6782,7 @@
             },
             {
               "name": "role",
-              "value": "="
+              "value": "={{ $json.data.session.role_id }}"
             },
             {
               "name": "school_section",
@@ -7291,6 +7295,304 @@
       ],
       "id": "65f61e3e-26a9-4ba7-97b4-1ca4decb1f55",
       "name": "Execute Workflow"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "fxGc0Kp6hEqyottE",
+          "mode": "list",
+          "cachedResultName": "chatbot cerebro cambio status"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "state": "={{ $('Edit Fields12').item.json.state }}",
+            "userId": "={{ $('Edit Fields12').item.json.user_id }}",
+            "phoneNumber": "={{ $('WhatsApp Trigger 2').item.json.messages[0].from }}",
+            "info": "={{ $('Edit Fields12').item.json.information }}",
+            "student_id": "={{ $('student_id1').item.json.student_id }}",
+            "information": "={{ $('Edit Fields12').item.json.information }}",
+            "base_url": "={{ $('Set Variables').item.json.currentEnvironment }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "state",
+              "displayName": "state",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "userId",
+              "displayName": "userId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "phoneNumber",
+              "displayName": "phoneNumber",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "info",
+              "displayName": "info",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "grade_state",
+              "displayName": "grade_state",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "type_conversation",
+              "displayName": "type_conversation",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "student_id",
+              "displayName": "student_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "course_selected",
+              "displayName": "course_selected",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "justify_state",
+              "displayName": "justify_state",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "justify_selected_date",
+              "displayName": "justify_selected_date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "information",
+              "displayName": "information",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "base_url",
+              "displayName": "base_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        1640,
+        580
+      ],
+      "id": "f8631638-6992-41c3-82dc-210832f01769",
+      "name": "Execute Workflow1"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "fxGc0Kp6hEqyottE",
+          "mode": "list",
+          "cachedResultName": "chatbot cerebro cambio status"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "state": "={{ $json.state }}",
+            "userId": "={{ $json.userStateId }}",
+            "phoneNumber": "={{ $('WhatsApp Trigger 2').item.json.messages[0].from }}",
+            "info": "=esperando respuesta de menú calendario",
+            "information": "=esperando respuesta de menú calendario",
+            "base_url": "={{ $('Set Variables').item.json.currentEnvironment }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "state",
+              "displayName": "state",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "userId",
+              "displayName": "userId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "phoneNumber",
+              "displayName": "phoneNumber",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "info",
+              "displayName": "info",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "grade_state",
+              "displayName": "grade_state",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "type_conversation",
+              "displayName": "type_conversation",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "student_id",
+              "displayName": "student_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "course_selected",
+              "displayName": "course_selected",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "justify_state",
+              "displayName": "justify_state",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "justify_selected_date",
+              "displayName": "justify_selected_date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "information",
+              "displayName": "information",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "base_url",
+              "displayName": "base_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        1780,
+        1480
+      ],
+      "id": "e6c6b5d7-535a-4250-a0bf-1b36f5f7e770",
+      "name": "Execute Workflow2"
     }
   ],
   "connections": {
@@ -7641,7 +7943,7 @@
       "main": [
         [
           {
-            "node": "MongoDB7",
+            "node": "HTTP Request1",
             "type": "main",
             "index": 0
           }
@@ -7650,13 +7952,7 @@
     },
     "MongoDB7": {
       "main": [
-        [
-          {
-            "node": "HTTP Request1",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "Code4": {
@@ -7851,7 +8147,7 @@
       "main": [
         [
           {
-            "node": "MongoDB12",
+            "node": "Code9",
             "type": "main",
             "index": 0
           }
@@ -7860,27 +8156,10 @@
     },
     "MongoDB12": {
       "main": [
-        [
-          {
-            "node": "Code9",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "Edit Fields12": {
-      "main": [
-        [
-          {
-            "node": "MongoDB13",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "MongoDB13": {
       "main": [
         [
           {
@@ -7889,6 +8168,11 @@
             "index": 0
           }
         ]
+      ]
+    },
+    "MongoDB13": {
+      "main": [
+        []
       ]
     },
     "Code9": {
@@ -7904,20 +8188,19 @@
     },
     "MongoDB14": {
       "main": [
-        [
-          {
-            "node": "menu principal4",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "Edit Fields13": {
       "main": [
         [
           {
-            "node": "MongoDB14",
+            "node": "menu principal4",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Execute Workflow1",
             "type": "main",
             "index": 0
           }
@@ -7939,7 +8222,7 @@
       "main": [
         [
           {
-            "node": "MongoDB15",
+            "node": "Execute Workflow2",
             "type": "main",
             "index": 0
           }
@@ -9724,40 +10007,9 @@
           "student_selected": null
         }
       }
-    ],
-    "WhatsApp Trigger 2": [
-      {
-        "json": {
-          "messaging_product": "whatsapp",
-          "metadata": {
-            "display_phone_number": "5215612472568",
-            "phone_number_id": "626839230509107"
-          },
-          "contacts": [
-            {
-              "profile": {
-                "name": "Rick"
-              },
-              "wa_id": "5214434901193"
-            }
-          ],
-          "messages": [
-            {
-              "from": "5214434901193",
-              "id": "wamid.HBgNNTIxNDQzNDkwMTE5MxUCABIYFjNFQjAxQUJBMjNGQjUwNzRBQjkwQUIA",
-              "timestamp": "1755645635",
-              "text": {
-                "body": "hola"
-              },
-              "type": "text"
-            }
-          ],
-          "field": "messages"
-        }
-      }
     ]
   },
-  "versionId": "0b74bf98-51a3-43ed-86eb-14a644183f43",
+  "versionId": "758e4d13-555e-4ce8-8bc8-2abd47232747",
   "triggerCount": 1,
   "shared": [
     {
