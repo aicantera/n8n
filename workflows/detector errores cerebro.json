@@ -1,0 +1,431 @@
+{
+  "createdAt": "2025-08-20T18:27:00.571Z",
+  "updatedAt": "2025-08-20T18:36:13.000Z",
+  "id": "gv446Ms2vBXyZk3u",
+  "name": "detector errores cerebro",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [
+        -280,
+        840
+      ],
+      "id": "160ddcc8-4cf0-4008-8f10-6d5f9da74f81",
+      "name": "Error Trigger"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "timestamp",
+              "name": "timestamp",
+              "value": "={{ $now.format('YYYY-MM-DD HH:mm:ss') }}",
+              "type": "string"
+            },
+            {
+              "id": "workflow-name",
+              "name": "workflow_name",
+              "value": "={{ $json.workflow?.name || 'Workflow Desconocido' }}",
+              "type": "string"
+            },
+            {
+              "id": "error-message",
+              "name": "error_message",
+              "value": "={{ $json.execution?.error?.message || $json.error?.message || 'Error sin mensaje' }}",
+              "type": "string"
+            },
+            {
+              "id": "node-name",
+              "name": "node_name",
+              "value": "={{ $json.execution?.error?.node?.name || 'Nodo Desconocido' }}",
+              "type": "string"
+            },
+            {
+              "id": "execution-url",
+              "name": "execution_url",
+              "value": "={{ $json.execution?.url || 'No disponible' }}",
+              "type": "string"
+            },
+            {
+              "id": "severity",
+              "name": "severity",
+              "value": "={{ $json.execution?.error?.message?.toLowerCase().includes('timeout') || $json.execution?.error?.message?.toLowerCase().includes('connection') ? 'CRÍTICO' : 'Normal' }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "59a4a11e-0b8d-440c-a538-846c8afbf20d",
+      "name": "2️⃣ Extraer Info del Error",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        0,
+        840
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1OFMVcN5tax_1QErYt7yEuBIfgpr-aHITAzMmemhP4bU",
+          "mode": "list",
+          "cachedResultName": "Error Logs n8n",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1OFMVcN5tax_1QErYt7yEuBIfgpr-aHITAzMmemhP4bU/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1OFMVcN5tax_1QErYt7yEuBIfgpr-aHITAzMmemhP4bU/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Timestamp": "={{ $json.timestamp }}",
+            "Workflow": "={{ $json.workflow_name }}",
+            "Nodo": "={{ $json.node_name }}",
+            "Gravedad": "={{ $json.severity }}",
+            "Mensaje de error": "={{ $json.error_message }}",
+            "ID": "={{ $json.execution_url }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "ID",
+              "displayName": "ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Workflow",
+              "displayName": "Workflow",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Nodo",
+              "displayName": "Nodo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Mensaje de error",
+              "displayName": "Mensaje de error",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Gravedad",
+              "displayName": "Gravedad",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "a5bb31ab-106f-4bb4-bc3f-ecace58c6b55",
+      "name": "3️⃣ Guardar en Google Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.4,
+      "position": [
+        240,
+        840
+      ],
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "select": "user",
+        "user": {
+          "__rl": true,
+          "value": "U07BY7VQ5B3",
+          "mode": "list",
+          "cachedResultName": "info"
+        },
+        "text": "⚠️ **Error detectado en n8n**\n\n🕐 **Cuándo:** {{ $('2️⃣ Extraer Info del Error').item.json.timestamp }}\n📋 **Workflow:** {{ $('2️⃣ Extraer Info del Error').item.json.workflow_name }}\n⚙️ **Nodo:** {{ $('2️⃣ Extraer Info del Error').item.json.node_name }}\n🔴 **Error:** {{ $('2️⃣ Extraer Info del Error').item.json.error_message }}\n📊 **Tipo:** {{ $('2️⃣ Extraer Info del Error').item.json.severity }}\n🔗 **Ver:** {{ $('2️⃣ Extraer Info del Error').item.json.execution_url }}",
+        "otherOptions": {
+          "includeLinkToWorkflow": false
+        }
+      },
+      "id": "9c33bfec-b22c-4ab4-9ee4-ff336edc8e47",
+      "name": "4️⃣ Notificar en Slack",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.1,
+      "position": [
+        460,
+        840
+      ],
+      "webhookId": "d2d54266-70a7-452e-832d-3ba167c2652d",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "content": "# 📚 GUÍA - Sistema de Errores n8n\n\n## 🎯 ¿Qué hace este workflow?\nCuando **CUALQUIER** workflow falla, este sistema:\n1. Captura el error automáticamente\n2. Guarda la información en Google Sheets\n3. Envía notificación a Slack\n\n## ⚙️ CONFIGURACIÓN NECESARIA:\n\n### 📋 PASO 1: Crear Google Sheet\n1. Ve a Google Sheets\n2. Crea una nueva hoja\n3. Pon estas columnas en la fila 1:\n   `Fecha y Hora | Workflow | Nodo con Error | Mensaje de Error | Tipo | Ver Ejecución`\n4. Copia el ID de la URL (la parte larga después de /d/)\n5. Reemplaza `AQUI_VA_TU_GOOGLE_SHEET_ID` en el nodo 3️⃣\n\n### 🔐 PASO 2: Configurar Credenciales Google Sheets\n1. Click en nodo \"3️⃣ Guardar en Google Sheets\"\n2. Click en \"Select Credential\"\n3. Crear nueva credencial OAuth2\n4. Autorizar acceso a Google\n\n### 💬 PASO 3: Configurar Slack (Opcional)\n1. Click en nodo \"4️⃣ Notificar en Slack\"\n2. Configurar credenciales de Slack\n3. Elegir canal (ej: #errores-n8n)\n\n### 🔗 PASO 4: Configurar workflows para usar este sistema\n**¡MUY IMPORTANTE!**\nPara CADA workflow que quieras monitorear:\n1. Ve al workflow → Settings (3 puntos)\n2. Error Workflow → Selecciona este workflow\n3. Save\n\n## 🧪 PASO 5: Probar el sistema\n1. Crea un workflow simple\n2. Añade HTTP Request con URL: `https://servidor-que-no-existe.com`\n3. Configura Error Workflow en Settings\n4. Ejecuta → ¡Debería generar error y registrarlo!\n\n---\n**💡 TIP:** Siempre configura el Error Workflow en Settings de cada workflow que quieras monitorear",
+        "height": 1204,
+        "width": 680,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1060,
+        100
+      ],
+      "id": "fd67a033-97ae-4aff-ac71-2e6b1b7724fc",
+      "name": "📚 INSTRUCCIONES PARA ALUMNOS"
+    },
+    {
+      "parameters": {
+        "content": "# ✅ CHECKLIST DE CONFIGURACIÓN\n\n## Antes de activar, verifica:\n\n□ **Google Sheet creado** con columnas correctas\n□ **ID del Sheet** copiado en nodo 3️⃣\n□ **Credenciales Google** configuradas\n□ **Credenciales Slack** configuradas (opcional)\n□ **Canal de Slack** seleccionado\n□ **Workflow guardado**\n\n## Para usar en otros workflows:\n□ **Settings** → **Error Workflow** → Seleccionar este\n□ **Workflow activado**\n□ **Probado** con error simulado\n\n---\n## 🚨 Solución de Problemas:\n\n**❌ No se dispara el error:**\n- Verificar que el workflow tenga configurado Error Workflow en Settings\n- El workflow con error debe estar activo\n\n**❌ No guarda en Sheets:**\n- Verificar credenciales Google\n- Verificar ID del Sheet\n- Verificar columnas del Sheet\n\n**❌ No notifica en Slack:**\n- Verificar credenciales Slack\n- Verificar que el canal existe",
+        "height": 812,
+        "width": 672,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -320,
+        -60
+      ],
+      "id": "8210bad0-dde6-4e66-9fbe-d71bd719d083",
+      "name": "✅ CHECKLIST"
+    },
+    {
+      "parameters": {
+        "content": "# 🧪 WORKFLOW DE PRUEBA\n\n## Crea este workflow para probar:\n\n1. **HTTP Request Node:**\n   - URL: `https://httpstat.us/500`\n   - Method: GET\n   \n2. **En Settings del workflow de prueba:**\n   - Error Workflow → Selecciona este workflow\n   \n3. **Activa y ejecuta**\n   \n4. **Resultado esperado:**\n   - Nueva fila en Google Sheets\n   - Mensaje en Slack\n   - Error clasificado como \"Normal\"\n\n---\n\n## Para probar error CRÍTICO:\nCambia URL a: `https://servidor-timeout-database.com`\n\n¡El error debería clasificarse como \"CRÍTICO\"!",
+        "height": 676,
+        "width": 380,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        400,
+        80
+      ],
+      "id": "bc41313e-8aca-41fa-81ba-17681b73c16b",
+      "name": "🧪 PRUEBA"
+    }
+  ],
+  "connections": {
+    "Error Trigger": {
+      "main": [
+        [
+          {
+            "node": "2️⃣ Extraer Info del Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "2️⃣ Extraer Info del Error": {
+      "main": [
+        [
+          {
+            "node": "3️⃣ Guardar en Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "3️⃣ Guardar en Google Sheets": {
+      "main": [
+        [
+          {
+            "node": "4️⃣ Notificar en Slack",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {
+    "Error Trigger": [
+      {
+        "json": {
+          "execution": {
+            "id": "36561",
+            "url": "https://ia.canteradigital.mx/workflow/fxGc0Kp6hEqyottE/executions/36561",
+            "error": {
+              "level": "warning",
+              "tags": {},
+              "context": {
+                "itemIndex": 0,
+                "request": {
+                  "body": {
+                    "phone": "5214434901193",
+                    "state": "seleccion_alumno",
+                    "userId": "689e04a58e242c50b9756684",
+                    "information": "se presenta menu select student",
+                    "date": "20/8/2025, 12:35:30 p.m."
+                  },
+                  "headers": {
+                    "accept": "application/json,text/html,application/xhtml+xml,application/xml,text/*;q=0.9, image/*;q=0.8, */*;q=0.7"
+                  },
+                  "method": "POST",
+                  "uri": "https://cerebro-dev-7d8f30a4b3ff.herokuapp.com/api/v1/engage/update_user_session_by_phone",
+                  "gzip": true,
+                  "rejectUnauthorized": true,
+                  "followRedirect": true,
+                  "resolveWithFullResponse": true,
+                  "followAllRedirects": true,
+                  "timeout": 300000,
+                  "encoding": null,
+                  "json": false,
+                  "useStream": true
+                }
+              },
+              "functionality": "regular",
+              "name": "NodeApiError",
+              "timestamp": 1755714930421,
+              "node": {
+                "parameters": {
+                  "curlImport": "",
+                  "method": "POST",
+                  "url": "={{ $('flujo de actualización base de datos').item.json.base_url }}/api/v1/engage/update_user_session_by_phone",
+                  "authentication": "none",
+                  "provideSslCertificates": false,
+                  "sendQuery": false,
+                  "sendHeaders": false,
+                  "sendBody": true,
+                  "contentType": "json",
+                  "specifyBody": "json",
+                  "jsonBody": "={{$json }}",
+                  "options": {},
+                  "infoMessage": ""
+                },
+                "type": "n8n-nodes-base.httpRequest",
+                "typeVersion": 4.2,
+                "position": [
+                  540,
+                  100
+                ],
+                "id": "74440457-7644-4c98-8ff9-c978e0dfff1f",
+                "name": "HTTP Request"
+              },
+              "messages": [
+                "400 - \"{\\\"error\\\": \\\"Datos de entrada inv\\\\u00e1lidos\\\", \\\"details\\\": {\\\"phoneNumber\\\": [\\\"Missing data for required field.\\\"], \\\"phone\\\": [\\\"Unknown field.\\\"]}}\""
+              ],
+              "httpCode": "400",
+              "description": "Datos de entrada inválidos",
+              "message": "Bad request - please check your parameters",
+              "stack": "NodeApiError: Bad request - please check your parameters\n    at ExecuteContext.execute (/usr/local/lib/node_modules/n8n/node_modules/.pnpm/n8n-nodes-base@file+packages+nodes-base_@aws-sdk+credential-providers@3.808.0_asn1.js@5_1af219c3f47f2a1223ec4ccec249a974/node_modules/n8n-nodes-base/nodes/HttpRequest/V3/HttpRequestV3.node.ts:780:15)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at WorkflowExecute.runNode (/usr/local/lib/node_modules/n8n/node_modules/.pnpm/n8n-core@file+packages+core_openai@4.103.0_encoding@0.1.13_ws@8.17.1_zod@3.25.67_/node_modules/n8n-core/src/execution-engine/workflow-execute.ts:1193:9)\n    at /usr/local/lib/node_modules/n8n/node_modules/.pnpm/n8n-core@file+packages+core_openai@4.103.0_encoding@0.1.13_ws@8.17.1_zod@3.25.67_/node_modules/n8n-core/src/execution-engine/workflow-execute.ts:1542:27\n    at /usr/local/lib/node_modules/n8n/node_modules/.pnpm/n8n-core@file+packages+core_openai@4.103.0_encoding@0.1.13_ws@8.17.1_zod@3.25.67_/node_modules/n8n-core/src/execution-engine/workflow-execute.ts:2108:11"
+            },
+            "lastNodeExecuted": "HTTP Request",
+            "mode": "integrated"
+          },
+          "workflow": {
+            "id": "fxGc0Kp6hEqyottE",
+            "name": "chatbot cerebro cambio status"
+          }
+        }
+      }
+    ]
+  },
+  "versionId": "cef0f748-2327-4023-9a21-6814cc37c3fd",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "createdAt": "2025-08-20T18:27:00.580Z",
+      "updatedAt": "2025-08-20T18:27:00.580Z",
+      "role": "workflow:owner",
+      "workflowId": "gv446Ms2vBXyZk3u",
+      "projectId": "BsYMJSPwury6TiTn",
+      "project": {
+        "createdAt": "2025-06-06T20:24:22.277Z",
+        "updatedAt": "2025-06-06T21:09:46.835Z",
+        "id": "BsYMJSPwury6TiTn",
+        "name": "adolfo huerta <adolfocuentas123@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "projectRelations": [
+          {
+            "createdAt": "2025-06-06T20:24:22.278Z",
+            "updatedAt": "2025-06-06T20:24:22.278Z",
+            "role": "project:personalOwner",
+            "userId": "f9268337-0922-4cba-994c-bf6b40332731",
+            "projectId": "BsYMJSPwury6TiTn",
+            "user": {
+              "createdAt": "2025-06-06T20:24:22.275Z",
+              "updatedAt": "2025-08-14T21:54:59.548Z",
+              "id": "f9268337-0922-4cba-994c-bf6b40332731",
+              "email": "adolfocuentas123@gmail.com",
+              "firstName": "adolfo",
+              "lastName": "huerta",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-06-06T21:09:59.993Z",
+                "personalization_survey_n8n_version": "1.92.2",
+                "companySize": "<20",
+                "companyType": "saas",
+                "role": "business-owner",
+                "reportedSource": "twitter"
+              },
+              "settings": {
+                "firstSuccessfulWorkflowId": "k6PApGOzpLKtnZ0q",
+                "userActivated": true,
+                "userActivatedAt": 1749594629341,
+                "npsSurvey": {
+                  "responded": true,
+                  "lastShownAt": 1750216203399
+                },
+                "easyAIWorkflowOnboarded": true
+              },
+              "role": "global:member",
+              "disabled": false,
+              "mfaEnabled": false,
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": []
+}
