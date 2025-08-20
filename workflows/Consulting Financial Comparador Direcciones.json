@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-08-15T18:12:56.636Z",
-  "updatedAt": "2025-08-18T22:27:33.000Z",
+  "updatedAt": "2025-08-20T15:47:41.000Z",
   "id": "VFvEQwvxizzpS1Wm",
   "name": "Consulting Financial Comparador Direcciones",
   "active": false,
@@ -19,8 +19,8 @@
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "typeVersion": 1.1,
       "position": [
-        0,
-        225
+        -240,
+        220
       ],
       "id": "2b3581f3-fb0d-4aa5-a158-f4d5be8ebfce",
       "name": "When Executed by Another Workflow"
@@ -46,7 +46,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        980,
+        940,
         240
       ],
       "id": "53346784-d42f-4455-b4bf-45a7f067c890",
@@ -73,8 +73,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        1200,
-        240
+        0,
+        220
       ],
       "id": "2366ce87-6a6a-4b3f-b7ad-4e1e83094e23",
       "name": "Geocode Candidato"
@@ -87,7 +87,7 @@
           "parameters": [
             {
               "name": "origins",
-              "value": "={{ $json.results[0].geometry.location.lat }}, {{ $json.results[0].geometry.location.lng }}"
+              "value": "={{ $('Geocode Candidato').item.json.results[0].geometry.location.lat }}, {{ $('Geocode Candidato').item.json.results[0].geometry.location.lng }}"
             },
             {
               "name": "destinations",
@@ -108,7 +108,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        1420,
+        1180,
         240
       ],
       "id": "923914d5-1c46-4a51-a2d2-54ddb07aec75",
@@ -141,7 +141,7 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        1640,
+        1400,
         240
       ],
       "id": "21b16be9-0e78-4f5f-8d31-f24c1baf8d34",
@@ -169,7 +169,7 @@
       "typeVersion": 4.6,
       "position": [
         220,
-        225
+        220
       ],
       "id": "b86cd3d6-1d42-4415-b1c9-97c24bb35ab3",
       "name": "Get row(s) in sheet",
@@ -264,7 +264,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        760,
+        700,
         240
       ],
       "id": "001f66f9-2d5a-4008-8abf-06ffd82c9a88",
@@ -341,7 +341,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        1880,
+        1640,
         280
       ],
       "id": "7eba5596-f1db-4f07-b115-1c42ef746bac",
@@ -418,7 +418,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        1840,
+        1600,
         500
       ],
       "id": "3ec71007-407a-4fa5-bfed-92c5a6e5d479",
@@ -443,7 +443,7 @@
       "main": [
         [
           {
-            "node": "Get row(s) in sheet",
+            "node": "Geocode Candidato",
             "type": "main",
             "index": 0
           }
@@ -454,7 +454,7 @@
       "main": [
         [
           {
-            "node": "Geocode Candidato",
+            "node": "Calcular Distancia",
             "type": "main",
             "index": 0
           }
@@ -465,7 +465,7 @@
       "main": [
         [
           {
-            "node": "Calcular Distancia",
+            "node": "Get row(s) in sheet",
             "type": "main",
             "index": 0
           }
@@ -585,7 +585,7 @@
       }
     ]
   },
-  "versionId": "43ba7c1a-4709-4d25-b6a5-13898d1bf01f",
+  "versionId": "778eab15-490b-476e-8e6a-16b0b5c06bc4",
   "triggerCount": 0,
   "shared": [
     {
