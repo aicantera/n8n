@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-08-18T15:14:25.900Z",
-  "updatedAt": "2025-08-18T15:34:38.000Z",
+  "updatedAt": "2025-08-19T23:37:46.000Z",
   "id": "oEZHX2FF35Jfifc4",
   "name": "chatbot cerebro dev",
   "active": false,
@@ -34,7 +34,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 1,
       "position": [
-        -5160,
+        -5260,
         2380
       ],
       "id": "0df1f0bb-7c5a-46dd-80d8-d17c84e52ac4"
@@ -48,7 +48,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        -4940,
+        -5060,
         2380
       ],
       "id": "c3868c3b-0336-46da-8924-c3aa2e9ea9b2"
@@ -58,7 +58,7 @@
         "conditions": {
           "number": [
             {
-              "value1": "={{ $json.number_students }}",
+              "value1": "={{ $json.data.session.number_students }}",
               "operation": "largerEqual",
               "value2": 1
             }
@@ -693,7 +693,7 @@
     },
     {
       "parameters": {
-        "url": "={{ $('Set Variables').item.json.currentEnvironment }}﻿/assistant/select_student?user_id={{ $('Main Logic Placeholder').item.json.user_id }}﻿﻿&tenant_id=﻿﻿{{ $('Main Logic Placeholder').item.json.tenant_id }}",
+        "url": "={{ $('Set Variables').item.json.currentEnvironment }}﻿/assistant/select_student_refactored?user_id={{ $('Main Logic Placeholder').item.json.user_id }}﻿﻿&tenant_id=﻿﻿{{ $('Main Logic Placeholder').item.json.tenant_id }}",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
@@ -6575,25 +6575,25 @@
             {
               "id": "a10d127b-47b9-4007-bd48-996eb052af15",
               "name": "phoneNumber_final",
-              "value": "={{ $json.phoneNumber_edited || $json.phoneNumber_finded }}",
+              "value": "={{ $json.data.session.phone_whatsapp }}",
               "type": "string"
             },
             {
               "id": "8da211fa-6c03-4bf0-9db4-1b1725aa9940",
               "name": "state_final",
-              "value": "={{ $json.state_edited || $json.state_finded }}",
+              "value": "={{ $json.data.session.state }}",
               "type": "string"
             },
             {
               "id": "3d79bd72-44b3-47c1-95b1-2c0e7d8fa771",
               "name": "type_conversation_final",
-              "value": "={{ $json.type_conversation_edited || $json.type_conversation_finded }}",
+              "value": "={{ $json.data.session.type_conversation }}",
               "type": "string"
             },
             {
               "id": "965c36fb-3748-4fd6-8a3a-9890cab3858e",
               "name": "user_state_id_final",
-              "value": "={{ $json.user_state_id_edited || $json.user_state_id_finded }}",
+              "value": "={{ $json.data.session.user_id }}",
               "type": "string"
             }
           ]
@@ -6780,52 +6780,52 @@
           "string": [
             {
               "name": "group",
-              "value": "={{ $('Auth Guardian').item.json.students_data[0].courses[0].group }}"
+              "value": "={{ $json.data.session.students_data[0].courses[0].group }}"
             },
             {
               "name": "guardian_name",
-              "value": "={{ $('Auth Guardian').item.json.students_data[0].guardian_name }}"
+              "value": "="
             },
             {
               "name": "role",
-              "value": "={{ $('Auth Guardian').item.json.students_data[0].role }}"
+              "value": "="
             },
             {
               "name": "school_section",
-              "value": "={{ $('Auth Guardian').item.json.students_data[0].courses[0].school_section }}"
+              "value": "={{ $json.data.session.students_data[1].courses[0].school_section }}"
             },
             {
               "name": "student_name",
-              "value": "={{ $('Auth Guardian').item.json.students_data[0].student_name }}"
+              "value": "="
             },
             {
               "name": "tenant_id",
-              "value": "={{ $('Auth Guardian').item.json.students_data[0].tenant_id }}"
+              "value": "={{ $json.data.session.tenant_id }}"
             },
             {
               "name": "user_id",
-              "value": "={{ $('Auth Guardian').item.json.students_data[0].user_id }}"
+              "value": "={{ $json.data.session.user_id }}"
             },
             {
               "name": "year",
-              "value": "={{ $('Auth Guardian').item.json.students_data[0].courses[0].year }}"
+              "value": "="
             },
             {
               "name": "school_name",
-              "value": "={{ $('Auth Guardian').item.json.students_data[0].school_name }}"
+              "value": "="
             },
             {
               "name": "feature"
             },
             {
               "name": "validated_whatsapp",
-              "value": "={{ $('Auth Guardian').item.json.validated_whatsapp }}"
+              "value": "="
             }
           ],
           "boolean": [
             {
               "name": "multi_student",
-              "value": "={{ $('Auth Guardian').item.json.multi_student }}"
+              "value": "={{ $json.data.session.multi_student }}"
             }
           ]
         },
@@ -6835,8 +6835,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 1,
       "position": [
-        -7760,
-        2800
+        -4880,
+        2380
       ],
       "id": "5f81f1ba-bb52-4c7b-9986-b7b14bbae2d3"
     },
@@ -7170,7 +7170,7 @@
       "main": [
         [
           {
-            "node": "IF - Auth Success",
+            "node": "Main Logic Placeholder",
             "type": "main",
             "index": 0
           }
@@ -9466,7 +9466,7 @@
       "main": [
         [
           {
-            "node": "MongoDB",
+            "node": "IF - Auth Success",
             "type": "main",
             "index": 0
           }
@@ -9584,9 +9584,40 @@
           "student_selected": null
         }
       }
+    ],
+    "WhatsApp Trigger 2": [
+      {
+        "json": {
+          "messaging_product": "whatsapp",
+          "metadata": {
+            "display_phone_number": "5215612472568",
+            "phone_number_id": "626839230509107"
+          },
+          "contacts": [
+            {
+              "profile": {
+                "name": "Rick"
+              },
+              "wa_id": "5214434901193"
+            }
+          ],
+          "messages": [
+            {
+              "from": "5214434901193",
+              "id": "wamid.HBgNNTIxNDQzNDkwMTE5MxUCABIYFjNFQjAxQUJBMjNGQjUwNzRBQjkwQUIA",
+              "timestamp": "1755645635",
+              "text": {
+                "body": "hola"
+              },
+              "type": "text"
+            }
+          ],
+          "field": "messages"
+        }
+      }
     ]
   },
-  "versionId": "ed680a83-5aaa-4bb3-9703-950cffaf9641",
+  "versionId": "da9c9093-fb84-4dc9-a93b-adc915c861eb",
   "triggerCount": 0,
   "shared": [
     {
