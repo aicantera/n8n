@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-08-20T16:23:06.918Z",
-  "updatedAt": "2025-08-20T16:23:06.918Z",
+  "updatedAt": "2025-08-20T17:30:43.000Z",
   "id": "fxGc0Kp6hEqyottE",
   "name": "chatbot cerebro cambio status",
   "active": false,
@@ -85,20 +85,6 @@
     },
     {
       "parameters": {
-        "jsCode": "// Importante: Esto se coloca dentro de un nodo \"Code\" en n8n\n\nfunction uuidv4() {\n  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {\n    const r = Math.random() * 16 | 0;\n    const v = c === 'x' ? r : (r & 0x3 | 0x8);\n    return v.toString(16);\n  });\n}\n\nreturn [\n  {\n    json: {\n      now: new Date().toLocaleString('es-MX', {\n  timeZone: 'America/Mexico_City'\n})\n    }\n  }\n];\n"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        80,
-        100
-      ],
-      "id": "b1638881-cb68-4964-b3b8-f670a4ca7c1c",
-      "name": "Code1",
-      "alwaysOutputData": true
-    },
-    {
-      "parameters": {
         "operation": "update",
         "collection": "user_state_sales",
         "updateKey": "userStateId",
@@ -174,13 +160,34 @@
               "name": "userId"
             },
             {
-              "name": "userStateId"
+              "name": "phoneNumber"
             },
             {
               "name": "info"
             },
             {
-              "name": "sub_menu"
+              "name": "grade_state"
+            },
+            {
+              "name": "type_conversation"
+            },
+            {
+              "name": "student_id"
+            },
+            {
+              "name": "course_selected"
+            },
+            {
+              "name": "justify_state"
+            },
+            {
+              "name": "justify_selected_date"
+            },
+            {
+              "name": "information"
+            },
+            {
+              "name": "base_url"
             }
           ]
         }
@@ -193,6 +200,50 @@
       ],
       "id": "70ca746b-7ba7-480e-ba53-79e494ba1bb8",
       "name": "flujo de actualización base de datos"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Lee el objeto de entrada\nconst input = items[0]?.json ?? {};\n\n// Lista blanca de campos esperados (evita que se cuelen otros)\nconst allowedKeys = [\n  'state',\n  'userId',\n  'phoneNumber',\n  'info',\n  'grade_state',\n  'type_conversation',\n  'student_id',\n  'course_selected',\n  'justify_state',\n  'justify_selected_date',\n];\n\n// Función para detectar “vacío”\nconst isEmpty = (v) => (\n  v === null ||\n  v === undefined ||\n  (typeof v === 'string' && v.trim() === '') ||\n  (Array.isArray(v) && v.length === 0) ||\n  (typeof v === 'object' && !Array.isArray(v) && Object.keys(v).length === 0) ||\n  v === 'null' ||              // por si llega literal como string\n  v === 'undefined'            // idem\n);\n\n// Filtra solo claves permitidas y no vacías\nconst cleaned = Object.fromEntries(\n  Object.entries(input)\n    .filter(([k]) => allowedKeys.includes(k))\n    .filter(([_, v]) => !isEmpty(v))\n);\n\n// Agrega la fecha actual en formato requerido\ncleaned.now = new Date().toLocaleString('es-MX', {\n  timeZone: 'America/Mexico_City'\n});\n\n// Devuelve un único item con el objeto “limpio” + fecha\nreturn [{ json: cleaned }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        80,
+        100
+      ],
+      "id": "c8a1b806-c3fb-4e7f-b26e-68233ed8d757",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('flujo de actualización base de datos').item.json.base_url }}/api/v1/engage/update_user_session_by_phone",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{$json }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        540,
+        100
+      ],
+      "id": "74440457-7644-4c98-8ff9-c978e0dfff1f",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Tomamos el objeto limpio del nodo anterior\nconst input = items[0]?.json ?? {};\n\n// Construimos el body de la petición\nconst body = {\n  phone: input.phoneNumber,        // obligatorio\n  state: input.state,\n  userId: input.userId,\n  information: input.info,         // mapeado a \"information\"\n  grade_state: input.grade_state,\n  type_conversation: input.type_conversation,\n  student_id: input.student_id,\n  course_selected: input.course_selected,\n  justify_state: input.justify_state,\n  justify_selected_date: input.justify_selected_date,\n  date: input.now                   // si quieres mandar la fecha actual también\n};\n\n// Retornamos un único item con el body\nreturn [{ json: body }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        300,
+        100
+      ],
+      "id": "0f10bc18-9d28-4cd0-9220-8493b96056a4",
+      "name": "Code1"
     }
   ],
   "connections": {
@@ -205,11 +256,6 @@
             "index": 0
           }
         ]
-      ]
-    },
-    "Code1": {
-      "main": [
-        []
       ]
     },
     "MongoDB5": {
@@ -238,7 +284,29 @@
       "main": [
         [
           {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
             "node": "Code1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code1": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
             "type": "main",
             "index": 0
           }
@@ -255,16 +323,23 @@
     "flujo de actualización base de datos": [
       {
         "json": {
-          "state": "respuesta_seleccion_nivel_escolar_ubicacion",
-          "userId": "c0e55c73-3101-4ce3-9ae0-140446da0335",
-          "userStateId": "c0e55c73-3101-4ce3-9ae0-140446da0335",
-          "info": "seleccion info de para ubicación en preescolar",
-          "sub_menu": "cita_llamada_info"
+          "state": null,
+          "userId": null,
+          "phoneNumber": "5214434901193",
+          "info": null,
+          "grade_state": null,
+          "type_conversation": null,
+          "student_id": null,
+          "course_selected": null,
+          "justify_state": null,
+          "justify_selected_date": null,
+          "information": null,
+          "base_url": "https://cerebro-dev-7d8f30a4b3ff.herokuapp.com﻿/"
         }
       }
     ]
   },
-  "versionId": "e46695ed-e31c-49ae-ab18-cfa05567e42d",
+  "versionId": "61ec19de-92c3-44a2-acbe-2490fa33195c",
   "triggerCount": 0,
   "shared": [
     {
