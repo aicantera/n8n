@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-08-15T18:12:56.636Z",
-  "updatedAt": "2025-08-20T19:59:40.000Z",
+  "updatedAt": "2025-08-20T20:37:55.000Z",
   "id": "VFvEQwvxizzpS1Wm",
   "name": "Consulting Financial Comparador Direcciones",
   "active": false,
@@ -222,9 +222,21 @@
               "type": "string"
             },
             {
+              "id": "2e5ffa72-8dd4-4e7a-884a-7f240e0ffdba",
+              "name": "PERFIL",
+              "value": "={{ $json.perfil_requisitos }}",
+              "type": "string"
+            },
+            {
               "id": "2be09105-2e8b-481c-b8f7-d0d2617a7b3d",
               "name": "SUELDO SEMANAL LIBRE",
               "value": "={{ $json.sueldo_semanal_libre }}",
+              "type": "string"
+            },
+            {
+              "id": "8d73484e-4a6a-4a5f-a3fe-88cedf431119",
+              "name": "BENEFICIOS",
+              "value": "={{ $json.prestaciones_beneficios }}",
               "type": "string"
             },
             {
@@ -237,6 +249,12 @@
               "id": "b15f06c4-e78d-4fb6-86e2-407f577a7b0d",
               "name": "TRANSPORTE",
               "value": "={{ $json.ofrece_transporte }}",
+              "type": "string"
+            },
+            {
+              "id": "441a037f-879f-4abe-9663-ad58da47784e",
+              "name": "OBSERVACIONES",
+              "value": "={{ $json.observaciones }}",
               "type": "string"
             }
           ]
@@ -281,39 +299,39 @@
               "type": "string"
             },
             {
+              "id": "28277179-ceb9-4516-8953-d37787a3553b",
+              "name": "PERFIL",
+              "value": "={{ $('Edit Fields').item.json.PERFIL }}",
+              "type": "string"
+            },
+            {
               "id": "50c642d3-5b49-455b-ac5c-08a1084176c7",
               "name": "SUELDO SEMANAL LIBRE",
               "value": "={{ $('Edit Fields').item.json['SUELDO SEMANAL LIBRE'] }}",
               "type": "string"
             },
             {
-              "id": "026c2316-1e87-4ab8-8ff8-c1842ba04f3b",
-              "name": "EDAD",
-              "value": "={{ $('Edit Fields').item.json.EDAD }}",
+              "id": "8150c036-7a0b-4308-ad23-1ac04238af9b",
+              "name": "BENEFICIOS",
+              "value": "={{ $('Edit Fields').item.json.BENEFICIOS }}",
               "type": "string"
             },
             {
               "id": "f73eac05-6160-49af-865f-4e6ce4cf9c4d",
-              "name": "GÉNERO",
-              "value": "={{ $('Edit Fields').item.json['GÉNERO'] }}",
-              "type": "string"
-            },
-            {
-              "id": "f5f33165-61a0-45f2-8013-57e93ce9a3c4",
-              "name": "ESCOLARIDAD",
-              "value": "={{ $('Edit Fields').item.json.ESCOLARIDAD }}",
-              "type": "string"
-            },
-            {
-              "id": "a33b0a6f-9059-4794-b2c8-86ad9eaad87b",
-              "name": "EXPERIENCIA",
-              "value": "={{ $('Edit Fields').item.json.EXPERIENCIA }}",
+              "name": "HORARIO",
+              "value": "={{ $('Edit Fields').item.json.HORARIO }}",
               "type": "string"
             },
             {
               "id": "c0fb6adf-5240-45b5-a5dc-5da6188ff8da",
               "name": "TRANSPORTE",
               "value": "={{ $('Edit Fields').item.json.TRANSPORTE }}",
+              "type": "string"
+            },
+            {
+              "id": "79c1c808-a0b2-43ae-b709-9e9ecafc6f53",
+              "name": "OBSERVACIONES",
+              "value": "={{ $('Edit Fields').item.json.OBSERVACIONES }}",
               "type": "string"
             }
           ]
@@ -388,7 +406,7 @@
         "promptType": "define",
         "text": "={{ $json.text }}",
         "options": {
-          "systemMessage": "=# CONTEXTO\nEres un agente de IA dentro de un flujo de trabajo en n8n. Tu función es procesar un texto no estructurado que contiene descripciones de múltiples vacantes de empleo y convertirlo en un array de JSON estructurado. El objetivo es que cada elemento del array sea una vacante individual, para que el siguiente nodo (\"Split in Batches\" o loop) pueda iterar sobre cada una de ellas.\n\n# TAREA\n1.  **Analiza el texto de entrada** para identificar dónde empieza y termina la descripción de cada vacante.\n2.  **Para cada vacante identificada**, extrae toda la información relevante.\n3.  **Estructura la información** de cada vacante en un objeto JSON.\n4.  **Agrupa todos los objetos JSON** en un único array principal.\n\n# FORMATO DE SALIDA OBLIGATORIO\nLa respuesta debe ser **únicamente el código JSON** y nada más. No incluyas explicaciones, comentarios o la palabra \"json\" al principio. El array debe contener objetos con la siguiente estructura de claves:\n\n{\n  \"vacantes\": [\n    {\n      \"puesto\": \"string\", // El nombre del puesto, ej: \"AUXILIARES DE ALMACEN\"\n      \"empresa_cliente\": \"string\", // El nombre del usuario o cliente, ej: \"AXIONLOG\"\n      \"giro\": \"string\", // El giro de la empresa\n      \"ubicacion\": \"string\", // La ubicación del trabajo\n      \"perfil_requisitos\": [ // Un array de strings con cada punto del perfil\n        \"string\", \n        \"string\"\n      ],\n      \"sueldo_semanal_libre\": \"string\", // El monto y la moneda, ej: \"$1,930\"\n      \"prestaciones_beneficios\": [ // Un array de strings con todo lo que se ofrece\n        \"string\",\n        \"string\"\n      ],\n      \"horario\": \"string\", // La descripción completa del horario y los turnos\n      \"ofrece_transporte\": \"boolean\" // true si se menciona transporte, false si explícitamente no lo tiene o no se menciona\n    }\n  ]\n}\n\nAsegúrate de capturar todos los detalles de las secciones \"PERFIL\" y \"OFRECE\" dentro de los arrays correspondientes. Presta especial atención a la última vacante (\"MANIOBRISTA\") para establecer correctamente el valor de \"ofrece_transporte\" en `false`."
+          "systemMessage": "=# CONTEXTO\nEres un agente de IA dentro de un flujo de trabajo en n8n. Tu función es procesar un texto no estructurado que contiene descripciones de múltiples vacantes de empleo y convertirlo en un array de JSON estructurado. El objetivo es que cada elemento del array sea una vacante individual, para que el siguiente nodo (\"Split in Batches\" o loop) pueda iterar sobre cada una de ellas.\n\n# TAREA\n1.  **Analiza el texto de entrada** para identificar dónde empieza y termina la descripción de cada vacante.\n2.  **Para cada vacante identificada**, extrae toda la información relevante.\n3.  **Estructura la información** de cada vacante en un objeto JSON.\n4.  **Agrupa todos los objetos JSON** en un único array principal.\n\n# FORMATO DE SALIDA OBLIGATORIO\nLa respuesta debe ser **únicamente el código JSON** y nada más. No incluyas explicaciones, comentarios o la palabra \"json\" al principio. El array debe contener objetos con la siguiente estructura de claves:\n\n{\n  \"vacantes\": [\n    {\n      \"puesto\": \"string\", // El nombre del puesto, ej: \"AUXILIARES DE ALMACEN\"\n      \"empresa_cliente\": \"string\", // El nombre del usuario o cliente, ej: \"AXIONLOG\"\n      \"giro\": \"string\", // El giro de la empresa\n      \"ubicacion\": \"string\", // La ubicación del trabajo\n      \"perfil_requisitos\": [ // Un array de strings con cada punto del perfil\n        \"string\", \n        \"string\"\n      ],\n      \"sueldo_semanal_libre\": \"string\", // El monto y la moneda, ej: \"$1,930\"\n      \"prestaciones_beneficios\": [ // Un array de strings con todo lo que se ofrece\n        \"string\",\n        \"string\"\n      ],\n      \"horario\": \"string\", // La descripción completa del horario y los turnos\n      \"ofrece_transporte\": \"string\" // información referente al transporte, \"No cuenta con transporte\" si explícitamente no lo tiene o no se menciona\n      \"observaciones\": [ // un array de strings con las observaciones\n        \"string\",\n        \"string\"\n      ]\n    }\n  ]\n}\n\nAsegúrate de capturar todos los detalles de las secciones \"PERFIL\" y \"OFRECE\" dentro de los arrays correspondientes."
         }
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
@@ -473,7 +491,7 @@
             {
               "id": "45b006c3-d11b-4c02-849d-e5848bc4d90a",
               "name": "UBICACIÓN",
-              "value": "=No aplica",
+              "value": "No aplica",
               "type": "string"
             },
             {
@@ -483,8 +501,20 @@
               "type": "string"
             },
             {
+              "id": "2e5ffa72-8dd4-4e7a-884a-7f240e0ffdba",
+              "name": "PERFIL",
+              "value": "No aplica",
+              "type": "string"
+            },
+            {
               "id": "2be09105-2e8b-481c-b8f7-d0d2617a7b3d",
               "name": "SUELDO SEMANAL LIBRE",
+              "value": "No aplica",
+              "type": "string"
+            },
+            {
+              "id": "8d73484e-4a6a-4a5f-a3fe-88cedf431119",
+              "name": "BENEFICIOS",
               "value": "No aplica",
               "type": "string"
             },
@@ -499,6 +529,12 @@
               "name": "TRANSPORTE",
               "value": "No aplica",
               "type": "string"
+            },
+            {
+              "id": "71bad80e-5719-4d4c-a24d-202463766e44",
+              "name": "OBSERVACIONES",
+              "value": "No aplica",
+              "type": "string"
             }
           ]
         },
@@ -507,10 +543,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        960,
+        980,
         480
       ],
-      "id": "acd168ec-aff2-4f5b-a4d1-5b1a32616a5e",
+      "id": "be652b59-dfca-4765-82e1-4922b934bfc8",
       "name": "Edit Fields2"
     }
   ],
@@ -721,7 +757,7 @@
       }
     ]
   },
-  "versionId": "c387cfba-ba20-4809-8a1e-364002d35e9d",
+  "versionId": "82db65d3-3d1b-4401-a68a-ffa6a5ca8643",
   "triggerCount": 0,
   "shared": [
     {
