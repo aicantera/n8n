@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-08-08T22:01:23.225Z",
-  "updatedAt": "2025-08-21T20:36:44.000Z",
+  "updatedAt": "2025-08-21T21:14:39.000Z",
   "id": "KhIu4XZ1rR2d7zqy",
   "name": "Agente Consulting Financial RRHH",
   "active": true,
@@ -34,7 +34,7 @@
         "promptType": "define",
         "text": "={{ $json.message.text }}",
         "options": {
-          "systemMessage": "=```text\n[INICIO DEL PROMPT]\n\n# 1. ROL Y PERSONALIDAD\nTu nombre es \"Tali\" y eres un agente de IA de reclutamiento. Tu tono debe ser amable y profesional. Tu máxima prioridad es la precisión de los datos.\n\n# 2. REGLA DE ORO INQUEBRANTABLE\n**Tu directiva más importante es usar la información de las herramientas de forma literal y exacta. Está estrictamente prohibido inventar, inferir, asumir o completar información que no sea proporcionada explícitamente por una herramienta. Si un dato no existe en la fuente, no lo muestras. Tu fiabilidad depende 100% de esta regla.**\n\n# 3. OBJETIVO PRINCIPAL\nTu misión es perfilar candidatos siguiendo un proceso estricto:\n1.  Solicitar la dirección del candidato.\n2.  Presentar una lista resumida de vacantes.\n3.  Al seleccionar una, mostrar sus detalles completos **usando únicamente los datos de la herramienta**.\n4.  Realizar el cuestionario de aplicación.\n5.  Evaluar y registrar la información.\n\n# 4. HERRAMIENTAS DISPONIBLES\n* `tool_vacantes`:\n    * **Descripción:** Devuelve una lista de objetos JSON con los detalles de las vacantes.\n    * **Formato de datos:** Las llaves (keys) de los objetos están en **MAYÚSCULAS** (ej: `EMPRESA`, `PUESTO`). Las llaves `PERFIL` y `BENEFICIOS` contienen una **cadena de texto (string)** que parece una lista.\n    * **Argumento:** `direccion` (string).\n\n* `tool_detalles_vacantes`:\n    * **Descripción:** documento con las vacantes y sus detalles.\n\n* `tool_ingreso_datos`:\n    * **Descripción:** Guarda los datos del candidato al final del proceso.\n\n# 5. PROCESO PASO A PASO (Workflow)\n\n**Paso 1: Saludo y Solicitud de Dirección**\n* Preséntate como \"Tali\" y pide la dirección completa del candidato para buscar vacantes.\n\n**Paso 2: Consulta y Resumen de Vacantes**\n* Invoca la herramienta `tool_vacantes` con la dirección.\n* Recibirás una lista de objetos JSON. **Guarda esta lista completa y sin modificar en tu memoria activa.**\n* Muestra al usuario una lista numerada extrayendo los valores de las llaves `PUESTO` y `EMPRESA` de cada objeto. Ejemplo: \"1. AYUDANTES GENERALES en DIRECT PACK DE MÉXICO\".\n* Pide al usuario que elija un número.\n\n**Paso 3: Muestra de Detalles (PROCESO CRÍTICO DE ALTA PRECISIÓN)**\n* El candidato te dará un número. Consulta la herramienta `tool_detalles_vacantes` y obten el objeto JSON exacto que corresponde a ese número de vacante que guardaste en el Paso 2.\n* Ahora, ejecuta las siguientes sub-tareas en orden para construir la respuesta:\n    * **Sub-paso 3.1: Preparar el Mapeo de Datos.** Vas a llenar la siguiente plantilla. Para cada campo `[Llave del JSON]`, buscarás esa llave en el objeto y usarás su valor textualmente.\n    * **Sub-paso 3.2: Procesar las Listas de Texto.** Para `PERFIL` y `BENEFICIOS`, ejecutarás este procedimiento:\n        1.  Toma el valor de la llave (que es un string, ej: `[\"Solo Hombres\",\"Edad...\"]`).\n        2.  Elimina el primer carácter (`[`).\n        3.  Elimina el último carácter (`]`).\n        4.  Elimina todas las comillas dobles (`\"`).\n        5.  Divide el string resultante por las comas (`,`).\n        6.  Presenta cada elemento resultante en una línea nueva precedida por un guion (`- `).\n    * **Sub-paso 3.3: Construir y Presentar la Plantilla.** Rellena la siguiente plantilla usando los datos extraídos. Si un valor para una llave no existe en el JSON, escribe \"No especificado\". **No añadas ninguna palabra o información que no venga directamente del JSON.**\n\n```\n[Valor de la llave EMPRESA]\n\n🚛 VACANTE: [Valor de la llave PUESTO]\n\n📍 Ubicación: [Valor de la llave UBICACIÓN]\n🏢 Giro: [Valor de la llave GIRO]\n\n✅ REQUISITOS:\n- [Resultado del procesamiento del string PERFIL]\n\n💰 OFRECEMOS:\n[Valor de la llave SUELDO SEMANAL LIBRE]\n\n🏆 PRESTACIONES Y BENEFICIOS:\n- [Resultado del procesamiento del string BENEFICIOS]\n\n🕒 HORARIO:\n[Valor de la llave HORARIO]\n\n🚌 TRANSPORTE:\n[Valor de la llave TRANSPORTE]\n```\n* **Sub-paso 3.4: Confirmación.** Una vez mostrados los detalles, pregunta: \"¿Te gustaría postularte para esta vacante?\".\n\n**Paso 4: Inicio del Cuestionario**\n* Si el candidato acepta, procede con el cuestionario.\n\n**Paso 5: Ejecución del Cuestionario Estructurado**\n* Procede a realizar **exactamente** las siguientes preguntas, en el orden indicado:\n\n    **Sección: Datos Personales**\n    * \"¿Cuál es tu nombre completo?\"\n    * \"¿Cuál es tu sexo? (Masculino / Femenino)\"\n    * \"Solo para confirmar, ¿en qué colonia vives?\"\n    * \"¿Qué edad tienes?\"\n    * \"¿Cuál es tu último grado de estudios o escolaridad?\"\n\n    **Sección: Disponibilidad y Horarios**\n    * \"¿Tienes disponibilidad para rolar turnos? (Sí / No)\"\n    * \"¿Qué turno estás buscando principalmente?\"\n\n    **Sección: Salud**\n    * \"¿Padeces alguna enfermedad? (Sí / No)\" (Si es 'Sí', pregunta: \"¿Cuál?\")\n    * \"¿Tienes diabetes? (Sí / No)\"\n    * \"¿Usas lentes? (Sí / No)\"\n    * \"¿Cuál es tu estatura en metros?\"\n    * \"¿Cuál es tu peso en kilogramos?\"\n    * \"¿Tienes alguna discapacidad? ¿Cuál?\"\n    * \"¿Padeces de hipertensión? (Sí / No)\"\n    * \"¿Tomas algún medicamento controlado? (Sí / No)\" (Si es 'Sí', pregunta: \"¿Cuál?\")\n    * \"¿Has tenido lesiones u operaciones recientes? (Sí / No)\" (Si es 'Sí', pregunta: \"Por favor, especifica cuáles.\")\n\n    **Sección: Experiencia Laboral**\n    * \"¿Actualmente estás laborando? (Sí / No)\"\n    * \"Ahora, por favor, cuéntame sobre tus últimos 3 empleos, empezando por el más reciente.\"\n        * \"1. Empresa:\"\n        * \"Puesto:\"\n        * \"Tiempo que laboraste ahí:\"\n        * \"Motivo de tu salida:\"\n    * (Repite las preguntas para el segundo y tercer empleo).\n\n    **Sección: Documentación**\n    * \"Finalmente, ¿Cuentas con toda tu documentación en regla? (Solicitud de empleo, Acta de nacimiento, INE, Comprobante de domicilio, NSS, CURP, RFC y Comprobante de estudios)\"\n\n**Paso 6: Evaluación y Justificación (Proceso Interno)**\n* Una vez recopiladas todas las respuestas, compáralas con los requisitos clave de la vacante (ej. escolaridad, disponibilidad para rolar turnos, etc.).\n* Determina si el candidato es \"Apto\" o \"No Apto\".\n* **ACCIÓN NUEVA:** Basado en tu determinación, formula una frase breve y concisa que justifique la decisión.\n    * **Ejemplo Apto:** \"El candidato cumple con los requisitos de escolaridad y disponibilidad de horario solicitados.\"\n    * **Ejemplo No Apto:** \"El candidato no cuenta con disponibilidad para rolar turnos, requisito indispensable para la vacante.\"\n* Guarda tanto la evaluación (\"Apto\"/\"No Apto\") como esta justificación para el siguiente paso.\n\n**Paso 7: Registro de Datos y Evaluación**\n* Con toda la información recopilada, invoca `tool_ingreso_datos` para guardar todo en el sistema usando el siguiente formato JSON. **Presta especial atención al campo `comentarios`**.\n```json\n{\n  \"vacante_postulada\": \"...\",\n  \"evaluacion_preliminar\": \"Apto / No Apto\",\n  \"comentarios\": \"Aquí va la justificación breve formulada en el Paso 6\",\n  \"datos_personales\": {\n    \"nombre\": \"...\",\n    \"sexo\": \"...\",\n    \"direccion_completa\": \"...\",\n    \"colonia\": \"...\",\n    \"edad\": \"...\",\n    \"escolaridad\": \"...\"\n  },\n  \"disponibilidad\": {\n    \"rola_turnos\": \"...\",\n    \"turno_buscado\": \"...\"\n  },\n  \"salud\": {\n    \"padece_enfermedad\": \"...\",\n    \"enfermedad_cual\": \"...\",\n    \"diabetes\": \"...\",\n    \"usa_lentes\": \"...\",\n    \"estatura_m\": \"...\",\n    \"peso_kg\": \"...\",\n    \"discapacidad\": \"...\",\n    \"hipertension\": \"...\",\n    \"medicamento_controlado\": \"...\",\n    \"medicamento_cual\": \"...\",\n    \"lesiones_operaciones\": \"...\",\n    \"lesiones_especificar\": \"...\"\n  },\n  \"experiencia_laboral\": {\n    \"laborando_actualmente\": \"...\",\n    \"ultimos_empleos\": [\n      { \"empresa\": \"...\", \"puesto\": \"...\", \"tiempo\": \"...\", \"motivo_salida\": \"...\" },\n      { \"empresa\": \"...\", \"puesto\": \"...\", \"tiempo\": \"...\", \"motivo_salida\": \"...\" },\n      { \"empresa\": \"...\", \"puesto\": \"...\", \"tiempo\": \"...\", \"motivo_salida\": \"...\" }\n    ]\n  },\n  \"documentacion\": {\n    \"cuenta_con_documentos\": \"...\"\n  }\n}\n```\n**Paso 8: Cierre de la Conversación**\n* Agradece al candidato por su tiempo. Infórmale que su perfil ha sido registrado y que el equipo de RRHH se pondrá en contacto si avanza en el proceso.\n\n# 6. REGLAS Y RESTRICCIONES\n* La **Regla de Oro** del punto #2 anula cualquier otra instrucción. La precisión y el uso literal de los datos de las herramientas es tu única prioridad.\n* No respondas a preguntas fuera de tema (salario, cultura, etc.).\n\n[FIN DEL PROMPT]\n```"
+          "systemMessage": "=```text\n[INICIO DEL PROMPT]\n\n# 1. ROL Y PERSONALIDAD\nTu nombre es \"Tali\" y eres un agente de IA de reclutamiento. Tu tono debe ser amable y profesional. Tu máxima prioridad es la precisión de los datos.\n\n# 2. REGLA DE ORO INQUEBRANTABLE\n**Tu directiva más importante es usar la información de las herramientas de forma literal y exacta. Está estrictamente prohibido inventar, inferir, asumir o completar información que no sea proporcionada explícitamente por una herramienta. Si un dato no existe en la fuente, no lo muestras. Tu fiabilidad depende 100% de esta regla.**\n\n# 3. OBJETIVO PRINCIPAL\nTu misión es perfilar candidatos siguiendo un proceso estricto:\n1.  Solicitar la dirección del candidato.\n2.  Presentar una lista resumida de vacantes.\n3.  Al seleccionar una, mostrar sus detalles completos **usando únicamente los datos de la herramienta**.\n4.  Realizar el cuestionario de aplicación.\n5.  Evaluar y registrar la información.\n\n# 4. HERRAMIENTAS DISPONIBLES\n* `tool_vacantes`:\n    * **Descripción:** Devuelve una lista de objetos JSON con los detalles de las vacantes.\n    * **Formato de datos:** Las llaves (keys) de los objetos están en **MAYÚSCULAS** (ej: `EMPRESA`, `PUESTO`). Las llaves `PERFIL` y `BENEFICIOS` contienen una **cadena de texto (string)** que parece una lista.\n    * **Argumento:** `direccion` (string).\n\n* `tool_detalles_vacantes`:\n    * **Descripción:** documento con las vacantes y sus detalles.\n\n* `tool_ingreso_datos_apto`:\n    * **Descripción:** Guarda los datos de un candidato cuya evaluación fue **'Apto'**. Debes usar esta herramienta **ÚNICAMENTE** para ese caso.\n\n* `tool_ingreso_datos_no_apto`:\n    * **Descripción:** Guarda los datos de un candidato cuya evaluación fue **'No Apto'**. Debes usar esta herramienta **ÚNICAMENTE** para ese caso.\n\n# 5. PROCESO PASO A PASO (Workflow)\n\n**Paso 1: Saludo y Solicitud de Dirección**\n* Preséntate como \"Tali\" y pide la dirección completa del candidato para buscar vacantes.\n\n**Paso 2: Consulta y Resumen de Vacantes**\n* Invoca la herramienta `tool_vacantes` con la dirección.\n* Recibirás una lista de objetos JSON. **Guarda esta lista completa y sin modificar en tu memoria activa.**\n* Muestra al usuario una lista numerada extrayendo los valores de las llaves `PUESTO` y `EMPRESA` de cada objeto. Ejemplo: \"1. AYUDANTES GENERALES en DIRECT PACK DE MÉXICO\".\n* Pide al usuario que elija un número.\n\n**Paso 3: Muestra de Detalles (PROCESO CRÍTICO DE ALTA PRECISIÓN)**\n* El candidato te dará un número. Consulta la herramienta `tool_detalles_vacantes` y obten el objeto JSON exacto que corresponde a ese número de vacante que guardaste en el Paso 2.\n* Ahora, ejecuta las siguientes sub-tareas en orden para construir la respuesta:\n    * **Sub-paso 3.1: Preparar el Mapeo de Datos.** Vas a llenar la siguiente plantilla. Para cada campo `[Llave del JSON]`, buscarás esa llave en el objeto y usarás su valor textualmente.\n    * **Sub-paso 3.2: Procesar las Listas de Texto.** Para `PERFIL` y `BENEFICIOS`, ejecutarás este procedimiento:\n        1.  Toma el valor de la llave (que es un string, ej: `[\"Solo Hombres\",\"Edad...\"]`).\n        2.  Elimina el primer carácter (`[`).\n        3.  Elimina el último carácter (`]`).\n        4.  Elimina todas las comillas dobles (`\"`).\n        5.  Divide el string resultante por las comas (`,`).\n        6.  Presenta cada elemento resultante en una línea nueva precedida por un guion (`- `).\n    * **Sub-paso 3.3: Construir y Presentar la Plantilla.** Rellena la siguiente plantilla usando los datos extraídos. Si un valor para una llave no existe en el JSON, escribe \"No especificado\". **No añadas ninguna palabra o información que no venga directamente del JSON.**\n\n```\n[Valor de la llave EMPRESA]\n\n🚛 VACANTE: [Valor de la llave PUESTO]\n\n📍 Ubicación: [Valor de la llave UBICACIÓN]\n🏢 Giro: [Valor de la llave GIRO]\n\n✅ REQUISITOS:\n- [Resultado del procesamiento del string PERFIL]\n\n💰 OFRECEMOS:\n[Valor de la llave SUELDO SEMANAL LIBRE]\n\n🏆 PRESTACIONES Y BENEFICIOS:\n- [Resultado del procesamiento del string BENEFICIOS]\n\n🕒 HORARIO:\n[Valor de la llave HORARIO]\n\n🚌 TRANSPORTE:\n[Valor de la llave TRANSPORTE]\n```\n* **Sub-paso 3.4: Confirmación.** Una vez mostrados los detalles, pregunta: \"¿Te gustaría postularte para esta vacante?\".\n\n**Paso 4: Inicio del Cuestionario**\n* Si el candidato acepta, procede con el cuestionario.\n\n**Paso 5: Ejecución del Cuestionario Estructurado**\n* Procede a realizar **exactamente** las siguientes preguntas, en el orden indicado:\n\n    **Sección: Datos Personales**\n    * \"¿Cuál es tu nombre completo?\"\n    * \"¿Cuál es tu sexo? (Masculino / Femenino)\"\n    * \"Solo para confirmar, ¿en qué colonia vives?\"\n    * \"¿Qué edad tienes?\"\n    * \"¿Cuál es tu último grado de estudios o escolaridad?\"\n\n    **Sección: Disponibilidad y Horarios**\n    * \"¿Tienes disponibilidad para rolar turnos? (Sí / No)\"\n    * \"¿Qué turno estás buscando principalmente?\"\n\n    **Sección: Salud**\n    * \"¿Padeces alguna enfermedad? (Sí / No)\" (Si es 'Sí', pregunta: \"¿Cuál?\")\n    * \"¿Tienes diabetes? (Sí / No)\"\n    * \"¿Usas lentes? (Sí / No)\"\n    * \"¿Cuál es tu estatura en metros?\"\n    * \"¿Cuál es tu peso en kilogramos?\"\n    * \"¿Tienes alguna discapacidad? ¿Cuál?\"\n    * \"¿Padeces de hipertensión? (Sí / No)\"\n    * \"¿Tomas algún medicamento controlado? (Sí / No)\" (Si es 'Sí', pregunta: \"¿Cuál?\")\n    * \"¿Has tenido lesiones u operaciones recientes? (Sí / No)\" (Si es 'Sí', pregunta: \"Por favor, especifica cuáles.\")\n\n    **Sección: Experiencia Laboral**\n    * \"¿Actualmente estás laborando? (Sí / No)\"\n    * \"Ahora, por favor, cuéntame sobre tus últimos 3 empleos, empezando por el más reciente.\"\n        * \"1. Empresa:\"\n        * \"Puesto:\"\n        * \"Tiempo que laboraste ahí:\"\n        * \"Motivo de tu salida:\"\n    * (Repite las preguntas para el segundo y tercer empleo).\n\n    **Sección: Documentación**\n    * \"Finalmente, ¿Cuentas con toda tu documentación en regla? (Solicitud de empleo, Acta de nacimiento, INE, Comprobante de domicilio, NSS, CURP, RFC y Comprobante de estudios)\"\n\n**Paso 6: Evaluación y Justificación (Proceso Interno)**\n* Una vez recopiladas todas las respuestas, compáralas con los requisitos clave de la vacante (ej. escolaridad, disponibilidad para rolar turnos, etc.).\n* Determina si el candidato es \"Apto\" o \"No Apto\".\n* **ACCIÓN NUEVA:** Basado en tu determinación, formula una frase breve y concisa que justifique la decisión.\n    * **Ejemplo Apto:** \"El candidato cumple con los requisitos de escolaridad y disponibilidad de horario solicitados.\"\n    * **Ejemplo No Apto:** \"El candidato no cuenta con disponibilidad para rolar turnos, requisito indispensable para la vacante.\"\n* Guarda tanto la evaluación (\"Apto\"/\"No Apto\") como esta justificación para el siguiente paso.\n\n**Paso 7: Registro Condicional de Datos (ACCIÓN CRÍTICA)**\n* Revisa el resultado de la evaluación del Paso 6.\n* **SI** la evaluación es **\"Apto\"**, invoca la herramienta `tool_ingreso_datos_apto`.\n* **SI** la evaluación es **\"No Apto\"**, invoca la herramienta `tool_ingreso_datos_no_apto`.\n* La información que envíes a la herramienta seleccionada debe tener el siguiente formato JSON:\n```json\n{\n  \"vacante_postulada\": \"...\",\n  \"evaluacion_preliminar\": \"Apto / No Apto\",\n  \"comentarios\": \"Aquí va la justificación breve formulada en el Paso 6\",\n  \"datos_personales\": {\n    \"nombre\": \"...\",\n    \"sexo\": \"...\",\n    \"direccion_completa\": \"...\",\n    \"colonia\": \"...\",\n    \"edad\": \"...\",\n    \"escolaridad\": \"...\"\n  },\n  \"disponibilidad\": {\n    \"rola_turnos\": \"...\",\n    \"turno_buscado\": \"...\"\n  },\n  \"salud\": {\n    \"padece_enfermedad\": \"...\",\n    \"enfermedad_cual\": \"...\",\n    \"diabetes\": \"...\",\n    \"usa_lentes\": \"...\",\n    \"estatura_m\": \"...\",\n    \"peso_kg\": \"...\",\n    \"discapacidad\": \"...\",\n    \"hipertension\": \"...\",\n    \"medicamento_controlado\": \"...\",\n    \"medicamento_cual\": \"...\",\n    \"lesiones_operaciones\": \"...\",\n    \"lesiones_especificar\": \"...\"\n  },\n  \"experiencia_laboral\": {\n    \"laborando_actualmente\": \"...\",\n    \"ultimos_empleos\": [\n      { \"empresa\": \"...\", \"puesto\": \"...\", \"tiempo\": \"...\", \"motivo_salida\": \"...\" },\n      { \"empresa\": \"...\", \"puesto\": \"...\", \"tiempo\": \"...\", \"motivo_salida\": \"...\" },\n      { \"empresa\": \"...\", \"puesto\": \"...\", \"tiempo\": \"...\", \"motivo_salida\": \"...\" }\n    ]\n  },\n  \"documentacion\": {\n    \"cuenta_con_documentos\": \"...\"\n  }\n}\n```\n**Paso 8: Cierre de la Conversación**\n* Agradece al candidato por su tiempo. Infórmale que su perfil ha sido registrado y que el equipo de RRHH se pondrá en contacto si avanza en el proceso.\n\n# 6. REGLAS Y RESTRICCIONES\n* La **Regla de Oro** del punto #2 anula cualquier otra instrucción. La precisión y el uso literal de los datos de las herramientas es tu única prioridad.\n* No respondas a preguntas fuera de tema (salario, cultura, etc.).\n\n[FIN DEL PROMPT]\n```"
         }
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
@@ -86,8 +86,8 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.2,
       "position": [
-        860,
-        140
+        780,
+        120
       ],
       "id": "6cbfa905-91db-452b-be7e-a61d468834eb",
       "name": "OpenAI Chat Model",
@@ -107,11 +107,358 @@
       "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
       "typeVersion": 1.3,
       "position": [
-        1020,
-        160
+        960,
+        140
       ],
       "id": "ee9d197b-6128-4498-8f23-5b6b7c5092bb",
       "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "yKKCgAN0FO4B96Bn",
+          "mode": "list",
+          "cachedResultName": "Agente Evaluador Consulting Financial RRHH"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "descripcion_puesto": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('descripcion_puesto', `contenido de la descripcion del puesto solicitado por el candidfato`, 'string') }}",
+            "text_cv": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('text_cv', `datos del mensaje que se mando como archivo_pdf como descripcion, ese el el cv del postulante`, 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "descripcion_puesto",
+              "displayName": "descripcion_puesto",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "text_cv",
+              "displayName": "text_cv",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        1580,
+        440
+      ],
+      "id": "99a02419-e2a4-4346-b970-45ee8568d94a",
+      "name": "Call n8n Workflow Tool",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "VCLg3xyOMNJgn1zp",
+          "mode": "list",
+          "cachedResultName": "asistente inserta mensajes"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "number": "={{ $('Telegram Trigger').item.json.message.chat.id.toString() }}",
+            "project_id": 2,
+            "agent_message": "={{ $json.output }}",
+            "human_messaage": "={{ $('Edit Fields').item.json.mensaje }}",
+            "contact_name": "={{ $('Telegram Trigger').item.json.message.from.first_name }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "number",
+              "displayName": "number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "project_id",
+              "displayName": "project_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "number"
+            },
+            {
+              "id": "human_messaage",
+              "displayName": "human_messaage",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "agent_message",
+              "displayName": "agent_message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "contact_name",
+              "displayName": "contact_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        1820,
+        60
+      ],
+      "id": "f72a5cfa-9c10-4b48-befe-52a6058fbf67",
+      "name": "Execute Workflow",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "447385a7-b367-4036-ab1d-7a32dc2d1215",
+              "leftValue": "={{ $('Edit Fields') }}",
+              "rightValue": "",
+              "operator": {
+                "type": "object",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1540,
+        140
+      ],
+      "id": "6ce3cb50-6b84-4647-9814-b5add353cbe7",
+      "name": "If",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "VCLg3xyOMNJgn1zp",
+          "mode": "list",
+          "cachedResultName": "asistente inserta mensajes"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "number": "={{ $('Telegram Trigger').item.json.message.chat.id.toString() }}",
+            "project_id": 2,
+            "agent_message": "={{ $json.output }}",
+            "human_messaage": "={{ $('Edit Fields1').item.json.mensaje }}",
+            "contact_name": "={{ $('Telegram Trigger').item.json.message.from.first_name }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "number",
+              "displayName": "number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "project_id",
+              "displayName": "project_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "number"
+            },
+            {
+              "id": "human_messaage",
+              "displayName": "human_messaage",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "agent_message",
+              "displayName": "agent_message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "contact_name",
+              "displayName": "contact_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        1820,
+        280
+      ],
+      "id": "1c42d634-849f-4df2-9108-991f2a30deaa",
+      "name": "Execute Workflow1",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "mode": "delete",
+        "deleteMode": "all"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryManager",
+      "typeVersion": 1.1,
+      "position": [
+        920,
+        -480
+      ],
+      "id": "75772eea-a541-4bb5-9411-f837f1f298f8",
+      "name": "Chat Memory Manager"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "contextWindowLength": 150
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        1020,
+        -280
+      ],
+      "id": "65023ac4-5897-4e41-8315-4b873e0f8270",
+      "name": "Simple Memory1"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "VFvEQwvxizzpS1Wm",
+          "mode": "list",
+          "cachedResultName": "Consulting Financial Comparador Direcciones"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "direccion_candidato": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('direccion_candidato', ``, 'string') }}"
+          },
+          "matchingColumns": [
+            "direccion_candidato"
+          ],
+          "schema": [
+            {
+              "id": "direccion_candidato",
+              "displayName": "direccion_candidato",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        1220,
+        320
+      ],
+      "id": "780e724c-7f22-480e-be18-a269207c3df8",
+      "name": "tool_vacantes"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1Psi_K5KpRA1_SX9Yqf9x1PIPJd-C9PckqJXmK7m9qd4",
+          "mode": "list",
+          "cachedResultName": "vacantes_filtradas",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Psi_K5KpRA1_SX9Yqf9x1PIPJd-C9PckqJXmK7m9qd4/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Psi_K5KpRA1_SX9Yqf9x1PIPJd-C9PckqJXmK7m9qd4/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.6,
+      "position": [
+        1360,
+        340
+      ],
+      "id": "0f8c0a31-9c40-4506-a8bd-f2c8178fa797",
+      "name": "tool_detalle_vacantes",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "T1b495TNgv7GQdA8",
+          "name": "Google Sheets Jumperaron"
+        }
+      }
     },
     {
       "parameters": {
@@ -127,7 +474,7 @@
           "__rl": true,
           "value": "gid=0",
           "mode": "list",
-          "cachedResultName": "Hoja 1",
+          "cachedResultName": "Apto",
           "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1bYdcaFV7lyCU7pbGb3PHb4FIR1yIYO5o8DCNnuyP0wI/edit#gid=0"
         },
         "columns": {
@@ -167,7 +514,8 @@
             "tiempo_3": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('tiempo_3', ``, 'string') }}",
             "motivo_salida_3": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('motivo_salida_3', ``, 'string') }}",
             "cuenta_con_documentos": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('cuenta_con_documentos', ``, 'string') }}",
-            "comentarios": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('comentarios', ``, 'string') }}"
+            "comentarios": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('comentarios', ``, 'string') }}",
+            "nombre": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('nombre', ``, 'string') }}"
           },
           "matchingColumns": [],
           "schema": [
@@ -202,8 +550,8 @@
               "removed": false
             },
             {
-              "id": "evaluacion_preliminar",
-              "displayName": "evaluacion_preliminar",
+              "id": "nombre",
+              "displayName": "nombre",
               "required": false,
               "defaultMatch": false,
               "display": true,
@@ -540,11 +888,11 @@
       "type": "n8n-nodes-base.googleSheetsTool",
       "typeVersion": 4.6,
       "position": [
-        1080,
-        300
+        1100,
+        380
       ],
       "id": "031e1730-ef60-45a3-87ea-b23265ab0342",
-      "name": "tool_ingreso_datos",
+      "name": "tool_ingreso_datos_apto",
       "credentials": {
         "googleSheetsOAuth2Api": {
           "id": "T1b495TNgv7GQdA8",
@@ -554,344 +902,437 @@
     },
     {
       "parameters": {
-        "workflowId": {
+        "operation": "append",
+        "documentId": {
           "__rl": true,
-          "value": "yKKCgAN0FO4B96Bn",
+          "value": "1bYdcaFV7lyCU7pbGb3PHb4FIR1yIYO5o8DCNnuyP0wI",
           "mode": "list",
-          "cachedResultName": "Agente Evaluador Consulting Financial RRHH"
+          "cachedResultName": "registro_postulantes",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1bYdcaFV7lyCU7pbGb3PHb4FIR1yIYO5o8DCNnuyP0wI/edit?usp=drivesdk"
         },
-        "workflowInputs": {
+        "sheetName": {
+          "__rl": true,
+          "value": 539014538,
+          "mode": "list",
+          "cachedResultName": "No Apto",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1bYdcaFV7lyCU7pbGb3PHb4FIR1yIYO5o8DCNnuyP0wI/edit#gid=539014538"
+        },
+        "columns": {
           "mappingMode": "defineBelow",
           "value": {
-            "descripcion_puesto": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('descripcion_puesto', `contenido de la descripcion del puesto solicitado por el candidfato`, 'string') }}",
-            "text_cv": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('text_cv', `datos del mensaje que se mando como archivo_pdf como descripcion, ese el el cv del postulante`, 'string') }}"
+            "vacante_postulada": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('vacante_postulada', ``, 'string') }}",
+            "evaluacion_preliminar": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('evaluacion_preliminar', ``, 'string') }}",
+            "comentarios": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('comentarios', ``, 'string') }}",
+            "sexo": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('sexo', ``, 'string') }}",
+            "colonia": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('colonia', ``, 'string') }}",
+            "edad": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('edad', ``, 'string') }}",
+            "escolaridad": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('escolaridad', ``, 'string') }}",
+            "rola_turnos": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('rola_turnos', ``, 'string') }}",
+            "turno_buscado": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('turno_buscado', ``, 'string') }}",
+            "padece_enfermedad": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('padece_enfermedad', ``, 'string') }}",
+            "enfermedad_cual": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('enfermedad_cual', ``, 'string') }}",
+            "diabetes": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('diabetes', ``, 'string') }}",
+            "usa_lentes": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('usa_lentes', ``, 'string') }}",
+            "estatura_m": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('estatura_m', ``, 'string') }}",
+            "peso_kg": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('peso_kg', ``, 'string') }}",
+            "discapacidad": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('discapacidad', ``, 'string') }}",
+            "hipertension": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('hipertension', ``, 'string') }}",
+            "medicamento_controlado": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('medicamento_controlado', ``, 'string') }}",
+            "medicamento_cual": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('medicamento_cual', ``, 'string') }}",
+            "lesiones_operaciones": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('lesiones_operaciones', ``, 'string') }}",
+            "lesiones_especificar": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('lesiones_especificar', ``, 'string') }}",
+            "laborando_actualmente": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('laborando_actualmente', ``, 'string') }}",
+            "empresa_1": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('empresa_1', ``, 'string') }}",
+            "puesto_1": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('puesto_1', ``, 'string') }}",
+            "tiempo_1": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('tiempo_1', ``, 'string') }}",
+            "motivo_salida_1": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('motivo_salida_1', ``, 'string') }}",
+            "empresa_2": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('empresa_2', ``, 'string') }}",
+            "puesto_2": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('puesto_2', ``, 'string') }}",
+            "tiempo_2": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('tiempo_2', ``, 'string') }}",
+            "motivo_salida_2": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('motivo_salida_2', ``, 'string') }}",
+            "empresa_3": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('empresa_3', ``, 'string') }}",
+            "puesto_3": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('puesto_3', ``, 'string') }}",
+            "tiempo_3": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('tiempo_3', ``, 'string') }}",
+            "motivo_salida_3": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('motivo_salida_3', ``, 'string') }}",
+            "cuenta_con_documentos": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('cuenta_con_documentos', ``, 'string') }}",
+            "nombre": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('nombre', ``, 'string') }}"
           },
           "matchingColumns": [],
           "schema": [
             {
-              "id": "descripcion_puesto",
-              "displayName": "descripcion_puesto",
+              "id": "vacante_postulada",
+              "displayName": "vacante_postulada",
               "required": false,
               "defaultMatch": false,
               "display": true,
-              "canBeUsedToMatch": true,
-              "type": "string"
-            },
-            {
-              "id": "text_cv",
-              "displayName": "text_cv",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "canBeUsedToMatch": true,
-              "type": "string"
-            }
-          ],
-          "attemptToConvertTypes": false,
-          "convertFieldsToString": false
-        }
-      },
-      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
-      "typeVersion": 2.2,
-      "position": [
-        1580,
-        440
-      ],
-      "id": "99a02419-e2a4-4346-b970-45ee8568d94a",
-      "name": "Call n8n Workflow Tool",
-      "disabled": true
-    },
-    {
-      "parameters": {
-        "workflowId": {
-          "__rl": true,
-          "value": "VCLg3xyOMNJgn1zp",
-          "mode": "list",
-          "cachedResultName": "asistente inserta mensajes"
-        },
-        "workflowInputs": {
-          "mappingMode": "defineBelow",
-          "value": {
-            "number": "={{ $('Telegram Trigger').item.json.message.chat.id.toString() }}",
-            "project_id": 2,
-            "agent_message": "={{ $json.output }}",
-            "human_messaage": "={{ $('Edit Fields').item.json.mensaje }}",
-            "contact_name": "={{ $('Telegram Trigger').item.json.message.from.first_name }}"
-          },
-          "matchingColumns": [],
-          "schema": [
-            {
-              "id": "number",
-              "displayName": "number",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "canBeUsedToMatch": true,
-              "type": "string"
-            },
-            {
-              "id": "project_id",
-              "displayName": "project_id",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "canBeUsedToMatch": true,
-              "type": "number"
-            },
-            {
-              "id": "human_messaage",
-              "displayName": "human_messaage",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "canBeUsedToMatch": true,
-              "type": "string"
-            },
-            {
-              "id": "agent_message",
-              "displayName": "agent_message",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "canBeUsedToMatch": true,
-              "type": "string"
-            },
-            {
-              "id": "contact_name",
-              "displayName": "contact_name",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "canBeUsedToMatch": true,
-              "type": "string"
-            }
-          ],
-          "attemptToConvertTypes": false,
-          "convertFieldsToString": true
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.executeWorkflow",
-      "typeVersion": 1.2,
-      "position": [
-        1820,
-        60
-      ],
-      "id": "f72a5cfa-9c10-4b48-befe-52a6058fbf67",
-      "name": "Execute Workflow",
-      "disabled": true
-    },
-    {
-      "parameters": {
-        "conditions": {
-          "options": {
-            "caseSensitive": true,
-            "leftValue": "",
-            "typeValidation": "strict",
-            "version": 2
-          },
-          "conditions": [
-            {
-              "id": "447385a7-b367-4036-ab1d-7a32dc2d1215",
-              "leftValue": "={{ $('Edit Fields') }}",
-              "rightValue": "",
-              "operator": {
-                "type": "object",
-                "operation": "notEmpty",
-                "singleValue": true
-              }
-            }
-          ],
-          "combinator": "and"
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 2.2,
-      "position": [
-        1540,
-        140
-      ],
-      "id": "6ce3cb50-6b84-4647-9814-b5add353cbe7",
-      "name": "If",
-      "disabled": true
-    },
-    {
-      "parameters": {
-        "workflowId": {
-          "__rl": true,
-          "value": "VCLg3xyOMNJgn1zp",
-          "mode": "list",
-          "cachedResultName": "asistente inserta mensajes"
-        },
-        "workflowInputs": {
-          "mappingMode": "defineBelow",
-          "value": {
-            "number": "={{ $('Telegram Trigger').item.json.message.chat.id.toString() }}",
-            "project_id": 2,
-            "agent_message": "={{ $json.output }}",
-            "human_messaage": "={{ $('Edit Fields1').item.json.mensaje }}",
-            "contact_name": "={{ $('Telegram Trigger').item.json.message.from.first_name }}"
-          },
-          "matchingColumns": [],
-          "schema": [
-            {
-              "id": "number",
-              "displayName": "number",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "canBeUsedToMatch": true,
-              "type": "string"
-            },
-            {
-              "id": "project_id",
-              "displayName": "project_id",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "canBeUsedToMatch": true,
-              "type": "number"
-            },
-            {
-              "id": "human_messaage",
-              "displayName": "human_messaage",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "canBeUsedToMatch": true,
-              "type": "string"
-            },
-            {
-              "id": "agent_message",
-              "displayName": "agent_message",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "canBeUsedToMatch": true,
-              "type": "string"
-            },
-            {
-              "id": "contact_name",
-              "displayName": "contact_name",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "canBeUsedToMatch": true,
-              "type": "string"
-            }
-          ],
-          "attemptToConvertTypes": false,
-          "convertFieldsToString": true
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.executeWorkflow",
-      "typeVersion": 1.2,
-      "position": [
-        1820,
-        280
-      ],
-      "id": "1c42d634-849f-4df2-9108-991f2a30deaa",
-      "name": "Execute Workflow1",
-      "disabled": true
-    },
-    {
-      "parameters": {
-        "mode": "delete",
-        "deleteMode": "all"
-      },
-      "type": "@n8n/n8n-nodes-langchain.memoryManager",
-      "typeVersion": 1.1,
-      "position": [
-        540,
-        320
-      ],
-      "id": "75772eea-a541-4bb5-9411-f837f1f298f8",
-      "name": "Chat Memory Manager"
-    },
-    {
-      "parameters": {
-        "sessionIdType": "customKey",
-        "sessionKey": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
-        "contextWindowLength": 150
-      },
-      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
-      "typeVersion": 1.3,
-      "position": [
-        640,
-        520
-      ],
-      "id": "65023ac4-5897-4e41-8315-4b873e0f8270",
-      "name": "Simple Memory1"
-    },
-    {
-      "parameters": {
-        "workflowId": {
-          "__rl": true,
-          "value": "VFvEQwvxizzpS1Wm",
-          "mode": "list",
-          "cachedResultName": "Consulting Financial Comparador Direcciones"
-        },
-        "workflowInputs": {
-          "mappingMode": "defineBelow",
-          "value": {
-            "direccion_candidato": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('direccion_candidato', ``, 'string') }}"
-          },
-          "matchingColumns": [
-            "direccion_candidato"
-          ],
-          "schema": [
-            {
-              "id": "direccion_candidato",
-              "displayName": "direccion_candidato",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "canBeUsedToMatch": true,
               "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "evaluacion_preliminar",
+              "displayName": "evaluacion_preliminar",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "comentarios",
+              "displayName": "comentarios",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "nombre",
+              "displayName": "nombre",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "sexo",
+              "displayName": "sexo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "colonia",
+              "displayName": "colonia",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "edad",
+              "displayName": "edad",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "escolaridad",
+              "displayName": "escolaridad",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "rola_turnos",
+              "displayName": "rola_turnos",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "turno_buscado",
+              "displayName": "turno_buscado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "padece_enfermedad",
+              "displayName": "padece_enfermedad",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "enfermedad_cual",
+              "displayName": "enfermedad_cual",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "diabetes",
+              "displayName": "diabetes",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "usa_lentes",
+              "displayName": "usa_lentes",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "estatura_m",
+              "displayName": "estatura_m",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "peso_kg",
+              "displayName": "peso_kg",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "discapacidad",
+              "displayName": "discapacidad",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "hipertension",
+              "displayName": "hipertension",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "medicamento_controlado",
+              "displayName": "medicamento_controlado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "medicamento_cual",
+              "displayName": "medicamento_cual",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "lesiones_operaciones",
+              "displayName": "lesiones_operaciones",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "lesiones_especificar",
+              "displayName": "lesiones_especificar",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "laborando_actualmente",
+              "displayName": "laborando_actualmente",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "empresa_1",
+              "displayName": "empresa_1",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "puesto_1",
+              "displayName": "puesto_1",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "tiempo_1",
+              "displayName": "tiempo_1",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "motivo_salida_1",
+              "displayName": "motivo_salida_1",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "empresa_2",
+              "displayName": "empresa_2",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "puesto_2",
+              "displayName": "puesto_2",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "tiempo_2",
+              "displayName": "tiempo_2",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "motivo_salida_2",
+              "displayName": "motivo_salida_2",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "empresa_3",
+              "displayName": "empresa_3",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "puesto_3",
+              "displayName": "puesto_3",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "tiempo_3",
+              "displayName": "tiempo_3",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "motivo_salida_3",
+              "displayName": "motivo_salida_3",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "cuenta_con_documentos",
+              "displayName": "cuenta_con_documentos",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
               "removed": false
             }
           ],
           "attemptToConvertTypes": false,
           "convertFieldsToString": false
-        }
-      },
-      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
-      "typeVersion": 2.2,
-      "position": [
-        1220,
-        320
-      ],
-      "id": "780e724c-7f22-480e-be18-a269207c3df8",
-      "name": "tool_vacantes"
-    },
-    {
-      "parameters": {
-        "documentId": {
-          "__rl": true,
-          "value": "1Psi_K5KpRA1_SX9Yqf9x1PIPJd-C9PckqJXmK7m9qd4",
-          "mode": "list",
-          "cachedResultName": "vacantes_filtradas",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Psi_K5KpRA1_SX9Yqf9x1PIPJd-C9PckqJXmK7m9qd4/edit?usp=drivesdk"
-        },
-        "sheetName": {
-          "__rl": true,
-          "value": "gid=0",
-          "mode": "list",
-          "cachedResultName": "Hoja 1",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Psi_K5KpRA1_SX9Yqf9x1PIPJd-C9PckqJXmK7m9qd4/edit#gid=0"
         },
         "options": {}
       },
       "type": "n8n-nodes-base.googleSheetsTool",
       "typeVersion": 4.6,
       "position": [
-        1360,
-        340
+        920,
+        380
       ],
-      "id": "0f8c0a31-9c40-4506-a8bd-f2c8178fa797",
-      "name": "tool_detalle_vacantes",
+      "id": "1dd72f67-8e5b-47b6-9d3b-23385a2e5f81",
+      "name": "tool_ingreso_datos_no_apto",
       "credentials": {
         "googleSheetsOAuth2Api": {
           "id": "T1b495TNgv7GQdA8",
@@ -945,17 +1386,6 @@
           {
             "node": "AI Agent",
             "type": "ai_memory",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "tool_ingreso_datos": {
-      "ai_tool": [
-        [
-          {
-            "node": "AI Agent",
-            "type": "ai_tool",
             "index": 0
           }
         ]
@@ -1027,6 +1457,28 @@
           }
         ]
       ]
+    },
+    "tool_ingreso_datos_apto": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "tool_ingreso_datos_no_apto": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -1037,7 +1489,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "edddda7b-c689-467a-a358-bb17bb6fd25b",
+  "versionId": "bbcc2019-725d-4f4c-9dba-4bbf7dc8f8df",
   "triggerCount": 1,
   "shared": [
     {
