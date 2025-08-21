@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-08-15T18:12:56.636Z",
-  "updatedAt": "2025-08-21T00:53:03.000Z",
+  "updatedAt": "2025-08-21T01:32:39.000Z",
   "id": "VFvEQwvxizzpS1Wm",
   "name": "Consulting Financial Comparador Direcciones",
   "active": false,
@@ -19,7 +19,7 @@
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "typeVersion": 1.1,
       "position": [
-        -1800,
+        -2160,
         220
       ],
       "id": "2b3581f3-fb0d-4aa5-a158-f4d5be8ebfce",
@@ -73,7 +73,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -1560,
+        -1920,
         220
       ],
       "id": "2366ce87-6a6a-4b3f-b7ad-4e1e83094e23",
@@ -368,7 +368,7 @@
       "type": "n8n-nodes-base.extractFromFile",
       "typeVersion": 1,
       "position": [
-        -1100,
+        -1460,
         220
       ],
       "id": "8034e869-8545-471e-88dd-19f4f344d1bf",
@@ -389,7 +389,7 @@
       "type": "n8n-nodes-base.googleDrive",
       "typeVersion": 3,
       "position": [
-        -1300,
+        -1660,
         220
       ],
       "id": "209634f9-f8fc-4a0e-ba35-6322d520281d",
@@ -433,8 +433,8 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.2,
       "position": [
-        -1040,
-        700
+        -920,
+        680
       ],
       "id": "ed0154c6-29de-4d23-86bb-45b1013065fc",
       "name": "OpenAI Chat Model2",
@@ -452,8 +452,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -600,
-        500
+        -480,
+        460
       ],
       "id": "c765db0c-29a2-4735-b30f-1371a0958134",
       "name": "Code"
@@ -466,7 +466,7 @@
       "type": "n8n-nodes-base.splitOut",
       "typeVersion": 1,
       "position": [
-        -320,
+        -940,
         220
       ],
       "id": "ef3e1187-4307-4432-86c0-ee1787fcc4b6",
@@ -552,7 +552,7 @@
     {
       "parameters": {
         "promptType": "define",
-        "text": "={{ $json.text }}",
+        "text": "={{ JSON.stringify($json.vacantes) }}",
         "messages": {
           "messageValues": [
             {
@@ -565,8 +565,8 @@
       "type": "@n8n/n8n-nodes-langchain.chainLlm",
       "typeVersion": 1.7,
       "position": [
-        -960,
-        500
+        -1480,
+        480
       ],
       "id": "c58600c1-3961-4544-9b5c-219383aabce1",
       "name": "Basic LLM Chain"
@@ -629,16 +629,38 @@
     },
     {
       "parameters": {
-        "jsCode": "// INPUT: items[0].json.text  (todo el texto del PDF)\n// OUTPUT: un único item con { vacantes: [...] } exactamente en el formato solicitado.\n\nfunction cleanText(t) {\n  return (t || \"\")\n    .replace(/\\u0000/g, \" \")\n    .replace(/\\r/g, \"\\n\")\n    .replace(/[ \\t]+/g, \" \")\n    .replace(/\\n[ \\t]+/g, \"\\n\")\n    .replace(/\\n{3,}/g, \"\\n\\n\")\n    .trim();\n}\n\nfunction pick(arr) {\n  return (arr || []).map(s => s.trim()).filter(Boolean);\n}\n\nfunction extractFirst(regex, str) {\n  const m = regex.exec(str);\n  return m ? (m[1] || m[0]).trim() : \"\";\n}\n\nfunction between(startLabel, endLabels, str) {\n  const start = str.indexOf(startLabel);\n  if (start < 0) return \"\";\n  const sub = str.slice(start + startLabel.length);\n  let end = sub.length;\n  for (const lab of endLabels) {\n    const i = sub.indexOf(lab);\n    if (i >= 0) end = Math.min(end, i);\n  }\n  return sub.slice(0, end).trim();\n}\n\nfunction linesToArray(block) {\n  // bullets tipo ✔, ●, •, -, * y líneas normales\n  return pick(\n    block\n      .split(\"\\n\")\n      .map(s => s.replace(/^[\\s•●\\-–—*✔]+/g, \"\").trim())\n  );\n}\n\nfunction detectTransporte(ofreceArr, fullBlock) {\n  const full = (ofreceArr.join(\" \") + \" \" + fullBlock).toLowerCase();\n  if (/(servicio de transporte|transporte incluido|cuentan con transporte)/i.test(full)) {\n    return \"Sí cuenta con transporte\";\n  }\n  if (/(no hay transporte|no tienen transporte|no cuenta con transporte)/i.test(full)) {\n    return \"No cuenta con transporte\";\n  }\n  return \"No cuenta con transporte\"; // por especificación: si no se menciona, marcar que no\n}\n\nfunction detectSueldo(ofreceArr) {\n  // Busca “Sueldo semanal”, “Pago Semanal”, “sueldo libre por semana”, etc.\n  const joined = ofreceArr.join(\" • \");\n  const rxs = [\n    /sueldo\\s*(?:semanal|por semana|semanales)?.{0,40}?(\\$\\s?[\\d\\.,]+)/i,\n    /pago\\s*semanal.{0,40}?(\\$\\s?[\\d\\.,]+)/i,\n    /sueldo\\s*libre.{0,40}?(\\$\\s?[\\d\\.,]+)/i\n  ];\n  for (const rx of rxs) {\n    const m = rx.exec(joined);\n    if (m) return m[1].replace(/\\s+/g, \"\");\n  }\n  return \"\";\n}\n\nfunction extractPuesto(block) {\n  // Tomamos lo que hay entre UBICACIÓN: ... y PERFIL:\n  const mid = between(\"UBICACIÓN:\", [\"PERFIL:\", \"Perfil:\", \"PERFIL :\", \"Perfil :\"], block);\n  if (mid) {\n    // nos quedamos con la última línea no vacía (suelen ser títulos del puesto)\n    const lines = pick(mid.split(\"\\n\"));\n    if (lines.length) {\n      // descartar la línea propia de la ubicación (primera) si luce como dirección\n      // y quedarnos con la última “título”\n      return (lines[lines.length - 1] || \"\").trim();\n    }\n  }\n  // fallback: busca líneas en MAYÚSCULAS antes de PERFIL:\n  const beforePerfil = block.split(/PERFIL\\s*:/i)[0] || \"\";\n  const caps = pick(beforePerfil.split(\"\\n\"))\n    .filter(s => s.length <= 80 && /[A-ZÁÉÍÓÚÜÑ]{3}/.test(s) && !/^USUARIO:|^GIRO:|^UBICACIÓN:/i.test(s));\n  return caps.length ? caps[caps.length - 1] : \"\";\n}\n\nconst raw = items[0]?.json?.text || \"\";\nconst text = cleanText(raw);\n\n// Separamos por cada \"USUARIO:\" para obtener bloques de vacante/empresa\nlet parts = text.split(/(?:^|\\n)USUARIO:\\s*/i);\nif (parts[0].trim() === \"\") parts = parts.slice(1);\n\n// Reconstruimos añadiendo el prefijo \"USUARIO:\" a cada bloque\nconst blocks = parts.map(p => (\"USUARIO: \" + p).trim());\n\nconst vacantes = [];\n\nfor (const block of blocks) {\n  // Campos directos\n  const empresa = extractFirst(/USUARIO:\\s*([^\\n]+)/i, block);\n  const giro = extractFirst(/GIRO:\\s*([^\\n]+)/i, block);\n  const ubicacion = extractFirst(/UBICACIÓN:\\s*([^\\n]+)/i, block) || extractFirst(/UBICACION:\\s*([^\\n]+)/i, block);\n\n  // Secciones\n  const perfilBlock = between(\"PERFIL:\", [\"OFRECE:\", \"Ofrece:\", \"HORARIO:\", \"Horario:\", \"OBSERVACIONES\", \"Observaciones\", \"USUARIO:\"], block);\n  const ofreceBlock = between(\"OFRECE:\", [\"HORARIO:\", \"Horario:\", \"OBSERVACIONES\", \"Observaciones\", \"USUARIO:\"], block);\n  const horarioText = between(\"HORARIO:\", [\"OBSERVACIONES\", \"Observaciones\", \"USUARIO:\"], block);\n  const obsBlock = between(\"OBSERVACIONES\", [\"USUARIO:\"], block) || between(\"Observaciones\", [\"USUARIO:\"], block);\n\n  const perfilArr = linesToArray(perfilBlock);\n  const ofreceArr = linesToArray(ofreceBlock);\n  const obsArr = linesToArray(obsBlock);\n\n  const puesto = extractPuesto(block);\n  const sueldo = detectSueldo(ofreceArr);\n  const transporte = detectTransporte(ofreceArr, block);\n\n  // Armamos objeto\n  const vac = {\n    \"puesto\": puesto || \"\",\n    \"empresa_cliente\": empresa || \"\",\n    \"giro\": giro || \"\",\n    \"ubicacion\": ubicacion || \"\",\n    \"perfil_requisitos\": perfilArr,\n    \"sueldo_semanal_libre\": sueldo,\n    \"prestaciones_beneficios\": ofreceArr,\n    \"horario\": (horarioText || \"\").replace(/\\s+/g, \" \").trim(),\n    \"ofrece_transporte\": transporte,\n    \"observaciones\": obsArr\n  };\n\n  // Filtra bloques basura (por si algún split agarró ruido)\n  /*const hasAny =\n    vac.puesto || vac.empresa_cliente || vac.giro || vac.ubicacion ||\n    vac.perfil_requisitos.length || vac.prestaciones_beneficios.length;\n  if (hasAny) vacantes.push(vac);*/\n\n  const ok =\n  (vac.empresa_cliente?.trim().length > 0) &&\n  (vac.ubicacion?.trim().length > 0) &&\n  (vac.perfil_requisitos.length > 0 || vac.prestaciones_beneficios.length > 0);\n  if (ok) vacantes.push(vac);\n}\n\n// Devuelve exactamente el JSON que pides\nreturn [{\n  json: { \"vacantes\": vacantes }\n}];\n\n\n"
+        "jsCode": "// INPUT: items[0].json.text  (todo el texto del PDF)\n// OUTPUT: un único item con { vacantes: [...] } exactamente en el formato solicitado.\n\nfunction cleanText(t) {\n  return (t || \"\")\n    .replace(/\\u0000/g, \" \")\n    .replace(/\\r/g, \"\\n\")\n    .replace(/[ \\t]+/g, \" \")\n    .replace(/\\n[ \\t]+/g, \"\\n\")\n    .replace(/\\n{3,}/g, \"\\n\\n\")\n    .trim();\n}\n\nfunction pick(arr) {\n  return (arr || []).map(s => s.trim()).filter(Boolean);\n}\n\nfunction extractFirst(regex, str) {\n  const m = regex.exec(str);\n  return m ? (m[1] || m[0]).trim() : \"\";\n}\n\nfunction between(startLabel, endLabels, str) {\n  const start = str.indexOf(startLabel);\n  if (start < 0) return \"\";\n  const sub = str.slice(start + startLabel.length);\n  let end = sub.length;\n  for (const lab of endLabels) {\n    const i = sub.indexOf(lab);\n    if (i >= 0) end = Math.min(end, i);\n  }\n  return sub.slice(0, end).trim();\n}\n\nfunction linesToArray(block) {\n  // bullets tipo ✔, ●, •, -, * y líneas normales\n  return pick(\n    block\n      .split(\"\\n\")\n      .map(s => s.replace(/^[\\s•●\\-–—*✔]+/g, \"\").trim())\n  );\n}\n\nfunction detectTransporte(ofreceArr, fullBlock) {\n  const full = (ofreceArr.join(\" \") + \" \" + fullBlock).toLowerCase();\n  if (/(servicio de transporte|transporte incluido|cuentan con transporte)/i.test(full)) {\n    return \"Sí cuenta con transporte\";\n  }\n  if (/(no hay transporte|no tienen transporte|no cuenta con transporte)/i.test(full)) {\n    return \"No cuenta con transporte\";\n  }\n  return \"No cuenta con transporte\"; // por especificación: si no se menciona, marcar que no\n}\n\nfunction detectSueldo(ofreceArr) {\n  // Busca “Sueldo semanal”, “Pago Semanal”, “sueldo libre por semana”, etc.\n  const joined = ofreceArr.join(\" • \");\n  const rxs = [\n    /sueldo\\s*(?:semanal|por semana|semanales)?.{0,40}?(\\$\\s?[\\d\\.,]+)/i,\n    /pago\\s*semanal.{0,40}?(\\$\\s?[\\d\\.,]+)/i,\n    /sueldo\\s*libre.{0,40}?(\\$\\s?[\\d\\.,]+)/i\n  ];\n  for (const rx of rxs) {\n    const m = rx.exec(joined);\n    if (m) return m[1].replace(/\\s+/g, \"\");\n  }\n  return \"\";\n}\n\nfunction extractPuesto(block) {\n  // Tomamos lo que hay entre UBICACIÓN: ... y PERFIL:\n  const mid = between(\"UBICACIÓN:\", [\"PERFIL:\", \"Perfil:\", \"PERFIL :\", \"Perfil :\"], block);\n  if (mid) {\n    // nos quedamos con la última línea no vacía (suelen ser títulos del puesto)\n    const lines = pick(mid.split(\"\\n\"));\n    if (lines.length) {\n      return (lines[lines.length - 1] || \"\").trim();\n    }\n  }\n  // fallback: busca líneas en MAYÚSCULAS antes de PERFIL:\n  const beforePerfil = block.split(/PERFIL\\s*:/i)[0] || \"\";\n  const caps = pick(beforePerfil.split(\"\\n\"))\n    .filter(s => s.length <= 80 && /[A-ZÁÉÍÓÚÜÑ]{3}/.test(s) && !/^USUARIO:|^GIRO:|^UBICACIÓN:/i.test(s));\n  return caps.length ? caps[caps.length - 1] : \"\";\n}\n\nconst raw = items[0]?.json?.text || \"\";\nconst text = cleanText(raw);\n\n// Separamos por cada \"USUARIO:\" para obtener bloques de vacante/empresa\nlet parts = text.split(/(?:^|\\n)USUARIO:\\s*/i);\nif (parts[0].trim() === \"\") parts = parts.slice(1);\n\n// Reconstruimos añadiendo el prefijo \"USUARIO:\" a cada bloque\nconst blocks = parts.map(p => (\"USUARIO: \" + p).trim());\n\nconst vacantes = [];\n\nfor (const block of blocks) {\n  // Campos directos\n  const empresa = extractFirst(/USUARIO:\\s*([^\\n]+)/i, block);\n  const giro = extractFirst(/GIRO:\\s*([^\\n]+)/i, block);\n  const ubicacion = extractFirst(/UBICACIÓN:\\s*([^\\n]+)/i, block) || extractFirst(/UBICACION:\\s*([^\\n]+)/i, block);\n\n  // Secciones (ahora soporta también \"Horarios:\")\n  const perfilBlock = between(\"PERFIL:\", [\"OFRECE:\", \"Ofrece:\", \"HORARIO:\", \"Horario:\", \"HORARIOS:\", \"Horarios:\", \"OBSERVACIONES\", \"Observaciones\", \"USUARIO:\"], block);\n  const ofreceBlock = between(\"OFRECE:\", [\"HORARIO:\", \"Horario:\", \"HORARIOS:\", \"Horarios:\", \"OBSERVACIONES\", \"Observaciones\", \"USUARIO:\"], block);\n  const horarioText = between(\"HORARIO:\", [\"OBSERVACIONES\", \"Observaciones\", \"USUARIO:\"], block) || between(\"HORARIOS:\", [\"OBSERVACIONES\", \"Observaciones\", \"USUARIO:\"], block) || between(\"Horarios:\", [\"OBSERVACIONES\", \"Observaciones\", \"USUARIO:\"], block);\n  const obsBlock = between(\"OBSERVACIONES\", [\"USUARIO:\"], block) || between(\"Observaciones\", [\"USUARIO:\"], block);\n\n  const perfilArr = linesToArray(perfilBlock);\n  const ofreceArr = linesToArray(ofreceBlock);\n  const obsArr = linesToArray(obsBlock);\n\n  const puesto = extractPuesto(block);\n  const sueldo = detectSueldo(ofreceArr);\n  const transporte = detectTransporte(ofreceArr, block);\n\n  // Armamos objeto\n  const vac = {\n    \"puesto\": puesto || \"\",\n    \"empresa_cliente\": empresa || \"\",\n    \"giro\": giro || \"\",\n    \"ubicacion\": ubicacion || \"\",\n    \"perfil_requisitos\": perfilArr,\n    \"sueldo_semanal_libre\": sueldo,\n    \"prestaciones_beneficios\": ofreceArr,\n    \"horario\": (horarioText || \"\").replace(/\\s+/g, \" \").trim(),\n    \"ofrece_transporte\": transporte,\n    \"observaciones\": obsArr\n  };\n\n  // Filtra bloques basura y descarta los que no tengan ubicación\n  const ok =\n    (vac.empresa_cliente?.trim().length > 0) &&\n    (vac.ubicacion?.trim().length > 0) &&\n    (vac.perfil_requisitos.length > 0 || vac.prestaciones_beneficios.length > 0);\n\n  if (ok) vacantes.push(vac);\n}\n\n// Devuelve exactamente el JSON que pides\nreturn [{\n  json: { \"vacantes\": vacantes }\n}];\n\n\n\n\n"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -840,
+        -1200,
         220
       ],
       "id": "a8ab58ca-e6b4-4e0b-8ce0-087a14ce3bbf",
       "name": "Code2"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json }}",
+        "messages": {
+          "messageValues": [
+            {
+              "message": "=Te va a llegar un arreglo necesito que me retornes el arreglo en el mismo formato, pero el arreglo original viene con caracteres raros, frases sueltas, cosas que no le dan sentido a los textos, necesito que me ayude a eliminar todo eso que no le da sentido a los items"
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        -900,
+        460
+      ],
+      "id": "e767b1e5-c558-4378-a666-5696e323dfe5",
+      "name": "Basic LLM Chain1"
     }
   ],
   "connections": {
@@ -780,7 +802,7 @@
       "ai_languageModel": [
         [
           {
-            "node": "Basic LLM Chain",
+            "node": "Basic LLM Chain1",
             "type": "ai_languageModel",
             "index": 0
           }
@@ -821,13 +843,7 @@
     },
     "Basic LLM Chain": {
       "main": [
-        [
-          {
-            "node": "Code",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "Send a text message": {
@@ -862,6 +878,17 @@
           }
         ]
       ]
+    },
+    "Basic LLM Chain1": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -880,7 +907,7 @@
       }
     ]
   },
-  "versionId": "34170398-854f-487f-991d-8124eab6bca7",
+  "versionId": "f017e6bf-c8b1-4f70-ab4b-a0d48a82eff9",
   "triggerCount": 0,
   "shared": [
     {
