@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-08-15T18:12:56.636Z",
-  "updatedAt": "2025-08-21T00:00:48.000Z",
+  "updatedAt": "2025-08-21T00:53:03.000Z",
   "id": "VFvEQwvxizzpS1Wm",
   "name": "Consulting Financial Comparador Direcciones",
   "active": false,
@@ -168,8 +168,8 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.6,
       "position": [
-        -240,
-        -40
+        280,
+        -160
       ],
       "id": "b86cd3d6-1d42-4415-b1c9-97c24bb35ab3",
       "name": "Get row(s) in sheet",
@@ -412,8 +412,8 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 2,
       "position": [
-        -900,
-        220
+        -140,
+        -160
       ],
       "id": "d0d97840-86c6-40aa-bc15-c69511b95a8b",
       "name": "AI Agent2"
@@ -433,8 +433,8 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.2,
       "position": [
-        -940,
-        420
+        -1040,
+        700
       ],
       "id": "ed0154c6-29de-4d23-86bb-45b1013065fc",
       "name": "OpenAI Chat Model2",
@@ -447,13 +447,13 @@
     },
     {
       "parameters": {
-        "jsCode": "return JSON.parse($json.output);"
+        "jsCode": "return JSON.parse($json.text);"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -540,
-        220
+        -600,
+        500
       ],
       "id": "c765db0c-29a2-4735-b30f-1371a0958134",
       "name": "Code"
@@ -548,6 +548,97 @@
       ],
       "id": "be652b59-dfca-4765-82e1-4922b934bfc8",
       "name": "Edit Fields2"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.text }}",
+        "messages": {
+          "messageValues": [
+            {
+              "message": "=# CONTEXTO\nEres un agente de IA dentro de un flujo de trabajo en n8n. Tu función es procesar un texto no estructurado que contiene descripciones de múltiples vacantes de empleo y convertirlo en un array de JSON estructurado. El objetivo es que cada elemento del array sea una vacante individual, para que el siguiente nodo (\"Split in Batches\" o loop) pueda iterar sobre cada una de ellas.\n\n# TAREA\n1.  **Analiza el texto de entrada** para identificar dónde empieza y termina la descripción de cada vacante.\n2.  **Para cada vacante identificada**, extrae toda la información relevante.\n3.  **Estructura la información** de cada vacante en un objeto JSON.\n4.  **Agrupa todos los objetos JSON** en un único array principal.\n\n# FORMATO DE SALIDA OBLIGATORIO\nLa respuesta debe ser **únicamente el código JSON** y nada más. No incluyas explicaciones, comentarios o la palabra \"json\" al principio. El array debe contener objetos con la siguiente estructura de claves:\n\n{\n  \"vacantes\": [\n    {\n      \"puesto\": \"string\", // El nombre del puesto, ej: \"AUXILIARES DE ALMACEN\"\n      \"empresa_cliente\": \"string\", // El nombre del usuario o cliente, ej: \"AXIONLOG\"\n      \"giro\": \"string\", // El giro de la empresa\n      \"ubicacion\": \"string\", // La ubicación del trabajo\n      \"perfil_requisitos\": [ // Un array de strings con cada punto del perfil\n        \"string\", \n        \"string\"\n      ],\n      \"sueldo_semanal_libre\": \"string\", // El monto y la moneda, ej: \"$1,930\"\n      \"prestaciones_beneficios\": [ // Un array de strings con todo lo que se ofrece\n        \"string\",\n        \"string\"\n      ],\n      \"horario\": \"string\", // La descripción completa del horario y los turnos\n      \"ofrece_transporte\": \"string\" // información referente al transporte, \"No cuenta con transporte\" si explícitamente no lo tiene o no se menciona\n      \"observaciones\": [ // un array de strings con las observaciones\n        \"string\",\n        \"string\"\n      ]\n    }\n  ]\n}\n\nAsegúrate de capturar todos los detalles de las secciones \"PERFIL\" y \"OFRECE\" dentro de los arrays correspondientes."
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        -960,
+        500
+      ],
+      "id": "c58600c1-3961-4544-9b5c-219383aabce1",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "chatId": "1526474745",
+        "text": "Espera un momento, estoy buscando las vacantes...",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -940,
+        -160
+      ],
+      "id": "a3e7950d-f2a9-411a-902d-71151a239058",
+      "name": "Send a text message",
+      "webhookId": "3c544ee7-f384-4fad-84fc-99159cf13aca",
+      "credentials": {
+        "telegramApi": {
+          "id": "mIaRqusXRT4FiDP4",
+          "name": "Telegram Consulting Financial RRHH"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        -720,
+        -160
+      ],
+      "id": "b053f01c-fa5b-4280-a28b-f178ae555bea",
+      "name": "Wait",
+      "webhookId": "05d9b3f8-ae64-42b3-9885-1f6e110fb12a"
+    },
+    {
+      "parameters": {
+        "chatId": "1526474745",
+        "text": "Ya casi esta listo...",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -500,
+        -160
+      ],
+      "id": "3786741e-c584-4833-8ab4-87b583b189dc",
+      "name": "Send a text message1",
+      "webhookId": "c7dd2f4c-1e6b-4df6-9fe9-327e90d306a1",
+      "credentials": {
+        "telegramApi": {
+          "id": "mIaRqusXRT4FiDP4",
+          "name": "Telegram Consulting Financial RRHH"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// INPUT: items[0].json.text  (todo el texto del PDF)\n// OUTPUT: un único item con { vacantes: [...] } exactamente en el formato solicitado.\n\nfunction cleanText(t) {\n  return (t || \"\")\n    .replace(/\\u0000/g, \" \")\n    .replace(/\\r/g, \"\\n\")\n    .replace(/[ \\t]+/g, \" \")\n    .replace(/\\n[ \\t]+/g, \"\\n\")\n    .replace(/\\n{3,}/g, \"\\n\\n\")\n    .trim();\n}\n\nfunction pick(arr) {\n  return (arr || []).map(s => s.trim()).filter(Boolean);\n}\n\nfunction extractFirst(regex, str) {\n  const m = regex.exec(str);\n  return m ? (m[1] || m[0]).trim() : \"\";\n}\n\nfunction between(startLabel, endLabels, str) {\n  const start = str.indexOf(startLabel);\n  if (start < 0) return \"\";\n  const sub = str.slice(start + startLabel.length);\n  let end = sub.length;\n  for (const lab of endLabels) {\n    const i = sub.indexOf(lab);\n    if (i >= 0) end = Math.min(end, i);\n  }\n  return sub.slice(0, end).trim();\n}\n\nfunction linesToArray(block) {\n  // bullets tipo ✔, ●, •, -, * y líneas normales\n  return pick(\n    block\n      .split(\"\\n\")\n      .map(s => s.replace(/^[\\s•●\\-–—*✔]+/g, \"\").trim())\n  );\n}\n\nfunction detectTransporte(ofreceArr, fullBlock) {\n  const full = (ofreceArr.join(\" \") + \" \" + fullBlock).toLowerCase();\n  if (/(servicio de transporte|transporte incluido|cuentan con transporte)/i.test(full)) {\n    return \"Sí cuenta con transporte\";\n  }\n  if (/(no hay transporte|no tienen transporte|no cuenta con transporte)/i.test(full)) {\n    return \"No cuenta con transporte\";\n  }\n  return \"No cuenta con transporte\"; // por especificación: si no se menciona, marcar que no\n}\n\nfunction detectSueldo(ofreceArr) {\n  // Busca “Sueldo semanal”, “Pago Semanal”, “sueldo libre por semana”, etc.\n  const joined = ofreceArr.join(\" • \");\n  const rxs = [\n    /sueldo\\s*(?:semanal|por semana|semanales)?.{0,40}?(\\$\\s?[\\d\\.,]+)/i,\n    /pago\\s*semanal.{0,40}?(\\$\\s?[\\d\\.,]+)/i,\n    /sueldo\\s*libre.{0,40}?(\\$\\s?[\\d\\.,]+)/i\n  ];\n  for (const rx of rxs) {\n    const m = rx.exec(joined);\n    if (m) return m[1].replace(/\\s+/g, \"\");\n  }\n  return \"\";\n}\n\nfunction extractPuesto(block) {\n  // Tomamos lo que hay entre UBICACIÓN: ... y PERFIL:\n  const mid = between(\"UBICACIÓN:\", [\"PERFIL:\", \"Perfil:\", \"PERFIL :\", \"Perfil :\"], block);\n  if (mid) {\n    // nos quedamos con la última línea no vacía (suelen ser títulos del puesto)\n    const lines = pick(mid.split(\"\\n\"));\n    if (lines.length) {\n      // descartar la línea propia de la ubicación (primera) si luce como dirección\n      // y quedarnos con la última “título”\n      return (lines[lines.length - 1] || \"\").trim();\n    }\n  }\n  // fallback: busca líneas en MAYÚSCULAS antes de PERFIL:\n  const beforePerfil = block.split(/PERFIL\\s*:/i)[0] || \"\";\n  const caps = pick(beforePerfil.split(\"\\n\"))\n    .filter(s => s.length <= 80 && /[A-ZÁÉÍÓÚÜÑ]{3}/.test(s) && !/^USUARIO:|^GIRO:|^UBICACIÓN:/i.test(s));\n  return caps.length ? caps[caps.length - 1] : \"\";\n}\n\nconst raw = items[0]?.json?.text || \"\";\nconst text = cleanText(raw);\n\n// Separamos por cada \"USUARIO:\" para obtener bloques de vacante/empresa\nlet parts = text.split(/(?:^|\\n)USUARIO:\\s*/i);\nif (parts[0].trim() === \"\") parts = parts.slice(1);\n\n// Reconstruimos añadiendo el prefijo \"USUARIO:\" a cada bloque\nconst blocks = parts.map(p => (\"USUARIO: \" + p).trim());\n\nconst vacantes = [];\n\nfor (const block of blocks) {\n  // Campos directos\n  const empresa = extractFirst(/USUARIO:\\s*([^\\n]+)/i, block);\n  const giro = extractFirst(/GIRO:\\s*([^\\n]+)/i, block);\n  const ubicacion = extractFirst(/UBICACIÓN:\\s*([^\\n]+)/i, block) || extractFirst(/UBICACION:\\s*([^\\n]+)/i, block);\n\n  // Secciones\n  const perfilBlock = between(\"PERFIL:\", [\"OFRECE:\", \"Ofrece:\", \"HORARIO:\", \"Horario:\", \"OBSERVACIONES\", \"Observaciones\", \"USUARIO:\"], block);\n  const ofreceBlock = between(\"OFRECE:\", [\"HORARIO:\", \"Horario:\", \"OBSERVACIONES\", \"Observaciones\", \"USUARIO:\"], block);\n  const horarioText = between(\"HORARIO:\", [\"OBSERVACIONES\", \"Observaciones\", \"USUARIO:\"], block);\n  const obsBlock = between(\"OBSERVACIONES\", [\"USUARIO:\"], block) || between(\"Observaciones\", [\"USUARIO:\"], block);\n\n  const perfilArr = linesToArray(perfilBlock);\n  const ofreceArr = linesToArray(ofreceBlock);\n  const obsArr = linesToArray(obsBlock);\n\n  const puesto = extractPuesto(block);\n  const sueldo = detectSueldo(ofreceArr);\n  const transporte = detectTransporte(ofreceArr, block);\n\n  // Armamos objeto\n  const vac = {\n    \"puesto\": puesto || \"\",\n    \"empresa_cliente\": empresa || \"\",\n    \"giro\": giro || \"\",\n    \"ubicacion\": ubicacion || \"\",\n    \"perfil_requisitos\": perfilArr,\n    \"sueldo_semanal_libre\": sueldo,\n    \"prestaciones_beneficios\": ofreceArr,\n    \"horario\": (horarioText || \"\").replace(/\\s+/g, \" \").trim(),\n    \"ofrece_transporte\": transporte,\n    \"observaciones\": obsArr\n  };\n\n  // Filtra bloques basura (por si algún split agarró ruido)\n  /*const hasAny =\n    vac.puesto || vac.empresa_cliente || vac.giro || vac.ubicacion ||\n    vac.perfil_requisitos.length || vac.prestaciones_beneficios.length;\n  if (hasAny) vacantes.push(vac);*/\n\n  const ok =\n  (vac.empresa_cliente?.trim().length > 0) &&\n  (vac.ubicacion?.trim().length > 0) &&\n  (vac.perfil_requisitos.length > 0 || vac.prestaciones_beneficios.length > 0);\n  if (ok) vacantes.push(vac);\n}\n\n// Devuelve exactamente el JSON que pides\nreturn [{\n  json: { \"vacantes\": vacantes }\n}];\n\n\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -840,
+        220
+      ],
+      "id": "a8ab58ca-e6b4-4e0b-8ce0-087a14ce3bbf",
+      "name": "Code2"
     }
   ],
   "connections": {
@@ -667,7 +758,7 @@
       "main": [
         [
           {
-            "node": "AI Agent2",
+            "node": "Code2",
             "type": "main",
             "index": 0
           }
@@ -689,7 +780,7 @@
       "ai_languageModel": [
         [
           {
-            "node": "AI Agent2",
+            "node": "Basic LLM Chain",
             "type": "ai_languageModel",
             "index": 0
           }
@@ -698,24 +789,12 @@
     },
     "AI Agent2": {
       "main": [
-        [
-          {
-            "node": "Code",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "Code": {
       "main": [
-        [
-          {
-            "node": "Split Out",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "Split Out": {
@@ -739,6 +818,50 @@
           }
         ]
       ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a text message": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Send a text message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code2": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -757,7 +880,7 @@
       }
     ]
   },
-  "versionId": "13de84fe-7f80-4d2e-861d-1e82751cac97",
+  "versionId": "34170398-854f-487f-991d-8124eab6bca7",
   "triggerCount": 0,
   "shared": [
     {
