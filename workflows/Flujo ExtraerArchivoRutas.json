@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-08-21T21:50:52.841Z",
-  "updatedAt": "2025-08-21T21:55:31.000Z",
+  "updatedAt": "2025-08-21T22:07:12.000Z",
   "id": "cGAhQ0ImIgf1MQqR",
   "name": "Flujo ExtraerArchivoRutas",
   "active": false,
@@ -11,7 +11,7 @@
         "workflowInputs": {
           "values": [
             {
-              "name": "nombreEmpresa"
+              "name": "nombreArchivoRutaEmpresa"
             },
             {
               "name": "idTelegram"
@@ -31,154 +31,61 @@
     {
       "parameters": {
         "operation": "download",
-        "fileId": "={{ $json.id }}"
-      },
-      "type": "n8n-nodes-base.microsoftOneDrive",
-      "typeVersion": 1,
-      "position": [
-        420,
-        -280
-      ],
-      "id": "f001dd3b-0b5a-4746-99b5-d283b530ec12",
-      "name": "Descargar archivos1",
-      "credentials": {
-        "microsoftOneDriveOAuth2Api": {
-          "id": "nmcBNRZloSFuI6D4",
-          "name": "Gael OneDrive"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "options": {}
-      },
-      "type": "n8n-nodes-base.extractFromFile",
-      "typeVersion": 1,
-      "position": [
-        640,
-        -280
-      ],
-      "id": "5ccd02e4-41e6-4896-9a94-770052f58554",
-      "name": "Extraer datos1"
-    },
-    {
-      "parameters": {
-        "assignments": {
-          "assignments": [
-            {
-              "id": "38b1c965-1d64-415d-9166-66fb5b4ea091",
-              "name": "﻿ID",
-              "value": "={{ $json['﻿ID'] }}",
-              "type": "string"
-            },
-            {
-              "id": "441d55ef-c5c6-4666-82fe-4373e1b48c8b",
-              "name": "Work Item Type",
-              "value": "={{ $json['Work Item Type'] }}",
-              "type": "string"
-            },
-            {
-              "id": "37f3a63a-6772-4ba8-b3aa-82ec4b300381",
-              "name": "Title",
-              "value": "={{ $json['Title'] }}",
-              "type": "string"
-            },
-            {
-              "id": "d0908705-e1ed-473d-a184-b2b07350c822",
-              "name": "Assigned To",
-              "value": "={{ $json['Assigned To'] }}",
-              "type": "string"
-            },
-            {
-              "id": "bc2ed500-7b10-48e9-9bd1-daae78e52dc4",
-              "name": "=State",
-              "value": "={{ $json['State'] }}",
-              "type": "string"
-            },
-            {
-              "id": "9c9c1600-e09c-46ac-8500-ec9dbb271ca2",
-              "name": "Completed Work",
-              "value": "={{ $json['Completed Work'] }}",
-              "type": "number"
-            },
-            {
-              "id": "5b9f07a5-06fc-4903-b947-3138eabbea71",
-              "name": "Remaining Work",
-              "value": "={{ $json[\"Remaining Work\"] }}",
-              "type": "number"
-            },
-            {
-              "id": "abe037cb-5c7b-4f2d-90dd-d0489d5808d0",
-              "name": "Created Date",
-              "value": "={{ $json['Created Date'] }}",
-              "type": "string"
-            },
-            {
-              "id": "eba65992-ce43-484c-9519-12e2d002d979",
-              "name": "Closed Date",
-              "value": "={{$json['Closed Date'] }}",
-              "type": "string"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
-      "position": [
-        860,
-        -280
-      ],
-      "id": "43f2d5b8-daee-4cbb-997a-da1c7e4a4ac6",
-      "name": "Transformación de datos1"
-    },
-    {
-      "parameters": {
-        "operation": "xlsx",
-        "options": {
-          "fileName": "={{ $('Llamada de Bot_RentabilidadExcel').item.json.fileName }}.xlsx",
-          "sheetName": "Concentrado_datos"
-        }
-      },
-      "type": "n8n-nodes-base.convertToFile",
-      "typeVersion": 1.1,
-      "position": [
-        1120,
-        -280
-      ],
-      "id": "ff2ee3b2-cf2c-421f-8eaf-4839c2b5acf3",
-      "name": "Convertir a archivo excel1",
-      "executeOnce": false,
-      "notesInFlow": false
-    },
-    {
-      "parameters": {
-        "resource": "folder",
-        "folderId": "={{ $json.id }}"
-      },
-      "type": "n8n-nodes-base.microsoftOneDrive",
-      "typeVersion": 1,
-      "position": [
-        180,
-        -280
-      ],
-      "id": "b5c4074c-b905-47fb-869c-f39c02704e93",
-      "name": "Obtener contenido de la carpeta",
-      "credentials": {
-        "microsoftOneDriveOAuth2Api": {
-          "id": "nmcBNRZloSFuI6D4",
-          "name": "Gael OneDrive"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "operation": "download",
         "fileId": {
           "__rl": true,
-          "mode": "list",
-          "value": ""
+          "value": "={{ $json.nombreEmpresa }}",
+          "mode": "id"
         },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        440,
+        0
+      ],
+      "id": "bbb4c74f-d4f3-4d1c-b899-6b7d0240528d",
+      "name": "Download file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "1P9PgyGmxd7ggSGM",
+          "name": "Gael Extraer Datos PDF"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "sendDocument",
+        "chatId": "={{ $('Llamada de Bot_RentabilidadExcel').item.json.idTelegram }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        660,
+        0
+      ],
+      "id": "b9041d0d-7a0c-4033-8ef7-818c504a110b",
+      "name": "Send a document",
+      "webhookId": "e671e9ea-81ac-46f7-beba-355a755f1fc9",
+      "credentials": {
+        "telegramApi": {
+          "id": "qBBCv0YcYdci711O",
+          "name": "Bot_RentabilidadExcel"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "resource": "file",
+        "operation": "share",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.nombreArchivoRutaEmpresa }}",
+          "mode": "id"
+        },
+        "permissionsUi": {},
         "options": {}
       },
       "type": "n8n-nodes-base.googleDrive",
@@ -187,8 +94,8 @@
         220,
         0
       ],
-      "id": "bbb4c74f-d4f3-4d1c-b899-6b7d0240528d",
-      "name": "Download file",
+      "id": "be99a2dc-1839-4b43-b01a-432b047cac55",
+      "name": "Share file",
       "credentials": {
         "googleDriveOAuth2Api": {
           "id": "1P9PgyGmxd7ggSGM",
@@ -202,56 +109,29 @@
       "main": [
         [
           {
+            "node": "Share file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download file": {
+      "main": [
+        [
+          {
+            "node": "Send a document",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Share file": {
+      "main": [
+        [
+          {
             "node": "Download file",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Descargar archivos1": {
-      "main": [
-        [
-          {
-            "node": "Extraer datos1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Extraer datos1": {
-      "main": [
-        [
-          {
-            "node": "Transformación de datos1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Transformación de datos1": {
-      "main": [
-        [
-          {
-            "node": "Convertir a archivo excel1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Convertir a archivo excel1": {
-      "main": [
-        []
-      ]
-    },
-    "Obtener contenido de la carpeta": {
-      "main": [
-        [
-          {
-            "node": "Descargar archivos1",
             "type": "main",
             "index": 0
           }
@@ -267,7 +147,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "02259fa6-a229-401b-90fc-5a83a9967fc8",
+  "versionId": "f94e8abc-827d-44ff-b538-72e97e7fcd50",
   "triggerCount": 0,
   "shared": [
     {
