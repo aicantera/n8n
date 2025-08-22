@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-08-22T15:40:23.466Z",
-  "updatedAt": "2025-08-22T16:04:15.000Z",
+  "updatedAt": "2025-08-22T17:24:24.000Z",
   "id": "jxjAIFzEJQtYofZJ",
   "name": "Consulting Financial Rutas",
   "active": false,
@@ -45,6 +45,7 @@
       ],
       "id": "cc07b32f-5e9c-4cb0-85b3-e7a5c97482e2",
       "name": "Search files and folders",
+      "alwaysOutputData": true,
       "credentials": {
         "googleDriveOAuth2Api": {
           "id": "qyLYDHqds4fDuWE4",
@@ -65,8 +66,8 @@
       "type": "n8n-nodes-base.googleDrive",
       "typeVersion": 3,
       "position": [
-        440,
-        0
+        720,
+        -20
       ],
       "id": "8ba13364-c6bf-45ae-979a-d5610217410e",
       "name": "Download file",
@@ -87,8 +88,8 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        660,
-        0
+        880,
+        -20
       ],
       "id": "c773a5e1-058e-40de-8938-38475776cae0",
       "name": "Send a document",
@@ -99,6 +100,63 @@
           "name": "Telegram Consulting Financial RRHH"
         }
       }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "d12488a0-0436-4991-88a5-1b1bd6cd17f9",
+              "leftValue": "={{ $json }}",
+              "rightValue": "",
+              "operator": {
+                "type": "object",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        440,
+        0
+      ],
+      "id": "e20e5e2b-8d35-4d53-ab2d-0f17ff3096eb",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "89ec24d7-04d7-4fd9-a412-6ee58dd486df",
+              "name": "message",
+              "value": "La empresa no cuenta con rutas de transporte",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        720,
+        160
+      ],
+      "id": "c7c16715-b75c-4c50-baf0-61406a284ca3",
+      "name": "Edit Fields"
     }
   ],
   "connections": {
@@ -117,7 +175,7 @@
       "main": [
         [
           {
-            "node": "Download file",
+            "node": "If",
             "type": "main",
             "index": 0
           }
@@ -129,6 +187,24 @@
         [
           {
             "node": "Send a document",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Download file",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields",
             "type": "main",
             "index": 0
           }
@@ -148,12 +224,12 @@
       {
         "json": {
           "chat_id": "1526474745",
-          "nombre_empresa": "CEDIS DE FARMACIAS GDL"
+          "nombre_empresa": "AXIOLOG"
         }
       }
     ]
   },
-  "versionId": "f7431022-8e64-44e8-81be-0cc4a3c30cc6",
+  "versionId": "e6e1e215-b054-43eb-8864-681580138278",
   "triggerCount": 0,
   "shared": [
     {
