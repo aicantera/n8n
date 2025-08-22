@@ -1,0 +1,181 @@
+{
+  "createdAt": "2025-08-21T21:50:52.841Z",
+  "updatedAt": "2025-08-22T00:55:39.000Z",
+  "id": "cGAhQ0ImIgf1MQqR",
+  "name": "Extraer ArchivoRutas",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.idArchivo }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        220,
+        0
+      ],
+      "id": "bbb4c74f-d4f3-4d1c-b899-6b7d0240528d",
+      "name": "Download file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "1P9PgyGmxd7ggSGM",
+          "name": "Gael Extraer Datos PDF"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "sendDocument",
+        "chatId": "={{ $('When Executed by Another Workflow').item.json.idTelegram }}",
+        "binaryData": true,
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        420,
+        0
+      ],
+      "id": "b9041d0d-7a0c-4033-8ef7-818c504a110b",
+      "name": "Send a document",
+      "webhookId": "e671e9ea-81ac-46f7-beba-355a755f1fc9",
+      "credentials": {
+        "telegramApi": {
+          "id": "M4yT4PHnQvsP26j3",
+          "name": "Bot_Pruebas_Gael"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "idTelegram"
+            },
+            {
+              "name": "idArchivo"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "23f7f766-cc28-438e-a8c2-b7243fb38c23",
+      "name": "When Executed by Another Workflow"
+    }
+  ],
+  "connections": {
+    "Download file": {
+      "main": [
+        [
+          {
+            "node": "Send a document",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Download file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "ea7ced35-f7e7-46aa-b204-981b32717dd3",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "createdAt": "2025-08-21T21:50:52.849Z",
+      "updatedAt": "2025-08-21T21:50:52.849Z",
+      "role": "workflow:owner",
+      "workflowId": "cGAhQ0ImIgf1MQqR",
+      "projectId": "6D91TcMmlphV2lVS",
+      "project": {
+        "createdAt": "2025-07-14T23:58:54.932Z",
+        "updatedAt": "2025-07-15T00:03:17.549Z",
+        "id": "6D91TcMmlphV2lVS",
+        "name": "Gael  Graciano <gael.graciano@canteradigital.mx>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "projectRelations": [
+          {
+            "createdAt": "2025-07-14T23:58:54.935Z",
+            "updatedAt": "2025-07-14T23:58:54.935Z",
+            "role": "project:personalOwner",
+            "userId": "bff7f19f-b5be-48d6-aea2-dfc3de153ccc",
+            "projectId": "6D91TcMmlphV2lVS",
+            "user": {
+              "createdAt": "2025-07-14T23:58:54.930Z",
+              "updatedAt": "2025-08-06T23:15:33.615Z",
+              "id": "bff7f19f-b5be-48d6-aea2-dfc3de153ccc",
+              "email": "gael.graciano@canteradigital.mx",
+              "firstName": "Gael ",
+              "lastName": "Graciano",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-07-15T00:12:22.917Z",
+                "personalization_survey_n8n_version": "1.100.1",
+                "automationGoalDevops": [
+                  "other",
+                  "ticketing-systems-integrations",
+                  "cloud-infrastructure-orchestration"
+                ],
+                "companySize": "100-499",
+                "companyType": "saas",
+                "role": "devops",
+                "reportedSource": "event"
+              },
+              "settings": {
+                "easyAIWorkflowOnboarded": true,
+                "firstSuccessfulWorkflowId": "j0Fiqu3Vwfp6hOC3",
+                "userActivated": true,
+                "userActivatedAt": 1753839716307,
+                "npsSurvey": {
+                  "responded": true,
+                  "lastShownAt": 1754337405043
+                },
+                "dismissedCallouts": {
+                  "aiAgentStarterCallout": true
+                }
+              },
+              "role": "global:member",
+              "disabled": false,
+              "mfaEnabled": false,
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": []
+}
