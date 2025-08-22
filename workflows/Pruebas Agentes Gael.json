@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-08-20T18:57:44.721Z",
-  "updatedAt": "2025-08-21T02:49:03.000Z",
+  "updatedAt": "2025-08-22T15:39:43.000Z",
   "id": "GnnlSd6hcMGKAopg",
   "name": "Pruebas Agentes Gael",
   "active": false,
@@ -8,20 +8,90 @@
   "nodes": [
     {
       "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.idArchivo }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        560,
+        300
+      ],
+      "id": "63a8a9d1-12d8-4810-b933-991cf325f6f9",
+      "name": "Download file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "1P9PgyGmxd7ggSGM",
+          "name": "Gael Extraer Datos PDF"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "sendDocument",
+        "chatId": "={{ $('When Executed by Another Workflow').item.json.idTelegram }}",
+        "binaryData": true,
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        760,
+        300
+      ],
+      "id": "4e01f9e4-7e80-49c7-b4bf-b664fb27d462",
+      "name": "Send a document",
+      "webhookId": "e671e9ea-81ac-46f7-beba-355a755f1fc9",
+      "credentials": {
+        "telegramApi": {
+          "id": "M4yT4PHnQvsP26j3",
+          "name": "Bot_Pruebas_Gael"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "idTelegram"
+            },
+            {
+              "name": "idArchivo"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        340,
+        300
+      ],
+      "id": "3c2ba2ad-d609-4f56-8b3a-b405ae3ef96c",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
         "promptType": "define",
         "text": "={{ $json.text }}",
         "options": {
-          "systemMessage": "=Eres un asistente de chatbot especializado en la gestión de archivos y reportes. Tu propósito es ayudar a los usuarios a generar un nuevo archivo de rentabilidad.\n\nTienes acceso a una herramienta llamada `extraer_datos_rentabilidad` que puedes utilizar para procesar esta solicitud. Para usar esta herramienta, necesitas el ID de una carpeta de origen donde se encuentran los archivos (este ID es un valor estático que tú ya conoces y no debes pedirle al usuario) y el nombre que el usuario quiere para el nuevo archivo de rentabilidad.\n\nTu flujo de trabajo es el siguiente:\n1.  **Escuchar la intención del usuario:** El usuario te pedirá generar un archivo de rentabilidad y te proporcionará el nombre que desea para este nuevo archivo.\n2.  **Preparar la llamada a la herramienta:** Utiliza el nombre de archivo que te da el usuario y el ID estático de la carpeta de origen que ya tienes definido. El ID de la carpeta es `01IFTEMG3AMQ3GESGUSBAYKYS2VVIIDGB5`. No menciones este ID en tu conversación con el usuario.\n3.  **Llamar a la herramienta:** Llama a la herramienta `extraer_datos_rentabilidad` con el nombre del nuevo archivo y el ID de la carpeta.\n\nSi el usuario hace una pregunta no relacionada con tu propósito (como sobre religión, política o temas delicados), debes responder amablemente que solo puedes ayudar con solicitudes relacionadas con la gestión de archivos y reportes.\n\n**Herramientas Disponibles:**\n\n**Nombre:** `extraer_datos_rentabilidad`\n**Descripción:** Genera un nuevo reporte de rentabilidad en formato de archivo.\n**Parámetros:**\n* `nombre_nuevo_archivo`: (String, requerido) El nombre que se le asignará al nuevo archivo.\n* `id_carpeta_origen`: (String, requerido) El ID de la carpeta donde se encuentran los archivos para el reporte.\n```",
+          "systemMessage": "=Eres un asistente de chatbot especializado en la gestión de archivos y busqueda. Tu propósito es ayudar a los usuarios a recibir su archivo correspondiente a la empresa a la que van.\n\n**Tu proceso es el siguiente:**\n\n1.  **Analizar el Mensaje:** Lee el mensaje del usuario para identificar el dato clave:\n    * El **nombre de la empresa** a la que se va a postular.\n\n2.  **Llamar a la Herramienta:** Una vez que tengas el dato, llama a la herramienta `buscar_archivo`. Debes pasarle la información de la siguiente manera:\n    * El parámetro `nombre_archivo_ruta_empresa` debe contener el **nombre de la empresa** que extrajiste.\n\n**Reglas de Comportamiento:**\n* **Manejo de Temas no Relacionados:** Si el usuario pregunta sobre cualquier tema que no sea solicitar un archivo de una empresa (como política, religión, etc.), responde exactamente con: \"Lo siento, solo puedo ayudarte con la gestión y envío de archivos.\" y no ejecutes la herramienta.\n\n**Herramientas Disponibles:**\n- **Nombre:** `buscar_archivo`\n- **Descripción:** Busca el archivo correspondiente al nombre de la empresa a la que va el postulante y le saca el id para pasarlo a la herramienta `llamar_extraer_archivo_rutas`.\n- **Nombre:** `llamar_extraer_archivo_rutas`\n- **Descripción:** Subflujo que se encarga de descargar el archivo y enviarlo al usuario.\n ",
           "returnIntermediateSteps": false
         }
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 2,
       "position": [
-        400,
-        60
+        -440,
+        420
       ],
-      "id": "26e7057b-f7c2-4d23-9d5d-0c70c6b4ccb7",
+      "id": "3d0bf65d-d18d-4430-8bed-1f7f31e4f6f2",
       "name": "AI Agent",
       "onError": "continueRegularOutput"
     },
@@ -30,23 +100,22 @@
         "chatId": "={{ $('Trigger - Recibir mensaje').item.json.message.from.id }}",
         "text": "={{ $json.output }}",
         "additionalFields": {
-          "appendAttribution": false,
-          "parse_mode": "HTML"
+          "appendAttribution": false
         }
       },
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        760,
-        60
+        -20,
+        280
       ],
-      "id": "6a4334d2-d50e-4c69-bf3c-f33d2f3a6b3c",
+      "id": "e6361dcc-06f2-4e69-abe7-fe8488d9492b",
       "name": "Mandar mensaje",
       "webhookId": "91dadec4-ca52-4ca3-9971-3e77a31be22d",
       "credentials": {
         "telegramApi": {
-          "id": "qBBCv0YcYdci711O",
-          "name": "Bot_RentabilidadExcel"
+          "id": "M4yT4PHnQvsP26j3",
+          "name": "Bot_Pruebas_Gael"
         }
       }
     },
@@ -60,19 +129,121 @@
       "type": "n8n-nodes-base.telegramTrigger",
       "typeVersion": 1.2,
       "position": [
-        -520,
-        120
+        -1340,
+        480
       ],
-      "id": "7a3d949c-08d0-42c3-84db-7efadebe5f80",
+      "id": "25010b76-95d7-4e29-b626-f965062a7ca2",
       "name": "Trigger - Recibir mensaje",
       "webhookId": "3c2457b9-ff1c-490c-91ed-779599e0805f",
       "credentials": {
         "telegramApi": {
-          "id": "qBBCv0YcYdci711O",
-          "name": "Bot_RentabilidadExcel"
+          "id": "M4yT4PHnQvsP26j3",
+          "name": "Bot_Pruebas_Gael"
         }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "3afb4b21-1923-41e7-a49c-672d6cf20141",
+              "name": "text",
+              "value": "={{ $json.message.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
       },
-      "disabled": true
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -820,
+        380
+      ],
+      "id": "c053637e-94af-4f1e-b5c8-a800eb9c1540",
+      "name": "Texto"
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "fileId": "={{ $('Trigger - Recibir mensaje').item.json.message.voice.file_id }}"
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -920,
+        580
+      ],
+      "id": "9932745b-872c-457f-a91d-371a710310bf",
+      "name": "Descargar audio",
+      "webhookId": "f145bc9e-37c1-4762-816b-386767c194fc",
+      "credentials": {
+        "telegramApi": {
+          "id": "M4yT4PHnQvsP26j3",
+          "name": "Bot_Pruebas_Gael"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "operation": "transcribe",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -700,
+        580
+      ],
+      "id": "fd602e65-9f4a-4a29-ae22-9e0a7fa6317b",
+      "name": "Transcribe audio",
+      "credentials": {
+        "openAiApi": {
+          "id": "0PNoojfjNHHXEtdv",
+          "name": "Test_Agente_Soporte_Gael"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -500,
+        580
+      ],
+      "id": "1049d991-c5c3-469e-a69f-a7710dfce239",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "0PNoojfjNHHXEtdv",
+          "name": "Test_Agente_Soporte_Gael"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Trigger - Recibir mensaje').item.json.message.chat.id }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -440,
+        780
+      ],
+      "id": "d1689613-bfb1-4ae1-9056-675074041e8d",
+      "name": "Simple Memory"
     },
     {
       "parameters": {
@@ -135,321 +306,31 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.2,
       "position": [
-        -320,
-        120
+        -1140,
+        480
       ],
-      "id": "6227bb4d-40bc-4c3e-bf39-67d3751d7066",
-      "name": "Switch"
+      "id": "e771f270-3090-4457-9eb3-b23213a526f4",
+      "name": "Texto o Audio"
     },
     {
       "parameters": {
-        "assignments": {
-          "assignments": [
-            {
-              "id": "3afb4b21-1923-41e7-a49c-672d6cf20141",
-              "name": "text",
-              "value": "={{ $json.message.text }}",
-              "type": "string"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
-      "position": [
-        20,
-        20
-      ],
-      "id": "921d41bb-b53f-4681-b44e-2d77094ed1ea",
-      "name": "Texto"
-    },
-    {
-      "parameters": {
-        "resource": "file",
-        "fileId": "={{ $('Trigger - Recibir mensaje').item.json.message.voice.file_id }}"
-      },
-      "type": "n8n-nodes-base.telegram",
-      "typeVersion": 1.2,
-      "position": [
-        -100,
-        220
-      ],
-      "id": "0d8b8143-8483-4bdf-ba20-55d415af63cf",
-      "name": "Descargar audio",
-      "webhookId": "f145bc9e-37c1-4762-816b-386767c194fc",
-      "credentials": {
-        "telegramApi": {
-          "id": "qBBCv0YcYdci711O",
-          "name": "Bot_RentabilidadExcel"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "resource": "audio",
-        "operation": "transcribe",
-        "options": {}
-      },
-      "type": "@n8n/n8n-nodes-langchain.openAi",
-      "typeVersion": 1.8,
-      "position": [
-        140,
-        220
-      ],
-      "id": "364a9b73-fd1b-4c30-9017-ddcee2ab4746",
-      "name": "Transcribe audio",
-      "credentials": {
-        "openAiApi": {
-          "id": "0PNoojfjNHHXEtdv",
-          "name": "Test_Agente_Soporte_Gael"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "model": {
-          "__rl": true,
-          "mode": "list",
-          "value": "gpt-4.1-mini"
-        },
-        "options": {}
-      },
-      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
-      "typeVersion": 1.2,
-      "position": [
-        340,
-        220
-      ],
-      "id": "951c2cba-5d64-4fbf-9e4d-2e4fa571ce3b",
-      "name": "OpenAI Chat Model",
-      "credentials": {
-        "openAiApi": {
-          "id": "0PNoojfjNHHXEtdv",
-          "name": "Test_Agente_Soporte_Gael"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "sessionIdType": "customKey",
-        "sessionKey": "={{ $('Trigger - Recibir mensaje').item.json.message.chat.id }}"
-      },
-      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
-      "typeVersion": 1.3,
-      "position": [
-        400,
-        420
-      ],
-      "id": "9dc696cf-00cb-4a0e-9d15-60581a4e5340",
-      "name": "Simple Memory"
-    },
-    {
-      "parameters": {
-        "description": "Llama a esta tool cuando tengas el nombre del archivo.",
-        "workflowId": {
-          "__rl": true,
-          "value": "hYIL4H3KPAgpe1K1",
-          "mode": "list",
-          "cachedResultName": "Extraer Datos Rentabilidad Excel"
-        },
-        "workflowInputs": {
-          "mappingMode": "defineBelow",
-          "value": {
-            "fileName": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fileName', ``, 'string') }}",
-            "id": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('id', ``, 'string') }}"
-          },
-          "matchingColumns": [],
-          "schema": [
-            {
-              "id": "fileName",
-              "displayName": "fileName",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "canBeUsedToMatch": true,
-              "type": "string",
-              "removed": false
-            },
-            {
-              "id": "id",
-              "displayName": "id",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "canBeUsedToMatch": true,
-              "type": "string"
-            }
-          ],
-          "attemptToConvertTypes": false,
-          "convertFieldsToString": false
-        }
-      },
-      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
-      "typeVersion": 2.2,
-      "position": [
-        540,
-        320
-      ],
-      "id": "5468a94e-45fc-44f3-aad0-416f6ad13b28",
-      "name": "Extraer Datos Rentabilidad"
-    },
-    {
-      "parameters": {
-        "content": "## ChatBot para la Rentabilidad de Excel\n**Función principal; llama la tool que activa el flujo Extraer Datos Rentabilidad Excel. [Guide](https://docs.n8n.io/workflows/sticky-notes/)",
-        "height": 600,
-        "width": 1540
-      },
-      "type": "n8n-nodes-base.stickyNote",
-      "position": [
-        -580,
-        -20
-      ],
-      "typeVersion": 1,
-      "id": "50c66578-901a-4943-91d3-ed36d0b6d8de",
-      "name": "Sticky Note"
-    },
-    {
-      "parameters": {
-        "updates": [
-          "message"
-        ],
-        "additionalFields": {}
-      },
-      "type": "n8n-nodes-base.telegramTrigger",
-      "typeVersion": 1.2,
-      "position": [
-        -540,
-        920
-      ],
-      "id": "0567d89b-1c42-4e2e-8483-eaab8532b6ca",
-      "name": "Telegram Trigger",
-      "webhookId": "188e14b8-b829-446b-a646-b2f825af97e1",
-      "credentials": {
-        "telegramApi": {
-          "id": "M4yT4PHnQvsP26j3",
-          "name": "Bot_Pruebas_Gael"
-        }
-      },
-      "disabled": true
-    },
-    {
-      "parameters": {
-        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
-        "text": "={{ $json.output }}",
-        "additionalFields": {
-          "appendAttribution": false
-        }
-      },
-      "type": "n8n-nodes-base.telegram",
-      "typeVersion": 1.2,
-      "position": [
-        40,
-        880
-      ],
-      "id": "55926056-442c-476f-a17d-914a71eb0078",
-      "name": "Send a text message",
-      "webhookId": "4b8bf762-8dfb-43d8-8877-9d4836838230",
-      "credentials": {
-        "telegramApi": {
-          "id": "M4yT4PHnQvsP26j3",
-          "name": "Bot_Pruebas_Gael"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "operation": "sendPhoto",
-        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
-        "binaryData": true,
-        "additionalFields": {}
-      },
-      "type": "n8n-nodes-base.telegram",
-      "typeVersion": 1.2,
-      "position": [
-        960,
-        960
-      ],
-      "id": "fecccfee-da85-4209-8916-979e2a4c15ca",
-      "name": "Send a photo message",
-      "webhookId": "dfc827e6-a764-46b5-af0a-66e67f7df3dc",
-      "credentials": {
-        "telegramApi": {
-          "id": "M4yT4PHnQvsP26j3",
-          "name": "Bot_Pruebas_Gael"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "operation": "download",
-        "fileId": {
-          "__rl": true,
-          "value": "1Wa7_7R-dYMvBL8scgygR9Fj75w1Gkh8s",
-          "mode": "list",
-          "cachedResultName": "FARMACIAS GDL VESPERTINO-1-1.pdf",
-          "cachedResultUrl": "https://drive.google.com/file/d/1Wa7_7R-dYMvBL8scgygR9Fj75w1Gkh8s/view?usp=drivesdk"
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.googleDrive",
-      "typeVersion": 3,
-      "position": [
-        760,
-        940
-      ],
-      "id": "de90153f-203d-4c84-a624-e3cb11dd1a97",
-      "name": "Download file",
-      "credentials": {
-        "googleDriveOAuth2Api": {
-          "id": "1P9PgyGmxd7ggSGM",
-          "name": "Gael Extraer Datos PDF"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "operation": "sendDocument",
-        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
-        "binaryData": true,
-        "additionalFields": {}
-      },
-      "type": "n8n-nodes-base.telegram",
-      "typeVersion": 1.2,
-      "position": [
-        1040,
-        1060
-      ],
-      "id": "d76189fd-d04b-46d5-b3f0-442c7320dfa1",
-      "name": "Send a document",
-      "webhookId": "a4458d21-5c5d-4a27-89ea-c4aebd5e406c",
-      "credentials": {
-        "telegramApi": {
-          "id": "M4yT4PHnQvsP26j3",
-          "name": "Bot_Pruebas_Gael"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "operation": "download",
-        "fileId": {
-          "__rl": true,
-          "value": "1Wa7_7R-dYMvBL8scgygR9Fj75w1Gkh8s",
-          "mode": "list",
-          "cachedResultName": "FARMACIAS GDL VESPERTINO-1-1.pdf",
-          "cachedResultUrl": "https://drive.google.com/file/d/1Wa7_7R-dYMvBL8scgygR9Fj75w1Gkh8s/view?usp=drivesdk"
+        "resource": "fileFolder",
+        "limit": 50,
+        "queryString": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Search_Query', `sirve para sacar el id del archivo y comprobar que está pasando el archivo correcto correspondiente a la empresa`, 'string') }}",
+        "returnAll": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Return_All', ``, 'boolean') }}",
+        "filter": {
+          "whatToSearch": "files"
         },
         "options": {}
       },
       "type": "n8n-nodes-base.googleDriveTool",
       "typeVersion": 3,
       "position": [
-        -260,
-        1300
+        -300,
+        640
       ],
-      "id": "da064df5-fed2-4d32-80d3-bf457c90416c",
-      "name": "Download file in Google Drive",
+      "id": "f3c30532-ce6c-433b-adb7-73142d185afd",
+      "name": "Buscar Archivo",
       "credentials": {
         "googleDriveOAuth2Api": {
           "id": "1P9PgyGmxd7ggSGM",
@@ -459,37 +340,18 @@
     },
     {
       "parameters": {
-        "simple": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Simplify', ``, 'boolean') }}"
-      },
-      "type": "n8n-nodes-base.awsTextractTool",
-      "typeVersion": 1,
-      "position": [
-        -140,
-        1220
-      ],
-      "id": "dc16dd0a-9953-4154-a67c-aa1bf91cfc66",
-      "name": "AWS Textract",
-      "credentials": {
-        "aws": {
-          "id": "Bck8QEdgOMGYPmOn",
-          "name": "Gael AWS"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "description": "Llama a este tool para parsear el documento",
+        "description": "Llama a esta herramienta cuando hayas sacado el idArchivo con ayuda de la herramienta 'buscar_archivo' y extrae el idTelegram de la conversación ",
         "workflowId": {
           "__rl": true,
-          "value": "sjQ9mMNiU99d8ckC",
+          "value": "cGAhQ0ImIgf1MQqR",
           "mode": "list",
-          "cachedResultName": "Flujo Extraer Datos PDF"
+          "cachedResultName": "Extraer ArchivoRutas"
         },
         "workflowInputs": {
           "mappingMode": "defineBelow",
           "value": {
-            "idTelegram": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('idTelegram', ``, 'string') }}",
-            "contexto_usuario": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('contexto_usuario', ``, 'string') }}"
+            "idTelegram": "={{ $('Trigger - Recibir mensaje').item.json.message.chat.id }}",
+            "idArchivo": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('idArchivo', ``, 'string') }}"
           },
           "matchingColumns": [],
           "schema": [
@@ -503,13 +365,14 @@
               "type": "string"
             },
             {
-              "id": "contexto_usuario",
-              "displayName": "contexto_usuario",
+              "id": "idArchivo",
+              "displayName": "idArchivo",
               "required": false,
               "defaultMatch": false,
               "display": true,
               "canBeUsedToMatch": true,
-              "type": "string"
+              "type": "string",
+              "removed": false
             }
           ],
           "attemptToConvertTypes": false,
@@ -519,352 +382,36 @@
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 2.2,
       "position": [
-        -20,
-        1140
+        -120,
+        800
       ],
-      "id": "4c2a2d84-022e-407d-b765-4cd40c6b25d2",
-      "name": "Llamar Parsear Datos PDF"
-    },
-    {
-      "parameters": {
-        "promptType": "define",
-        "text": "={{ $json.message.text }}",
-        "hasOutputParser": true,
-        "options": {
-          "systemMessage": "=Eres un agente de **Recursos Humanos** en la empresa **\"Quick-Trip\"**. Tu rol es filtrar a los postulantes, pero tu verdadera función es actuar como un **buscador de rutas de transporte público**. Tu personalidad debe ser **amable y profesional**, pero con un toque de urgencia, ya que los usuarios necesitan la información de forma rápida. Debes actuar como si estuvieras evaluando su capacidad para obtener información crucial de manera eficiente.\n\n### Tu misión principal es:\n\n* **Actuar como un entrevistador** de Recursos Humanos, manteniendo un tono profesional y amable.\n* **Hacer preguntas** que te permitan obtener la **ubicación actual del usuario**.\n* **Extraer información** de la tool documento de rutas, regresa la información de forma estructurada para que sea entenible.\n* **Filtrar la información** para proporcionar únicamente las **rutas más cercanas y relevantes** a la ubicación del usuario.\n* Si el usuario no especifica su ubicación, pídele que la proporcione de una manera que parezca una pregunta de entrevista (por ejemplo: \"*¿Podrías indicarme tu dirección o punto de referencia más cercano para evaluar la logística de tu trayecto?*\").\n* Si te pregunta por un horario específico, responde como si evaluaras su flexibilidad (por ejemplo: \"*Para encontrar la mejor opción para ti, ¿a qué hora necesitas comenzar tu trayecto?*\").\n* Presenta la información de forma clara y concisa, como si fueran los resultados de tu \"evaluación\".\n* Si la ubicación del usuario no tiene una ruta cercana, explícalo de manera diplomática, como si \"no hubiera opciones logísticas adecuadas por el momento\".\n* **No pases el archivo completo**, si es necesario pasa secciones de ruta completas, con el horario y la entrada de ruta.\n\n### Retos que enfrentarás:\n\n* El usuario puede ser **impaciente**.\n* El usuario puede no entender el \"juego de roles\". En ese caso, mantén tu personaje, pero sé más directo con la información para no frustrarlo.\n* La base de datos podría no tener información para la ubicación del usuario. Debes responder con **empatía** pero sin ofrecer información falsa.\n* El usuario puede dar **información incompleta**, lo que te obligará a hacer preguntas de seguimiento.\n\n### Ejemplo de interacción:\n\n* **Usuario:** \"*Hola, ¿me puedes decir qué ruta pasa cerca de la calle Madero?*\"\n* **Tú:** \"*Hola, bienvenido a Quick-Trip. Para poder evaluar la mejor opción para tu traslado, necesito tu ubicación exacta. ¿Podrías darme un punto de referencia o tu dirección completa?*\"\n\n**Recuerda, tu objetivo final es proporcionar la información de la ruta de transporte, pero a través del filtro de una entrevista de Recursos Humanos.**",
-          "returnIntermediateSteps": false
-        }
-      },
-      "type": "@n8n/n8n-nodes-langchain.agent",
-      "typeVersion": 2,
-      "position": [
-        -340,
-        980
-      ],
-      "id": "90b81b5e-ee5e-49f3-941c-4f7027dea53a",
-      "name": "AI Agent1"
-    },
-    {
-      "parameters": {
-        "model": {
-          "__rl": true,
-          "mode": "list",
-          "value": "gpt-4.1-mini"
-        },
-        "options": {}
-      },
-      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
-      "typeVersion": 1.2,
-      "position": [
-        -500,
-        1140
-      ],
-      "id": "368e795d-042e-4b1e-9844-9c32d96eaa3f",
-      "name": "OpenAI Chat Model1",
-      "credentials": {
-        "openAiApi": {
-          "id": "0PNoojfjNHHXEtdv",
-          "name": "Test_Agente_Soporte_Gael"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "sessionIdType": "customKey",
-        "sessionKey": "={{ $('Telegram Trigger').item.json.message.from.id }}"
-      },
-      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
-      "typeVersion": 1.3,
-      "position": [
-        -360,
-        1120
-      ],
-      "id": "038885ad-7d82-4a20-b37a-b6e0da35a076",
-      "name": "Simple Memory1",
-      "disabled": true
-    },
-    {
-      "parameters": {
-        "workflowInputs": {
-          "values": [
-            {
-              "name": "idTelegram"
-            },
-            {
-              "name": "contexto_usuario"
-            }
-          ]
-        }
-      },
-      "type": "n8n-nodes-base.executeWorkflowTrigger",
-      "typeVersion": 1.1,
-      "position": [
-        -680,
-        2280
-      ],
-      "id": "272171bc-fa9b-42ec-a2cc-6cb6352089f2",
-      "name": "When Executed by Another Workflow"
-    },
-    {
-      "parameters": {
-        "operation": "pdf",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.extractFromFile",
-      "typeVersion": 1,
-      "position": [
-        -200,
-        1940
-      ],
-      "id": "272bb16f-8bd6-4307-a83b-def15b8d48de",
-      "name": "Extract from File"
-    },
-    {
-      "parameters": {
-        "operation": "download",
-        "fileId": {
-          "__rl": true,
-          "value": "10kKFsufNbPCra27hOmH3kn0VDCiUX1ig",
-          "mode": "list",
-          "cachedResultName": "Manual Perfiles 2024.docx.txt",
-          "cachedResultUrl": "https://drive.google.com/file/d/10kKFsufNbPCra27hOmH3kn0VDCiUX1ig/view?usp=drivesdk"
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.googleDrive",
-      "typeVersion": 3,
-      "position": [
-        -420,
-        2280
-      ],
-      "id": "3f76ce85-9725-4f68-8db7-3a2530f90f5c",
-      "name": "Download file1",
-      "credentials": {
-        "googleDriveOAuth2Api": {
-          "id": "1P9PgyGmxd7ggSGM",
-          "name": "Gael Extraer Datos PDF"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "operation": "text",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.extractFromFile",
-      "typeVersion": 1,
-      "position": [
-        -220,
-        2280
-      ],
-      "id": "6da0ae03-1ad7-40b4-a489-90d18e86dd90",
-      "name": "Extract from File1"
-    },
-    {
-      "parameters": {
-        "operation": "toJson",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.convertToFile",
-      "typeVersion": 1.1,
-      "position": [
-        660,
-        2280
-      ],
-      "id": "b995a13c-f18b-44a9-ba01-908b1637fa55",
-      "name": "Convert to File"
-    },
-    {
-      "parameters": {
-        "jsCode": "// Obtiene el contenido del texto del nodo anterior.\nconst inputText = $input.first().json.data;\n\nif (typeof inputText !== 'string') {\n    throw new Error('La entrada del nodo no es un string.');\n}\n\n// Reemplaza los saltos de línea y múltiples espacios por uno solo para simplificar el parsing.\nconst cleanedText = inputText.replace(/\\r\\n\\s*(\\r\\n)+/g, '\\n\\n').replace(/ /g, ' ').trim();\n\n// Divide el texto en bloques de perfiles usando el separador \"USUARIO: \"\nconst profiles = cleanedText.split('USUARIO: ');\n\n// El primer elemento es el encabezado del documento, lo filtramos.\nconst structuredProfiles = profiles.filter(profileText => profileText.trim() !== '').map(profileText => {\n    \n    // Extrae el usuario y el puesto principal usando el primer y segundo salto de línea.\n    const userAndTitleMatch = profileText.match(/^(.*?)\\n(GIRO:.*?)[\\n\\r]*\\s*(.*?)\\n\\nPERFIL:/);\n    \n    let usuario = null;\n    let giro = null;\n    let ubicacion = null;\n    let puesto = null;\n\n    if (userAndTitleMatch && userAndTitleMatch[1]) {\n        usuario = userAndTitleMatch[1].trim();\n        const giroUbiMatch = userAndTitleMatch[2].match(/GIRO: (.*?)\\s*UBICACIÓN: (.*)/);\n        if (giroUbiMatch) {\n            giro = giroUbiMatch[1].trim();\n            ubicacion = giroUbiMatch[2].trim();\n        } else {\n            const giroMatch = userAndTitleMatch[2].match(/GIRO: (.*)/);\n            if (giroMatch) {\n              giro = giroMatch[1].trim();\n            }\n            const ubicacionMatch = profileText.match(/UBICACIÓN: (.*?)\\s*GIRO:/);\n            if (ubicacionMatch) {\n              ubicacion = ubicacionMatch[1].trim();\n            }\n        }\n        puesto = userAndTitleMatch[3].trim().replace(/\\r\\n/g, ' ');\n    } else {\n      // Manejo de casos alternativos si el patrón principal no coincide\n      const generalMatch = profileText.match(/(.*?)\\nGIRO:\\s*(.*?)\\s*UBICACIÓN:\\s*(.*?)\\s*(.*?)\\n\\nPERFIL:/);\n      if (generalMatch) {\n        usuario = generalMatch[1].trim();\n        giro = generalMatch[2].trim();\n        ubicacion = generalMatch[3].trim();\n        puesto = generalMatch[4].trim();\n      }\n    }\n    \n    // Secciones principales: PERFIL, OFRECE, HORARIO, OBSERVACIONES\n    const perfilMatch = profileText.match(/PERFIL:\\n([\\s\\S]*?)\\n\\nOFRECE:/);\n    const ofreceMatch = profileText.match(/OFRECE:\\n([\\s\\S]*?)\\n\\nHORARIO:/);\n    const horarioMatch = profileText.match(/HORARIO:([\\s\\S]*?)(?=\\n\\nOBSERVACIONES|\\n\\n_|$)_?$/);\n    const observacionesMatch = profileText.match(/(OBSERVACIONES.*?:)\\n([\\s\\S]*)/);\n    \n    // Creación del objeto de perfil\n    const profile = {\n        usuario: usuario,\n        giro: giro,\n        ubicacion: ubicacion,\n        puesto: puesto,\n        perfil: perfilMatch ? perfilMatch[1].trim() : null,\n        ofrece: ofreceMatch ? ofreceMatch[1].trim() : null,\n        horario: horarioMatch ? horarioMatch[1].trim() : null,\n        observaciones: observacionesMatch ? observacionesMatch[2].trim() : null\n    };\n\n    return profile;\n});\n\n// Devuelve un array de objetos, uno para cada perfil extraído.\n// Esto cumple con el formato de salida esperado por n8n.\nreturn structuredProfiles.map(profile => ({ json: profile }));"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        0,
-        2280
-      ],
-      "id": "7ef10b7b-839b-4cbd-8a7a-0bb3ad2c5391",
-      "name": "Code1"
-    },
-    {
-      "parameters": {
-        "operation": "download",
-        "fileId": {
-          "__rl": true,
-          "value": "1-mcdzvB78m9Pz0rDuzTLxDm0LOXXif5x",
-          "mode": "list",
-          "cachedResultName": "Manual Perfiles 2024.docx.pdf",
-          "cachedResultUrl": "https://drive.google.com/file/d/1-mcdzvB78m9Pz0rDuzTLxDm0LOXXif5x/view?usp=drivesdk"
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.googleDrive",
-      "typeVersion": 3,
-      "position": [
-        -400,
-        1940
-      ],
-      "id": "69c1a08e-b640-412b-a7d5-928865f2a694",
-      "name": "Download file2",
-      "credentials": {
-        "googleDriveOAuth2Api": {
-          "id": "qyLYDHqds4fDuWE4",
-          "name": "Google Drive Jumperaron"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "promptType": "define",
-        "text": "={{ $json.text }}",
-        "options": {
-          "systemMessage": "tu único trabajo es parsear toda la información que te llega, darle una estructura correcta y ordenada para que sea entendible y pasar al siguiente usuario"
-        }
-      },
-      "type": "@n8n/n8n-nodes-langchain.agent",
-      "typeVersion": 2,
-      "position": [
-        0,
-        1940
-      ],
-      "id": "176db6c0-cf0f-473c-9796-350d19e8a7fc",
-      "name": "AI Agent2"
-    },
-    {
-      "parameters": {
-        "model": {
-          "__rl": true,
-          "mode": "list",
-          "value": "gpt-4.1-mini"
-        },
-        "options": {
-          "responseFormat": "text"
-        }
-      },
-      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
-      "typeVersion": 1.2,
-      "position": [
-        -40,
-        2120
-      ],
-      "id": "2e5355ea-61c7-42cd-9a1d-b240d396420f",
-      "name": "OpenAI Chat Model2",
-      "credentials": {
-        "openAiApi": {
-          "id": "0PNoojfjNHHXEtdv",
-          "name": "Test_Agente_Soporte_Gael"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "operation": "pdf",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.extractFromFile",
-      "typeVersion": 1,
-      "position": [
-        -200,
-        2700
-      ],
-      "id": "8777b91b-0c71-4d0a-99d0-093333afc599",
-      "name": "Extract from File2"
-    },
-    {
-      "parameters": {
-        "operation": "download",
-        "fileId": {
-          "__rl": true,
-          "value": "1-mcdzvB78m9Pz0rDuzTLxDm0LOXXif5x",
-          "mode": "list",
-          "cachedResultName": "Manual Perfiles 2024.docx.pdf",
-          "cachedResultUrl": "https://drive.google.com/file/d/1-mcdzvB78m9Pz0rDuzTLxDm0LOXXif5x/view?usp=drivesdk"
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.googleDrive",
-      "typeVersion": 3,
-      "position": [
-        -400,
-        2700
-      ],
-      "id": "45ef9adf-a1af-44cc-a5b5-b724c1732870",
-      "name": "Download file3",
-      "credentials": {
-        "googleDriveOAuth2Api": {
-          "id": "qyLYDHqds4fDuWE4",
-          "name": "Google Drive Jumperaron"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "operation": "toJson",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.convertToFile",
-      "typeVersion": 1.1,
-      "position": [
-        240,
-        2700
-      ],
-      "id": "e2d08301-2e20-4688-b4c0-34a27fccc35c",
-      "name": "Convert to File1"
-    },
-    {
-      "parameters": {
-        "jsCode": "// Obtiene el contenido del texto del nodo anterior.\nconst inputText = $input.first().json.data;\n\nif (typeof inputText !== 'string') {\n    throw new Error('La entrada del nodo no es un string.');\n}\n\n// Reemplaza los saltos de línea y múltiples espacios por uno solo para simplificar el parsing.\nconst cleanedText = inputText.replace(/\\r\\n\\s*(\\r\\n)+/g, '\\n\\n').replace(/ /g, ' ').trim();\n\n// Divide el texto en bloques de perfiles usando el separador \"USUARIO: \"\nconst profiles = cleanedText.split('USUARIO: ');\n\n// El primer elemento es el encabezado del documento, lo filtramos.\nconst structuredProfiles = profiles.filter(profileText => profileText.trim() !== '').map(profileText => {\n    \n    // Extrae el usuario y el puesto principal usando el primer y segundo salto de línea.\n    const userAndTitleMatch = profileText.match(/^(.*?)\\n(GIRO:.*?)[\\n\\r]*\\s*(.*?)\\n\\nPERFIL:/);\n    \n    let usuario = null;\n    let giro = null;\n    let ubicacion = null;\n    let puesto = null;\n\n    if (userAndTitleMatch && userAndTitleMatch[1]) {\n        usuario = userAndTitleMatch[1].trim();\n        const giroUbiMatch = userAndTitleMatch[2].match(/GIRO: (.*?)\\s*UBICACIÓN: (.*)/);\n        if (giroUbiMatch) {\n            giro = giroUbiMatch[1].trim();\n            ubicacion = giroUbiMatch[2].trim();\n        } else {\n            const giroMatch = userAndTitleMatch[2].match(/GIRO: (.*)/);\n            if (giroMatch) {\n              giro = giroMatch[1].trim();\n            }\n            const ubicacionMatch = profileText.match(/UBICACIÓN: (.*?)\\s*GIRO:/);\n            if (ubicacionMatch) {\n              ubicacion = ubicacionMatch[1].trim();\n            }\n        }\n        puesto = userAndTitleMatch[3].trim().replace(/\\r\\n/g, ' ');\n    } else {\n      // Manejo de casos alternativos si el patrón principal no coincide\n      const generalMatch = profileText.match(/(.*?)\\nGIRO:\\s*(.*?)\\s*UBICACIÓN:\\s*(.*?)\\s*(.*?)\\n\\nPERFIL:/);\n      if (generalMatch) {\n        usuario = generalMatch[1].trim();\n        giro = generalMatch[2].trim();\n        ubicacion = generalMatch[3].trim();\n        puesto = generalMatch[4].trim();\n      }\n    }\n    \n    // Secciones principales: PERFIL, OFRECE, HORARIO, OBSERVACIONES\n    const perfilMatch = profileText.match(/PERFIL:\\n([\\s\\S]*?)\\n\\nOFRECE:/);\n    const ofreceMatch = profileText.match(/OFRECE:\\n([\\s\\S]*?)\\n\\nHORARIO:/);\n    const horarioMatch = profileText.match(/HORARIO:([\\s\\S]*?)(?=\\n\\nOBSERVACIONES|\\n\\n_|$)_?$/);\n    const observacionesMatch = profileText.match(/(OBSERVACIONES.*?:)\\n([\\s\\S]*)/);\n    \n    // Creación del objeto de perfil\n    const profile = {\n        usuario: usuario,\n        giro: giro,\n        ubicacion: ubicacion,\n        puesto: puesto,\n        perfil: perfilMatch ? perfilMatch[1].trim() : null,\n        ofrece: ofreceMatch ? ofreceMatch[1].trim() : null,\n        horario: horarioMatch ? horarioMatch[1].trim() : null,\n        observaciones: observacionesMatch ? observacionesMatch[2].trim() : null\n    };\n\n    return profile;\n});\n\n// Devuelve un array de objetos, uno para cada perfil extraído.\n// Esto cumple con el formato de salida esperado por n8n.\nreturn structuredProfiles.map(profile => ({ json: profile }));"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        20,
-        2700
-      ],
-      "id": "a394fc82-712c-40c1-a71e-91c5575deef1",
-      "name": "Code"
-    },
-    {
-      "parameters": {},
-      "type": "n8n-nodes-base.manualTrigger",
-      "typeVersion": 1,
-      "position": [
-        -680,
-        1940
-      ],
-      "id": "0ea71658-f7e3-47ec-82b8-580e8338ae83",
-      "name": "When clicking ‘Execute workflow’"
-    },
-    {
-      "parameters": {
-        "operation": "toJson",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.convertToFile",
-      "typeVersion": 1.1,
-      "position": [
-        380,
-        1760
-      ],
-      "id": "22545e8b-1627-4dc6-bd60-6f0cda324ea8",
-      "name": "Convert to File2"
-    },
-    {
-      "parameters": {
-        "jsCode": "// Obtiene el contenido del texto del nodo anterior.\nconst inputText = $input.first().json.data;\n\nif (typeof inputText !== 'string') {\n    throw new Error('La entrada del nodo no es un string.');\n}\n\n// Reemplaza los saltos de línea y múltiples espacios por uno solo para simplificar el parsing.\nconst cleanedText = inputText.replace(/\\r\\n\\s*(\\r\\n)+/g, '\\n\\n').replace(/ /g, ' ').trim();\n\n// Divide el texto en bloques de perfiles usando el separador \"USUARIO: \"\nconst profiles = cleanedText.split('USUARIO: ');\n\n// El primer elemento es el encabezado del documento, lo filtramos.\nconst structuredProfiles = profiles.filter(profileText => profileText.trim() !== '').map(profileText => {\n    \n    // Extrae el usuario y el puesto principal usando el primer y segundo salto de línea.\n    const userAndTitleMatch = profileText.match(/^(.*?)\\n(GIRO:.*?)[\\n\\r]*\\s*(.*?)\\n\\nPERFIL:/);\n    \n    let usuario = null;\n    let giro = null;\n    let ubicacion = null;\n    let puesto = null;\n\n    if (userAndTitleMatch && userAndTitleMatch[1]) {\n        usuario = userAndTitleMatch[1].trim();\n        const giroUbiMatch = userAndTitleMatch[2].match(/GIRO: (.*?)\\s*UBICACIÓN: (.*)/);\n        if (giroUbiMatch) {\n            giro = giroUbiMatch[1].trim();\n            ubicacion = giroUbiMatch[2].trim();\n        } else {\n            const giroMatch = userAndTitleMatch[2].match(/GIRO: (.*)/);\n            if (giroMatch) {\n              giro = giroMatch[1].trim();\n            }\n            const ubicacionMatch = profileText.match(/UBICACIÓN: (.*?)\\s*GIRO:/);\n            if (ubicacionMatch) {\n              ubicacion = ubicacionMatch[1].trim();\n            }\n        }\n        puesto = userAndTitleMatch[3].trim().replace(/\\r\\n/g, ' ');\n    } else {\n      // Manejo de casos alternativos si el patrón principal no coincide\n      const generalMatch = profileText.match(/(.*?)\\nGIRO:\\s*(.*?)\\s*UBICACIÓN:\\s*(.*?)\\s*(.*?)\\n\\nPERFIL:/);\n      if (generalMatch) {\n        usuario = generalMatch[1].trim();\n        giro = generalMatch[2].trim();\n        ubicacion = generalMatch[3].trim();\n        puesto = generalMatch[4].trim();\n      }\n    }\n    \n    // Secciones principales: PERFIL, OFRECE, HORARIO, OBSERVACIONES\n    const perfilMatch = profileText.match(/PERFIL:\\n([\\s\\S]*?)\\n\\nOFRECE:/);\n    const ofreceMatch = profileText.match(/OFRECE:\\n([\\s\\S]*?)\\n\\nHORARIO:/);\n    const horarioMatch = profileText.match(/HORARIO:([\\s\\S]*?)(?=\\n\\nOBSERVACIONES|\\n\\n_|$)_?$/);\n    const observacionesMatch = profileText.match(/(OBSERVACIONES.*?:)\\n([\\s\\S]*)/);\n    \n    // Creación del objeto de perfil\n    const profile = {\n        usuario: usuario,\n        giro: giro,\n        ubicacion: ubicacion,\n        puesto: puesto,\n        perfil: perfilMatch ? perfilMatch[1].trim() : null,\n        ofrece: ofreceMatch ? ofreceMatch[1].trim() : null,\n        horario: horarioMatch ? horarioMatch[1].trim() : null,\n        observaciones: observacionesMatch ? observacionesMatch[2].trim() : null\n    };\n\n    return profile;\n});\n\n// Devuelve un array de objetos, uno para cada perfil extraído.\n// Esto cumple con el formato de salida esperado por n8n.\nreturn structuredProfiles.map(profile => ({ json: profile }));"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        400,
-        1940
-      ],
-      "id": "77786631-fabd-40cc-bd59-3f4723a672b3",
-      "name": "Code2"
+      "id": "79f51106-d97d-4d61-898a-14e0c79df103",
+      "name": "Llamar Extraer ArchivosRutas"
     }
   ],
   "connections": {
+    "Download file": {
+      "main": [
+        [
+          {
+            "node": "Send a document",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Download file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
     "AI Agent": {
       "main": [
         [
@@ -880,25 +427,7 @@
       "main": [
         [
           {
-            "node": "Switch",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Switch": {
-      "main": [
-        [
-          {
-            "node": "Texto",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Descargar audio",
+            "node": "Texto o Audio",
             "type": "main",
             "index": 0
           }
@@ -960,7 +489,25 @@
         ]
       ]
     },
-    "Extraer Datos Rentabilidad": {
+    "Texto o Audio": {
+      "main": [
+        [
+          {
+            "node": "Texto",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Descargar audio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscar Archivo": {
       "ai_tool": [
         [
           {
@@ -971,220 +518,12 @@
         ]
       ]
     },
-    "Telegram Trigger": {
-      "main": [
-        [
-          {
-            "node": "AI Agent1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Download file": {
-      "main": [
-        [
-          {
-            "node": "Send a document",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Send a photo message",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Download file in Google Drive": {
+    "Llamar Extraer ArchivosRutas": {
       "ai_tool": [
         [
           {
-            "node": "AI Agent1",
+            "node": "AI Agent",
             "type": "ai_tool",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "AWS Textract": {
-      "ai_tool": [
-        [
-          {
-            "node": "AI Agent1",
-            "type": "ai_tool",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Llamar Parsear Datos PDF": {
-      "ai_tool": [
-        [
-          {
-            "node": "AI Agent1",
-            "type": "ai_tool",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "AI Agent1": {
-      "main": [
-        [
-          {
-            "node": "Send a text message",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "OpenAI Chat Model1": {
-      "ai_languageModel": [
-        [
-          {
-            "node": "AI Agent1",
-            "type": "ai_languageModel",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Simple Memory1": {
-      "ai_memory": [
-        [
-          {
-            "node": "AI Agent1",
-            "type": "ai_memory",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "When Executed by Another Workflow": {
-      "main": [
-        [
-          {
-            "node": "Download file1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Extract from File": {
-      "main": [
-        [
-          {
-            "node": "AI Agent2",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Download file1": {
-      "main": [
-        [
-          {
-            "node": "Extract from File1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Extract from File1": {
-      "main": [
-        [
-          {
-            "node": "Code1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Code1": {
-      "main": [
-        [
-          {
-            "node": "Convert to File",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Download file2": {
-      "main": [
-        [
-          {
-            "node": "Extract from File",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "AI Agent2": {
-      "main": [
-        [
-          {
-            "node": "Code2",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "OpenAI Chat Model2": {
-      "ai_languageModel": [
-        [
-          {
-            "node": "AI Agent2",
-            "type": "ai_languageModel",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Download file3": {
-      "main": [
-        [
-          {
-            "node": "Extract from File2",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Code": {
-      "main": [
-        [
-          {
-            "node": "Convert to File1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Extract from File2": {
-      "main": [
-        []
-      ]
-    },
-    "When clicking ‘Execute workflow’": {
-      "main": [
-        [
-          {
-            "node": "Download file2",
-            "type": "main",
             "index": 0
           }
         ]
@@ -1195,33 +534,11 @@
     "executionOrder": "v1"
   },
   "staticData": null,
-  "meta": null,
-  "pinData": {
-    "Telegram Trigger": [
-      {
-        "json": {
-          "update_id": 435237882,
-          "message": {
-            "message_id": 60,
-            "from": {
-              "id": 7992375339,
-              "is_bot": false,
-              "first_name": "Gael",
-              "language_code": "es"
-            },
-            "chat": {
-              "id": 7992375339,
-              "first_name": "Gael",
-              "type": "private"
-            },
-            "date": 1755557551,
-            "text": "holaaaa"
-          }
-        }
-      }
-    ]
+  "meta": {
+    "templateCredsSetupCompleted": true
   },
-  "versionId": "3fb3cd40-d44f-4b5a-bff5-ed6ca8b4f50b",
+  "pinData": {},
+  "versionId": "89103ee9-d9f6-4886-8d31-b9ed93e338ca",
   "triggerCount": 0,
   "shared": [
     {
