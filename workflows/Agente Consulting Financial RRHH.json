@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-08-08T22:01:23.225Z",
-  "updatedAt": "2025-08-21T22:59:52.000Z",
+  "updatedAt": "2025-08-21T23:53:04.000Z",
   "id": "KhIu4XZ1rR2d7zqy",
   "name": "Agente Consulting Financial RRHH",
   "active": true,
@@ -348,7 +348,8 @@
         "workflowInputs": {
           "mappingMode": "defineBelow",
           "value": {
-            "direccion_candidato": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('direccion_candidato', ``, 'string') }}"
+            "direccion_candidato": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('direccion_candidato', ``, 'string') }}",
+            "chat_id": "={{ $('Telegram Trigger').item.json.message.chat.id }}"
           },
           "matchingColumns": [
             "direccion_candidato"
@@ -357,6 +358,16 @@
             {
               "id": "direccion_candidato",
               "displayName": "direccion_candidato",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "chat_id",
+              "displayName": "chat_id",
               "required": false,
               "defaultMatch": false,
               "display": true,
@@ -377,39 +388,6 @@
       ],
       "id": "780e724c-7f22-480e-be18-a269207c3df8",
       "name": "tool_vacantes"
-    },
-    {
-      "parameters": {
-        "documentId": {
-          "__rl": true,
-          "value": "1Psi_K5KpRA1_SX9Yqf9x1PIPJd-C9PckqJXmK7m9qd4",
-          "mode": "list",
-          "cachedResultName": "vacantes_filtradas",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Psi_K5KpRA1_SX9Yqf9x1PIPJd-C9PckqJXmK7m9qd4/edit?usp=drivesdk"
-        },
-        "sheetName": {
-          "__rl": true,
-          "value": "gid=0",
-          "mode": "list",
-          "cachedResultName": "Hoja 1",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Psi_K5KpRA1_SX9Yqf9x1PIPJd-C9PckqJXmK7m9qd4/edit#gid=0"
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.googleSheetsTool",
-      "typeVersion": 4.6,
-      "position": [
-        1360,
-        340
-      ],
-      "id": "0f8c0a31-9c40-4506-a8bd-f2c8178fa797",
-      "name": "tool_detalle_vacantes",
-      "credentials": {
-        "googleSheetsOAuth2Api": {
-          "id": "T1b495TNgv7GQdA8",
-          "name": "Google Sheets Jumperaron"
-        }
-      }
     },
     {
       "parameters": {
@@ -1331,6 +1309,36 @@
       ],
       "id": "12a44825-c047-42c8-9255-d4976886eed6",
       "name": "tool_datos_entrevista"
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "tableId": "rh_vacantes_consultng_financial",
+        "returnAll": true,
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "chat_id",
+              "condition": "eq",
+              "keyValue": "={{ $('Telegram Trigger').item.json.message.chat.id }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabaseTool",
+      "typeVersion": 1,
+      "position": [
+        1360,
+        340
+      ],
+      "id": "24104009-ae6b-44cc-8223-71121578e502",
+      "name": "tool_detalle_vacantes",
+      "credentials": {
+        "supabaseApi": {
+          "id": "ty0KiXsEYP1uJ8t9",
+          "name": "Supabase account - CANTERA"
+        }
+      }
     }
   ],
   "connections": {
@@ -1428,17 +1436,6 @@
         ]
       ]
     },
-    "tool_detalle_vacantes": {
-      "ai_tool": [
-        [
-          {
-            "node": "AI Agent",
-            "type": "ai_tool",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "tool_ingreso_datos_apto": {
       "ai_tool": [
         [
@@ -1471,6 +1468,17 @@
           }
         ]
       ]
+    },
+    "tool_detalle_vacantes": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -1481,7 +1489,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "3ac851d0-ffcf-425f-98d2-0cbc51d53483",
+  "versionId": "7e1142cb-35d8-4bb1-9905-d869e45dfc0a",
   "triggerCount": 1,
   "shared": [
     {
