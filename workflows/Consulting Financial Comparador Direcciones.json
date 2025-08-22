@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-08-15T18:12:56.636Z",
-  "updatedAt": "2025-08-21T19:58:12.000Z",
+  "updatedAt": "2025-08-21T23:52:13.000Z",
   "id": "VFvEQwvxizzpS1Wm",
   "name": "Consulting Financial Comparador Direcciones",
   "active": false,
@@ -12,6 +12,9 @@
           "values": [
             {
               "name": "direccion_candidato"
+            },
+            {
+              "name": "chat_id"
             }
           ]
         }
@@ -19,7 +22,7 @@
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "typeVersion": 1.1,
       "position": [
-        -2420,
+        -2400,
         220
       ],
       "id": "2b3581f3-fb0d-4aa5-a158-f4d5be8ebfce",
@@ -806,8 +809,8 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.6,
       "position": [
-        400,
-        80
+        360,
+        860
       ],
       "id": "715047b9-d0bd-4522-a1c3-c9c2bffcf0c8",
       "name": "Append row in sheet",
@@ -840,8 +843,8 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.6,
       "position": [
-        -2180,
-        220
+        120,
+        860
       ],
       "id": "b93192ac-7c4f-4b71-9b50-85e7d6931b5b",
       "name": "Clear sheet",
@@ -851,6 +854,103 @@
           "name": "Google Sheets Jumperaron"
         }
       }
+    },
+    {
+      "parameters": {
+        "tableId": "rh_vacantes_consultng_financial",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "chat_id",
+              "fieldValue": "={{$item(0).$node[\"When Executed by Another Workflow\"].json.chat_id}}"
+            },
+            {
+              "fieldId": "empresa",
+              "fieldValue": "={{ $json.EMPRESA }}"
+            },
+            {
+              "fieldId": "puesto",
+              "fieldValue": "={{ $json.PUESTO }}"
+            },
+            {
+              "fieldId": "ubicacion",
+              "fieldValue": "={{ $json['UBICACIÓN'] }}"
+            },
+            {
+              "fieldId": "giro",
+              "fieldValue": "={{ $json.GIRO }}"
+            },
+            {
+              "fieldId": "perfil",
+              "fieldValue": "={{ $json.PERFIL }}"
+            },
+            {
+              "fieldId": "sueldo_semanal_libre",
+              "fieldValue": "={{ $json['SUELDO SEMANAL LIBRE'] }}"
+            },
+            {
+              "fieldId": "beneficios",
+              "fieldValue": "={{ $json.BENEFICIOS }}"
+            },
+            {
+              "fieldId": "horario",
+              "fieldValue": "={{ $json.HORARIO }}"
+            },
+            {
+              "fieldId": "transporte",
+              "fieldValue": "={{ $json.TRANSPORTE }}"
+            },
+            {
+              "fieldId": "observaciones",
+              "fieldValue": "={{ $json.OBSERVACIONES }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        380,
+        80
+      ],
+      "id": "59004098-e8af-4c22-b06b-d18fed3771ca",
+      "name": "Create a row",
+      "credentials": {
+        "supabaseApi": {
+          "id": "ty0KiXsEYP1uJ8t9",
+          "name": "Supabase account - CANTERA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "tableId": "rh_vacantes_consultng_financial",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "chat_id",
+              "condition": "eq",
+              "keyValue": "={{ $json.chat_id }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        -2160,
+        220
+      ],
+      "id": "aa378ffc-703e-40ee-bf75-a481a2585d9c",
+      "name": "Delete a row",
+      "alwaysOutputData": true,
+      "credentials": {
+        "supabaseApi": {
+          "id": "ty0KiXsEYP1uJ8t9",
+          "name": "Supabase account - CANTERA"
+        }
+      }
     }
   ],
   "connections": {
@@ -858,7 +958,7 @@
       "main": [
         [
           {
-            "node": "Clear sheet",
+            "node": "Delete a row",
             "type": "main",
             "index": 0
           }
@@ -965,7 +1065,7 @@
       "main": [
         [
           {
-            "node": "Append row in sheet",
+            "node": "Create a row",
             "type": "main",
             "index": 0
           }
@@ -1088,6 +1188,11 @@
     },
     "Clear sheet": {
       "main": [
+        []
+      ]
+    },
+    "Delete a row": {
+      "main": [
         [
           {
             "node": "Geocode Candidato",
@@ -1095,6 +1200,11 @@
             "index": 0
           }
         ]
+      ]
+    },
+    "Create a row": {
+      "main": [
+        []
       ]
     }
   },
@@ -1109,12 +1219,13 @@
     "When Executed by Another Workflow": [
       {
         "json": {
-          "direccion_candidato": "tlajomulco"
+          "direccion_candidato": "Tlajomulco",
+          "chat_id": 1526474745
         }
       }
     ]
   },
-  "versionId": "bb72c60e-3268-4a2b-a5f4-17936f8e8e99",
+  "versionId": "8ec9487a-75cd-4c48-b272-0da6a938853c",
   "triggerCount": 0,
   "shared": [
     {
