@@ -1,0 +1,513 @@
+{
+  "createdAt": "2025-08-23T06:41:45.713Z",
+  "updatedAt": "2025-08-23T06:56:57.000Z",
+  "id": "fPp1Yp5RDKGW0fTo",
+  "name": "workflow error detector",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        900
+      ],
+      "id": "62819ec2-878d-4f11-b6d6-7027fcfd2b72",
+      "name": "Error Trigger"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "timestamp",
+              "name": "timestamp",
+              "value": "={{ $now.format('yyyy-MM-DD HH:mm:ss') }}",
+              "type": "string"
+            },
+            {
+              "id": "workflow-name",
+              "name": "workflow_name",
+              "value": "={{ $json.workflow?.name || 'Workflow Desconocido' }}",
+              "type": "string"
+            },
+            {
+              "id": "error-message",
+              "name": "error_message",
+              "value": "={{ $json.execution?.error?.message || $json.error?.message || 'Error sin mensaje' }}",
+              "type": "string"
+            },
+            {
+              "id": "node-name",
+              "name": "node_name",
+              "value": "={{ $json.execution?.error?.node?.name || 'Nodo Desconocido' }}",
+              "type": "string"
+            },
+            {
+              "id": "execution-url",
+              "name": "execution_url",
+              "value": "={{ $json.execution?.url || 'No disponible' }}",
+              "type": "string"
+            },
+            {
+              "id": "severity",
+              "name": "severity",
+              "value": "={{ $json.execution?.error?.message?.toLowerCase().includes('timeout') || $json.execution?.error?.message?.toLowerCase().includes('connection') ? 'CRÍTICO' : 'Normal' }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "abc9a7e0-1d45-479f-8a84-a9c4fe6eca8f",
+      "name": "2️⃣ Extraer Info del Error",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        280,
+        900
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1OFMVcN5tax_1QErYt7yEuBIfgpr-aHITAzMmemhP4bU",
+          "mode": "list",
+          "cachedResultName": "Error Logs n8n",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1OFMVcN5tax_1QErYt7yEuBIfgpr-aHITAzMmemhP4bU/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1OFMVcN5tax_1QErYt7yEuBIfgpr-aHITAzMmemhP4bU/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Timestamp": "={{ $json.timestamp }}",
+            "Workflow": "={{ $json.workflow_name }}",
+            "Nodo": "={{ $json.node_name }}",
+            "Gravedad": "={{ $json.severity }}",
+            "Mensaje de error": "={{ $json.error_message }}",
+            "ID": "={{ $json.execution_url }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "ID",
+              "displayName": "ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Workflow",
+              "displayName": "Workflow",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Nodo",
+              "displayName": "Nodo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Mensaje de error",
+              "displayName": "Mensaje de error",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Gravedad",
+              "displayName": "Gravedad",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "eb809479-dfcc-4189-ab30-04ece4bc82ed",
+      "name": "3️⃣ Guardar en Google Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.4,
+      "position": [
+        200,
+        1140
+      ],
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "select": "user",
+        "user": {
+          "__rl": true,
+          "value": "U07BY7VQ5B3",
+          "mode": "list",
+          "cachedResultName": "info"
+        },
+        "text": "⚠️ **Error detectado en n8n**\n\n🕐 **Cuándo:** {{ $('2️⃣ Extraer Info del Error').item.json.timestamp }}\n📋 **Workflow:** {{ $('2️⃣ Extraer Info del Error').item.json.workflow_name }}\n⚙️ **Nodo:** {{ $('2️⃣ Extraer Info del Error').item.json.node_name }}\n🔴 **Error:** {{ $('2️⃣ Extraer Info del Error').item.json.error_message }}\n📊 **Tipo:** {{ $('2️⃣ Extraer Info del Error').item.json.severity }}\n🔗 **Ver:** {{ $('2️⃣ Extraer Info del Error').item.json.execution_url }}",
+        "otherOptions": {
+          "includeLinkToWorkflow": false
+        }
+      },
+      "id": "2cdb7ef0-76b0-48da-9731-4159f5140214",
+      "name": "4️⃣ Notificar en Slack",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.1,
+      "position": [
+        420,
+        1140
+      ],
+      "webhookId": "d2d54266-70a7-452e-832d-3ba167c2652d",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "content": "# 📚 GUÍA - Sistema de Errores n8n\n\n## 🎯 ¿Qué hace este workflow?\nCuando **CUALQUIER** workflow falla, este sistema:\n1. Captura el error automáticamente\n2. Guarda la información en Google Sheets\n3. Envía notificación a Slack\n\n## ⚙️ CONFIGURACIÓN NECESARIA:\n\n### 📋 PASO 1: Crear Google Sheet\n1. Ve a Google Sheets\n2. Crea una nueva hoja\n3. Pon estas columnas en la fila 1:\n   `Fecha y Hora | Workflow | Nodo con Error | Mensaje de Error | Tipo | Ver Ejecución`\n4. Copia el ID de la URL (la parte larga después de /d/)\n5. Reemplaza `AQUI_VA_TU_GOOGLE_SHEET_ID` en el nodo 3️⃣\n\n### 🔐 PASO 2: Configurar Credenciales Google Sheets\n1. Click en nodo \"3️⃣ Guardar en Google Sheets\"\n2. Click en \"Select Credential\"\n3. Crear nueva credencial OAuth2\n4. Autorizar acceso a Google\n\n### 💬 PASO 3: Configurar Slack (Opcional)\n1. Click en nodo \"4️⃣ Notificar en Slack\"\n2. Configurar credenciales de Slack\n3. Elegir canal (ej: #errores-n8n)\n\n### 🔗 PASO 4: Configurar workflows para usar este sistema\n**¡MUY IMPORTANTE!**\nPara CADA workflow que quieras monitorear:\n1. Ve al workflow → Settings (3 puntos)\n2. Error Workflow → Selecciona este workflow\n3. Save\n\n## 🧪 PASO 5: Probar el sistema\n1. Crea un workflow simple\n2. Añade HTTP Request con URL: `https://servidor-que-no-existe.com`\n3. Configura Error Workflow en Settings\n4. Ejecuta → ¡Debería generar error y registrarlo!\n\n---\n**💡 TIP:** Siempre configura el Error Workflow en Settings de cada workflow que quieras monitorear",
+        "height": 1204,
+        "width": 680,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -780,
+        160
+      ],
+      "id": "8b9a044d-f73c-4ef4-9b67-bb653fb11161",
+      "name": "📚 INSTRUCCIONES PARA ALUMNOS"
+    },
+    {
+      "parameters": {
+        "content": "# ✅ CHECKLIST DE CONFIGURACIÓN\n\n## Antes de activar, verifica:\n\n□ **Google Sheet creado** con columnas correctas\n□ **ID del Sheet** copiado en nodo 3️⃣\n□ **Credenciales Google** configuradas\n□ **Credenciales Slack** configuradas (opcional)\n□ **Canal de Slack** seleccionado\n□ **Workflow guardado**\n\n## Para usar en otros workflows:\n□ **Settings** → **Error Workflow** → Seleccionar este\n□ **Workflow activado**\n□ **Probado** con error simulado\n\n---\n## 🚨 Solución de Problemas:\n\n**❌ No se dispara el error:**\n- Verificar que el workflow tenga configurado Error Workflow en Settings\n- El workflow con error debe estar activo\n\n**❌ No guarda en Sheets:**\n- Verificar credenciales Google\n- Verificar ID del Sheet\n- Verificar columnas del Sheet\n\n**❌ No notifica en Slack:**\n- Verificar credenciales Slack\n- Verificar que el canal existe",
+        "height": 812,
+        "width": 672,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -40,
+        0
+      ],
+      "id": "4e623473-adfc-4d81-818c-c8a494148a9d",
+      "name": "✅ CHECKLIST"
+    },
+    {
+      "parameters": {
+        "content": "# 🧪 WORKFLOW DE PRUEBA\n\n## Crea este workflow para probar:\n\n1. **HTTP Request Node:**\n   - URL: `https://httpstat.us/500`\n   - Method: GET\n   \n2. **En Settings del workflow de prueba:**\n   - Error Workflow → Selecciona este workflow\n   \n3. **Activa y ejecuta**\n   \n4. **Resultado esperado:**\n   - Nueva fila en Google Sheets\n   - Mensaje en Slack\n   - Error clasificado como \"Normal\"\n\n---\n\n## Para probar error CRÍTICO:\nCambia URL a: `https://servidor-timeout-database.com`\n\n¡El error debería clasificarse como \"CRÍTICO\"!",
+        "height": 676,
+        "width": 380,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        680,
+        140
+      ],
+      "id": "eb6a2d3e-eb90-4b58-a838-9abc463e00ca",
+      "name": "🧪 PRUEBA"
+    },
+    {
+      "parameters": {
+        "tableId": "errores",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "workflow",
+              "fieldValue": "={{ $json.workflow_name }}"
+            },
+            {
+              "fieldId": "error_message",
+              "fieldValue": "={{ $json.error_message }}"
+            },
+            {
+              "fieldId": "node_name",
+              "fieldValue": "={{ $json.node_name }}"
+            },
+            {
+              "fieldId": "execution_url",
+              "fieldValue": "={{ $json.execution_url }}"
+            },
+            {
+              "fieldId": "severity",
+              "fieldValue": "={{ $json.severity }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        500,
+        900
+      ],
+      "id": "318ae816-a502-48a9-b4b4-b837c204e97b",
+      "name": "Create a row",
+      "credentials": {
+        "supabaseApi": {
+          "id": "ty0KiXsEYP1uJ8t9",
+          "name": "Supabase account - CANTERA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "toRecipients": "rcorrea@canteradigital.mx,ravila@canteradigital.mx",
+        "subject": "={{    (() => {     const sev = String($json.severity || 'Incidencia').normalize('NFD').replace(/\\p{Diacritic}/gu,'').toUpperCase();     const tag = sev.includes('CRITICO') ? 'CRÍTICO' :                 sev.includes('ALTO')    ? 'ALTO'    :                 sev.includes('ADVERTENCIA') ? 'ADVERTENCIA' :                 sev.includes('INFO')    ? 'INFO'    : 'INCIDENCIA';     return `[${tag}] ${$json.workflow_name || 'Workflow'} – ${$json.node_name || 'Nodo'}`;   })() }}",
+        "bodyContent": "=<!doctype html>\n<html lang=\"es\" style=\"margin:0;padding:0;\">\n  <head>\n    <meta charset=\"utf-8\">\n    <meta http-equiv=\"x-ua-compatible\" content=\"ie=edge\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>Incidencia técnica</title>\n  </head>\n  <body style=\"margin:0;padding:0;background:#0f172a;font-family:Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:#e2e8f0;\">\n    <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"background:#0f172a;padding:24px 0;\">\n      <tr>\n        <td align=\"center\">\n          <table role=\"presentation\" width=\"600\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:600px;max-width:600px;background:#0b1220;border:1px solid #1f2937;border-radius:12px;overflow:hidden;\">\n            \n            <!-- Barra superior dinámica por severidad -->\n            <tr>\n              <td style=\"height:6px;line-height:6px;padding:0;{{ \n                (() => {\n                  const sev = String($json.severity || 'Normal').normalize('NFD').replace(/\\p{Diacritic}/gu,'').toUpperCase();\n                  const color = sev.includes('CRITICO') ? '#ef4444' :\n                                sev.includes('ALTO')    ? '#f97316' :\n                                sev.includes('ADVERTENCIA') ? '#eab308' :\n                                sev.includes('INFO')    ? '#0ea5e9' : '#22c55e';\n                  return `background:${color};`;\n                })()\n              }}\"></td>\n            </tr>\n\n            <!-- Header -->\n            <tr>\n              <td style=\"padding:20px 24px;background:#111827;border-bottom:1px solid #1f2937;\">\n                <div style=\"font-size:14px;letter-spacing:.08em;color:#94a3b8;text-transform:uppercase;\">Alerta de Incidencia</div>\n                <div style=\"font-size:22px;font-weight:700;color:#f8fafc;margin-top:6px;\">Fallo en workflow</div>\n              </td>\n            </tr>\n\n            <!-- Badge severidad -->\n            <tr>\n              <td style=\"padding:12px 24px;background:#0b1220;border-bottom:1px solid #1f2937;\">\n                <span style=\"display:inline-block;font-size:12px;font-weight:700;padding:6px 10px;border-radius:999px;vertical-align:middle;{{\n                  (() => {\n                    const sevRaw = String($json.severity || 'Normal');\n                    const sev = sevRaw.normalize('NFD').replace(/\\p{Diacritic}/gu,'').toUpperCase();\n                    if (sev.includes('CRITICO'))   return 'background:#fee2e2;color:#7f1d1d;';\n                    if (sev.includes('ALTO'))      return 'background:#ffedd5;color:#7c2d12;';\n                    if (sev.includes('ADVERTENCIA')) return 'background:#fef9c3;color:#713f12;';\n                    if (sev.includes('INFO'))      return 'background:#e0f2fe;color:#0c4a6e;';\n                    return 'background:#dcfce7;color:#166534;';\n                  })()\n                }}\">\n                  {{$json.severity || 'Normal'}}\n                </span>\n              </td>\n            </tr>\n\n            <!-- Body -->\n            <tr>\n              <td style=\"padding:20px 24px;\">\n                <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"border-collapse:separate;border-spacing:0 10px;\">\n                  <tr>\n                    <td style=\"width:180px;color:#94a3b8;font-size:13px;\">Fecha / hora</td>\n                    <td style=\"font-size:14px;color:#e5e7eb;\">{{$json.timestamp || ''}}</td>\n                  </tr>\n                  <tr>\n                    <td style=\"width:180px;color:#94a3b8;font-size:13px;\">Workflow</td>\n                    <td style=\"font-size:14px;color:#e5e7eb;font-weight:600;\">{{$json.workflow_name || ''}}</td>\n                  </tr>\n                  <tr>\n                    <td style=\"width:180px;color:#94a3b8;font-size:13px;\">Nodo</td>\n                    <td style=\"font-size:14px;color:#e5e7eb;\">{{$json.node_name || ''}}</td>\n                  </tr>\n                  <tr>\n                    <td style=\"width:180px;color:#94a3b8;font-size:13px;vertical-align:top;\">Mensaje de error</td>\n                    <td style=\"font-size:13px;color:#fca5a5;background:#0a0f1a;border:1px solid #1f2937;border-radius:10px;padding:12px;\">\n                      <pre style=\"margin:0;white-space:pre-wrap;word-break:break-word;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,'Liberation Mono','Courier New',monospace;font-size:12px;\">\n{{$json.error_message || ''}}\n                      </pre>\n                    </td>\n                  </tr>\n                </table>\n\n                <!-- CTA -->\n                <div style=\"margin-top:18px;\">\n                  <a href=\"{{ $json.execution_url || '#' }}\" target=\"_blank\"\n                     style=\"display:inline-block;text-decoration:none;background:#2563eb;color:#ffffff;padding:10px 16px;border-radius:10px;font-weight:700;font-size:14px;\">\n                    Ver ejecución\n                  </a>\n                </div>\n\n                <!-- JSON crudo opcional (puedes ocultar esta sección si no lo requieres) -->\n                <div style=\"margin-top:18px;\">\n                  <div style=\"font-size:12px;color:#94a3b8;margin-bottom:6px;\">Payload</div>\n                  <div style=\"background:#04070e;border:1px solid #1f2937;border-radius:10px;padding:12px;\">\n                    <pre style=\"margin:0;white-space:pre-wrap;word-break:break-word;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,'Liberation Mono','Courier New',monospace;font-size:12px;color:#cbd5e1;\">\n{{ JSON.stringify($json, null, 2) }}\n                    </pre>\n                  </div>\n                </div>\n              </td>\n            </tr>\n\n            <!-- Footer -->\n            <tr>\n              <td style=\"padding:16px 24px;border-top:1px solid #1f2937;background:#0b1220;color:#94a3b8;font-size:12px;\">\n                Correo generado automáticamente por el sistema de monitoreo. Dudas: \n                <a href=\"mailto:soporte@canteradigital.mx\" style=\"color:#93c5fd;text-decoration:none;\">soporte@canteradigital.mx</a>.\n              </td>\n            </tr>\n          </table>\n\n          <div style=\"color:#64748b;font-size:11px;margin-top:12px;\">\n            © {{ new Date().getFullYear() }} Cantera Digital · Incidentes\n          </div>\n        </td>\n      </tr>\n    </table>\n  </body>\n</html>\n",
+        "additionalFields": {
+          "bodyContentType": "html"
+        }
+      },
+      "type": "n8n-nodes-base.microsoftOutlook",
+      "typeVersion": 2,
+      "position": [
+        720,
+        900
+      ],
+      "id": "93dd08ef-a354-4753-b722-b6f777355270",
+      "name": "Send a message",
+      "webhookId": "7b4c393f-7deb-48ae-a92d-136673ad26db",
+      "credentials": {
+        "microsoftOutlookOAuth2Api": {
+          "id": "1e9fbzjIiV9wNv2j",
+          "name": "Microsoft Outlook account - azure@canteradigital.mx"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Error Trigger": {
+      "main": [
+        [
+          {
+            "node": "2️⃣ Extraer Info del Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "2️⃣ Extraer Info del Error": {
+      "main": [
+        [
+          {
+            "node": "Create a row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "3️⃣ Guardar en Google Sheets": {
+      "main": [
+        [
+          {
+            "node": "4️⃣ Notificar en Slack",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a row": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {
+    "Error Trigger": [
+      {
+        "json": {
+          "execution": {
+            "id": "36561",
+            "url": "https://ia.canteradigital.mx/workflow/fxGc0Kp6hEqyottE/executions/36561",
+            "error": {
+              "level": "warning",
+              "tags": {},
+              "context": {
+                "itemIndex": 0,
+                "request": {
+                  "body": {
+                    "phone": "5214434901193",
+                    "state": "seleccion_alumno",
+                    "userId": "689e04a58e242c50b9756684",
+                    "information": "se presenta menu select student",
+                    "date": "20/8/2025, 12:35:30 p.m."
+                  },
+                  "headers": {
+                    "accept": "application/json,text/html,application/xhtml+xml,application/xml,text/*;q=0.9, image/*;q=0.8, */*;q=0.7"
+                  },
+                  "method": "POST",
+                  "uri": "https://cerebro-dev-7d8f30a4b3ff.herokuapp.com/api/v1/engage/update_user_session_by_phone",
+                  "gzip": true,
+                  "rejectUnauthorized": true,
+                  "followRedirect": true,
+                  "resolveWithFullResponse": true,
+                  "followAllRedirects": true,
+                  "timeout": 300000,
+                  "encoding": null,
+                  "json": false,
+                  "useStream": true
+                }
+              },
+              "functionality": "regular",
+              "name": "NodeApiError",
+              "timestamp": 1755714930421,
+              "node": {
+                "parameters": {
+                  "curlImport": "",
+                  "method": "POST",
+                  "url": "={{ $('flujo de actualización base de datos').item.json.base_url }}/api/v1/engage/update_user_session_by_phone",
+                  "authentication": "none",
+                  "provideSslCertificates": false,
+                  "sendQuery": false,
+                  "sendHeaders": false,
+                  "sendBody": true,
+                  "contentType": "json",
+                  "specifyBody": "json",
+                  "jsonBody": "={{$json }}",
+                  "options": {},
+                  "infoMessage": ""
+                },
+                "type": "n8n-nodes-base.httpRequest",
+                "typeVersion": 4.2,
+                "position": [
+                  540,
+                  100
+                ],
+                "id": "74440457-7644-4c98-8ff9-c978e0dfff1f",
+                "name": "HTTP Request"
+              },
+              "messages": [
+                "400 - \"{\\\"error\\\": \\\"Datos de entrada inv\\\\u00e1lidos\\\", \\\"details\\\": {\\\"phoneNumber\\\": [\\\"Missing data for required field.\\\"], \\\"phone\\\": [\\\"Unknown field.\\\"]}}\""
+              ],
+              "httpCode": "400",
+              "description": "Datos de entrada inválidos",
+              "message": "Bad request - please check your parameters",
+              "stack": "NodeApiError: Bad request - please check your parameters\n    at ExecuteContext.execute (/usr/local/lib/node_modules/n8n/node_modules/.pnpm/n8n-nodes-base@file+packages+nodes-base_@aws-sdk+credential-providers@3.808.0_asn1.js@5_1af219c3f47f2a1223ec4ccec249a974/node_modules/n8n-nodes-base/nodes/HttpRequest/V3/HttpRequestV3.node.ts:780:15)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at WorkflowExecute.runNode (/usr/local/lib/node_modules/n8n/node_modules/.pnpm/n8n-core@file+packages+core_openai@4.103.0_encoding@0.1.13_ws@8.17.1_zod@3.25.67_/node_modules/n8n-core/src/execution-engine/workflow-execute.ts:1193:9)\n    at /usr/local/lib/node_modules/n8n/node_modules/.pnpm/n8n-core@file+packages+core_openai@4.103.0_encoding@0.1.13_ws@8.17.1_zod@3.25.67_/node_modules/n8n-core/src/execution-engine/workflow-execute.ts:1542:27\n    at /usr/local/lib/node_modules/n8n/node_modules/.pnpm/n8n-core@file+packages+core_openai@4.103.0_encoding@0.1.13_ws@8.17.1_zod@3.25.67_/node_modules/n8n-core/src/execution-engine/workflow-execute.ts:2108:11"
+            },
+            "lastNodeExecuted": "HTTP Request",
+            "mode": "integrated"
+          },
+          "workflow": {
+            "id": "fxGc0Kp6hEqyottE",
+            "name": "chatbot cerebro cambio status"
+          }
+        }
+      }
+    ]
+  },
+  "versionId": "ab2745ef-fbf6-430c-9d58-c5d045b42c21",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "createdAt": "2025-08-23T06:41:45.718Z",
+      "updatedAt": "2025-08-23T06:41:45.718Z",
+      "role": "workflow:owner",
+      "workflowId": "fPp1Yp5RDKGW0fTo",
+      "projectId": "BZ9Ta5yhe4RhzY78",
+      "project": {
+        "createdAt": "2025-05-13T15:56:28.209Z",
+        "updatedAt": "2025-05-13T16:18:54.372Z",
+        "id": "BZ9Ta5yhe4RhzY78",
+        "name": "CANTERA ADMIN <canteradigital7@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "projectRelations": [
+          {
+            "createdAt": "2025-05-13T15:56:28.209Z",
+            "updatedAt": "2025-05-13T15:56:28.209Z",
+            "role": "project:personalOwner",
+            "userId": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
+            "projectId": "BZ9Ta5yhe4RhzY78",
+            "user": {
+              "createdAt": "2025-05-13T15:56:27.880Z",
+              "updatedAt": "2025-07-08T21:59:22.697Z",
+              "id": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
+              "email": "canteradigital7@gmail.com",
+              "firstName": "CANTERA",
+              "lastName": "ADMIN",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-05-13T16:19:25.161Z",
+                "personalization_survey_n8n_version": "1.92.2",
+                "companySize": "<20",
+                "companyType": "saas",
+                "role": "customer-support",
+                "reportedSource": "event"
+              },
+              "settings": {
+                "userActivated": true,
+                "firstSuccessfulWorkflowId": "PTbESRzX3rguwQN8",
+                "userActivatedAt": 1747154580970,
+                "easyAIWorkflowOnboarded": true,
+                "npsSurvey": {
+                  "responded": true,
+                  "lastShownAt": 1748367494893
+                },
+                "dismissedCallouts": {
+                  "aiAgentStarterCallout": true
+                }
+              },
+              "role": "global:owner",
+              "disabled": false,
+              "mfaEnabled": false,
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": []
+}
