@@ -1,19 +1,397 @@
 {
   "createdAt": "2025-08-25T19:12:28.603Z",
-  "updatedAt": "2025-08-25T19:12:28.603Z",
+  "updatedAt": "2025-08-26T22:54:37.000Z",
   "id": "igPri1apVIhK5QNC",
   "name": "Prueba Flujo OCR",
   "active": false,
   "isArchived": false,
-  "nodes": [],
-  "connections": {},
+  "nodes": [
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.mistral.ai/v1/ocr",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "contentType": "binaryData",
+        "inputDataFieldName": "data",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        320,
+        -180
+      ],
+      "id": "0d5e3e00-c293-46cf-bffe-71a4c5b01027",
+      "name": "HTTP Request OCR",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "5mkReM30SuQKhse1",
+          "name": "Gael Mistral OCR"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.text }}",
+        "options": {
+          "systemMessage": "=Eres un asistente de chatbot especializado en la gestión de archivos y busqueda. Tu propósito es ayudar a los usuarios a recibir su archivo correspondiente a la empresa a la que van.\n\n**Tu proceso es el siguiente:**\n\n1.  **Analizar el Mensaje:** Lee el mensaje del usuario para identificar el dato clave:\n    * El **nombre de la empresa** a la que se va a postular.\n\n2.  **Llamar a la Herramienta:** Una vez que tengas el dato, llama a la herramienta `buscar_archivo`. Debes pasarle la información de la siguiente manera:\n    * El parámetro `nombre_archivo_ruta_empresa` debe contener el **nombre de la empresa** que extrajiste.\n\n**Reglas de Comportamiento:**\n* **Manejo de Temas no Relacionados:** Si el usuario pregunta sobre cualquier tema que no sea solicitar un archivo de una empresa (como política, religión, etc.), responde exactamente con: \"Lo siento, solo puedo ayudarte con la gestión y envío de archivos.\" y no ejecutes la herramienta.\n\n**Herramientas Disponibles:**\n- **Nombre:** `buscar_archivo`\n- **Descripción:** Busca el archivo correspondiente al nombre de la empresa a la que va el postulante y le saca el id para pasarlo a la herramienta `llamar_extraer_archivo_rutas`.\n- **Nombre:** `llamar_extraer_archivo_rutas`\n- **Descripción:** Subflujo que se encarga de descargar el archivo y enviarlo al usuario.\n ",
+          "returnIntermediateSteps": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        900,
+        220
+      ],
+      "id": "22a968b3-57b0-452c-a6dd-a04e67197f30",
+      "name": "AI Agent",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -440,
+        320
+      ],
+      "id": "14244fcb-0b0e-4f85-846c-9f02f8a03a93",
+      "name": "Trigger - Recibir mensaje",
+      "webhookId": "3c2457b9-ff1c-490c-91ed-779599e0805f",
+      "credentials": {
+        "telegramApi": {
+          "id": "M4yT4PHnQvsP26j3",
+          "name": "Bot_Pruebas_Gael"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "3afb4b21-1923-41e7-a49c-672d6cf20141",
+              "name": "text",
+              "value": "={{ $json.message.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        60,
+        60
+      ],
+      "id": "b7aaf256-0eb3-4868-a491-69346d250b9f",
+      "name": "Texto"
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "fileId": "={{ $('Trigger - Recibir mensaje').item.json.message.voice.file_id }}"
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        40,
+        240
+      ],
+      "id": "4bbc9411-76de-484a-89c1-34aec87d5acb",
+      "name": "Descargar audio",
+      "webhookId": "f145bc9e-37c1-4762-816b-386767c194fc",
+      "credentials": {
+        "telegramApi": {
+          "id": "M4yT4PHnQvsP26j3",
+          "name": "Bot_Pruebas_Gael"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "operation": "transcribe",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        220,
+        240
+      ],
+      "id": "0e9d1ef1-3998-435f-afd7-84be6c275eab",
+      "name": "Transcribe audio",
+      "credentials": {
+        "openAiApi": {
+          "id": "0PNoojfjNHHXEtdv",
+          "name": "Test_Agente_Soporte_Gael"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        880,
+        380
+      ],
+      "id": "40b52f9c-3eb5-436f-97a6-8e538b752586",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "0PNoojfjNHHXEtdv",
+          "name": "Test_Agente_Soporte_Gael"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "limit": 50,
+        "queryString": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Search_Query', `sirve para sacar el id del archivo y comprobar que está pasando el archivo correcto correspondiente a la empresa`, 'string') }}",
+        "returnAll": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Return_All', ``, 'boolean') }}",
+        "filter": {
+          "whatToSearch": "files"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDriveTool",
+      "typeVersion": 3,
+      "position": [
+        1100,
+        420
+      ],
+      "id": "7a961358-c781-424d-b49a-674996fec12f",
+      "name": "Buscar Archivo",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "1P9PgyGmxd7ggSGM",
+          "name": "Gael Extraer Datos PDF"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "exists",
+                      "singleValue": true
+                    },
+                    "id": "81145717-c846-4994-b521-38b433a26f12"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "text"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "19666aed-eb33-4ab7-9647-f2ef9bd318e9",
+                    "leftValue": "={{ $json.message.voice.file_id }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "exists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "voice"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "1133ef31-ab74-4149-a2c6-d7f21c00d644",
+                    "leftValue": "",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "document"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "3fecd0e2-0777-4c84-b39a-44c1c12fdb36",
+                    "leftValue": "",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "image"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -240,
+        320
+      ],
+      "id": "0d2c4693-5f74-4263-8273-53c8f3ccf581",
+      "name": "Texto, Audio, Documento e Imagen"
+    }
+  ],
+  "connections": {
+    "Trigger - Recibir mensaje": {
+      "main": [
+        [
+          {
+            "node": "Texto, Audio, Documento e Imagen",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Texto": {
+      "main": [
+        []
+      ]
+    },
+    "Descargar audio": {
+      "main": [
+        [
+          {
+            "node": "Transcribe audio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transcribe audio": {
+      "main": [
+        []
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscar Archivo": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Texto, Audio, Documento e Imagen": {
+      "main": [
+        [
+          {
+            "node": "Texto",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Descargar audio",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [],
+        []
+      ]
+    }
+  },
   "settings": {
     "executionOrder": "v1"
   },
   "staticData": null,
-  "meta": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
   "pinData": {},
-  "versionId": "09f39ff8-552c-4c9d-b357-a4e1460a32ba",
+  "versionId": "135a1405-65fe-4a7f-8cd8-0d830e7311e0",
   "triggerCount": 0,
   "shared": [
     {
