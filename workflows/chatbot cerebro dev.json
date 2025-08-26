@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-08-18T15:14:25.900Z",
-  "updatedAt": "2025-08-20T20:01:51.000Z",
+  "updatedAt": "2025-08-26T19:57:39.000Z",
   "id": "oEZHX2FF35Jfifc4",
   "name": "chatbot cerebro dev",
   "active": false,
@@ -11,7 +11,7 @@
         "values": {
           "string": [
             {
-              "name": "currentEnvironment",
+              "name": "currentEnvironment_2",
               "value": "https://cerebro-dev-7d8f30a4b3ff.herokuapp.com"
             },
             {
@@ -25,6 +25,10 @@
             {
               "name": "tokenWp",
               "value": "Bearer EAAHeSgKjRYEBOZBi0kUskW4k3L6ZCO8EhqsGNjWLyfJ3U1NZCbDyQp9WSoX0Ouh8hh44Jue9ev7TMlygkZAMoqMReAJL9cNZBQZCZB508HXZB84HCNFZBIRlSa9cXFs0dXmR31XoO0iUZBOTx4VSnErdZC9OD1sQDKprPHpbK7NBrTZAWy8D6pvNi9w0w4c9pt2KE3stGwZDZD"
+            },
+            {
+              "name": "currentEnvironment",
+              "value": "https://api.pruebascerebro.online"
             }
           ]
         },
@@ -970,12 +974,12 @@
     },
     {
       "parameters": {
-        "jsCode": "// Modo: Run Once for All Items\n\n// 1) Leer variables desde el Set previo\nconst input = items[0].json;\n\n// 2) Definir orden de meses\nconst monthOrder = [\n  \"Enero\",\"Febrero\",\"Marzo\",\"Abril\",\"Mayo\",\"Junio\",\n  \"Julio\",\"Agosto\",\"Septiembre\",\"Octubre\",\"Noviembre\",\"Diciembre\",\n];\n\n// 3) Función para ordenar un array de meses según monthOrder\nfunction sortMonths(months) {\n  return months.sort(\n    (a, b) => monthOrder.indexOf(a) - monthOrder.indexOf(b)\n  );\n}\n\n// 4) Función para crear diccionario día→eventos\nfunction createEventDaysDictionary(monthEvents) {\n  const eventsByDay = monthEvents.reduce((acc, ev) => {\n    if (ev.type === \"individual\" && ev.content?.day) {\n      const d = String(ev.content.day);\n      acc[d] = acc[d]||[];\n      acc[d].push(ev);\n    }\n    return acc;\n  }, {});\n  const sortedDays = Object.keys(eventsByDay)\n    .map(d => parseInt(d))\n    .sort((a,b)=>a-b);\n  const dictionary = sortedDays.reduce((acc, day, i) => {\n    acc[String(i+1)] = String(day);\n    return acc;\n  }, {});\n  return { dictionary, eventsByDay };\n}\n\n// 5) Función para generar el mensaje de WhatsApp\nfunction createMonthlyMessage(data, currentMonth) {\n  let msg = `*¡Eventos de ${currentMonth}!* 📅\\n\\n`;\n  const monthEvents = data.filter(\n    i => i.month === currentMonth && i.type === \"individual\"\n  );\n  const hasContent = monthEvents.length>0 ? \"yes\":\"no\";\n\n  if (!monthEvents.length) {\n    msg += `No hay eventos programados para ${currentMonth}. ¡Pero cada día es una oportunidad para aprender!\\n\\n`;\n  } else {\n    const { dictionary, eventsByDay } = createEventDaysDictionary(monthEvents);\n    msg += \"*Eventos del mes:*\\n\";\n    for (const [order, day] of Object.entries(dictionary)) {\n      const evs = eventsByDay[day]||[];\n      msg += `${order}. 🗓 Día ${day}:\\n`;\n      evs.forEach((ev, idx) => {\n        msg += `   ${String.fromCharCode(97+idx)}) \"${ev.content.title}\"\\n`;\n      });\n      msg += \"\\n\";\n    }\n  }\n  msg += \"¡Esperamos tu participación! Juntos haremos de este mes una experiencia inolvidable. 🌟\";\n  return { message: msg, eventDaysDictionary: createEventDaysDictionary(monthEvents).dictionary, hasContent };\n}\n\n// 6) Parsear MonthlyGuide (string o ya objeto)\nlet monthlyGuideData = [];\ntry {\n  const raw = input.MonthlyGuide;\n  const parsed = typeof raw === \"string\" ? JSON.parse(raw) : raw;\n  // Si viene envuelto en { MonthlyGuide: [...] }\n  monthlyGuideData = Array.isArray(parsed)\n    ? parsed\n    : parsed.MonthlyGuide || [];\n} catch (e) {\n  // si falla el parse, dejamos el array vacío\n  monthlyGuideData = [];\n}\n\n// 7) Sacar los meses disponibles y ordenarlos\nlet availableMonths = [\n  ...new Set(monthlyGuideData.map(i=>i.month))\n];\navailableMonths = sortMonths(availableMonths);\n\n// 8) Mes actual e invocar creación de mensaje\nconst currentMonth = monthOrder[new Date().getMonth()];\nconst { message, eventDaysDictionary, hasContent } =\n  createMonthlyMessage(monthlyGuideData, currentMonth);\n\n// 9) Devolver la salida que usará el resto del workflow\nreturn [{\n  json: {\n    salida_whatsapp_guardian_function: {\n      mensaje_guardian_options: message,\n      dias_eventos_enumerados: eventDaysDictionary,\n      available_months: availableMonths,\n      has_content: hasContent,\n    }\n  }\n}];\n"
+        "jsCode": "// Modo: Run Once for All Items\n\n// 1) Leer variables desde el Set previo\nconst input = items[0].json;\n\n// 2) Definir orden de meses\nconst monthOrder = [\n  \"Enero\", \"Febrero\", \"Marzo\", \"Abril\", \"Mayo\", \"Junio\",\n  \"Julio\", \"Agosto\", \"Septiembre\", \"Octubre\", \"Noviembre\", \"Diciembre\",\n];\n\n// 3) Función para ordenar meses numéricos (1–12)\nfunction sortMonths(months) {\n  return months.sort((a, b) => a - b);\n}\n\n// 4) Función para crear diccionario día→eventos\nfunction createEventDaysDictionary(monthEvents) {\n  const eventsByDay = monthEvents.reduce((acc, ev) => {\n    if (ev.type === 1 && ev.content?.day) {\n      const d = String(ev.content.day);\n      acc[d] = acc[d] || [];\n      acc[d].push(ev);\n    }\n    return acc;\n  }, {});\n  \n  const sortedDays = Object.keys(eventsByDay)\n    .map(d => parseInt(d))\n    .sort((a, b) => a - b);\n\n  const dictionary = sortedDays.reduce((acc, day, i) => {\n    acc[String(i + 1)] = String(day);\n    return acc;\n  }, {});\n\n  return { dictionary, eventsByDay };\n}\n\n// 5) Función para generar el mensaje de WhatsApp\nfunction createMonthlyMessage(data, currentMonth) {\n  let msg = `*¡Eventos de ${monthOrder[currentMonth - 1]}!* 📅\\n\\n`;\n  const monthEvents = data.filter(\n    i => i.month === currentMonth && i.type === 1\n  );\n\n  const hasContent = monthEvents.length > 0 ? \"yes\" : \"no\";\n\n  if (!monthEvents.length) {\n    msg += `No hay eventos programados para ${monthOrder[currentMonth - 1]}. ¡Pero cada día es una oportunidad para aprender!\\n\\n`;\n    return { message: msg, eventDaysDictionary: {}, hasContent };\n  } \n\n  const { dictionary, eventsByDay } = createEventDaysDictionary(monthEvents);\n  msg += \"*Eventos del mes:*\\n\";\n  for (const [order, day] of Object.entries(dictionary)) {\n    const evs = eventsByDay[day] || [];\n    msg += `${order}. 🗓 Día ${day}:\\n`;\n    evs.forEach((ev, idx) => {\n      msg += `   ${String.fromCharCode(97 + idx)}) \"${ev.content.title}\"\\n`;\n    });\n    msg += \"\\n\";\n  }\n\n  msg += \"¡Esperamos tu participación! Juntos haremos de este mes una experiencia inolvidable. 🌟\";\n\n  return { message: msg, eventDaysDictionary: dictionary, hasContent };\n}\n\n// 6) Parsear MonthlyGuide (string o ya objeto)\nlet monthlyGuideData = [];\ntry {\n  const raw = input.MonthlyGuide || [input]; // Soporta input directo\n  const parsed = typeof raw === \"string\" ? JSON.parse(raw) : raw;\n  monthlyGuideData = Array.isArray(parsed) ? parsed : [parsed];\n} catch (e) {\n  monthlyGuideData = [];\n}\n\n// 7) Sacar los meses disponibles y ordenarlos\nlet availableMonths = [...new Set(monthlyGuideData.map(i => i.month))];\navailableMonths = sortMonths(availableMonths).map(m => monthOrder[m - 1]);\n\n// 8) Mes actual e invocar creación de mensaje\nconst currentMonth = new Date().getMonth() + 1;\nconst { message, eventDaysDictionary, hasContent } =\n  createMonthlyMessage(monthlyGuideData, currentMonth);\n\n// 9) Devolver salida\nreturn [{\n  json: {\n    salida_whatsapp_guardian_function: {\n      mensaje_guardian_options: message,\n      dias_eventos_enumerados: eventDaysDictionary,\n      available_months: availableMonths,\n      has_content: hasContent,\n    }\n  }\n}];\n"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        440,
+        320,
         1380
       ],
       "id": "65d89f81-7cfc-453c-97c5-2f38421889d8",
@@ -983,7 +987,7 @@
     },
     {
       "parameters": {
-        "url": "={{ $('Set Variables').item.json.currentEnvironment }}//assistant/community_records_whatsapp?user_id={{ $('Main Logic Placeholder').item.json.user_id }}&role={{ $('Main Logic Placeholder').item.json.role }}&tenant_id={{ $('Main Logic Placeholder').item.json.tenant_id }}",
+        "url": "={{ $('Set Variables').item.json.currentEnvironment }}/api/v1/engage/calendar/community_records?tenant_id={{ $('Main Logic Placeholder').item.json.tenant_id }}&is_whatsapp=True",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
@@ -1002,7 +1006,7 @@
             {
               "id": "c939e818-0f2a-4c19-8d62-c77f842d8667",
               "name": "MonthlyGuide",
-              "value": "={{ JSON.stringify($json.data_whatsapp_guardian_conversation.MonthlyGuide) }}",
+              "value": "={{ $json.data.data_whatsapp_guardian_conversation.MonthlyGuide[0] }}",
               "type": "string"
             }
           ]
@@ -1052,8 +1056,8 @@
       "type": "n8n-nodes-base.mongoDb",
       "typeVersion": 1.1,
       "position": [
-        1760,
-        1280
+        2040,
+        1120
       ],
       "id": "56190008-7eca-4fad-becb-ee937bc38ac0",
       "name": "MongoDB6",
@@ -1083,7 +1087,7 @@
             {
               "id": "127efdf6-7193-4011-a155-fa072b66e80f",
               "name": "userStateId",
-              "value": "={{ $('MongoDB').item.json.userStateId }}",
+              "value": "={{ $('Main Logic Placeholder').item.json.user_id }}",
               "type": "string"
             }
           ]
@@ -2068,7 +2072,7 @@
             {
               "id": "670342e3-e699-4e30-af27-04db7bace385",
               "name": "user_id",
-              "value": "={{ $('Main Logic Placeholder').item.json.students_data[0].user_id }}",
+              "value": "={{ $('Main Logic Placeholder').item.json.user_id }}",
               "type": "string"
             },
             {
@@ -2098,7 +2102,7 @@
             {
               "id": "127efdf6-7193-4011-a155-fa072b66e80f",
               "name": "userStateId",
-              "value": "={{ $('MongoDB').item.json.userStateId }}",
+              "value": "={{ $('Main Logic Placeholder').item.json.user_id }}",
               "type": "string"
             }
           ]
@@ -2124,8 +2128,8 @@
       "type": "n8n-nodes-base.mongoDb",
       "typeVersion": 1.1,
       "position": [
-        680,
-        3060
+        520,
+        2840
       ],
       "id": "8bcf8bf3-0fb3-485b-bfa6-3037fcea99c5",
       "name": "MongoDB16",
@@ -2134,7 +2138,8 @@
           "id": "xZYe0R0CRtWFmyv7",
           "name": "MongoDB account cerebro core"
         }
-      }
+      },
+      "disabled": true
     },
     {
       "parameters": {
@@ -2175,7 +2180,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        900,
+        700,
         3060
       ],
       "id": "14068251-96d7-4c5e-87e3-a6333d27804d",
@@ -2214,7 +2219,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// 1) Leer input\nconst input = items[0].json;\n\n// 2) Orden de meses\nconst monthOrder = [\n  \"Enero\",\"Febrero\",\"Marzo\",\"Abril\",\"Mayo\",\"Junio\",\n  \"Julio\",\"Agosto\",\"Septiembre\",\"Octubre\",\"Noviembre\",\"Diciembre\",\n];\n\n// 3) Helper: parsear MonthlyGuide indiferente si viene string u objeto\nlet monthlyGuideData = [];\ntry {\n  const raw = input.MonthlyGuide;\n  const parsed = typeof raw === \"string\" ? JSON.parse(raw) : raw;\n  monthlyGuideData = Array.isArray(parsed)\n    ? parsed\n    : parsed.MonthlyGuide || [];\n} catch (e) {\n  console.log(\"Error parseando MonthlyGuide:\", e.message);\n}\n\n// 4) Helper: listado de eventos\nfunction createEventList(data, currentMonth) {\n  let message = `*¡Eventos de ${currentMonth}!* 📅\\n\\n`;\n  const monthEvents = data.filter(i => i.month === currentMonth);\n  const eventDaysDictionary = {};\n  let counter = 1;\n  const seen = new Set();\n\n  if (!monthEvents.length) {\n    message += `No hay eventos programados para ${currentMonth}.\\n\\n`;\n  } else {\n    message += \"*Eventos del mes:*\\n\";\n\n    // 4.1 individuales únicos y ordenados\n    const indivs = monthEvents\n      .filter(e => e.type === \"individual\" && !seen.has(e.content.title))\n      .map(e => ({ day: e.content.day, title: e.content.title }));\n    indivs.sort((a, b) => a.day - b.day);\n    indivs.forEach(ev => {\n      seen.add(ev.title);\n      eventDaysDictionary[String(counter)] = String(ev.day);\n      message += `${counter}. 🗓 Día ${ev.day}: \"${ev.title}\"\\n`;\n      counter++;\n    });\n\n    // 4.2 globals\n    monthEvents\n      .filter(e => e.type === \"global\" && e.content.events)\n      .forEach(e => {\n        Object.keys(e.content.events).forEach(title => {\n          if (!seen.has(title)) {\n            seen.add(title);\n            eventDaysDictionary[String(counter)] = \"0\";\n            message += `${counter}. 🌍 \"${title}\"\\n`;\n            counter++;\n          }\n        });\n      });\n  }\n\n  message += `\\n*¿Qué evento te gustaría conocer más a fondo?* Escribe el número correspondiente.`;\n  return { message, eventDaysDictionary };\n}\n\n// 5) Mes actual e invocar\nconst currentMonth = monthOrder[new Date().getMonth()];\nconst { message, eventDaysDictionary } =\n  createEventList(monthlyGuideData, currentMonth);\n\n// 6) Devolver resultados\nreturn [{\n  json: {\n    salida_whatsapp_guardian_function: {\n      mensaje_guardian_options: message,\n      dias_eventos_enumerados: eventDaysDictionary,\n    }\n  }\n}];\n"
+        "jsCode": "// Modo: Run Once for All Items\n\n// 1) Leer input\nconst input = items[0].json;\n\n// 2) Orden de meses (para mostrar nombre bonito)\nconst monthOrder = [\n  \"Enero\",\"Febrero\",\"Marzo\",\"Abril\",\"Mayo\",\"Junio\",\n  \"Julio\",\"Agosto\",\"Septiembre\",\"Octubre\",\"Noviembre\",\"Diciembre\",\n];\n\n// 3) Helper: parsear MonthlyGuide (acepta string, array u objeto suelto)\nlet monthlyGuideData = [];\ntry {\n  let raw = input.MonthlyGuide;\n\n  // Si no existe MonthlyGuide pero el propio input parece ser un evento válido,\n  // armamos un arreglo con ese único evento.\n  if (!raw && (input.category === \"MonthlyGuide\" || (typeof input.month === \"number\" && input.content))) {\n    raw = [input];\n  }\n\n  const parsed = typeof raw === \"string\" ? JSON.parse(raw) : raw;\n  monthlyGuideData = Array.isArray(parsed)\n    ? parsed\n    : (parsed?.MonthlyGuide ?? []);\n} catch (e) {\n  console.log(\"Error parseando MonthlyGuide:\", e.message);\n  monthlyGuideData = [];\n}\n\n// 4) Helper: listado de eventos con formato (numérico) de MonthlyGuide\n//    - month: 1..12\n//    - type: 1 -> individual (usa content.day y content.title)\n//    - type: 2 -> global (usa content.events: { \"Título\": {...}, ... })\nfunction createEventList(data, currentMonthNum) {\n  const monthName = monthOrder[currentMonthNum - 1];\n  let message = `*¡Eventos de ${monthName}!* 📅\\n\\n`;\n\n  // Filtrar por mes numérico\n  const monthEvents = data.filter(i => Number(i.month) === currentMonthNum);\n\n  const eventDaysDictionary = {};\n  let counter = 1;\n  const seen = new Set();\n\n  if (!monthEvents.length) {\n    message += `No hay eventos programados para ${monthName}.\\n\\n`;\n  } else {\n    message += \"*Eventos del mes:*\\n\";\n\n    // 4.1 Individuales únicos (type === 1), ordenar por día asc\n    const indivs = monthEvents\n      .filter(e => Number(e.type) === 1 && e?.content?.day && e?.content?.title)\n      .map(e => ({ day: Number(e.content.day), title: String(e.content.title) }))\n      .sort((a, b) => a.day - b.day);\n\n    for (const ev of indivs) {\n      if (seen.has(ev.title)) continue;\n      seen.add(ev.title);\n      eventDaysDictionary[String(counter)] = String(ev.day);\n      message += `${counter}. 🗓 Día ${ev.day}: \"${ev.title}\"\\n`;\n      counter++;\n    }\n\n    // 4.2 Globales (type === 2) — sin día, enumerar títulos de content.events\n    for (const e of monthEvents.filter(e => Number(e.type) === 2 && e?.content?.events)) {\n      const titles = Object.keys(e.content.events || {});\n      for (const title of titles) {\n        if (seen.has(title)) continue;\n        seen.add(title);\n        eventDaysDictionary[String(counter)] = \"0\";\n        message += `${counter}. 🌍 \"${title}\"\\n`;\n        counter++;\n      }\n    }\n  }\n\n  message += `\\n*¿Qué evento te gustaría conocer más a fondo?* Escribe el número correspondiente.`;\n  return { message, eventDaysDictionary };\n}\n\n// 5) Mes actual (numérico 1–12) e invocar\nconst currentMonthNum = new Date().getMonth() + 1;\nconst { message, eventDaysDictionary } = createEventList(monthlyGuideData, currentMonthNum);\n\n// 6) Devolver resultados\nreturn [{\n  json: {\n    salida_whatsapp_guardian_function: {\n      mensaje_guardian_options: message,\n      dias_eventos_enumerados: eventDaysDictionary,\n    }\n  }\n}];\n"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -2227,7 +2232,7 @@
     },
     {
       "parameters": {
-        "url": "={{ $('Set Variables').item.json.currentEnvironment }}//assistant/community_records_whatsapp?user_id={{ $('Main Logic Placeholder').item.json.user_id }}&role={{ $('Main Logic Placeholder').item.json.role }}&tenant_id={{ $('Main Logic Placeholder').item.json.tenant_id }}",
+        "url": "={{ $('Set Variables').item.json.currentEnvironment }}/api/v1/engage/calendar/community_records?tenant_id={{ $('Main Logic Placeholder').item.json.tenant_id }}&is_whatsapp=True",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
@@ -2246,7 +2251,7 @@
             {
               "id": "c939e818-0f2a-4c19-8d62-c77f842d8667",
               "name": "MonthlyGuide",
-              "value": "={{ JSON.stringify($json.data_whatsapp_guardian_conversation.MonthlyGuide) }}",
+              "value": "={{ $json.data.data_whatsapp_guardian_conversation.MonthlyGuide }}",
               "type": "string"
             }
           ]
@@ -2338,8 +2343,8 @@
       "type": "n8n-nodes-base.mongoDb",
       "typeVersion": 1.1,
       "position": [
-        900,
-        3780
+        660,
+        3600
       ],
       "id": "81a3f51a-4d70-46bc-a2e6-3db7c786aabc",
       "name": "MongoDB17",
@@ -2348,7 +2353,8 @@
           "id": "xZYe0R0CRtWFmyv7",
           "name": "MongoDB account cerebro core"
         }
-      }
+      },
+      "disabled": true
     },
     {
       "parameters": {
@@ -2369,7 +2375,7 @@
             {
               "id": "127efdf6-7193-4011-a155-fa072b66e80f",
               "name": "userStateId",
-              "value": "={{ $('MongoDB').item.json.userStateId }}",
+              "value": "={{ $('Main Logic Placeholder').item.json.user_id }}",
               "type": "string"
             }
           ]
@@ -2401,7 +2407,7 @@
     },
     {
       "parameters": {
-        "url": "={{ $('Set Variables').item.json.currentEnvironment }}//assistant/community_records_whatsapp?user_id={{ $('Main Logic Placeholder').item.json.user_id }}&role={{ $('Main Logic Placeholder').item.json.role }}&tenant_id={{ $('Main Logic Placeholder').item.json.tenant_id }}",
+        "url": "={{ $('Set Variables').item.json.currentEnvironment }}/api/v1/engage/calendar/community_records?tenant_id={{ $('Main Logic Placeholder').item.json.tenant_id }}&is_whatsapp=True",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
@@ -2420,7 +2426,7 @@
             {
               "id": "c939e818-0f2a-4c19-8d62-c77f842d8667",
               "name": "MonthlyGuide",
-              "value": "={{ JSON.stringify($json.data_whatsapp_guardian_conversation.MonthlyGuide) }}",
+              "value": "={{ $json.data.data_whatsapp_guardian_conversation.MonthlyGuide }}",
               "type": "string"
             },
             {
@@ -2444,7 +2450,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// Run Once for All Items\n\n// 1) Leer variables del Set anterior\nconst input = items[0].json;\nconst rawMonthlyGuide = input.MonthlyGuide;\nconst selectedEventRaw = input.selected_event;\n\n// 2) Orden de meses\nconst monthOrder = [\n  \"Enero\",\"Febrero\",\"Marzo\",\"Abril\",\"Mayo\",\"Junio\",\n  \"Julio\",\"Agosto\",\"Septiembre\",\"Octubre\",\"Noviembre\",\"Diciembre\",\n];\n\n// 3) Funciones auxiliares\nfunction getCurrentMonth() {\n  return monthOrder[new Date().getMonth()];\n}\n\nfunction validateSelectedEvent(sel, total) {\n  if (sel === undefined || sel === null) {\n    return { isValid: false, error: \"No se ha proporcionado un número de evento.\" };\n  }\n  const num = parseInt(sel, 10);\n  if (isNaN(num)) {\n    return { isValid: false, error: `El valor '${sel}' no es un número válido. Por favor, introduce un número.` };\n  }\n  if (num <= 0) {\n    return { isValid: false, error: \"El número de evento debe ser mayor que 0.\" };\n  }\n  if (num > total) {\n    return { isValid: false, error: `Solo hay ${total} eventos disponibles. Por favor, selecciona un número entre 1 y ${total}.` };\n  }\n  return { isValid: true, value: num };\n}\n\nfunction countTotalEvents(data, month) {\n  return data.filter(i => i.month === month && i.type === 'individual').length;\n}\n\nfunction getEventDetails(data, month, selRaw) {\n  const total = countTotalEvents(data, month);\n  const v = validateSelectedEvent(selRaw, total);\n  if (!v.isValid) {\n    return { mensaje: v.error, imagen_url: null, error: \"si\" };\n  }\n  // Filtrar y ordenar individuales\n  const indivs = data\n    .filter(i => i.month===month && i.type==='individual')\n    .sort((a,b)=>\n      parseInt(a.content.day,10)-parseInt(b.content.day,10)\n    );\n  const ev = indivs[v.value - 1];\n  if (ev) {\n    const textMsg =\n      `*Detalles del evento:*\\n\\n` +\n      `🗓 Día ${ev.content.day}\\n` +\n      `📌 ${ev.content.title}\\n\\n` +\n      `${ev.content.text}\\n\\n` +\n      `¡Esperamos contar con tu participación en este emocionante evento! 🌟`;\n    const img = ev.content.image_url || null;\n    return { mensaje: textMsg, imagen_url: img, error: \"no\" };\n  }\n  // Fallback improbable\n  return { mensaje: \"Error inesperado al obtener los detalles del evento.\", imagen_url: null, error: \"si\" };\n}\n\n// 4) Parsear MonthlyGuide\nlet monthlyGuideData = [];\ntry {\n  const parsed = typeof rawMonthlyGuide === 'string'\n    ? JSON.parse(rawMonthlyGuide)\n    : rawMonthlyGuide;\n  monthlyGuideData = Array.isArray(parsed)\n    ? parsed\n    : parsed.MonthlyGuide || [];\n} catch (e) {\n  // si falla parseo, devolvemos un mensaje de error inmediato\n  return [{\n    json: {\n      salida_whatsapp_guardian_function: {\n        mensaje_guardian_options: \"Error al procesar los datos del calendario. Por favor, contacta al administrador.\",\n        imagen_url: null,\n        error: \"si\"\n      }\n    }\n  }];\n}\n\n// 5) Ejecutar lógica\nconst currentMonth = getCurrentMonth();\nconst details = getEventDetails(monthlyGuideData, currentMonth, selectedEventRaw);\n\n// 6) Devolver resultado\nreturn [{\n  json: {\n    salida_whatsapp_guardian_function: {\n      mensaje_guardian_options: details.mensaje,\n      imagen_url: details.imagen_url,\n      error: details.error\n    }\n  }\n}];\n"
+        "jsCode": "// Run Once for All Items\n\n// 1) Leer variables del Set anterior\nconst input = items[0].json;\nconst rawMonthlyGuide = input.MonthlyGuide;      // Puede no venir\nconst selectedEventRaw = input.selected_event;   // Número elegido (string o número)\n\n// 2) Orden de meses (para mostrar bonito si hace falta)\nconst monthOrder = [\n  \"Enero\",\"Febrero\",\"Marzo\",\"Abril\",\"Mayo\",\"Junio\",\n  \"Julio\",\"Agosto\",\"Septiembre\",\"Octubre\",\"Noviembre\",\"Diciembre\",\n];\n\n// 3) Aux: mes actual numérico (1–12)\nfunction getCurrentMonthNum() {\n  return new Date().getMonth() + 1;\n}\n\n// 4) Aux: validar número seleccionado\nfunction validateSelectedEvent(sel, total) {\n  if (sel === undefined || sel === null || sel === \"\") {\n    return { isValid: false, error: \"No se ha proporcionado un número de evento.\" };\n  }\n  const num = parseInt(sel, 10);\n  if (Number.isNaN(num)) {\n    return { isValid: false, error: `El valor '${sel}' no es un número válido. Por favor, introduce un número.` };\n  }\n  if (num <= 0) {\n    return { isValid: false, error: \"El número de evento debe ser mayor que 0.\" };\n  }\n  if (total === 0) {\n    return { isValid: false, error: \"No hay eventos disponibles este mes.\" };\n  }\n  if (num > total) {\n    return { isValid: false, error: `Solo hay ${total} eventos disponibles. Selecciona un número entre 1 y ${total}.` };\n  }\n  return { isValid: true, value: num };\n}\n\n// 5) Aux: contar eventos individuales del mes (type === 1)\nfunction countTotalEvents(data, monthNum) {\n  return data.filter(i =>\n    Number(i?.month) === Number(monthNum) &&\n    Number(i?.type) === 1 &&\n    i?.content?.day\n  ).length;\n}\n\n// 6) Aux: formatear detalles de un evento\nfunction formatEventMessage(ev) {\n  const c = ev.content || {};\n  const lines = [];\n\n  // Encabezado\n  lines.push(`*Detalles del evento:*`);\n  lines.push(\"\");\n\n  // Día + fecha\n  if (c.day) lines.push(`🗓 Día ${c.day}`);\n  if (c.date) lines.push(`📅 Fecha: ${c.date}`);\n\n  // Título\n  if (c.title) lines.push(`📌 ${c.title}`);\n\n  // Horario\n  const hasStart = !!c.start_time;\n  const hasEnd = !!c.end_time;\n  if (hasStart || hasEnd) {\n    lines.push(`⏰ ${hasStart ? c.start_time : \"—\"}${hasEnd ? \"–\" + c.end_time : \"\"}`);\n  }\n\n  // Lugar\n  if (c.location) lines.push(`📍 ${c.location}`);\n\n  // Descripción / texto\n  const desc = c.description || c.text;\n  if (desc) {\n    lines.push(\"\");\n    lines.push(desc);\n  }\n\n  lines.push(\"\");\n  lines.push(\"¡Esperamos contar con tu participación en este evento! 🌟\");\n\n  return lines.join(\"\\n\");\n}\n\n// 7) Aux: obtener detalles según número seleccionado (orden por día)\nfunction getEventDetails(data, monthNum, selRaw) {\n  const total = countTotalEvents(data, monthNum);\n  const v = validateSelectedEvent(selRaw, total);\n  if (!v.isValid) {\n    return { mensaje: v.error, imagen_url: null, error: \"si\" };\n  }\n\n  // Filtrar y ordenar solo individuales (type === 1) del mes actual por día asc\n  const indivs = data\n    .filter(i =>\n      Number(i?.month) === Number(monthNum) &&\n      Number(i?.type) === 1 &&\n      i?.content?.day\n    )\n    .sort((a, b) => Number(a.content.day) - Number(b.content.day));\n\n  const ev = indivs[v.value - 1];\n  if (ev) {\n    const mensaje = formatEventMessage(ev);\n    const img = ev?.content?.image_url || null;\n    return { mensaje, imagen_url: img, error: \"no\" };\n  }\n\n  // Fallback improbable\n  return { mensaje: \"Error inesperado al obtener los detalles del evento.\", imagen_url: null, error: \"si\" };\n}\n\n// 8) Parsear MonthlyGuide (string, array, objeto, o un único evento suelto)\nlet monthlyGuideData = [];\ntry {\n  let raw = rawMonthlyGuide;\n\n  // Si no viene MonthlyGuide pero el input luce como un evento válido, lo envolvemos\n  if (!raw && (input?.category === \"MonthlyGuide\" || (typeof input?.month === \"number\" && input?.content))) {\n    raw = [input];\n  }\n\n  const parsed = typeof raw === \"string\" ? JSON.parse(raw) : raw;\n  monthlyGuideData = Array.isArray(parsed)\n    ? parsed\n    : (parsed?.MonthlyGuide ?? []);\n\n  if (!Array.isArray(monthlyGuideData)) monthlyGuideData = [];\n} catch (e) {\n  return [{\n    json: {\n      salida_whatsapp_guardian_function: {\n        mensaje_guardian_options: \"Error al procesar los datos del calendario. Por favor, contacta al administrador.\",\n        imagen_url: null,\n        error: \"si\"\n      }\n    }\n  }];\n}\n\n// 9) Ejecutar lógica con mes actual numérico\nconst currentMonthNum = getCurrentMonthNum();\nconst details = getEventDetails(monthlyGuideData, currentMonthNum, selectedEventRaw);\n\n// 10) Devolver resultado\nreturn [{\n  json: {\n    salida_whatsapp_guardian_function: {\n      mensaje_guardian_options: details.mensaje,\n      imagen_url: details.imagen_url,\n      error: details.error\n    }\n  }\n}];\n"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -3072,7 +3078,7 @@
           "conditions": [
             {
               "id": "cee8dd42-7e45-4a60-8990-ff8cea984ca1",
-              "leftValue": "={{ $json.has_content }}",
+              "leftValue": "={{ $json.salida_whatsapp_guardian_function.has_content }}",
               "rightValue": "no",
               "operator": {
                 "type": "string",
@@ -3311,7 +3317,7 @@
             {
               "id": "127efdf6-7193-4011-a155-fa072b66e80f",
               "name": "userStateId",
-              "value": "={{ $('MongoDB').item.json.userStateId }}",
+              "value": "={{ $('Main Logic Placeholder').item.json.user_id }}",
               "type": "string"
             }
           ]
@@ -3321,7 +3327,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        1120,
+        920,
         3060
       ],
       "id": "1ff6d769-232b-4a11-a446-23ad0fbc8f7d",
@@ -3338,8 +3344,8 @@
       "type": "n8n-nodes-base.mongoDb",
       "typeVersion": 1.1,
       "position": [
-        1340,
-        3060
+        400,
+        2820
       ],
       "id": "2ac0acd6-a296-4bef-aacf-d685bd2d93d9",
       "name": "actualizamos estatus del usuario a espera_respuesta_academico",
@@ -3348,7 +3354,8 @@
           "id": "xZYe0R0CRtWFmyv7",
           "name": "MongoDB account cerebro core"
         }
-      }
+      },
+      "disabled": true
     },
     {
       "parameters": {
@@ -3593,7 +3600,7 @@
     },
     {
       "parameters": {
-        "url": "={{ $('Set Variables').item.json.currentEnvironment }}/assistant/journal_students?student_id={{ $('Edit Fields1').item.json.student_selected }}&tenant_id=﻿﻿{{ $('Main Logic Placeholder').item.json.students_data[1].tenant_id }}",
+        "url": "={{ $('Set Variables').item.json.currentEnvironment }}/assistant/journal_students?student_id={{ $('Auth Guardian').item.json.data.session.student_id }}&tenant_id={{ $('Main Logic Placeholder').item.json.tenant_id }}",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
@@ -7593,6 +7600,453 @@
       ],
       "id": "e6c6b5d7-535a-4250-a0bf-1b36f5f7e770",
       "name": "Execute Workflow2"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "fxGc0Kp6hEqyottE",
+          "mode": "list",
+          "cachedResultName": "chatbot cerebro cambio status"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "state": "={{ $json.state }}",
+            "userId": "={{ $json.userStateId }}",
+            "phoneNumber": "={{ $('WhatsApp Trigger 2').item.json.messages[0].from }}",
+            "info": "=esperando respuesta de menú calendario",
+            "information": "=esperando respuesta de menú calendario",
+            "base_url": "={{ $('Set Variables').item.json.currentEnvironment }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "state",
+              "displayName": "state",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "userId",
+              "displayName": "userId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "phoneNumber",
+              "displayName": "phoneNumber",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "info",
+              "displayName": "info",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "grade_state",
+              "displayName": "grade_state",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "type_conversation",
+              "displayName": "type_conversation",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "student_id",
+              "displayName": "student_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "course_selected",
+              "displayName": "course_selected",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "justify_state",
+              "displayName": "justify_state",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "justify_selected_date",
+              "displayName": "justify_selected_date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "information",
+              "displayName": "information",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "base_url",
+              "displayName": "base_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        1760,
+        1280
+      ],
+      "id": "9cbf1548-c382-48c2-8de9-d9602a2a0788",
+      "name": "Execute Workflow3"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "fxGc0Kp6hEqyottE",
+          "mode": "list",
+          "cachedResultName": "chatbot cerebro cambio status"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "state": "={{ $json.state }}",
+            "userId": "={{ $json.userStateId }}",
+            "phoneNumber": "={{ $('WhatsApp Trigger 2').item.json.messages[0].from }}",
+            "info": "=esperando respuesta de evento calendario",
+            "information": "=esperando respuesta de evento calendario",
+            "base_url": "={{ $('Set Variables').item.json.currentEnvironment }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "state",
+              "displayName": "state",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "userId",
+              "displayName": "userId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "phoneNumber",
+              "displayName": "phoneNumber",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "info",
+              "displayName": "info",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "grade_state",
+              "displayName": "grade_state",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "type_conversation",
+              "displayName": "type_conversation",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "student_id",
+              "displayName": "student_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "course_selected",
+              "displayName": "course_selected",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "justify_state",
+              "displayName": "justify_state",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "justify_selected_date",
+              "displayName": "justify_selected_date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "information",
+              "displayName": "information",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "base_url",
+              "displayName": "base_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        900,
+        3780
+      ],
+      "id": "49f63095-79e8-41a8-83a0-31ee9167ad95",
+      "name": "Execute Workflow4"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "fxGc0Kp6hEqyottE",
+          "mode": "list",
+          "cachedResultName": "chatbot cerebro cambio status"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "state": "={{ $json.state }}",
+            "userId": "={{ $json.userStateId }}",
+            "phoneNumber": "={{ $('WhatsApp Trigger 2').item.json.messages[0].from }}",
+            "info": "={{ $('Edit Fields16').item.json.information }}",
+            "information": "={{ $('Edit Fields16').item.json.information }}",
+            "base_url": "={{ $('Set Variables').item.json.currentEnvironment }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "state",
+              "displayName": "state",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "userId",
+              "displayName": "userId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "phoneNumber",
+              "displayName": "phoneNumber",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "info",
+              "displayName": "info",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "grade_state",
+              "displayName": "grade_state",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "type_conversation",
+              "displayName": "type_conversation",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "student_id",
+              "displayName": "student_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "course_selected",
+              "displayName": "course_selected",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "justify_state",
+              "displayName": "justify_state",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "justify_selected_date",
+              "displayName": "justify_selected_date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "information",
+              "displayName": "information",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "base_url",
+              "displayName": "base_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        1160,
+        3060
+      ],
+      "id": "81d57a88-e2d5-41cd-bb0e-c95b1d56f092",
+      "name": "Execute Workflow5"
     }
   ],
   "connections": {
@@ -7921,7 +8375,7 @@
       "main": [
         [
           {
-            "node": "MongoDB6",
+            "node": "Execute Workflow3",
             "type": "main",
             "index": 0
           }
@@ -8244,7 +8698,7 @@
       "main": [
         [
           {
-            "node": "MongoDB16",
+            "node": "menu academico",
             "type": "main",
             "index": 0
           }
@@ -8253,13 +8707,7 @@
     },
     "MongoDB16": {
       "main": [
-        [
-          {
-            "node": "menu academico",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "Code11": {
@@ -8350,7 +8798,7 @@
       "main": [
         [
           {
-            "node": "MongoDB17",
+            "node": "Execute Workflow4",
             "type": "main",
             "index": 0
           }
@@ -8708,7 +9156,7 @@
       "main": [
         [
           {
-            "node": "actualizamos estatus del usuario a espera_respuesta_academico",
+            "node": "Execute Workflow5",
             "type": "main",
             "index": 0
           }
@@ -10009,7 +10457,7 @@
       }
     ]
   },
-  "versionId": "758e4d13-555e-4ce8-8bc8-2abd47232747",
+  "versionId": "9e282e0b-53ac-46c1-bc76-949e334e3463",
   "triggerCount": 1,
   "shared": [
     {
