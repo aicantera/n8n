@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-08-25T19:12:28.603Z",
-  "updatedAt": "2025-08-26T22:54:37.000Z",
+  "updatedAt": "2025-08-26T23:37:52.000Z",
   "id": "igPri1apVIhK5QNC",
   "name": "Prueba Flujo OCR",
   "active": false,
@@ -20,8 +20,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        320,
-        -180
+        300,
+        320
       ],
       "id": "0d5e3e00-c293-46cf-bffe-71a4c5b01027",
       "name": "HTTP Request OCR",
@@ -91,8 +91,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        60,
-        60
+        100,
+        0
       ],
       "id": "b7aaf256-0eb3-4868-a491-69346d250b9f",
       "name": "Texto"
@@ -105,8 +105,8 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        40,
-        240
+        100,
+        160
       ],
       "id": "4bbc9411-76de-484a-89c1-34aec87d5acb",
       "name": "Descargar audio",
@@ -127,8 +127,8 @@
       "type": "@n8n/n8n-nodes-langchain.openAi",
       "typeVersion": 1.8,
       "position": [
-        220,
-        240
+        300,
+        160
       ],
       "id": "0e9d1ef1-3998-435f-afd7-84be6c275eab",
       "name": "Transcribe audio",
@@ -254,12 +254,12 @@
                 "conditions": [
                   {
                     "id": "1133ef31-ab74-4149-a2c6-d7f21c00d644",
-                    "leftValue": "",
+                    "leftValue": "={{ $json.message.document.thumbnail.file_id }}",
                     "rightValue": "",
                     "operator": {
                       "type": "string",
-                      "operation": "equals",
-                      "name": "filter.operator.equals"
+                      "operation": "exists",
+                      "singleValue": true
                     }
                   }
                 ],
@@ -279,19 +279,19 @@
                 "conditions": [
                   {
                     "id": "3fecd0e2-0777-4c84-b39a-44c1c12fdb36",
-                    "leftValue": "",
+                    "leftValue": "={{ $json.message.photo[0].file_id }}",
                     "rightValue": "",
                     "operator": {
                       "type": "string",
-                      "operation": "equals",
-                      "name": "filter.operator.equals"
+                      "operation": "exists",
+                      "singleValue": true
                     }
                   }
                 ],
                 "combinator": "and"
               },
               "renameOutput": true,
-              "outputKey": "image"
+              "outputKey": "image/photo"
             }
           ]
         },
@@ -305,6 +305,74 @@
       ],
       "id": "0d2c4693-5f74-4263-8273-53c8f3ccf581",
       "name": "Texto, Audio, Documento e Imagen"
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "fileId": "={{ $json.message.document.thumbnail.file_id }}"
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        100,
+        320
+      ],
+      "id": "2488e8ce-8d3f-4379-bbf4-6eb0d0c31bff",
+      "name": "Descargar documento",
+      "webhookId": "dbeaec55-a3ae-4526-b79e-e4a5fe2a85c4",
+      "credentials": {
+        "telegramApi": {
+          "id": "M4yT4PHnQvsP26j3",
+          "name": "Bot_Pruebas_Gael"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "fileId": "="
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        100,
+        500
+      ],
+      "id": "b975e39b-65a7-4369-9642-6eb4f62dbbb6",
+      "name": "Descargar imagen/foto",
+      "webhookId": "dbeaec55-a3ae-4526-b79e-e4a5fe2a85c4",
+      "credentials": {
+        "telegramApi": {
+          "id": "M4yT4PHnQvsP26j3",
+          "name": "Bot_Pruebas_Gael"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.mistral.ai/v1/ocr",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "contentType": "binaryData",
+        "inputDataFieldName": "data",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        300,
+        500
+      ],
+      "id": "74b338ed-6ccc-4614-9701-c94cdbce489e",
+      "name": "HTTP Request OCR2",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "5mkReM30SuQKhse1",
+          "name": "Gael Mistral OCR"
+        }
+      }
     }
   ],
   "connections": {
@@ -378,8 +446,42 @@
             "index": 0
           }
         ],
-        [],
-        []
+        [
+          {
+            "node": "Descargar documento",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Descargar imagen/foto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Descargar documento": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request OCR",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Descargar imagen/foto": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request OCR2",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     }
   },
@@ -390,8 +492,52 @@
   "meta": {
     "templateCredsSetupCompleted": true
   },
-  "pinData": {},
-  "versionId": "135a1405-65fe-4a7f-8cd8-0d830e7311e0",
+  "pinData": {
+    "Trigger - Recibir mensaje": [
+      {
+        "json": {
+          "update_id": 435237901,
+          "message": {
+            "message_id": 111,
+            "from": {
+              "id": 7992375339,
+              "is_bot": false,
+              "first_name": "Gael",
+              "language_code": "es"
+            },
+            "chat": {
+              "id": 7992375339,
+              "first_name": "Gael",
+              "type": "private"
+            },
+            "date": 1756249176,
+            "document": {
+              "file_name": "Captura de pantalla 2025-08-08 151304.png",
+              "mime_type": "image/png",
+              "thumbnail": {
+                "file_id": "AAMCAQADGQEAA29orjxYky4uGhp1tDjTS2Tk0hVO0gACfAUAAjzLeUXwpQlLMWCVvwEAB20AAzYE",
+                "file_unique_id": "AQADfAUAAjzLeUVy",
+                "file_size": 22192,
+                "width": 320,
+                "height": 235
+              },
+              "thumb": {
+                "file_id": "AAMCAQADGQEAA29orjxYky4uGhp1tDjTS2Tk0hVO0gACfAUAAjzLeUXwpQlLMWCVvwEAB20AAzYE",
+                "file_unique_id": "AQADfAUAAjzLeUVy",
+                "file_size": 22192,
+                "width": 320,
+                "height": 235
+              },
+              "file_id": "BQACAgEAAxkBAANvaK48WJMuLhoadbQ400tk5NIVTtIAAnwFAAI8y3lF8KUJSzFglb82BA",
+              "file_unique_id": "AgADfAUAAjzLeUU",
+              "file_size": 408730
+            }
+          }
+        }
+      }
+    ]
+  },
+  "versionId": "3e74af0e-e8ab-47be-b9e2-504a00f2798e",
   "triggerCount": 0,
   "shared": [
     {
