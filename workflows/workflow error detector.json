@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-08-23T06:41:45.713Z",
-  "updatedAt": "2025-08-23T06:56:57.000Z",
+  "updatedAt": "2025-08-27T15:47:18.000Z",
   "id": "fPp1Yp5RDKGW0fTo",
   "name": "workflow error detector",
   "active": false,
@@ -16,59 +16,6 @@
       ],
       "id": "62819ec2-878d-4f11-b6d6-7027fcfd2b72",
       "name": "Error Trigger"
-    },
-    {
-      "parameters": {
-        "assignments": {
-          "assignments": [
-            {
-              "id": "timestamp",
-              "name": "timestamp",
-              "value": "={{ $now.format('yyyy-MM-DD HH:mm:ss') }}",
-              "type": "string"
-            },
-            {
-              "id": "workflow-name",
-              "name": "workflow_name",
-              "value": "={{ $json.workflow?.name || 'Workflow Desconocido' }}",
-              "type": "string"
-            },
-            {
-              "id": "error-message",
-              "name": "error_message",
-              "value": "={{ $json.execution?.error?.message || $json.error?.message || 'Error sin mensaje' }}",
-              "type": "string"
-            },
-            {
-              "id": "node-name",
-              "name": "node_name",
-              "value": "={{ $json.execution?.error?.node?.name || 'Nodo Desconocido' }}",
-              "type": "string"
-            },
-            {
-              "id": "execution-url",
-              "name": "execution_url",
-              "value": "={{ $json.execution?.url || 'No disponible' }}",
-              "type": "string"
-            },
-            {
-              "id": "severity",
-              "name": "severity",
-              "value": "={{ $json.execution?.error?.message?.toLowerCase().includes('timeout') || $json.execution?.error?.message?.toLowerCase().includes('connection') ? 'CRÍTICO' : 'Normal' }}",
-              "type": "string"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "id": "abc9a7e0-1d45-479f-8a84-a9c4fe6eca8f",
-      "name": "2️⃣ Extraer Info del Error",
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.3,
-      "position": [
-        280,
-        900
-      ]
     },
     {
       "parameters": {
@@ -290,7 +237,7 @@
       "parameters": {
         "toRecipients": "rcorrea@canteradigital.mx,ravila@canteradigital.mx",
         "subject": "={{    (() => {     const sev = String($json.severity || 'Incidencia').normalize('NFD').replace(/\\p{Diacritic}/gu,'').toUpperCase();     const tag = sev.includes('CRITICO') ? 'CRÍTICO' :                 sev.includes('ALTO')    ? 'ALTO'    :                 sev.includes('ADVERTENCIA') ? 'ADVERTENCIA' :                 sev.includes('INFO')    ? 'INFO'    : 'INCIDENCIA';     return `[${tag}] ${$json.workflow_name || 'Workflow'} – ${$json.node_name || 'Nodo'}`;   })() }}",
-        "bodyContent": "=<!doctype html>\n<html lang=\"es\" style=\"margin:0;padding:0;\">\n  <head>\n    <meta charset=\"utf-8\">\n    <meta http-equiv=\"x-ua-compatible\" content=\"ie=edge\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>Incidencia técnica</title>\n  </head>\n  <body style=\"margin:0;padding:0;background:#0f172a;font-family:Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:#e2e8f0;\">\n    <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"background:#0f172a;padding:24px 0;\">\n      <tr>\n        <td align=\"center\">\n          <table role=\"presentation\" width=\"600\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:600px;max-width:600px;background:#0b1220;border:1px solid #1f2937;border-radius:12px;overflow:hidden;\">\n            \n            <!-- Barra superior dinámica por severidad -->\n            <tr>\n              <td style=\"height:6px;line-height:6px;padding:0;{{ \n                (() => {\n                  const sev = String($json.severity || 'Normal').normalize('NFD').replace(/\\p{Diacritic}/gu,'').toUpperCase();\n                  const color = sev.includes('CRITICO') ? '#ef4444' :\n                                sev.includes('ALTO')    ? '#f97316' :\n                                sev.includes('ADVERTENCIA') ? '#eab308' :\n                                sev.includes('INFO')    ? '#0ea5e9' : '#22c55e';\n                  return `background:${color};`;\n                })()\n              }}\"></td>\n            </tr>\n\n            <!-- Header -->\n            <tr>\n              <td style=\"padding:20px 24px;background:#111827;border-bottom:1px solid #1f2937;\">\n                <div style=\"font-size:14px;letter-spacing:.08em;color:#94a3b8;text-transform:uppercase;\">Alerta de Incidencia</div>\n                <div style=\"font-size:22px;font-weight:700;color:#f8fafc;margin-top:6px;\">Fallo en workflow</div>\n              </td>\n            </tr>\n\n            <!-- Badge severidad -->\n            <tr>\n              <td style=\"padding:12px 24px;background:#0b1220;border-bottom:1px solid #1f2937;\">\n                <span style=\"display:inline-block;font-size:12px;font-weight:700;padding:6px 10px;border-radius:999px;vertical-align:middle;{{\n                  (() => {\n                    const sevRaw = String($json.severity || 'Normal');\n                    const sev = sevRaw.normalize('NFD').replace(/\\p{Diacritic}/gu,'').toUpperCase();\n                    if (sev.includes('CRITICO'))   return 'background:#fee2e2;color:#7f1d1d;';\n                    if (sev.includes('ALTO'))      return 'background:#ffedd5;color:#7c2d12;';\n                    if (sev.includes('ADVERTENCIA')) return 'background:#fef9c3;color:#713f12;';\n                    if (sev.includes('INFO'))      return 'background:#e0f2fe;color:#0c4a6e;';\n                    return 'background:#dcfce7;color:#166534;';\n                  })()\n                }}\">\n                  {{$json.severity || 'Normal'}}\n                </span>\n              </td>\n            </tr>\n\n            <!-- Body -->\n            <tr>\n              <td style=\"padding:20px 24px;\">\n                <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"border-collapse:separate;border-spacing:0 10px;\">\n                  <tr>\n                    <td style=\"width:180px;color:#94a3b8;font-size:13px;\">Fecha / hora</td>\n                    <td style=\"font-size:14px;color:#e5e7eb;\">{{$json.timestamp || ''}}</td>\n                  </tr>\n                  <tr>\n                    <td style=\"width:180px;color:#94a3b8;font-size:13px;\">Workflow</td>\n                    <td style=\"font-size:14px;color:#e5e7eb;font-weight:600;\">{{$json.workflow_name || ''}}</td>\n                  </tr>\n                  <tr>\n                    <td style=\"width:180px;color:#94a3b8;font-size:13px;\">Nodo</td>\n                    <td style=\"font-size:14px;color:#e5e7eb;\">{{$json.node_name || ''}}</td>\n                  </tr>\n                  <tr>\n                    <td style=\"width:180px;color:#94a3b8;font-size:13px;vertical-align:top;\">Mensaje de error</td>\n                    <td style=\"font-size:13px;color:#fca5a5;background:#0a0f1a;border:1px solid #1f2937;border-radius:10px;padding:12px;\">\n                      <pre style=\"margin:0;white-space:pre-wrap;word-break:break-word;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,'Liberation Mono','Courier New',monospace;font-size:12px;\">\n{{$json.error_message || ''}}\n                      </pre>\n                    </td>\n                  </tr>\n                </table>\n\n                <!-- CTA -->\n                <div style=\"margin-top:18px;\">\n                  <a href=\"{{ $json.execution_url || '#' }}\" target=\"_blank\"\n                     style=\"display:inline-block;text-decoration:none;background:#2563eb;color:#ffffff;padding:10px 16px;border-radius:10px;font-weight:700;font-size:14px;\">\n                    Ver ejecución\n                  </a>\n                </div>\n\n                <!-- JSON crudo opcional (puedes ocultar esta sección si no lo requieres) -->\n                <div style=\"margin-top:18px;\">\n                  <div style=\"font-size:12px;color:#94a3b8;margin-bottom:6px;\">Payload</div>\n                  <div style=\"background:#04070e;border:1px solid #1f2937;border-radius:10px;padding:12px;\">\n                    <pre style=\"margin:0;white-space:pre-wrap;word-break:break-word;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,'Liberation Mono','Courier New',monospace;font-size:12px;color:#cbd5e1;\">\n{{ JSON.stringify($json, null, 2) }}\n                    </pre>\n                  </div>\n                </div>\n              </td>\n            </tr>\n\n            <!-- Footer -->\n            <tr>\n              <td style=\"padding:16px 24px;border-top:1px solid #1f2937;background:#0b1220;color:#94a3b8;font-size:12px;\">\n                Correo generado automáticamente por el sistema de monitoreo. Dudas: \n                <a href=\"mailto:soporte@canteradigital.mx\" style=\"color:#93c5fd;text-decoration:none;\">soporte@canteradigital.mx</a>.\n              </td>\n            </tr>\n          </table>\n\n          <div style=\"color:#64748b;font-size:11px;margin-top:12px;\">\n            © {{ new Date().getFullYear() }} Cantera Digital · Incidentes\n          </div>\n        </td>\n      </tr>\n    </table>\n  </body>\n</html>\n",
+        "bodyContent": "=<!doctype html>\n<html lang=\"es\" style=\"margin:0;padding:0;\">\n  <head>\n    <meta charset=\"utf-8\">\n    <meta http-equiv=\"x-ua-compatible\" content=\"ie=edge\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>Incidencia técnica</title>\n  </head>\n  <body style=\"margin:0;padding:0;background:#0f172a;font-family:Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:#e2e8f0;\">\n    <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"background:#0f172a;padding:24px 0;\">\n      <tr>\n        <td align=\"center\">\n          <table role=\"presentation\" width=\"600\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:600px;max-width:600px;background:#0b1220;border:1px solid #1f2937;border-radius:12px;overflow:hidden;\">\n            \n            <!-- Barra superior dinámica por severidad -->\n            <tr>\n              <td style=\"height:6px;line-height:6px;padding:0;{{ \n                (() => {\n                  const sev = String($json.severity || 'Normal').normalize('NFD').replace(/\\p{Diacritic}/gu,'').toUpperCase();\n                  const color = sev.includes('CRITICO') ? '#ef4444' :\n                                sev.includes('ALTO')    ? '#f97316' :\n                                sev.includes('ADVERTENCIA') ? '#eab308' :\n                                sev.includes('INFO')    ? '#0ea5e9' : '#22c55e';\n                  return `background:${color};`;\n                })()\n              }}\"></td>\n            </tr>\n\n            <!-- Header -->\n            <tr>\n              <td style=\"padding:20px 24px;background:#111827;border-bottom:1px solid #1f2937;\">\n                <div style=\"font-size:14px;letter-spacing:.08em;color:#94a3b8;text-transform:uppercase;\">Alerta de Incidencia</div>\n                <div style=\"font-size:22px;font-weight:700;color:#f8fafc;margin-top:6px;\">Fallo en workflow</div>\n              </td>\n            </tr>\n\n            <!-- Badge severidad -->\n            <tr>\n              <td style=\"padding:12px 24px;background:#0b1220;border-bottom:1px solid #1f2937;\">\n                <span style=\"display:inline-block;font-size:12px;font-weight:700;padding:6px 10px;border-radius:999px;vertical-align:middle;{{\n                  (() => {\n                    const sevRaw = String($json.severity || 'Normal');\n                    const sev = sevRaw.normalize('NFD').replace(/\\p{Diacritic}/gu,'').toUpperCase();\n                    if (sev.includes('CRITICO'))   return 'background:#fee2e2;color:#7f1d1d;';\n                    if (sev.includes('ALTO'))      return 'background:#ffedd5;color:#7c2d12;';\n                    if (sev.includes('ADVERTENCIA')) return 'background:#fef9c3;color:#713f12;';\n                    if (sev.includes('INFO'))      return 'background:#e0f2fe;color:#0c4a6e;';\n                    return 'background:#dcfce7;color:#166534;';\n                  })()\n                }}\">\n                  {{$json.severity || 'Normal'}}\n                </span>\n              </td>\n            </tr>\n\n            <!-- Body -->\n            <tr>\n              <td style=\"padding:20px 24px;\">\n                <table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"border-collapse:separate;border-spacing:0 10px;\">\n                  <tr>\n                    <td style=\"width:180px;color:#94a3b8;font-size:13px;\">Fecha / hora</td>\n                    <td style=\"font-size:14px;color:#e5e7eb;\">{{ $('Extraer Info del Error').item.json.timestamp || ''}} </td>\n                  </tr>\n                  <tr>\n                    <td style=\"width:180px;color:#94a3b8;font-size:13px;\">Workflow</td>\n                    <td style=\"font-size:14px;color:#e5e7eb;font-weight:600;\">{{$('Extraer Info del Error').item.json.workflow_name || ''}}</td>\n                  </tr>\n                  <tr>\n                    <td style=\"width:180px;color:#94a3b8;font-size:13px;\">Nodo</td>\n                    <td style=\"font-size:14px;color:#e5e7eb;\">{{$json.node_name || ''}}</td>\n                  </tr>\n                  <tr>\n                    <td style=\"width:180px;color:#94a3b8;font-size:13px;vertical-align:top;\">Mensaje de error</td>\n                    <td style=\"font-size:13px;color:#fca5a5;background:#0a0f1a;border:1px solid #1f2937;border-radius:10px;padding:12px;\">\n                      <pre style=\"margin:0;white-space:pre-wrap;word-break:break-word;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,'Liberation Mono','Courier New',monospace;font-size:12px;\">\n{{$json.error_message || ''}}\n                      </pre>\n                    </td>\n                  </tr>\n                </table>\n\n                <!-- CTA -->\n                <div style=\"margin-top:18px;\">\n                  <a href=\"{{ $json.execution_url || '#' }}\" target=\"_blank\"\n                     style=\"display:inline-block;text-decoration:none;background:#2563eb;color:#ffffff;padding:10px 16px;border-radius:10px;font-weight:700;font-size:14px;\">\n                    Ver ejecución\n                  </a>\n                </div>\n\n                <!-- JSON crudo opcional (puedes ocultar esta sección si no lo requieres) -->\n                <div style=\"margin-top:18px;\">\n                  <div style=\"font-size:12px;color:#94a3b8;margin-bottom:6px;\">Payload</div>\n                  <div style=\"background:#04070e;border:1px solid #1f2937;border-radius:10px;padding:12px;\">\n                    <pre style=\"margin:0;white-space:pre-wrap;word-break:break-word;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,'Liberation Mono','Courier New',monospace;font-size:12px;color:#cbd5e1;\">\n{{ JSON.stringify($json, null, 2) }}\n                    </pre>\n                  </div>\n                </div>\n              </td>\n            </tr>\n\n            <!-- Footer -->\n            <tr>\n              <td style=\"padding:16px 24px;border-top:1px solid #1f2937;background:#0b1220;color:#94a3b8;font-size:12px;\">\n                Correo generado automáticamente por el sistema de monitoreo. Dudas: \n                <a href=\"mailto:soporte@canteradigital.mx\" style=\"color:#93c5fd;text-decoration:none;\">soporte@canteradigital.mx</a>.\n              </td>\n            </tr>\n          </table>\n\n          <div style=\"color:#64748b;font-size:11px;margin-top:12px;\">\n            © {{ new Date().getFullYear() }} Cantera Digital · Incidentes\n          </div>\n        </td>\n      </tr>\n    </table>\n  </body>\n</html>\n",
         "additionalFields": {
           "bodyContentType": "html"
         }
@@ -310,6 +257,59 @@
           "name": "Microsoft Outlook account - azure@canteradigital.mx"
         }
       }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "timestamp",
+              "name": "timestamp",
+              "value": "={{ $now.format('yyyy-MM-DD HH:mm:ss') }}",
+              "type": "string"
+            },
+            {
+              "id": "workflow-name",
+              "name": "workflow_name",
+              "value": "={{ $json.workflow?.name || 'Workflow Desconocido' }}",
+              "type": "string"
+            },
+            {
+              "id": "error-message",
+              "name": "error_message",
+              "value": "={{ $json.execution?.error?.message || $json.error?.message || 'Error sin mensaje' }}",
+              "type": "string"
+            },
+            {
+              "id": "node-name",
+              "name": "node_name",
+              "value": "={{ $json.execution?.error?.node?.name || 'Nodo Desconocido' }}",
+              "type": "string"
+            },
+            {
+              "id": "execution-url",
+              "name": "execution_url",
+              "value": "={{ $json.execution?.url || 'No disponible' }}",
+              "type": "string"
+            },
+            {
+              "id": "severity",
+              "name": "severity",
+              "value": "={{ $json.execution?.error?.message?.toLowerCase().includes('timeout') || $json.execution?.error?.message?.toLowerCase().includes('connection') ? 'CRÍTICO' : 'Normal' }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "abc9a7e0-1d45-479f-8a84-a9c4fe6eca8f",
+      "name": "Extraer Info del Error",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        280,
+        900
+      ]
     }
   ],
   "connections": {
@@ -317,18 +317,7 @@
       "main": [
         [
           {
-            "node": "2️⃣ Extraer Info del Error",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "2️⃣ Extraer Info del Error": {
-      "main": [
-        [
-          {
-            "node": "Create a row",
+            "node": "Extraer Info del Error",
             "type": "main",
             "index": 0
           }
@@ -351,6 +340,17 @@
         [
           {
             "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extraer Info del Error": {
+      "main": [
+        [
+          {
+            "node": "Create a row",
             "type": "main",
             "index": 0
           }
@@ -446,7 +446,7 @@
       }
     ]
   },
-  "versionId": "ab2745ef-fbf6-430c-9d58-c5d045b42c21",
+  "versionId": "53bfdc20-e2b9-498e-989e-a78c26a48e7f",
   "triggerCount": 0,
   "shared": [
     {
