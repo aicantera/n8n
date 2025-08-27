@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-08-15T18:12:56.636Z",
-  "updatedAt": "2025-08-27T16:50:11.000Z",
+  "updatedAt": "2025-08-27T17:56:56.000Z",
   "id": "VFvEQwvxizzpS1Wm",
   "name": "Consulting Financial Comparador Direcciones",
   "active": false,
@@ -138,7 +138,7 @@
             {
               "id": "c587ca31-072e-45c4-b799-1abc5847cb20",
               "leftValue": "={{$node[\"Calcular Distancia\"].json[\"rows\"][0][\"elements\"][0][\"distance\"][\"value\"]}}",
-              "rightValue": 32000,
+              "rightValue": 7000,
               "operator": {
                 "type": "number",
                 "operation": "lte"
@@ -332,11 +332,12 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -380,
-        -360
+        -420,
+        -560
       ],
       "id": "9b7734aa-ede7-44e9-8fa2-be4c8fe0f7ce",
-      "name": "Code1"
+      "name": "Code1",
+      "alwaysOutputData": true
     },
     {
       "parameters": {
@@ -656,8 +657,8 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        -180,
-        -360
+        40,
+        -580
       ],
       "id": "59004098-e8af-4c22-b06b-d18fed3771ca",
       "name": "Create a row",
@@ -731,6 +732,388 @@
       ],
       "id": "9d91dc25-773e-4dee-89af-df52da1855a5",
       "name": "If1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "0b7ca478-bae8-43f7-a20a-6afc5130be51",
+              "name": "EMPRESA",
+              "value": "={{ $json.empresa_cliente }}",
+              "type": "string"
+            },
+            {
+              "id": "2bd0cabb-064e-484f-bec8-01d4d3332ef2",
+              "name": "PUESTO",
+              "value": "={{ $json.puesto }}",
+              "type": "string"
+            },
+            {
+              "id": "45b006c3-d11b-4c02-849d-e5848bc4d90a",
+              "name": "UBICACIÓN",
+              "value": "={{ $json.ubicacion }}",
+              "type": "string"
+            },
+            {
+              "id": "d91d101b-84a7-4c21-b432-02f12d23189b",
+              "name": "GIRO",
+              "value": "={{ $json.giro }}",
+              "type": "string"
+            },
+            {
+              "id": "2e5ffa72-8dd4-4e7a-884a-7f240e0ffdba",
+              "name": "PERFIL",
+              "value": "={{ $json.perfil_requisitos }}",
+              "type": "string"
+            },
+            {
+              "id": "2be09105-2e8b-481c-b8f7-d0d2617a7b3d",
+              "name": "SUELDO SEMANAL LIBRE",
+              "value": "={{ $json.sueldo_semanal_libre }}",
+              "type": "string"
+            },
+            {
+              "id": "8d73484e-4a6a-4a5f-a3fe-88cedf431119",
+              "name": "BENEFICIOS",
+              "value": "={{ $json.prestaciones_beneficios }}",
+              "type": "string"
+            },
+            {
+              "id": "3c5da0f2-5963-4462-ad2a-8a9895139464",
+              "name": "HORARIO",
+              "value": "={{ $json.horario }}",
+              "type": "string"
+            },
+            {
+              "id": "b15f06c4-e78d-4fb6-86e2-407f577a7b0d",
+              "name": "TRANSPORTE",
+              "value": "={{ $json.ofrece_transporte }}",
+              "type": "string"
+            },
+            {
+              "id": "441a037f-879f-4abe-9663-ad58da47784e",
+              "name": "OBSERVACIONES",
+              "value": "={{ $json.observaciones }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        120,
+        -120
+      ],
+      "id": "2c96444e-9a99-4ab5-8556-06c3d251600b",
+      "name": "Edit Fields3"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1310530123,
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1FoqQqf6Uz8WU8fQa1ciXJ6HEd6Ru0FzgDZDlqzQf-RI/edit#gid=1310530123"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        760,
+        -140
+      ],
+      "id": "6cb503dc-0782-4f52-bea6-ccfbb982ad0b",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "T1b495TNgv7GQdA8",
+          "name": "Google Sheets Jumperaron"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "searchMethod": "query",
+        "queryString": "=name contains '{{ $json.EMPRESA }} RUTAS'",
+        "returnAll": true,
+        "filter": {},
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        320,
+        -120
+      ],
+      "id": "b74900ce-0428-4dde-9742-5a98742d0aec",
+      "name": "Search files and folders",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "qyLYDHqds4fDuWE4",
+          "name": "Google Drive Jumperaron"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "d12488a0-0436-4991-88a5-1b1bd6cd17f9",
+              "leftValue": "={{ $json }}",
+              "rightValue": "",
+              "operator": {
+                "type": "object",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        500,
+        -120
+      ],
+      "id": "1893fb99-c1ba-473d-8d30-2d85f26d34ac",
+      "name": "If2"
+    },
+    {
+      "parameters": {
+        "url": "https://maps.googleapis.com/maps/api/distancematrix/json",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "origins",
+              "value": "={{$items(\"Geocode Candidato\")[0].json.results[0].geometry.location.lat\n  + \",\" +\n  $items(\"Geocode Candidato\")[0].json.results[0].geometry.location.lng}}"
+            },
+            {
+              "name": "destinations",
+              "value": "={{ $json.latitud }}, {{ $json.longitud }}"
+            },
+            {
+              "name": "key",
+              "value": "AIzaSyDBsA-93QjipM-2zgXhGYq1VGeBbwqUVUU"
+            },
+            {
+              "name": "units",
+              "value": "metric"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1240,
+        -120
+      ],
+      "id": "22f8fe48-68d6-4cb6-ad31-7d98ff9626d4",
+      "name": "Calcular Distancia1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "c587ca31-072e-45c4-b799-1abc5847cb20",
+              "leftValue": "={{$node[\"Calcular Distancia1\"].json[\"rows\"][0][\"elements\"][0][\"distance\"][\"value\"]}}",
+              "rightValue": 1000,
+              "operator": {
+                "type": "number",
+                "operation": "lte"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1460,
+        -120
+      ],
+      "id": "a6e15eae-1b50-429b-965e-b96caf1f996f",
+      "name": "If3"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        1000,
+        -140
+      ],
+      "id": "2f503659-0f98-4058-91f8-32391aaa9672",
+      "name": "Loop Over Items1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "dee78352-e3e3-4170-ac8b-872184013843",
+              "name": "EMPRESA",
+              "value": "={{ $('Edit Fields3').item.json.EMPRESA }}",
+              "type": "string"
+            },
+            {
+              "id": "be617d07-0ed7-4958-8561-c2988d3fc8de",
+              "name": "PUESTO",
+              "value": "={{ $('Edit Fields3').item.json.PUESTO }}",
+              "type": "string"
+            },
+            {
+              "id": "e94873b0-06cb-4f1e-acdc-9d7c6001044b",
+              "name": "UBICACIÓN",
+              "value": "={{ $('Edit Fields3').item.json['UBICACIÓN'] }}",
+              "type": "string"
+            },
+            {
+              "id": "f9e7f5a9-33ac-423b-a167-2b7fc2bdacda",
+              "name": "GIRO",
+              "value": "={{ $('Edit Fields3').item.json.GIRO }}",
+              "type": "string"
+            },
+            {
+              "id": "28277179-ceb9-4516-8953-d37787a3553b",
+              "name": "PERFIL",
+              "value": "={{ $('Edit Fields3').item.json.PERFIL }}",
+              "type": "string"
+            },
+            {
+              "id": "50c642d3-5b49-455b-ac5c-08a1084176c7",
+              "name": "SUELDO SEMANAL LIBRE",
+              "value": "={{ $('Edit Fields3').item.json['SUELDO SEMANAL LIBRE'] }}",
+              "type": "string"
+            },
+            {
+              "id": "8150c036-7a0b-4308-ad23-1ac04238af9b",
+              "name": "BENEFICIOS",
+              "value": "={{ $('Edit Fields3').item.json.BENEFICIOS }}",
+              "type": "string"
+            },
+            {
+              "id": "f73eac05-6160-49af-865f-4e6ce4cf9c4d",
+              "name": "HORARIO",
+              "value": "={{ $('Edit Fields3').item.json.HORARIO }}",
+              "type": "string"
+            },
+            {
+              "id": "c0fb6adf-5240-45b5-a5dc-5da6188ff8da",
+              "name": "TRANSPORTE",
+              "value": "={{ $('Edit Fields3').item.json.TRANSPORTE }}",
+              "type": "string"
+            },
+            {
+              "id": "79c1c808-a0b2-43ae-b709-9e9ecafc6f53",
+              "name": "OBSERVACIONES",
+              "value": "={{ $('Edit Fields3').item.json.OBSERVACIONES }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1720,
+        -140
+      ],
+      "id": "ee9a01c8-1e70-4091-8baf-8377c115ce13",
+      "name": "Edit Fields4"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "4b3f8522-924a-46cc-b2a4-21fe40a895e1",
+              "leftValue": "={{ $json }}",
+              "rightValue": "",
+              "operator": {
+                "type": "object",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -220,
+        -560
+      ],
+      "id": "6aade20d-f6b3-461d-be7a-9af6448e92c4",
+      "name": "If4"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "cd65d015-f23a-4b56-8506-ac92c182a1bc",
+              "name": "message",
+              "value": "Lamentablemente no tenemos vacantes para tu ubicación",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        40,
+        -400
+      ],
+      "id": "b37a8869-9455-4601-b3d3-5f3ab361def0",
+      "name": "Edit Fields5"
     }
   ],
   "connections": {
@@ -840,7 +1223,7 @@
       "main": [
         [
           {
-            "node": "Create a row",
+            "node": "If4",
             "type": "main",
             "index": 0
           }
@@ -971,7 +1354,7 @@
       "main": [
         [
           {
-            "node": "Edit Fields2",
+            "node": "Edit Fields3",
             "type": "main",
             "index": 0
           }
@@ -979,6 +1362,133 @@
         [
           {
             "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields3": {
+      "main": [
+        [
+          {
+            "node": "Search files and folders",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search files and folders": {
+      "main": [
+        [
+          {
+            "node": "If2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If2": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calcular Distancia1": {
+      "main": [
+        [
+          {
+            "node": "If3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Calcular Distancia1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If3": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields4",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Loop Over Items1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields4": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If4": {
+      "main": [
+        [
+          {
+            "node": "Create a row",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields5",
             "type": "main",
             "index": 0
           }
@@ -1003,7 +1513,7 @@
       }
     ]
   },
-  "versionId": "9467ed9a-3e4c-4594-b105-682050cdddcc",
+  "versionId": "4c791351-e81a-4bc8-a909-3906e9c33f87",
   "triggerCount": 0,
   "shared": [
     {
