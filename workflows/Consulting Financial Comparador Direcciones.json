@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-08-15T18:12:56.636Z",
-  "updatedAt": "2025-08-25T21:35:04.000Z",
+  "updatedAt": "2025-08-27T16:50:11.000Z",
   "id": "VFvEQwvxizzpS1Wm",
   "name": "Consulting Financial Comparador Direcciones",
   "active": false,
@@ -53,7 +53,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        440,
+        340,
         240
       ],
       "id": "53346784-d42f-4455-b4bf-45a7f067c890",
@@ -119,7 +119,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        680,
+        580,
         240
       ],
       "id": "923914d5-1c46-4a51-a2d2-54ddb07aec75",
@@ -138,7 +138,7 @@
             {
               "id": "c587ca31-072e-45c4-b799-1abc5847cb20",
               "leftValue": "={{$node[\"Calcular Distancia\"].json[\"rows\"][0][\"elements\"][0][\"distance\"][\"value\"]}}",
-              "rightValue": 7000,
+              "rightValue": 32000,
               "operator": {
                 "type": "number",
                 "operation": "lte"
@@ -152,44 +152,11 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        900,
+        800,
         240
       ],
       "id": "21b16be9-0e78-4f5f-8d31-f24c1baf8d34",
       "name": "If"
-    },
-    {
-      "parameters": {
-        "documentId": {
-          "__rl": true,
-          "value": "1jFvPYGQQvi5FBudCgpJEyPY5NZPgVPRmsd5Kf7Q4inI",
-          "mode": "list",
-          "cachedResultName": "vacantes_prueba",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1jFvPYGQQvi5FBudCgpJEyPY5NZPgVPRmsd5Kf7Q4inI/edit?usp=drivesdk"
-        },
-        "sheetName": {
-          "__rl": true,
-          "value": "gid=0",
-          "mode": "list",
-          "cachedResultName": "Hoja 1",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1jFvPYGQQvi5FBudCgpJEyPY5NZPgVPRmsd5Kf7Q4inI/edit#gid=0"
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.googleSheets",
-      "typeVersion": 4.6,
-      "position": [
-        280,
-        -160
-      ],
-      "id": "b86cd3d6-1d42-4415-b1c9-97c24bb35ab3",
-      "name": "Get row(s) in sheet",
-      "credentials": {
-        "googleSheetsOAuth2Api": {
-          "id": "T1b495TNgv7GQdA8",
-          "name": "Google Sheets Jumperaron"
-        }
-      }
     },
     {
       "parameters": {
@@ -198,7 +165,7 @@
       "type": "n8n-nodes-base.splitInBatches",
       "typeVersion": 3,
       "position": [
-        -60,
+        -740,
         220
       ],
       "id": "c89e3698-4497-44ff-ba76-22bd741386da",
@@ -275,7 +242,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        200,
+        100,
         240
       ],
       "id": "001f66f9-2d5a-4008-8abf-06ffd82c9a88",
@@ -352,7 +319,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        1140,
+        1040,
         280
       ],
       "id": "7eba5596-f1db-4f07-b115-1c42ef746bac",
@@ -365,8 +332,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        180,
-        80
+        -380,
+        -360
       ],
       "id": "9b7734aa-ede7-44e9-8fa2-be4c8fe0f7ce",
       "name": "Code1"
@@ -414,24 +381,6 @@
     },
     {
       "parameters": {
-        "promptType": "define",
-        "text": "={{ $json.text }}",
-        "options": {
-          "systemMessage": "=# CONTEXTO\nEres un agente de IA dentro de un flujo de trabajo en n8n. Tu función es procesar un texto no estructurado que contiene descripciones de múltiples vacantes de empleo y convertirlo en un array de JSON estructurado. El objetivo es que cada elemento del array sea una vacante individual, para que el siguiente nodo (\"Split in Batches\" o loop) pueda iterar sobre cada una de ellas.\n\n# TAREA\n1.  **Analiza el texto de entrada** para identificar dónde empieza y termina la descripción de cada vacante.\n2.  **Para cada vacante identificada**, extrae toda la información relevante.\n3.  **Estructura la información** de cada vacante en un objeto JSON.\n4.  **Agrupa todos los objetos JSON** en un único array principal.\n\n# FORMATO DE SALIDA OBLIGATORIO\nLa respuesta debe ser **únicamente el código JSON** y nada más. No incluyas explicaciones, comentarios o la palabra \"json\" al principio. El array debe contener objetos con la siguiente estructura de claves:\n\n{\n  \"vacantes\": [\n    {\n      \"puesto\": \"string\", // El nombre del puesto, ej: \"AUXILIARES DE ALMACEN\"\n      \"empresa_cliente\": \"string\", // El nombre del usuario o cliente, ej: \"AXIONLOG\"\n      \"giro\": \"string\", // El giro de la empresa\n      \"ubicacion\": \"string\", // La ubicación del trabajo\n      \"perfil_requisitos\": [ // Un array de strings con cada punto del perfil\n        \"string\", \n        \"string\"\n      ],\n      \"sueldo_semanal_libre\": \"string\", // El monto y la moneda, ej: \"$1,930\"\n      \"prestaciones_beneficios\": [ // Un array de strings con todo lo que se ofrece\n        \"string\",\n        \"string\"\n      ],\n      \"horario\": \"string\", // La descripción completa del horario y los turnos\n      \"ofrece_transporte\": \"string\" // información referente al transporte, \"No cuenta con transporte\" si explícitamente no lo tiene o no se menciona\n      \"observaciones\": [ // un array de strings con las observaciones\n        \"string\",\n        \"string\"\n      ]\n    }\n  ]\n}\n\nAsegúrate de capturar todos los detalles de las secciones \"PERFIL\" y \"OFRECE\" dentro de los arrays correspondientes."
-        }
-      },
-      "type": "@n8n/n8n-nodes-langchain.agent",
-      "typeVersion": 2,
-      "position": [
-        -140,
-        -160
-      ],
-      "id": "d0d97840-86c6-40aa-bc15-c69511b95a8b",
-      "name": "AI Agent2",
-      "disabled": true
-    },
-    {
-      "parameters": {
         "model": {
           "__rl": true,
           "value": "gpt-4o-mini",
@@ -445,8 +394,8 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.2,
       "position": [
-        -920,
-        680
+        -2200,
+        880
       ],
       "id": "ed0154c6-29de-4d23-86bb-45b1013065fc",
       "name": "OpenAI Chat Model2",
@@ -464,8 +413,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -480,
-        460
+        -1760,
+        660
       ],
       "id": "c765db0c-29a2-4735-b30f-1371a0958134",
       "name": "Code"
@@ -478,7 +427,7 @@
       "type": "n8n-nodes-base.splitOut",
       "typeVersion": 1,
       "position": [
-        -940,
+        -960,
         220
       ],
       "id": "ef3e1187-4307-4432-86c0-ee1787fcc4b6",
@@ -555,34 +504,11 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        980,
+        880,
         480
       ],
       "id": "be652b59-dfca-4765-82e1-4922b934bfc8",
       "name": "Edit Fields2"
-    },
-    {
-      "parameters": {
-        "promptType": "define",
-        "text": "={{ JSON.stringify($json.vacantes) }}",
-        "messages": {
-          "messageValues": [
-            {
-              "message": "=# CONTEXTO\nEres un agente de IA dentro de un flujo de trabajo en n8n. Tu función es procesar un texto no estructurado que contiene descripciones de múltiples vacantes de empleo y convertirlo en un array de JSON estructurado. El objetivo es que cada elemento del array sea una vacante individual, para que el siguiente nodo (\"Split in Batches\" o loop) pueda iterar sobre cada una de ellas.\n\n# TAREA\n1.  **Analiza el texto de entrada** para identificar dónde empieza y termina la descripción de cada vacante.\n2.  **Para cada vacante identificada**, extrae toda la información relevante.\n3.  **Estructura la información** de cada vacante en un objeto JSON.\n4.  **Agrupa todos los objetos JSON** en un único array principal.\n\n# FORMATO DE SALIDA OBLIGATORIO\nLa respuesta debe ser **únicamente el código JSON** y nada más. No incluyas explicaciones, comentarios o la palabra \"json\" al principio. El array debe contener objetos con la siguiente estructura de claves:\n\n{\n  \"vacantes\": [\n    {\n      \"puesto\": \"string\", // El nombre del puesto, ej: \"AUXILIARES DE ALMACEN\"\n      \"empresa_cliente\": \"string\", // El nombre del usuario o cliente, ej: \"AXIONLOG\"\n      \"giro\": \"string\", // El giro de la empresa\n      \"ubicacion\": \"string\", // La ubicación del trabajo\n      \"perfil_requisitos\": [ // Un array de strings con cada punto del perfil\n        \"string\", \n        \"string\"\n      ],\n      \"sueldo_semanal_libre\": \"string\", // El monto y la moneda, ej: \"$1,930\"\n      \"prestaciones_beneficios\": [ // Un array de strings con todo lo que se ofrece\n        \"string\",\n        \"string\"\n      ],\n      \"horario\": \"string\", // La descripción completa del horario y los turnos\n      \"ofrece_transporte\": \"string\" // información referente al transporte, \"No cuenta con transporte\" si explícitamente no lo tiene o no se menciona\n      \"observaciones\": [ // un array de strings con las observaciones\n        \"string\",\n        \"string\"\n      ]\n    }\n  ]\n}\n\nAsegúrate de capturar todos los detalles de las secciones \"PERFIL\" y \"OFRECE\" dentro de los arrays correspondientes."
-            }
-          ]
-        },
-        "batching": {}
-      },
-      "type": "@n8n/n8n-nodes-langchain.chainLlm",
-      "typeVersion": 1.7,
-      "position": [
-        -1500,
-        500
-      ],
-      "id": "c58600c1-3961-4544-9b5c-219383aabce1",
-      "name": "Basic LLM Chain",
-      "disabled": true
     },
     {
       "parameters": {
@@ -593,8 +519,8 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        -940,
-        -160
+        -1900,
+        -140
       ],
       "id": "a3e7950d-f2a9-411a-902d-71151a239058",
       "name": "Send a text message",
@@ -611,8 +537,8 @@
       "type": "n8n-nodes-base.wait",
       "typeVersion": 1.1,
       "position": [
-        -720,
-        -160
+        -1680,
+        -140
       ],
       "id": "b053f01c-fa5b-4280-a28b-f178ae555bea",
       "name": "Wait",
@@ -627,8 +553,8 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        -500,
-        -160
+        -1460,
+        -140
       ],
       "id": "3786741e-c584-4833-8ab4-87b583b189dc",
       "name": "Send a text message1",
@@ -669,199 +595,11 @@
       "type": "@n8n/n8n-nodes-langchain.chainLlm",
       "typeVersion": 1.7,
       "position": [
-        -900,
-        460
+        -2180,
+        660
       ],
       "id": "e767b1e5-c558-4378-a666-5696e323dfe5",
       "name": "Basic LLM Chain1"
-    },
-    {
-      "parameters": {
-        "operation": "append",
-        "documentId": {
-          "__rl": true,
-          "value": "1Psi_K5KpRA1_SX9Yqf9x1PIPJd-C9PckqJXmK7m9qd4",
-          "mode": "list",
-          "cachedResultName": "vacantes_filtradas",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Psi_K5KpRA1_SX9Yqf9x1PIPJd-C9PckqJXmK7m9qd4/edit?usp=drivesdk"
-        },
-        "sheetName": {
-          "__rl": true,
-          "value": "gid=0",
-          "mode": "list",
-          "cachedResultName": "Hoja 1",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Psi_K5KpRA1_SX9Yqf9x1PIPJd-C9PckqJXmK7m9qd4/edit#gid=0"
-        },
-        "columns": {
-          "mappingMode": "defineBelow",
-          "value": {
-            "EMPRESA": "={{ $json.EMPRESA }}",
-            "PUESTO": "={{ $json.PUESTO }}",
-            "UBICACIÓN": "={{ $json['UBICACIÓN'] }}",
-            "GIRO": "={{ $json.GIRO }}",
-            "PERFIL": "={{ $json.PERFIL }}",
-            "SUELDO SEMANAL LIBRE": "={{ $json['SUELDO SEMANAL LIBRE'] }}",
-            "BENEFICIOS": "={{ $json.BENEFICIOS }}",
-            "HORARIO": "={{ $json.HORARIO }}",
-            "TRASNPORTE": "={{ $json.TRANSPORTE }}",
-            "OBSERVACIONES": "={{ $json.OBSERVACIONES }}"
-          },
-          "matchingColumns": [],
-          "schema": [
-            {
-              "id": "EMPRESA",
-              "displayName": "EMPRESA",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": false
-            },
-            {
-              "id": "PUESTO",
-              "displayName": "PUESTO",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": false
-            },
-            {
-              "id": "UBICACIÓN",
-              "displayName": "UBICACIÓN",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": false
-            },
-            {
-              "id": "GIRO",
-              "displayName": "GIRO",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": false
-            },
-            {
-              "id": "PERFIL",
-              "displayName": "PERFIL",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": false
-            },
-            {
-              "id": "SUELDO SEMANAL LIBRE",
-              "displayName": "SUELDO SEMANAL LIBRE",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": false
-            },
-            {
-              "id": "BENEFICIOS",
-              "displayName": "BENEFICIOS",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": false
-            },
-            {
-              "id": "HORARIO",
-              "displayName": "HORARIO",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": false
-            },
-            {
-              "id": "TRASNPORTE",
-              "displayName": "TRASNPORTE",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": false
-            },
-            {
-              "id": "OBSERVACIONES",
-              "displayName": "OBSERVACIONES",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": false
-            }
-          ],
-          "attemptToConvertTypes": false,
-          "convertFieldsToString": false
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.googleSheets",
-      "typeVersion": 4.6,
-      "position": [
-        360,
-        860
-      ],
-      "id": "715047b9-d0bd-4522-a1c3-c9c2bffcf0c8",
-      "name": "Append row in sheet",
-      "credentials": {
-        "googleSheetsOAuth2Api": {
-          "id": "T1b495TNgv7GQdA8",
-          "name": "Google Sheets Jumperaron"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "operation": "clear",
-        "documentId": {
-          "__rl": true,
-          "value": "1Psi_K5KpRA1_SX9Yqf9x1PIPJd-C9PckqJXmK7m9qd4",
-          "mode": "list",
-          "cachedResultName": "vacantes_filtradas",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Psi_K5KpRA1_SX9Yqf9x1PIPJd-C9PckqJXmK7m9qd4/edit?usp=drivesdk"
-        },
-        "sheetName": {
-          "__rl": true,
-          "value": "gid=0",
-          "mode": "list",
-          "cachedResultName": "Hoja 1",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Psi_K5KpRA1_SX9Yqf9x1PIPJd-C9PckqJXmK7m9qd4/edit#gid=0"
-        },
-        "keepFirstRow": true
-      },
-      "type": "n8n-nodes-base.googleSheets",
-      "typeVersion": 4.6,
-      "position": [
-        120,
-        860
-      ],
-      "id": "b93192ac-7c4f-4b71-9b50-85e7d6931b5b",
-      "name": "Clear sheet",
-      "credentials": {
-        "googleSheetsOAuth2Api": {
-          "id": "T1b495TNgv7GQdA8",
-          "name": "Google Sheets Jumperaron"
-        }
-      }
     },
     {
       "parameters": {
@@ -918,8 +656,8 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        380,
-        80
+        -180,
+        -360
       ],
       "id": "59004098-e8af-4c22-b06b-d18fed3771ca",
       "name": "Create a row",
@@ -959,6 +697,40 @@
           "name": "Supabase account - CANTERA"
         }
       }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "75f0d0d9-b094-465f-8e3c-7aada57bdaa2",
+              "leftValue": "={{ $json.ofrece_transporte }}",
+              "rightValue": "Sí cuenta con transporte",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -320,
+        240
+      ],
+      "id": "9d91dc25-773e-4dee-89af-df52da1855a5",
+      "name": "If1"
     }
   ],
   "connections": {
@@ -1006,11 +778,6 @@
         ]
       ]
     },
-    "Get row(s) in sheet": {
-      "main": [
-        []
-      ]
-    },
     "Loop Over Items": {
       "main": [
         [
@@ -1022,7 +789,7 @@
         ],
         [
           {
-            "node": "Edit Fields",
+            "node": "If1",
             "type": "main",
             "index": 0
           }
@@ -1113,11 +880,6 @@
         ]
       ]
     },
-    "AI Agent2": {
-      "main": [
-        []
-      ]
-    },
     "Code": {
       "main": [
         []
@@ -1143,11 +905,6 @@
             "index": 0
           }
         ]
-      ]
-    },
-    "Basic LLM Chain": {
-      "main": [
-        []
       ]
     },
     "Send a text message": {
@@ -1194,11 +951,6 @@
         ]
       ]
     },
-    "Clear sheet": {
-      "main": [
-        []
-      ]
-    },
     "Delete a row": {
       "main": [
         [
@@ -1213,6 +965,24 @@
     "Create a row": {
       "main": [
         []
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     }
   },
@@ -1233,7 +1003,7 @@
       }
     ]
   },
-  "versionId": "dbdf66fd-a8d0-48ae-bb39-3474fa13cf25",
+  "versionId": "9467ed9a-3e4c-4594-b105-682050cdddcc",
   "triggerCount": 0,
   "shared": [
     {
