@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-08-15T18:12:56.636Z",
-  "updatedAt": "2025-08-27T20:53:28.000Z",
+  "updatedAt": "2025-08-27T22:56:17.000Z",
   "id": "VFvEQwvxizzpS1Wm",
   "name": "Consulting Financial Comparador Direcciones",
   "active": false,
@@ -932,7 +932,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        1240,
+        1300,
         -120
       ],
       "id": "22f8fe48-68d6-4cb6-ad31-7d98ff9626d4",
@@ -965,7 +965,7 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        1460,
+        1520,
         -120
       ],
       "id": "a6e15eae-1b50-429b-965e-b96caf1f996f",
@@ -1055,7 +1055,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        1720,
+        1780,
         -140
       ],
       "id": "ee9a01c8-1e70-4091-8baf-8377c115ce13",
@@ -1147,11 +1147,12 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.6,
       "position": [
-        540,
+        440,
         -120
       ],
       "id": "072a1ca5-7416-4565-91cb-d98becff2bb6",
       "name": "Get row(s) in sheet1",
+      "alwaysOutputData": true,
       "credentials": {
         "googleSheetsOAuth2Api": {
           "id": "T1b495TNgv7GQdA8",
@@ -1194,6 +1195,40 @@
       ],
       "id": "9bdb67d8-636a-49e1-ac14-3ae5b97ab576",
       "name": "Calcular Distancia2"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "307056d1-f725-4857-b917-eb953222a935",
+              "leftValue": "={{ $json}}",
+              "rightValue": "",
+              "operator": {
+                "type": "object",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        660,
+        -120
+      ],
+      "id": "9779f14c-f5ed-4960-8957-47dbd25f604b",
+      "name": "If5"
     }
   ],
   "connections": {
@@ -1495,13 +1530,7 @@
     },
     "Loop Over Items1": {
       "main": [
-        [
-          {
-            "node": "Edit Fields2",
-            "type": "main",
-            "index": 0
-          }
-        ],
+        [],
         [
           {
             "node": "Calcular Distancia1",
@@ -1538,7 +1567,7 @@
       "main": [
         [
           {
-            "node": "Loop Over Items",
+            "node": "Loop Over Items1",
             "type": "main",
             "index": 0
           }
@@ -1567,7 +1596,25 @@
       "main": [
         [
           {
+            "node": "If5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If5": {
+      "main": [
+        [
+          {
             "node": "Loop Over Items1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields2",
             "type": "main",
             "index": 0
           }
@@ -1592,7 +1639,7 @@
       }
     ]
   },
-  "versionId": "05f0ab19-cbc2-41e6-b6d5-0272159c95e1",
+  "versionId": "1d3f3b80-fc51-4dae-9918-b886f8219c77",
   "triggerCount": 0,
   "shared": [
     {
