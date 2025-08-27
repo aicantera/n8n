@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-08-25T19:12:28.603Z",
-  "updatedAt": "2025-08-26T23:37:52.000Z",
+  "updatedAt": "2025-08-27T20:51:33.000Z",
   "id": "igPri1apVIhK5QNC",
   "name": "Prueba Flujo OCR",
   "active": false,
@@ -13,15 +13,15 @@
         "authentication": "genericCredentialType",
         "genericAuthType": "httpHeaderAuth",
         "sendBody": true,
-        "contentType": "binaryData",
-        "inputDataFieldName": "data",
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"mistral-ocr-latest\",\n  \"document\": {\n    \"type\": \"document_url\",\n    \"document_url\": \"{{ $json.url }}\"\n  },\n\"include_image_base64\": true\n} ",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        300,
-        320
+        720,
+        420
       ],
       "id": "0d5e3e00-c293-46cf-bffe-71a4c5b01027",
       "name": "HTTP Request OCR",
@@ -44,8 +44,8 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 2,
       "position": [
-        900,
-        220
+        -440,
+        620
       ],
       "id": "22a968b3-57b0-452c-a6dd-a04e67197f30",
       "name": "AI Agent",
@@ -61,8 +61,8 @@
       "type": "n8n-nodes-base.telegramTrigger",
       "typeVersion": 1.2,
       "position": [
-        -440,
-        320
+        -480,
+        340
       ],
       "id": "14244fcb-0b0e-4f85-846c-9f02f8a03a93",
       "name": "Trigger - Recibir mensaje",
@@ -92,7 +92,7 @@
       "typeVersion": 3.4,
       "position": [
         100,
-        0
+        20
       ],
       "id": "b7aaf256-0eb3-4868-a491-69346d250b9f",
       "name": "Texto"
@@ -106,7 +106,7 @@
       "typeVersion": 1.2,
       "position": [
         100,
-        160
+        220
       ],
       "id": "4bbc9411-76de-484a-89c1-34aec87d5acb",
       "name": "Descargar audio",
@@ -128,7 +128,7 @@
       "typeVersion": 1.8,
       "position": [
         300,
-        160
+        220
       ],
       "id": "0e9d1ef1-3998-435f-afd7-84be6c275eab",
       "name": "Transcribe audio",
@@ -151,8 +151,8 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.2,
       "position": [
-        880,
-        380
+        -520,
+        780
       ],
       "id": "40b52f9c-3eb5-436f-97a6-8e538b752586",
       "name": "OpenAI Chat Model",
@@ -160,32 +160,6 @@
         "openAiApi": {
           "id": "0PNoojfjNHHXEtdv",
           "name": "Test_Agente_Soporte_Gael"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "resource": "fileFolder",
-        "limit": 50,
-        "queryString": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Search_Query', `sirve para sacar el id del archivo y comprobar que está pasando el archivo correcto correspondiente a la empresa`, 'string') }}",
-        "returnAll": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Return_All', ``, 'boolean') }}",
-        "filter": {
-          "whatToSearch": "files"
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.googleDriveTool",
-      "typeVersion": 3,
-      "position": [
-        1100,
-        420
-      ],
-      "id": "7a961358-c781-424d-b49a-674996fec12f",
-      "name": "Buscar Archivo",
-      "credentials": {
-        "googleDriveOAuth2Api": {
-          "id": "1P9PgyGmxd7ggSGM",
-          "name": "Gael Extraer Datos PDF"
         }
       }
     },
@@ -315,7 +289,7 @@
       "typeVersion": 1.2,
       "position": [
         100,
-        320
+        420
       ],
       "id": "2488e8ce-8d3f-4379-bbf4-6eb0d0c31bff",
       "name": "Descargar documento",
@@ -330,13 +304,13 @@
     {
       "parameters": {
         "resource": "file",
-        "fileId": "="
+        "fileId": "={{ $json.message.photo[0].file_id }}"
       },
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
         100,
-        500
+        620
       ],
       "id": "b975e39b-65a7-4369-9642-6eb4f62dbbb6",
       "name": "Descargar imagen/foto",
@@ -350,29 +324,327 @@
     },
     {
       "parameters": {
+        "contextWindowLength": 50
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -380,
+        820
+      ],
+      "id": "cfc93858-2f64-4a58-bb56-64c3e9f810e5",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
         "method": "POST",
-        "url": "https://api.mistral.ai/v1/ocr",
+        "url": "https://api.mistral.ai/v1/files",
         "authentication": "genericCredentialType",
         "genericAuthType": "httpHeaderAuth",
         "sendBody": true,
-        "contentType": "binaryData",
-        "inputDataFieldName": "data",
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "purpose",
+              "value": "ocr"
+            },
+            {
+              "parameterType": "formBinaryData",
+              "name": "file",
+              "inputDataFieldName": "data"
+            }
+          ]
+        },
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
         300,
-        500
+        420
       ],
-      "id": "74b338ed-6ccc-4614-9701-c94cdbce489e",
-      "name": "HTTP Request OCR2",
+      "id": "58ab6ffa-ac05-442f-a696-4dbf5d7006ba",
+      "name": "HTTP Request - Guardar archivo en Mistral",
       "credentials": {
         "httpHeaderAuth": {
           "id": "5mkReM30SuQKhse1",
           "name": "Gael Mistral OCR"
         }
       }
+    },
+    {
+      "parameters": {
+        "url": "=https://api.mistral.ai/v1/files/{{ $json.id }}/url",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        520,
+        420
+      ],
+      "id": "ebd9f809-5009-4f39-8cb5-def1c04e7633",
+      "name": "HTTP Request",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "5mkReM30SuQKhse1",
+          "name": "Gael Mistral OCR"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "operation": "analyze",
+        "modelId": {
+          "__rl": true,
+          "value": "chatgpt-4o-latest",
+          "mode": "list",
+          "cachedResultName": "CHATGPT-4O-LATEST"
+        },
+        "text": "recibirás capturas de pantalla, fotos o imagenes que tendrás que extraer toda la información ",
+        "inputType": "base64",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        300,
+        860
+      ],
+      "id": "e8f1c34e-5894-48f1-8520-093d6cc3074f",
+      "name": "Analyze image",
+      "credentials": {
+        "openAiApi": {
+          "id": "0PNoojfjNHHXEtdv",
+          "name": "Test_Agente_Soporte_Gael"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.mistral.ai/v1/ocr",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"mistral-ocr-latest\",\n  \"document\": {\n    \"type\": \"document_url\",\n    \"document_url\": \"{{ $json.url }}\"\n  },\n\"include_image_base64\": true\n} ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        720,
+        620
+      ],
+      "id": "4e463533-3875-4558-9d62-fcb09c9ef83c",
+      "name": "HTTP Request OCR1",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "5mkReM30SuQKhse1",
+          "name": "Gael Mistral OCR"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.mistral.ai/v1/files",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "purpose",
+              "value": "ocr"
+            },
+            {
+              "parameterType": "formBinaryData",
+              "name": "file",
+              "inputDataFieldName": "data"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        300,
+        620
+      ],
+      "id": "4d657280-7b3c-423f-a9cb-1901d44bceb9",
+      "name": "HTTP Request - Guardar archivo en Mistral1",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "5mkReM30SuQKhse1",
+          "name": "Gael Mistral OCR"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "=https://api.mistral.ai/v1/files/{{ $json.id }}/url",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        520,
+        620
+      ],
+      "id": "7b893a22-f409-4220-b3a3-41785c7b777b",
+      "name": "HTTP Request1",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "5mkReM30SuQKhse1",
+          "name": "Gael Mistral OCR"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {
+          "download": true
+        }
+      },
+      "id": "f9fae722-19d4-49ed-8d20-840a738e644b",
+      "name": "Telegram Trigger",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "position": [
+        500,
+        -80
+      ],
+      "webhookId": "b957dd8b-8f10-40e9-a041-56b3f7a176b9",
+      "typeVersion": 1.2
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c8cd1608-2326-401d-9c47-79a6a72f5fc7",
+              "name": "chatID",
+              "type": "number",
+              "value": "={{ $json.message.chat.id }}"
+            },
+            {
+              "id": "0f1a41cb-8630-4e10-b445-f6bbbcf91d33",
+              "name": "Image",
+              "type": "string",
+              "value": "={{ $json[\"message\"][\"photo\"][$json[\"message\"][\"photo\"].length - 1][\"file_id\"] }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "7374bb85-aceb-4f7a-8783-018d7099058c",
+      "name": "Clean Input Data",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        720,
+        -80
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "fileId": "={{ $json.Image.replace(/\\n/g, '') }}"
+      },
+      "id": "5a25eacc-af9c-4f73-87e3-82d3f44d4eb1",
+      "name": "get file",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        940,
+        -80
+      ],
+      "webhookId": "089cb9a3-a383-4e1d-b732-b877833ef538",
+      "typeVersion": 1.2
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Clean Input Data').item.json.chatID }}",
+        "text": "={{ $json.output }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "dc2f4e0d-7a4a-47c1-a5de-09f66b0bfb22",
+      "name": "Telegram",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        1980,
+        -80
+      ],
+      "webhookId": "1c599e35-fb24-4cae-9177-61fa09e0b5ca",
+      "typeVersion": 1.2
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.0-flash",
+        "options": {}
+      },
+      "id": "d624cd95-f7c4-4f49-b619-5599c63b8194",
+      "name": "Google Gemini Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "position": [
+        1480,
+        140
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "jsCode": "let text = $json.output;\n\ntext = text\n  .replace(/[_*[\\]()~`>#+\\-=|{}.!]/g, '\\\\$&'); // Escape karakter markdown V2\n\nreturn { json: { output: text } };\n"
+      },
+      "id": "4159de3b-2e74-45d4-a33c-bb07f9b3750d",
+      "name": "Replace",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        1760,
+        -80
+      ],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {},
+      "id": "ed9ce55d-6acb-44b0-974d-aa68123f0282",
+      "name": "Tesseract OCR",
+      "type": "n8n-nodes-tesseractjs.tesseractNode",
+      "position": [
+        1160,
+        -80
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.text }}",
+        "options": {
+          "systemMessage": "Kamu adalah asisten AI yang dirancang untuk memperjelas teks hasil ekstraksi gambar melalui OCR.\n\nTujuan utamamu adalah membuat hasil OCR menjadi mudah dibaca dan dipahami oleh pengguna dengan cara merapikan format, memperbaiki kesalahan pengenalan karakter, dan menyusun ulang konten agar lebih logis.\n\n🧠 Panduan Perilaku:\nJika teks hasil OCR menyerupai tabel atau data terstruktur, jangan buat ulang dalam bentuk tabel. Sebagai gantinya, ubah menjadi poin-poin ringkas agar lebih mudah dibaca.\n\nFokus pada kejelasan, akurasi, dan format yang ramah pengguna.\n\nPerbaiki masalah umum pada hasil OCR seperti:\n\n- Kata atau kalimat yang terpotong\n- Karakter yang salah dikenali \n𝑐\n𝑜\n𝑛\n𝑡\n𝑜\nℎ\n:\n\"\n0\n\"\n𝑑\n𝑎\n𝑛\n\"\n𝑂\n\"\n,\n\"\n1\n\"\n𝑑\n𝑎\n𝑛\n\"\n𝐼\n\"\ncontoh:\"0\"dan\"O\",\"1\"dan\"I\"\n- Simbol yang salah tempat atau format yang berantakan\n\nWAJIB Perhatikan, karena pesan ini akan dikirim ke Telegram maka hindari penggunaan karakter markdown seperti _, *, \n,\n,, \n,\n,, ~, >, #, +, -, =, |, {, }, ., !"
+        }
+      },
+      "id": "aeee1cee-b324-423e-9202-ebce41cfb8b9",
+      "name": "AI Agent1",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "position": [
+        1380,
+        -80
+      ],
+      "typeVersion": 2
     }
   ],
   "connections": {
@@ -419,17 +691,6 @@
         ]
       ]
     },
-    "Buscar Archivo": {
-      "ai_tool": [
-        [
-          {
-            "node": "AI Agent",
-            "type": "ai_tool",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Texto, Audio, Documento e Imagen": {
       "main": [
         [
@@ -466,7 +727,7 @@
       "main": [
         [
           {
-            "node": "HTTP Request OCR",
+            "node": "HTTP Request - Guardar archivo en Mistral",
             "type": "main",
             "index": 0
           }
@@ -477,7 +738,127 @@
       "main": [
         [
           {
-            "node": "HTTP Request OCR2",
+            "node": "HTTP Request - Guardar archivo en Mistral1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Analyze image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request - Guardar archivo en Mistral": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request OCR",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request OCR": {
+      "main": [
+        []
+      ]
+    },
+    "HTTP Request - Guardar archivo en Mistral1": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request OCR1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Replace": {
+      "main": [
+        [
+          {
+            "node": "Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clean Input Data": {
+      "main": [
+        [
+          {
+            "node": "get file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Clean Input Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent1": {
+      "main": [
+        [
+          {
+            "node": "Replace",
             "type": "main",
             "index": 0
           }
@@ -496,9 +877,9 @@
     "Trigger - Recibir mensaje": [
       {
         "json": {
-          "update_id": 435237901,
+          "update_id": 435237902,
           "message": {
-            "message_id": 111,
+            "message_id": 112,
             "from": {
               "id": 7992375339,
               "is_bot": false,
@@ -510,34 +891,83 @@
               "first_name": "Gael",
               "type": "private"
             },
-            "date": 1756249176,
-            "document": {
-              "file_name": "Captura de pantalla 2025-08-08 151304.png",
-              "mime_type": "image/png",
-              "thumbnail": {
-                "file_id": "AAMCAQADGQEAA29orjxYky4uGhp1tDjTS2Tk0hVO0gACfAUAAjzLeUXwpQlLMWCVvwEAB20AAzYE",
-                "file_unique_id": "AQADfAUAAjzLeUVy",
-                "file_size": 22192,
-                "width": 320,
-                "height": 235
+            "date": 1756327036,
+            "photo": [
+              {
+                "file_id": "AgACAgEAAxkBAANwaK9se6Y48MGTp1pfV_ywJtwM0S4AAviuMRs8y4FFyJPq0VxVxhMBAAMCAANzAAM2BA",
+                "file_unique_id": "AQAD-K4xGzzLgUV4",
+                "file_size": 1464,
+                "width": 89,
+                "height": 90
               },
-              "thumb": {
-                "file_id": "AAMCAQADGQEAA29orjxYky4uGhp1tDjTS2Tk0hVO0gACfAUAAjzLeUXwpQlLMWCVvwEAB20AAzYE",
-                "file_unique_id": "AQADfAUAAjzLeUVy",
-                "file_size": 22192,
-                "width": 320,
-                "height": 235
+              {
+                "file_id": "AgACAgEAAxkBAANwaK9se6Y48MGTp1pfV_ywJtwM0S4AAviuMRs8y4FFyJPq0VxVxhMBAAMCAANtAAM2BA",
+                "file_unique_id": "AQAD-K4xGzzLgUVy",
+                "file_size": 27097,
+                "width": 316,
+                "height": 320
               },
-              "file_id": "BQACAgEAAxkBAANvaK48WJMuLhoadbQ400tk5NIVTtIAAnwFAAI8y3lF8KUJSzFglb82BA",
-              "file_unique_id": "AgADfAUAAjzLeUU",
-              "file_size": 408730
-            }
+              {
+                "file_id": "AgACAgEAAxkBAANwaK9se6Y48MGTp1pfV_ywJtwM0S4AAviuMRs8y4FFyJPq0VxVxhMBAAMCAAN4AAM2BA",
+                "file_unique_id": "AQAD-K4xGzzLgUV9",
+                "file_size": 109463,
+                "width": 789,
+                "height": 800
+              },
+              {
+                "file_id": "AgACAgEAAxkBAANwaK9se6Y48MGTp1pfV_ywJtwM0S4AAviuMRs8y4FFyJPq0VxVxhMBAAMCAAN5AAM2BA",
+                "file_unique_id": "AQAD-K4xGzzLgUV-",
+                "file_size": 157481,
+                "width": 1263,
+                "height": 1280
+              }
+            ]
           }
+        }
+      }
+    ],
+    "Telegram Trigger": [
+      {
+        "json": {
+          "message": {
+            "chat": {
+              "id": 1335515855,
+              "type": "private",
+              "username": "VextCode",
+              "first_name": "Vext"
+            },
+            "date": 1751331862,
+            "from": {
+              "id": 1335515855,
+              "is_bot": false,
+              "username": "VextCode",
+              "first_name": "Vext",
+              "language_code": "en"
+            },
+            "photo": [
+              {
+                "width": 60,
+                "height": 90,
+                "file_id": "AgACAgUAAxkBAAM6aGM0FnhSd_ThwreRtlPz1FwRHkIAAvrHMRuQCxlXPe0X3IyKdDkBAAMCAANzAAM2BA",
+                "file_size": 1512,
+                "file_unique_id": "AQAD-scxG5ALGVd4"
+              },
+              {
+                "width": 161,
+                "height": 241,
+                "file_id": "AgACAgUAAxkBAAM6aGM0FnhSd_ThwreRtlPz1FwRHkIAAvrHMRuQCxlXPe0X3IyKdDkBAAMCAANtAAM2BA",
+                "file_size": 7969,
+                "file_unique_id": "AQAD-scxG5ALGVdy"
+              }
+            ],
+            "message_id": 58
+          },
+          "update_id": 413913356
         }
       }
     ]
   },
-  "versionId": "3e74af0e-e8ab-47be-b9e2-504a00f2798e",
+  "versionId": "e2736779-65ba-4d86-b991-85b6cdc14a46",
   "triggerCount": 0,
   "shared": [
     {
