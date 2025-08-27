@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-08-15T18:12:56.636Z",
-  "updatedAt": "2025-08-27T19:48:16.000Z",
+  "updatedAt": "2025-08-27T20:53:28.000Z",
   "id": "VFvEQwvxizzpS1Wm",
   "name": "Consulting Financial Comparador Direcciones",
   "active": false,
@@ -814,8 +814,10 @@
       "parameters": {
         "documentId": {
           "__rl": true,
-          "value": "={{ $json.id }}",
-          "mode": "id"
+          "value": "1Y7M0FgYJKNAQcvjTz8_L-SjdxlePj8iSc8RSa7TmM9E",
+          "mode": "list",
+          "cachedResultName": "COPRECI DE MEXICO RUTAS",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Y7M0FgYJKNAQcvjTz8_L-SjdxlePj8iSc8RSa7TmM9E/edit?usp=drivesdk"
         },
         "sheetName": {
           "__rl": true,
@@ -830,7 +832,7 @@
       "typeVersion": 4.6,
       "position": [
         760,
-        -140
+        -380
       ],
       "id": "6cb503dc-0782-4f52-bea6-ccfbb982ad0b",
       "name": "Get row(s) in sheet",
@@ -839,7 +841,8 @@
           "id": "T1b495TNgv7GQdA8",
           "name": "Google Sheets Jumperaron"
         }
-      }
+      },
+      "onError": "continueRegularOutput"
     },
     {
       "parameters": {
@@ -854,7 +857,7 @@
       "typeVersion": 3,
       "position": [
         320,
-        -120
+        -360
       ],
       "id": "b74900ce-0428-4dde-9742-5a98742d0aec",
       "name": "Search files and folders",
@@ -878,7 +881,7 @@
           "conditions": [
             {
               "id": "d12488a0-0436-4991-88a5-1b1bd6cd17f9",
-              "leftValue": "={{ $json }}",
+              "leftValue": "={{ $json}}",
               "rightValue": "",
               "operator": {
                 "type": "object",
@@ -894,8 +897,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        500,
-        -120
+        520,
+        -360
       ],
       "id": "1893fb99-c1ba-473d-8d30-2d85f26d34ac",
       "name": "If2"
@@ -975,7 +978,7 @@
       "type": "n8n-nodes-base.splitInBatches",
       "typeVersion": 3,
       "position": [
-        1000,
+        1040,
         -140
       ],
       "id": "2f503659-0f98-4058-91f8-32391aaa9672",
@@ -1114,6 +1117,83 @@
       ],
       "id": "b37a8869-9455-4601-b3d3-5f3ab361def0",
       "name": "Edit Fields5"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1o0uEkkwqKdqz4RTZAZ6f2WpFG14AafBpCXcDUSdSxDg",
+          "mode": "list",
+          "cachedResultName": "prueba rutas juntas",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1o0uEkkwqKdqz4RTZAZ6f2WpFG14AafBpCXcDUSdSxDg/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1o0uEkkwqKdqz4RTZAZ6f2WpFG14AafBpCXcDUSdSxDg/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Empresa",
+              "lookupValue": "={{ $json.EMPRESA }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        540,
+        -120
+      ],
+      "id": "072a1ca5-7416-4565-91cb-d98becff2bb6",
+      "name": "Get row(s) in sheet1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "T1b495TNgv7GQdA8",
+          "name": "Google Sheets Jumperaron"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "url": "https://maps.googleapis.com/maps/api/distancematrix/json",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "origins",
+              "value": "={{$items(\"Geocode Candidato\")[0].json.results[0].geometry.location.lat\n  + \",\" +\n  $items(\"Geocode Candidato\")[0].json.results[0].geometry.location.lng}}"
+            },
+            {
+              "name": "destinations",
+              "value": "={{ $json.latitud }}, {{ $json.longitud }}"
+            },
+            {
+              "name": "key",
+              "value": "AIzaSyDBsA-93QjipM-2zgXhGYq1VGeBbwqUVUU"
+            },
+            {
+              "name": "units",
+              "value": "metric"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1320,
+        -460
+      ],
+      "id": "9bdb67d8-636a-49e1-ac14-3ae5b97ab576",
+      "name": "Calcular Distancia2"
     }
   ],
   "connections": {
@@ -1372,7 +1452,7 @@
       "main": [
         [
           {
-            "node": "Search files and folders",
+            "node": "Get row(s) in sheet1",
             "type": "main",
             "index": 0
           }
@@ -1399,13 +1479,7 @@
             "index": 0
           }
         ],
-        [
-          {
-            "node": "Edit Fields2",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "Calcular Distancia1": {
@@ -1439,13 +1513,7 @@
     },
     "Get row(s) in sheet": {
       "main": [
-        [
-          {
-            "node": "Loop Over Items1",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "If3": {
@@ -1494,6 +1562,17 @@
           }
         ]
       ]
+    },
+    "Get row(s) in sheet1": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -1507,13 +1586,13 @@
     "When Executed by Another Workflow": [
       {
         "json": {
-          "direccion_candidato": "C. El Eden 2, Paraíso, 45690 Las Pintas, Jal.",
+          "direccion_candidato": "Paraíso, 45690 Las Pintas, Jal.",
           "chat_id": 1526474745
         }
       }
     ]
   },
-  "versionId": "b0292017-7bca-486d-b6a8-74a94c211cb9",
+  "versionId": "05f0ab19-cbc2-41e6-b6d5-0272159c95e1",
   "triggerCount": 0,
   "shared": [
     {
