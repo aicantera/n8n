@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-08-25T19:12:28.603Z",
-  "updatedAt": "2025-08-27T21:49:04.000Z",
+  "updatedAt": "2025-08-27T23:05:52.000Z",
   "id": "igPri1apVIhK5QNC",
   "name": "Prueba Flujo OCR",
   "active": false,
@@ -44,8 +44,8 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 2,
       "position": [
-        -440,
-        620
+        1100,
+        20
       ],
       "id": "22a968b3-57b0-452c-a6dd-a04e67197f30",
       "name": "AI Agent",
@@ -151,8 +151,8 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.2,
       "position": [
-        -520,
-        780
+        1060,
+        220
       ],
       "id": "40b52f9c-3eb5-436f-97a6-8e538b752586",
       "name": "OpenAI Chat Model",
@@ -329,8 +329,8 @@
       "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
       "typeVersion": 1.3,
       "position": [
-        -380,
-        820
+        1140,
+        380
       ],
       "id": "cfc93858-2f64-4a58-bb56-64c3e9f810e5",
       "name": "Simple Memory"
@@ -523,8 +523,8 @@
       "name": "Telegram Trigger",
       "type": "n8n-nodes-base.telegramTrigger",
       "position": [
-        500,
-        -80
+        580,
+        -460
       ],
       "webhookId": "b957dd8b-8f10-40e9-a041-56b3f7a176b9",
       "typeVersion": 1.2,
@@ -559,8 +559,8 @@
       "name": "Clean Input Data",
       "type": "n8n-nodes-base.set",
       "position": [
-        720,
-        -80
+        800,
+        -460
       ],
       "typeVersion": 3.4
     },
@@ -573,8 +573,8 @@
       "name": "get file",
       "type": "n8n-nodes-base.telegram",
       "position": [
-        940,
-        -80
+        1020,
+        -460
       ],
       "webhookId": "089cb9a3-a383-4e1d-b732-b877833ef538",
       "typeVersion": 1.2,
@@ -597,8 +597,8 @@
       "name": "Telegram",
       "type": "n8n-nodes-base.telegram",
       "position": [
-        1980,
-        -80
+        1920,
+        -360
       ],
       "webhookId": "1c599e35-fb24-4cae-9177-61fa09e0b5ca",
       "typeVersion": 1.2
@@ -612,8 +612,8 @@
       "name": "Google Gemini Chat Model",
       "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
       "position": [
-        1480,
-        140
+        1420,
+        -260
       ],
       "typeVersion": 1
     },
@@ -625,8 +625,8 @@
       "name": "Replace",
       "type": "n8n-nodes-base.code",
       "position": [
-        1760,
-        -80
+        1700,
+        -360
       ],
       "typeVersion": 2
     },
@@ -636,8 +636,8 @@
       "name": "Tesseract OCR",
       "type": "n8n-nodes-tesseractjs.tesseractNode",
       "position": [
-        1160,
-        -80
+        1240,
+        -460
       ],
       "typeVersion": 1
     },
@@ -653,10 +653,31 @@
       "name": "AI Agent1",
       "type": "@n8n/n8n-nodes-langchain.agent",
       "position": [
-        1380,
-        -80
+        1400,
+        -460
       ],
       "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "operation": "sendVideo",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1740,
+        -220
+      ],
+      "id": "bca2da6c-e3f5-4772-9021-55211377879d",
+      "name": "Send a video",
+      "webhookId": "c64ae4cf-9650-4ce3-b750-fd5a16859a2c",
+      "credentials": {
+        "telegramApi": {
+          "id": "qBBCv0YcYdci711O",
+          "name": "Bot_RentabilidadExcel"
+        }
+      }
     }
   ],
   "connections": {
@@ -673,7 +694,13 @@
     },
     "Texto": {
       "main": [
-        []
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     },
     "Descargar audio": {
@@ -689,7 +716,13 @@
     },
     "Transcribe audio": {
       "main": [
-        []
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     },
     "OpenAI Chat Model": {
@@ -797,7 +830,13 @@
     },
     "HTTP Request OCR": {
       "main": [
-        []
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     },
     "HTTP Request - Guardar archivo en Mistral1": {
@@ -871,6 +910,17 @@
         [
           {
             "node": "Replace",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request OCR1": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
             "type": "main",
             "index": 0
           }
@@ -991,7 +1041,7 @@
       }
     ]
   },
-  "versionId": "6dc91c19-5324-44cc-b40c-f0cf8f08914f",
+  "versionId": "3a00aec9-1ee2-4334-b60f-2f54002bc598",
   "triggerCount": 0,
   "shared": [
     {
