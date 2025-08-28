@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-08-28T00:23:36.446Z",
-  "updatedAt": "2025-08-28T01:16:12.000Z",
+  "updatedAt": "2025-08-28T04:29:36.000Z",
   "id": "SPyRYxJsTB1Th5DA",
   "name": "carniceria don rafa",
   "active": true,
@@ -139,8 +139,8 @@
       "type": "n8n-nodes-base.googleSheetsTool",
       "typeVersion": 4.6,
       "position": [
-        120,
-        320
+        20,
+        340
       ],
       "id": "33763b08-f04e-481a-9107-db16120646da",
       "name": "obtener_usuarios",
@@ -156,8 +156,8 @@
       "type": "@n8n/n8n-nodes-langchain.toolCalculator",
       "typeVersion": 1,
       "position": [
-        240,
-        320
+        480,
+        360
       ],
       "id": "9b7a305c-7f5c-41fc-858f-9d25f32b948a",
       "name": "calculadora"
@@ -237,6 +237,140 @@
       ],
       "id": "034dca1b-b0a0-4e0b-8131-e009ddddab1a",
       "name": "No Operation, do nothing"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1XEsCbSZ8fNhFBWGh5raOvOQ90cgIug_4L4L1klen5xE",
+          "mode": "list",
+          "cachedResultName": "San rafa carnes",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1XEsCbSZ8fNhFBWGh5raOvOQ90cgIug_4L4L1klen5xE/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1568796731,
+          "mode": "list",
+          "cachedResultName": "productos_carniceria",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1XEsCbSZ8fNhFBWGh5raOvOQ90cgIug_4L4L1klen5xE/edit#gid=1568796731"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.6,
+      "position": [
+        160,
+        340
+      ],
+      "id": "bd6cb15e-09de-4303-81a4-b80b2a38d7ba",
+      "name": "obtener_precios",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "VrznAZQXjQh9WpvY",
+          "name": "Google Sheets - Cantera"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1XEsCbSZ8fNhFBWGh5raOvOQ90cgIug_4L4L1klen5xE",
+          "mode": "list",
+          "cachedResultName": "San rafa carnes",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1XEsCbSZ8fNhFBWGh5raOvOQ90cgIug_4L4L1klen5xE/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1840645813,
+          "mode": "list",
+          "cachedResultName": "pedidos_carniceria",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1XEsCbSZ8fNhFBWGh5raOvOQ90cgIug_4L4L1klen5xE/edit#gid=1840645813"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('id', `id auto incrementable`, 'string') }}",
+            "pedido json": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('pedido_json', `estructura en json del resumen del pedidos, producto, precio, kilos y total calculado`, 'string') }}",
+            "total": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('total', `total general del pedido tomando en cuenta todos los productos, la cantidad de kilos y el precio por kilo de cada uno `, 'string') }}",
+            "estatus": "activo",
+            "usuario_id": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('usuario_id', `id de usuario obtenido de la primera interacción`, 'string') }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "pedido json",
+              "displayName": "pedido json",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "total",
+              "displayName": "total",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "estatus",
+              "displayName": "estatus",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "usuario_id",
+              "displayName": "usuario_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.6,
+      "position": [
+        320,
+        340
+      ],
+      "id": "86cdff19-f68f-4af6-945e-ea137a77111d",
+      "name": "Append row in sheet in Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "VrznAZQXjQh9WpvY",
+          "name": "Google Sheets - Cantera"
+        }
+      }
     }
   ],
   "connections": {
@@ -338,6 +472,28 @@
           }
         ]
       ]
+    },
+    "obtener_precios": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet in Google Sheets": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -355,9 +511,9 @@
     "Telegram Trigger": [
       {
         "json": {
-          "update_id": 291253556,
+          "update_id": 291253562,
           "message": {
-            "message_id": 6,
+            "message_id": 20,
             "from": {
               "id": 775456693,
               "is_bot": false,
@@ -371,14 +527,14 @@
               "last_name": "Correa",
               "type": "private"
             },
-            "date": 1756342820,
-            "text": "hola"
+            "date": 1756355216,
+            "text": "generame nuevamente el pedido"
           }
         }
       }
     ]
   },
-  "versionId": "e384551d-3f8f-49c4-9f37-419e11a4fde1",
+  "versionId": "4cef6bb5-88eb-4e39-b894-3d28334fcca0",
   "triggerCount": 2,
   "shared": [
     {
