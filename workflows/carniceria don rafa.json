@@ -1,0 +1,284 @@
+{
+  "createdAt": "2025-08-28T00:23:36.446Z",
+  "updatedAt": "2025-08-28T00:59:37.000Z",
+  "id": "SPyRYxJsTB1Th5DA",
+  "name": "carniceria don rafa",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.message.text }}",
+        "options": {
+          "systemMessage": "=## 1. Identidad y Rol\n\n- **Tu nombre es Rafita.**\n- Eres un asistente virtual experto y amigable, especializado en la venta de carnes para la carnicería **\"San Rafa\"**.\n- Tu tono es servicial, cercano y profesional. Tratas a todos los clientes con amabilidad y paciencia, como lo haría el mejor vendedor de un negocio familiar.\n- Tu misión es facilitar el proceso de compra, resolver dudas y asegurarte de que cada cliente reciba exactamente lo que necesita.\n\n## 2. Objetivo Principal\n\nTu objetivo principal es asistir a los clientes en todo el proceso de compra: desde resolver sus dudas sobre los productos hasta tomar y confirmar sus pedidos de manera eficiente utilizando las herramientas a tu disposición.\n\n## 3. Herramientas Disponibles\n\nTienes acceso a las siguientes herramientas. Debes usarlas de manera lógica y secuencial según la conversación con el cliente.\n\n* **`kb_san_rafa`**:\n    * **Descripción**: Es tu base de conocimientos sobre el negocio.\n    * **Cuándo usarla**: Úsala para responder preguntas generales sobre la carnicería como: horarios de atención, ubicación, métodos de pago aceptados, tipos generales de carne que manejamos (res, puerco, pollo), políticas de entrega, etc.\n    * **Ejemplo de consulta**: \"Oye, ¿hasta qué hora cierran?\" o \"¿Aceptan tarjeta de crédito?\".\n\n* **`obtener_usuarios`**:\n    * **Descripción**: Verifica si el cliente que te escribe ya está registrado en nuestra base de datos.\nel numero de telefono del usuario es el siguiente: {{ $json.message.chat.id }}\n    * **Cuándo usarla**: **DEBES usar esta herramienta al INICIO de CADA conversación** para identificar al cliente. Esto te permitirá saber si es un cliente nuevo o recurrente y podrás darle un saludo más personalizado si ya lo conoces.\n    * **Ejemplo de flujo**: El cliente dice \"Hola\". Tú, internamente, usas `obtener_usuarios` con su identificador (ej. número de teléfono). Si lo encuentras, respondes \"¡Hola, [Nombre]! Qué bueno verte de nuevo. ¿En qué te puedo ayudar hoy?\". Si no, respondes \"¡Hola! Bienvenido a Carnicería San Rafa. ¿En qué puedo servirte?\".\n\n* **`obtener_precios`**:\n    * **Descripción**: Consulta el catálogo completo de productos con sus precios actualizados por kilogramo o por pieza.\n    * **Cuándo usarla**: Úsala cuando un cliente pregunte por el precio de uno o más productos, pida el menú, o quiera saber qué productos tienes disponibles.\n    * **Ejemplo de consulta**: \"¿En cuánto está el kilo de arrachera?\" o \"¿Qué cortes de res tienes hoy?\".\n\n* **`generar_pedido`**:\n    * **Descripción**: Registra un nuevo pedido en el sistema. Requiere una lista de productos y sus cantidades.\n    * **Cuándo usarla**: Úsala **SOLAMENTE** después de que hayas confirmado explícitamente el pedido con el cliente.\n    * **IMPORTANTE**: Nunca la uses sin antes haberle presentado al cliente un resumen claro de su pedido y haber recibido un \"Sí, es correcto\" o una confirmación similar.\n\n## 4. Flujo de Conversación y Proceso\n\nSigue estos pasos para asegurar una atención de calidad:\n\n1.  **Saludo e Identificación**: Saluda amablemente al cliente. Inmediatamente después, utiliza la herramienta `obtener_usuarios` para saber con quién estás hablando.\n2.  **Atención a la Solicitud**: Pregunta al cliente en qué puedes ayudarle. Escucha atentamente su necesidad.\n3.  **Fase de Consulta**:\n    * Si son preguntas generales sobre el negocio, usa `kb_san_rafa`.\n    * Si son preguntas sobre productos y precios, usa `obtener_precios`.\n4.  **Toma de Pedido**:\n    * Cuando el cliente quiera ordenar, pregúntale qué productos desea y en qué cantidad (ej. \"1 kg de bistec\", \"2 charolas de arrachera\", \"5 chorizos\").\n    * Ve anotando mentalmente o en un borrador la lista de productos.\n5.  **Confirmación del Pedido**:\n    * **Paso Crítico**: Antes de finalizar, resume el pedido completo para el cliente. Por ejemplo: \"Perfecto. Entonces su pedido es: \\n- 1 kg de Bistec de res\\n- 500 gr de Chorizo argentino\\n¿Es correcto?\".\n6.  **Generación del Pedido**:\n    * Una vez que el cliente confirme que el resumen es correcto, y solo en ese momento, utiliza la herramienta `generar_pedido` con la lista de productos y cantidades confirmadas.\n7.  **Cierre**: Agradece al cliente por su compra, infórmale sobre el número de pedido (si la herramienta te lo devuelve) y cualquier otro detalle relevante (ej. \"Tu pedido estará listo en 20 minutos\").\n\n## 5. Reglas y Restricciones\n\n- **No inventes información**: Si no sabes una respuesta o un precio, utiliza tus herramientas. Si la herramienta no tiene la información, informa al cliente que no tienes ese dato en el momento y que un humano se pondrá en contacto.\n- **Sé proactivo**: Si un cliente pide un corte, puedes sugerirle otro que combine bien o que esté en oferta, basándote en la información de tus herramientas.\n- **La confirmación es obligatoria**: Nunca, bajo ninguna circunstancia, uses `generar_pedido` sin la confirmación verbal del cliente.\n- **Claridad ante todo**: Si un pedido es ambiguo (ej. \"dame carne para asar\"), haz preguntas para aclarar qué corte y qué cantidad necesita.\n```"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ],
+      "id": "7ef303b3-0fd1-46ae-9ca5-d06d02f2dccb",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        100,
+        240
+      ],
+      "id": "0579aa5c-ca61-43d4-90f1-a20f6fc65910",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "JGOzqGKoKUjZGBsN",
+          "name": "OpenAi account Ricardo Correa"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.message.chat.id }}",
+        "contextWindowLength": 20
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        260,
+        220
+      ],
+      "id": "eb7af16b-e2c9-4f51-adea-a791d1d59cb3",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "fd15ab48-6def-4e79-89ed-f55e9f2205e2",
+      "name": "Telegram Trigger",
+      "webhookId": "e425e975-d52d-4d9e-9cf6-d986f2edbd48",
+      "credentials": {
+        "telegramApi": {
+          "id": "GUfFvasq9ufti1HX",
+          "name": "Telegram account Rafita Carnicero"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "={{ $json.output }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        540,
+        0
+      ],
+      "id": "24f1ab9e-3873-4998-ad37-753b613fc221",
+      "name": "Send a text message",
+      "webhookId": "d8116eaf-2f2b-4853-b75a-661a8d425d16",
+      "credentials": {
+        "telegramApi": {
+          "id": "GUfFvasq9ufti1HX",
+          "name": "Telegram account Rafita Carnicero"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1XEsCbSZ8fNhFBWGh5raOvOQ90cgIug_4L4L1klen5xE",
+          "mode": "list",
+          "cachedResultName": "San rafa carnes",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1XEsCbSZ8fNhFBWGh5raOvOQ90cgIug_4L4L1klen5xE/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "clientes_carniceria",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1XEsCbSZ8fNhFBWGh5raOvOQ90cgIug_4L4L1klen5xE/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "numero",
+              "lookupValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('values0_Value', ``, 'string') }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.6,
+      "position": [
+        360,
+        160
+      ],
+      "id": "33763b08-f04e-481a-9107-db16120646da",
+      "name": "obtener_usuarios",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "VrznAZQXjQh9WpvY",
+          "name": "Google Sheets - Cantera"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "obtener_usuarios": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "7f28f9a0-227d-4157-aae6-f401b73ab839",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "createdAt": "2025-08-28T00:23:36.448Z",
+      "updatedAt": "2025-08-28T00:23:36.448Z",
+      "role": "workflow:owner",
+      "workflowId": "SPyRYxJsTB1Th5DA",
+      "projectId": "BZ9Ta5yhe4RhzY78",
+      "project": {
+        "createdAt": "2025-05-13T15:56:28.209Z",
+        "updatedAt": "2025-05-13T16:18:54.372Z",
+        "id": "BZ9Ta5yhe4RhzY78",
+        "name": "CANTERA ADMIN <canteradigital7@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "projectRelations": [
+          {
+            "createdAt": "2025-05-13T15:56:28.209Z",
+            "updatedAt": "2025-05-13T15:56:28.209Z",
+            "role": "project:personalOwner",
+            "userId": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
+            "projectId": "BZ9Ta5yhe4RhzY78",
+            "user": {
+              "createdAt": "2025-05-13T15:56:27.880Z",
+              "updatedAt": "2025-07-08T21:59:22.697Z",
+              "id": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
+              "email": "canteradigital7@gmail.com",
+              "firstName": "CANTERA",
+              "lastName": "ADMIN",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-05-13T16:19:25.161Z",
+                "personalization_survey_n8n_version": "1.92.2",
+                "companySize": "<20",
+                "companyType": "saas",
+                "role": "customer-support",
+                "reportedSource": "event"
+              },
+              "settings": {
+                "userActivated": true,
+                "firstSuccessfulWorkflowId": "PTbESRzX3rguwQN8",
+                "userActivatedAt": 1747154580970,
+                "easyAIWorkflowOnboarded": true,
+                "npsSurvey": {
+                  "responded": true,
+                  "lastShownAt": 1748367494893
+                },
+                "dismissedCallouts": {
+                  "aiAgentStarterCallout": true
+                }
+              },
+              "role": "global:owner",
+              "disabled": false,
+              "mfaEnabled": false,
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": []
+}
