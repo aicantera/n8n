@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-08-28T00:23:36.446Z",
-  "updatedAt": "2025-08-28T04:29:36.000Z",
+  "updatedAt": "2025-08-28T22:59:32.000Z",
   "id": "SPyRYxJsTB1Th5DA",
   "name": "carniceria don rafa",
   "active": true,
@@ -228,17 +228,6 @@
       "name": "Schedule Trigger"
     },
     {
-      "parameters": {},
-      "type": "n8n-nodes-base.noOp",
-      "typeVersion": 1,
-      "position": [
-        100,
-        -380
-      ],
-      "id": "034dca1b-b0a0-4e0b-8131-e009ddddab1a",
-      "name": "No Operation, do nothing"
-    },
-    {
       "parameters": {
         "documentId": {
           "__rl": true,
@@ -364,13 +353,153 @@
         340
       ],
       "id": "86cdff19-f68f-4af6-945e-ea137a77111d",
-      "name": "Append row in sheet in Google Sheets",
+      "name": "generar_pedido",
       "credentials": {
         "googleSheetsOAuth2Api": {
           "id": "VrznAZQXjQh9WpvY",
           "name": "Google Sheets - Cantera"
         }
       }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1XEsCbSZ8fNhFBWGh5raOvOQ90cgIug_4L4L1klen5xE",
+          "mode": "list",
+          "cachedResultName": "San rafa carnes",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1XEsCbSZ8fNhFBWGh5raOvOQ90cgIug_4L4L1klen5xE/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "clientes_carniceria",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1XEsCbSZ8fNhFBWGh5raOvOQ90cgIug_4L4L1klen5xE/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        100,
+        -380
+      ],
+      "id": "00e436bc-7e0a-4558-9479-67d5045388ca",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "VrznAZQXjQh9WpvY",
+          "name": "Google Sheets - Cantera"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        320,
+        -380
+      ],
+      "id": "9e05732a-4be3-4b86-a6c8-015db931df45",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1XEsCbSZ8fNhFBWGh5raOvOQ90cgIug_4L4L1klen5xE",
+          "mode": "list",
+          "cachedResultName": "San rafa carnes",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1XEsCbSZ8fNhFBWGh5raOvOQ90cgIug_4L4L1klen5xE/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1840645813,
+          "mode": "list",
+          "cachedResultName": "pedidos_carniceria",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1XEsCbSZ8fNhFBWGh5raOvOQ90cgIug_4L4L1klen5xE/edit#gid=1840645813"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "usuario_id",
+              "lookupValue": "={{ $json.id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        540,
+        -360
+      ],
+      "id": "dfcbf096-610f-4fcf-8ec8-447b5cef57fc",
+      "name": "Get row(s) in sheet1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "VrznAZQXjQh9WpvY",
+          "name": "Google Sheets - Cantera"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e426c3d2-b0f8-452a-8b34-cc12fb7521bc",
+              "name": "Pedido",
+              "value": "={{ $json['pedido json'] }}",
+              "type": "string"
+            },
+            {
+              "id": "419ce590-9c38-4d92-bfa4-9e7501c88bee",
+              "name": "Total",
+              "value": "={{ $json.total }}",
+              "type": "string"
+            },
+            {
+              "id": "65cc81d3-3bb6-4199-9041-a1b0dbf4979a",
+              "name": "Estatus",
+              "value": "={{ $json.estatus }}",
+              "type": "string"
+            },
+            {
+              "id": "237074b1-1e23-4383-a708-e885c96b1e6e",
+              "name": "Nombre",
+              "value": "={{ $('Get row(s) in sheet').item.json.nombre }}",
+              "type": "string"
+            },
+            {
+              "id": "c7558611-c8b2-46ad-86aa-eebd11f7b652",
+              "name": "Telefono",
+              "value": "={{ $('Get row(s) in sheet').item.json.numero }}",
+              "type": "string"
+            },
+            {
+              "id": "6cbeefca-3e78-4cc6-9b46-6241d837f278",
+              "name": "Correo",
+              "value": "={{ $('Get row(s) in sheet').item.json.correo }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        760,
+        -360
+      ],
+      "id": "abe4b739-fa34-4df6-81fe-42c4403b9e52",
+      "name": "Edit Fields"
     }
   ],
   "connections": {
@@ -466,7 +595,7 @@
       "main": [
         [
           {
-            "node": "No Operation, do nothing",
+            "node": "Get row(s) in sheet",
             "type": "main",
             "index": 0
           }
@@ -484,7 +613,7 @@
         ]
       ]
     },
-    "Append row in sheet in Google Sheets": {
+    "generar_pedido": {
       "ai_tool": [
         [
           {
@@ -493,6 +622,45 @@
             "index": 0
           }
         ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Get row(s) in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        []
       ]
     }
   },
@@ -534,7 +702,7 @@
       }
     ]
   },
-  "versionId": "4cef6bb5-88eb-4e39-b894-3d28334fcca0",
+  "versionId": "09fdb002-e230-4c58-9998-2d8e49f6aab8",
   "triggerCount": 2,
   "shared": [
     {
