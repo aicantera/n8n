@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-08-15T18:12:56.636Z",
-  "updatedAt": "2025-08-28T00:04:04.000Z",
+  "updatedAt": "2025-08-28T21:00:10.000Z",
   "id": "VFvEQwvxizzpS1Wm",
   "name": "Consulting Financial Comparador Direcciones",
   "active": false,
@@ -812,99 +812,6 @@
     },
     {
       "parameters": {
-        "documentId": {
-          "__rl": true,
-          "value": "1Y7M0FgYJKNAQcvjTz8_L-SjdxlePj8iSc8RSa7TmM9E",
-          "mode": "list",
-          "cachedResultName": "COPRECI DE MEXICO RUTAS",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Y7M0FgYJKNAQcvjTz8_L-SjdxlePj8iSc8RSa7TmM9E/edit?usp=drivesdk"
-        },
-        "sheetName": {
-          "__rl": true,
-          "value": "gid=0",
-          "mode": "list",
-          "cachedResultName": "Hoja 1",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Y7M0FgYJKNAQcvjTz8_L-SjdxlePj8iSc8RSa7TmM9E/edit#gid=0"
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.googleSheets",
-      "typeVersion": 4.6,
-      "position": [
-        820,
-        -600
-      ],
-      "id": "6cb503dc-0782-4f52-bea6-ccfbb982ad0b",
-      "name": "Get row(s) in sheet",
-      "credentials": {
-        "googleSheetsOAuth2Api": {
-          "id": "T1b495TNgv7GQdA8",
-          "name": "Google Sheets Jumperaron"
-        }
-      },
-      "onError": "continueRegularOutput"
-    },
-    {
-      "parameters": {
-        "resource": "fileFolder",
-        "searchMethod": "query",
-        "queryString": "=name contains '{{ $json.EMPRESA }} RUTAS'",
-        "returnAll": true,
-        "filter": {},
-        "options": {}
-      },
-      "type": "n8n-nodes-base.googleDrive",
-      "typeVersion": 3,
-      "position": [
-        380,
-        -580
-      ],
-      "id": "b74900ce-0428-4dde-9742-5a98742d0aec",
-      "name": "Search files and folders",
-      "alwaysOutputData": true,
-      "credentials": {
-        "googleDriveOAuth2Api": {
-          "id": "qyLYDHqds4fDuWE4",
-          "name": "Google Drive Jumperaron"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "conditions": {
-          "options": {
-            "caseSensitive": true,
-            "leftValue": "",
-            "typeValidation": "strict",
-            "version": 2
-          },
-          "conditions": [
-            {
-              "id": "d12488a0-0436-4991-88a5-1b1bd6cd17f9",
-              "leftValue": "={{ $json}}",
-              "rightValue": "",
-              "operator": {
-                "type": "object",
-                "operation": "notEmpty",
-                "singleValue": true
-              }
-            }
-          ],
-          "combinator": "and"
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 2.2,
-      "position": [
-        580,
-        -580
-      ],
-      "id": "1893fb99-c1ba-473d-8d30-2d85f26d34ac",
-      "name": "If2"
-    },
-    {
-      "parameters": {
         "conditions": {
           "options": {
             "caseSensitive": true,
@@ -959,41 +866,6 @@
       ],
       "id": "b37a8869-9455-4601-b3d3-5f3ab361def0",
       "name": "Edit Fields5"
-    },
-    {
-      "parameters": {
-        "url": "https://maps.googleapis.com/maps/api/distancematrix/json",
-        "sendQuery": true,
-        "queryParameters": {
-          "parameters": [
-            {
-              "name": "origins",
-              "value": "={{$items(\"Geocode Candidato\")[0].json.results[0].geometry.location.lat\n  + \",\" +\n  $items(\"Geocode Candidato\")[0].json.results[0].geometry.location.lng}}"
-            },
-            {
-              "name": "destinations",
-              "value": "={{ $json.latitud }}, {{ $json.longitud }}"
-            },
-            {
-              "name": "key",
-              "value": "AIzaSyDBsA-93QjipM-2zgXhGYq1VGeBbwqUVUU"
-            },
-            {
-              "name": "units",
-              "value": "metric"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        1320,
-        -460
-      ],
-      "id": "9bdb67d8-636a-49e1-ac14-3ae5b97ab576",
-      "name": "Calcular Distancia2"
     },
     {
       "parameters": {
@@ -1408,34 +1280,6 @@
         ]
       ]
     },
-    "Search files and folders": {
-      "main": [
-        [
-          {
-            "node": "If2",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "If2": {
-      "main": [
-        [
-          {
-            "node": "Get row(s) in sheet",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        []
-      ]
-    },
-    "Get row(s) in sheet": {
-      "main": [
-        []
-      ]
-    },
     "If4": {
       "main": [
         [
@@ -1483,7 +1327,7 @@
       }
     ]
   },
-  "versionId": "61d42b3b-0d1f-4902-bd5c-49af3e1b6406",
+  "versionId": "13c62b92-abae-4541-be2a-0f85c1f2d9e5",
   "triggerCount": 0,
   "shared": [
     {
