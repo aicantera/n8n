@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-08-25T19:12:28.603Z",
-  "updatedAt": "2025-08-27T23:05:52.000Z",
+  "updatedAt": "2025-08-28T16:58:28.000Z",
   "id": "igPri1apVIhK5QNC",
   "name": "Prueba Flujo OCR",
   "active": false,
@@ -92,7 +92,7 @@
       "typeVersion": 3.4,
       "position": [
         100,
-        20
+        0
       ],
       "id": "b7aaf256-0eb3-4868-a491-69346d250b9f",
       "name": "Texto"
@@ -106,7 +106,7 @@
       "typeVersion": 1.2,
       "position": [
         100,
-        220
+        200
       ],
       "id": "4bbc9411-76de-484a-89c1-34aec87d5acb",
       "name": "Descargar audio",
@@ -128,7 +128,7 @@
       "typeVersion": 1.8,
       "position": [
         300,
-        220
+        200
       ],
       "id": "0e9d1ef1-3998-435f-afd7-84be6c275eab",
       "name": "Transcribe audio",
@@ -288,8 +288,8 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        100,
-        420
+        80,
+        460
       ],
       "id": "2488e8ce-8d3f-4379-bbf4-6eb0d0c31bff",
       "name": "Descargar documento",
@@ -309,8 +309,8 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        100,
-        620
+        80,
+        700
       ],
       "id": "b975e39b-65a7-4369-9642-6eb4f62dbbb6",
       "name": "Descargar imagen/foto",
@@ -337,44 +337,6 @@
     },
     {
       "parameters": {
-        "method": "POST",
-        "url": "https://api.mistral.ai/v1/files",
-        "authentication": "genericCredentialType",
-        "genericAuthType": "httpHeaderAuth",
-        "sendBody": true,
-        "contentType": "multipart-form-data",
-        "bodyParameters": {
-          "parameters": [
-            {
-              "name": "purpose",
-              "value": "ocr"
-            },
-            {
-              "parameterType": "formBinaryData",
-              "name": "file",
-              "inputDataFieldName": "data"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        300,
-        420
-      ],
-      "id": "58ab6ffa-ac05-442f-a696-4dbf5d7006ba",
-      "name": "HTTP Request - Guardar archivo en Mistral",
-      "credentials": {
-        "httpHeaderAuth": {
-          "id": "5mkReM30SuQKhse1",
-          "name": "Gael Mistral OCR"
-        }
-      }
-    },
-    {
-      "parameters": {
         "url": "=https://api.mistral.ai/v1/files/{{ $json.id }}/url",
         "authentication": "genericCredentialType",
         "genericAuthType": "httpHeaderAuth",
@@ -393,7 +355,8 @@
           "id": "5mkReM30SuQKhse1",
           "name": "Gael Mistral OCR"
         }
-      }
+      },
+      "disabled": true
     },
     {
       "parameters": {
@@ -413,7 +376,7 @@
       "typeVersion": 1.8,
       "position": [
         300,
-        860
+        960
       ],
       "id": "e8f1c34e-5894-48f1-8520-093d6cc3074f",
       "name": "Analyze image",
@@ -439,7 +402,7 @@
       "typeVersion": 4.2,
       "position": [
         720,
-        620
+        680
       ],
       "id": "4e463533-3875-4558-9d62-fcb09c9ef83c",
       "name": "HTTP Request OCR1",
@@ -477,7 +440,7 @@
       "typeVersion": 4.2,
       "position": [
         300,
-        620
+        680
       ],
       "id": "4d657280-7b3c-423f-a9cb-1901d44bceb9",
       "name": "HTTP Request - Guardar archivo en Mistral1",
@@ -499,7 +462,7 @@
       "typeVersion": 4.2,
       "position": [
         520,
-        620
+        680
       ],
       "id": "7b893a22-f409-4220-b3a3-41785c7b777b",
       "name": "HTTP Request1",
@@ -678,6 +641,196 @@
           "name": "Bot_RentabilidadExcel"
         }
       }
+    },
+    {
+      "parameters": {
+        "content": "## Image Reader",
+        "height": 620,
+        "width": 920,
+        "color": 4
+      },
+      "id": "92837467-55a3-4f4c-b7c2-17237adda3a4",
+      "name": "Sticky Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2200,
+        840
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpQueryAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"contents\": [\n    {\n      \"role\": \"user\",\n      \"parts\": [\n        {\n          \"inlineData\": {\n            \"mimeType\": \"image/jpeg\",\n            \"data\": \"{{ $json.data }}\"\n          }\n        },\n        {\n          \"text\": \"Extract text\"\n        }\n      ]\n    }\n  ]\n}",
+        "options": {}
+      },
+      "id": "9423dbd3-2235-403a-aeb3-dedfba93f1e4",
+      "name": "Gemini OCR",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        2280,
+        1160
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "operation": "binaryToPropery",
+        "options": {}
+      },
+      "id": "139048a0-acca-4233-8fb1-003389753926",
+      "name": "Extract from File",
+      "type": "n8n-nodes-base.extractFromFile",
+      "position": [
+        2960,
+        900
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## HTTP Gemini OCR Setting\n\nDefine Gemini Model on URL\n\nhttps://generativelanguage.googleapis.com/v1beta/models/[Gemini Model]:generateContent\n\nexample:\nhttps://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent\n\n...\n\nAuthentication\nGeneric Credential Type\n\nGeneric Auth Type\nQuery Auth\n\nQuery Auth\n+ Create new credential (take if from https://aistudio.google.com/)\n\n...\n\nBody Content Type\nJSON\n\nSpecify Body\nUsing JSON\n\nJSON\n{\n  \"contents\": [\n    {\n      \"role\": \"user\",\n      \"parts\": [\n        {\n          \"inlineData\": {\n            \"mimeType\": \"image/jpeg\",\n            \"data\": \"{{ $json.data }}\"\n          }\n        },\n        {\n          \"text\": \"Extract text\"\n        }\n      ]\n    }\n  ]\n}",
+        "height": 1060
+      },
+      "id": "9c54976d-1190-4fd3-8e5c-8764ef257b94",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1940,
+        840
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {
+          "download": true
+        }
+      },
+      "id": "b7e8d312-ceb2-4741-86e2-f782f78c17c1",
+      "name": "Telegram Trigger1",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "position": [
+        2280,
+        900
+      ],
+      "webhookId": "9b8e55dc-1389-435a-95b3-030d7e30ebce",
+      "typeVersion": 1.2
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c8cd1608-2326-401d-9c47-79a6a72f5fc7",
+              "name": "chatID",
+              "type": "number",
+              "value": "={{ $json.message.chat.id }}"
+            },
+            {
+              "id": "0f1a41cb-8630-4e10-b445-f6bbbcf91d33",
+              "name": "Image",
+              "type": "string",
+              "value": "={{ $json[\"message\"][\"photo\"][$json[\"message\"][\"photo\"].length - 1][\"file_id\"] }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "5db7f1ae-da53-4ced-bf47-b895aa0104e8",
+      "name": "Clean Input Data1",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        2500,
+        900
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "fileId": "={{ $json.Image.replace(/\\n/g, '') }}"
+      },
+      "id": "e4362697-0fc3-48a0-bb22-192cfbd784d5",
+      "name": "get file1",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        2720,
+        900
+      ],
+      "webhookId": "b812a0c8-e5f5-4969-9fad-a7b5b6e72dd9",
+      "typeVersion": 1.2,
+      "credentials": {
+        "telegramApi": {
+          "id": "qBBCv0YcYdci711O",
+          "name": "Bot_RentabilidadExcel"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Clean Input Data1').item.json.chatID }}",
+        "text": "={{ $json.output }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "97988c7a-a682-4ea4-92d2-34580a393b9b",
+      "name": "Telegram1",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        2720,
+        1160
+      ],
+      "webhookId": "8219e2f1-2393-40ee-9c84-88666b10d946",
+      "typeVersion": 1.2
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.mistral.ai/v1/files",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "purpose",
+              "value": "ocr"
+            },
+            {
+              "parameterType": "formBinaryData",
+              "name": "file",
+              "inputDataFieldName": "data"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        300,
+        440
+      ],
+      "id": "858ba3df-29a4-4701-8475-77d09f870d22",
+      "name": "HTTP Request - Guardar archivo en Mistral",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "5mkReM30SuQKhse1",
+          "name": "Gael Mistral OCR"
+        }
+      },
+      "disabled": true
     }
   ],
   "connections": {
@@ -806,17 +959,6 @@
         ]
       ]
     },
-    "HTTP Request - Guardar archivo en Mistral": {
-      "main": [
-        [
-          {
-            "node": "HTTP Request",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "HTTP Request": {
       "main": [
         [
@@ -921,6 +1063,72 @@
         [
           {
             "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini OCR": {
+      "main": [
+        [
+          {
+            "node": "Telegram1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "Gemini OCR",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Trigger1": {
+      "main": [
+        [
+          {
+            "node": "Clean Input Data1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clean Input Data1": {
+      "main": [
+        [
+          {
+            "node": "get file1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "get file1": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request - Guardar archivo en Mistral": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
             "type": "main",
             "index": 0
           }
@@ -1039,9 +1247,63 @@
           }
         }
       }
+    ],
+    "Telegram Trigger1": [
+      {
+        "json": {
+          "message": {
+            "chat": {
+              "id": 1335515855,
+              "type": "private",
+              "username": "VextCode",
+              "first_name": "Vext"
+            },
+            "date": 1752202117,
+            "from": {
+              "id": 1335515855,
+              "is_bot": false,
+              "username": "VextCode",
+              "first_name": "Vext",
+              "language_code": "en"
+            },
+            "photo": [
+              {
+                "width": 90,
+                "height": 47,
+                "file_id": "AgACAgUAAxkBAAN9aHB7hU8nKT7coClCdMyelOTFy-sAAsPKMRvnqolXYKE3ScdP6HABAAMCAANzAAM2BA",
+                "file_size": 1128,
+                "file_unique_id": "AQADw8oxG-eqiVd4"
+              },
+              {
+                "width": 320,
+                "height": 168,
+                "file_id": "AgACAgUAAxkBAAN9aHB7hU8nKT7coClCdMyelOTFy-sAAsPKMRvnqolXYKE3ScdP6HABAAMCAANtAAM2BA",
+                "file_size": 18516,
+                "file_unique_id": "AQADw8oxG-eqiVdy"
+              },
+              {
+                "width": 800,
+                "height": 420,
+                "file_id": "AgACAgUAAxkBAAN9aHB7hU8nKT7coClCdMyelOTFy-sAAsPKMRvnqolXYKE3ScdP6HABAAMCAAN4AAM2BA",
+                "file_size": 73842,
+                "file_unique_id": "AQADw8oxG-eqiVd9"
+              },
+              {
+                "width": 1200,
+                "height": 630,
+                "file_id": "AgACAgUAAxkBAAN9aHB7hU8nKT7coClCdMyelOTFy-sAAsPKMRvnqolXYKE3ScdP6HABAAMCAAN5AAM2BA",
+                "file_size": 86132,
+                "file_unique_id": "AQADw8oxG-eqiVd-"
+              }
+            ],
+            "message_id": 125
+          },
+          "update_id": 413913388
+        }
+      }
     ]
   },
-  "versionId": "3a00aec9-1ee2-4334-b60f-2f54002bc598",
+  "versionId": "d7227b06-ea0a-43ab-a00e-4b4cc7f6f248",
   "triggerCount": 0,
   "shared": [
     {
