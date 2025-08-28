@@ -1,0 +1,681 @@
+{
+  "createdAt": "2025-08-27T23:48:55.957Z",
+  "updatedAt": "2025-08-28T00:00:28.000Z",
+  "id": "D1JMPzYc4dMN30AZ",
+  "name": "Consulting Financial Comparador Rutas",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "0b7ca478-bae8-43f7-a20a-6afc5130be51",
+              "name": "EMPRESA",
+              "value": "No aplica",
+              "type": "string"
+            },
+            {
+              "id": "2bd0cabb-064e-484f-bec8-01d4d3332ef2",
+              "name": "PUESTO",
+              "value": "No aplica",
+              "type": "string"
+            },
+            {
+              "id": "45b006c3-d11b-4c02-849d-e5848bc4d90a",
+              "name": "UBICACIÓN",
+              "value": "No aplica",
+              "type": "string"
+            },
+            {
+              "id": "d91d101b-84a7-4c21-b432-02f12d23189b",
+              "name": "GIRO",
+              "value": "No aplica",
+              "type": "string"
+            },
+            {
+              "id": "2e5ffa72-8dd4-4e7a-884a-7f240e0ffdba",
+              "name": "PERFIL",
+              "value": "No aplica",
+              "type": "string"
+            },
+            {
+              "id": "2be09105-2e8b-481c-b8f7-d0d2617a7b3d",
+              "name": "SUELDO SEMANAL LIBRE",
+              "value": "No aplica",
+              "type": "string"
+            },
+            {
+              "id": "8d73484e-4a6a-4a5f-a3fe-88cedf431119",
+              "name": "BENEFICIOS",
+              "value": "No aplica",
+              "type": "string"
+            },
+            {
+              "id": "3c5da0f2-5963-4462-ad2a-8a9895139464",
+              "name": "HORARIO",
+              "value": "No aplica",
+              "type": "string"
+            },
+            {
+              "id": "b15f06c4-e78d-4fb6-86e2-407f577a7b0d",
+              "name": "TRANSPORTE",
+              "value": "No aplica",
+              "type": "string"
+            },
+            {
+              "id": "71bad80e-5719-4d4c-a24d-202463766e44",
+              "name": "OBSERVACIONES",
+              "value": "No aplica",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1980,
+        80
+      ],
+      "id": "7a9c408b-5d73-4b35-8261-1b2bd1a3f602",
+      "name": "Edit Fields6"
+    },
+    {
+      "parameters": {
+        "url": "https://maps.googleapis.com/maps/api/distancematrix/json",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "origins",
+              "value": "={{ $('Start').item.json.UBICACION_CANDIDATO }}"
+            },
+            {
+              "name": "destinations",
+              "value": "={{ $json.latitud }}, {{ $json.longitud }}"
+            },
+            {
+              "name": "key",
+              "value": "AIzaSyDBsA-93QjipM-2zgXhGYq1VGeBbwqUVUU"
+            },
+            {
+              "name": "units",
+              "value": "metric"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1520,
+        -120
+      ],
+      "id": "22f8fe48-68d6-4cb6-ad31-7d98ff9626d4",
+      "name": "Calcular Distancia1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "c587ca31-072e-45c4-b799-1abc5847cb20",
+              "leftValue": "={{$node[\"Calcular Distancia1\"].json[\"rows\"][0][\"elements\"][0][\"distance\"][\"value\"]}}",
+              "rightValue": 1000,
+              "operator": {
+                "type": "number",
+                "operation": "lte"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1740,
+        -120
+      ],
+      "id": "a6e15eae-1b50-429b-965e-b96caf1f996f",
+      "name": "If3"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1o0uEkkwqKdqz4RTZAZ6f2WpFG14AafBpCXcDUSdSxDg",
+          "mode": "list",
+          "cachedResultName": "prueba rutas juntas",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1o0uEkkwqKdqz4RTZAZ6f2WpFG14AafBpCXcDUSdSxDg/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1o0uEkkwqKdqz4RTZAZ6f2WpFG14AafBpCXcDUSdSxDg/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Empresa",
+              "lookupValue": "={{ $json.EMPRESA }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        440,
+        -120
+      ],
+      "id": "072a1ca5-7416-4565-91cb-d98becff2bb6",
+      "name": "Get row(s) in sheet1",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "T1b495TNgv7GQdA8",
+          "name": "Google Sheets Jumperaron"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "307056d1-f725-4857-b917-eb953222a935",
+              "leftValue": "={{ $json}}",
+              "rightValue": "",
+              "operator": {
+                "type": "object",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        660,
+        -120
+      ],
+      "id": "9779f14c-f5ed-4960-8957-47dbd25f604b",
+      "name": "If5"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        1040,
+        -140
+      ],
+      "id": "2f503659-0f98-4058-91f8-32391aaa9672",
+      "name": "Loop Over Items1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "dee78352-e3e3-4170-ac8b-872184013843",
+              "name": "EMPRESA",
+              "value": "={{ $('Start').item.json.EMPRESA }}",
+              "type": "string"
+            },
+            {
+              "id": "be617d07-0ed7-4958-8561-c2988d3fc8de",
+              "name": "PUESTO",
+              "value": "={{ $('Start').item.json.PUESTO }}",
+              "type": "string"
+            },
+            {
+              "id": "e94873b0-06cb-4f1e-acdc-9d7c6001044b",
+              "name": "UBICACIÓN",
+              "value": "={{ $('Start').item.json.UBICACION }}",
+              "type": "string"
+            },
+            {
+              "id": "f9e7f5a9-33ac-423b-a167-2b7fc2bdacda",
+              "name": "GIRO",
+              "value": "={{ $('Start').item.json.GIRO }}",
+              "type": "string"
+            },
+            {
+              "id": "28277179-ceb9-4516-8953-d37787a3553b",
+              "name": "PERFIL",
+              "value": "={{ $('Start').item.json.PERFIL }}",
+              "type": "string"
+            },
+            {
+              "id": "50c642d3-5b49-455b-ac5c-08a1084176c7",
+              "name": "SUELDO SEMANAL LIBRE",
+              "value": "={{ $('Start').item.json.SUELDO_SEMANAL_LIBRE }}",
+              "type": "string"
+            },
+            {
+              "id": "8150c036-7a0b-4308-ad23-1ac04238af9b",
+              "name": "BENEFICIOS",
+              "value": "={{ $('Start').item.json.BENEFICIOS }}",
+              "type": "string"
+            },
+            {
+              "id": "f73eac05-6160-49af-865f-4e6ce4cf9c4d",
+              "name": "HORARIO",
+              "value": "={{ $('Start').item.json.HORARIO }}",
+              "type": "string"
+            },
+            {
+              "id": "c0fb6adf-5240-45b5-a5dc-5da6188ff8da",
+              "name": "TRANSPORTE",
+              "value": "={{ $('Start').item.json.TRANSPORTE }}",
+              "type": "string"
+            },
+            {
+              "id": "79c1c808-a0b2-43ae-b709-9e9ecafc6f53",
+              "name": "OBSERVACIONES",
+              "value": "={{ $('Start').item.json.OBSERVACIONES }}",
+              "type": "string"
+            },
+            {
+              "id": "f23e3753-6584-4045-b196-fed5fa0319f2",
+              "name": "duplicado",
+              "value": "se duplico",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2000,
+        -140
+      ],
+      "id": "ee9a01c8-1e70-4091-8baf-8377c115ce13",
+      "name": "Edit Fields4"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Run Once for All Items\n \n// Detecta si el objeto es del tipo \"ruta\"\nfunction esRuta(obj) {\n  // Tiene row_number o las claves características de ruta\n  const tieneClavesRuta =\n    Object.prototype.hasOwnProperty.call(obj, 'Ruta') &&\n    Object.prototype.hasOwnProperty.call(obj, 'latitud') &&\n    Object.prototype.hasOwnProperty.call(obj, 'longitud');\n \n  return (\n    Object.prototype.hasOwnProperty.call(obj, 'row_number') ||\n    tieneClavesRuta\n  );\n}\n \n// Detecta si el objeto es \"No aplica\"\nfunction esNoAplica(obj) {\n  const valor = (v) => (typeof v === 'string' ? v.trim().toLowerCase() : v);\n  // Regla principal: EMPRESA = \"No aplica\"\n  if (valor(obj.EMPRESA) === 'no aplica') return true;\n \n  // Opcional: si todos los campos principales son \"No aplica\"\n  const campos = [\n    'EMPRESA','PUESTO','UBICACIÓN','GIRO','PERFIL',\n    'SUELDO SEMANAL LIBRE','BENEFICIOS','HORARIO',\n    'TRANSPORTE','OBSERVACIONES'\n  ];\n  const hayCampos = campos.some(k => k in obj);\n  if (hayCampos) {\n    const todosNoAplica = campos\n      .filter(k => k in obj)\n      .every(k => valor(obj[k]) === 'no aplica');\n    if (todosNoAplica) return true;\n  }\n  return false;\n}\n \n// Construye el listado limpio a partir de los items que llegan del bucle\nconst listadoLimpio = [];\nfor (const item of items) {\n  const obj = item.json || {};\n  if (esRuta(obj)) continue;         // descarta rutas\n  if (esNoAplica(obj)) continue;     // descarta \"No aplica\"\n  listadoLimpio.push(obj);           // conserva el resto\n}\n \n// Devuelve en el formato que n8n espera\nreturn listadoLimpio.map(o => ({ json: o }));"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1280,
+        -220
+      ],
+      "id": "c622ad97-2764-4e84-a5df-b9fdc744adc9",
+      "name": "Code3"
+    },
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "EMPRESA",
+              "type": "any"
+            },
+            {
+              "name": "PUESTO",
+              "type": "any"
+            },
+            {
+              "name": "UBICACION",
+              "type": "any"
+            },
+            {
+              "name": "GIRO",
+              "type": "any"
+            },
+            {
+              "name": "PERFIL",
+              "type": "any"
+            },
+            {
+              "name": "BENEFICIOS",
+              "type": "any"
+            },
+            {
+              "name": "HORARIO",
+              "type": "any"
+            },
+            {
+              "name": "TRANSPORTE",
+              "type": "any"
+            },
+            {
+              "name": "OBSERVACIONES",
+              "type": "any"
+            },
+            {
+              "name": "SUELDO_SEMANAL_LIBRE",
+              "type": "any"
+            },
+            {
+              "name": "UBICACION_CANDIDATO",
+              "type": "any"
+            }
+          ]
+        }
+      },
+      "id": "14c7b24e-2ee9-44eb-9751-3b6e4ec29c00",
+      "typeVersion": 1.1,
+      "name": "Start",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "position": [
+        220,
+        -120
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "0b7ca478-bae8-43f7-a20a-6afc5130be51",
+              "name": "EMPRESA",
+              "value": "No aplica",
+              "type": "string"
+            },
+            {
+              "id": "2bd0cabb-064e-484f-bec8-01d4d3332ef2",
+              "name": "PUESTO",
+              "value": "No aplica",
+              "type": "string"
+            },
+            {
+              "id": "45b006c3-d11b-4c02-849d-e5848bc4d90a",
+              "name": "UBICACIÓN",
+              "value": "No aplica",
+              "type": "string"
+            },
+            {
+              "id": "d91d101b-84a7-4c21-b432-02f12d23189b",
+              "name": "GIRO",
+              "value": "No aplica",
+              "type": "string"
+            },
+            {
+              "id": "2e5ffa72-8dd4-4e7a-884a-7f240e0ffdba",
+              "name": "PERFIL",
+              "value": "No aplica",
+              "type": "string"
+            },
+            {
+              "id": "2be09105-2e8b-481c-b8f7-d0d2617a7b3d",
+              "name": "SUELDO SEMANAL LIBRE",
+              "value": "No aplica",
+              "type": "string"
+            },
+            {
+              "id": "8d73484e-4a6a-4a5f-a3fe-88cedf431119",
+              "name": "BENEFICIOS",
+              "value": "No aplica",
+              "type": "string"
+            },
+            {
+              "id": "3c5da0f2-5963-4462-ad2a-8a9895139464",
+              "name": "HORARIO",
+              "value": "No aplica",
+              "type": "string"
+            },
+            {
+              "id": "b15f06c4-e78d-4fb6-86e2-407f577a7b0d",
+              "name": "TRANSPORTE",
+              "value": "No aplica",
+              "type": "string"
+            },
+            {
+              "id": "71bad80e-5719-4d4c-a24d-202463766e44",
+              "name": "OBSERVACIONES",
+              "value": "No aplica",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        700,
+        140
+      ],
+      "id": "6d245576-e85c-4028-a8b1-460348d801e5",
+      "name": "Edit Fields"
+    }
+  ],
+  "connections": {
+    "Calcular Distancia1": {
+      "main": [
+        [
+          {
+            "node": "If3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items1": {
+      "main": [
+        [
+          {
+            "node": "Code3",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Calcular Distancia1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If3": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields4",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields4": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet1": {
+      "main": [
+        [
+          {
+            "node": "If5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If5": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields6": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code3": {
+      "main": [
+        []
+      ]
+    },
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {
+    "Start": [
+      {
+        "json": {
+          "EMPRESA": "COPRECI DE MEXICO",
+          "PUESTO": "OPERADOR DE PRODUCCION",
+          "UBICACION": "C. 1 736, COLÓN INDUSTRIAL, 44940 GUADALAJARA, JAL.",
+          "GIRO": "MANUFACTURA DE VALVULAS DE ESTUFA",
+          "PERFIL": "[\"✓ Ambos Sexos\",\"✓ Edad de 18 a 55 años\",\"✓ Escolaridad mínima Primaria\",\"✓ Sin Experiencia Laboral\",\"✓ Estatura mínima 150\"]",
+          "BENEFICIOS": "[\"Sueldo semanal $1,827 libres\",\"(descontando el Caja y Fondo de ahorro)\",\"Fondo de ahorro 8%\",\"Vales de despensa semanal $239\",\"Bono nocturno de $239\",\"Aguinaldo 20 días\",\"Caja de ahorro $20 por semana\",\"Aumentos de sueldo a los 6 y 12 meses\",\"Pago de Utilidades\",\"Bono de Puntualidad Catorcenal\",\"Bono de Asistencia Catorcenal\",\"Bono de Productividad Catorcenal\",\"Transporte de Personal\",\"Seguro de vida\",\"BONO DE PERMANENCIA DE $1,000 AL MES - Durante los primero 6 Meses\"]",
+          "HORARIO": "Se rola turnos cada semana, (no negociable a turnos fijos) » Lunes a sábado de 06:30 am a 02:30 pm » Lunes a sábado de 02:30 a 10:00 pm » Lunes a Sábado de 10:00 pm a 06:30 a.m. pág. 7 INFORMACIÓN CONFIDENCIAL CONSULTING FINANCIAL",
+          "TRANSPORTE": "Sí cuenta con transporte",
+          "OBSERVACIONES": "[]",
+          "UBICACION_CANDIDATO": "20.5547468,-103.3284089"
+        }
+      }
+    ]
+  },
+  "versionId": "53ea08ba-8233-40d0-8ab1-b6fbac09a4fe",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "createdAt": "2025-08-27T23:48:55.963Z",
+      "updatedAt": "2025-08-27T23:48:55.963Z",
+      "role": "workflow:owner",
+      "workflowId": "D1JMPzYc4dMN30AZ",
+      "projectId": "BZ9Ta5yhe4RhzY78",
+      "project": {
+        "createdAt": "2025-05-13T15:56:28.209Z",
+        "updatedAt": "2025-05-13T16:18:54.372Z",
+        "id": "BZ9Ta5yhe4RhzY78",
+        "name": "CANTERA ADMIN <canteradigital7@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "projectRelations": [
+          {
+            "createdAt": "2025-05-13T15:56:28.209Z",
+            "updatedAt": "2025-05-13T15:56:28.209Z",
+            "role": "project:personalOwner",
+            "userId": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
+            "projectId": "BZ9Ta5yhe4RhzY78",
+            "user": {
+              "createdAt": "2025-05-13T15:56:27.880Z",
+              "updatedAt": "2025-07-08T21:59:22.697Z",
+              "id": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
+              "email": "canteradigital7@gmail.com",
+              "firstName": "CANTERA",
+              "lastName": "ADMIN",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-05-13T16:19:25.161Z",
+                "personalization_survey_n8n_version": "1.92.2",
+                "companySize": "<20",
+                "companyType": "saas",
+                "role": "customer-support",
+                "reportedSource": "event"
+              },
+              "settings": {
+                "userActivated": true,
+                "firstSuccessfulWorkflowId": "PTbESRzX3rguwQN8",
+                "userActivatedAt": 1747154580970,
+                "easyAIWorkflowOnboarded": true,
+                "npsSurvey": {
+                  "responded": true,
+                  "lastShownAt": 1748367494893
+                },
+                "dismissedCallouts": {
+                  "aiAgentStarterCallout": true
+                }
+              },
+              "role": "global:owner",
+              "disabled": false,
+              "mfaEnabled": false,
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": []
+}
