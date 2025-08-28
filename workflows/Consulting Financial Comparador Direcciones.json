@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-08-15T18:12:56.636Z",
-  "updatedAt": "2025-08-27T22:56:17.000Z",
+  "updatedAt": "2025-08-27T23:59:26.000Z",
   "id": "VFvEQwvxizzpS1Wm",
   "name": "Consulting Financial Comparador Direcciones",
   "active": false,
@@ -319,7 +319,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        1040,
+        1260,
         280
       ],
       "id": "7eba5596-f1db-4f07-b115-1c42ef746bac",
@@ -332,7 +332,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -420,
+        -460,
         -560
       ],
       "id": "9b7734aa-ede7-44e9-8fa2-be4c8fe0f7ce",
@@ -505,7 +505,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        880,
+        860,
         480
       ],
       "id": "be652b59-dfca-4765-82e1-4922b934bfc8",
@@ -831,8 +831,8 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.6,
       "position": [
-        760,
-        -380
+        820,
+        -600
       ],
       "id": "6cb503dc-0782-4f52-bea6-ccfbb982ad0b",
       "name": "Get row(s) in sheet",
@@ -856,8 +856,8 @@
       "type": "n8n-nodes-base.googleDrive",
       "typeVersion": 3,
       "position": [
-        320,
-        -360
+        380,
+        -580
       ],
       "id": "b74900ce-0428-4dde-9742-5a98742d0aec",
       "name": "Search files and folders",
@@ -897,169 +897,11 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        520,
-        -360
+        580,
+        -580
       ],
       "id": "1893fb99-c1ba-473d-8d30-2d85f26d34ac",
       "name": "If2"
-    },
-    {
-      "parameters": {
-        "url": "https://maps.googleapis.com/maps/api/distancematrix/json",
-        "sendQuery": true,
-        "queryParameters": {
-          "parameters": [
-            {
-              "name": "origins",
-              "value": "={{$items(\"Geocode Candidato\")[0].json.results[0].geometry.location.lat\n  + \",\" +\n  $items(\"Geocode Candidato\")[0].json.results[0].geometry.location.lng}}"
-            },
-            {
-              "name": "destinations",
-              "value": "={{ $json.latitud }}, {{ $json.longitud }}"
-            },
-            {
-              "name": "key",
-              "value": "AIzaSyDBsA-93QjipM-2zgXhGYq1VGeBbwqUVUU"
-            },
-            {
-              "name": "units",
-              "value": "metric"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        1300,
-        -120
-      ],
-      "id": "22f8fe48-68d6-4cb6-ad31-7d98ff9626d4",
-      "name": "Calcular Distancia1"
-    },
-    {
-      "parameters": {
-        "conditions": {
-          "options": {
-            "caseSensitive": true,
-            "leftValue": "",
-            "typeValidation": "strict",
-            "version": 2
-          },
-          "conditions": [
-            {
-              "id": "c587ca31-072e-45c4-b799-1abc5847cb20",
-              "leftValue": "={{$node[\"Calcular Distancia1\"].json[\"rows\"][0][\"elements\"][0][\"distance\"][\"value\"]}}",
-              "rightValue": 1000,
-              "operator": {
-                "type": "number",
-                "operation": "lte"
-              }
-            }
-          ],
-          "combinator": "and"
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 2.2,
-      "position": [
-        1520,
-        -120
-      ],
-      "id": "a6e15eae-1b50-429b-965e-b96caf1f996f",
-      "name": "If3"
-    },
-    {
-      "parameters": {
-        "options": {}
-      },
-      "type": "n8n-nodes-base.splitInBatches",
-      "typeVersion": 3,
-      "position": [
-        1040,
-        -140
-      ],
-      "id": "2f503659-0f98-4058-91f8-32391aaa9672",
-      "name": "Loop Over Items1"
-    },
-    {
-      "parameters": {
-        "assignments": {
-          "assignments": [
-            {
-              "id": "dee78352-e3e3-4170-ac8b-872184013843",
-              "name": "EMPRESA",
-              "value": "={{ $('Edit Fields3').item.json.EMPRESA }}",
-              "type": "string"
-            },
-            {
-              "id": "be617d07-0ed7-4958-8561-c2988d3fc8de",
-              "name": "PUESTO",
-              "value": "={{ $('Edit Fields3').item.json.PUESTO }}",
-              "type": "string"
-            },
-            {
-              "id": "e94873b0-06cb-4f1e-acdc-9d7c6001044b",
-              "name": "UBICACIÓN",
-              "value": "={{ $('Edit Fields3').item.json['UBICACIÓN'] }}",
-              "type": "string"
-            },
-            {
-              "id": "f9e7f5a9-33ac-423b-a167-2b7fc2bdacda",
-              "name": "GIRO",
-              "value": "={{ $('Edit Fields3').item.json.GIRO }}",
-              "type": "string"
-            },
-            {
-              "id": "28277179-ceb9-4516-8953-d37787a3553b",
-              "name": "PERFIL",
-              "value": "={{ $('Edit Fields3').item.json.PERFIL }}",
-              "type": "string"
-            },
-            {
-              "id": "50c642d3-5b49-455b-ac5c-08a1084176c7",
-              "name": "SUELDO SEMANAL LIBRE",
-              "value": "={{ $('Edit Fields3').item.json['SUELDO SEMANAL LIBRE'] }}",
-              "type": "string"
-            },
-            {
-              "id": "8150c036-7a0b-4308-ad23-1ac04238af9b",
-              "name": "BENEFICIOS",
-              "value": "={{ $('Edit Fields3').item.json.BENEFICIOS }}",
-              "type": "string"
-            },
-            {
-              "id": "f73eac05-6160-49af-865f-4e6ce4cf9c4d",
-              "name": "HORARIO",
-              "value": "={{ $('Edit Fields3').item.json.HORARIO }}",
-              "type": "string"
-            },
-            {
-              "id": "c0fb6adf-5240-45b5-a5dc-5da6188ff8da",
-              "name": "TRANSPORTE",
-              "value": "={{ $('Edit Fields3').item.json.TRANSPORTE }}",
-              "type": "string"
-            },
-            {
-              "id": "79c1c808-a0b2-43ae-b709-9e9ecafc6f53",
-              "name": "OBSERVACIONES",
-              "value": "={{ $('Edit Fields3').item.json.OBSERVACIONES }}",
-              "type": "string"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
-      "position": [
-        1780,
-        -140
-      ],
-      "id": "ee9a01c8-1e70-4091-8baf-8377c115ce13",
-      "name": "Edit Fields4"
     },
     {
       "parameters": {
@@ -1120,49 +962,6 @@
     },
     {
       "parameters": {
-        "documentId": {
-          "__rl": true,
-          "value": "1o0uEkkwqKdqz4RTZAZ6f2WpFG14AafBpCXcDUSdSxDg",
-          "mode": "list",
-          "cachedResultName": "prueba rutas juntas",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1o0uEkkwqKdqz4RTZAZ6f2WpFG14AafBpCXcDUSdSxDg/edit?usp=drivesdk"
-        },
-        "sheetName": {
-          "__rl": true,
-          "value": "gid=0",
-          "mode": "list",
-          "cachedResultName": "Hoja 1",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1o0uEkkwqKdqz4RTZAZ6f2WpFG14AafBpCXcDUSdSxDg/edit#gid=0"
-        },
-        "filtersUI": {
-          "values": [
-            {
-              "lookupColumn": "Empresa",
-              "lookupValue": "={{ $json.EMPRESA }}"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.googleSheets",
-      "typeVersion": 4.6,
-      "position": [
-        440,
-        -120
-      ],
-      "id": "072a1ca5-7416-4565-91cb-d98becff2bb6",
-      "name": "Get row(s) in sheet1",
-      "alwaysOutputData": true,
-      "credentials": {
-        "googleSheetsOAuth2Api": {
-          "id": "T1b495TNgv7GQdA8",
-          "name": "Google Sheets Jumperaron"
-        }
-      },
-      "onError": "continueRegularOutput"
-    },
-    {
-      "parameters": {
         "url": "https://maps.googleapis.com/maps/api/distancematrix/json",
         "sendQuery": true,
         "queryParameters": {
@@ -1198,37 +997,152 @@
     },
     {
       "parameters": {
-        "conditions": {
-          "options": {
-            "caseSensitive": true,
-            "leftValue": "",
-            "typeValidation": "strict",
-            "version": 2
+        "workflowId": {
+          "__rl": true,
+          "value": "D1JMPzYc4dMN30AZ",
+          "mode": "list",
+          "cachedResultName": "Consulting Financial Comparador Rutas"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "EMPRESA": "={{ $json.EMPRESA }}",
+            "PUESTO": "={{ $('Edit Fields3').item.json.PUESTO }}",
+            "GIRO": "={{ $('Edit Fields3').item.json.GIRO }}",
+            "PERFIL": "={{ $('Edit Fields3').item.json.PERFIL }}",
+            "BENEFICIOS": "={{ $('Edit Fields3').item.json.BENEFICIOS }}",
+            "HORARIO": "={{ $('Edit Fields3').item.json.HORARIO }}",
+            "TRANSPORTE": "={{ $('Edit Fields3').item.json.TRANSPORTE }}",
+            "OBSERVACIONES": "={{ $('Edit Fields3').item.json.OBSERVACIONES }}",
+            "UBICACION": "={{ $json['UBICACIÓN'] }}",
+            "UBICACION_CANDIDATO": "={{$items(\"Geocode Candidato\")[0].json.results[0].geometry.location.lat   + \",\" +   $items(\"Geocode Candidato\")[0].json.results[0].geometry.location.lng}}",
+            "SUELDO_SEMANAL_LIBRE": "={{ $json['SUELDO SEMANAL LIBRE'] }}"
           },
-          "conditions": [
+          "matchingColumns": [
+            "EMPRESA",
+            "PUESTO",
+            "",
+            "GIRO",
+            "PERFIL",
+            "BENEFICIOS",
+            "HORARIO",
+            "TRANSPORTE",
+            "OBSERVACIONES"
+          ],
+          "schema": [
             {
-              "id": "307056d1-f725-4857-b917-eb953222a935",
-              "leftValue": "={{ $json}}",
-              "rightValue": "",
-              "operator": {
-                "type": "object",
-                "operation": "notEmpty",
-                "singleValue": true
-              }
+              "id": "EMPRESA",
+              "displayName": "EMPRESA",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "PUESTO",
+              "displayName": "PUESTO",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "UBICACION",
+              "displayName": "UBICACION",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "GIRO",
+              "displayName": "GIRO",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "PERFIL",
+              "displayName": "PERFIL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "BENEFICIOS",
+              "displayName": "BENEFICIOS",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "HORARIO",
+              "displayName": "HORARIO",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "TRANSPORTE",
+              "displayName": "TRANSPORTE",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "OBSERVACIONES",
+              "displayName": "OBSERVACIONES",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "SUELDO_SEMANAL_LIBRE",
+              "displayName": "SUELDO_SEMANAL_LIBRE",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "UBICACION_CANDIDATO",
+              "displayName": "UBICACION_CANDIDATO",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "removed": false
             }
           ],
-          "combinator": "and"
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
         },
         "options": {}
       },
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 2.2,
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
       "position": [
-        660,
+        520,
         -120
       ],
-      "id": "9779f14c-f5ed-4960-8957-47dbd25f604b",
-      "name": "If5"
+      "name": "Call Consulting Financial Comparador Rutas",
+      "id": "922a8fa9-3e4a-436d-ad59-1b32ac3ba016"
     }
   ],
   "connections": {
@@ -1487,7 +1401,7 @@
       "main": [
         [
           {
-            "node": "Get row(s) in sheet1",
+            "node": "Call Consulting Financial Comparador Rutas",
             "type": "main",
             "index": 0
           }
@@ -1517,61 +1431,9 @@
         []
       ]
     },
-    "Calcular Distancia1": {
-      "main": [
-        [
-          {
-            "node": "If3",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Loop Over Items1": {
-      "main": [
-        [],
-        [
-          {
-            "node": "Calcular Distancia1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Get row(s) in sheet": {
       "main": [
         []
-      ]
-    },
-    "If3": {
-      "main": [
-        [
-          {
-            "node": "Edit Fields4",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Loop Over Items1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Edit Fields4": {
-      "main": [
-        [
-          {
-            "node": "Loop Over Items1",
-            "type": "main",
-            "index": 0
-          }
-        ]
       ]
     },
     "If4": {
@@ -1592,29 +1454,11 @@
         ]
       ]
     },
-    "Get row(s) in sheet1": {
+    "Call Consulting Financial Comparador Rutas": {
       "main": [
         [
           {
-            "node": "If5",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "If5": {
-      "main": [
-        [
-          {
-            "node": "Loop Over Items1",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Edit Fields2",
+            "node": "Loop Over Items",
             "type": "main",
             "index": 0
           }
@@ -1639,7 +1483,7 @@
       }
     ]
   },
-  "versionId": "1d3f3b80-fc51-4dae-9918-b886f8219c77",
+  "versionId": "1ee39be1-f517-4af9-9eea-3b966ca6b7e5",
   "triggerCount": 0,
   "shared": [
     {
