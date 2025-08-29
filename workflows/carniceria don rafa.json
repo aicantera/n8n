@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-08-28T00:23:36.446Z",
-  "updatedAt": "2025-08-28T23:35:32.000Z",
+  "updatedAt": "2025-08-29T00:43:45.000Z",
   "id": "SPyRYxJsTB1Th5DA",
   "name": "carniceria don rafa",
   "active": true,
@@ -11,7 +11,7 @@
         "promptType": "define",
         "text": "={{ $json.message.text }}",
         "options": {
-          "systemMessage": "=# Prompt para Agente de Ventas: Rafita\n\n## 1. Identidad y Rol\n\n- **Tu nombre es Rafita.**\n- Eres un asistente virtual experto y amigable, especializado en la venta de carnes para la carnicería **\"San Rafa\"**.\n- Tu tono es servicial, cercano y profesional. Tratas a todos los clientes con amabilidad y paciencia, como lo haría el mejor vendedor de un negocio familiar.\n- Tu misión es facilitar el proceso de compra, resolver dudas y asegurarte de que cada cliente reciba exactamente lo que necesita.\n\n## 2. Objetivo Principal\n\nTu objetivo principal es asistir a los clientes en todo el proceso de compra: desde resolver sus dudas sobre los productos hasta tomar y confirmar sus pedidos de manera eficiente utilizando las herramientas a tu disposición.\n\n## 3. Herramientas Disponibles\n\nTienes acceso a las siguientes herramientas. Debes usarlas de manera lógica y secuencial según la conversación con el cliente.\n\n* **`kb_san_rafa`**:\n    * **Descripción**: Es tu base de conocimientos sobre el negocio.\n    * **Cuándo usarla**: Úsala para responder preguntas generales sobre la carnicería como: horarios de atención, ubicación, métodos de pago aceptados, tipos generales de carne que manejamos, políticas de entrega, etc.\n\n* **`obtener_usuarios`**:\n    * **Descripción**: Verifica si el cliente que te escribe ya está registrado en nuestra base de datos usando su número de teléfono. El número del usuario actual es: `{{ $json.message.chat.id }}`. El resultado de esta herramienta te devolverá un campo llamado **`id`** y otro con el nombre del cliente.\n    * **Cuándo usarla**: **DEBES usar esta herramienta al INICIO de CADA conversación** para identificar al cliente.\n    * **Acción clave**: Cuando la uses, saluda al cliente por su nombre, pero lo más importante es que **debes recordar y almacenar en tu memoria el valor del campo `id`. Este valor es crucial y lo necesitarás más adelante.**\n\n* **`obtener_precios`**:\n    * **Descripción**: Consulta el catálogo completo de productos con sus precios actualizados.\n    * **Cuándo usarla**: Úsala cuando un cliente pregunte por el precio de uno o más productos, pida el menú, o quiera saber qué productos tienes disponibles.\n\n* **`generar_pedido`**:\n    * **Descripción**: Registra un nuevo pedido en el sistema. Esta herramienta tiene un campo llamado `usuario_id`.\n    * **Instrucción Crítica**: Para el parámetro **`usuario_id`** de esta herramienta, **debes usar el valor del campo `id`** que obtuviste de la herramienta `obtener_usuarios` al principio de la conversación. **No uses el nombre del cliente, usa el `id` que guardaste en tu memoria.**\n    * **Cuándo usarla**: Úsala **SOLAMENTE** después de que hayas confirmado explícitamente el pedido con el cliente y hayas calculado el total.\n\n## 4. Flujo de Conversación y Proceso\n\nSigue estos pasos para asegurar una atención de calidad:\n\n1.  **Saludo e Identificación**: Saluda amablemente. Inmediatamente después, utiliza `obtener_usuarios`. Al recibir la respuesta, **guarda el valor del campo `id` en tu memoria** y saluda al cliente por su nombre.\n2.  **Atención a la Solicitud**: Pregunta al cliente en qué puedes ayudarle.\n3.  **Fase de Consulta**: Usa `kb_san_rafa` para dudas generales y `obtener_precios` para consultas de productos.\n4.  **Toma de Pedido**: Anota los productos y cantidades que el cliente desea.\n5.  **Confirmación y Cálculo**:\n    * Resume el pedido completo para el cliente.\n    * Usa la herramienta `calculadora` para obtener el monto total y preséntaselo en el resumen. Por ejemplo: \"Perfecto. Su pedido es: \\[Lista de productos]. El total es de $XXX.XX. ¿Es correcto?\".\n6.  **Generación del Pedido**:\n    * Una vez que el cliente confirme, utiliza la herramienta `generar_pedido`.\n    * Asegúrate de pasarle a la herramienta la lista de productos, el total y, lo más importante, **pasar el valor `id` (que guardaste al inicio) al campo `usuario_id` de la herramienta.**\n7.  **Cierre**: Agradece al cliente, infórmale sobre el número de pedido (si aplica), confirma el monto total y cualquier otro detalle relevante.\n\n## 5. Reglas y Restricciones\n\n-   **No inventes información**: Si no sabes algo, usa tus herramientas. Si aún no lo sabes, informa que un humano se pondrá en contacto.\n-   **Sé proactivo**: Sugiere productos complementarios o en oferta.\n-   **La confirmación es obligatoria**: Nunca uses `generar_pedido` sin la confirmación explícita del cliente.\n-   **El ID es la clave**: El valor del campo `id` de la consulta de usuario es el que debe ir en el campo `usuario_id` del pedido.\n\n---\nEl día de hoy es {{ $now.minus({ hours: 0 }).setLocale('es').toFormat(\"dd 'de' LLLL 'de' yyyy HH:mm\") }} hora de CDMX."
+          "systemMessage": "=# Prompt para Agente de Ventas: Rafita\n\n## 1. Identidad y Rol\n\n- **Tu nombre es Rafita.**\n- Eres un asistente virtual experto y amigable, especializado en la venta de carnes para la carnicería **\"San Rafa\"**.\n- Tu tono es servicial, cercano y profesional. Tratas a todos los clientes con amabilidad y paciencia.\n\n## 2. Objetivo Principal\n\nTu objetivo principal es asistir a los clientes en todo el proceso de compra, desde resolver sus dudas sobre los productos hasta tomar y confirmar sus pedidos de manera eficiente utilizando las herramientas a tu disposición.\n\n## 3. Herramientas Disponibles\n\nTienes acceso a las siguientes herramientas. Debes usarlas de manera lógica y secuencial.\n\n* **`kb_san_rafa`**:\n    * **Descripción**: Es tu base de conocimientos sobre el negocio (horarios, ubicación, etc.).\n    * **Cuándo usarla**: Para responder preguntas generales sobre la carnicería.\n\n* **`obtener_usuarios`**:\n    * **Descripción**: Verifica si un cliente ya está registrado en la base de datos.\n    * **Cuándo usarla**: **DEBES usar esta herramienta al INICIO de CADA conversación.**\n    * **Acción clave**: La respuesta de esta herramienta contiene varios datos del cliente. **Tu tarea es extraer el valor del campo `id` que se encuentra dentro de la respuesta (por ejemplo, en la imagen de la herramienta, el valor a extraer es \"1\"). Este es el ID de Cliente único y DEBES guardarlo en tu memoria para usarlo al crear el pedido.**\n\n* **`obtener_precios`**:\n    * **Descripción**: Consulta el catálogo completo de productos con sus precios.\n    * **Cuándo usarla**: Cuando un cliente pregunte por precios o productos disponibles.\n\n* **`generar_pedido`**:\n    * **Descripción**: Registra un nuevo pedido en el sistema. Esta herramienta requiere un parámetro llamado `usuario_id`.\n    * **Instrucción Crítica**: Para llenar el campo **`usuario_id`**, **debes usar el valor del campo `id` que extrajiste y guardaste de la herramienta `obtener_usuarios` al principio.** No uses el `chat_id` de Telegram ni el nombre del cliente. Si al principio obtuviste el `id` \"1\", aquí debes usar \"1\".\n\n## 4. Flujo de Conversación y Proceso\n\nSigue estos pasos para asegurar una atención de calidad:\n\n1.  **Saludo e Identificación**: Saluda amablemente. Inmediatamente después, utiliza `obtener_usuarios`. Al recibir la respuesta, **extrae el valor del campo `id` y guárdalo como el ID de Cliente para esta sesión.** Luego, saluda al cliente por su nombre.\n2.  **Atención a la Solicitud**: Pregunta al cliente en qué puedes ayudarle.\n3.  **Fase de Consulta**: Usa `kb_san_rafa` para dudas generales y `obtener_precios` para consultas de productos.\n4.  **Toma de Pedido**: Anota los productos y cantidades que el cliente desea.\n5.  **Confirmación y Cálculo**:\n    * Resume el pedido completo para el cliente.\n    * Usa la herramienta `calculadora` para obtener el monto total y preséntaselo en el resumen. Por ejemplo: \"Perfecto. Su pedido es: \\[Lista de productos]. El total es de $XXX.XX. ¿Es correcto?\".\n6.  **Generación del Pedido**:\n    * Una vez que el cliente confirme, utiliza la herramienta `generar_pedido`.\n    * Asegúrate de pasar a la herramienta la lista de productos, el total y, lo más importante, **pasar el ID de Cliente (que extrajiste en el paso 1) al campo `usuario_id` de la herramienta.**\n7.  **Cierre**: Agradece al cliente, infórmale sobre el número de pedido (si aplica), confirma el monto total y cualquier otro detalle relevante.\n\n## 5. Reglas y Restricciones\n\n-   **El ID es la clave**: El valor del campo `id` de la consulta de usuario es el que debe ir en el campo `usuario_id` del pedido.\n-   **No inventes información**: Usa siempre tus herramientas.\n-   **La confirmación es obligatoria**: Nunca uses `generar_pedido` sin la confirmación explícita del cliente.\n-  **No hables sobre algo que no tenga que ver con tus productos y servicios, evita hablar sobre religion, futbot, y temas fuera de tu conocimiento**\n\n---\nEl día de hoy es {{ $now.minus({ hours: 0 }).setLocale('es').toFormat(\"dd 'de' LLLL 'de' yyyy HH:mm\") }} hora de CDMX."
         }
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
@@ -115,7 +115,7 @@
           "values": [
             {
               "lookupColumn": "numero",
-              "lookupValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('values0_Value', ``, 'string') }}"
+              "lookupValue": "={{ $json.message.chat.id }}"
             }
           ]
         },
@@ -437,6 +437,7 @@
       ],
       "id": "dfcbf096-610f-4fcf-8ec8-447b5cef57fc",
       "name": "Get row(s) in sheet1",
+      "alwaysOutputData": true,
       "credentials": {
         "googleSheetsOAuth2Api": {
           "id": "VrznAZQXjQh9WpvY",
@@ -483,6 +484,12 @@
               "name": "Correo",
               "value": "={{ $('Get row(s) in sheet').item.json.correo }}",
               "type": "string"
+            },
+            {
+              "id": "e8a5ba3d-1ba1-4395-b5fc-0ac64c2a80d3",
+              "name": "created_at",
+              "value": "={{ $json.created_at }}",
+              "type": "string"
             }
           ]
         },
@@ -491,7 +498,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        760,
+        1140,
         -360
       ],
       "id": "abe4b739-fa34-4df6-81fe-42c4403b9e52",
@@ -509,7 +516,7 @@
       "type": "n8n-nodes-base.gmail",
       "typeVersion": 2.1,
       "position": [
-        1220,
+        1660,
         -360
       ],
       "id": "0099e7cc-8a7e-41f7-a58e-2ee8b1a350dd",
@@ -524,12 +531,12 @@
     },
     {
       "parameters": {
-        "jsCode": "// n8n Code Node (JavaScript)\n// Entrada: items[] con campos: Pedido (string JSON), Total, Estatus, Nombre, Telefono, Correo\n// Salida: un item por destinatario con { to, subject, html }\n\nfunction currencyMXN(n) {\n  const num = Number(n);\n  if (Number.isNaN(num)) return n;\n  return num.toLocaleString('es-MX', { style: 'currency', currency: 'MXN', maximumFractionDigits: 2 });\n}\n\n// Escapar texto simple para HTML\nfunction esc(s) {\n  return String(s ?? '')\n    .replace(/&/g, '&amp;')\n    .replace(/</g, '&lt;')\n    .replace(/>/g, '&gt;');\n}\n\n// Badge y fila por estatus\nconst STATUS_MAP = {\n  'activo':   { label: 'Activa',   class: 'badge badge--ok',    row: 'row row--ok' },\n  'por vencer': { label: 'Por vencer', class: 'badge badge--warn',  row: 'row row--warn' },\n  'vencido':  { label: 'Vencida',  class: 'badge badge--danger', row: 'row row--danger' },\n};\n\nfunction productosResumen(pedidoStr) {\n  try {\n    const obj = typeof pedidoStr === 'string' ? JSON.parse(pedidoStr) : pedidoStr;\n    const prods = Array.isArray(obj?.productos) ? obj.productos : [];\n    if (!prods.length) return '-';\n    return prods.map(p => `${p.nombre} (x${p.cantidad})`).join(', ');\n  } catch {\n    return '-';\n  }\n}\n\nfunction buildHTML(nombre, correo, pedidos) {\n  // Estadísticos por estatus\n  const counts = { activo: 0, 'por vencer': 0, vencido: 0 };\n  let totalSuma = 0;\n\n  // Pre-render filas\n  const rows = pedidos.map((p, idx) => {\n    const estatusKey = (String(p.Estatus || '').trim().toLowerCase());\n    const meta = STATUS_MAP[estatusKey] ?? { label: esc(p.Estatus || ''), class: 'badge', row: 'row' };\n    const totalNum = Number(p.Total);\n    if (!Number.isNaN(totalNum)) totalSuma += totalNum;\n    if (counts[estatusKey] !== undefined) counts[estatusKey]++;\n\n    return `\n      <tr class=\"${meta.row}\">\n        <td class=\"col col--idx\">${idx + 1}</td>\n        <td class=\"col col--status\"><span class=\"${meta.class}\">${esc(meta.label)}</span></td>\n        <td class=\"col col--total\">${currencyMXN(p.Total)}</td>\n        <td class=\"col col--productos\">${esc(productosResumen(p.Pedido))}</td>\n      </tr>\n    `;\n  }).join('');\n\n  const hoy = new Date().toLocaleDateString('es-MX', { year: 'numeric', month: 'long', day: '2-digit' });\n\n  return `<!DOCTYPE html>\n<html lang=\"es\">\n<head>\n<meta charset=\"UTF-8\" />\n<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\" />\n<title>Resumen de facturas - Carnicería San Rafa</title>\n<style>\n  :root{\n    --ok:#16a34a;        /* verde */\n    --ok-bg:#dcfce7;\n    --warn:#b45309;      /* ámbar */\n    --warn-bg:#fef3c7;\n    --danger:#b91c1c;    /* rojo */\n    --danger-bg:#fee2e2;\n    --text:#111827;\n    --muted:#6b7280;\n    --border:#e5e7eb;\n    --brand:#7c3aed;     /* acento */\n  }\n  body{\n    margin:0;\n    padding:0;\n    background:#f9fafb;\n    color:var(--text);\n    font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,Helvetica,Arial,\"Apple Color Emoji\",\"Segoe UI Emoji\";\n  }\n  .container{\n    max-width:720px;\n    margin:0 auto;\n    padding:24px 16px;\n  }\n  .card{\n    background:#fff;\n    border:1px solid var(--border);\n    border-radius:14px;\n    overflow:hidden;\n    box-shadow:0 1px 2px rgba(0,0,0,0.03);\n  }\n  .header{\n    padding:24px;\n    border-bottom:1px solid var(--border);\n    background:linear-gradient(180deg,#faf5ff,#fff);\n  }\n  .title{\n    margin:0 0 6px;\n    font-size:20px;\n    line-height:1.2;\n  }\n  .subtitle{\n    margin:0;\n    font-size:14px;\n    color:var(--muted);\n  }\n  .hello{\n    padding:20px 24px 0;\n    font-size:15px;\n  }\n  .hello strong{ color:var(--brand); }\n  .table-wrap{ padding:12px 16px 24px; }\n  table{\n    width:100%;\n    border-collapse:separate;\n    border-spacing:0;\n    border:1px solid var(--border);\n    border-radius:12px;\n    overflow:hidden;\n  }\n  thead th{\n    background:#f3f4f6;\n    text-align:left;\n    font-size:12px;\n    letter-spacing:.02em;\n    color:#374151;\n    padding:10px 12px;\n    border-bottom:1px solid var(--border);\n  }\n  .col--idx{ width:52px; }\n  .col--status{ width:130px; }\n  .col--total{ width:140px; white-space:nowrap; }\n  .col--productos{ width:auto; }\n  tbody td{\n    padding:12px;\n    font-size:14px;\n    vertical-align:top;\n    border-bottom:1px solid var(--border);\n    background:#fff;\n  }\n  tbody tr:last-child td{ border-bottom:none; }\n  .row--ok td{ background:linear-gradient(0deg,var(--ok-bg),var(--ok-bg)) }\n  .row--warn td{ background:linear-gradient(0deg,var(--warn-bg),var(--warn-bg)) }\n  .row--danger td{ background:linear-gradient(0deg,var(--danger-bg),var(--danger-bg)) }\n  .badge{\n    display:inline-block;\n    padding:4px 8px;\n    font-size:12px;\n    border-radius:999px;\n    border:1px solid var(--border);\n    background:#fff;\n  }\n  .badge--ok{\n    color:var(--ok);\n    border-color:rgba(22,163,74,0.25);\n    background:linear-gradient(0deg,#fff,var(--ok-bg));\n  }\n  .badge--warn{\n    color:var(--warn);\n    border-color:rgba(180,83,9,0.25);\n    background:linear-gradient(0deg,#fff,var(--warn-bg));\n  }\n  .badge--danger{\n    color:var(--danger);\n    border-color:rgba(185,28,28,0.25);\n    background:linear-gradient(0deg,#fff,var(--danger-bg));\n  }\n  .summary{\n    padding:8px 24px 20px;\n    font-size:14px;\n    color:#374151;\n  }\n  .summary .pill{\n    display:inline-block;\n    margin-right:8px;\n    margin-top:8px;\n    padding:6px 10px;\n    border-radius:999px;\n    background:#f3f4f6;\n    border:1px solid var(--border);\n    font-size:12px;\n  }\n  .footer{\n    border-top:1px solid var(--border);\n    padding:16px 24px 24px;\n    font-size:12px;\n    color:var(--muted);\n  }\n  .brand{\n    font-weight:700;\n    color:#111827;\n  }\n  .small{ font-size:12px; color:var(--muted); }\n</style>\n</head>\n<body>\n  <div class=\"container\">\n    <div class=\"card\">\n      <div class=\"header\">\n        <h1 class=\"title\">Resumen de facturas del mes</h1>\n        <p class=\"subtitle\">Enviado el ${esc(hoy)} &middot; ${esc(correo)}</p>\n      </div>\n\n      <div class=\"hello\">\n        Hola <strong>${esc(nombre)}</strong>, aquí Rafita de <span class=\"brand\">Carnicería San Rafa</span>.  \n        Te comparto el resumen de tus facturas de este mes.\n      </div>\n\n      <div class=\"summary\">\n        <span class=\"pill\">Activas: ${counts.activo}</span>\n        <span class=\"pill\">Por vencer: ${counts['por vencer']}</span>\n        <span class=\"pill\">Vencidas: ${counts.vencido}</span>\n        <span class=\"pill\">Total acumulado: <strong>${currencyMXN(totalSuma)}</strong></span>\n      </div>\n\n      <div class=\"table-wrap\">\n        <table role=\"table\" aria-label=\"Listado de facturas\">\n          <thead>\n            <tr>\n              <th class=\"col col--idx\">#</th>\n              <th class=\"col col--status\">Estatus</th>\n              <th class=\"col col--total\">Total</th>\n              <th class=\"col col--productos\">Productos</th>\n            </tr>\n          </thead>\n          <tbody>\n            ${rows}\n          </tbody>\n        </table>\n      </div>\n\n      <div class=\"footer\">\n        © ${new Date().getFullYear()} <span class=\"brand\">Carnicería San Rafa</span>.  \n        Sucursal Centro · Tel. 555-123-4567 · Horario: Lun-Dom 8:00–19:00.\n      </div>\n    </div>\n  </div>\n</body>\n</html>`;\n}\n\nconst input = items.map(i => i.json || {});\n// Agrupar por correo (un email por destinatario)\nconst byEmail = new Map();\nfor (const row of input) {\n  const correo = String(row.Correo || '').trim().toLowerCase() || 'sin_correo@local';\n  if (!byEmail.has(correo)) byEmail.set(correo, []);\n  byEmail.get(correo).push(row);\n}\n\n// Construir salida (un item por correo)\nconst out = [];\nfor (const [correo, pedidos] of byEmail.entries()) {\n  const nombre = pedidos[0]?.Nombre || 'Cliente';\n  const subject = `Tus facturas del mes - Carnicería San Rafa`;\n  const html = buildHTML(nombre, correo, pedidos);\n  out.push({ json: { to: correo, subject, html, nombre } });\n}\n\nreturn out;\n"
+        "jsCode": "// n8n Code Node (JavaScript)\n// Entrada: items[] con campos: Pedido (string JSON u objeto), Total, Estatus, Nombre, Telefono, Correo, created_at\n// Salida: un item por destinatario con { to, subject, html }\n\nfunction currencyMXN(n) {\n  const num = Number(n);\n  if (Number.isNaN(num)) return String(n ?? '');\n  return num.toLocaleString('es-MX', { style: 'currency', currency: 'MXN', maximumFractionDigits: 2 });\n}\n\nfunction esc(s) {\n  return String(s ?? '')\n    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');\n}\n\n// Normaliza estatus y estilos \"semáforo\"\nfunction statusMeta(estatus) {\n  const key = String(estatus || '').trim().toLowerCase();\n  if (key === 'activo') {\n    return { label: 'Activa', color: '#16a34a', bg: '#dcfce7', rowBg: '#ecfdf5' };\n  }\n  if (key === 'por vencer') {\n    return { label: 'Por vencer', color: '#b45309', bg: '#fef3c7', rowBg: '#fffbeb' };\n  }\n  if (key === 'vencido' || key === 'vencida') {\n    return { label: 'Vencida', color: '#b91c1c', bg: '#fee2e2', rowBg: '#fef2f2' };\n  }\n  return { label: estatus || '—', color: '#374151', bg: '#f3f4f6', rowBg: '#ffffff' };\n}\n\n// Soporta distintos formatos de productos y evita \"undefined\"\nfunction productosResumen(pedidoIn) {\n  let obj = pedidoIn;\n  try { if (typeof obj === 'string') obj = JSON.parse(obj); } catch { /* ignore */ }\n  const prods = Array.isArray(obj?.productos) ? obj.productos : [];\n  if (!prods.length) return '—';\n\n  const toQty = (p) => {\n    if (p.cantidad != null) return p.cantidad;\n    if (p.qty != null) return p.qty;\n    if (p.kilos != null) return p.kilos;\n    return '';\n  };\n\n  return prods.map(p => {\n    const nombre = p.nombre ?? p.producto ?? 'Producto';\n    const qty = toQty(p);\n    return `${nombre}${qty !== '' ? ` (x${qty})` : ''}`;\n  }).join(', ');\n}\n\n// === FILTRO DE MES ACTUAL (America/Mexico_City) ===\nfunction esDelMesActual(fechaStr) {\n  if (!fechaStr) return false;\n  // \"Ahora\" en zona MX\n  const ahoraLocalStr = new Date().toLocaleString('en-US', { timeZone: 'America/Mexico_City' });\n  const ahora = new Date(ahoraLocalStr);\n  // Intentar parsear created_at; si viene \"YYYY-MM-DD HH:mm:ss\", también lo toma.\n  const f = new Date(fechaStr);\n  if (isNaN(f)) return false;\n  return f.getFullYear() === ahora.getFullYear() && f.getMonth() === ahora.getMonth();\n}\n\n// === PLANTILLA CON CSS INLINE ===\nfunction buildHTML(nombre, correo, pedidos) {\n  // Contadores y suma\n  const counts = { activo: 0, 'por vencer': 0, vencido: 0 };\n  let totalSuma = 0;\n\n  const rows = pedidos.map((p, idx) => {\n    const meta = statusMeta(p.Estatus);\n    const totalNum = Number(p.Total);\n    if (!Number.isNaN(totalNum)) totalSuma += totalNum;\n\n    // Contar por estatus normalizado\n    const k = String(p.Estatus || '').trim().toLowerCase();\n    if (k in counts) counts[k]++;\n\n    return `\n      <tr>\n        <td style=\"padding:12px;border-bottom:1px solid #e5e7eb;font:14px/20px system-ui, -apple-system, Segoe UI, Roboto; background:${meta.rowBg}\">${idx + 1}</td>\n        <td style=\"padding:12px;border-bottom:1px solid #e5e7eb;font:14px/20px system-ui, -apple-system, Segoe UI, Roboto; background:${meta.rowBg}\">\n          <span style=\"display:inline-block;padding:4px 8px;border-radius:999px;border:1px solid rgba(0,0,0,0.06);background:${meta.bg};color:${meta.color};font:12px/16px system-ui, -apple-system, Segoe UI, Roboto;\">\n            ${esc(meta.label)}\n          </span>\n        </td>\n        <td style=\"padding:12px;border-bottom:1px solid #e5e7eb;font:14px/20px system-ui, -apple-system, Segoe UI, Roboto; white-space:nowrap; background:${meta.rowBg}\">${currencyMXN(p.Total)}</td>\n        <td style=\"padding:12px;border-bottom:1px solid #e5e7eb;font:14px/20px system-ui, -apple-system, Segoe UI, Roboto; background:${meta.rowBg}\">${esc(productosResumen(p.Pedido))}</td>\n      </tr>\n    `;\n  }).join('');\n\n  const hoy = new Date().toLocaleDateString('es-MX', { year: 'numeric', month: 'long', day: '2-digit' });\n\n  return `<!DOCTYPE html>\n<html lang=\"es\">\n<body style=\"margin:0;padding:0;background:#f3f4f6;\">\n  <table role=\"presentation\" width=\"100%\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"background:#f3f4f6;\">\n    <tr>\n      <td align=\"center\" style=\"padding:24px 12px;\">\n        <table width=\"720\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"max-width:720px;width:100%;background:#ffffff;border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;\">\n          <tr>\n            <td style=\"padding:24px;border-bottom:1px solid #e5e7eb;background:#faf5ff;\">\n              <div style=\"font:20px/24px system-ui,-apple-system,Segoe UI,Roboto;font-weight:700;color:#111827;\">Resumen de facturas del mes</div>\n              <div style=\"margin-top:6px;font:14px/20px system-ui,-apple-system,Segoe UI,Roboto;color:#6b7280;\">Enviado el ${esc(hoy)} · ${esc(correo)}</div>\n            </td>\n          </tr>\n          <tr>\n            <td style=\"padding:20px 24px 0;font:15px/22px system-ui,-apple-system,Segoe UI,Roboto;color:#111827;\">\n              Hola <strong style=\"color:#7c3aed;\">${esc(nombre)}</strong>, aquí Rafita de <span style=\"font-weight:700;\">Carnicería San Rafa</span>.<br/>\n              Te comparto el resumen de tus facturas de este mes.\n            </td>\n          </tr>\n          <tr>\n            <td style=\"padding:8px 24px 16px;\">\n              <div style=\"display:inline-block;margin:8px 8px 0 0;padding:6px 10px;border-radius:999px;background:#f3f4f6;border:1px solid #e5e7eb;font:12px/16px system-ui,-apple-system,Segoe UI,Roboto;color:#374151;\">Activas: ${counts.activo}</div>\n              <div style=\"display:inline-block;margin:8px 8px 0 0;padding:6px 10px;border-radius:999px;background:#f3f4f6;border:1px solid #e5e7eb;font:12px/16px system-ui,-apple-system,Segoe UI,Roboto;color:#374151;\">Por vencer: ${counts['por vencer']}</div>\n              <div style=\"display:inline-block;margin:8px 8px 0 0;padding:6px 10px;border-radius:999px;background:#f3f4f6;border:1px solid #e5e7eb;font:12px/16px system-ui,-apple-system,Segoe UI,Roboto;color:#374151;\">Vencidas: ${counts.vencido}</div>\n              <div style=\"display:inline-block;margin:8px 8px 0 0;padding:6px 10px;border-radius:999px;background:#f3f4f6;border:1px solid #e5e7eb;font:12px/16px system-ui,-apple-system,Segoe UI,Roboto;color:#111827;\">Total acumulado: <strong>${currencyMXN(totalSuma)}</strong></div>\n            </td>\n          </tr>\n          <tr>\n            <td style=\"padding:12px 16px 24px;\">\n              <table role=\"table\" width=\"100%\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"border:1px solid #e5e7eb;border-radius:8px;overflow:hidden;\">\n                <thead>\n                  <tr>\n                    <th align=\"left\" style=\"background:#f3f4f6;color:#374151;font:12px/16px system-ui,-apple-system,Segoe UI,Roboto;padding:10px 12px;border-bottom:1px solid #e5e7eb;width:40px;\">#</th>\n                    <th align=\"left\" style=\"background:#f3f4f6;color:#374151;font:12px/16px system-ui,-apple-system,Segoe UI,Roboto;padding:10px 12px;border-bottom:1px solid #e5e7eb;width:140px;\">Estatus</th>\n                    <th align=\"left\" style=\"background:#f3f4f6;color:#374151;font:12px/16px system-ui,-apple-system,Segoe UI,Roboto;padding:10px 12px;border-bottom:1px solid #e5e7eb;width:140px;\">Total</th>\n                    <th align=\"left\" style=\"background:#f3f4f6;color:#374151;font:12px/16px system-ui,-apple-system,Segoe UI,Roboto;padding:10px 12px;border-bottom:1px solid #e5e7eb;\">Productos</th>\n                  </tr>\n                </thead>\n                <tbody>\n                  ${rows}\n                </tbody>\n              </table>\n            </td>\n          </tr>\n          <tr>\n            <td style=\"border-top:1px solid #e5e7eb;padding:16px 24px 24px;font:12px/18px system-ui,-apple-system,Segoe UI,Roboto;color:#6b7280;\">\n              © ${new Date().getFullYear()} <span style=\"font-weight:700;color:#111827;\">Carnicería San Rafa</span> · Sucursal Centro · Tel. 555-123-4567 · Horario: Lun-Dom 8:00–19:00.\n            </td>\n          </tr>\n        </table>\n      </td>\n    </tr>\n  </table>\n</body>\n</html>`;\n}\n\n// === MAIN ===\n\n// 1) Filtrar por mes actual\nconst filtrados = items\n  .map(i => i.json || {})\n  .filter(row => esDelMesActual(row.created_at));\n\n// 2) Agrupar por correo\nconst byEmail = new Map();\nfor (const row of filtrados) {\n  const correo = String(row.Correo || '').trim().toLowerCase() || 'sin_correo@local';\n  if (!byEmail.has(correo)) byEmail.set(correo, []);\n  byEmail.get(correo).push(row);\n}\n\n// 3) Construir salida (un item por destinatario) — si un correo no tiene pedidos tras el filtro, no se crea item\nconst out = [];\nfor (const [correo, pedidos] of byEmail.entries()) {\n  if (!pedidos.length) continue;\n  const nombre = pedidos[0]?.Nombre || 'Cliente';\n  const subject = `Tus facturas del mes - Carnicería San Rafa`;\n  const html = buildHTML(nombre, correo, pedidos);\n  out.push({ json: { to: correo, subject, html, nombre } });\n}\n\nreturn out;\n"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1000,
+        1440,
         -360
       ],
       "id": "6a204370-ac3b-42a8-9b59-0d33445d4bb5",
@@ -558,11 +565,129 @@
       "type": "@n8n/n8n-nodes-langchain.memoryManager",
       "typeVersion": 1.1,
       "position": [
-        -360,
-        220
+        -1000,
+        -160
       ],
       "id": "c24a455c-8431-4658-8220-dbbbd7484f1d",
-      "name": "Chat Memory Manager"
+      "name": "Chat Memory Manager",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "13310a1b-42f5-4537-899d-d0fe478f9c5f",
+              "leftValue": "={{ $json }}",
+              "rightValue": "",
+              "operator": {
+                "type": "object",
+                "operation": "empty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        760,
+        -360
+      ],
+      "id": "bf882502-967a-45f9-a197-bbf3a2e1bb9c",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        1320,
+        500
+      ],
+      "id": "186efe85-6b1b-4d87-8a02-08c8000181c6",
+      "name": "When chat message received",
+      "webhookId": "6f225f8e-d289-4f2f-b606-7b6b801fc9a9"
+    },
+    {
+      "parameters": {
+        "inputText": "={{ $json.chatInput }}",
+        "categories": {
+          "categories": [
+            {
+              "category": "queja",
+              "description": "esta tema seria cuando un usuario mencione que necesita ayuda o que tiene una queja sobre algo "
+            },
+            {
+              "category": "servicio general",
+              "description": "cualquier servciioon como pregunta frecuente o pedidos"
+            }
+          ]
+        },
+        "options": {
+          "systemPromptTemplate": "tu trabajo es clasificar la intencion del usuario como quejas o servicios en general"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.textClassifier",
+      "typeVersion": 1.1,
+      "position": [
+        1540,
+        500
+      ],
+      "id": "f54d36d8-ce3f-4fc0-93de-68ebcf7a424b",
+      "name": "Text Classifier"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        1620,
+        720
+      ],
+      "id": "c23a55f2-ac3a-4148-a38b-6302e6ab742b",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "ZmWqQ5PGylh4Y05s",
+          "name": "OpenAi account - CANTERA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "inputText": "={{ $('When chat message received').item.json.chatInput }}",
+        "options": {
+          "systemPromptTemplate": "You are highly intelligent and accurate sentiment analyzer. Analyze the sentiment of the provided text. Categorize it into one of the following: {categories}. Use the provided formatting instructions. Only output the JSON."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.sentimentAnalysis",
+      "typeVersion": 1.1,
+      "position": [
+        1560,
+        240
+      ],
+      "id": "b9768069-3d22-4422-bb34-e3d05f0c04c3",
+      "name": "Sentiment Analysis"
     }
   ],
   "connections": {
@@ -703,7 +828,7 @@
       "main": [
         [
           {
-            "node": "Edit Fields",
+            "node": "If",
             "type": "main",
             "index": 0
           }
@@ -741,6 +866,72 @@
             "index": 0
           }
         ]
+      ]
+    },
+    "Send a message": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "Text Classifier",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Sentiment Analysis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Text Classifier",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Sentiment Analysis",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Text Classifier": {
+      "main": [
+        []
       ]
     }
   },
@@ -782,8 +973,8 @@
       }
     ]
   },
-  "versionId": "b3913430-16cb-4c0f-aa22-dcac475f790b",
-  "triggerCount": 2,
+  "versionId": "a6eda73d-f4b3-4802-af37-bf725482018d",
+  "triggerCount": 3,
   "shared": [
     {
       "createdAt": "2025-08-28T00:23:36.448Z",
