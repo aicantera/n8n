@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-08-28T00:23:36.446Z",
-  "updatedAt": "2025-08-28T22:59:32.000Z",
+  "updatedAt": "2025-08-28T23:35:32.000Z",
   "id": "SPyRYxJsTB1Th5DA",
   "name": "carniceria don rafa",
   "active": true,
@@ -11,7 +11,7 @@
         "promptType": "define",
         "text": "={{ $json.message.text }}",
         "options": {
-          "systemMessage": "=## 1. Identidad y Rol\n\n- **Tu nombre es Rafita.**\n- Eres un asistente virtual experto y amigable, especializado en la venta de carnes para la carnicería **\"San Rafa\"**.\n- Tu tono es servicial, cercano y profesional. Tratas a todos los clientes con amabilidad y paciencia, como lo haría el mejor vendedor de un negocio familiar.\n- Tu misión es facilitar el proceso de compra, resolver dudas y asegurarte de que cada cliente reciba exactamente lo que necesita.\n\n## 2. Objetivo Principal\n\nTu objetivo principal es asistir a los clientes en todo el proceso de compra: desde resolver sus dudas sobre los productos hasta tomar y confirmar sus pedidos de manera eficiente utilizando las herramientas a tu disposición.\n\n## 3. Herramientas Disponibles\n\nTienes acceso a las siguientes herramientas. Debes usarlas de manera lógica y secuencial según la conversación con el cliente.\n\n* **`kb_san_rafa`**:\n    * **Descripción**: Es tu base de conocimientos sobre el negocio.\n    * **Cuándo usarla**: Úsala para responder preguntas generales sobre la carnicería como: horarios de atención, ubicación, métodos de pago aceptados, tipos generales de carne que manejamos (res, puerco, pollo), políticas de entrega, etc.\n    * **Ejemplo de consulta**: \"Oye, ¿hasta qué hora cierran?\" o \"¿Aceptan tarjeta de crédito?\".\n\n* **`obtener_usuarios`**:\n    * **Descripción**: Verifica si el cliente que te escribe ya está registrado en nuestra base de datos.\nel numero de telefono del usuario es el siguiente: {{ $json.message.chat.id }}\n    * **Cuándo usarla**: **DEBES usar esta herramienta al INICIO de CADA conversación** para identificar al cliente. Esto te permitirá saber si es un cliente nuevo o recurrente y podrás darle un saludo más personalizado si ya lo conoces.\n    * **Ejemplo de flujo**: El cliente dice \"Hola\". Tú, internamente, usas `obtener_usuarios` con su identificador (ej. número de teléfono). Si lo encuentras, respondes \"¡Hola, [Nombre]! Qué bueno verte de nuevo. ¿En qué te puedo ayudar hoy?\". Si no, respondes \"¡Hola! Bienvenido a Carnicería San Rafa. ¿En qué puedo servirte?\".\n\n* **`obtener_precios`**:\n    * **Descripción**: Consulta el catálogo completo de productos con sus precios actualizados por kilogramo o por pieza.\n    * **Cuándo usarla**: Úsala cuando un cliente pregunte por el precio de uno o más productos, pida el menú, o quiera saber qué productos tienes disponibles.\n    * **Ejemplo de consulta**: \"¿En cuánto está el kilo de arrachera?\" o \"¿Qué cortes de res tienes hoy?\".\n\n* **`generar_pedido`**:\n    * **Descripción**: Registra un nuevo pedido en el sistema. Requiere una lista de productos y sus cantidades.\n    * **Cuándo usarla**: Úsala **SOLAMENTE** después de que hayas confirmado explícitamente el pedido con el cliente.\n    * **IMPORTANTE**: Nunca la uses sin antes haberle presentado al cliente un resumen claro de su pedido y haber recibido un \"Sí, es correcto\" o una confirmación similar.\n\n## 4. Flujo de Conversación y Proceso\n\nSigue estos pasos para asegurar una atención de calidad:\n\n1.  **Saludo e Identificación**: Saluda amablemente al cliente. Inmediatamente después, utiliza la herramienta `obtener_usuarios` para saber con quién estás hablando.\n2.  **Atención a la Solicitud**: Pregunta al cliente en qué puedes ayudarle. Escucha atentamente su necesidad.\n3.  **Fase de Consulta**:\n    * Si son preguntas generales sobre el negocio, usa `kb_san_rafa`.\n    * Si son preguntas sobre productos y precios, usa `obtener_precios`.\n4.  **Toma de Pedido**:\n    * Cuando el cliente quiera ordenar, pregúntale qué productos desea y en qué cantidad (ej. \"1 kg de bistec\", \"2 charolas de arrachera\", \"5 chorizos\").\n    * Ve anotando mentalmente o en un borrador la lista de productos.\n5.  **Confirmación del Pedido**:\n    * **Paso Crítico**: Antes de finalizar, resume el pedido completo para el cliente. Por ejemplo: \"Perfecto. Entonces su pedido es: \\n- 1 kg de Bistec de res\\n- 500 gr de Chorizo argentino\\n¿Es correcto?\".\n6.  **Generación del Pedido**:\n    * Una vez que el cliente confirme que el resumen es correcto, y solo en ese momento, utiliza la herramienta `generar_pedido` con la lista de productos y cantidades confirmadas.\n7.  **Cierre**: Agradece al cliente por su compra, infórmale sobre el número de pedido (si la herramienta te lo devuelve) y cualquier otro detalle relevante (ej. \"Tu pedido estará listo en 20 minutos\").\n\n## 5. Reglas y Restricciones\n\n- **No inventes información**: Si no sabes una respuesta o un precio, utiliza tus herramientas. Si la herramienta no tiene la información, informa al cliente que no tienes ese dato en el momento y que un humano se pondrá en contacto.\n- **Sé proactivo**: Si un cliente pide un corte, puedes sugerirle otro que combine bien o que esté en oferta, basándote en la información de tus herramientas.\n- **La confirmación es obligatoria**: Nunca, bajo ninguna circunstancia, uses `generar_pedido` sin la confirmación verbal del cliente.\n- **Claridad ante todo**: Si un pedido es ambiguo (ej. \"dame carne para asar\"), haz preguntas para aclarar qué corte y qué cantidad necesita.\n```"
+          "systemMessage": "=# Prompt para Agente de Ventas: Rafita\n\n## 1. Identidad y Rol\n\n- **Tu nombre es Rafita.**\n- Eres un asistente virtual experto y amigable, especializado en la venta de carnes para la carnicería **\"San Rafa\"**.\n- Tu tono es servicial, cercano y profesional. Tratas a todos los clientes con amabilidad y paciencia, como lo haría el mejor vendedor de un negocio familiar.\n- Tu misión es facilitar el proceso de compra, resolver dudas y asegurarte de que cada cliente reciba exactamente lo que necesita.\n\n## 2. Objetivo Principal\n\nTu objetivo principal es asistir a los clientes en todo el proceso de compra: desde resolver sus dudas sobre los productos hasta tomar y confirmar sus pedidos de manera eficiente utilizando las herramientas a tu disposición.\n\n## 3. Herramientas Disponibles\n\nTienes acceso a las siguientes herramientas. Debes usarlas de manera lógica y secuencial según la conversación con el cliente.\n\n* **`kb_san_rafa`**:\n    * **Descripción**: Es tu base de conocimientos sobre el negocio.\n    * **Cuándo usarla**: Úsala para responder preguntas generales sobre la carnicería como: horarios de atención, ubicación, métodos de pago aceptados, tipos generales de carne que manejamos, políticas de entrega, etc.\n\n* **`obtener_usuarios`**:\n    * **Descripción**: Verifica si el cliente que te escribe ya está registrado en nuestra base de datos usando su número de teléfono. El número del usuario actual es: `{{ $json.message.chat.id }}`. El resultado de esta herramienta te devolverá un campo llamado **`id`** y otro con el nombre del cliente.\n    * **Cuándo usarla**: **DEBES usar esta herramienta al INICIO de CADA conversación** para identificar al cliente.\n    * **Acción clave**: Cuando la uses, saluda al cliente por su nombre, pero lo más importante es que **debes recordar y almacenar en tu memoria el valor del campo `id`. Este valor es crucial y lo necesitarás más adelante.**\n\n* **`obtener_precios`**:\n    * **Descripción**: Consulta el catálogo completo de productos con sus precios actualizados.\n    * **Cuándo usarla**: Úsala cuando un cliente pregunte por el precio de uno o más productos, pida el menú, o quiera saber qué productos tienes disponibles.\n\n* **`generar_pedido`**:\n    * **Descripción**: Registra un nuevo pedido en el sistema. Esta herramienta tiene un campo llamado `usuario_id`.\n    * **Instrucción Crítica**: Para el parámetro **`usuario_id`** de esta herramienta, **debes usar el valor del campo `id`** que obtuviste de la herramienta `obtener_usuarios` al principio de la conversación. **No uses el nombre del cliente, usa el `id` que guardaste en tu memoria.**\n    * **Cuándo usarla**: Úsala **SOLAMENTE** después de que hayas confirmado explícitamente el pedido con el cliente y hayas calculado el total.\n\n## 4. Flujo de Conversación y Proceso\n\nSigue estos pasos para asegurar una atención de calidad:\n\n1.  **Saludo e Identificación**: Saluda amablemente. Inmediatamente después, utiliza `obtener_usuarios`. Al recibir la respuesta, **guarda el valor del campo `id` en tu memoria** y saluda al cliente por su nombre.\n2.  **Atención a la Solicitud**: Pregunta al cliente en qué puedes ayudarle.\n3.  **Fase de Consulta**: Usa `kb_san_rafa` para dudas generales y `obtener_precios` para consultas de productos.\n4.  **Toma de Pedido**: Anota los productos y cantidades que el cliente desea.\n5.  **Confirmación y Cálculo**:\n    * Resume el pedido completo para el cliente.\n    * Usa la herramienta `calculadora` para obtener el monto total y preséntaselo en el resumen. Por ejemplo: \"Perfecto. Su pedido es: \\[Lista de productos]. El total es de $XXX.XX. ¿Es correcto?\".\n6.  **Generación del Pedido**:\n    * Una vez que el cliente confirme, utiliza la herramienta `generar_pedido`.\n    * Asegúrate de pasarle a la herramienta la lista de productos, el total y, lo más importante, **pasar el valor `id` (que guardaste al inicio) al campo `usuario_id` de la herramienta.**\n7.  **Cierre**: Agradece al cliente, infórmale sobre el número de pedido (si aplica), confirma el monto total y cualquier otro detalle relevante.\n\n## 5. Reglas y Restricciones\n\n-   **No inventes información**: Si no sabes algo, usa tus herramientas. Si aún no lo sabes, informa que un humano se pondrá en contacto.\n-   **Sé proactivo**: Sugiere productos complementarios o en oferta.\n-   **La confirmación es obligatoria**: Nunca uses `generar_pedido` sin la confirmación explícita del cliente.\n-   **El ID es la clave**: El valor del campo `id` de la consulta de usuario es el que debe ir en el campo `usuario_id` del pedido.\n\n---\nEl día de hoy es {{ $now.minus({ hours: 0 }).setLocale('es').toFormat(\"dd 'de' LLLL 'de' yyyy HH:mm\") }} hora de CDMX."
         }
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
@@ -50,21 +50,6 @@
     },
     {
       "parameters": {
-        "sessionIdType": "customKey",
-        "sessionKey": "={{ $json.message.chat.id }}",
-        "contextWindowLength": 20
-      },
-      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
-      "typeVersion": 1.3,
-      "position": [
-        -60,
-        200
-      ],
-      "id": "eb7af16b-e2c9-4f51-adea-a791d1d59cb3",
-      "name": "Simple Memory"
-    },
-    {
-      "parameters": {
         "updates": [
           "message"
         ],
@@ -73,7 +58,7 @@
       "type": "n8n-nodes-base.telegramTrigger",
       "typeVersion": 1.2,
       "position": [
-        0,
+        -40,
         0
       ],
       "id": "fd15ab48-6def-4e79-89ed-f55e9f2205e2",
@@ -280,11 +265,12 @@
         "columns": {
           "mappingMode": "defineBelow",
           "value": {
-            "id": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('id', `id auto incrementable`, 'string') }}",
+            "id": "={{ parseInt(new Date().toDateTime().toSeconds()) }}",
             "pedido json": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('pedido_json', `estructura en json del resumen del pedidos, producto, precio, kilos y total calculado`, 'string') }}",
-            "total": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('total', `total general del pedido tomando en cuenta todos los productos, la cantidad de kilos y el precio por kilo de cada uno `, 'string') }}",
+            "total": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('total', `total generado mediante la herramienta de 'calculadora'`, 'string') }}",
             "estatus": "activo",
-            "usuario_id": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('usuario_id', `id de usuario obtenido de la primera interacción`, 'string') }}"
+            "usuario_id": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('usuario_id', `id de usuario obtenido de la cunsulta de usuario cliente`, 'string') }}",
+            "created_at": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('created_at', `fecha actual utilizando el formato yyyy-mm-dd hh:mm:ss en zona horario america mexico city `, 'string') }}"
           },
           "matchingColumns": [
             "id"
@@ -333,6 +319,16 @@
             {
               "id": "usuario_id",
               "displayName": "usuario_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
               "required": false,
               "defaultMatch": false,
               "display": true,
@@ -500,6 +496,73 @@
       ],
       "id": "abe4b739-fa34-4df6-81fe-42c4403b9e52",
       "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.to }}",
+        "subject": "={{ $json.subject }}",
+        "message": "={{ $json.html }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1220,
+        -360
+      ],
+      "id": "0099e7cc-8a7e-41f7-a58e-2ee8b1a350dd",
+      "name": "Send a message",
+      "webhookId": "3f613f49-decf-4f35-998e-04f10d566da8",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "iWesvtiVejStxiao",
+          "name": "Gmail account cerebro sales (ricardo)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// n8n Code Node (JavaScript)\n// Entrada: items[] con campos: Pedido (string JSON), Total, Estatus, Nombre, Telefono, Correo\n// Salida: un item por destinatario con { to, subject, html }\n\nfunction currencyMXN(n) {\n  const num = Number(n);\n  if (Number.isNaN(num)) return n;\n  return num.toLocaleString('es-MX', { style: 'currency', currency: 'MXN', maximumFractionDigits: 2 });\n}\n\n// Escapar texto simple para HTML\nfunction esc(s) {\n  return String(s ?? '')\n    .replace(/&/g, '&amp;')\n    .replace(/</g, '&lt;')\n    .replace(/>/g, '&gt;');\n}\n\n// Badge y fila por estatus\nconst STATUS_MAP = {\n  'activo':   { label: 'Activa',   class: 'badge badge--ok',    row: 'row row--ok' },\n  'por vencer': { label: 'Por vencer', class: 'badge badge--warn',  row: 'row row--warn' },\n  'vencido':  { label: 'Vencida',  class: 'badge badge--danger', row: 'row row--danger' },\n};\n\nfunction productosResumen(pedidoStr) {\n  try {\n    const obj = typeof pedidoStr === 'string' ? JSON.parse(pedidoStr) : pedidoStr;\n    const prods = Array.isArray(obj?.productos) ? obj.productos : [];\n    if (!prods.length) return '-';\n    return prods.map(p => `${p.nombre} (x${p.cantidad})`).join(', ');\n  } catch {\n    return '-';\n  }\n}\n\nfunction buildHTML(nombre, correo, pedidos) {\n  // Estadísticos por estatus\n  const counts = { activo: 0, 'por vencer': 0, vencido: 0 };\n  let totalSuma = 0;\n\n  // Pre-render filas\n  const rows = pedidos.map((p, idx) => {\n    const estatusKey = (String(p.Estatus || '').trim().toLowerCase());\n    const meta = STATUS_MAP[estatusKey] ?? { label: esc(p.Estatus || ''), class: 'badge', row: 'row' };\n    const totalNum = Number(p.Total);\n    if (!Number.isNaN(totalNum)) totalSuma += totalNum;\n    if (counts[estatusKey] !== undefined) counts[estatusKey]++;\n\n    return `\n      <tr class=\"${meta.row}\">\n        <td class=\"col col--idx\">${idx + 1}</td>\n        <td class=\"col col--status\"><span class=\"${meta.class}\">${esc(meta.label)}</span></td>\n        <td class=\"col col--total\">${currencyMXN(p.Total)}</td>\n        <td class=\"col col--productos\">${esc(productosResumen(p.Pedido))}</td>\n      </tr>\n    `;\n  }).join('');\n\n  const hoy = new Date().toLocaleDateString('es-MX', { year: 'numeric', month: 'long', day: '2-digit' });\n\n  return `<!DOCTYPE html>\n<html lang=\"es\">\n<head>\n<meta charset=\"UTF-8\" />\n<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\" />\n<title>Resumen de facturas - Carnicería San Rafa</title>\n<style>\n  :root{\n    --ok:#16a34a;        /* verde */\n    --ok-bg:#dcfce7;\n    --warn:#b45309;      /* ámbar */\n    --warn-bg:#fef3c7;\n    --danger:#b91c1c;    /* rojo */\n    --danger-bg:#fee2e2;\n    --text:#111827;\n    --muted:#6b7280;\n    --border:#e5e7eb;\n    --brand:#7c3aed;     /* acento */\n  }\n  body{\n    margin:0;\n    padding:0;\n    background:#f9fafb;\n    color:var(--text);\n    font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,Helvetica,Arial,\"Apple Color Emoji\",\"Segoe UI Emoji\";\n  }\n  .container{\n    max-width:720px;\n    margin:0 auto;\n    padding:24px 16px;\n  }\n  .card{\n    background:#fff;\n    border:1px solid var(--border);\n    border-radius:14px;\n    overflow:hidden;\n    box-shadow:0 1px 2px rgba(0,0,0,0.03);\n  }\n  .header{\n    padding:24px;\n    border-bottom:1px solid var(--border);\n    background:linear-gradient(180deg,#faf5ff,#fff);\n  }\n  .title{\n    margin:0 0 6px;\n    font-size:20px;\n    line-height:1.2;\n  }\n  .subtitle{\n    margin:0;\n    font-size:14px;\n    color:var(--muted);\n  }\n  .hello{\n    padding:20px 24px 0;\n    font-size:15px;\n  }\n  .hello strong{ color:var(--brand); }\n  .table-wrap{ padding:12px 16px 24px; }\n  table{\n    width:100%;\n    border-collapse:separate;\n    border-spacing:0;\n    border:1px solid var(--border);\n    border-radius:12px;\n    overflow:hidden;\n  }\n  thead th{\n    background:#f3f4f6;\n    text-align:left;\n    font-size:12px;\n    letter-spacing:.02em;\n    color:#374151;\n    padding:10px 12px;\n    border-bottom:1px solid var(--border);\n  }\n  .col--idx{ width:52px; }\n  .col--status{ width:130px; }\n  .col--total{ width:140px; white-space:nowrap; }\n  .col--productos{ width:auto; }\n  tbody td{\n    padding:12px;\n    font-size:14px;\n    vertical-align:top;\n    border-bottom:1px solid var(--border);\n    background:#fff;\n  }\n  tbody tr:last-child td{ border-bottom:none; }\n  .row--ok td{ background:linear-gradient(0deg,var(--ok-bg),var(--ok-bg)) }\n  .row--warn td{ background:linear-gradient(0deg,var(--warn-bg),var(--warn-bg)) }\n  .row--danger td{ background:linear-gradient(0deg,var(--danger-bg),var(--danger-bg)) }\n  .badge{\n    display:inline-block;\n    padding:4px 8px;\n    font-size:12px;\n    border-radius:999px;\n    border:1px solid var(--border);\n    background:#fff;\n  }\n  .badge--ok{\n    color:var(--ok);\n    border-color:rgba(22,163,74,0.25);\n    background:linear-gradient(0deg,#fff,var(--ok-bg));\n  }\n  .badge--warn{\n    color:var(--warn);\n    border-color:rgba(180,83,9,0.25);\n    background:linear-gradient(0deg,#fff,var(--warn-bg));\n  }\n  .badge--danger{\n    color:var(--danger);\n    border-color:rgba(185,28,28,0.25);\n    background:linear-gradient(0deg,#fff,var(--danger-bg));\n  }\n  .summary{\n    padding:8px 24px 20px;\n    font-size:14px;\n    color:#374151;\n  }\n  .summary .pill{\n    display:inline-block;\n    margin-right:8px;\n    margin-top:8px;\n    padding:6px 10px;\n    border-radius:999px;\n    background:#f3f4f6;\n    border:1px solid var(--border);\n    font-size:12px;\n  }\n  .footer{\n    border-top:1px solid var(--border);\n    padding:16px 24px 24px;\n    font-size:12px;\n    color:var(--muted);\n  }\n  .brand{\n    font-weight:700;\n    color:#111827;\n  }\n  .small{ font-size:12px; color:var(--muted); }\n</style>\n</head>\n<body>\n  <div class=\"container\">\n    <div class=\"card\">\n      <div class=\"header\">\n        <h1 class=\"title\">Resumen de facturas del mes</h1>\n        <p class=\"subtitle\">Enviado el ${esc(hoy)} &middot; ${esc(correo)}</p>\n      </div>\n\n      <div class=\"hello\">\n        Hola <strong>${esc(nombre)}</strong>, aquí Rafita de <span class=\"brand\">Carnicería San Rafa</span>.  \n        Te comparto el resumen de tus facturas de este mes.\n      </div>\n\n      <div class=\"summary\">\n        <span class=\"pill\">Activas: ${counts.activo}</span>\n        <span class=\"pill\">Por vencer: ${counts['por vencer']}</span>\n        <span class=\"pill\">Vencidas: ${counts.vencido}</span>\n        <span class=\"pill\">Total acumulado: <strong>${currencyMXN(totalSuma)}</strong></span>\n      </div>\n\n      <div class=\"table-wrap\">\n        <table role=\"table\" aria-label=\"Listado de facturas\">\n          <thead>\n            <tr>\n              <th class=\"col col--idx\">#</th>\n              <th class=\"col col--status\">Estatus</th>\n              <th class=\"col col--total\">Total</th>\n              <th class=\"col col--productos\">Productos</th>\n            </tr>\n          </thead>\n          <tbody>\n            ${rows}\n          </tbody>\n        </table>\n      </div>\n\n      <div class=\"footer\">\n        © ${new Date().getFullYear()} <span class=\"brand\">Carnicería San Rafa</span>.  \n        Sucursal Centro · Tel. 555-123-4567 · Horario: Lun-Dom 8:00–19:00.\n      </div>\n    </div>\n  </div>\n</body>\n</html>`;\n}\n\nconst input = items.map(i => i.json || {});\n// Agrupar por correo (un email por destinatario)\nconst byEmail = new Map();\nfor (const row of input) {\n  const correo = String(row.Correo || '').trim().toLowerCase() || 'sin_correo@local';\n  if (!byEmail.has(correo)) byEmail.set(correo, []);\n  byEmail.get(correo).push(row);\n}\n\n// Construir salida (un item por correo)\nconst out = [];\nfor (const [correo, pedidos] of byEmail.entries()) {\n  const nombre = pedidos[0]?.Nombre || 'Cliente';\n  const subject = `Tus facturas del mes - Carnicería San Rafa`;\n  const html = buildHTML(nombre, correo, pedidos);\n  out.push({ json: { to: correo, subject, html, nombre } });\n}\n\nreturn out;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1000,
+        -360
+      ],
+      "id": "6a204370-ac3b-42a8-9b59-0d33445d4bb5",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "contextWindowLength": 20
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -80,
+        260
+      ],
+      "id": "b392f1f8-7b1c-483d-b033-b0049a45ab6b",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "mode": "delete",
+        "deleteMode": "all"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryManager",
+      "typeVersion": 1.1,
+      "position": [
+        -360,
+        220
+      ],
+      "id": "c24a455c-8431-4658-8220-dbbbd7484f1d",
+      "name": "Chat Memory Manager"
     }
   ],
   "connections": {
@@ -509,17 +572,6 @@
           {
             "node": "AI Agent",
             "type": "ai_languageModel",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Simple Memory": {
-      "ai_memory": [
-        [
-          {
-            "node": "AI Agent",
-            "type": "ai_memory",
             "index": 0
           }
         ]
@@ -660,7 +712,35 @@
     },
     "Edit Fields": {
       "main": [
-        []
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
       ]
     }
   },
@@ -679,9 +759,9 @@
     "Telegram Trigger": [
       {
         "json": {
-          "update_id": 291253562,
+          "update_id": 291253568,
           "message": {
-            "message_id": 20,
+            "message_id": 32,
             "from": {
               "id": 775456693,
               "is_bot": false,
@@ -695,14 +775,14 @@
               "last_name": "Correa",
               "type": "private"
             },
-            "date": 1756355216,
-            "text": "generame nuevamente el pedido"
+            "date": 1756422903,
+            "text": "si correcto"
           }
         }
       }
     ]
   },
-  "versionId": "09fdb002-e230-4c58-9998-2d8e49f6aab8",
+  "versionId": "b3913430-16cb-4c0f-aa22-dcac475f790b",
   "triggerCount": 2,
   "shared": [
     {
