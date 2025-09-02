@@ -1,9 +1,9 @@
 {
   "createdAt": "2025-05-13T18:42:23.048Z",
-  "updatedAt": "2025-08-26T23:52:56.000Z",
+  "updatedAt": "2025-09-02T18:56:12.000Z",
   "id": "GJUKvC12lo7L8JjK",
   "name": "Agente Glassy dev",
-  "active": true,
+  "active": false,
   "isArchived": false,
   "nodes": [
     {
@@ -634,6 +634,58 @@
       ],
       "id": "38dd1ace-6dc6-42fb-816a-07837a1c3bb6",
       "name": "agente_registro"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "daysInterval": 30
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -620,
+        1080
+      ],
+      "id": "a5ab13e7-297f-488d-9ae8-e9036b8cca07",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1L0yBRQss7tAWz9GFaVJkjsV1QP89hq0uBXwyHFGz1Dg",
+          "mode": "list",
+          "cachedResultName": "Registro de Interacción Glassy",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1L0yBRQss7tAWz9GFaVJkjsV1QP89hq0uBXwyHFGz1Dg/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1L0yBRQss7tAWz9GFaVJkjsV1QP89hq0uBXwyHFGz1Dg/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        -400,
+        1080
+      ],
+      "id": "88f80e6b-096c-4ae3-8d07-dbf795b30a6e",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "T1b495TNgv7GQdA8",
+          "name": "Google Sheets Jumperaron"
+        }
+      }
     }
   ],
   "connections": {
@@ -841,6 +893,17 @@
           }
         ]
       ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -851,7 +914,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "6245604c-d950-4f54-aebb-e17f74f778fc",
+  "versionId": "8a13c94f-7be9-4797-af85-1cbd23ce3922",
   "triggerCount": 1,
   "shared": [
     {
