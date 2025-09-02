@@ -1,9 +1,9 @@
 {
   "createdAt": "2025-05-13T18:42:23.048Z",
-  "updatedAt": "2025-09-02T18:56:12.000Z",
+  "updatedAt": "2025-09-02T22:07:14.000Z",
   "id": "GJUKvC12lo7L8JjK",
   "name": "Agente Glassy dev",
-  "active": false,
+  "active": true,
   "isArchived": false,
   "nodes": [
     {
@@ -686,6 +686,80 @@
           "name": "Google Sheets Jumperaron"
         }
       }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Mapeo de meses en español a número\nconst meses = {\n  'enero': 0, 'febrero': 1, 'marzo': 2, 'abril': 3,\n  'mayo': 4, 'junio': 5, 'julio': 6, 'agosto': 7,\n  'septiembre': 8, 'octubre': 9, 'noviembre': 10, 'diciembre': 11\n};\n\n// Obtenemos el mes y año actual\nconst ahora = new Date();\nconst mesActual = ahora.getMonth() - 1;\nconst anioActual = ahora.getFullYear();\n\n// Array para guardar los resultados filtrados\nconst resultadosFiltrados = [];\n\n// Iteramos sobre cada item (fila) que llega al nodo\nfor (const item of $input.all()) {\n  // Extraemos la fecha del JSON\n  const fechaString = item.json.Fecha;\n\n  // \"18 de agosto de 2025 13:28\" -> [\"18\", \"agosto\", \"2025\", \"13:28\"]\n  const partes = fechaString.replace(' de ', ' ').replace(' de ', ' ').split(' ');\n  const dia = parseInt(partes[0]);\n  const mes = meses[partes[1].toLowerCase()];\n  const anio = parseInt(partes[2]);\n\n  // Si el mes y el año de la fila coinciden con el actual, lo guardamos\n  if (mes === mesActual && anio === anioActual) {\n    resultadosFiltrados.push(item);\n  }\n}\n\n// Devolvemos solo los items que cumplen la condición\nreturn resultadosFiltrados;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -180,
+        1080
+      ],
+      "id": "d833b4fd-5130-46fa-856a-70e0d43d87b9",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\n\nif (items.length === 0) {\n  return [{ json: { html: \"<p>No hay interacciones para reportar este mes.</p>\" } }];\n}\n\nlet tablaHtml = `\n  <h1>Reporte de Interacciones del Mes</h1>\n  <p>Total de interacciones: ${items.length}</p>\n  <table border=\"1\" style=\"width:100%; border-collapse: collapse;\">\n    <thead>\n      <tr>\n        <th style=\"padding: 8px; background-color: #f2f2f2;\">Fecha</th>\n        <th style=\"padding: 8px; background-color: #f2f2f2;\">Nombre</th>\n        <th style=\"padding: 8px; background-color: #f2f2f2;\">Solicitud</th>\n      </tr>\n    </thead>\n    <tbody>\n`;\n\nfor (const item of items) {\n  tablaHtml += `\n    <tr>\n      <td style=\"padding: 8px;\">${item.json.Fecha}</td>\n      <td style=\"padding: 8px;\">${item.json.Nombre}</td>\n      <td style=\"padding: 8px;\">${item.json.Solicitud}</td>\n    </tr>\n  `;\n}\n\ntablaHtml += `\n    </tbody>\n  </table>\n`;\n\nreturn [{ json: { html: tablaHtml } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        40,
+        1080
+      ],
+      "id": "ae873493-ae1d-4eea-898c-699ed51764e6",
+      "name": "Code1"
+    },
+    {
+      "parameters": {
+        "fromEmail": "hola@glasbilbutik.com",
+        "toEmail": "jumperaron@gmail.com",
+        "subject": "Reporte Mensual de Interacciones con Glassy",
+        "html": "={{ $json.html }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        240,
+        1300
+      ],
+      "id": "13f094a5-c2dd-4df9-b482-5aa046fda4a5",
+      "name": "Send email",
+      "webhookId": "87033a49-006f-4539-a677-008470ce748b",
+      "credentials": {
+        "smtp": {
+          "id": "F2sMAxnazmc9fzKE",
+          "name": "SMTP account Glasbil Dev"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "sendTo": "jumperaron@gmail.com",
+        "subject": "Reporte Mensual de Interacciones con Glassy",
+        "message": "={{ $json.html }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        260,
+        1080
+      ],
+      "id": "179ab0fb-0a5d-44c4-8e0c-c2f89f65a454",
+      "name": "Send a message",
+      "webhookId": "69a784dc-bd77-4534-b14c-818049fc407f",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "I97E42GKdPjszGha",
+          "name": "Gmail account Aaron"
+        }
+      }
     }
   ],
   "connections": {
@@ -904,18 +978,55 @@
           }
         ]
       ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Code1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code1": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
     "executionOrder": "v1"
   },
-  "staticData": null,
+  "staticData": {
+    "node:Schedule Trigger": {
+      "recurrenceRules": []
+    }
+  },
   "meta": {
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "8a13c94f-7be9-4797-af85-1cbd23ce3922",
-  "triggerCount": 1,
+  "versionId": "81912cca-7363-4f76-b066-cbae6e18bccf",
+  "triggerCount": 2,
   "shared": [
     {
       "createdAt": "2025-05-13T18:42:23.050Z",
