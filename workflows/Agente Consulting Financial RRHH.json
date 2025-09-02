@@ -1,9 +1,9 @@
 {
   "createdAt": "2025-08-08T22:01:23.225Z",
-  "updatedAt": "2025-09-01T22:27:13.000Z",
+  "updatedAt": "2025-09-02T22:45:55.000Z",
   "id": "KhIu4XZ1rR2d7zqy",
   "name": "Agente Consulting Financial RRHH",
-  "active": true,
+  "active": false,
   "isArchived": false,
   "nodes": [
     {
@@ -1409,6 +1409,197 @@
       ],
       "id": "9b4c7064-19d3-4b03-abbf-24f0ce73e5f9",
       "name": "tool_datos_rutas"
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1dZcm0jG2eCp6Ooam-qKSiTyh3Ccnr4fqc_eyEUok0uQ",
+          "mode": "list",
+          "cachedResultName": "registro_estado",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1dZcm0jG2eCp6Ooam-qKSiTyh3Ccnr4fqc_eyEUok0uQ/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1dZcm0jG2eCp6Ooam-qKSiTyh3Ccnr4fqc_eyEUok0uQ/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "chat_id": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+            "last_interaction": "={{ $now }}"
+          },
+          "matchingColumns": [
+            "chat_id"
+          ],
+          "schema": [
+            {
+              "id": "chat_id",
+              "displayName": "chat_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "last_interaction",
+              "displayName": "last_interaction",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        1540,
+        -300
+      ],
+      "id": "b0f9e0a9-bcf5-4542-9bc3-c8ceed329b18",
+      "name": "Registro de estado de la conversación",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "T1b495TNgv7GQdA8",
+          "name": "Google Sheets Jumperaron"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        640,
+        720
+      ],
+      "id": "96097cc3-666b-419c-8d4c-69c00c6afbd1",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1dZcm0jG2eCp6Ooam-qKSiTyh3Ccnr4fqc_eyEUok0uQ",
+          "mode": "list",
+          "cachedResultName": "registro_estado",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1dZcm0jG2eCp6Ooam-qKSiTyh3Ccnr4fqc_eyEUok0uQ/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1dZcm0jG2eCp6Ooam-qKSiTyh3Ccnr4fqc_eyEUok0uQ/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        840,
+        720
+      ],
+      "id": "a0fa8961-2968-48e6-97e4-e3270b393bf7",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "T1b495TNgv7GQdA8",
+          "name": "Google Sheets Jumperaron"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "=",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        840,
+        920
+      ],
+      "id": "3a190417-7eec-4a4b-ad1a-f46cbbb10473",
+      "name": "Split Out",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "2aee4760-625d-48ed-80f9-a34ef701c839",
+              "leftValue": "={{ $now.diff(DateTime.fromISO($json.last_interaction), 'hours').toObject().hours }}",
+              "rightValue": 5,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1060,
+        720
+      ],
+      "id": "7406517e-926d-411d-a32e-a2ae1aa62d98",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.chat_id }}",
+        "text": "¡Hola! Solo quería saber si seguías por ahí. ¿Necesitas algo más?",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1320,
+        740
+      ],
+      "id": "cd1e885f-9c1d-4b74-8d88-ce6449d53ea7",
+      "name": "Send a text message1",
+      "webhookId": "ff3f4160-c4a0-48a7-af4b-89f31f6a79b9",
+      "credentials": {
+        "telegramApi": {
+          "id": "mIaRqusXRT4FiDP4",
+          "name": "Telegram Consulting Financial RRHH"
+        }
+      }
     }
   ],
   "connections": {
@@ -1433,6 +1624,11 @@
           },
           {
             "node": "If",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Registro de estado de la conversación",
             "type": "main",
             "index": 0
           }
@@ -1560,6 +1756,40 @@
           }
         ]
       ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Send a text message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -1572,7 +1802,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "1dc58b90-9310-4cf5-947d-7c79967c85b1",
+  "versionId": "41b847ef-8b26-4dd4-a4aa-7e3c44044099",
   "triggerCount": 1,
   "shared": [
     {
