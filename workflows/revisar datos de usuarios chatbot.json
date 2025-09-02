@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-06-18T02:56:28.104Z",
-  "updatedAt": "2025-07-18T15:42:43.000Z",
+  "updatedAt": "2025-09-02T15:56:15.000Z",
   "id": "lvEmEanFbdDwGFYm",
   "name": "revisar datos de usuarios chatbot",
   "active": true,
@@ -43,7 +43,7 @@
     },
     {
       "parameters": {
-        "collection": "user_state",
+        "collection": "user_sessions",
         "options": {
           "skip": 0,
           "sort": "{}",
@@ -66,7 +66,7 @@
     },
     {
       "parameters": {
-        "functionCode": "const results = [];\nconst nowUtcMs = Date.now();\nconst offsetMs = 6 * 60 * 60 * 1000; // UTC-6\nfor (const item of items) {\n  const data = item.json;\n  // Sólo conversaciones de tipo chatbot\n  if (data.type_conversation !== 'chatbot') continue;\n  const dateStr = data.date;\n  if (!dateStr) continue;\n  // Parsear fecha y hora\n  const [datePart, timePart] = dateStr.split(', ');\n  const [day, month, year] = datePart.split('/').map(Number);\n  let [timeStr, meridiem] = timePart.split(' ');\n  meridiem = meridiem.toLowerCase();\n  let [hour, minute, second] = timeStr.split(':').map(Number);\n  if (meridiem === 'p.m.' && hour < 12) hour += 12;\n  if (meridiem === 'a.m.' && hour === 12) hour = 0;\n  // Última interacción en UTC (sumar 6 horas a hora local)\n  const lastUtcMs = Date.UTC(year, month - 1, day, hour + 6, minute, second);\n  const diffMin = (nowUtcMs - lastUtcMs) / 60000;\n  // Si inactivo >30min y no está en menuInicial\n  if (diffMin > 20 && data.state !== 'menuInicial') {\n    // Calcular fecha actual en UTC-6\n    const nowMexicoUtcMs = nowUtcMs - offsetMs;\n    const d = new Date(nowMexicoUtcMs);\n    const D = d.getUTCDate();\n    const M = d.getUTCMonth() + 1;\n    const Y = d.getUTCFullYear();\n    let h2 = d.getUTCHours();\n    const m2 = String(d.getUTCMinutes()).padStart(2, '0');\n    const s2 = String(d.getUTCSeconds()).padStart(2, '0');\n    const ampm2 = h2 >= 12 ? 'p.m.' : 'a.m.';\n    h2 = h2 % 12 === 0 ? 12 : h2 % 12;\n    const newDateStr = `${D}/${M}/${Y}, ${h2}:${m2}:${s2} ${ampm2}`;\n    results.push({\n      json: {\n        _id: data._id,\n        state: 'menuInicial',\n        date: newDateStr,\n        phoneNumber: data.phoneNumber\n      }\n    });\n  }\n}\nreturn results;"
+        "functionCode": "const results = [];\nconst nowUtcMs = Date.now();\nconst offsetMs = 6 * 60 * 60 * 1000; // UTC-6\nfor (const item of items) {\n  const data = item.json;\n  // Sólo conversaciones de tipo chatbot\n  if (data.type_conversation !== 'chatbot') continue;\n  const dateStr = data.date;\n  if (!dateStr) continue;\n  // Parsear fecha y hora\n  const [datePart, timePart] = dateStr.split(', ');\n  const [day, month, year] = datePart.split('/').map(Number);\n  let [timeStr, meridiem] = timePart.split(' ');\n  meridiem = meridiem.toLowerCase();\n  let [hour, minute, second] = timeStr.split(':').map(Number);\n  if (meridiem === 'p.m.' && hour < 12) hour += 12;\n  if (meridiem === 'a.m.' && hour === 12) hour = 0;\n  // Última interacción en UTC (sumar 6 horas a hora local)\n  const lastUtcMs = Date.UTC(year, month - 1, day, hour + 6, minute, second);\n  const diffMin = (nowUtcMs - lastUtcMs) / 60000;\n  // Si inactivo >30min y no está en menuInicial\n  if (diffMin > 20 && data.state !== 'menuInicial') {\n    // Calcular fecha actual en UTC-6\n    const nowMexicoUtcMs = nowUtcMs - offsetMs;\n    const d = new Date(nowMexicoUtcMs);\n    const D = d.getUTCDate();\n    const M = d.getUTCMonth() + 1;\n    const Y = d.getUTCFullYear();\n    let h2 = d.getUTCHours();\n    const m2 = String(d.getUTCMinutes()).padStart(2, '0');\n    const s2 = String(d.getUTCSeconds()).padStart(2, '0');\n    const ampm2 = h2 >= 12 ? 'p.m.' : 'a.m.';\n    h2 = h2 % 12 === 0 ? 12 : h2 % 12;\n    const newDateStr = `${D}/${M}/${Y}, ${h2}:${m2}:${s2} ${ampm2}`;\n    results.push({\n      json: {\n        _id: data._id,\n        state: 'menuInicial',\n        date: newDateStr,\n        phoneNumber: data.phone_whatsapp\n      }\n    });\n  }\n}\nreturn results;"
       },
       "name": "Filter Inactive Users",
       "type": "n8n-nodes-base.function",
@@ -80,7 +80,7 @@
     {
       "parameters": {
         "operation": "update",
-        "collection": "user_state",
+        "collection": "user_sessions",
         "updateKey": "_id",
         "fields": "state,date",
         "options": {
@@ -511,7 +511,7 @@
       }
     ]
   },
-  "versionId": "b5224311-0fd5-4cbc-91ed-f2c3c03b1f40",
+  "versionId": "35b8462a-47d6-48ee-afa2-f86aa820e5e8",
   "triggerCount": 1,
   "shared": [
     {
