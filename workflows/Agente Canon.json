@@ -1,26 +1,419 @@
 {
-  "createdAt": "2025-09-03T19:04:15.028Z",
-  "updatedAt": "2025-09-03T19:04:15.028Z",
-  "id": "HnEbG8DC9aK49zPS",
+  "createdAt": "2025-09-03T19:05:48.841Z",
+  "updatedAt": "2025-09-03T19:52:18.000Z",
+  "id": "YaV9OmzlTVADEm5X",
   "name": "Agente Canon",
-  "active": false,
+  "active": true,
   "isArchived": false,
-  "nodes": [],
-  "connections": {},
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        280,
+        120
+      ],
+      "id": "1ae4fb4b-9e28-4ec8-9a48-830f997069f5",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        240,
+        260
+      ],
+      "id": "0c66179d-4b75-456b-a677-ef8a1afcd7e3",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "0PNoojfjNHHXEtdv",
+          "name": "Test_Gael"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "contextWindowLength": 10
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        380,
+        300
+      ],
+      "id": "ca3fe51f-a8c8-4ccf-9b6d-cafbce64f62f",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        480,
+        560
+      ],
+      "id": "cc7564b6-931f-4404-88ac-a57fd2af9d15",
+      "name": "Embeddings OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "0PNoojfjNHHXEtdv",
+          "name": "Test_Gael"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "retrieve-as-tool",
+        "toolDescription": "aquí encontraras la información de los cursos que ofreces, consúltala cuando sea necesario y responde de acuerdo al archivo",
+        "tableName": {
+          "__rl": true,
+          "value": "información_cursos_Canon",
+          "mode": "id"
+        },
+        "useReranker": "={{ false }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1.3,
+      "position": [
+        400,
+        420
+      ],
+      "id": "f8261f3d-5a6c-4c6d-b91b-d5955262c85f",
+      "name": "info_cursos",
+      "credentials": {
+        "supabaseApi": {
+          "id": "aNnbCn1D40iXK70A",
+          "name": "Gael Supabase"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -620,
+        160
+      ],
+      "id": "e5b98c17-193c-402b-8cbd-2a3a2e095ff7",
+      "name": "Trigger - Recibir mensaje",
+      "webhookId": "3c2457b9-ff1c-490c-91ed-779599e0805f",
+      "credentials": {
+        "telegramApi": {
+          "id": "M4yT4PHnQvsP26j3",
+          "name": "Bot_Pruebas_Gael"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "exists",
+                      "singleValue": true
+                    },
+                    "id": "81145717-c846-4994-b521-38b433a26f12"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "texto"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "19666aed-eb33-4ab7-9647-f2ef9bd318e9",
+                    "leftValue": "={{ $json.message.voice.file_id }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "exists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "voz"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -420,
+        160
+      ],
+      "id": "b8341bce-b63e-4b63-9140-8fcf5993d10b",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "3afb4b21-1923-41e7-a49c-672d6cf20141",
+              "name": "text",
+              "value": "={{ $json.message.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -200,
+        80
+      ],
+      "id": "e1df768a-1eb7-4f3f-8c89-14396b449c49",
+      "name": "Texto"
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "fileId": "={{ $('Trigger - Recibir mensaje').item.json.message.voice.file_id }}"
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -200,
+        260
+      ],
+      "id": "30a82420-d37c-4561-b3eb-687eeec4e54d",
+      "name": "Descargar audio",
+      "webhookId": "f145bc9e-37c1-4762-816b-386767c194fc",
+      "credentials": {
+        "telegramApi": {
+          "id": "qBBCv0YcYdci711O",
+          "name": "Bot_RentabilidadExcel"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "operation": "transcribe",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        20,
+        260
+      ],
+      "id": "327667d3-8d77-4d0c-bbde-9f3c10abb08b",
+      "name": "Transcribe audio",
+      "credentials": {
+        "openAiApi": {
+          "id": "0PNoojfjNHHXEtdv",
+          "name": "Test_Gael"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        640,
+        120
+      ],
+      "id": "bc0dc908-4946-443d-8cbe-6d327c9c704a",
+      "name": "Send a text message",
+      "webhookId": "4e629ebe-1b24-4c90-adec-df21ae5d53f7",
+      "credentials": {
+        "telegramApi": {
+          "id": "M4yT4PHnQvsP26j3",
+          "name": "Bot_Pruebas_Gael"
+        }
+      },
+      "disabled": true
+    }
+  ],
+  "connections": {
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI": {
+      "ai_embedding": [
+        [
+          {
+            "node": "info_cursos",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "info_cursos": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Trigger - Recibir mensaje": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Texto",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Descargar audio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Descargar audio": {
+      "main": [
+        [
+          {
+            "node": "Transcribe audio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Texto": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transcribe audio": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
   "settings": {
     "executionOrder": "v1"
   },
   "staticData": null,
-  "meta": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
   "pinData": {},
-  "versionId": "7e0bf984-d44e-435c-b92e-ac5361f36129",
-  "triggerCount": 0,
+  "versionId": "2f141666-62d5-4638-90c0-76a081203867",
+  "triggerCount": 1,
   "shared": [
     {
-      "createdAt": "2025-09-03T19:04:15.033Z",
-      "updatedAt": "2025-09-03T19:04:15.033Z",
+      "createdAt": "2025-09-03T19:05:48.844Z",
+      "updatedAt": "2025-09-03T19:05:48.844Z",
       "role": "workflow:owner",
-      "workflowId": "HnEbG8DC9aK49zPS",
+      "workflowId": "YaV9OmzlTVADEm5X",
       "projectId": "6D91TcMmlphV2lVS",
       "project": {
         "createdAt": "2025-07-14T23:58:54.932Z",
