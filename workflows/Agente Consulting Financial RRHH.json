@@ -1,9 +1,9 @@
 {
   "createdAt": "2025-08-08T22:01:23.225Z",
-  "updatedAt": "2025-09-02T23:55:23.000Z",
+  "updatedAt": "2025-09-03T00:34:15.000Z",
   "id": "KhIu4XZ1rR2d7zqy",
   "name": "Agente Consulting Financial RRHH",
-  "active": false,
+  "active": true,
   "isArchived": false,
   "nodes": [
     {
@@ -1482,7 +1482,7 @@
         "rule": {
           "interval": [
             {
-              "field": "minutes"
+              "field": "hours"
             }
           ]
         }
@@ -1556,7 +1556,7 @@
           "conditions": [
             {
               "id": "2aee4760-625d-48ed-80f9-a34ef701c839",
-              "leftValue": "={{ $now.diff(DateTime.fromISO($json.last_interaction), 'minutes').toObject().minutes }}\n",
+              "leftValue": "={{ $now.diff(DateTime.fromISO($json.last_interaction), 'hours').toObject().hours }}\n",
               "rightValue": 5,
               "operator": {
                 "type": "number",
@@ -1572,8 +1572,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        1280,
-        860
+        1060,
+        840
       ],
       "id": "7406517e-926d-411d-a32e-a2ae1aa62d98",
       "name": "If1"
@@ -1589,8 +1589,8 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        1540,
-        840
+        1320,
+        820
       ],
       "id": "cd1e885f-9c1d-4b74-8d88-ce6449d53ea7",
       "name": "Send a text message1",
@@ -1619,13 +1619,13 @@
           "cachedResultName": "Hoja 1",
           "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1dZcm0jG2eCp6Ooam-qKSiTyh3Ccnr4fqc_eyEUok0uQ/edit#gid=0"
         },
-        "startIndex": "={{ $('If1').item.json.row_number }}"
+        "startIndex": "={{ $json.row_number }}"
       },
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.6,
       "position": [
-        1760,
-        840
+        1740,
+        820
       ],
       "id": "a0a2bec3-8dd6-417e-b8de-60670e69c20a",
       "name": "Delete rows or columns from sheet",
@@ -1638,16 +1638,44 @@
     },
     {
       "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1dZcm0jG2eCp6Ooam-qKSiTyh3Ccnr4fqc_eyEUok0uQ",
+          "mode": "list",
+          "cachedResultName": "registro_estado",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1dZcm0jG2eCp6Ooam-qKSiTyh3Ccnr4fqc_eyEUok0uQ/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1dZcm0jG2eCp6Ooam-qKSiTyh3Ccnr4fqc_eyEUok0uQ/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "chat_id",
+              "lookupValue": "={{ $json.result.chat.id }}"
+            }
+          ]
+        },
         "options": {}
       },
-      "type": "n8n-nodes-base.splitInBatches",
-      "typeVersion": 3,
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
       "position": [
-        1040,
-        840
+        1540,
+        820
       ],
-      "id": "4f6d77d9-d31f-44a5-84f0-755e2e507494",
-      "name": "Loop Over Items"
+      "id": "fa65e0c2-5eb0-4ce3-af41-ed9b9481cfd8",
+      "name": "Get row(s) in sheet1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "T1b495TNgv7GQdA8",
+          "name": "Google Sheets Jumperaron"
+        }
+      }
     }
   ],
   "connections": {
@@ -1820,7 +1848,7 @@
       "main": [
         [
           {
-            "node": "Loop Over Items",
+            "node": "If1",
             "type": "main",
             "index": 0
           }
@@ -1836,32 +1864,14 @@
             "index": 0
           }
         ],
-        [
-          {
-            "node": "Loop Over Items",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "Send a text message1": {
       "main": [
         [
           {
-            "node": "Delete rows or columns from sheet",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Loop Over Items": {
-      "main": [
-        [],
-        [
-          {
-            "node": "If1",
+            "node": "Get row(s) in sheet1",
             "type": "main",
             "index": 0
           }
@@ -1870,9 +1880,14 @@
     },
     "Delete rows or columns from sheet": {
       "main": [
+        []
+      ]
+    },
+    "Get row(s) in sheet1": {
+      "main": [
         [
           {
-            "node": "Loop Over Items",
+            "node": "Delete rows or columns from sheet",
             "type": "main",
             "index": 0
           }
@@ -1894,7 +1909,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "6b22da16-6549-4aa8-a082-43b73136d43f",
+  "versionId": "cfe8ac36-8d77-4354-a8ab-b67afd9be099",
   "triggerCount": 2,
   "shared": [
     {
