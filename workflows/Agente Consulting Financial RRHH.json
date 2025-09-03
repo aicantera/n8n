@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-08-08T22:01:23.225Z",
-  "updatedAt": "2025-09-02T22:45:55.000Z",
+  "updatedAt": "2025-09-02T23:55:23.000Z",
   "id": "KhIu4XZ1rR2d7zqy",
   "name": "Agente Consulting Financial RRHH",
   "active": false,
@@ -1482,7 +1482,7 @@
         "rule": {
           "interval": [
             {
-              "field": "hours"
+              "field": "minutes"
             }
           ]
         }
@@ -1490,8 +1490,8 @@
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
       "position": [
-        640,
-        720
+        620,
+        840
       ],
       "id": "96097cc3-666b-419c-8d4c-69c00c6afbd1",
       "name": "Schedule Trigger"
@@ -1517,8 +1517,8 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.6,
       "position": [
-        840,
-        720
+        820,
+        840
       ],
       "id": "a0fa8961-2968-48e6-97e4-e3270b393bf7",
       "name": "Get row(s) in sheet",
@@ -1537,8 +1537,8 @@
       "type": "n8n-nodes-base.splitOut",
       "typeVersion": 1,
       "position": [
-        840,
-        920
+        660,
+        1080
       ],
       "id": "3a190417-7eec-4a4b-ad1a-f46cbbb10473",
       "name": "Split Out",
@@ -1550,13 +1550,13 @@
           "options": {
             "caseSensitive": true,
             "leftValue": "",
-            "typeValidation": "strict",
+            "typeValidation": "loose",
             "version": 2
           },
           "conditions": [
             {
               "id": "2aee4760-625d-48ed-80f9-a34ef701c839",
-              "leftValue": "={{ $now.diff(DateTime.fromISO($json.last_interaction), 'hours').toObject().hours }}",
+              "leftValue": "={{ $now.diff(DateTime.fromISO($json.last_interaction), 'minutes').toObject().minutes }}\n",
               "rightValue": 5,
               "operator": {
                 "type": "number",
@@ -1566,13 +1566,14 @@
           ],
           "combinator": "and"
         },
+        "looseTypeValidation": true,
         "options": {}
       },
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        1060,
-        720
+        1280,
+        860
       ],
       "id": "7406517e-926d-411d-a32e-a2ae1aa62d98",
       "name": "If1"
@@ -1588,8 +1589,8 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        1320,
-        740
+        1540,
+        840
       ],
       "id": "cd1e885f-9c1d-4b74-8d88-ce6449d53ea7",
       "name": "Send a text message1",
@@ -1600,6 +1601,53 @@
           "name": "Telegram Consulting Financial RRHH"
         }
       }
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "documentId": {
+          "__rl": true,
+          "value": "1dZcm0jG2eCp6Ooam-qKSiTyh3Ccnr4fqc_eyEUok0uQ",
+          "mode": "list",
+          "cachedResultName": "registro_estado",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1dZcm0jG2eCp6Ooam-qKSiTyh3Ccnr4fqc_eyEUok0uQ/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1dZcm0jG2eCp6Ooam-qKSiTyh3Ccnr4fqc_eyEUok0uQ/edit#gid=0"
+        },
+        "startIndex": "={{ $('If1').item.json.row_number }}"
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        1760,
+        840
+      ],
+      "id": "a0a2bec3-8dd6-417e-b8de-60670e69c20a",
+      "name": "Delete rows or columns from sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "T1b495TNgv7GQdA8",
+          "name": "Google Sheets Jumperaron"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        1040,
+        840
+      ],
+      "id": "4f6d77d9-d31f-44a5-84f0-755e2e507494",
+      "name": "Loop Over Items"
     }
   ],
   "connections": {
@@ -1772,7 +1820,7 @@
       "main": [
         [
           {
-            "node": "If1",
+            "node": "Loop Over Items",
             "type": "main",
             "index": 0
           }
@@ -1781,10 +1829,50 @@
     },
     "If1": {
       "main": [
-        [],
         [
           {
             "node": "Send a text message1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a text message1": {
+      "main": [
+        [
+          {
+            "node": "Delete rows or columns from sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [],
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete rows or columns from sheet": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
             "type": "main",
             "index": 0
           }
@@ -1797,13 +1885,17 @@
     "callerPolicy": "workflowsFromSameOwner",
     "errorWorkflow": "fPp1Yp5RDKGW0fTo"
   },
-  "staticData": null,
+  "staticData": {
+    "node:Schedule Trigger": {
+      "recurrenceRules": []
+    }
+  },
   "meta": {
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "41b847ef-8b26-4dd4-a4aa-7e3c44044099",
-  "triggerCount": 1,
+  "versionId": "6b22da16-6549-4aa8-a082-43b73136d43f",
+  "triggerCount": 2,
   "shared": [
     {
       "createdAt": "2025-08-08T22:01:23.230Z",
