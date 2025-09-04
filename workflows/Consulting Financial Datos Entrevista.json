@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-08-21T22:05:06.922Z",
-  "updatedAt": "2025-08-28T20:57:14.000Z",
+  "updatedAt": "2025-09-03T23:49:30.000Z",
   "id": "P1aDenWn4hFrMR0a",
   "name": "Consulting Financial Datos Entrevista",
   "active": false,
@@ -54,7 +54,7 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.6,
       "position": [
-        220,
+        224,
         0
       ],
       "id": "bbbef3c2-36a4-47b4-8455-c1134827f74b",
@@ -65,6 +65,43 @@
           "name": "Google Sheets Jumperaron"
         }
       }
+    },
+    {
+      "parameters": {
+        "jsCode": "// --- Lógica para procesar los datos de la entrevista ---\n\n// Obtenemos el primer item de la entrada (los datos de la hoja de cálculo)\nconst interviewData = $items(\"1. Simular Datos de Google Sheet\")[0].json.inputData[0];\n\n// --- 1. Lógica para calcular la próxima fecha de entrevista ---\n\nconst dayMap = {\n  'domingo': 0, 'lunes': 1, 'martes': 2, 'miércoles': 3, 'miercoles': 3, \n  'jueves': 4, 'viernes': 5, 'sábado': 6\n};\n\nconst horario = interviewData.HORARIO.toLowerCase();\n\n// Expresiones regulares para extraer días y horas\nconst dayRegex = /de (lunes|martes|miércoles|miercoles|jueves|viernes|sábado|domingo) a (lunes|martes|miércoles|miercoles|jueves|viernes|sábado|domingo)/;\nconst timeRegex = /(\\d{1,2}:\\d{2}\\s?(am|pm))/g;\n\nconst dayMatch = horario.match(dayRegex);\nconst timeMatches = horario.match(timeRegex);\n\nlet confirmationSentence = \"No se pudo determinar un horario. Favor de verificar el formato en la celda 'HORARIO'.\";\n\nif (dayMatch && timeMatches) {\n  const startDay = dayMap[dayMatch[1]];\n  const endDay = dayMap[dayMatch[2]];\n  const interviewStartTime = timeMatches[0];\n\n  let interviewDate = new Date();\n  // Empezamos a buscar desde mañana\n  interviewDate.setDate(interviewDate.getDate() + 1);\n  interviewDate.setHours(0, 0, 0, 0);\n\n  let foundDate = false;\n  // Buscamos en los próximos 14 días por una fecha disponible\n  for (let i = 0; i < 14; i++) {\n    let currentDayOfWeek = interviewDate.getDay();\n\n    if (currentDayOfWeek >= startDay && currentDayOfWeek <= endDay) {\n      foundDate = true;\n      break;\n    }\n    interviewDate.setDate(interviewDate.getDate() + 1);\n  }\n\n  if (foundDate) {\n    // Formateamos la fecha a un formato amigable en español (ej: miércoles 8 de abril)\n    const options = { weekday: 'long', day: 'numeric', month: 'long' };\n    const formattedDate = interviewDate.toLocaleDateString('es-ES', options);\n    \n    // Construimos la oración de confirmación\n    confirmationSentence = `Te confirmamos tu entrevista para el día ${formattedDate} a las ${interviewStartTime}`;\n  } else {\n    confirmationSentence = \"No se encontraron fechas disponibles en las próximas 2 semanas.\"\n  }\n}\n\n// --- 2. Lógica para formatear las listas (documentos, importante, notas) ---\nconst formatList = (text) => {\n  if (!text) return '';\n  // Reemplaza las comas con saltos de línea y quita espacios extra\n  return text.split(',').map(s => `• ${s.trim()}`).join('\\n');\n}\n\n// --- 3. Preparamos el objeto de salida ---\n\n// Copiamos los datos originales\nconst output = { ...interviewData };\n\n// Añadimos los nuevos campos formateados\noutput.formattedConfirmation = confirmationSentence;\noutput.formattedDocuments = formatList(interviewData[\"DOCUMENTACION A PRESENTAR\"]);\noutput.formattedImportant = formatList(interviewData.IMPORTANTE);\noutput.formattedNote = formatList(interviewData.NOTA);\n\n// Devolvemos el resultado para que el siguiente nodo lo pueda usar\nreturn output;\n"
+      },
+      "name": "2. Calcular Fecha y Formatear Texto",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [
+        448,
+        0
+      ],
+      "id": "c5c21e81-1c73-42a5-84bc-d4f0a0aa7120",
+      "notes": "Este nodo contiene la lógica principal:\n1.  Lee el campo `HORARIO`.\n2.  Calcula la fecha de la próxima entrevista disponible a partir del día siguiente.\n3.  Formatea las listas de documentos, notas, etc., para que se muestren correctamente."
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "mensajeFinal",
+              "value": "={{`Gracias por la información proporcionada.\n${$json.formattedConfirmation}\n\n📌 Documentación a presentar:\n${$json.formattedDocuments}\n\n🚩 Importante:\n${$json.formattedImportant}\n\n🏢 Empresa: ${$json.EMPRESA}\n📍 Ubicación: ${$json.UBICACION}\n🗺️ Ver ubicación en Google Maps: ${$json.MAPA}\n\n🛎️ Nota:\n${$json.formattedNote}\n\nQuedamos atentos a cualquier duda. ¡Mucho éxito en tu entrevista!`}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "3. Construir Mensaje Final",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        672,
+        0
+      ],
+      "id": "9edf3994-dcee-435d-bf8d-aec266634ec7",
+      "notes": "Este nodo une toda la información (tanto la original como la procesada por el nodo de Código) para crear el mensaje de texto final y limpio que puedes enviar por WhatsApp, correo, etc."
     }
   ],
   "connections": {
@@ -73,6 +110,28 @@
         [
           {
             "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "2. Calcular Fecha y Formatear Texto": {
+      "main": [
+        [
+          {
+            "node": "3. Construir Mensaje Final",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "2. Calcular Fecha y Formatear Texto",
             "type": "main",
             "index": 0
           }
@@ -91,12 +150,12 @@
     "When Executed by Another Workflow": [
       {
         "json": {
-          "nombre_empresa": "AXIOLOG"
+          "nombre_empresa": "AXIONLOG"
         }
       }
     ]
   },
-  "versionId": "47b98916-a0c5-4a29-9537-76d4786761a2",
+  "versionId": "e6ad88ac-8677-4677-a2e1-374b13fbc165",
   "triggerCount": 0,
   "shared": [
     {
