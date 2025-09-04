@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-08-20T16:23:06.918Z",
-  "updatedAt": "2025-09-03T22:36:14.000Z",
+  "updatedAt": "2025-09-04T19:07:14.000Z",
   "id": "fxGc0Kp6hEqyottE",
   "name": "chatbot cerebro cambio status",
   "active": false,
@@ -206,7 +206,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// Lee el objeto de entrada\nconst input = items[0]?.json ?? {};\n\n// Lista blanca de campos esperados (evita que se cuelen otros)\nconst allowedKeys = [\n  'state',\n  'userId',\n  'phoneNumber',\n  'info',\n  'grade_state',\n  'ticket_type',\n  'type_conversation',\n  'student_id',\n  'course_selected',\n  'justify_state',\n  'justify_selected_date',\n];\n\n// Función para detectar “vacío”\nconst isEmpty = (v) => (\n  v === null ||\n  v === undefined ||\n  (typeof v === 'string' && v.trim() === '') ||\n  (Array.isArray(v) && v.length === 0) ||\n  (typeof v === 'object' && !Array.isArray(v) && Object.keys(v).length === 0) ||\n  v === 'null' ||              // por si llega literal como string\n  v === 'undefined'            // idem\n);\n\n// Filtra solo claves permitidas y no vacías\nconst cleaned = Object.fromEntries(\n  Object.entries(input)\n    .filter(([k]) => allowedKeys.includes(k))\n    .filter(([_, v]) => !isEmpty(v))\n);\n\n// Agrega la fecha actual en formato requerido\ncleaned.now = new Date().toLocaleString('es-MX', {\n  timeZone: 'America/Mexico_City'\n});\n\n// Devuelve un único item con el objeto “limpio” + fecha\nreturn [{ json: cleaned }];\n"
+        "jsCode": "// Lee el objeto de entrada\nconst input = items[0]?.json ?? {};\n\n// Lista blanca de campos esperados (evita que se cuelen otros)\nconst allowedKeys = [\n  'state',\n  'child_state',\n  'userId',\n  'phoneNumber',\n  'info',\n  'grade_state',\n  'ticket_type',\n  'type_conversation',\n  'student_id',\n  'course_selected',\n  'justify_state',\n  'justify_selected_date',\n];\n\n// Función para detectar “vacío”\nconst isEmpty = (v) => (\n  v === null ||\n  v === undefined ||\n  (typeof v === 'string' && v.trim() === '') ||\n  (Array.isArray(v) && v.length === 0) ||\n  (typeof v === 'object' && !Array.isArray(v) && Object.keys(v).length === 0) ||\n  v === 'null' ||              // por si llega literal como string\n  v === 'undefined'            // idem\n);\n\n// Filtra solo claves permitidas y no vacías\nconst cleaned = Object.fromEntries(\n  Object.entries(input)\n    .filter(([k]) => allowedKeys.includes(k))\n    .filter(([_, v]) => !isEmpty(v))\n);\n\n// Agrega la fecha actual en formato requerido\ncleaned.now = new Date().toLocaleString('es-MX', {\n  timeZone: 'America/Mexico_City'\n});\n\n// Devuelve un único item con el objeto “limpio” + fecha\nreturn [{ json: cleaned }];\n"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -237,7 +237,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// Tomamos el objeto limpio del nodo anterior\nconst input = items[0]?.json ?? {};\n\n// Construimos el body de la petición\nconst body = {\n  phone: input.phoneNumber,        // obligatorio\n  state: input.state,\n  userId: input.userId,\n  information: input.info,         // mapeado a \"information\"\n  grade_state: input.grade_state,\n  type_conversation: input.type_conversation,\n  student_id: input.student_id,\n  course_selected: input.course_selected,\n  justify_state: input.justify_state,\n  ticket_type:input.ticket_type,\n  justify_selected_date: input.justify_selected_date,\n  date: input.now                   // si quieres mandar la fecha actual también\n};\n\n// Retornamos un único item con el body\nreturn [{ json: body }];\n"
+        "jsCode": "// Tomamos el objeto limpio del nodo anterior\nconst input = items[0]?.json ?? {};\nconst states = {\n  parent_state:input.state,\n  child_state:input.child_state\n}\n\n// Construimos el body de la petición\nconst body = {\n  phone: input.phoneNumber,        // obligatorio\n  states: states,\n  userId: input.userId,\n  information: input.info,         // mapeado a \"information\"\n  grade_state: input.grade_state,\n  type_conversation: input.type_conversation,\n  student_id: input.student_id,\n  course_selected: input.course_selected,\n  justify_state: input.justify_state,\n  ticket_type:input.ticket_type,\n  justify_selected_date: input.justify_selected_date,\n  date: input.now                   // si quieres mandar la fecha actual también\n};\n\n// Retornamos un único item con el body\nreturn [{ json: body }];\n"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -345,7 +345,7 @@
       }
     ]
   },
-  "versionId": "6a8acf85-343b-4038-93fe-b70e69edb3f6",
+  "versionId": "2b4f7722-6417-4c79-849c-33b707ac6d3d",
   "triggerCount": 0,
   "shared": [
     {
