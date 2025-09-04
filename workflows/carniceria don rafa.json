@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-08-28T00:23:36.446Z",
-  "updatedAt": "2025-09-02T01:39:23.000Z",
+  "updatedAt": "2025-09-04T18:30:46.000Z",
   "id": "SPyRYxJsTB1Th5DA",
   "name": "carniceria don rafa",
   "active": true,
@@ -11,13 +11,13 @@
         "promptType": "define",
         "text": "={{ $json.message.text }}",
         "options": {
-          "systemMessage": "=# Prompt para Agente de Ventas: Rafita\n\n## 1. Identidad y Rol\n\n- **Tu nombre es Rafita.**\n- Eres un asistente virtual experto y amigable, especializado en la venta de carnes para la carnicería **\"San Rafa\"**.\n- Tu tono es servicial, cercano y profesional. Tratas a todos los clientes con amabilidad y paciencia.\n\n## 2. Objetivo Principal\n\nTu objetivo principal es asistir a los clientes en todo el proceso de compra, desde resolver sus dudas sobre los productos hasta tomar y confirmar sus pedidos de manera eficiente utilizando las herramientas a tu disposición.\n\n## 3. Herramientas Disponibles\n\nTienes acceso a las siguientes herramientas. Debes usarlas de manera lógica y secuencial.\n\n* **`kb_san_rafa`**:\n    * **Descripción**: Es tu base de conocimientos sobre el negocio (horarios, ubicación, etc.).\n    * **Cuándo usarla**: Para responder preguntas generales sobre la carnicería.\n\n* **`obtener_usuarios`**:\n    * **Descripción**: Verifica si un cliente ya está registrado en la base de datos.\n    * **Cuándo usarla**: **DEBES usar esta herramienta al INICIO de CADA conversación.**\n    * **Acción clave**: La respuesta de esta herramienta contiene varios datos del cliente. **Tu tarea es extraer el valor del campo `id` que se encuentra dentro de la respuesta (por ejemplo, en la imagen de la herramienta, el valor a extraer es \"1\"). Este es el ID de Cliente único y DEBES guardarlo en tu memoria para usarlo al crear el pedido.**\n\n* **`obtener_precios`**:\n    * **Descripción**: Consulta el catálogo completo de productos con sus precios.\n    * **Cuándo usarla**: Cuando un cliente pregunte por precios o productos disponibles.\n\n* **`generar_pedido`**:\n    * **Descripción**: Registra un nuevo pedido en el sistema. Esta herramienta requiere un parámetro llamado `usuario_id`.\n    * **Instrucción Crítica**: Para llenar el campo **`usuario_id`**, **debes usar el valor del campo `id` que extrajiste y guardaste de la herramienta `obtener_usuarios` al principio.** No uses el `chat_id` de Telegram ni el nombre del cliente. Si al principio obtuviste el `id` \"1\", aquí debes usar \"1\".\n\n## 4. Flujo de Conversación y Proceso\n\nSigue estos pasos para asegurar una atención de calidad:\n\n1.  **Saludo e Identificación**: Saluda amablemente. Inmediatamente después, utiliza `obtener_usuarios`. Al recibir la respuesta, **extrae el valor del campo `id` y guárdalo como el ID de Cliente para esta sesión.** Luego, saluda al cliente por su nombre.\n2.  **Atención a la Solicitud**: Pregunta al cliente en qué puedes ayudarle.\n3.  **Fase de Consulta**: Usa `kb_san_rafa` para dudas generales y `obtener_precios` para consultas de productos.\n4.  **Toma de Pedido**: Anota los productos y cantidades que el cliente desea.\n5.  **Confirmación y Cálculo**:\n    * Resume el pedido completo para el cliente.\n    * Usa la herramienta `calculadora` para obtener el monto total y preséntaselo en el resumen. Por ejemplo: \"Perfecto. Su pedido es: \\[Lista de productos]. El total es de $XXX.XX. ¿Es correcto?\".\n6.  **Generación del Pedido**:\n    * Una vez que el cliente confirme, utiliza la herramienta `generar_pedido`.\n    * Asegúrate de pasar a la herramienta la lista de productos, el total y, lo más importante, **pasar el ID de Cliente (que extrajiste en el paso 1) al campo `usuario_id` de la herramienta.**\n7.  **Cierre**: Agradece al cliente, infórmale sobre el número de pedido (si aplica), confirma el monto total y cualquier otro detalle relevante.\n\n## 5. Reglas y Restricciones\n\n-   **El ID es la clave**: El valor del campo `id` de la consulta de usuario es el que debe ir en el campo `usuario_id` del pedido.\n-   **No inventes información**: Usa siempre tus herramientas.\n-   **La confirmación es obligatoria**: Nunca uses `generar_pedido` sin la confirmación explícita del cliente.\n-  **No hables sobre algo que no tenga que ver con tus productos y servicios, evita hablar sobre religion, futbot, y temas fuera de tu conocimiento**\n\n---\nEl día de hoy es {{ $now.minus({ hours: 0 }).setLocale('es').toFormat(\"dd 'de' LLLL 'de' yyyy HH:mm\") }} hora de CDMX."
+          "systemMessage": "=# Prompt para Agente de Ventas: Rafita\n\n## 1. Identidad y Rol\n\n- **Tu nombre es Rafita.**\n- Eres un asistente virtual experto y amigable para la carnicería **\"San Rafa\"**.\n- Tu tono es servicial, cercano y profesional.\n\n## 2. Objetivo Principal\n\nTu objetivo es asistir a los clientes en su proceso de compra, resolver dudas y tomar pedidos usando tus herramientas.\n\n## 3. Herramientas Disponibles\n\n* **`obtener_usuarios`**:\n    * **Descripción**: Úsala **siempre al inicio de cada conversación** para identificar al cliente. Esto te permitirá saber su nombre y saludarlo de forma personalizada.\n* **`obtener_precios`**:\n    * **Descripción**: Úsala si el cliente pregunta por productos o precios.\n* **`calculadora`**:\n    * **Descripción**: Úsala para calcular el total del pedido antes de confirmarlo con el cliente.\n* **`generar_pedido`**:\n    * **Descripción**: Úsala **solo después de que el cliente haya confirmado el resumen del pedido y el total.** Esta herramienta guardará el pedido en el sistema.\n\n## 4. Flujo de Conversación\n\n1.  **Saludo e Identificación**: Saluda y usa inmediatamente `obtener_usuarios`. Cuando te devuelva el nombre, úsalo en tu saludo (Ej: \"¡Hola, Juan! ¿En qué te puedo ayudar hoy?\").\n2.  **Asistencia**: Ayuda al cliente con sus dudas usando `obtener_precios` o `kb_san_rafa`.\n3.  **Toma de Pedido**: Anota los productos y cantidades que el cliente pide.\n4.  **Confirmación y Cálculo**: Resume el pedido, calcula el total con la `calculadora` y pide la confirmación del cliente.\n5.  **Generación del Pedido**: Una vez el cliente confirme, usa la herramienta `generar_pedido`.\n6.  **Cierre**: Agradece al cliente y dale los detalles finales.\n\n## 5. Reglas y Restricciones\n\n-   No inventes información que no esté en tus herramientas.\n-   Siempre confirma el pedido con el cliente antes de usar `generar_pedido`.\n-   Mantén la conversación enfocada en los productos y servicios de la carnicería.\n\n---\nEl día de hoy es {{ $now.minus({ hours: 0 }).setLocale('es').toFormat(\"dd 'de' LLLL 'de' yyyy HH:mm\") }} hora de CDMX."
         }
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 2,
       "position": [
-        220,
+        224,
         0
       ],
       "id": "7ef303b3-0fd1-46ae-9ca5-d06d02f2dccb",
@@ -36,8 +36,8 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.2,
       "position": [
-        -200,
-        200
+        -208,
+        208
       ],
       "id": "0579aa5c-ca61-43d4-90f1-a20f6fc65910",
       "name": "OpenAI Chat Model",
@@ -58,7 +58,7 @@
       "type": "n8n-nodes-base.telegramTrigger",
       "typeVersion": 1.2,
       "position": [
-        -40,
+        -48,
         0
       ],
       "id": "fd15ab48-6def-4e79-89ed-f55e9f2205e2",
@@ -82,7 +82,7 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        540,
+        544,
         0
       ],
       "id": "24f1ab9e-3873-4998-ad37-753b613fc221",
@@ -124,8 +124,8 @@
       "type": "n8n-nodes-base.googleSheetsTool",
       "typeVersion": 4.6,
       "position": [
-        20,
-        340
+        32,
+        352
       ],
       "id": "33763b08-f04e-481a-9107-db16120646da",
       "name": "obtener_usuarios",
@@ -142,7 +142,7 @@
       "typeVersion": 1,
       "position": [
         480,
-        360
+        368
       ],
       "id": "9b7a305c-7f5c-41fc-858f-9d25f32b948a",
       "name": "calculadora"
@@ -165,7 +165,7 @@
       "typeVersion": 1.3,
       "position": [
         560,
-        220
+        224
       ],
       "id": "90ea004d-4dcf-46b3-8933-a97216c8eb65",
       "name": "kb_san_rafa",
@@ -183,15 +183,15 @@
       "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
       "typeVersion": 1.2,
       "position": [
-        620,
-        460
+        624,
+        464
       ],
       "id": "6b33ef9a-17a9-459c-bada-f4020afb4386",
       "name": "Embeddings OpenAI",
       "credentials": {
         "openAiApi": {
           "id": "0PNoojfjNHHXEtdv",
-          "name": "Test_Agente_Soporte_Gael"
+          "name": "Test_Gael"
         }
       }
     },
@@ -206,8 +206,8 @@
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
       "position": [
-        -120,
-        -380
+        -128,
+        -384
       ],
       "id": "a283eea3-8c8a-49ee-9c30-c228408b4cb7",
       "name": "Schedule Trigger"
@@ -234,122 +234,10 @@
       "typeVersion": 4.6,
       "position": [
         160,
-        340
+        352
       ],
       "id": "bd6cb15e-09de-4303-81a4-b80b2a38d7ba",
       "name": "obtener_precios",
-      "credentials": {
-        "googleSheetsOAuth2Api": {
-          "id": "VrznAZQXjQh9WpvY",
-          "name": "Google Sheets - Cantera"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "operation": "append",
-        "documentId": {
-          "__rl": true,
-          "value": "1XEsCbSZ8fNhFBWGh5raOvOQ90cgIug_4L4L1klen5xE",
-          "mode": "list",
-          "cachedResultName": "San rafa carnes",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1XEsCbSZ8fNhFBWGh5raOvOQ90cgIug_4L4L1klen5xE/edit?usp=drivesdk"
-        },
-        "sheetName": {
-          "__rl": true,
-          "value": 1840645813,
-          "mode": "list",
-          "cachedResultName": "pedidos_carniceria",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1XEsCbSZ8fNhFBWGh5raOvOQ90cgIug_4L4L1klen5xE/edit#gid=1840645813"
-        },
-        "columns": {
-          "mappingMode": "defineBelow",
-          "value": {
-            "id": "={{ parseInt(new Date().toDateTime().toSeconds()) }}",
-            "pedido json": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('pedido_json', `estructura en json del resumen del pedidos, producto, precio, kilos y total calculado`, 'string') }}",
-            "total": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('total', `total generado mediante la herramienta de 'calculadora'`, 'string') }}",
-            "estatus": "activo",
-            "usuario_id": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('usuario_id', `id de usuario obtenido de la cunsulta de usuario cliente`, 'string') }}",
-            "created_at": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('created_at', `fecha actual utilizando el formato yyyy-mm-dd hh:mm:ss en zona horario america mexico city `, 'string') }}"
-          },
-          "matchingColumns": [
-            "id"
-          ],
-          "schema": [
-            {
-              "id": "id",
-              "displayName": "id",
-              "required": false,
-              "defaultMatch": true,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": false
-            },
-            {
-              "id": "pedido json",
-              "displayName": "pedido json",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": false
-            },
-            {
-              "id": "total",
-              "displayName": "total",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": false
-            },
-            {
-              "id": "estatus",
-              "displayName": "estatus",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": false
-            },
-            {
-              "id": "usuario_id",
-              "displayName": "usuario_id",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": false
-            },
-            {
-              "id": "created_at",
-              "displayName": "created_at",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": false
-            }
-          ],
-          "attemptToConvertTypes": false,
-          "convertFieldsToString": false
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.googleSheetsTool",
-      "typeVersion": 4.6,
-      "position": [
-        320,
-        340
-      ],
-      "id": "86cdff19-f68f-4af6-945e-ea137a77111d",
-      "name": "generar_pedido",
       "credentials": {
         "googleSheetsOAuth2Api": {
           "id": "VrznAZQXjQh9WpvY",
@@ -378,8 +266,8 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.6,
       "position": [
-        100,
-        -380
+        112,
+        -384
       ],
       "id": "00e436bc-7e0a-4558-9479-67d5045388ca",
       "name": "Get row(s) in sheet",
@@ -398,7 +286,7 @@
       "typeVersion": 3,
       "position": [
         320,
-        -380
+        -384
       ],
       "id": "9e05732a-4be3-4b86-a6c8-015db931df45",
       "name": "Loop Over Items"
@@ -432,8 +320,8 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.6,
       "position": [
-        540,
-        -360
+        544,
+        -368
       ],
       "id": "dfcbf096-610f-4fcf-8ec8-447b5cef57fc",
       "name": "Get row(s) in sheet1",
@@ -498,8 +386,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        1140,
-        -360
+        1152,
+        -368
       ],
       "id": "abe4b739-fa34-4df6-81fe-42c4403b9e52",
       "name": "Edit Fields"
@@ -516,8 +404,8 @@
       "type": "n8n-nodes-base.gmail",
       "typeVersion": 2.1,
       "position": [
-        1660,
-        -360
+        1664,
+        -368
       ],
       "id": "0099e7cc-8a7e-41f7-a58e-2ee8b1a350dd",
       "name": "Send a message",
@@ -537,25 +425,10 @@
       "typeVersion": 2,
       "position": [
         1440,
-        -360
+        -368
       ],
       "id": "6a204370-ac3b-42a8-9b59-0d33445d4bb5",
       "name": "Code"
-    },
-    {
-      "parameters": {
-        "sessionIdType": "customKey",
-        "sessionKey": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
-        "contextWindowLength": 20
-      },
-      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
-      "typeVersion": 1.3,
-      "position": [
-        -80,
-        260
-      ],
-      "id": "b392f1f8-7b1c-483d-b033-b0049a45ab6b",
-      "name": "Simple Memory"
     },
     {
       "parameters": {
@@ -565,7 +438,7 @@
       "type": "@n8n/n8n-nodes-langchain.memoryManager",
       "typeVersion": 1.1,
       "position": [
-        -1000,
+        -1008,
         -160
       ],
       "id": "c24a455c-8431-4658-8220-dbbbd7484f1d",
@@ -600,8 +473,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        760,
-        -360
+        768,
+        -368
       ],
       "id": "bf882502-967a-45f9-a197-bbf3a2e1bb9c",
       "name": "If"
@@ -613,8 +486,8 @@
       "type": "@n8n/n8n-nodes-langchain.chatTrigger",
       "typeVersion": 1.1,
       "position": [
-        1320,
-        500
+        1328,
+        512
       ],
       "id": "186efe85-6b1b-4d87-8a02-08c8000181c6",
       "name": "When chat message received",
@@ -642,8 +515,8 @@
       "type": "@n8n/n8n-nodes-langchain.textClassifier",
       "typeVersion": 1.1,
       "position": [
-        1540,
-        500
+        1552,
+        512
       ],
       "id": "f54d36d8-ce3f-4fc0-93de-68ebcf7a424b",
       "name": "Text Classifier"
@@ -661,7 +534,7 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.2,
       "position": [
-        1620,
+        1632,
         720
       ],
       "id": "c23a55f2-ac3a-4148-a38b-6302e6ab742b",
@@ -683,11 +556,100 @@
       "type": "@n8n/n8n-nodes-langchain.sentimentAnalysis",
       "typeVersion": 1.1,
       "position": [
-        1560,
+        1568,
         240
       ],
       "id": "b9768069-3d22-4422-bb34-e3d05f0c04c3",
       "name": "Sentiment Analysis"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.message.chat.id }}",
+        "contextWindowLength": 20
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -48,
+        240
+      ],
+      "id": "b7d6d5c7-19cc-42b4-a8ac-a9c0d97c95c3",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "description": "a esta herramienta se va a llevar los datos del pedido",
+        "workflowId": {
+          "__rl": true,
+          "value": "FrPeKGr8zZ6TGgUv",
+          "mode": "list",
+          "cachedResultName": "generar_pedido_carniceria"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "user_phone": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+            "total": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('total', `total generado mediante la herramienta de 'calculadora'`, 'string') }}",
+            "estatus": "activo",
+            "pedido_json": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('pedido_json', `estructura en json del resumen del pedidos, producto, precio, kilos y total calculado`, 'string') }}"
+          },
+          "matchingColumns": [
+            "response"
+          ],
+          "schema": [
+            {
+              "id": "user_phone",
+              "displayName": "user_phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "total",
+              "displayName": "total",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "pedido_json",
+              "displayName": "pedido_json",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "estatus",
+              "displayName": "estatus",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        336,
+        368
+      ],
+      "id": "a8c0ecc1-e9e0-4072-aabc-ad79c5519c4c",
+      "name": "generar_pedido"
     }
   ],
   "connections": {
@@ -790,17 +752,6 @@
         ]
       ]
     },
-    "generar_pedido": {
-      "ai_tool": [
-        [
-          {
-            "node": "AI Agent",
-            "type": "ai_tool",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Get row(s) in sheet": {
       "main": [
         [
@@ -852,17 +803,6 @@
           {
             "node": "Send a message",
             "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Simple Memory": {
-      "ai_memory": [
-        [
-          {
-            "node": "AI Agent",
-            "type": "ai_memory",
             "index": 0
           }
         ]
@@ -933,6 +873,28 @@
       "main": [
         []
       ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "generar_pedido": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -950,9 +912,9 @@
     "Telegram Trigger": [
       {
         "json": {
-          "update_id": 291253568,
+          "update_id": 291253615,
           "message": {
-            "message_id": 32,
+            "message_id": 135,
             "from": {
               "id": 775456693,
               "is_bot": false,
@@ -966,14 +928,14 @@
               "last_name": "Correa",
               "type": "private"
             },
-            "date": 1756422903,
-            "text": "si correcto"
+            "date": 1757010313,
+            "text": "Si"
           }
         }
       }
     ]
   },
-  "versionId": "94eba806-2cc3-493e-8dcf-a76db6bbf0cd",
+  "versionId": "c55b7f7f-e0d5-4bc8-8c59-0df2b6b34681",
   "triggerCount": 3,
   "shared": [
     {
