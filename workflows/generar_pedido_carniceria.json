@@ -1,0 +1,296 @@
+{
+  "createdAt": "2025-09-04T18:26:04.620Z",
+  "updatedAt": "2025-09-04T18:41:28.000Z",
+  "id": "FrPeKGr8zZ6TGgUv",
+  "name": "generar_pedido_carniceria",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "user_phone",
+              "type": "any"
+            },
+            {
+              "name": "total"
+            },
+            {
+              "name": "pedido_json"
+            },
+            {
+              "name": "estatus"
+            }
+          ]
+        }
+      },
+      "id": "9423f8b4-a08d-431d-a894-8cf1c08b2e7b",
+      "typeVersion": 1.1,
+      "name": "Start",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "position": [
+        16,
+        368
+      ]
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1XEsCbSZ8fNhFBWGh5raOvOQ90cgIug_4L4L1klen5xE",
+          "mode": "list",
+          "cachedResultName": "San rafa carnes",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1XEsCbSZ8fNhFBWGh5raOvOQ90cgIug_4L4L1klen5xE/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "clientes_carniceria",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1XEsCbSZ8fNhFBWGh5raOvOQ90cgIug_4L4L1klen5xE/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "numero",
+              "lookupValue": "={{ $json.user_phone }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        224,
+        368
+      ],
+      "id": "020778c3-f4ef-471a-aedb-deebe78e6e81",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "VrznAZQXjQh9WpvY",
+          "name": "Google Sheets - Cantera"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1XEsCbSZ8fNhFBWGh5raOvOQ90cgIug_4L4L1klen5xE",
+          "mode": "list",
+          "cachedResultName": "San rafa carnes",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1XEsCbSZ8fNhFBWGh5raOvOQ90cgIug_4L4L1klen5xE/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1840645813,
+          "mode": "list",
+          "cachedResultName": "pedidos_carniceria",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1XEsCbSZ8fNhFBWGh5raOvOQ90cgIug_4L4L1klen5xE/edit#gid=1840645813"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ parseInt(new Date().toDateTime().toSeconds()) }}",
+            "pedido json": "={{ $('Start').item.json.pedido_json }}",
+            "total": "={{ $('Start').item.json.total }}",
+            "estatus": "={{ $('Start').item.json.estatus }}",
+            "usuario_id": "={{ $json.id }}",
+            "created_at": "={{ $now.setZone('America/Mexico_City').toFormat(\"yyyy-MM-dd HH:mm:ss\") }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "pedido json",
+              "displayName": "pedido json",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "total",
+              "displayName": "total",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "estatus",
+              "displayName": "estatus",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "usuario_id",
+              "displayName": "usuario_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        432,
+        368
+      ],
+      "id": "00a4652b-fc66-42d7-bca3-a343e03a4d04",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "VrznAZQXjQh9WpvY",
+          "name": "Google Sheets - Cantera"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {
+    "Start": [
+      {
+        "json": {
+          "user_phone": 775456693,
+          "total": "$180.00",
+          "pedido_json": "{\"producto\":\"Chorizo\",\"precio\":90,\"kilos\":2,\"total\":180}",
+          "estatus": "activo"
+        }
+      }
+    ]
+  },
+  "versionId": "d465a9ec-7096-44de-ba93-a4fb7477e31c",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "createdAt": "2025-09-04T18:26:04.625Z",
+      "updatedAt": "2025-09-04T18:26:04.625Z",
+      "role": "workflow:owner",
+      "workflowId": "FrPeKGr8zZ6TGgUv",
+      "projectId": "BZ9Ta5yhe4RhzY78",
+      "project": {
+        "createdAt": "2025-05-13T15:56:28.209Z",
+        "updatedAt": "2025-05-13T16:18:54.372Z",
+        "id": "BZ9Ta5yhe4RhzY78",
+        "name": "CANTERA ADMIN <canteradigital7@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "projectRelations": [
+          {
+            "createdAt": "2025-05-13T15:56:28.209Z",
+            "updatedAt": "2025-05-13T15:56:28.209Z",
+            "role": "project:personalOwner",
+            "userId": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
+            "projectId": "BZ9Ta5yhe4RhzY78",
+            "user": {
+              "createdAt": "2025-05-13T15:56:27.880Z",
+              "updatedAt": "2025-09-04T06:00:32.000Z",
+              "id": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
+              "email": "canteradigital7@gmail.com",
+              "firstName": "CANTERA",
+              "lastName": "ADMIN",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-05-13T16:19:25.161Z",
+                "personalization_survey_n8n_version": "1.92.2",
+                "companySize": "<20",
+                "companyType": "saas",
+                "role": "customer-support",
+                "reportedSource": "event"
+              },
+              "settings": {
+                "userActivated": true,
+                "firstSuccessfulWorkflowId": "PTbESRzX3rguwQN8",
+                "userActivatedAt": 1747154580970,
+                "easyAIWorkflowOnboarded": true,
+                "npsSurvey": {
+                  "responded": true,
+                  "lastShownAt": 1748367494893
+                },
+                "dismissedCallouts": {
+                  "aiAgentStarterCallout": true,
+                  "preBuiltAgentsCalloutHttpRequest": true
+                }
+              },
+              "role": "global:owner",
+              "disabled": false,
+              "mfaEnabled": false,
+              "lastActiveAt": "2025-09-04",
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": []
+}
