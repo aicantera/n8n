@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-09-03T19:05:48.841Z",
-  "updatedAt": "2025-09-04T17:01:12.000Z",
+  "updatedAt": "2025-09-04T17:37:43.000Z",
   "id": "YaV9OmzlTVADEm5X",
   "name": "Agente Demo Canon",
   "active": true,
@@ -35,7 +35,7 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.2,
       "position": [
-        240,
+        220,
         260
       ],
       "id": "0c66179d-4b75-456b-a677-ef8a1afcd7e3",
@@ -56,7 +56,7 @@
       "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
       "typeVersion": 1.3,
       "position": [
-        380,
+        360,
         300
       ],
       "id": "ca3fe51f-a8c8-4ccf-9b6d-cafbce64f62f",
@@ -223,14 +223,15 @@
         "subject": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Subject', `añade el motivo del correo, en este caso el nombre del o de los cursos que adquirió el usuario`, 'string') }}",
         "message": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message', `añade toda la información relevante sobre los cursos o curso que adquirió el usuario, ordénalos de una forma bonita y estructurada `, 'string') }}",
         "options": {
-          "appendAttribution": false
+          "appendAttribution": false,
+          "senderName": "Canon Academy"
         }
       },
       "type": "n8n-nodes-base.gmailTool",
       "typeVersion": 2.1,
       "position": [
-        580,
-        380
+        940,
+        540
       ],
       "id": "2bf46fe1-6c7d-49ca-a02c-8fe1c1b7343c",
       "name": "correo_cursos",
@@ -240,7 +241,8 @@
           "id": "TfuWCh8JVlH2yVFO",
           "name": "Gael Gmail"
         }
-      }
+      },
+      "disabled": true
     },
     {
       "parameters": {
@@ -392,8 +394,8 @@
       "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
       "typeVersion": 1.3,
       "position": [
-        740,
-        340
+        700,
+        420
       ],
       "id": "94ad1699-e945-48ee-a891-c0e3400c89d5",
       "name": "Supabase Vector Store1",
@@ -411,8 +413,8 @@
       "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
       "typeVersion": 1.2,
       "position": [
-        760,
-        520
+        700,
+        580
       ],
       "id": "f079c464-7d28-4626-b9fc-dec47c98977b",
       "name": "Embeddings OpenAI",
@@ -443,7 +445,6 @@
         "columns": {
           "mappingMode": "defineBelow",
           "value": {
-            "id": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('id__using_to_match_', ``, 'string') }}",
             "modalidad": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('modalidad', `si los recursos son presenciales u online`, 'string') }}",
             "diplomado": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('diplomado', `si es que adquirió algún diplomado anteriormente`, 'string') }}",
             "información_General": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('informaci_n_General', `información adicional como requisitos, perfil a quien va, si tiene cupo limitado o no y más información que se tiene que tomar en cuenta`, 'string') }}",
@@ -452,7 +453,8 @@
             "correo_Cursante": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('correo_Cursante', `correo electrónico de la persona que tomara los recursos`, 'string') }}",
             "observaciones_Cursante": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('observaciones_Cursante', `si la persona cursante no tiene equipo necesario, alguna enfermedad a tomar en cuenta, o si tiene experiencia o no, etc`, 'string') }}",
             "precio": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('precio', `el precio o costo de los recursos`, 'string') }}",
-            "numero_Celular": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('numero_Celular', `numero celular del cursante`, 'string') }}"
+            "numero_Celular": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('numero_Celular', `numero celular del cursante`, 'string') }}",
+            "id": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('id__using_to_match_', `un número de identificación que no puede repetirse y es creciente`, 'string') }}"
           },
           "matchingColumns": [
             "id"
@@ -567,8 +569,8 @@
       "type": "n8n-nodes-base.googleSheetsTool",
       "typeVersion": 4.6,
       "position": [
-        440,
-        500
+        360,
+        520
       ],
       "id": "e9bc274f-e9b7-4873-a09c-a9ea1cc2f7e2",
       "name": "consultar o insertar datos",
@@ -578,6 +580,123 @@
           "name": "Gael Sheets"
         }
       }
+    },
+    {
+      "parameters": {
+        "description": "llama a este subflujo cuando sea necesario crear el correo que se enviara al usuario",
+        "workflowId": {
+          "__rl": true,
+          "value": "z08CTdjm00oTJUJj",
+          "mode": "list",
+          "cachedResultName": "subflujo_correo_cursos"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "correo": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('correo', `correo electrónico `, 'string') }}",
+            "asunto": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('asunto', `asunto del correo`, 'string') }}",
+            "fecha": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fecha', `fechas del recurso`, 'string') }}",
+            "nombre_Cursante": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('nombre_Cursante', `nombre de la persona que tomara los recursos`, 'string') }}",
+            "ubicación": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('ubicaci_n', `ubicación del lugar donde serán los recursos`, 'string') }}",
+            "modalidad": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('modalidad', `modalidad de los recursos`, 'string') }}",
+            "precio": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('precio', `precio de los recursos o recurso`, 'string') }}",
+            "link_Acceso": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('link_Acceso', `el link del recurso, solo si aplica`, 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "correo",
+              "displayName": "correo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "asunto",
+              "displayName": "asunto",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "fecha",
+              "displayName": "fecha",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "nombre_Cursante",
+              "displayName": "nombre_Cursante",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "ubicación",
+              "displayName": "ubicación",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "modalidad",
+              "displayName": "modalidad",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "precio",
+              "displayName": "precio",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "link_Acceso",
+              "displayName": "link_Acceso",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        540,
+        420
+      ],
+      "id": "664687b2-6735-4ec4-8ecc-69ef7b1af829",
+      "name": "correo_cursos1"
     }
   ],
   "connections": {
@@ -678,13 +797,7 @@
     },
     "correo_cursos": {
       "ai_tool": [
-        [
-          {
-            "node": "AI Agent",
-            "type": "ai_tool",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "Default Data Loader": {
@@ -774,6 +887,17 @@
           }
         ]
       ]
+    },
+    "correo_cursos1": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -784,7 +908,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "42545019-6437-4cad-bcd9-a1ab34667987",
+  "versionId": "fc56e339-8103-4c02-9634-44b018ad00af",
   "triggerCount": 1,
   "shared": [
     {
