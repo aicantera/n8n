@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-08-21T22:05:06.922Z",
-  "updatedAt": "2025-09-03T23:49:30.000Z",
+  "updatedAt": "2025-09-04T00:21:00.000Z",
   "id": "P1aDenWn4hFrMR0a",
   "name": "Consulting Financial Datos Entrevista",
   "active": false,
@@ -68,7 +68,78 @@
     },
     {
       "parameters": {
-        "jsCode": "// --- Lógica para procesar los datos de la entrevista ---\n\n// Obtenemos el primer item de la entrada (los datos de la hoja de cálculo)\nconst interviewData = $items(\"1. Simular Datos de Google Sheet\")[0].json.inputData[0];\n\n// --- 1. Lógica para calcular la próxima fecha de entrevista ---\n\nconst dayMap = {\n  'domingo': 0, 'lunes': 1, 'martes': 2, 'miércoles': 3, 'miercoles': 3, \n  'jueves': 4, 'viernes': 5, 'sábado': 6\n};\n\nconst horario = interviewData.HORARIO.toLowerCase();\n\n// Expresiones regulares para extraer días y horas\nconst dayRegex = /de (lunes|martes|miércoles|miercoles|jueves|viernes|sábado|domingo) a (lunes|martes|miércoles|miercoles|jueves|viernes|sábado|domingo)/;\nconst timeRegex = /(\\d{1,2}:\\d{2}\\s?(am|pm))/g;\n\nconst dayMatch = horario.match(dayRegex);\nconst timeMatches = horario.match(timeRegex);\n\nlet confirmationSentence = \"No se pudo determinar un horario. Favor de verificar el formato en la celda 'HORARIO'.\";\n\nif (dayMatch && timeMatches) {\n  const startDay = dayMap[dayMatch[1]];\n  const endDay = dayMap[dayMatch[2]];\n  const interviewStartTime = timeMatches[0];\n\n  let interviewDate = new Date();\n  // Empezamos a buscar desde mañana\n  interviewDate.setDate(interviewDate.getDate() + 1);\n  interviewDate.setHours(0, 0, 0, 0);\n\n  let foundDate = false;\n  // Buscamos en los próximos 14 días por una fecha disponible\n  for (let i = 0; i < 14; i++) {\n    let currentDayOfWeek = interviewDate.getDay();\n\n    if (currentDayOfWeek >= startDay && currentDayOfWeek <= endDay) {\n      foundDate = true;\n      break;\n    }\n    interviewDate.setDate(interviewDate.getDate() + 1);\n  }\n\n  if (foundDate) {\n    // Formateamos la fecha a un formato amigable en español (ej: miércoles 8 de abril)\n    const options = { weekday: 'long', day: 'numeric', month: 'long' };\n    const formattedDate = interviewDate.toLocaleDateString('es-ES', options);\n    \n    // Construimos la oración de confirmación\n    confirmationSentence = `Te confirmamos tu entrevista para el día ${formattedDate} a las ${interviewStartTime}`;\n  } else {\n    confirmationSentence = \"No se encontraron fechas disponibles en las próximas 2 semanas.\"\n  }\n}\n\n// --- 2. Lógica para formatear las listas (documentos, importante, notas) ---\nconst formatList = (text) => {\n  if (!text) return '';\n  // Reemplaza las comas con saltos de línea y quita espacios extra\n  return text.split(',').map(s => `• ${s.trim()}`).join('\\n');\n}\n\n// --- 3. Preparamos el objeto de salida ---\n\n// Copiamos los datos originales\nconst output = { ...interviewData };\n\n// Añadimos los nuevos campos formateados\noutput.formattedConfirmation = confirmationSentence;\noutput.formattedDocuments = formatList(interviewData[\"DOCUMENTACION A PRESENTAR\"]);\noutput.formattedImportant = formatList(interviewData.IMPORTANTE);\noutput.formattedNote = formatList(interviewData.NOTA);\n\n// Devolvemos el resultado para que el siguiente nodo lo pueda usar\nreturn output;\n"
+        "jsCode": "// --- Lógica para procesar los datos de la entrevista ---\n\n// Obtenemos el primer item de la entrada (los datos de la hoja de cálculo)\n// CAMBIO: Se usa $items('main')[0].json para referenciar la entrada por nombre ('main'), lo cual es más robusto.\nconst interviewData = $items('Get row(s) in sheet')[0].json;\n\n// --- 1. Lógica para calcular la próxima fecha de entrevista ---\n\nconst dayMap = {\n  'domingo': 0, 'lunes': 1, 'martes': 2, 'miércoles': 3, 'miercoles': 3, \n  'jueves': 4, 'viernes': 5, 'sábado': 6\n};\n\n// Se agrega una verificación para asegurar que HORARIO no sea nulo\nconst horario = (interviewData.HORARIO || '').toLowerCase();\n\n// Expresiones regulares para extraer días y horas\nconst dayRegex = /de (lunes|martes|miércoles|miercoles|jueves|viernes|sábado|domingo) a (lunes|martes|miércoles|miercoles|jueves|viernes|sábado|domingo)/;\nconst timeRegex = /(\\d{1,2}:\\d{2}\\s?(am|pm))/g;\n\nconst dayMatch = horario.match(dayRegex);\nconst timeMatches = horario.match(timeRegex);\n\nlet confirmationSentence = \"No se pudo determinar un horario. Favor de verificar el formato en la celda 'HORARIO'.\";\n\nif (dayMatch && timeMatches) {\n  const startDay = dayMap[dayMatch[1]];\n  const endDay = dayMap[dayMatch[2]];\n  const interviewStartTime = timeMatches[0];\n\n  let interviewDate = new Date();\n  // Empezamos a buscar desde mañana\n  interviewDate.setDate(interviewDate.getDate() + 1);\n  interviewDate.setHours(0, 0, 0, 0);\n\n  let foundDate = false;\n  // Buscamos en los próximos 14 días por una fecha disponible\n  for (let i = 0; i < 14; i++) {\n    let currentDayOfWeek = interviewDate.getDay();\n\n    if (currentDayOfWeek >= startDay && currentDayOfWeek <= endDay) {\n      foundDate = true;\n      break;\n    }\n    interviewDate.setDate(interviewDate.getDate() + 1);\n  }\n\n  if (foundDate) {\n    // Formateamos la fecha a un formato amigable en español (ej: miércoles 8 de abril)\n    const options = { weekday: 'long', day: 'numeric', month: 'long' };\n    const formattedDate = interviewDate.toLocaleDateString('es-ES', options);\n    \n    // Construimos la oración de confirmación\n    confirmationSentence = `Te confirmamos tu entrevista para el día ${formattedDate} a las ${interviewStartTime}`;\n  } else {\n    confirmationSentence = \"No se encontraron fechas disponibles en las próximas 2 semanas.\"\n  }\n}\n\n// --- 2. Lógica para formatear las listas (documentos, importante, notas) ---\nconst formatList = (text) => {\n  if (!text) return '';\n  // Reemplaza las comas con saltos de línea y quita espacios extra\n  return text.split(',').map(s => `• ${s.trim()}`).join('\\n');\n}\n\n// --- 3. Preparamos el objeto de salida ---\n\n// Copiamos los datos originales\nconst output = { ...interviewData };\n\n// Añadimos los nuevos campos formateados\noutput.formattedConfirmation = confirmationSentence;\noutput.formattedDocuments = formatList(interviewData[\"DOCUMENTACION A PRESENTAR\"]);\noutput.formattedImportant = formatList(interviewData.IMPORTANTE);\noutput.formattedNote = formatList(interviewData.NOTA);\n\n// Devolvemos el resultado para que el siguiente nodo lo pueda usar\nreturn output;\n"
+      },
+      "name": "2. Calcular Fecha y Formatear Texto1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [
+        448,
+        240
+      ],
+      "id": "cd9c5d42-9afa-40ad-8d26-de2ebe3425b6",
+      "notes": "Este nodo contiene la lógica principal:\n1.  Lee el campo `HORARIO`.\n2.  Calcula la fecha de la próxima entrevista disponible a partir del día siguiente.\n3.  Formatea las listas de documentos, notas, etc., para que se muestren correctamente."
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "mensajeFinal",
+              "value": "={{`Gracias por la información proporcionada.\n${$json.formattedConfirmation}\n\n📌 Documentación a presentar:\n${$json.formattedDocuments}\n\n🚩 Importante:\n${$json.formattedImportant}\n\n🏢 Empresa: ${$json.EMPRESA}\n📍 Ubicación: ${$json.UBICACION}\n🗺️ Ver ubicación en Google Maps: ${$json.MAPA}\n\n🛎️ Nota:\n${$json.formattedNote}\n\nQuedamos atentos a cualquier duda. ¡Mucho éxito en tu entrevista!`}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "3. Construir Mensaje Final1",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        672,
+        240
+      ],
+      "id": "fb9e39b5-9938-45d7-903e-af7713a2d87f",
+      "notes": "Este nodo une toda la información (tanto la original como la procesada por el nodo de Código) para crear el mensaje de texto final y limpio que puedes enviar por WhatsApp, correo, etc."
+    },
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        -32,
+        256
+      ],
+      "id": "28e64881-7547-4a1e-88a2-2eea5770677b"
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "inputData",
+              "value": "={{ JSON.parse('[  {    \"row_number\": 2,    \"EMPRESA\": \"AXIONLOG\",    \"UBICACION\": \"Parque Industrial Advance, Nave 12, 45675 Jalisco\",    \"MAPA\": \"https://maps.app.goo.gl/8DcVqHMAHo6jExt69\",    \"HORARIO\": \"Entrevistas de lunes a viernes de 9:30 am a 11:30 am\",    \"DOCUMENTACION A PRESENTAR\": \"Solicitud de empleo elaborada, Documentación básica (CURP, RFC, comprobante de domicilio, etc.), Identificación oficial (obligatoria para el acceso en vigilancia)\",    \"IMPORTANTE\": \"Se realizará un examen médico básico, por lo que te recomendamos acudir desayunado para evitar problemas de presión arterial. 🍎🧃, Si utilizas lentes, no olvides llevarlos.\",    \"NOTA\": \"Preséntate con disponibilidad de horario. , Al llegar, pregunta por la Lic. Nancy Alvarado y menciona que vienes por parte de Consultig Financial para agilizar tu atención. ⭐\"  }]') }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "1. Simular Datos de Google Sheet",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        192,
+        256
+      ],
+      "id": "c6c7e920-d28b-4ebb-87cd-2c80c09da47a",
+      "notes": "Este nodo simula la salida de tu nodo de Google Sheet. \n\n**ACCIÓN REQUERIDA:**\nReemplaza este nodo con tu nodo \"Google Sheet\" y asegúrate de que se conecte al siguiente nodo \"Código\"."
+    },
+    {
+      "parameters": {
+        "jsCode": "// --- Lógica para procesar los datos de la entrevista ---\n\n// Obtenemos el primer item de la entrada (los datos de la hoja de cálculo)\nconst interviewData = $items('Get row(s) in sheet')[0].json;\n\n// --- 1. Lógica para calcular la próxima fecha de entrevista ---\n\nconst dayMap = {\n  'domingo': 0, 'lunes': 1, 'martes': 2, 'miércoles': 3, 'miercoles': 3, \n  'jueves': 4, 'viernes': 5, 'sábado': 6\n};\n\nconst horario = (interviewData.HORARIO || '').toLowerCase();\n\n// Expresiones regulares para extraer días y horas\nconst dayRegex = /de (lunes|martes|miércoles|miercoles|jueves|viernes|sábado|domingo) a (lunes|martes|miércoles|miercoles|jueves|viernes|sábado|domingo)/;\nconst timeRegex = /(\\d{1,2}:\\d{2}\\s?(am|pm))/g;\n\nconst dayMatch = horario.match(dayRegex);\nconst timeMatches = horario.match(timeRegex);\n\nlet confirmationSentence = \"No se pudo determinar un horario. Favor de verificar el formato en la celda 'HORARIO'.\";\n\nif (dayMatch && timeMatches) {\n  const startDay = dayMap[dayMatch[1]];\n  const endDay = dayMap[dayMatch[2]];\n  const interviewStartTime = timeMatches[0];\n\n  let foundDate = null;\n\n  // CORRECCIÓN: Se reescribe el bucle para que sea más robusto.\n  // Busca en los próximos 14 días, empezando desde mañana (i=1).\n  for (let i = 1; i <= 14; i++) {\n    let futureDate = new Date();\n    futureDate.setDate(futureDate.getDate() + i);\n    let currentDayOfWeek = futureDate.getDay();\n\n    if (currentDayOfWeek >= startDay && currentDayOfWeek <= endDay) {\n      // Encontramos la primera fecha válida y la guardamos\n      foundDate = futureDate;\n      break;\n    }\n  }\n\n  if (foundDate) {\n    // Formateamos la fecha a un formato amigable en español\n    const options = { weekday: 'long', day: 'numeric', month: 'long' };\n    const formattedDate = foundDate.toLocaleDateString('es-ES', options);\n    \n    // Construimos la oración de confirmación\n    confirmationSentence = `Te confirmamos tu entrevista para el día ${formattedDate} a las ${interviewStartTime}`;\n  } else {\n    confirmationSentence = \"No se encontraron fechas disponibles en las próximas 2 semanas.\"\n  }\n}\n\n// --- 2. Lógica para formatear las listas (documentos, importante, notas) ---\nconst formatList = (text) => {\n  if (!text) return '';\n  // Reemplaza las comas con saltos de línea y quita espacios extra\n  return text.split(',').map(s => `• ${s.trim()}`).join('\\n');\n}\n\n// --- 3. Preparamos el objeto de salida ---\n\n// Copiamos los datos originales\nconst output = { ...interviewData };\n\n// Añadimos los nuevos campos formateados\noutput.formattedConfirmation = confirmationSentence;\noutput.formattedDocuments = formatList(interviewData[\"DOCUMENTACION A PRESENTAR\"]);\noutput.formattedImportant = formatList(interviewData.IMPORTANTE);\noutput.formattedNote = formatList(interviewData.NOTA);\n\n// Devolvemos el resultado para que el siguiente nodo lo pueda usar\nreturn output;\n"
       },
       "name": "2. Calcular Fecha y Formatear Texto",
       "type": "n8n-nodes-base.code",
@@ -77,7 +148,7 @@
         448,
         0
       ],
-      "id": "c5c21e81-1c73-42a5-84bc-d4f0a0aa7120",
+      "id": "53193d55-a730-4f2d-95b2-012eb2697958",
       "notes": "Este nodo contiene la lógica principal:\n1.  Lee el campo `HORARIO`.\n2.  Calcula la fecha de la próxima entrevista disponible a partir del día siguiente.\n3.  Formatea las listas de documentos, notas, etc., para que se muestren correctamente."
     },
     {
@@ -100,7 +171,7 @@
         672,
         0
       ],
-      "id": "9edf3994-dcee-435d-bf8d-aec266634ec7",
+      "id": "3597b860-7246-4b22-aa3a-7db402e93dc8",
       "notes": "Este nodo une toda la información (tanto la original como la procesada por el nodo de Código) para crear el mensaje de texto final y limpio que puedes enviar por WhatsApp, correo, etc."
     }
   ],
@@ -116,22 +187,49 @@
         ]
       ]
     },
-    "2. Calcular Fecha y Formatear Texto": {
+    "Get row(s) in sheet": {
       "main": [
         [
           {
-            "node": "3. Construir Mensaje Final",
+            "node": "2. Calcular Fecha y Formatear Texto",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Get row(s) in sheet": {
+    "2. Calcular Fecha y Formatear Texto1": {
       "main": [
         [
           {
-            "node": "2. Calcular Fecha y Formatear Texto",
+            "node": "3. Construir Mensaje Final1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "1. Simular Datos de Google Sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "1. Simular Datos de Google Sheet": {
+      "main": [
+        []
+      ]
+    },
+    "2. Calcular Fecha y Formatear Texto": {
+      "main": [
+        [
+          {
+            "node": "3. Construir Mensaje Final",
             "type": "main",
             "index": 0
           }
@@ -155,7 +253,7 @@
       }
     ]
   },
-  "versionId": "e6ad88ac-8677-4677-a2e1-374b13fbc165",
+  "versionId": "2c96be0e-c6df-4a12-a146-08c48b9a93ed",
   "triggerCount": 0,
   "shared": [
     {
