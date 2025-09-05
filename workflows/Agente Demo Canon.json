@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-09-03T19:05:48.841Z",
-  "updatedAt": "2025-09-05T00:03:13.000Z",
+  "updatedAt": "2025-09-05T17:30:45.000Z",
   "id": "YaV9OmzlTVADEm5X",
   "name": "Agente Demo Canon",
   "active": true,
@@ -50,7 +50,7 @@
     {
       "parameters": {
         "sessionIdType": "customKey",
-        "sessionKey": "={{ $('Trigger - Recibir mensaje').item.json.message.chat.id }}",
+        "sessionKey": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
         "contextWindowLength": 50
       },
       "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
@@ -60,30 +60,8 @@
         304
       ],
       "id": "ca3fe51f-a8c8-4ccf-9b6d-cafbce64f62f",
-      "name": "Simple Memory"
-    },
-    {
-      "parameters": {
-        "updates": [
-          "message"
-        ],
-        "additionalFields": {}
-      },
-      "type": "n8n-nodes-base.telegramTrigger",
-      "typeVersion": 1.2,
-      "position": [
-        -624,
-        160
-      ],
-      "id": "e5b98c17-193c-402b-8cbd-2a3a2e095ff7",
-      "name": "Trigger - Recibir mensaje",
-      "webhookId": "3c2457b9-ff1c-490c-91ed-779599e0805f",
-      "credentials": {
-        "telegramApi": {
-          "id": "M4yT4PHnQvsP26j3",
-          "name": "Bot_Pruebas_Gael"
-        }
-      }
+      "name": "Simple Memory",
+      "disabled": true
     },
     {
       "parameters": {
@@ -193,7 +171,7 @@
       "credentials": {
         "telegramApi": {
           "id": "M4yT4PHnQvsP26j3",
-          "name": "Bot_Pruebas_Gael"
+          "name": "Demo_Canon"
         }
       }
     },
@@ -247,7 +225,7 @@
     },
     {
       "parameters": {
-        "chatId": "={{ $('Trigger - Recibir mensaje').item.json.message.chat.id }}",
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
         "text": "={{ $json.output }}",
         "additionalFields": {
           "appendAttribution": false,
@@ -266,7 +244,7 @@
       "credentials": {
         "telegramApi": {
           "id": "M4yT4PHnQvsP26j3",
-          "name": "Bot_Pruebas_Gael"
+          "name": "Demo_Canon"
         }
       }
     },
@@ -742,6 +720,29 @@
       ],
       "id": "664687b2-6735-4ec4-8ecc-69ef7b1af829",
       "name": "correo_cursos1"
+    },
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -592,
+        160
+      ],
+      "id": "b757394d-4dfe-479f-8021-b43254519ad0",
+      "name": "Telegram Trigger",
+      "webhookId": "637c6711-d10c-4ce2-a945-a8e397c4408d",
+      "credentials": {
+        "telegramApi": {
+          "id": "M4yT4PHnQvsP26j3",
+          "name": "Demo_Canon"
+        }
+      }
     }
   ],
   "connections": {
@@ -762,17 +763,6 @@
           {
             "node": "AI Agent",
             "type": "ai_memory",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Trigger - Recibir mensaje": {
-      "main": [
-        [
-          {
-            "node": "Switch",
-            "type": "main",
             "index": 0
           }
         ]
@@ -943,6 +933,17 @@
           }
         ]
       ]
+    },
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -953,7 +954,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "c01dc830-3819-4adc-8ff6-c4f9345429d0",
+  "versionId": "f5f5fd30-477f-475c-81fa-d393ff23cb7e",
   "triggerCount": 1,
   "shared": [
     {
