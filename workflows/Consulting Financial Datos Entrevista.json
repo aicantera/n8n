@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-08-21T22:05:06.922Z",
-  "updatedAt": "2025-09-04T23:02:57.000Z",
+  "updatedAt": "2025-09-05T00:15:46.000Z",
   "id": "P1aDenWn4hFrMR0a",
   "name": "Consulting Financial Datos Entrevista",
   "active": false,
@@ -71,17 +71,17 @@
     },
     {
       "parameters": {
-        "jsCode": "// --- Lógica para procesar los datos de la entrevista ---\n\n// Obtenemos el primer item de la entrada (los datos de la hoja de cálculo)\nconst interviewData = $items('Get row(s) in sheet')[0].json;\n\n// --- 1. Lógica para calcular la próxima fecha de entrevista ---\n\nconst dayMap = {\n  'domingo': 0, 'lunes': 1, 'martes': 2, 'miércoles': 3, 'miercoles': 3, \n  'jueves': 4, 'viernes': 5, 'sábado': 6\n};\n\nconst horario = (interviewData.HORARIO || '').toLowerCase();\n\n// Expresiones regulares para extraer días y horas\nconst dayRegex = /de (lunes|martes|miércoles|miercoles|jueves|viernes|sábado|domingo) a (lunes|martes|miércoles|miercoles|jueves|viernes|sábado|domingo)/;\nconst timeRegex = /(\\d{1,2}:\\d{2}\\s?(am|pm))/g;\n\nconst dayMatch = horario.match(dayRegex);\nconst timeMatches = horario.match(timeRegex);\n\nlet confirmationSentence = \"No se pudo determinar un horario. Favor de verificar el formato en la celda 'HORARIO'.\";\n\nif (dayMatch && timeMatches) {\n  const startDay = dayMap[dayMatch[1]];\n  const endDay = dayMap[dayMatch[2]];\n  const interviewStartTime = timeMatches[0];\n\n  let foundDate = null;\n\n  // CORRECCIÓN: Se reescribe el bucle para que sea más robusto.\n  // Busca en los próximos 14 días, empezando desde mañana (i=1).\n  for (let i = 1; i <= 14; i++) {\n    let futureDate = new Date();\n    futureDate.setDate(futureDate.getDate() + i);\n    let currentDayOfWeek = futureDate.getDay();\n\n    if (currentDayOfWeek >= startDay && currentDayOfWeek <= endDay) {\n      // Encontramos la primera fecha válida y la guardamos\n      foundDate = futureDate;\n      break;\n    }\n  }\n\n  if (foundDate) {\n    // Formateamos la fecha a un formato amigable en español\n    const options = { weekday: 'long', day: 'numeric', month: 'long' };\n    const formattedDate = foundDate.toLocaleDateString('es-ES', options);\n    \n    // Construimos la oración de confirmación\n    confirmationSentence = `Te confirmamos tu entrevista para el día ${formattedDate} a las ${interviewStartTime}`;\n  } else {\n    confirmationSentence = \"No se encontraron fechas disponibles en las próximas 2 semanas.\"\n  }\n}\n\n// --- 2. Lógica para formatear las listas (documentos, importante, notas) ---\nconst formatList = (text) => {\n  if (!text) return '';\n  // Reemplaza las comas con saltos de línea y quita espacios extra\n  return text.split(',').map(s => `• ${s.trim()}`).join('\\n');\n}\n\n// --- 3. Preparamos el objeto de salida ---\n\n// Copiamos los datos originales\nconst output = { ...interviewData };\n\n// Añadimos los nuevos campos formateados\noutput.formattedConfirmation = confirmationSentence;\noutput.formattedDocuments = formatList(interviewData[\"DOCUMENTACION A PRESENTAR\"]);\noutput.formattedImportant = formatList(interviewData.IMPORTANTE);\noutput.formattedNote = formatList(interviewData.NOTA);\n\n// Devolvemos el resultado para que el siguiente nodo lo pueda usar\nreturn output;\n"
+        "jsCode": "// --- Lógica para procesar los datos de la entrevista ---\n\n// Obtenemos el primer item de la entrada (los datos de la hoja de cálculo)\nconst interviewData = $items('Get row(s) in sheet')[0].json;\n\n// --- 1. Lógica para calcular la próxima fecha de entrevista ---\n\nconst dayMap = {\n  'domingo': 0, 'lunes': 1, 'martes': 2, 'miércoles': 3, 'miercoles': 3, \n  'jueves': 4, 'viernes': 5, 'sábado': 6\n};\n\nconst horario = (interviewData.HORARIO || '').toLowerCase();\n\n// Expresiones regulares para extraer días y horas\nconst dayRegex = /de (lunes|martes|miércoles|miercoles|jueves|viernes|sábado|domingo) a (lunes|martes|miércoles|miercoles|jueves|viernes|sábado|domingo)/;\nconst timeRegex = /(\\d{1,2}:\\d{2}\\s?(am|pm))/g;\n\nconst dayMatch = horario.match(dayRegex);\nconst timeMatches = horario.match(timeRegex);\n\nlet confirmationSentence = \"No se pudo determinar un horario. Favor de verificar el formato en la celda 'HORARIO'.\";\n\nif (dayMatch && timeMatches) {\n  const startDay = dayMap[dayMatch[1]];\n  const endDay = dayMap[dayMatch[2]];\n  const interviewStartTime = timeMatches[0];\n\n  // CORRECCIÓN: Se establece la zona horaria de México para el cálculo.\n  const timeZone = 'America/Mexico_City';\n  const nowInMexico = new Date().toLocaleString('en-US', { timeZone });\n  const todayInMexico = new Date(nowInMexico);\n\n  let foundDate = null;\n\n  // El bucle ahora usará `todayInMexico` como base para ser preciso.\n  // Busca en los próximos 14 días, empezando desde mañana (i=1).\n  for (let i = 1; i <= 14; i++) {\n    let futureDate = new Date(todayInMexico);\n    futureDate.setDate(futureDate.getDate() + i);\n    let currentDayOfWeek = futureDate.getDay();\n\n    if (currentDayOfWeek >= startDay && currentDayOfWeek <= endDay) {\n      // Encontramos la primera fecha válida y la guardamos\n      foundDate = futureDate;\n      break;\n    }\n  }\n\n  if (foundDate) {\n    // Formateamos la fecha a un formato amigable en español\n    const options = { weekday: 'long', day: 'numeric', month: 'long' };\n    const formattedDate = foundDate.toLocaleDateString('es-ES', options);\n    \n    // Construimos la oración de confirmación\n    confirmationSentence = `Te confirmamos tu entrevista para el día ${formattedDate} a las ${interviewStartTime}`;\n  } else {\n    confirmationSentence = \"No se encontraron fechas disponibles en las próximas 2 semanas.\"\n  }\n}\n\n// --- 2. Lógica para formatear las listas (documentos, importante, notas) ---\nconst formatList = (text) => {\n  if (!text) return '';\n  // Reemplaza las diagonal con saltos de línea y quita espacios extra\n  return text.split('/').map(s => `• ${s.trim()}`).join('\\n');\n}\n\n// --- 3. Preparamos el objeto de salida ---\n\n// Copiamos los datos originales\nconst output = { ...interviewData };\n\n// Añadimos los nuevos campos formateados\noutput.formattedConfirmation = confirmationSentence;\noutput.formattedDocuments = formatList(interviewData[\"DOCUMENTACION A PRESENTAR\"]);\noutput.formattedImportant = formatList(interviewData.IMPORTANTE);\noutput.formattedNote = formatList(interviewData.NOTA);\n\n// Devolvemos el resultado para que el siguiente nodo lo pueda usar\nreturn output;\n"
       },
-      "name": "2. Calcular Fecha y Formatear Texto",
+      "name": "2. Calcular Fecha y Formatear Texto1",
       "type": "n8n-nodes-base.code",
       "typeVersion": 1,
       "position": [
-        448,
+        464,
         0
       ],
-      "id": "53193d55-a730-4f2d-95b2-012eb2697958",
-      "notes": "Este nodo contiene la lógica principal:\n1.  Lee el campo `HORARIO`.\n2.  Calcula la fecha de la próxima entrevista disponible a partir del día siguiente.\n3.  Formatea las listas de documentos, notas, etc., para que se muestren correctamente."
+      "id": "7011f664-e230-4d71-a973-610f9b5b32f6",
+      "notes": "Este nodo contiene la lógica principal:\n1.  Lee el campo `HORARIO`.\n2.  Calcula la fecha de la próxima entrevista disponible a partir del día siguiente, **usando la zona horaria de México.**\n3.  Formatea las listas de documentos, notas, etc., para que se muestren correctamente."
     },
     {
       "parameters": {
@@ -96,14 +96,14 @@
         },
         "options": {}
       },
-      "name": "3. Construir Mensaje Final",
+      "name": "3. Construir Mensaje Final1",
       "type": "n8n-nodes-base.set",
       "typeVersion": 1,
       "position": [
-        672,
+        688,
         0
       ],
-      "id": "3597b860-7246-4b22-aa3a-7db402e93dc8",
+      "id": "00b69184-ac07-43cb-8847-2f7e3ceaba06",
       "notes": "Este nodo une toda la información (tanto la original como la procesada por el nodo de Código) para crear el mensaje de texto final y limpio que puedes enviar por WhatsApp, correo, etc."
     }
   ],
@@ -123,22 +123,27 @@
       "main": [
         [
           {
-            "node": "2. Calcular Fecha y Formatear Texto",
+            "node": "2. Calcular Fecha y Formatear Texto1",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "2. Calcular Fecha y Formatear Texto": {
+    "2. Calcular Fecha y Formatear Texto1": {
       "main": [
         [
           {
-            "node": "3. Construir Mensaje Final",
+            "node": "3. Construir Mensaje Final1",
             "type": "main",
             "index": 0
           }
         ]
+      ]
+    },
+    "3. Construir Mensaje Final1": {
+      "main": [
+        []
       ]
     }
   },
@@ -159,7 +164,7 @@
       }
     ]
   },
-  "versionId": "7d01f5b0-e08c-4ceb-9621-3f008efacd6d",
+  "versionId": "89037206-e458-4b40-a194-88d3379a614f",
   "triggerCount": 0,
   "shared": [
     {
