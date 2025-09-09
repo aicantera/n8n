@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-08-08T22:01:23.225Z",
-  "updatedAt": "2025-09-09T19:25:25.000Z",
+  "updatedAt": "2025-09-09T20:45:36.000Z",
   "id": "KhIu4XZ1rR2d7zqy",
   "name": "Agente Consulting Financial RRHH",
   "active": false,
@@ -1477,8 +1477,8 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.6,
       "position": [
-        128,
-        288
+        256,
+        352
       ],
       "id": "b0f9e0a9-bcf5-4542-9bc3-c8ceed329b18",
       "name": "Registro de estado de la conversación",
@@ -1713,16 +1713,117 @@
           "cachedResultName": "Hoja1",
           "cachedResultUrl": "https://consultingfinancial-my.sharepoint.com/personal/jessica_olmedo_consultingfinancial_com_mx/_layouts/15/Doc.aspx?sourcedoc=%7BB3CA5426-AD55-4FCE-967F-0C3E4ECECBC4%7D&file=registro_estado.xlsx&action=default&mobileredirect=true&DefaultItemOpen=1&activeCell=Hoja1!A1"
         },
+        "columnToMatchOn": "chat_id",
+        "valueToMatchOn": "={{ $json.message.chat.id }}",
+        "fieldsUi": {
+          "values": [
+            {
+              "column": "last_interaction",
+              "fieldValue": "={{ $now }}"
+            }
+          ]
+        },
+        "options": {
+          "rawData": false
+        }
+      },
+      "type": "n8n-nodes-base.microsoftExcel",
+      "typeVersion": 2.1,
+      "position": [
+        272,
+        704
+      ],
+      "id": "d390d876-1f81-42ae-a263-e3c1e899eb7e",
+      "name": "Append or update a sheet",
+      "credentials": {
+        "microsoftExcelOAuth2Api": {
+          "id": "xZ8Ar2VyJ1rkP20c",
+          "name": "Microsoft Excel Consulting Financial"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "XdRVx3d2Wkfha4jq",
+          "mode": "list",
+          "cachedResultName": "Append or Update Consulting Financial"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "chat_id": "={{ $json.message.chat.id }}"
+          },
+          "matchingColumns": [
+            "chat_id"
+          ],
+          "schema": [
+            {
+              "id": "chat_id",
+              "displayName": "chat_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "number",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        704,
+        -64
+      ],
+      "id": "3ea81e78-8f6d-4259-8b5c-d4731383363a",
+      "name": "Append or update status"
+    },
+    {
+      "parameters": {
+        "resource": "worksheet",
+        "operation": "append",
+        "workbook": {
+          "__rl": true,
+          "value": "0147U5LRBGKTFLGVNNZZHZM7YMHZHM5S6E",
+          "mode": "list",
+          "cachedResultName": "registro_estado",
+          "cachedResultUrl": "https://consultingfinancial-my.sharepoint.com/personal/jessica_olmedo_consultingfinancial_com_mx/_layouts/15/Doc.aspx?sourcedoc=%7BB3CA5426-AD55-4FCE-967F-0C3E4ECECBC4%7D&file=registro_estado.xlsx&action=default&mobileredirect=true&DefaultItemOpen=1"
+        },
+        "worksheet": {
+          "__rl": true,
+          "value": "{F274FABB-DF5C-4F9E-B98F-F8DC866DADF5}",
+          "mode": "list",
+          "cachedResultName": "Hoja1",
+          "cachedResultUrl": "https://consultingfinancial-my.sharepoint.com/personal/jessica_olmedo_consultingfinancial_com_mx/_layouts/15/Doc.aspx?sourcedoc=%7BB3CA5426-AD55-4FCE-967F-0C3E4ECECBC4%7D&file=registro_estado.xlsx&action=default&mobileredirect=true&DefaultItemOpen=1&activeCell=Hoja1!A1"
+        },
+        "fieldsUi": {
+          "values": [
+            {
+              "column": "chat_id",
+              "fieldValue": "={{ $json.message.chat.id }}"
+            },
+            {
+              "column": "last_interaction",
+              "fieldValue": "={{ $now }}"
+            }
+          ]
+        },
         "options": {}
       },
       "type": "n8n-nodes-base.microsoftExcel",
       "typeVersion": 2.1,
       "position": [
-        688,
-        -64
+        272,
+        128
       ],
-      "id": "d390d876-1f81-42ae-a263-e3c1e899eb7e",
-      "name": "Append or update a sheet",
+      "id": "ead4f1d1-3e99-4d37-abea-472119e89d9c",
+      "name": "Append data to sheet",
       "credentials": {
         "microsoftExcelOAuth2Api": {
           "id": "xZ8Ar2VyJ1rkP20c",
@@ -1736,7 +1837,7 @@
       "main": [
         [
           {
-            "node": "Append or update a sheet",
+            "node": "Append or update status",
             "type": "main",
             "index": 0
           }
@@ -1967,6 +2068,11 @@
     },
     "Append or update a sheet": {
       "main": [
+        []
+      ]
+    },
+    "Append or update status": {
+      "main": [
         [
           {
             "node": "AI Agent",
@@ -1991,7 +2097,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "6cb18dc8-d4ce-4abf-b717-ed70d7f7567a",
+  "versionId": "5d302411-4e53-4f10-b938-278d57654c95",
   "triggerCount": 2,
   "shared": [
     {
