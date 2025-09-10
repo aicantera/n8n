@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-09-09T19:57:44.045Z",
-  "updatedAt": "2025-09-09T22:50:55.000Z",
+  "updatedAt": "2025-09-10T17:17:50.000Z",
   "id": "XdRVx3d2Wkfha4jq",
   "name": "Append or Update Consulting Financial",
   "active": false,
@@ -38,12 +38,11 @@
           "conditions": [
             {
               "id": "c5a6c6f5-3529-49ac-a873-b87ac5331ee5",
-              "leftValue": "={{ $items(\"Get rows from sheet\").map(item => item.json.chat_id).includes($(\"When Executed by Another Workflow\").first().json.chat_id) }}",
-              "rightValue": "true",
+              "leftValue": "={{ $json.data.values.findIndex(row => row[0] == $node[\"When Executed by Another Workflow\"].json.chat_id) + 1 }}",
+              "rightValue": 1,
               "operator": {
-                "type": "boolean",
-                "operation": "true",
-                "singleValue": true
+                "type": "number",
+                "operation": "gt"
               }
             }
           ],
@@ -80,7 +79,7 @@
           "cachedResultUrl": "https://consultingfinancial-my.sharepoint.com/personal/jessica_olmedo_consultingfinancial_com_mx/_layouts/15/Doc.aspx?sourcedoc=%7BB3CA5426-AD55-4FCE-967F-0C3E4ECECBC4%7D&file=registro_estado.xlsx&action=default&mobileredirect=true&DefaultItemOpen=1&activeCell=Hoja1!A1"
         },
         "options": {
-          "rawData": false
+          "rawData": true
         }
       },
       "type": "n8n-nodes-base.microsoftExcel",
@@ -250,7 +249,7 @@
       }
     ]
   },
-  "versionId": "f2c1dd42-c63c-4c2e-be0e-072a9038995d",
+  "versionId": "88e5a01c-681a-4f0a-b34d-a097e3b3c456",
   "triggerCount": 0,
   "shared": [
     {
