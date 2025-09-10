@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-09-04T23:04:47.741Z",
-  "updatedAt": "2025-09-09T22:24:24.000Z",
+  "updatedAt": "2025-09-10T00:43:13.000Z",
   "id": "lO4tpBf8INFWmCYp",
   "name": "Consulting Financial Cerrar Conversación",
   "active": false,
@@ -120,13 +120,13 @@
           "cachedResultUrl": "https://consultingfinancial-my.sharepoint.com/personal/jessica_olmedo_consultingfinancial_com_mx/_layouts/15/Doc.aspx?sourcedoc=%7BB3CA5426-AD55-4FCE-967F-0C3E4ECECBC4%7D&file=registro_estado.xlsx&action=default&mobileredirect=true&DefaultItemOpen=1&activeCell=Hoja1!A1"
         },
         "useRange": true,
-        "range": "=A{{ $json.rowNum }}:Z{{ $json.rowNum }}"
+        "range": "=A{{ $json.data.rowCount }}:B{{ $json.data.rowCount }}"
       },
       "type": "n8n-nodes-base.microsoftExcel",
       "typeVersion": 2.1,
       "position": [
-        224,
-        240
+        688,
+        176
       ],
       "id": "3327677d-3629-4805-a4a7-071ca9396d83",
       "name": "Delete Rows",
@@ -136,6 +136,76 @@
           "name": "Microsoft Excel Consulting Financial"
         }
       }
+    },
+    {
+      "parameters": {
+        "resource": "worksheet",
+        "operation": "readRows",
+        "workbook": {
+          "__rl": true,
+          "value": "0147U5LRBGKTFLGVNNZZHZM7YMHZHM5S6E",
+          "mode": "list",
+          "cachedResultName": "registro_estado",
+          "cachedResultUrl": "https://consultingfinancial-my.sharepoint.com/personal/jessica_olmedo_consultingfinancial_com_mx/_layouts/15/Doc.aspx?sourcedoc=%7BB3CA5426-AD55-4FCE-967F-0C3E4ECECBC4%7D&file=registro_estado.xlsx&action=default&mobileredirect=true&DefaultItemOpen=1"
+        },
+        "worksheet": {
+          "__rl": true,
+          "value": "{F274FABB-DF5C-4F9E-B98F-F8DC866DADF5}",
+          "mode": "list",
+          "cachedResultName": "Hoja1",
+          "cachedResultUrl": "https://consultingfinancial-my.sharepoint.com/personal/jessica_olmedo_consultingfinancial_com_mx/_layouts/15/Doc.aspx?sourcedoc=%7BB3CA5426-AD55-4FCE-967F-0C3E4ECECBC4%7D&file=registro_estado.xlsx&action=default&mobileredirect=true&DefaultItemOpen=1&activeCell=Hoja1!A1"
+        },
+        "options": {
+          "rawData": true
+        }
+      },
+      "type": "n8n-nodes-base.microsoftExcel",
+      "typeVersion": 2.1,
+      "position": [
+        208,
+        208
+      ],
+      "id": "e627dffa-db4a-4a2d-9f84-3857f81f6d46",
+      "name": "Get rows from sheet",
+      "credentials": {
+        "microsoftExcelOAuth2Api": {
+          "id": "xZ8Ar2VyJ1rkP20c",
+          "name": "Microsoft Excel Consulting Financial"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "70b8172c-1025-47f6-81cc-fafbc963ce8d",
+              "leftValue": "={{ $json.data.values[1][0] }}",
+              "rightValue": "={{ $('When Executed by Another Workflow').item.json.chat_id }}",
+              "operator": {
+                "type": "number",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        416,
+        208
+      ],
+      "id": "9b0c5266-e7c4-4f1b-8b6a-9a8ba1256585",
+      "name": "If"
     }
   ],
   "connections": {
@@ -144,6 +214,11 @@
         [
           {
             "node": "Busca chat id",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get rows from sheet",
             "type": "main",
             "index": 0
           }
@@ -155,6 +230,33 @@
         [
           {
             "node": "Elimina chat id de tabla recordatorios",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete Rows": {
+      "main": [
+        []
+      ]
+    },
+    "Get rows from sheet": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Delete Rows",
             "type": "main",
             "index": 0
           }
@@ -178,7 +280,7 @@
       }
     ]
   },
-  "versionId": "5c589470-0a6f-46d3-a081-a55a2b366183",
+  "versionId": "08870578-e21b-4dd4-b37f-182b447853e4",
   "triggerCount": 0,
   "shared": [
     {
