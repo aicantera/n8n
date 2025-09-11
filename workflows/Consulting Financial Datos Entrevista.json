@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-08-21T22:05:06.922Z",
-  "updatedAt": "2025-09-05T00:15:46.000Z",
+  "updatedAt": "2025-09-10T23:30:26.000Z",
   "id": "P1aDenWn4hFrMR0a",
   "name": "Consulting Financial Datos Entrevista",
   "active": false,
@@ -22,8 +22,8 @@
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "typeVersion": 1.1,
       "position": [
-        0,
-        0
+        -208,
+        16
       ],
       "id": "15ca18f8-7654-476d-8188-81e60e0fc483",
       "name": "When Executed by Another Workflow"
@@ -58,7 +58,7 @@
       "typeVersion": 4.6,
       "position": [
         224,
-        0
+        -208
       ],
       "id": "bbbef3c2-36a4-47b4-8455-c1134827f74b",
       "name": "Get row(s) in sheet",
@@ -71,7 +71,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// --- Lógica para procesar los datos de la entrevista ---\n\n// Obtenemos el primer item de la entrada (los datos de la hoja de cálculo)\nconst interviewData = $items('Get row(s) in sheet')[0].json;\n\n// --- 1. Lógica para calcular la próxima fecha de entrevista ---\n\nconst dayMap = {\n  'domingo': 0, 'lunes': 1, 'martes': 2, 'miércoles': 3, 'miercoles': 3, \n  'jueves': 4, 'viernes': 5, 'sábado': 6\n};\n\nconst horario = (interviewData.HORARIO || '').toLowerCase();\n\n// Expresiones regulares para extraer días y horas\nconst dayRegex = /de (lunes|martes|miércoles|miercoles|jueves|viernes|sábado|domingo) a (lunes|martes|miércoles|miercoles|jueves|viernes|sábado|domingo)/;\nconst timeRegex = /(\\d{1,2}:\\d{2}\\s?(am|pm))/g;\n\nconst dayMatch = horario.match(dayRegex);\nconst timeMatches = horario.match(timeRegex);\n\nlet confirmationSentence = \"No se pudo determinar un horario. Favor de verificar el formato en la celda 'HORARIO'.\";\n\nif (dayMatch && timeMatches) {\n  const startDay = dayMap[dayMatch[1]];\n  const endDay = dayMap[dayMatch[2]];\n  const interviewStartTime = timeMatches[0];\n\n  // CORRECCIÓN: Se establece la zona horaria de México para el cálculo.\n  const timeZone = 'America/Mexico_City';\n  const nowInMexico = new Date().toLocaleString('en-US', { timeZone });\n  const todayInMexico = new Date(nowInMexico);\n\n  let foundDate = null;\n\n  // El bucle ahora usará `todayInMexico` como base para ser preciso.\n  // Busca en los próximos 14 días, empezando desde mañana (i=1).\n  for (let i = 1; i <= 14; i++) {\n    let futureDate = new Date(todayInMexico);\n    futureDate.setDate(futureDate.getDate() + i);\n    let currentDayOfWeek = futureDate.getDay();\n\n    if (currentDayOfWeek >= startDay && currentDayOfWeek <= endDay) {\n      // Encontramos la primera fecha válida y la guardamos\n      foundDate = futureDate;\n      break;\n    }\n  }\n\n  if (foundDate) {\n    // Formateamos la fecha a un formato amigable en español\n    const options = { weekday: 'long', day: 'numeric', month: 'long' };\n    const formattedDate = foundDate.toLocaleDateString('es-ES', options);\n    \n    // Construimos la oración de confirmación\n    confirmationSentence = `Te confirmamos tu entrevista para el día ${formattedDate} a las ${interviewStartTime}`;\n  } else {\n    confirmationSentence = \"No se encontraron fechas disponibles en las próximas 2 semanas.\"\n  }\n}\n\n// --- 2. Lógica para formatear las listas (documentos, importante, notas) ---\nconst formatList = (text) => {\n  if (!text) return '';\n  // Reemplaza las diagonal con saltos de línea y quita espacios extra\n  return text.split('/').map(s => `• ${s.trim()}`).join('\\n');\n}\n\n// --- 3. Preparamos el objeto de salida ---\n\n// Copiamos los datos originales\nconst output = { ...interviewData };\n\n// Añadimos los nuevos campos formateados\noutput.formattedConfirmation = confirmationSentence;\noutput.formattedDocuments = formatList(interviewData[\"DOCUMENTACION A PRESENTAR\"]);\noutput.formattedImportant = formatList(interviewData.IMPORTANTE);\noutput.formattedNote = formatList(interviewData.NOTA);\n\n// Devolvemos el resultado para que el siguiente nodo lo pueda usar\nreturn output;\n"
+        "jsCode": "// --- Lógica para procesar los datos de la entrevista ---\n\n// Obtenemos el primer item de la entrada (los datos de la hoja de cálculo)\nconst interviewData = $items('Get rows from sheet')[0].json;\n\n// --- 1. Lógica para calcular la próxima fecha de entrevista ---\n\nconst dayMap = {\n  'domingo': 0, 'lunes': 1, 'martes': 2, 'miércoles': 3, 'miercoles': 3, \n  'jueves': 4, 'viernes': 5, 'sábado': 6\n};\n\nconst horario = (interviewData.HORARIO || '').toLowerCase();\n\n// Expresiones regulares para extraer días y horas\nconst dayRegex = /de (lunes|martes|miércoles|miercoles|jueves|viernes|sábado|domingo) a (lunes|martes|miércoles|miercoles|jueves|viernes|sábado|domingo)/;\nconst timeRegex = /(\\d{1,2}:\\d{2}\\s?(am|pm))/g;\n\nconst dayMatch = horario.match(dayRegex);\nconst timeMatches = horario.match(timeRegex);\n\nlet confirmationSentence = \"No se pudo determinar un horario. Favor de verificar el formato en la celda 'HORARIO'.\";\n\nif (dayMatch && timeMatches) {\n  const startDay = dayMap[dayMatch[1]];\n  const endDay = dayMap[dayMatch[2]];\n  const interviewStartTime = timeMatches[0];\n\n  // CORRECCIÓN: Se establece la zona horaria de México para el cálculo.\n  const timeZone = 'America/Mexico_City';\n  const nowInMexico = new Date().toLocaleString('en-US', { timeZone });\n  const todayInMexico = new Date(nowInMexico);\n\n  let foundDate = null;\n\n  // El bucle ahora usará `todayInMexico` como base para ser preciso.\n  // Busca en los próximos 14 días, empezando desde mañana (i=1).\n  for (let i = 1; i <= 14; i++) {\n    let futureDate = new Date(todayInMexico);\n    futureDate.setDate(futureDate.getDate() + i);\n    let currentDayOfWeek = futureDate.getDay();\n\n    if (currentDayOfWeek >= startDay && currentDayOfWeek <= endDay) {\n      // Encontramos la primera fecha válida y la guardamos\n      foundDate = futureDate;\n      break;\n    }\n  }\n\n  if (foundDate) {\n    // Formateamos la fecha a un formato amigable en español\n    const options = { weekday: 'long', day: 'numeric', month: 'long' };\n    const formattedDate = foundDate.toLocaleDateString('es-ES', options);\n    \n    // Construimos la oración de confirmación\n    confirmationSentence = `Te confirmamos tu entrevista para el día ${formattedDate} a las ${interviewStartTime}`;\n  } else {\n    confirmationSentence = \"No se encontraron fechas disponibles en las próximas 2 semanas.\"\n  }\n}\n\n// --- 2. Lógica para formatear las listas (documentos, importante, notas) ---\nconst formatList = (text) => {\n  if (!text) return '';\n  // Reemplaza las diagonal con saltos de línea y quita espacios extra\n  return text.split('/').map(s => `• ${s.trim()}`).join('\\n');\n}\n\n// --- 3. Preparamos el objeto de salida ---\n\n// Copiamos los datos originales\nconst output = { ...interviewData };\n\n// Añadimos los nuevos campos formateados\noutput.formattedConfirmation = confirmationSentence;\noutput.formattedDocuments = formatList(interviewData[\"DOCUMENTACION A PRESENTAR\"]);\noutput.formattedImportant = formatList(interviewData.IMPORTANTE);\noutput.formattedNote = formatList(interviewData.NOTA);\n\n// Devolvemos el resultado para que el siguiente nodo lo pueda usar\nreturn output;\n"
       },
       "name": "2. Calcular Fecha y Formatear Texto1",
       "type": "n8n-nodes-base.code",
@@ -90,7 +90,7 @@
           "string": [
             {
               "name": "mensajeFinal",
-              "value": "={{`${$('When Executed by Another Workflow').item.json.nombre_candidato}:\nGracias por la información proporcionada.\n${$json.formattedConfirmation}\n\n📌 Documentación a presentar:\n${$json.formattedDocuments}\n\n🚩 Importante:\n${$json.formattedImportant}\n\n🏢 Empresa: ${$json.EMPRESA}\n📍 Ubicación: ${$json.UBICACION}\n🗺️ Ver ubicación en Google Maps: ${$json.MAPA}\n\n🛎️ Nota:\n${$json.formattedNote}\n\nQuedamos atentos a cualquier duda. ¡Mucho éxito en tu entrevista!`}}"
+              "value": "={{`${$('When Executed by Another Workflow').first().json.nombre_candidato}:\nGracias por la información proporcionada.\n${$json.formattedConfirmation}\n\n📌 Documentación a presentar:\n${$json.formattedDocuments}\n\n🚩 Importante:\n${$json.formattedImportant}\n\n🏢 Empresa: ${$json.EMPRESA}\n📍 Ubicación: ${$json.UBICACION}\n🗺️ Ver ubicación en Google Maps: ${$json.MAPA}\n\n🛎️ Nota:\n${$json.formattedNote}\n\nQuedamos atentos a cualquier duda. ¡Mucho éxito en tu entrevista!`}}"
             }
           ]
         },
@@ -105,6 +105,75 @@
       ],
       "id": "00b69184-ac07-43cb-8847-2f7e3ceaba06",
       "notes": "Este nodo une toda la información (tanto la original como la procesada por el nodo de Código) para crear el mensaje de texto final y limpio que puedes enviar por WhatsApp, correo, etc."
+    },
+    {
+      "parameters": {
+        "resource": "worksheet",
+        "operation": "readRows",
+        "workbook": {
+          "__rl": true,
+          "value": "0147U5LRGTI6EBZLAAB5FLFHM77NVQEFNO",
+          "mode": "list",
+          "cachedResultName": "Datos Entrevista",
+          "cachedResultUrl": "https://consultingfinancial-my.sharepoint.com/personal/jessica_olmedo_consultingfinancial_com_mx/_layouts/15/Doc.aspx?sourcedoc=%7B1C8847D3-00AC-4A0F-B29D-9FFB6B0215AE%7D&file=Datos%20Entrevista.xlsx&action=default&mobileredirect=true&DefaultItemOpen=1"
+        },
+        "worksheet": {
+          "__rl": true,
+          "value": "{F274FABB-DF5C-4F9E-B98F-F8DC866DADF5}",
+          "mode": "list",
+          "cachedResultName": "Hoja1",
+          "cachedResultUrl": "https://consultingfinancial-my.sharepoint.com/personal/jessica_olmedo_consultingfinancial_com_mx/_layouts/15/Doc.aspx?sourcedoc=%7B1C8847D3-00AC-4A0F-B29D-9FFB6B0215AE%7D&file=Datos%20Entrevista.xlsx&action=default&mobileredirect=true&DefaultItemOpen=1&activeCell=Hoja1!A1"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.microsoftExcel",
+      "typeVersion": 2.1,
+      "position": [
+        48,
+        16
+      ],
+      "id": "da0f8ffd-cb41-4292-8ddf-f62ac1582745",
+      "name": "Get rows from sheet",
+      "credentials": {
+        "microsoftExcelOAuth2Api": {
+          "id": "xZ8Ar2VyJ1rkP20c",
+          "name": "Microsoft Excel Consulting Financial"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "a772fba6-2199-4d4f-92ea-aedaa7236f27",
+              "leftValue": "={{ $json.EMPRESA }}",
+              "rightValue": "={{ $('When Executed by Another Workflow').first().json.nombre_empresa }}",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        240,
+        16
+      ],
+      "id": "08355cc7-3055-40e1-a09e-db9cfdb87df2",
+      "name": "If"
     }
   ],
   "connections": {
@@ -112,7 +181,7 @@
       "main": [
         [
           {
-            "node": "Get row(s) in sheet",
+            "node": "Get rows from sheet",
             "type": "main",
             "index": 0
           }
@@ -121,13 +190,7 @@
     },
     "Get row(s) in sheet": {
       "main": [
-        [
-          {
-            "node": "2. Calcular Fecha y Formatear Texto1",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "2. Calcular Fecha y Formatear Texto1": {
@@ -144,6 +207,28 @@
     "3. Construir Mensaje Final1": {
       "main": [
         []
+      ]
+    },
+    "Get rows from sheet": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "2. Calcular Fecha y Formatear Texto1",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     }
   },
@@ -164,7 +249,7 @@
       }
     ]
   },
-  "versionId": "89037206-e458-4b40-a194-88d3379a614f",
+  "versionId": "cc98638a-f0ac-4258-a8fb-bf255024c76a",
   "triggerCount": 0,
   "shared": [
     {
