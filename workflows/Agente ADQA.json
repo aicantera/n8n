@@ -1,0 +1,262 @@
+{
+  "createdAt": "2025-09-11T14:01:40.630Z",
+  "updatedAt": "2025-09-11T14:09:06.000Z",
+  "id": "7RniuisFkZxT4pnE",
+  "name": "Agente ADQA",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "5e31899e-2594-4868-9968-6c2f0bdeb3c8",
+      "name": "Telegram Trigger",
+      "webhookId": "9879aba6-62e4-4904-b85b-88c4bd289bdd",
+      "credentials": {
+        "telegramApi": {
+          "id": "X4QUuvNeZg5hzh7s",
+          "name": "Agente ADQA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.message.text }}",
+        "options": {
+          "systemMessage": "eres un personal de rh para ser el primer filtro en un puesto de chedraui."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        208,
+        0
+      ],
+      "id": "042e8878-cf84-49bb-946f-3ebad2a7e205",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "={{ $json.output }}",
+        "additionalFields": {
+          "appendAttribution": true
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        560,
+        0
+      ],
+      "id": "4bd9449f-2b7e-415b-9aa2-969f680ae3b0",
+      "name": "Send a text message",
+      "webhookId": "74da98c6-ba5c-47b1-be63-667ff42dad72",
+      "credentials": {
+        "telegramApi": {
+          "id": "X4QUuvNeZg5hzh7s",
+          "name": "Agente ADQA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        128,
+        160
+      ],
+      "id": "5ff00415-44c0-42a4-9593-a98dd2d2648d",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "0PNoojfjNHHXEtdv",
+          "name": "Test_Gael"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "contextWindowLength": 50
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        256,
+        208
+      ],
+      "id": "6ebd1de4-007f-4a43-ace7-6f36e95640d5",
+      "name": "Simple Memory"
+    }
+  ],
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {
+    "Telegram Trigger": [
+      {
+        "json": {
+          "update_id": 513134275,
+          "message": {
+            "message_id": 3,
+            "from": {
+              "id": 7992375339,
+              "is_bot": false,
+              "first_name": "Gael",
+              "language_code": "es"
+            },
+            "chat": {
+              "id": 7992375339,
+              "first_name": "Gael",
+              "type": "private"
+            },
+            "date": 1757599358,
+            "text": "hola"
+          }
+        }
+      }
+    ]
+  },
+  "versionId": "988dbdf4-75df-4f54-a91d-b22cc2b4beae",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "createdAt": "2025-09-11T14:01:40.633Z",
+      "updatedAt": "2025-09-11T14:01:40.633Z",
+      "role": "workflow:owner",
+      "workflowId": "7RniuisFkZxT4pnE",
+      "projectId": "6D91TcMmlphV2lVS",
+      "project": {
+        "createdAt": "2025-07-14T23:58:54.932Z",
+        "updatedAt": "2025-07-15T00:03:17.549Z",
+        "id": "6D91TcMmlphV2lVS",
+        "name": "Gael  Graciano <gael.graciano@canteradigital.mx>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "projectRelations": [
+          {
+            "createdAt": "2025-07-14T23:58:54.935Z",
+            "updatedAt": "2025-07-14T23:58:54.935Z",
+            "role": "project:personalOwner",
+            "userId": "bff7f19f-b5be-48d6-aea2-dfc3de153ccc",
+            "projectId": "6D91TcMmlphV2lVS",
+            "user": {
+              "createdAt": "2025-07-14T23:58:54.930Z",
+              "updatedAt": "2025-09-11T13:51:11.000Z",
+              "id": "bff7f19f-b5be-48d6-aea2-dfc3de153ccc",
+              "email": "gael.graciano@canteradigital.mx",
+              "firstName": "Gael ",
+              "lastName": "Graciano",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-07-15T00:12:22.917Z",
+                "personalization_survey_n8n_version": "1.100.1",
+                "automationGoalDevops": [
+                  "other",
+                  "ticketing-systems-integrations",
+                  "cloud-infrastructure-orchestration"
+                ],
+                "companySize": "100-499",
+                "companyType": "saas",
+                "role": "devops",
+                "reportedSource": "event"
+              },
+              "settings": {
+                "easyAIWorkflowOnboarded": true,
+                "firstSuccessfulWorkflowId": "j0Fiqu3Vwfp6hOC3",
+                "userActivated": true,
+                "userActivatedAt": 1753839716307,
+                "npsSurvey": {
+                  "responded": true,
+                  "lastShownAt": 1754337405043
+                },
+                "dismissedCallouts": {
+                  "aiAgentStarterCallout": true,
+                  "ragStarterCallout": true
+                }
+              },
+              "role": "global:member",
+              "disabled": false,
+              "mfaEnabled": false,
+              "lastActiveAt": "2025-09-11",
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": []
+}
