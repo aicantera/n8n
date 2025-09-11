@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-08-22T15:40:23.466Z",
-  "updatedAt": "2025-08-29T18:08:57.000Z",
+  "updatedAt": "2025-09-11T19:00:37.000Z",
   "id": "jxjAIFzEJQtYofZJ",
   "name": "Consulting Financial Rutas",
   "active": false,
@@ -48,8 +48,8 @@
       "type": "n8n-nodes-base.googleDrive",
       "typeVersion": 3,
       "position": [
-        220,
-        0
+        80,
+        -240
       ],
       "id": "cc07b32f-5e9c-4cb0-85b3-e7a5c97482e2",
       "name": "Search files and folders",
@@ -74,8 +74,8 @@
       "type": "n8n-nodes-base.googleDrive",
       "typeVersion": 3,
       "position": [
-        720,
-        -20
+        448,
+        -256
       ],
       "id": "8ba13364-c6bf-45ae-979a-d5610217410e",
       "name": "Download file",
@@ -96,8 +96,8 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        880,
-        -20
+        1232,
+        -80
       ],
       "id": "c773a5e1-058e-40de-8938-38475776cae0",
       "name": "Send a document",
@@ -137,8 +137,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        440,
-        0
+        240,
+        -240
       ],
       "id": "e20e5e2b-8d35-4d53-ab2d-0f17ff3096eb",
       "name": "If"
@@ -160,11 +160,140 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        720,
-        160
+        1040,
+        -240
       ],
       "id": "c7c16715-b75c-4c50-baf0-61406a284ca3",
       "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "folderId": "={{ $json.id }}"
+      },
+      "type": "n8n-nodes-base.microsoftOneDrive",
+      "typeVersion": 1,
+      "position": [
+        384,
+        0
+      ],
+      "id": "9292323e-2ef0-46b8-9ab5-c21aeaa08075",
+      "name": "Get items in a folder",
+      "credentials": {
+        "microsoftOneDriveOAuth2Api": {
+          "id": "zRflpxqGXm7lDItY",
+          "name": "Microsoft Drive Consulting Financial"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "operation": "search",
+        "query": "Rutas"
+      },
+      "type": "n8n-nodes-base.microsoftOneDrive",
+      "typeVersion": 1,
+      "position": [
+        176,
+        0
+      ],
+      "id": "293c412a-0cb9-4bb0-b12a-fda9581f836c",
+      "name": "Search a folder",
+      "credentials": {
+        "microsoftOneDriveOAuth2Api": {
+          "id": "zRflpxqGXm7lDItY",
+          "name": "Microsoft Drive Consulting Financial"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "5ad5cb77-c532-40a2-8457-d8b1caf8140d",
+              "leftValue": "={{ $json.name }}",
+              "rightValue": "={{ $('When Executed by Another Workflow').item.json.nombre_empresa }}",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        576,
+        0
+      ],
+      "id": "05894f7c-afbe-40be-a018-2a8d663cb1ef",
+      "name": "If1",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": "={{ $json.id }}"
+      },
+      "type": "n8n-nodes-base.microsoftOneDrive",
+      "typeVersion": 1,
+      "position": [
+        1024,
+        -80
+      ],
+      "id": "d07e8ca1-e52e-4c8a-8b33-6ccbf1fc2a27",
+      "name": "Download a file",
+      "credentials": {
+        "microsoftOneDriveOAuth2Api": {
+          "id": "zRflpxqGXm7lDItY",
+          "name": "Microsoft Drive Consulting Financial"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "437f090b-ccdc-4fdf-a6d5-9bfcdcf48f4d",
+              "leftValue": "={{ $json }}",
+              "rightValue": "",
+              "operator": {
+                "type": "object",
+                "operation": "empty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        784,
+        -96
+      ],
+      "id": "e255bbaf-399b-4f1a-ac61-21bac16769db",
+      "name": "If2"
     }
   ],
   "connections": {
@@ -172,7 +301,7 @@
       "main": [
         [
           {
-            "node": "Search files and folders",
+            "node": "Search a folder",
             "type": "main",
             "index": 0
           }
@@ -192,13 +321,7 @@
     },
     "Download file": {
       "main": [
-        [
-          {
-            "node": "Send a document",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "If": {
@@ -210,9 +333,66 @@
             "index": 0
           }
         ],
+        []
+      ]
+    },
+    "Get items in a folder": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search a folder": {
+      "main": [
+        [
+          {
+            "node": "Get items in a folder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "If2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "Download a file": {
+      "main": [
+        [
+          {
+            "node": "Send a document",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If2": {
+      "main": [
         [
           {
             "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Download a file",
             "type": "main",
             "index": 0
           }
@@ -231,13 +411,13 @@
     "When Executed by Another Workflow": [
       {
         "json": {
-          "nombre_empresa": "COPRECI DE MEXICO",
+          "nombre_empresa": "AXIONLOG",
           "chat_id": 1526474745
         }
       }
     ]
   },
-  "versionId": "bbd8d135-31bc-4c48-8e16-35b6bdab7303",
+  "versionId": "6b874763-2bd4-4422-afe3-d5a97cb2c300",
   "triggerCount": 0,
   "shared": [
     {
