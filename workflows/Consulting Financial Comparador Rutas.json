@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-08-27T23:48:55.957Z",
-  "updatedAt": "2025-08-28T20:59:22.000Z",
+  "updatedAt": "2025-09-11T19:33:24.000Z",
   "id": "D1JMPzYc4dMN30AZ",
   "name": "Consulting Financial Comparador Rutas",
   "active": false,
@@ -77,7 +77,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        1980,
+        1984,
         80
       ],
       "id": "7a9c408b-5d73-4b35-8261-1b2bd1a3f602",
@@ -91,7 +91,7 @@
           "parameters": [
             {
               "name": "origins",
-              "value": "={{ $('Start').item.json.UBICACION_CANDIDATO }}"
+              "value": "={{ $('Start').first().json.UBICACION_CANDIDATO }}"
             },
             {
               "name": "destinations",
@@ -113,7 +113,7 @@
       "typeVersion": 4.2,
       "position": [
         1520,
-        -120
+        -128
       ],
       "id": "22f8fe48-68d6-4cb6-ad31-7d98ff9626d4",
       "name": "Calcular Distancia1"
@@ -145,8 +145,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        1740,
-        -120
+        1744,
+        -128
       ],
       "id": "a6e15eae-1b50-429b-965e-b96caf1f996f",
       "name": "If3"
@@ -170,8 +170,8 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.6,
       "position": [
-        440,
-        -120
+        464,
+        -384
       ],
       "id": "072a1ca5-7416-4565-91cb-d98becff2bb6",
       "name": "Get row(s) in sheet1",
@@ -203,6 +203,16 @@
                 "operation": "notEmpty",
                 "singleValue": true
               }
+            },
+            {
+              "id": "ffdff400-2da6-4682-91ba-6517595ff2c9",
+              "leftValue": "={{ $json.error }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notExists",
+                "singleValue": true
+              }
             }
           ],
           "combinator": "and"
@@ -212,8 +222,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        660,
-        -120
+        672,
+        -128
       ],
       "id": "9779f14c-f5ed-4960-8957-47dbd25f604b",
       "name": "If5"
@@ -226,7 +236,7 @@
       "typeVersion": 3,
       "position": [
         1040,
-        -140
+        -144
       ],
       "id": "2f503659-0f98-4058-91f8-32391aaa9672",
       "name": "Loop Over Items1"
@@ -238,61 +248,61 @@
             {
               "id": "dee78352-e3e3-4170-ac8b-872184013843",
               "name": "EMPRESA",
-              "value": "={{ $('Start').item.json.EMPRESA }}",
+              "value": "={{ $('Start').first().json.EMPRESA }}",
               "type": "string"
             },
             {
               "id": "be617d07-0ed7-4958-8561-c2988d3fc8de",
               "name": "PUESTO",
-              "value": "={{ $('Start').item.json.PUESTO }}",
+              "value": "={{ $('Start').first().json.PUESTO }}",
               "type": "string"
             },
             {
               "id": "e94873b0-06cb-4f1e-acdc-9d7c6001044b",
               "name": "UBICACIÓN",
-              "value": "={{ $('Start').item.json.UBICACION }}",
+              "value": "={{ $('Start').first().json.UBICACION }}",
               "type": "string"
             },
             {
               "id": "f9e7f5a9-33ac-423b-a167-2b7fc2bdacda",
               "name": "GIRO",
-              "value": "={{ $('Start').item.json.GIRO }}",
+              "value": "={{ $('Start').first().json.GIRO }}",
               "type": "string"
             },
             {
               "id": "28277179-ceb9-4516-8953-d37787a3553b",
               "name": "PERFIL",
-              "value": "={{ $('Start').item.json.PERFIL }}",
+              "value": "={{ $('Start').first().json.PERFIL }}",
               "type": "string"
             },
             {
               "id": "50c642d3-5b49-455b-ac5c-08a1084176c7",
               "name": "SUELDO SEMANAL LIBRE",
-              "value": "={{ $('Start').item.json.SUELDO_SEMANAL_LIBRE }}",
+              "value": "={{ $('Start').first().json.SUELDO_SEMANAL_LIBRE }}",
               "type": "string"
             },
             {
               "id": "8150c036-7a0b-4308-ad23-1ac04238af9b",
               "name": "BENEFICIOS",
-              "value": "={{ $('Start').item.json.BENEFICIOS }}",
+              "value": "={{ $('Start').first().json.BENEFICIOS }}",
               "type": "string"
             },
             {
               "id": "f73eac05-6160-49af-865f-4e6ce4cf9c4d",
               "name": "HORARIO",
-              "value": "={{ $('Start').item.json.HORARIO }}",
+              "value": "={{ $('Start').first().json.HORARIO }}",
               "type": "string"
             },
             {
               "id": "c0fb6adf-5240-45b5-a5dc-5da6188ff8da",
               "name": "TRANSPORTE",
-              "value": "={{ $('Start').item.json.TRANSPORTE }}",
+              "value": "={{ $('Start').first().json.TRANSPORTE }}",
               "type": "string"
             },
             {
               "id": "79c1c808-a0b2-43ae-b709-9e9ecafc6f53",
               "name": "OBSERVACIONES",
-              "value": "={{ $('Start').item.json.OBSERVACIONES }}",
+              "value": "={{ $('Start').first().json.OBSERVACIONES }}",
               "type": "string"
             }
           ]
@@ -303,7 +313,7 @@
       "typeVersion": 3.4,
       "position": [
         2000,
-        -140
+        -144
       ],
       "id": "ee9a01c8-1e70-4091-8baf-8377c115ce13",
       "name": "Edit Fields4"
@@ -315,8 +325,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1100,
-        -360
+        1104,
+        -368
       ],
       "id": "c622ad97-2764-4e84-a5df-b9fdc744adc9",
       "name": "Code3",
@@ -378,8 +388,8 @@
       "name": "Start",
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "position": [
-        220,
-        -120
+        224,
+        -128
       ]
     },
     {
@@ -453,11 +463,46 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        700,
-        140
+        704,
+        144
       ],
       "id": "6d245576-e85c-4028-a8b1-460348d801e5",
       "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "resource": "worksheet",
+        "operation": "readRows",
+        "workbook": {
+          "__rl": true,
+          "value": "0147U5LRHPXBIDCACMWZEYDN3HY5F6IUXC",
+          "mode": "list",
+          "cachedResultName": "Rutas Empresas",
+          "cachedResultUrl": "https://consultingfinancial-my.sharepoint.com/personal/jessica_olmedo_consultingfinancial_com_mx/_layouts/15/Doc.aspx?sourcedoc=%7B3150B8EF-4C00-49B6-81B7-67C74BE452E2%7D&file=Rutas%20Empresas.xlsx&action=default&mobileredirect=true&DefaultItemOpen=1"
+        },
+        "worksheet": {
+          "__rl": true,
+          "value": "={{ $json.EMPRESA }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.microsoftExcel",
+      "typeVersion": 2.1,
+      "position": [
+        464,
+        -128
+      ],
+      "id": "088801f2-2799-40b1-a30c-f4062145f955",
+      "name": "Get rows from sheet",
+      "alwaysOutputData": true,
+      "credentials": {
+        "microsoftExcelOAuth2Api": {
+          "id": "xZ8Ar2VyJ1rkP20c",
+          "name": "Microsoft Excel Consulting Financial"
+        }
+      },
+      "onError": "continueRegularOutput"
     }
   ],
   "connections": {
@@ -515,13 +560,7 @@
     },
     "Get row(s) in sheet1": {
       "main": [
-        [
-          {
-            "node": "If5",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "If5": {
@@ -562,7 +601,18 @@
       "main": [
         [
           {
-            "node": "Get row(s) in sheet1",
+            "node": "Get rows from sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get rows from sheet": {
+      "main": [
+        [
+          {
+            "node": "If5",
             "type": "main",
             "index": 0
           }
@@ -574,7 +624,9 @@
     "executionOrder": "v1"
   },
   "staticData": null,
-  "meta": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
   "pinData": {
     "Start": [
       {
@@ -588,12 +640,13 @@
           "HORARIO": "Se rola turnos cada semana, (no negociable a turnos fijos) » Lunes a sábado de 06:30 am a 02:30 pm » Lunes a sábado de 02:30 a 10:00 pm » Lunes a Sábado de 10:00 pm a 06:30 a.m. pág. 7 INFORMACIÓN CONFIDENCIAL CONSULTING FINANCIAL",
           "TRANSPORTE": "Sí cuenta con transporte",
           "OBSERVACIONES": "[]",
+          "SUELDO_SEMANAL_LIBRE": "$1,827",
           "UBICACION_CANDIDATO": "20.5547468,-103.3284089"
         }
       }
     ]
   },
-  "versionId": "5ea6b8a2-ab64-44eb-b987-4f2d28d706dc",
+  "versionId": "ea226e5f-a48d-4900-9f68-e7d48b3549e3",
   "triggerCount": 0,
   "shared": [
     {
