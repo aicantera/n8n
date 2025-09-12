@@ -1,9 +1,9 @@
 {
   "createdAt": "2025-09-11T14:01:40.630Z",
-  "updatedAt": "2025-09-12T21:49:15.000Z",
+  "updatedAt": "2025-09-12T22:50:23.000Z",
   "id": "7RniuisFkZxT4pnE",
   "name": "Agente ADQA",
-  "active": false,
+  "active": true,
   "isArchived": false,
   "nodes": [
     {
@@ -34,9 +34,9 @@
     {
       "parameters": {
         "promptType": "define",
-        "text": "={{ $json.message.text }}",
+        "text": "={{ $json.text }}",
         "options": {
-          "systemMessage": "eres un personal de rh para ser el primer filtro en un puesto de chedraui."
+          "systemMessage": "=Rol del Agente:\n\nActuarás como un agente de Recursos Humanos de Chedraui. Tu principal responsabilidad es llevar a cabo la primera etapa de entrevistas con los postulantes para las vacantes en las áreas de Secos (Preparadores Armadores, Recibidores, Ayudantes generales, Patineros Eléctricos y Montacargas) y Fríos (Refrigeración, Embutidos y Alimentos fríos). Tu objetivo es evaluar la idoneidad del candidato, recopilar información clave y, al finalizar, determinar si es apto o no. La interacción debe ser orgánica, profesional y respetuosa.\n\nInstrucciones y Flujo de la Conversación:\n\nInicio de la Interacción:\n\nSaluda al postulante de manera amable y preséntate como el personal de Recursos Humanos de Chedraui.\n\nCaptura de Datos y Uso de Herramientas:\n\nDespués de la primera respuesta del usuario, solicita su nombre completo, edad, genero, etc y, utilizando la herramienta \"Consultar/Insertar_Filtros\", genera un id_Postulante único. Este ID se compartirá automáticamente con el resto de las herramientas para identificar al usuario.\n\nContinúa la conversación pidiendo la información personal necesaria de uno en uno, de forma natural y fluida, para llenar los campos de \"Consultar/Insertar_Filtros\". Recuerda: una pregunta a la vez.\n\nMientras recopilas los datos, utiliza la herramienta \"Consultar/Insertar_Motivos_Rechazo\" para verificar si el postulante cumple con alguno de los criterios de rechazo.\n\nSi se detecta un motivo de rechazo, no lo notifiques de inmediato. Debes continuar la entrevista hasta el final, tal como si el candidato fuera apto.\n\nMantén un registro interno de este estado para notificarlo al concluir la entrevista.\n\nEvaluación de Vacantes y Requisitos:\n\nUna vez que hayas recopilado la información personal, pregunta al candidato sobre su experiencia laboral relevante para las vacantes de Chedraui.\n\nDependiendo de si el postulante eligió \"Secos\" o \"Fríos\" al inicio, utiliza la herramienta correspondiente (\"Consultar/Insertar_VacantesSecos\" o \"Consultar/Insertar_VacantesFrios\") para consultar los requisitos específicos y hacer preguntas que evalúen su idoneidad para esas áreas.\n\nPor ejemplo, si el postulante mencionó interés en \"Patinero Eléctrico\", pregunta sobre su experiencia manejando equipo similar. Si se interesa en el área de \"Embutidos\", indaga sobre su experiencia en el manejo de alimentos fríos o refrigerados.\n\nNotificación de Documentación:\n\nCuando hayas completado la evaluación de la experiencia, utiliza la herramienta Consultar/Insertar_Documentacion.\n\nInforma al postulante de manera clara y organizada sobre la documentación necesaria, especificando cuáles son obligatorios y cuál es el único documento opcional.\n\nFinalización y Resultado de la Entrevista:\n\nAgradece al postulante por su tiempo y por la información proporcionada.\n\nDependiendo de la evaluación, utiliza la herramienta adecuada para almacenar sus datos:\n\nSi el postulante es apto para una vacante y no tiene motivos de rechazo, utiliza \"Consultar/Insertar_Postulantes_Aptos\" para guardar su id_Postulante y sus datos. Finaliza la conversación indicando que su información será revisada por el equipo de selección y que se le contactará pronto.\n\nSi el postulante no es apto (porque no cumplió con los requisitos o porque se activó un motivo de rechazo), utiliza \"Consultar/Insertar_Postulantes_NoAptos\". La notificación debe ser respetuosa, amable y apreciando su tiempo. Un ejemplo de notificación podría ser: \"Agradecemos mucho tu tiempo e interés en Chedraui. Tu perfil es muy valioso, pero por el momento no contamos con una vacante que se ajuste completamente a tu experiencia. Sin embargo, hemos guardado tus datos para futuras oportunidades que se adapten mejor a ti. Te deseamos mucho éxito en tu búsqueda.\"\n\nCriterios de Interacción:\n\nUna pregunta a la vez: El agente debe formular una sola pregunta por turno para evitar abrumar al usuario.\n\nLenguaje natural y empático: Mantén un tono de voz conversacional y empático durante toda la entrevista.\n\nConexión entre herramientas: El id_Postulante es el hilo conductor. Asegúrate de que todas las herramientas lo utilicen para almacenar o consultar la información del mismo usuario."
         }
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
@@ -263,7 +263,20 @@
         },
         "columns": {
           "mappingMode": "defineBelow",
-          "value": {},
+          "value": {
+            "id_Postulante": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('id_Postulante__using_to_match_', ``, 'string') }}",
+            "Nombre completo": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Nombre_completo', ``, 'string') }}",
+            "Edad": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Edad', ``, 'string') }}",
+            "Genero": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Genero', ``, 'string') }}",
+            "Ultimo grado de estudios con certificado": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Ultimo_grado_de_estudios_con_certificado', ``, 'string') }}",
+            "¿Actualmente estas trabajando?": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('_Actualmente_estas_trabajando_', ``, 'string') }}",
+            "Experiencia laboral (años y áreas en las que has trabajado)": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Experiencia_laboral__a_os_y__reas_en_las_que_has_trabajado_', ``, 'string') }}",
+            "Municipio de residencia": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Municipio_de_residencia', ``, 'string') }}",
+            "Disponibilidad para entrevista": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Disponibilidad_para_entrevista', ``, 'string') }}",
+            "Vacante de tu interés": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Vacante_de_tu_inter_s', ``, 'string') }}",
+            "¿Sabe utilizar patín hidráulico y/o algún escáner (handheld)": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('_Sabe_utilizar_pat_n_hidr_ulico_y_o_alg_n_esc_ner__handheld_', ``, 'string') }}",
+            "Validación de rutas de trasporte": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Validaci_n_de_rutas_de_trasporte', ``, 'string') }}"
+          },
           "matchingColumns": [
             "id_Postulante"
           ],
@@ -291,6 +304,16 @@
             {
               "id": "Edad",
               "displayName": "Edad",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Genero",
+              "displayName": "Genero",
               "required": false,
               "defaultMatch": false,
               "display": true,
@@ -418,7 +441,21 @@
         },
         "columns": {
           "mappingMode": "defineBelow",
-          "value": {},
+          "value": {
+            "id_Postulante": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('id_Postulante__using_to_match_', ``, 'string') }}",
+            "Edad máxima 45 años (vacantes operativas)": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Edad_m_xima_45_a_os__vacantes_operativas_', ``, 'string') }}",
+            "Pagamos por medio del banco Santander ¿Tienes inconveniente con este banco?": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Pagamos_por_medio_del_banco_Santander__Tienes_inconveniente_con', ``, 'string') }}",
+            "En caso de manejar cuenta Santander ¿Esta activa?": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('En_caso_de_manejar_cuenta_Santander__Esta_activa_', ``, 'string') }}",
+            "No se aceptan reingresos": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('No_se_aceptan_reingresos', ``, 'string') }}",
+            "Que los candidatos no vivan a más de una hora de distancia": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Que_los_candidatos_no_vivan_a_m_s_de_una_hora_de_distancia', ``, 'string') }}",
+            "Falta de algún documento": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Falta_de_alg_n_documento', ``, 'string') }}",
+            "Infonavit o fonacot para vacantes operativas no ser mayor a $3,000 mil pesos": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Infonavit_o_fonacot_para_vacantes_operativas_no_ser_mayor_a__3_', ``, 'string') }}",
+            "Fracturas": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Fracturas', ``, 'string') }}",
+            "Consumo de drogas o antidepresivos (Antidoping)": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Consumo_de_drogas_o_antidepresivos__Antidoping_', ``, 'string') }}",
+            "En caso de mujeres no medir menos de 1.60": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('En_caso_de_mujeres_no_medir_menos_de_1_60', ``, 'string') }}",
+            "Alguna enfermedad crónica o degenerativa": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Alguna_enfermedad_cr_nica_o_degenerativa', ``, 'string') }}",
+            "En caso de tener miopía o astigmatismo y no contar con lentes tendra que tramitarlos antes de ingresar": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('En_caso_de_tener_miop_a_o_astigmatismo_y_no_contar_con_lentes_t', ``, 'string') }}"
+          },
           "matchingColumns": [
             "id_Postulante"
           ],
@@ -593,7 +630,20 @@
         },
         "columns": {
           "mappingMode": "defineBelow",
-          "value": {},
+          "value": {
+            "id_Postulante": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('id_Postulante__using_to_match_', ``, 'string') }}",
+            "CONSTANCIA DE SITUACIÓN FISCAL (Obligatorio) (No mayor a tres meses)": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('CONSTANCIA_DE_SITUACI_N_FISCAL__Obligatorio___No_mayor_a_tres_m', ``, 'string') }}",
+            "CUENTA DE NOMINA SANTANDER (Obligatorio)": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('CUENTA_DE_NOMINA_SANTANDER__Obligatorio_', ``, 'string') }}",
+            "CAPTURA DE CORREO ELECTRONICO (Obligatorio)": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('CAPTURA_DE_CORREO_ELECTRONICO__Obligatorio_', ``, 'string') }}",
+            "ACTA DE NACIMIENTO (Obligatorio)": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('ACTA_DE_NACIMIENTO__Obligatorio_', ``, 'string') }}",
+            "CURP (Obligatorio)": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('CURP__Obligatorio_', ``, 'string') }}",
+            "INE(AMBOS LADOS) (Obligatorio)": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('INE_AMBOS_LADOS___Obligatorio_', ``, 'string') }}",
+            "NUMERO DE SEGURO SOCIAL (Obligatorio) (Actualizado y desactualizado)": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('NUMERO_DE_SEGURO_SOCIAL__Obligatorio___Actualizado_y_desactuali', ``, 'string') }}",
+            "COMPROBANTE DE DOMICILIO (Obligatorio)": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('COMPROBANTE_DE_DOMICILIO__Obligatorio_', ``, 'string') }}",
+            "COMPROBANTE DE ESTUDIOS CERTIFICADO (Obligatorio)": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('COMPROBANTE_DE_ESTUDIOS_CERTIFICADO__Obligatorio_', ``, 'string') }}",
+            "ESTADO DE CUENTA INFONAVIT O FONACOT (Opcional) Solo si aplica": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('ESTADO_DE_CUENTA_INFONAVIT_O_FONACOT__Opcional__Solo_si_aplica', ``, 'string') }}",
+            "FOTOGRAFIA": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('FOTOGRAFIA', ``, 'string') }}"
+          },
           "matchingColumns": [
             "id_Postulante"
           ],
@@ -758,9 +808,24 @@
         },
         "columns": {
           "mappingMode": "defineBelow",
-          "value": {},
-          "matchingColumns": [],
-          "schema": [],
+          "value": {
+            "id_Postulante": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('id_Postulante', ``, 'string') }}"
+          },
+          "matchingColumns": [
+            "id_Postulante"
+          ],
+          "schema": [
+            {
+              "id": "id_Postulante",
+              "displayName": "id_Postulante",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
           "attemptToConvertTypes": false,
           "convertFieldsToString": false
         },
@@ -800,9 +865,24 @@
         },
         "columns": {
           "mappingMode": "defineBelow",
-          "value": {},
-          "matchingColumns": [],
-          "schema": [],
+          "value": {
+            "id_Postulante": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('id_Postulante__using_to_match_', ``, 'string') }}"
+          },
+          "matchingColumns": [
+            "id_Postulante"
+          ],
+          "schema": [
+            {
+              "id": "id_Postulante",
+              "displayName": "id_Postulante",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
           "attemptToConvertTypes": false,
           "convertFieldsToString": false
         },
@@ -842,14 +922,93 @@
         },
         "columns": {
           "mappingMode": "defineBelow",
-          "value": {},
+          "value": {
+            "id_Postulante": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('id_Postulante__using_to_match_', ``, 'string') }}",
+            "¿Alguna vez has trabajado en el area de frios?": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('_Alguna_vez_has_trabajado_en_el_area_de_frios_', ``, 'string') }}",
+            "¿Cuentas con disponibilidad de tiempo?": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('_Cuentas_con_disponibilidad_de_tiempo_', ``, 'string') }}",
+            "¿Tienes alguna enfermedad respiratoria?": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('_Tienes_alguna_enfermedad_respiratoria_', ``, 'string') }}",
+            "¿Conocimientos matematicos?": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('_Conocimientos_matematicos_', ``, 'string') }}",
+            "No operaciones, ni fracturas": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('No_operaciones__ni_fracturas', ``, 'string') }}",
+            "Condicion enfermiza": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Condicion_enfermiza', ``, 'string') }}",
+            "No mujeres": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('No_mujeres', ``, 'string') }}"
+          },
           "matchingColumns": [
-            "FRIOS"
+            "id_Postulante"
           ],
           "schema": [
             {
+              "id": "id_Postulante",
+              "displayName": "id_Postulante",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
               "id": "¿Alguna vez has trabajado en el area de frios?",
               "displayName": "¿Alguna vez has trabajado en el area de frios?",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "¿Cuentas con disponibilidad de tiempo?",
+              "displayName": "¿Cuentas con disponibilidad de tiempo?",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "¿Tienes alguna enfermedad respiratoria?",
+              "displayName": "¿Tienes alguna enfermedad respiratoria?",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "¿Conocimientos matematicos?",
+              "displayName": "¿Conocimientos matematicos?",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "No operaciones, ni fracturas",
+              "displayName": "No operaciones, ni fracturas",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Condicion enfermiza",
+              "displayName": "Condicion enfermiza",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "No mujeres",
+              "displayName": "No mujeres",
               "required": false,
               "defaultMatch": false,
               "display": true,
@@ -897,14 +1056,93 @@
         },
         "columns": {
           "mappingMode": "defineBelow",
-          "value": {},
+          "value": {
+            "id_Postulante": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('id_Postulante__using_to_match_', ``, 'string') }}",
+            "¿Alguna vez has trabajado en el area de frios?": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('_Alguna_vez_has_trabajado_en_el_area_de_frios_', ``, 'string') }}",
+            "¿Cuentas con disponibilidad de tiempo?": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('_Cuentas_con_disponibilidad_de_tiempo_', ``, 'string') }}",
+            "¿Tienes alguna enfermedad respiratoria?": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('_Tienes_alguna_enfermedad_respiratoria_', ``, 'string') }}",
+            "¿Conocimientos matematicos?": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('_Conocimientos_matematicos_', ``, 'string') }}",
+            "No operaciones, ni fracturas": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('No_operaciones__ni_fracturas', ``, 'string') }}",
+            "Condicion enfermiza": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Condicion_enfermiza', ``, 'string') }}",
+            "No mujeres": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('No_mujeres', ``, 'string') }}"
+          },
           "matchingColumns": [
-            "FRIOS"
+            "id_Postulante"
           ],
           "schema": [
             {
+              "id": "id_Postulante",
+              "displayName": "id_Postulante",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
               "id": "¿Alguna vez has trabajado en el area de frios?",
               "displayName": "¿Alguna vez has trabajado en el area de frios?",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "¿Cuentas con disponibilidad de tiempo?",
+              "displayName": "¿Cuentas con disponibilidad de tiempo?",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "¿Tienes alguna enfermedad respiratoria?",
+              "displayName": "¿Tienes alguna enfermedad respiratoria?",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "¿Conocimientos matematicos?",
+              "displayName": "¿Conocimientos matematicos?",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "No operaciones, ni fracturas",
+              "displayName": "No operaciones, ni fracturas",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Condicion enfermiza",
+              "displayName": "Condicion enfermiza",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "No mujeres",
+              "displayName": "No mujeres",
               "required": false,
               "defaultMatch": false,
               "display": true,
@@ -1119,9 +1357,9 @@
     "Telegram Trigger": [
       {
         "json": {
-          "update_id": 513134275,
+          "update_id": 513134281,
           "message": {
-            "message_id": 3,
+            "message_id": 11,
             "from": {
               "id": 7992375339,
               "is_bot": false,
@@ -1133,15 +1371,15 @@
               "first_name": "Gael",
               "type": "private"
             },
-            "date": 1757599358,
+            "date": 1757716901,
             "text": "hola"
           }
         }
       }
     ]
   },
-  "versionId": "fbba93cd-63aa-46b3-a2f4-e3c7977b214d",
-  "triggerCount": 0,
+  "versionId": "99e68ef5-68eb-4c2c-8e93-5ed0a93cf2cb",
+  "triggerCount": 1,
   "shared": [
     {
       "createdAt": "2025-09-11T14:01:40.633Z",
