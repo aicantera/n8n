@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-05-13T19:26:18.873Z",
-  "updatedAt": "2025-05-15T14:58:49.000Z",
+  "updatedAt": "2025-09-11T23:48:25.000Z",
   "id": "GzJuSAkJYNRnyuxJ",
   "name": "Agente glassy dev kb",
   "active": false,
@@ -13,8 +13,8 @@
       "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
       "typeVersion": 1.2,
       "position": [
-        220,
-        180
+        224,
+        192
       ],
       "id": "830e0001-9b5f-47f1-a58c-d1a469903c01",
       "name": "Embeddings OpenAI",
@@ -33,7 +33,7 @@
       "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
       "typeVersion": 1,
       "position": [
-        460,
+        464,
         160
       ],
       "id": "cc27486b-0ba6-420a-8f02-9ee7521abf78",
@@ -47,8 +47,8 @@
       "type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
       "typeVersion": 1,
       "position": [
-        520,
-        380
+        528,
+        384
       ],
       "id": "99fd68d6-b101-4456-b1e2-8f51f0896841",
       "name": "Recursive Character Text Splitter"
@@ -76,8 +76,8 @@
       "type": "n8n-nodes-base.googleDriveTrigger",
       "typeVersion": 1,
       "position": [
-        -360,
-        -60
+        -624,
+        -64
       ],
       "id": "b8d71667-bf77-40a4-ba64-fb3aaee134e8",
       "name": "Buscamnos cambios en documentos",
@@ -108,8 +108,8 @@
       "type": "n8n-nodes-base.googleDrive",
       "typeVersion": 3,
       "position": [
-        -140,
-        -60
+        -144,
+        -80
       ],
       "id": "47ff4346-8516-46e7-9e80-e026cbaf6c7b",
       "name": "sacamos todos los documentos",
@@ -133,8 +133,8 @@
       "type": "n8n-nodes-base.googleDrive",
       "typeVersion": 3,
       "position": [
-        100,
-        -60
+        112,
+        -64
       ],
       "id": "7966ecbe-59ad-473a-9d16-1adec1a721a4",
       "name": "descargamos los documentos",
@@ -160,10 +160,40 @@
       "typeVersion": 1.1,
       "position": [
         320,
-        -60
+        -64
       ],
       "id": "9581d066-3930-4c4b-8a5f-e34300d44197",
       "name": "añadimos documentos a la base de conocimiento",
+      "credentials": {
+        "supabaseApi": {
+          "id": "ty0KiXsEYP1uJ8t9",
+          "name": "Supabase account - CANTERA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "tableId": "documents_glassy",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "id",
+              "condition": "gt",
+              "keyValue": "0"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        -368,
+        -64
+      ],
+      "id": "09fe748e-7c5d-42b8-927e-8196acb02a79",
+      "name": "Delete a row",
+      "alwaysOutputData": true,
       "credentials": {
         "supabaseApi": {
           "id": "ty0KiXsEYP1uJ8t9",
@@ -210,7 +240,7 @@
       "main": [
         [
           {
-            "node": "sacamos todos los documentos",
+            "node": "Delete a row",
             "type": "main",
             "index": 0
           }
@@ -238,6 +268,17 @@
           }
         ]
       ]
+    },
+    "Delete a row": {
+      "main": [
+        [
+          {
+            "node": "sacamos todos los documentos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -248,7 +289,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "4981b12c-8ea5-43f9-8968-8494e98f25b0",
+  "versionId": "0fb494f3-dd03-4b56-a2c8-d270186ebea6",
   "triggerCount": 0,
   "shared": [
     {
