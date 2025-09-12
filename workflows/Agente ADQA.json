@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-09-11T14:01:40.630Z",
-  "updatedAt": "2025-09-11T22:49:51.000Z",
+  "updatedAt": "2025-09-12T18:10:39.000Z",
   "id": "7RniuisFkZxT4pnE",
   "name": "Agente ADQA",
   "active": false,
@@ -11,12 +11,14 @@
         "updates": [
           "message"
         ],
-        "additionalFields": {}
+        "additionalFields": {
+          "download": false
+        }
       },
       "type": "n8n-nodes-base.telegramTrigger",
       "typeVersion": 1.2,
       "position": [
-        0,
+        -432,
         0
       ],
       "id": "5e31899e-2594-4868-9968-6c2f0bdeb3c8",
@@ -40,7 +42,7 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 2.2,
       "position": [
-        208,
+        416,
         0
       ],
       "id": "042e8878-cf84-49bb-946f-3ebad2a7e205",
@@ -57,7 +59,7 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        560,
+        768,
         0
       ],
       "id": "4bd9449f-2b7e-415b-9aa2-969f680ae3b0",
@@ -82,7 +84,7 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.2,
       "position": [
-        128,
+        336,
         160
       ],
       "id": "5ff00415-44c0-42a4-9593-a98dd2d2648d",
@@ -103,7 +105,7 @@
       "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
       "typeVersion": 1.3,
       "position": [
-        256,
+        464,
         208
       ],
       "id": "6ebd1de4-007f-4a43-ace7-6f36e95640d5",
@@ -111,31 +113,176 @@
     },
     {
       "parameters": {
-        "driveId": {
+        "operation": "appendOrUpdate",
+        "documentId": {
           "__rl": true,
+          "value": "1e-M1wF-v-R2wFhi204EDb4LcbfRtoX2-1wX-lfQ11ZU",
           "mode": "list",
-          "value": "My Drive"
+          "cachedResultName": "Chedrahui",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1e-M1wF-v-R2wFhi204EDb4LcbfRtoX2-1wX-lfQ11ZU/edit?usp=drivesdk"
         },
-        "folderId": {
+        "sheetName": {
           "__rl": true,
+          "value": "gid=0",
           "mode": "list",
-          "value": "root",
-          "cachedResultName": "/ (Root folder)"
+          "cachedResultName": "Documentación",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1e-M1wF-v-R2wFhi204EDb4LcbfRtoX2-1wX-lfQ11ZU/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
         },
         "options": {}
       },
-      "type": "n8n-nodes-base.googleDriveTool",
-      "typeVersion": 3,
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
       "position": [
-        640,
-        208
+        720,
+        240
       ],
-      "id": "d2d53a2c-0f6d-43b4-92ec-2cd329991764",
-      "name": "Upload file in Google Drive",
+      "id": "0992c77c-8047-4129-a68c-0211026451e9",
+      "name": "Consultar/Insertar_Documentacion",
       "credentials": {
-        "googleDriveOAuth2Api": {
-          "id": "1P9PgyGmxd7ggSGM",
-          "name": "Gael Drive"
+        "googleSheetsOAuth2Api": {
+          "id": "HveeygHL8BoPyTUe",
+          "name": "Gael Sheets"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "exists",
+                      "singleValue": true
+                    },
+                    "id": "81145717-c846-4994-b521-38b433a26f12"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "texto"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "19666aed-eb33-4ab7-9647-f2ef9bd318e9",
+                    "leftValue": "={{ $json.message.voice.file_id }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "exists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "voz"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -224,
+        0
+      ],
+      "id": "cde74af3-af49-415c-b470-6a31a434b2ba",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "3afb4b21-1923-41e7-a49c-672d6cf20141",
+              "name": "text",
+              "value": "={{ $json.message.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        48,
+        -128
+      ],
+      "id": "f1c32c1e-a2f0-4ab8-bfd7-42edeac7aeef",
+      "name": "Texto"
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "fileId": "={{ $('Trigger - Recibir mensaje').item.json.message.voice.file_id }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -48,
+        128
+      ],
+      "id": "c6305a24-5ce6-4437-9994-8ae2d64f4741",
+      "name": "Descargar audio",
+      "webhookId": "f145bc9e-37c1-4762-816b-386767c194fc",
+      "credentials": {
+        "telegramApi": {
+          "id": "M4yT4PHnQvsP26j3",
+          "name": "Demo_Canon"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "operation": "transcribe",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        144,
+        128
+      ],
+      "id": "afe2f8be-d582-4717-b9f6-9867d45d316a",
+      "name": "Transcribe audio",
+      "credentials": {
+        "openAiApi": {
+          "id": "0PNoojfjNHHXEtdv",
+          "name": "Test_Gael"
         }
       }
     }
@@ -145,7 +292,7 @@
       "main": [
         [
           {
-            "node": "AI Agent",
+            "node": "Switch",
             "type": "main",
             "index": 0
           }
@@ -185,12 +332,63 @@
         ]
       ]
     },
-    "Upload file in Google Drive": {
+    "Consultar/Insertar_Documentacion": {
       "ai_tool": [
         [
           {
             "node": "AI Agent",
             "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Texto",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Descargar audio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Descargar audio": {
+      "main": [
+        [
+          {
+            "node": "Transcribe audio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Texto": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transcribe audio": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
             "index": 0
           }
         ]
@@ -229,7 +427,7 @@
       }
     ]
   },
-  "versionId": "ebe2adff-e06a-4f63-b55c-b0d4c519e4d7",
+  "versionId": "e375ac83-44cf-4c13-b9f0-b996ffd2ee49",
   "triggerCount": 0,
   "shared": [
     {
