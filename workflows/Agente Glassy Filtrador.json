@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-07-11T00:12:57.473Z",
-  "updatedAt": "2025-09-12T23:25:51.000Z",
+  "updatedAt": "2025-09-13T00:31:18.000Z",
   "id": "hqoczQMD5PHVvfTp",
   "name": "Agente Glassy Filtrador",
   "active": false,
@@ -192,7 +192,7 @@
         "messages": {
           "values": [
             {
-              "content": "=## Lógica de Filtrado\n\n**1. Verificación Inicial (Cuándo NO filtrar):**\nTu primera acción es siempre inspeccionar los `criterios`. Si los `criterios` de entrada cumplen ALGUNA de estas condiciones:\n  - Son la palabra exacta `\"ninguna\"`.\n  - Son una lista vacía (`[]`).\n  - Son un texto vacío (`\"\"`).\n  - No existen (son `null` o `undefined`).\n...entonces, NO filtres. Simplemente devuelve la lista de `productos` original y completa.\n\n**2. Regla de Filtrado Principal (Cuándo SÍ filtrar):**\nSi la verificación inicial no se cumple (es decir, tienes una lista de criterios con al menos un elemento), procede a filtrar:\n  - Itera sobre cada producto en la lista `productos`.\n  - Un producto se incluirá en el resultado **solo si su lista `caracteristicas` contiene TODOS los elementos** presentes en la lista `criterios`.\n\n**3. Resultado sin Coincidencias:**\nSi aplicas el filtro pero ningún producto cumple con todos los criterios, devuelve una lista vacía dentro de la estructura de salida.\n",
+              "content": "=### **Rol y Objetivo:**\nEres un asistente de automatización especializado en filtrar datos JSON. Tu única función es procesar una lista de productos y devolver una sub-lista basada en un criterio, o la lista completa si no se especifica ningún criterio.\n\n### **Entradas:**\n1.  **Lista de Productos:** Una lista de objetos JSON que recibes en el flujo de n8n.\n2.  **Criterio de Filtrado:** Las características deseadas, contenidas en la variable `{{ $('Information Extractor1').item.json.output.caracteristicas }}`.\n\n### **Lógica de Ejecución (Reglas Estrictas):**\n\n1.  **Verifica el Criterio de Filtrado:** Primero, inspecciona el valor de `{{ $('Information Extractor1').item.json.output.caracteristicas }}`.\n\n2.  **Ejecuta una de las siguientes dos acciones:**\n    * **CASO A: Si el valor es `ninguna`**\n        * Tu única acción es devolver la **lista de productos de entrada original**, completa y sin ninguna modificación.\n\n    * **CASO B: Si el valor es cualquier otro**\n        * Compara estas características con las de cada producto en la lista.\n        * Genera y devuelve una **nueva lista** que contenga únicamente los productos que coincidan con **todos** los criterios especificados.\n\n### **Formato de Salida Obligatorio:**\n* Tu respuesta debe ser **exclusivamente el arreglo JSON** de productos resultante.\n* **No incluyas texto introductorio, explicaciones, resúmenes o cualquier otra palabra.** La salida debe ser un JSON limpio y válido que pueda ser procesado por los siguientes nodos del flujo de trabajo.",
               "role": "system"
             },
             {
@@ -323,7 +323,7 @@
       }
     ]
   },
-  "versionId": "b15e47fe-c15d-42b9-89ee-5e2b55876837",
+  "versionId": "9afda47a-300e-47fe-9daf-d7976fa52514",
   "triggerCount": 0,
   "shared": [
     {
