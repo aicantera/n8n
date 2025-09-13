@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-07-11T00:12:57.473Z",
-  "updatedAt": "2025-08-18T19:52:07.000Z",
+  "updatedAt": "2025-09-12T23:25:51.000Z",
   "id": "hqoczQMD5PHVvfTp",
   "name": "Agente Glassy Filtrador",
   "active": false,
@@ -31,7 +31,7 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.2,
       "position": [
-        460,
+        464,
         240
       ],
       "id": "355dec35-1e94-42e6-8d7e-ffbc4929e189",
@@ -87,7 +87,7 @@
       "type": "@n8n/n8n-nodes-langchain.informationExtractor",
       "typeVersion": 1.2,
       "position": [
-        200,
+        208,
         0
       ],
       "id": "7af2fd4f-2215-4944-b889-5f8e09449621",
@@ -101,7 +101,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        500,
+        512,
         0
       ],
       "id": "a8a722e0-0b93-4ff3-aab6-ad31e22ff90b",
@@ -118,7 +118,7 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 2,
       "position": [
-        680,
+        688,
         0
       ],
       "id": "cb88db9b-3b40-4c29-916b-8d07e3e0e483",
@@ -142,7 +142,7 @@
       "type": "@n8n/n8n-nodes-langchain.informationExtractor",
       "typeVersion": 1.2,
       "position": [
-        1020,
+        1024,
         0
       ],
       "id": "f80af617-bdec-4f1a-a4eb-2dfaaa3f070d",
@@ -175,7 +175,7 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        1400,
+        1408,
         0
       ],
       "id": "271f7805-9d58-4c0f-8a6a-0fbd942976c3",
@@ -192,7 +192,7 @@
         "messages": {
           "values": [
             {
-              "content": "=**Objetivo:** Filtrar una lista de productos basándose en las características de vidrio especificadas por el usuario.\n\n**Descripción de la Tarea:**\nEres un nodo de n8n que recibe una lista de productos en el flujo de trabajo. Cada producto es un objeto JSON que incluye sus propias características. También recibes la variable {{ $('Information Extractor1').item.json.output.caracteristicas }}, que contiene los atributos que el vidrio del producto final debe tener.\n\nTu única función es comparar {{ $('Information Extractor1').item.json.output.caracteristicas }} con las características de cada producto en la lista y devolver una nueva lista que contenga **únicamente** los productos que coincidan con **todos** los criterios especificados.\n\n**Caso \"ninguna\":** Si el valor de la variable `{{ $('Information Extractor1').item.json.output.caracteristicas }}` es **'ninguna'**, no debes aplicar ningún filtro. En este caso, tu salida debe ser la lista de productos original, completa y sin modificaciones.\n",
+              "content": "=## Lógica de Filtrado\n\n**1. Verificación Inicial (Cuándo NO filtrar):**\nTu primera acción es siempre inspeccionar los `criterios`. Si los `criterios` de entrada cumplen ALGUNA de estas condiciones:\n  - Son la palabra exacta `\"ninguna\"`.\n  - Son una lista vacía (`[]`).\n  - Son un texto vacío (`\"\"`).\n  - No existen (son `null` o `undefined`).\n...entonces, NO filtres. Simplemente devuelve la lista de `productos` original y completa.\n\n**2. Regla de Filtrado Principal (Cuándo SÍ filtrar):**\nSi la verificación inicial no se cumple (es decir, tienes una lista de criterios con al menos un elemento), procede a filtrar:\n  - Itera sobre cada producto en la lista `productos`.\n  - Un producto se incluirá en el resultado **solo si su lista `caracteristicas` contiene TODOS los elementos** presentes en la lista `criterios`.\n\n**3. Resultado sin Coincidencias:**\nSi aplicas el filtro pero ningún producto cumple con todos los criterios, devuelve una lista vacía dentro de la estructura de salida.\n",
               "role": "system"
             },
             {
@@ -205,8 +205,8 @@
       "type": "@n8n/n8n-nodes-langchain.openAi",
       "typeVersion": 1.8,
       "position": [
-        1620,
-        -100
+        1632,
+        -96
       ],
       "id": "036ecec6-55c2-4dac-a4f6-53c6ec05c708",
       "name": "Message a model",
@@ -323,7 +323,7 @@
       }
     ]
   },
-  "versionId": "49b49dae-eb60-4db6-94c1-65695c422a52",
+  "versionId": "b15e47fe-c15d-42b9-89ee-5e2b55876837",
   "triggerCount": 0,
   "shared": [
     {
