@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-09-15T15:39:29.471Z",
-  "updatedAt": "2025-09-15T20:23:04.000Z",
+  "updatedAt": "2025-09-15T22:01:18.000Z",
   "id": "BPnkCPlia5Iozaew",
   "name": "chatbot cerebro qa",
   "active": false,
@@ -1022,7 +1022,7 @@
             {
               "id": "4bae602d-2cf2-49f0-9d2f-6a5c39f866d2",
               "name": "pregunta_guardian",
-              "value": "={{ $('WhatsApp Trigger 2').item.json.messages[0].text.body }}",
+              "value": "={{ $('incoming_data').item.json.incoming_wp.messages[0].text.body }}",
               "type": "string"
             },
             {
@@ -1641,7 +1641,7 @@
           "conditions": [
             {
               "id": "b74a5ca4-02b0-412f-98f8-5e6a71bce930",
-              "leftValue": "={{ $('WhatsApp Trigger 2').item.json.messages[0].interactive.type }}",
+              "leftValue": "={{ $('incoming_data').item.json.incoming_wp.messages[0].interactive.type }}",
               "rightValue": "button_reply",
               "operator": {
                 "type": "string",
@@ -1675,7 +1675,7 @@
           "conditions": [
             {
               "id": "6c7f1cd2-b359-4352-8450-20749aa9e023",
-              "leftValue": "={{ $('WhatsApp Trigger 2').item.json.messages[0].interactive.button_reply.id }}",
+              "leftValue": "={{ $('incoming_data').item.json.incoming_wp.messages[0].interactive.button_reply.id }}",
               "rightValue": "menu_inicial",
               "operator": {
                 "type": "string",
@@ -1685,7 +1685,7 @@
             },
             {
               "id": "950d5f79-b05e-4b79-892c-ea83e08ca16a",
-              "leftValue": "={{ $('WhatsApp Trigger 2').item.json.messages[0].interactive.button_reply.id }}",
+              "leftValue": "={{ $('incoming_data').item.json.incoming_wp.messages[0].interactive.button_reply.id }}",
               "rightValue": "main_menu",
               "operator": {
                 "type": "string",
@@ -6640,7 +6640,7 @@
             {
               "id": "6047f13f-d333-4a8a-9b62-94d4e784fc10",
               "name": "seleccion",
-              "value": "={{ $('WhatsApp Trigger 2').item.json.messages[0].text.body }}",
+              "value": "={{ $('incoming_data').item.json.incoming_wp.messages[0].text.body }}",
               "type": "string"
             }
           ]
@@ -6767,13 +6767,13 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "https://graph.facebook.com/v22.0/626839230509107/messages",
+        "url": "=https://graph.facebook.com/v22.0/{{ $('datos wp').item.json.data.config.whatsapp.accounts[0].phone_number_id }}/messages",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
               "name": "Authorization",
-              "value": "Bearer EAAHeSgKjRYEBOZBi0kUskW4k3L6ZCO8EhqsGNjWLyfJ3U1NZCbDyQp9WSoX0Ouh8hh44Jue9ev7TMlygkZAMoqMReAJL9cNZBQZCZB508HXZB84HCNFZBIRlSa9cXFs0dXmR31XoO0iUZBOTx4VSnErdZC9OD1sQDKprPHpbK7NBrTZAWy8D6pvNi9w0w4c9pt2KE3stGwZDZD"
+              "value": "={{ $('Set Variables').item.json.auth_token }}"
             },
             {
               "name": "Content-Type",
@@ -6783,7 +6783,7 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger 2').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": {{ JSON.stringify($json.data.message) }}\n  }\n}\n",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('incoming_data').item.json.incoming_wp.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": {{ JSON.stringify($json.data.message) }}\n  }\n}\n",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
@@ -6798,13 +6798,13 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "https://graph.facebook.com/v22.0/626839230509107/messages",
+        "url": "=https://graph.facebook.com/v22.0/{{ $('datos wp').item.json.data.config.whatsapp.accounts[0].phone_number_id }}/messages",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
               "name": "Authorization",
-              "value": "Bearer EAAHeSgKjRYEBOZBi0kUskW4k3L6ZCO8EhqsGNjWLyfJ3U1NZCbDyQp9WSoX0Ouh8hh44Jue9ev7TMlygkZAMoqMReAJL9cNZBQZCZB508HXZB84HCNFZBIRlSa9cXFs0dXmR31XoO0iUZBOTx4VSnErdZC9OD1sQDKprPHpbK7NBrTZAWy8D6pvNi9w0w4c9pt2KE3stGwZDZD"
+              "value": "={{ $('Set Variables').item.json.auth_token }}"
             },
             {
               "name": "Content-Type",
@@ -6814,7 +6814,7 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger 2').item.json.messages[0].from }}\",\n  \"type\": \"image\",\n  \"image\": {\n    \"link\": \"{{ $json.data.event.image_url }}\",\n    \"caption\": {{ JSON.stringify($json.data.message) }}\n  }\n}",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('incoming_data').item.json.incoming_wp.messages[0].from }}\",\n  \"type\": \"image\",\n  \"image\": {\n    \"link\": \"{{ $json.data.event.image_url }}\",\n    \"caption\": {{ JSON.stringify($json.data.message) }}\n  }\n}",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
@@ -10183,7 +10183,7 @@
       }
     ]
   },
-  "versionId": "c7202608-3e79-4d47-9685-114d8eb8b28c",
+  "versionId": "7fbaaff7-4d43-4092-85c3-9f7102014739",
   "triggerCount": 0,
   "shared": [
     {
