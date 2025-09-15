@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-09-15T15:39:29.471Z",
-  "updatedAt": "2025-09-15T15:49:12.000Z",
+  "updatedAt": "2025-09-15T16:53:45.000Z",
   "id": "BPnkCPlia5Iozaew",
   "name": "chatbot cerebro qa",
   "active": false,
@@ -15,24 +15,20 @@
               "value": "https://api.pruebascerebro.online"
             },
             {
-              "name": "status_report",
-              "value": "https://cerebro-core-050afed4ca53.herokuapp.com/sma/receive_messagebird_data"
-            },
-            {
               "name": "clienteIdWp",
-              "value": "626839230509107"
+              "value": "={{ $('datos wp').item.json.phone_number_id }}"
             },
             {
               "name": "tokenWp",
-              "value": "Bearer EAAHeSgKjRYEBOZBi0kUskW4k3L6ZCO8EhqsGNjWLyfJ3U1NZCbDyQp9WSoX0Ouh8hh44Jue9ev7TMlygkZAMoqMReAJL9cNZBQZCZB508HXZB84HCNFZBIRlSa9cXFs0dXmR31XoO0iUZBOTx4VSnErdZC9OD1sQDKprPHpbK7NBrTZAWy8D6pvNi9w0w4c9pt2KE3stGwZDZD"
+              "value": "={{ $('datos wp').item.json.auth_token }}"
             },
             {
               "name": "currentEnvironment",
-              "value": "=https://cerebro-core-050afed4ca53.herokuapp.com"
+              "value": "={{ $('incoming_data').item.json.currentEnv }}"
             },
             {
               "name": "x-api-key",
-              "value": "bfc47ca54a9c812169f1e3c2b44c69d1"
+              "value": "={{ $('incoming_data').item.json['x-api-key'] }}"
             }
           ]
         },
@@ -49,7 +45,7 @@
     },
     {
       "parameters": {
-        "url": "={{$node[\"Set Variables\"].json[\"currentEnvironment\"]}}/api/v1/authmb/auth_guardian?phone={{ $('WhatsApp Trigger 2').item.json.messages[0].from }}",
+        "url": "={{$node[\"Set Variables\"].json[\"currentEnvironment\"]}}/api/v1/authmb/auth_guardian?phone={{ $('incoming_data').item.json.incoming_wp.messages[0].from }}",
         "options": {}
       },
       "name": "Auth Guardian",
@@ -476,207 +472,14 @@
     },
     {
       "parameters": {
-        "rules": {
-          "values": [
-            {
-              "conditions": {
-                "options": {
-                  "caseSensitive": true,
-                  "leftValue": "",
-                  "typeValidation": "strict",
-                  "version": 2
-                },
-                "conditions": [
-                  {
-                    "leftValue": "={{ $json.messages[0].audio.voice }}",
-                    "rightValue": "",
-                    "operator": {
-                      "type": "boolean",
-                      "operation": "exists",
-                      "singleValue": true
-                    },
-                    "id": "1d07820e-eba7-477b-9d97-b7eafab2b218"
-                  }
-                ],
-                "combinator": "and"
-              },
-              "renameOutput": true,
-              "outputKey": "mensaje de voz"
-            },
-            {
-              "conditions": {
-                "options": {
-                  "caseSensitive": true,
-                  "leftValue": "",
-                  "typeValidation": "strict",
-                  "version": 2
-                },
-                "conditions": [
-                  {
-                    "id": "1af6c276-b636-440b-bbe5-cbc837091bd2",
-                    "leftValue": "={{ $json.messages[0].type }}",
-                    "rightValue": "document",
-                    "operator": {
-                      "type": "string",
-                      "operation": "equals",
-                      "name": "filter.operator.equals"
-                    }
-                  }
-                ],
-                "combinator": "and"
-              },
-              "renameOutput": true,
-              "outputKey": "documento"
-            },
-            {
-              "conditions": {
-                "options": {
-                  "caseSensitive": true,
-                  "leftValue": "",
-                  "typeValidation": "strict",
-                  "version": 2
-                },
-                "conditions": [
-                  {
-                    "id": "5618e653-a507-4ea4-979f-00b7f2b130d9",
-                    "leftValue": "={{ $json.messages[0].type }}",
-                    "rightValue": "image",
-                    "operator": {
-                      "type": "string",
-                      "operation": "equals",
-                      "name": "filter.operator.equals"
-                    }
-                  }
-                ],
-                "combinator": "and"
-              },
-              "renameOutput": true,
-              "outputKey": "imagen"
-            },
-            {
-              "conditions": {
-                "options": {
-                  "caseSensitive": true,
-                  "leftValue": "",
-                  "typeValidation": "strict",
-                  "version": 2
-                },
-                "conditions": [
-                  {
-                    "id": "da89dce8-8fe7-4db2-8fdf-ec07c5275504",
-                    "leftValue": "={{ $json.messages[0].type }}",
-                    "rightValue": "video",
-                    "operator": {
-                      "type": "string",
-                      "operation": "equals",
-                      "name": "filter.operator.equals"
-                    }
-                  }
-                ],
-                "combinator": "and"
-              },
-              "renameOutput": true,
-              "outputKey": "video"
-            },
-            {
-              "conditions": {
-                "options": {
-                  "caseSensitive": true,
-                  "leftValue": "",
-                  "typeValidation": "strict",
-                  "version": 2
-                },
-                "conditions": [
-                  {
-                    "id": "cb6a1619-9e4f-4fb1-ada2-ddbc8d0e9bc3",
-                    "leftValue": "={{ $json.messages[0].type }}",
-                    "rightValue": "text",
-                    "operator": {
-                      "type": "string",
-                      "operation": "equals",
-                      "name": "filter.operator.equals"
-                    }
-                  }
-                ],
-                "combinator": "and"
-              },
-              "renameOutput": true,
-              "outputKey": "texto"
-            },
-            {
-              "conditions": {
-                "options": {
-                  "caseSensitive": true,
-                  "leftValue": "",
-                  "typeValidation": "strict",
-                  "version": 2
-                },
-                "conditions": [
-                  {
-                    "id": "8bb0b189-ee63-4c74-aaaf-62d744854522",
-                    "leftValue": "={{ $json.messages[0].interactive.type }}",
-                    "rightValue": "",
-                    "operator": {
-                      "type": "string",
-                      "operation": "exists",
-                      "singleValue": true
-                    }
-                  }
-                ],
-                "combinator": "and"
-              },
-              "renameOutput": true,
-              "outputKey": "mensaje replica"
-            },
-            {
-              "conditions": {
-                "options": {
-                  "caseSensitive": true,
-                  "leftValue": "",
-                  "typeValidation": "strict",
-                  "version": 2
-                },
-                "conditions": [
-                  {
-                    "id": "70cd4d72-10d1-4bf8-b25a-e9693cb1b312",
-                    "leftValue": "={{ $json.statuses }}",
-                    "rightValue": "",
-                    "operator": {
-                      "type": "array",
-                      "operation": "exists",
-                      "singleValue": true
-                    }
-                  }
-                ],
-                "combinator": "and"
-              },
-              "renameOutput": true,
-              "outputKey": "mensaje de status"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.switch",
-      "typeVersion": 3.2,
-      "position": [
-        -6448,
-        1920
-      ],
-      "id": "af24809c-2023-4ff2-85b7-362a2b0fea78",
-      "name": "Switch1",
-      "alwaysOutputData": false
-    },
-    {
-      "parameters": {
         "method": "POST",
-        "url": "https://graph.facebook.com/v22.0/626839230509107/messages",
+        "url": "=https://graph.facebook.com/v22.0/{{ $('datos wp').item.json.data.config.whatsapp.accounts[0].phone_number_id }}/messages",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
               "name": "Authorization",
-              "value": "Bearer EAAHeSgKjRYEBOZBi0kUskW4k3L6ZCO8EhqsGNjWLyfJ3U1NZCbDyQp9WSoX0Ouh8hh44Jue9ev7TMlygkZAMoqMReAJL9cNZBQZCZB508HXZB84HCNFZBIRlSa9cXFs0dXmR31XoO0iUZBOTx4VSnErdZC9OD1sQDKprPHpbK7NBrTZAWy8D6pvNi9w0w4c9pt2KE3stGwZDZD"
+              "value": "=Bearer {{ $('datos wp').item.json.data.config.whatsapp.accounts[0].whatsapp_token }}"
             },
             {
               "name": "Content-Type",
@@ -686,7 +489,7 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger 2').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"Lo siento, en este momento no tengo la capacidad de interpretar notas de voz. Sin embargo, estamos trabajando para incluir esta función en futuras actualizaciones.  Gracias por tu comprensión.\"\n  }\n}\n",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('incoming_data').item.json.incoming_wp.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"Lo siento, en este momento no tengo la capacidad de interpretar notas de voz. Sin embargo, estamos trabajando para incluir esta función en futuras actualizaciones.  Gracias por tu comprensión.\"\n  }\n}\n",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
@@ -701,13 +504,13 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "https://graph.facebook.com/v22.0/626839230509107/messages",
+        "url": "=https://graph.facebook.com/v22.0/{{ $('datos wp').item.json.data.config.whatsapp.accounts[0].phone_number_id }}/messages",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
               "name": "Authorization",
-              "value": "Bearer EAAHeSgKjRYEBOZBi0kUskW4k3L6ZCO8EhqsGNjWLyfJ3U1NZCbDyQp9WSoX0Ouh8hh44Jue9ev7TMlygkZAMoqMReAJL9cNZBQZCZB508HXZB84HCNFZBIRlSa9cXFs0dXmR31XoO0iUZBOTx4VSnErdZC9OD1sQDKprPHpbK7NBrTZAWy8D6pvNi9w0w4c9pt2KE3stGwZDZD"
+              "value": "=Bearer {{ $('datos wp').item.json.data.config.whatsapp.accounts[0].whatsapp_token }}"
             },
             {
               "name": "Content-Type",
@@ -717,7 +520,7 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger 2').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"Lo siento, en este momento no tengo la capacidad de interpretar archivos. Gracias por tu comprensión.\"\n  }\n}\n",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"$('incoming_data').item.json.incoming_wp.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"Lo siento, en este momento no tengo la capacidad de interpretar archivos. Gracias por tu comprensión.\"\n  }\n}\n",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
@@ -732,13 +535,13 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "https://graph.facebook.com/v22.0/626839230509107/messages",
+        "url": "=https://graph.facebook.com/v22.0/{{ $('datos wp').item.json.data.config.whatsapp.accounts[0].phone_number_id }}/messages",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
               "name": "Authorization",
-              "value": "Bearer EAAHeSgKjRYEBOZBi0kUskW4k3L6ZCO8EhqsGNjWLyfJ3U1NZCbDyQp9WSoX0Ouh8hh44Jue9ev7TMlygkZAMoqMReAJL9cNZBQZCZB508HXZB84HCNFZBIRlSa9cXFs0dXmR31XoO0iUZBOTx4VSnErdZC9OD1sQDKprPHpbK7NBrTZAWy8D6pvNi9w0w4c9pt2KE3stGwZDZD"
+              "value": "=Bearer {{ $('datos wp').item.json.data.config.whatsapp.accounts[0].whatsapp_token }}"
             },
             {
               "name": "Content-Type",
@@ -748,7 +551,7 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger 2').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"Lo siento, en este momento no tengo la capacidad de interpretar imagenes. Sin embargo, estamos trabajando para incluir esta función en futuras actualizaciones. Gracias por tu comprensión.\"\n  }\n}\n",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"$('incoming_data').item.json.incoming_wp.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"Lo siento, en este momento no tengo la capacidad de interpretar imagenes. Sin embargo, estamos trabajando para incluir esta función en futuras actualizaciones. Gracias por tu comprensión.\"\n  }\n}\n",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
@@ -763,13 +566,13 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "https://graph.facebook.com/v22.0/626839230509107/messages",
+        "url": "=https://graph.facebook.com/v22.0/{{ $('datos wp').item.json.data.config.whatsapp.accounts[0].phone_number_id }}/messages",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
               "name": "Authorization",
-              "value": "Bearer EAAHeSgKjRYEBOZBi0kUskW4k3L6ZCO8EhqsGNjWLyfJ3U1NZCbDyQp9WSoX0Ouh8hh44Jue9ev7TMlygkZAMoqMReAJL9cNZBQZCZB508HXZB84HCNFZBIRlSa9cXFs0dXmR31XoO0iUZBOTx4VSnErdZC9OD1sQDKprPHpbK7NBrTZAWy8D6pvNi9w0w4c9pt2KE3stGwZDZD"
+              "value": "=Bearer {{ $('datos wp').item.json.data.config.whatsapp.accounts[0].whatsapp_token }}"
             },
             {
               "name": "Content-Type",
@@ -779,7 +582,7 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger 2').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"Lo siento, en este momento no tengo la capacidad de interpretar notas de voz. Sin embargo, estamos trabajando para incluir esta función en futuras actualizaciones.  Gracias por tu comprensión.\"\n  }\n}\n",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"$('incoming_data').item.json.incoming_wp.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"Lo siento, en este momento no tengo la capacidad de interpretar notas de voz. Sin embargo, estamos trabajando para incluir esta función en futuras actualizaciones.  Gracias por tu comprensión.\"\n  }\n}\n",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
@@ -7924,8 +7727,8 @@
       "type": "n8n-nodes-base.whatsAppTrigger",
       "typeVersion": 1,
       "position": [
-        -7744,
-        2016
+        -7728,
+        1440
       ],
       "id": "26658963-b873-4991-aa75-5bbb648f9689",
       "name": "WhatsApp Trigger",
@@ -7939,45 +7742,15 @@
     },
     {
       "parameters": {
-        "options": {}
-      },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        -6864,
-        2016
-      ],
-      "id": "b57d055b-6bd1-41ee-b890-c9b8d884c2b0",
-      "name": "HTTP Request2",
-      "disabled": true
-    },
-    {
-      "parameters": {
         "values": {
           "string": [
             {
               "name": "phone_number_id",
-              "value": "https://api.pruebascerebro.online"
+              "value": "={{ $json.data.config.whatsapp.accounts[0].phone_number_id }}"
             },
             {
-              "name": "status_report",
-              "value": "https://cerebro-core-050afed4ca53.herokuapp.com/sma/receive_messagebird_data"
-            },
-            {
-              "name": "clienteIdWp",
-              "value": "626839230509107"
-            },
-            {
-              "name": "tokenWp",
-              "value": "Bearer EAAHeSgKjRYEBOZBi0kUskW4k3L6ZCO8EhqsGNjWLyfJ3U1NZCbDyQp9WSoX0Ouh8hh44Jue9ev7TMlygkZAMoqMReAJL9cNZBQZCZB508HXZB84HCNFZBIRlSa9cXFs0dXmR31XoO0iUZBOTx4VSnErdZC9OD1sQDKprPHpbK7NBrTZAWy8D6pvNi9w0w4c9pt2KE3stGwZDZD"
-            },
-            {
-              "name": "currentEnvironment",
-              "value": "=https://cerebro-core-050afed4ca53.herokuapp.com"
-            },
-            {
-              "name": "x-api-key",
-              "value": "bfc47ca54a9c812169f1e3c2b44c69d1"
+              "name": "auth_token",
+              "value": "=Bearer {{ $json.data.config.whatsapp.accounts[0].whatsapp_token }}"
             }
           ]
         },
@@ -7988,7 +7761,7 @@
       "typeVersion": 1,
       "position": [
         -6656,
-        2016
+        2000
       ],
       "id": "62b4abc6-c516-403c-bb6e-8c73c6a15147"
     },
@@ -8000,8 +7773,8 @@
       "type": "n8n-nodes-base.aggregate",
       "typeVersion": 1,
       "position": [
-        -7088,
-        2016
+        -7312,
+        2000
       ],
       "id": "2f21d1de-3f04-46dc-8dab-aad1cfe20ef4",
       "name": "datos_combinados"
@@ -8014,12 +7787,263 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        -7936,
-        1904
+        -7920,
+        1312
       ],
       "typeVersion": 1,
       "id": "5d593012-f82c-46b8-92ce-6ceb48791344",
       "name": "Sticky Note9"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.currentEnv }}/api/v1/messaging/whatsapp/get-config/{{ $json.incoming_wp.metadata.phone_number_id }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-api-key",
+              "value": "={{ $json['x-api-key'] }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -6864,
+        2000
+      ],
+      "id": "b57d055b-6bd1-41ee-b890-c9b8d884c2b0",
+      "name": "datos_num"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "dd4ab65f-73e9-4d0b-ac9a-b622d5f1b441",
+              "name": "currentEnv",
+              "value": "https://48dab060c043.ngrok-free.app",
+              "type": "string"
+            },
+            {
+              "id": "8e828914-cbd7-4d5f-82ad-427b5ccfcf6c",
+              "name": "incoming_wp",
+              "value": "={{ $json.data[0] }}",
+              "type": "object"
+            },
+            {
+              "id": "54980743-4d5f-4067-8149-d9063c09cd45",
+              "name": "x-api-key",
+              "value": "bfc47ca54a9c812169f1e3c2b44c69d1",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -7088,
+        2000
+      ],
+      "id": "459cabd4-e97c-4cc7-a0f0-945300e03474",
+      "name": "incoming_data"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('incoming_data').item.json.incoming_wp.messages[0].audio.voice }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "exists",
+                      "singleValue": true
+                    },
+                    "id": "1d07820e-eba7-477b-9d97-b7eafab2b218"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "mensaje de voz"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "1af6c276-b636-440b-bbe5-cbc837091bd2",
+                    "leftValue": "={{ $('incoming_data').item.json.incoming_wp.messages[0].type }}",
+                    "rightValue": "document",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "documento"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "5618e653-a507-4ea4-979f-00b7f2b130d9",
+                    "leftValue": "={{ $('incoming_data').item.json.incoming_wp.messages[0].type }}",
+                    "rightValue": "image",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "imagen"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "da89dce8-8fe7-4db2-8fdf-ec07c5275504",
+                    "leftValue": "={{ $('incoming_data').item.json.incoming_wp.messages[0].type }}",
+                    "rightValue": "video",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "video"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "cb6a1619-9e4f-4fb1-ada2-ddbc8d0e9bc3",
+                    "leftValue": "={{ $('incoming_data').item.json.incoming_wp.messages[0].type }}",
+                    "rightValue": "text",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "texto"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "8bb0b189-ee63-4c74-aaaf-62d744854522",
+                    "leftValue": "={{ $('incoming_data').item.json.incoming_wp.messages[0].interactive.type }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "exists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "mensaje replica"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "70cd4d72-10d1-4bf8-b25a-e9693cb1b312",
+                    "leftValue": "={{ $('incoming_data').item.json.incoming_wp.statuses }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "array",
+                      "operation": "exists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "mensaje de status"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -6448,
+        1920
+      ],
+      "id": "af24809c-2023-4ff2-85b7-362a2b0fea78",
+      "name": "verificamos tipo de mensaje",
+      "alwaysOutputData": false
     }
   ],
   "connections": {
@@ -8154,59 +8178,6 @@
         [
           {
             "node": "If",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Switch1": {
-      "main": [
-        [
-          {
-            "node": "Error mensaje de voz",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "error documento",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "error imagen",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "error video",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Set Variables",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Set Variables",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Code29",
             "type": "main",
             "index": 0
           }
@@ -10075,7 +10046,18 @@
         ]
       ]
     },
-    "HTTP Request2": {
+    "datos_combinados": {
+      "main": [
+        [
+          {
+            "node": "incoming_data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "datos_num": {
       "main": [
         [
           {
@@ -10086,11 +10068,75 @@
         ]
       ]
     },
-    "datos_combinados": {
+    "datos wp": {
       "main": [
         [
           {
-            "node": "HTTP Request2",
+            "node": "verificamos tipo de mensaje",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "incoming_data": {
+      "main": [
+        [
+          {
+            "node": "datos_num",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "verificamos tipo de mensaje": {
+      "main": [
+        [
+          {
+            "node": "Error mensaje de voz",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "error documento",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "error imagen",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "error video",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set Variables",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set Variables",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Code29",
             "type": "main",
             "index": 0
           }
@@ -10138,7 +10184,7 @@
       }
     ]
   },
-  "versionId": "1103e18b-b75f-4be3-bdd4-c73f3caf3509",
+  "versionId": "312c0b46-6164-4a8e-b6fb-a47fe1457711",
   "triggerCount": 0,
   "shared": [
     {
