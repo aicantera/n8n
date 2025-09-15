@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-09-15T15:39:29.471Z",
-  "updatedAt": "2025-09-15T16:53:45.000Z",
+  "updatedAt": "2025-09-15T18:43:44.000Z",
   "id": "BPnkCPlia5Iozaew",
   "name": "chatbot cerebro qa",
   "active": false,
@@ -56,6 +56,7 @@
         2384
       ],
       "id": "178affc1-c5df-4adc-be2f-313b68487a47",
+      "notesInFlow": false,
       "onError": "continueErrorOutput"
     },
     {
@@ -596,40 +597,6 @@
     },
     {
       "parameters": {
-        "conditions": {
-          "options": {
-            "caseSensitive": true,
-            "leftValue": "",
-            "typeValidation": "strict",
-            "version": 2
-          },
-          "conditions": [
-            {
-              "id": "0b13a5d9-6075-4751-9c4a-d9665ea0c75b",
-              "leftValue": "={{ $('Main Logic Placeholder').item.json.multi_student }}",
-              "rightValue": "",
-              "operator": {
-                "type": "boolean",
-                "operation": "true",
-                "singleValue": true
-              }
-            }
-          ],
-          "combinator": "and"
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 2.2,
-      "position": [
-        -672,
-        384
-      ],
-      "id": "75512886-b025-4a7b-ae3b-467de483b20c",
-      "name": "If1"
-    },
-    {
-      "parameters": {
         "url": "={{ $('Set Variables').item.json.currentEnvironment }}﻿/assistant/select_student_refactored",
         "sendHeaders": true,
         "headerParameters": {
@@ -668,7 +635,7 @@
             {
               "id": "858d8bba-88da-4426-9ca2-2ad5917f192a",
               "name": "phoneNumber",
-              "value": "={{ $('WhatsApp Trigger 2').item.json.messages[0].from }}",
+              "value": "={{ $('incoming_data').item.json.incoming_wp.messages[0].from }}",
               "type": "string"
             }
           ]
@@ -687,13 +654,13 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "https://graph.facebook.com/v22.0/626839230509107/messages",
+        "url": "=https://graph.facebook.com/v22.0/{{ $('datos wp').item.json.data.config.whatsapp.accounts[0].phone_number_id }}/messages",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
               "name": "Authorization",
-              "value": "Bearer EAAHeSgKjRYEBOZBi0kUskW4k3L6ZCO8EhqsGNjWLyfJ3U1NZCbDyQp9WSoX0Ouh8hh44Jue9ev7TMlygkZAMoqMReAJL9cNZBQZCZB508HXZB84HCNFZBIRlSa9cXFs0dXmR31XoO0iUZBOTx4VSnErdZC9OD1sQDKprPHpbK7NBrTZAWy8D6pvNi9w0w4c9pt2KE3stGwZDZD"
+              "value": "={{ $('Set Variables').item.json.auth_token }}"
             },
             {
               "name": "Content-Type",
@@ -703,7 +670,7 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger 2').item.json.messages[0].from }}\",\n  \"type\": \"interactive\",\n  \"interactive\": {\n    \"type\": \"button\",\n    \"body\": {\n      \"text\": \"¡Hola! 😊 Estoy aquí para ayudarte a encontrar la información que necesitas.\\n\\n👉 Presiona 'Calendario' 📅 para ver la información de los eventos programados para este mes.\\n👉 Presiona 'Preguntas frecuentes'❓ para resolver dudas frecuentes.\"\n    },\n    \"action\": {\n      \"buttons\": [\n        {\n          \"type\": \"reply\",\n          \"reply\": {\n            \"id\": \"calendario\",\n            \"title\": \"Calendario\"\n          }\n        },\n        {\n          \"type\": \"reply\",\n          \"reply\": {\n            \"id\": \"preguntas_frecuentes\",\n            \"title\": \"Preguntas Frecuentes\"\n          }\n        }\n      ]\n    }\n  }\n}\n",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('incoming_data').item.json.incoming_wp.messages[0].from }}\",\n  \"type\": \"interactive\",\n  \"interactive\": {\n    \"type\": \"button\",\n    \"body\": {\n      \"text\": \"¡Hola! 😊 Estoy aquí para ayudarte a encontrar la información que necesitas.\\n\\n👉 Presiona 'Calendario' 📅 para ver la información de los eventos programados para este mes.\\n👉 Presiona 'Preguntas frecuentes'❓ para resolver dudas frecuentes.\"\n    },\n    \"action\": {\n      \"buttons\": [\n        {\n          \"type\": \"reply\",\n          \"reply\": {\n            \"id\": \"calendario\",\n            \"title\": \"Calendario\"\n          }\n        },\n        {\n          \"type\": \"reply\",\n          \"reply\": {\n            \"id\": \"preguntas_frecuentes\",\n            \"title\": \"Preguntas Frecuentes\"\n          }\n        }\n      ]\n    }\n  }\n}\n",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
@@ -1103,39 +1070,6 @@
     },
     {
       "parameters": {
-        "conditions": {
-          "options": {
-            "caseSensitive": true,
-            "leftValue": "",
-            "typeValidation": "strict",
-            "version": 2
-          },
-          "conditions": [
-            {
-              "id": "27ace6ed-299c-47ed-b7b8-34c14765c475",
-              "leftValue": "={{ $('datosFinalesUser').item.json.state_final }}",
-              "rightValue": "seleccion_alumno",
-              "operator": {
-                "type": "string",
-                "operation": "notEquals"
-              }
-            }
-          ],
-          "combinator": "and"
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 2.2,
-      "position": [
-        -224,
-        208
-      ],
-      "id": "81df475e-2c4c-423a-be94-1b85f30f9048",
-      "name": "If4"
-    },
-    {
-      "parameters": {
         "method": "POST",
         "url": "https://graph.facebook.com/v22.0/626839230509107/messages",
         "sendHeaders": true,
@@ -1268,7 +1202,7 @@
             {
               "id": "db2a36d3-1d7a-4e09-8474-823828015e40",
               "name": "selected_student",
-              "value": "={{ $('WhatsApp Trigger 2').item.json.messages[0].text.body }}",
+              "value": "={{ $('incoming_data').item.json.incoming_wp.messages[0].text.body }}",
               "type": "string"
             }
           ]
@@ -1310,7 +1244,7 @@
             {
               "id": "858d8bba-88da-4426-9ca2-2ad5917f192a",
               "name": "phoneNumber",
-              "value": "={{ $('WhatsApp Trigger 2').item.json.messages[0].from }}",
+              "value": "={{ $('incoming_data').item.json.incoming_wp.messages[0].from }}",
               "type": "string"
             }
           ]
@@ -1329,24 +1263,23 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "https://graph.facebook.com/v22.0/626839230509107/messages",
+        "url": "=https://graph.facebook.com/v22.0/{{ $('datos wp').item.json.data.config.whatsapp.accounts[0].phone_number_id }}/messages",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
               "name": "Authorization",
-              "value": "Bearer EAAHeSgKjRYEBOZBi0kUskW4k3L6ZCO8EhqsGNjWLyfJ3U1NZCbDyQp9WSoX0Ouh8hh44Jue9ev7TMlygkZAMoqMReAJL9cNZBQZCZB508HXZB84HCNFZBIRlSa9cXFs0dXmR31XoO0iUZBOTx4VSnErdZC9OD1sQDKprPHpbK7NBrTZAWy8D6pvNi9w0w4c9pt2KE3stGwZDZD"
+              "value": "={{ $('Set Variables').item.json.auth_token }}"
             },
             {
               "name": "Content-Type",
               "value": "application/json"
-            },
-            {}
+            }
           ]
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger 2').item.json.messages[0].from }}\",\n  \"type\": \"interactive\",\n  \"interactive\": {\n    \"type\": \"button\",\n    \"body\": {\n      \"text\": \"¡Hola! 😊 Estoy aquí para ayudarte a encontrar la información que necesitas.\\n\\n👉 Presiona 'Calendario' 📅 para ver la información de los eventos programados para este mes.\\n👉 Presiona 'Preguntas frecuentes'❓ para resolver dudas frecuentes.\"\n    },\n    \"action\": {\n      \"buttons\": [\n        {\n          \"type\": \"reply\",\n          \"reply\": {\n            \"id\": \"calendario\",\n            \"title\": \"Calendario\"\n          }\n        },\n        {\n          \"type\": \"reply\",\n          \"reply\": {\n            \"id\": \"preguntas_frecuentes\",\n            \"title\": \"Preguntas Frecuentes\"\n          }\n        }\n      ]\n    }\n  }\n}\n",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('incoming_data').item.json.incoming_wp.messages[0].from }}\",\n  \"type\": \"interactive\",\n  \"interactive\": {\n    \"type\": \"button\",\n    \"body\": {\n      \"text\": \"¡Hola! 😊 Estoy aquí para ayudarte a encontrar la información que necesitas.\\n\\n👉 Presiona 'Calendario' 📅 para ver la información de los eventos programados para este mes.\\n👉 Presiona 'Preguntas frecuentes'❓ para resolver dudas frecuentes.\"\n    },\n    \"action\": {\n      \"buttons\": [\n        {\n          \"type\": \"reply\",\n          \"reply\": {\n            \"id\": \"calendario\",\n            \"title\": \"Calendario\"\n          }\n        },\n        {\n          \"type\": \"reply\",\n          \"reply\": {\n            \"id\": \"preguntas_frecuentes\",\n            \"title\": \"Preguntas Frecuentes\"\n          }\n        }\n      ]\n    }\n  }\n}\n",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
@@ -1661,71 +1594,6 @@
       ],
       "id": "d2675315-2218-41ff-baa1-fd1c46194283",
       "name": "calendario"
-    },
-    {
-      "parameters": {
-        "conditions": {
-          "options": {
-            "caseSensitive": true,
-            "leftValue": "",
-            "typeValidation": "strict",
-            "version": 2
-          },
-          "conditions": [
-            {
-              "id": "797b0050-2694-48ef-a7d9-19a8bd4d4251",
-              "leftValue": "={{ $json.status }}",
-              "rightValue": "error",
-              "operator": {
-                "type": "string",
-                "operation": "equals",
-                "name": "filter.operator.equals"
-              }
-            }
-          ],
-          "combinator": "and"
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 2.2,
-      "position": [
-        432,
-        304
-      ],
-      "id": "bd28bf9f-11e0-444a-862a-9d0627f0f0e6",
-      "name": "If5"
-    },
-    {
-      "parameters": {
-        "method": "POST",
-        "url": "https://graph.facebook.com/v22.0/626839230509107/messages",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "Authorization",
-              "value": "Bearer EAAHeSgKjRYEBOZBi0kUskW4k3L6ZCO8EhqsGNjWLyfJ3U1NZCbDyQp9WSoX0Ouh8hh44Jue9ev7TMlygkZAMoqMReAJL9cNZBQZCZB508HXZB84HCNFZBIRlSa9cXFs0dXmR31XoO0iUZBOTx4VSnErdZC9OD1sQDKprPHpbK7NBrTZAWy8D6pvNi9w0w4c9pt2KE3stGwZDZD"
-            },
-            {
-              "name": "Content-Type",
-              "value": "application/json"
-            }
-          ]
-        },
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger 2').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"{{ $json.message }}\"\n  }\n}\n\n\n",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        656,
-        272
-      ],
-      "id": "6a5c45c7-04e7-4a21-ad61-5841d9fe29cb",
-      "name": "menu principal5"
     },
     {
       "parameters": {
@@ -4542,8 +4410,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -6608,
-        2816
+        -7248,
+        2752
       ],
       "id": "9fc1fc83-45f8-4fee-b9fd-f11cb2b8bc7c",
       "name": "Cambiamos status mensaje"
@@ -4580,8 +4448,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 1,
       "position": [
-        -6608,
-        2592
+        -7248,
+        2528
       ],
       "id": "575db642-f003-4bc1-9ede-0a41972e6de6"
     },
@@ -4592,8 +4460,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -6608,
-        2384
+        -7248,
+        2320
       ],
       "id": "0a7956e5-167b-473d-865c-5f5204d2bb7f",
       "name": "Code29"
@@ -7618,8 +7486,8 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.2,
       "position": [
-        -5728,
-        2560
+        -6544,
+        2752
       ],
       "id": "33cbd05f-64d4-4c2c-ae79-104b4c181554",
       "name": "Switch2"
@@ -7627,13 +7495,13 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "https://graph.facebook.com/v22.0/626839230509107/messages",
+        "url": "=https://graph.facebook.com/v22.0/{{ $('datos wp').item.json.data.config.whatsapp.accounts[0].phone_number_id }}/messages",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
               "name": "Authorization",
-              "value": "Bearer EAAHeSgKjRYEBOZBi0kUskW4k3L6ZCO8EhqsGNjWLyfJ3U1NZCbDyQp9WSoX0Ouh8hh44Jue9ev7TMlygkZAMoqMReAJL9cNZBQZCZB508HXZB84HCNFZBIRlSa9cXFs0dXmR31XoO0iUZBOTx4VSnErdZC9OD1sQDKprPHpbK7NBrTZAWy8D6pvNi9w0w4c9pt2KE3stGwZDZD"
+              "value": "={{ $('Set Variables').item.json.auth_token }}"
             },
             {
               "name": "Content-Type",
@@ -7643,14 +7511,14 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger 2').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"No encontramos una cuenta asociada a tus datos. Por favor, verifica la información e intenta nuevamente. Si el problema persiste, contáctanos por WhatsApp al +52 56 4389 1280 para ayudarte.\"\n  }\n}\n",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"$('incoming_data').item.json.incoming_wp.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"No encontramos una cuenta asociada a tus datos. Por favor, verifica la información e intenta nuevamente. Si el problema persiste, contáctanos por WhatsApp al +52 56 4389 1280 para ayudarte.\"\n  }\n}\n",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -5392,
-        2688
+        -6208,
+        2880
       ],
       "id": "28ba8e5d-7e57-4d30-9827-c93bd2b32ae6",
       "name": "usuario no encontrado"
@@ -7658,13 +7526,13 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "https://graph.facebook.com/v22.0/626839230509107/messages",
+        "url": "=https://graph.facebook.com/v22.0/{{ $('datos wp').item.json.data.config.whatsapp.accounts[0].phone_number_id }}/messages",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
               "name": "Authorization",
-              "value": "Bearer EAAHeSgKjRYEBOZBi0kUskW4k3L6ZCO8EhqsGNjWLyfJ3U1NZCbDyQp9WSoX0Ouh8hh44Jue9ev7TMlygkZAMoqMReAJL9cNZBQZCZB508HXZB84HCNFZBIRlSa9cXFs0dXmR31XoO0iUZBOTx4VSnErdZC9OD1sQDKprPHpbK7NBrTZAWy8D6pvNi9w0w4c9pt2KE3stGwZDZD"
+              "value": "={{ $('Set Variables').item.json.auth_token }}"
             },
             {
               "name": "Content-Type",
@@ -7674,14 +7542,14 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger 2').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"No puedes acceder al servicio de Cerebro porque tu teléfono no ha sido validado todavía.\\nSi crees que esto es un error, mándanos un mensaje de WhatsApp al +52 56 4389 1280 y te atenderemos.\"\n  }\n}\n",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('incoming_data').item.json.incoming_wp.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"No puedes acceder al servicio de Cerebro porque tu teléfono no ha sido validado todavía.\\nSi crees que esto es un error, mándanos un mensaje de WhatsApp al +52 56 4389 1280 y te atenderemos.\"\n  }\n}\n",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -5392,
-        2512
+        -6208,
+        2704
       ],
       "id": "d293c2ce-5250-423a-b66c-aa3953c73794",
       "name": "usuario no validado"
@@ -7689,13 +7557,13 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "https://graph.facebook.com/v22.0/626839230509107/messages",
+        "url": "=https://graph.facebook.com/v22.0/{{ $('datos wp').item.json.data.config.whatsapp.accounts[0].phone_number_id }}/messages",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
               "name": "Authorization",
-              "value": "Bearer EAAHeSgKjRYEBOZBi0kUskW4k3L6ZCO8EhqsGNjWLyfJ3U1NZCbDyQp9WSoX0Ouh8hh44Jue9ev7TMlygkZAMoqMReAJL9cNZBQZCZB508HXZB84HCNFZBIRlSa9cXFs0dXmR31XoO0iUZBOTx4VSnErdZC9OD1sQDKprPHpbK7NBrTZAWy8D6pvNi9w0w4c9pt2KE3stGwZDZD"
+              "value": "={{ $('Set Variables').item.json.auth_token }}"
             },
             {
               "name": "Content-Type",
@@ -7705,14 +7573,14 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger 2').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"¡Ups! Algo salió mal en nuestro sistema. Por favor, intenta de nuevo en unos minutos. Si el error continúa, escríbenos al +52 56 4389 1280 por WhatsApp para reportar el problema y brindarte soporte.\"\n  }\n}\n",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"$('incoming_data').item.json.incoming_wp.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"¡Ups! Algo salió mal en nuestro sistema. Por favor, intenta de nuevo en unos minutos. Si el error continúa, escríbenos al +52 56 4389 1280 por WhatsApp para reportar el problema y brindarte soporte.\"\n  }\n}\n",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -5392,
-        2880
+        -6208,
+        3072
       ],
       "id": "90bd52bd-a7af-47e1-8db9-92b00f268efc",
       "name": "error desconocido"
@@ -8044,6 +7912,151 @@
       "id": "af24809c-2023-4ff2-85b7-362a2b0fea78",
       "name": "verificamos tipo de mensaje",
       "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "0b13a5d9-6075-4751-9c4a-d9665ea0c75b",
+              "leftValue": "={{ $('Main Logic Placeholder').item.json.multi_student }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -672,
+        384
+      ],
+      "id": "75512886-b025-4a7b-ae3b-467de483b20c",
+      "name": "multi student true?"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "27ace6ed-299c-47ed-b7b8-34c14765c475",
+              "leftValue": "={{ $('datosFinalesUser').item.json.state_final }}",
+              "rightValue": "seleccion_alumno",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -224,
+        208
+      ],
+      "id": "81df475e-2c4c-423a-be94-1b85f30f9048",
+      "name": "no esta seleccionando un alumno aun?"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "797b0050-2694-48ef-a7d9-19a8bd4d4251",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "error",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        432,
+        304
+      ],
+      "id": "bd28bf9f-11e0-444a-862a-9d0627f0f0e6",
+      "name": "hay un error en seleccion?"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v22.0/{{ $('datos wp').item.json.data.config.whatsapp.accounts[0].phone_number_id }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ $('Set Variables').item.json.auth_token }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('incoming_data').item.json.incoming_wp.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"{{ $json.message }}\"\n  }\n}\n\n\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        672,
+        208
+      ],
+      "id": "6a5c45c7-04e7-4a21-ad61-5841d9fe29cb",
+      "name": "error seleccion alumno"
+    },
+    {
+      "parameters": {
+        "content": "## Flujo actualizado"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -832,
+        128
+      ],
+      "typeVersion": 1,
+      "id": "b4a59644-346e-4a5c-94e1-6991d4d43301",
+      "name": "Sticky Note10"
     }
   ],
   "connections": {
@@ -8091,7 +8104,7 @@
       "main": [
         [
           {
-            "node": "If1",
+            "node": "multi student true?",
             "type": "main",
             "index": 0
           }
@@ -8119,7 +8132,7 @@
         ],
         [
           {
-            "node": "If1",
+            "node": "multi student true?",
             "type": "main",
             "index": 0
           }
@@ -8184,29 +8197,11 @@
         ]
       ]
     },
-    "If1": {
-      "main": [
-        [
-          {
-            "node": "HTTP Request",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "student_id",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "HTTP Request": {
       "main": [
         [
           {
-            "node": "If4",
+            "node": "no esta seleccionando un alumno aun?",
             "type": "main",
             "index": 0
           }
@@ -8294,7 +8289,7 @@
       "main": [
         [
           {
-            "node": "If1",
+            "node": "multi student true?",
             "type": "main",
             "index": 0
           }
@@ -8339,24 +8334,6 @@
         [
           {
             "node": "HTTP Request7",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "If4": {
-      "main": [
-        [
-          {
-            "node": "seleccionar usuario mensaje",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Edit Fields11",
             "type": "main",
             "index": 0
           }
@@ -8422,7 +8399,7 @@
       "main": [
         [
           {
-            "node": "If5",
+            "node": "hay un error en seleccion?",
             "type": "main",
             "index": 0
           }
@@ -8555,24 +8532,6 @@
         ]
       ]
     },
-    "If5": {
-      "main": [
-        [
-          {
-            "node": "menu principal5",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "student_id1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "If10": {
       "main": [
         [
@@ -8613,7 +8572,7 @@
       "main": [
         [
           {
-            "node": "If1",
+            "node": "multi student true?",
             "type": "main",
             "index": 0
           }
@@ -8631,7 +8590,7 @@
       "main": [
         [
           {
-            "node": "If1",
+            "node": "multi student true?",
             "type": "main",
             "index": 0
           }
@@ -8758,7 +8717,7 @@
       "main": [
         [
           {
-            "node": "If1",
+            "node": "multi student true?",
             "type": "main",
             "index": 0
           }
@@ -8958,7 +8917,7 @@
       "main": [
         [
           {
-            "node": "If1",
+            "node": "multi student true?",
             "type": "main",
             "index": 0
           }
@@ -9372,7 +9331,7 @@
       "main": [
         [
           {
-            "node": "If1",
+            "node": "multi student true?",
             "type": "main",
             "index": 0
           }
@@ -9445,7 +9404,7 @@
       "main": [
         [
           {
-            "node": "If1",
+            "node": "multi student true?",
             "type": "main",
             "index": 0
           }
@@ -9565,7 +9524,7 @@
       "main": [
         [
           {
-            "node": "If1",
+            "node": "multi student true?",
             "type": "main",
             "index": 0
           }
@@ -9762,7 +9721,7 @@
       "main": [
         [
           {
-            "node": "If1",
+            "node": "multi student true?",
             "type": "main",
             "index": 0
           }
@@ -9956,7 +9915,7 @@
       "main": [
         [
           {
-            "node": "If1",
+            "node": "multi student true?",
             "type": "main",
             "index": 0
           }
@@ -10142,6 +10101,60 @@
           }
         ]
       ]
+    },
+    "multi student true?": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "student_id",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "no esta seleccionando un alumno aun?": {
+      "main": [
+        [
+          {
+            "node": "seleccionar usuario mensaje",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields11",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "hay un error en seleccion?": {
+      "main": [
+        [
+          {
+            "node": "error seleccion alumno",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "student_id1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -10184,7 +10197,7 @@
       }
     ]
   },
-  "versionId": "312c0b46-6164-4a8e-b6fb-a47fe1457711",
+  "versionId": "201c6107-2a15-4d05-8574-337459130efd",
   "triggerCount": 0,
   "shared": [
     {
