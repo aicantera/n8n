@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-09-15T15:39:29.471Z",
-  "updatedAt": "2025-09-15T22:01:18.000Z",
+  "updatedAt": "2025-09-15T23:41:09.000Z",
   "id": "BPnkCPlia5Iozaew",
   "name": "chatbot cerebro qa",
   "active": false,
@@ -1071,13 +1071,13 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "https://graph.facebook.com/v22.0/626839230509107/messages",
+        "url": "=https://graph.facebook.com/v22.0/{{ $('datos wp').item.json.data.config.whatsapp.accounts[0].phone_number_id }}/messages",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
               "name": "Authorization",
-              "value": "Bearer EAAHeSgKjRYEBOZBi0kUskW4k3L6ZCO8EhqsGNjWLyfJ3U1NZCbDyQp9WSoX0Ouh8hh44Jue9ev7TMlygkZAMoqMReAJL9cNZBQZCZB508HXZB84HCNFZBIRlSa9cXFs0dXmR31XoO0iUZBOTx4VSnErdZC9OD1sQDKprPHpbK7NBrTZAWy8D6pvNi9w0w4c9pt2KE3stGwZDZD"
+              "value": "={{ $('Set Variables').item.json.auth_token }}"
             },
             {
               "name": "Content-Type",
@@ -1087,7 +1087,7 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger 2').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": {{ JSON.stringify($json.data.message) }}\n  }\n}\n",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('incoming_data').item.json.incoming_wp.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": {{ JSON.stringify($json.data.message) }}\n  }\n}\n",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
@@ -1790,7 +1790,7 @@
             {
               "id": "6fca4a7f-bcc2-4d06-97ea-acb43394a3fd",
               "name": "userInput",
-              "value": "={{ $('WhatsApp Trigger 2').item.json.messages[0].text.body }}",
+              "value": "={{ $('incoming_data').item.json.incoming_wp.messages[0].text.body }}",
               "type": "string"
             }
           ]
@@ -1801,7 +1801,7 @@
       "typeVersion": 3.4,
       "position": [
         -3984,
-        3136
+        3248
       ],
       "id": "409f8cc6-bfca-47fe-b7b5-287cc18c19c9",
       "name": "guardamos la respuesta de academico"
@@ -1814,7 +1814,7 @@
       "typeVersion": 2,
       "position": [
         -3760,
-        3120
+        3216
       ],
       "id": "3e0e42fa-9177-42ee-b572-2d87eef25968",
       "name": "Revisamos que el valor este dentro de lo permitido"
@@ -1855,13 +1855,13 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "https://graph.facebook.com/v22.0/626839230509107/messages",
+        "url": "=https://graph.facebook.com/v22.0/{{ $('datos wp').item.json.data.config.whatsapp.accounts[0].phone_number_id }}/messages",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
               "name": "Authorization",
-              "value": "Bearer EAAHeSgKjRYEBOZBi0kUskW4k3L6ZCO8EhqsGNjWLyfJ3U1NZCbDyQp9WSoX0Ouh8hh44Jue9ev7TMlygkZAMoqMReAJL9cNZBQZCZB508HXZB84HCNFZBIRlSa9cXFs0dXmR31XoO0iUZBOTx4VSnErdZC9OD1sQDKprPHpbK7NBrTZAWy8D6pvNi9w0w4c9pt2KE3stGwZDZD"
+              "value": "={{ $('Set Variables').item.json.auth_token }}"
             },
             {
               "name": "Content-Type",
@@ -1871,7 +1871,7 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger 2').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"Lo lamento, la respuesta es invalida tiene que ser 1 o 3 intenta de nuevo.\"\n  }\n}\n",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('incoming_data').item.json.incoming_wp.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"Lo lamento, la respuesta es invalida tiene que ser 1 o 3 intenta de nuevo.\"\n  }\n}\n",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
@@ -4362,20 +4362,8 @@
               "value": "https://cerebro-dev-7d8f30a4b3ff.herokuapp.com"
             },
             {
-              "name": "status_report",
-              "value": "https://cerebro-core-050afed4ca53.herokuapp.com/sma/receive_messagebird_data"
-            },
-            {
-              "name": "clienteIdWp",
-              "value": "626839230509107"
-            },
-            {
-              "name": "tokenWp",
-              "value": "Bearer EAAHeSgKjRYEBOZBi0kUskW4k3L6ZCO8EhqsGNjWLyfJ3U1NZCbDyQp9WSoX0Ouh8hh44Jue9ev7TMlygkZAMoqMReAJL9cNZBQZCZB508HXZB84HCNFZBIRlSa9cXFs0dXmR31XoO0iUZBOTx4VSnErdZC9OD1sQDKprPHpbK7NBrTZAWy8D6pvNi9w0w4c9pt2KE3stGwZDZD"
-            },
-            {
               "name": "currentEnviroment",
-              "value": "=https://cerebro-core-050afed4ca53.herokuapp.com"
+              "value": "={{ $('incoming_data').item.json.currentEnv }}"
             }
           ]
         },
@@ -4428,7 +4416,7 @@
           "conditions": [
             {
               "id": "0770e18c-5cb6-4730-a721-382b47947981",
-              "leftValue": "={{ $('WhatsApp Trigger 2').item.json.messages[0].interactive }}",
+              "leftValue": "={{ $('incoming_data').item.json.incoming_wp.messages[0].interactive }}",
               "rightValue": "",
               "operator": {
                 "type": "object",
@@ -4453,13 +4441,13 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "https://graph.facebook.com/v22.0/626839230509107/messages",
+        "url": "=https://graph.facebook.com/v22.0/{{ $('datos wp').item.json.data.config.whatsapp.accounts[0].phone_number_id }}/messages",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
               "name": "Authorization",
-              "value": "Bearer EAAHeSgKjRYEBOZBi0kUskW4k3L6ZCO8EhqsGNjWLyfJ3U1NZCbDyQp9WSoX0Ouh8hh44Jue9ev7TMlygkZAMoqMReAJL9cNZBQZCZB508HXZB84HCNFZBIRlSa9cXFs0dXmR31XoO0iUZBOTx4VSnErdZC9OD1sQDKprPHpbK7NBrTZAWy8D6pvNi9w0w4c9pt2KE3stGwZDZD"
+              "value": "={{ $('Set Variables').item.json.auth_token }}"
             },
             {
               "name": "Content-Type",
@@ -4469,7 +4457,7 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger 2').item.json.messages[0].from }}\",\n  \"type\": \"interactive\",\n  \"interactive\": {\n    \"type\": \"button\",\n    \"body\": {\n      \"text\": \"✨ ¡Bienvenido a la sección de Preguntas Frecuentes! ✨ Aquí te puedo ayudar a responder las dudas más comunes sobre el colegio.\\n\\n¿Tienes alguna pregunta específica?💬\"\n    },\n    \"action\": {\n      \"buttons\": [\n        {\n          \"type\": \"reply\",\n          \"reply\": {\n            \"id\": \"menu_inicial\",\n            \"title\": \"Volver al menú\"\n          }\n        }\n      ]\n    }\n } }\n\n",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('incoming_data').item.json.incoming_wp.messages[0].from }}\",\n  \"type\": \"interactive\",\n  \"interactive\": {\n    \"type\": \"button\",\n    \"body\": {\n      \"text\": \"✨ ¡Bienvenido a la sección de Preguntas Frecuentes! ✨ Aquí te puedo ayudar a responder las dudas más comunes sobre el colegio.\\n\\n¿Tienes alguna pregunta específica?💬\"\n    },\n    \"action\": {\n      \"buttons\": [\n        {\n          \"type\": \"reply\",\n          \"reply\": {\n            \"id\": \"menu_inicial\",\n            \"title\": \"Volver al menú\"\n          }\n        }\n      ]\n    }\n } }\n\n",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
@@ -4602,7 +4590,7 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"$('incoming_data').item.json.incoming_wp.messages[0].from }}\",\n  \"type\": \"interactive\",\n  \"interactive\": {\n    \"type\": \"button\",\n    \"body\": {\n      \"text\": \"¡Perfecto! Para ayudarte mejor, ¿prefieres resolver tu consulta al instante con nuestra IA de preguntas frecuentes? \\n\\nSelecciona una opción:\\n\\n1️⃣ Interactuar con la IA (respuesta inmediata).\"\n    },\n    \"action\": {\n      \"buttons\": [\n        {\n          \"type\": \"reply\",\n          \"reply\": {\n            \"id\": \"menu_inicial\",\n            \"title\": \"Volver al menú\"\n          }\n        }\n      ]\n    }\n } }\n\n",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('incoming_data').item.json.incoming_wp.messages[0].from }}\",\n  \"type\": \"interactive\",\n  \"interactive\": {\n    \"type\": \"button\",\n    \"body\": {\n      \"text\": \"¡Perfecto! Para ayudarte mejor, ¿prefieres resolver tu consulta al instante con nuestra IA de preguntas frecuentes? \\n\\nSelecciona una opción:\\n\\n1️⃣ Interactuar con la IA (respuesta inmediata).\"\n    },\n    \"action\": {\n      \"buttons\": [\n        {\n          \"type\": \"reply\",\n          \"reply\": {\n            \"id\": \"menu_inicial\",\n            \"title\": \"Volver al menú\"\n          }\n        }\n      ]\n    }\n } }\n\n",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
@@ -4626,7 +4614,7 @@
           "conditions": [
             {
               "id": "ddf0020f-affc-4e34-8acc-ba0cbe6b025d",
-              "leftValue": "={{ $('WhatsApp Trigger 2').item.json.messages[0].interactive }}",
+              "leftValue": "={{ $('incoming_data').item.json.incoming_wp.messages[0].interactive }}",
               "rightValue": "",
               "operator": {
                 "type": "object",
@@ -4655,7 +4643,7 @@
             {
               "id": "6fca4a7f-bcc2-4d06-97ea-acb43394a3fd",
               "name": "userInput",
-              "value": "={{ $('WhatsApp Trigger 2').item.json.messages[0].text.body }}",
+              "value": "={{ $('incoming_data').item.json.incoming_wp.messages[0].text.body }}",
               "type": "string"
             }
           ]
@@ -4720,13 +4708,13 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "https://graph.facebook.com/v22.0/626839230509107/messages",
+        "url": "=https://graph.facebook.com/v22.0/{{ $('datos wp').item.json.data.config.whatsapp.accounts[0].phone_number_id }}/messages",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
               "name": "Authorization",
-              "value": "Bearer EAAHeSgKjRYEBOZBi0kUskW4k3L6ZCO8EhqsGNjWLyfJ3U1NZCbDyQp9WSoX0Ouh8hh44Jue9ev7TMlygkZAMoqMReAJL9cNZBQZCZB508HXZB84HCNFZBIRlSa9cXFs0dXmR31XoO0iUZBOTx4VSnErdZC9OD1sQDKprPHpbK7NBrTZAWy8D6pvNi9w0w4c9pt2KE3stGwZDZD"
+              "value": "={{ $('Set Variables').item.json.auth_token }}"
             },
             {
               "name": "Content-Type",
@@ -4736,7 +4724,7 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger 2').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"Lo lamento, la respuesta es invalida tiene que ser 1 o 3 intenta de nuevo.\"\n  }\n}\n",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('incoming_data').item.json.incoming_wp.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"Lo lamento, la respuesta es invalida tiene que ser 1 o 3 intenta de nuevo.\"\n  }\n}\n",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
@@ -4842,7 +4830,7 @@
           "value": {
             "state": "={{ $json.state }}",
             "userId": "={{ $json.userStateId }}",
-            "phoneNumber": "={{ $('WhatsApp Trigger 2').item.json.messages[0].from }}",
+            "phoneNumber": "={{ $('incoming_data').item.json.incoming_wp.messages[0].from }}",
             "info": "=espera respuesta faq",
             "information": "=espera respuesta faq",
             "base_url": "={{ $('Set Variables').item.json.currentEnvironment }}"
@@ -5077,13 +5065,13 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "https://graph.facebook.com/v22.0/626839230509107/messages",
+        "url": "=https://graph.facebook.com/v22.0/{{ $('datos wp').item.json.data.config.whatsapp.accounts[0].phone_number_id }}/messages",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
               "name": "Authorization",
-              "value": "Bearer EAAHeSgKjRYEBOZBi0kUskW4k3L6ZCO8EhqsGNjWLyfJ3U1NZCbDyQp9WSoX0Ouh8hh44Jue9ev7TMlygkZAMoqMReAJL9cNZBQZCZB508HXZB84HCNFZBIRlSa9cXFs0dXmR31XoO0iUZBOTx4VSnErdZC9OD1sQDKprPHpbK7NBrTZAWy8D6pvNi9w0w4c9pt2KE3stGwZDZD"
+              "value": "={{ $('Set Variables').item.json.auth_token }}"
             },
             {
               "name": "Content-Type",
@@ -5093,7 +5081,7 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger 2').item.json.messages[0].from }}\",\n  \"type\": \"interactive\",\n  \"interactive\": {\n    \"type\": \"button\",\n    \"body\": {\n      \"text\": \"¡Gracias por contactarnos! 🌟\\nPara dirigirte al área correcta, por favor elige una de las siguientes opciones:\\n\\n1️⃣ Finanzas\\n2️⃣ Administrativo\\n3️⃣ Extraescolares\\n4️⃣ Académico\\n\\nSolo responde con el número de la opción que prefieras. 😊\"\n    },\n    \"action\": {\n      \"buttons\": [\n        {\n          \"type\": \"reply\",\n          \"reply\": {\n            \"id\": \"menu_inicial\",\n            \"title\": \"Volver al menú\"\n          }\n        }\n      ]\n    }\n } }\n\n",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('incoming_data').item.json.incoming_wp.messages[0].from }}\",\n  \"type\": \"interactive\",\n  \"interactive\": {\n    \"type\": \"button\",\n    \"body\": {\n      \"text\": \"¡Gracias por contactarnos! 🌟\\nPara dirigirte al área correcta, por favor elige una de las siguientes opciones:\\n\\n1️⃣ Finanzas\\n2️⃣ Administrativo\\n3️⃣ Extraescolares\\n4️⃣ Académico\\n\\nSolo responde con el número de la opción que prefieras. 😊\"\n    },\n    \"action\": {\n      \"buttons\": [\n        {\n          \"type\": \"reply\",\n          \"reply\": {\n            \"id\": \"menu_inicial\",\n            \"title\": \"Volver al menú\"\n          }\n        }\n      ]\n    }\n } }\n\n",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
@@ -5118,7 +5106,7 @@
           "value": {
             "state": "={{ $json.state }}",
             "userId": "={{ $json.userStateId }}",
-            "phoneNumber": "={{ $('WhatsApp Trigger 2').item.json.messages[0].from }}",
+            "phoneNumber": "={{ $('incoming_data').item.json.incoming_wp.messages[0].from }}",
             "info": "={{ $('Edit Fields31').item.json.information }}",
             "information": "={{ $('Edit Fields31').item.json.information }}",
             "base_url": "={{ $('Set Variables').item.json.currentEnvironment }}"
@@ -5266,7 +5254,7 @@
           "conditions": [
             {
               "id": "ddf0020f-affc-4e34-8acc-ba0cbe6b025d",
-              "leftValue": "={{ $('WhatsApp Trigger 2').item.json.messages[0].interactive }}",
+              "leftValue": "={{ $('incoming_data').item.json.incoming_wp.messages[0].interactive }}",
               "rightValue": "",
               "operator": {
                 "type": "object",
@@ -5295,7 +5283,7 @@
             {
               "id": "6fca4a7f-bcc2-4d06-97ea-acb43394a3fd",
               "name": "userInput",
-              "value": "={{ $('WhatsApp Trigger 2').item.json.messages[0].text.body }}",
+              "value": "={{ $('incoming_data').item.json.incoming_wp.messages[0].text.body }}",
               "type": "string"
             }
           ]
@@ -5360,13 +5348,13 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "https://graph.facebook.com/v22.0/626839230509107/messages",
+        "url": "=https://graph.facebook.com/v22.0/{{ $('datos wp').item.json.data.config.whatsapp.accounts[0].phone_number_id }}/messages",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
               "name": "Authorization",
-              "value": "Bearer EAAHeSgKjRYEBOZBi0kUskW4k3L6ZCO8EhqsGNjWLyfJ3U1NZCbDyQp9WSoX0Ouh8hh44Jue9ev7TMlygkZAMoqMReAJL9cNZBQZCZB508HXZB84HCNFZBIRlSa9cXFs0dXmR31XoO0iUZBOTx4VSnErdZC9OD1sQDKprPHpbK7NBrTZAWy8D6pvNi9w0w4c9pt2KE3stGwZDZD"
+              "value": "={{ $('Set Variables').item.json.auth_token }}"
             },
             {
               "name": "Content-Type",
@@ -5376,7 +5364,7 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger 2').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"Lo lamento, la respuesta es invalida tiene que ser 1 o 4 intenta de nuevo.\"\n  }\n}\n",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('incoming_data').item.json.incoming_wp.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"Lo lamento, la respuesta es invalida tiene que ser 1 o 4 intenta de nuevo.\"\n  }\n}\n",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
@@ -5413,7 +5401,7 @@
             {
               "id": "5a8ea4a7-2ab9-4b64-973e-c6256426fcd6",
               "name": "wa_body",
-              "value": "={{ $('WhatsApp Trigger 2').item.json }}",
+              "value": "={{ $('incoming_data').item.json.incoming_wp }}",
               "type": "string"
             }
           ]
@@ -5479,13 +5467,13 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "https://graph.facebook.com/v22.0/626839230509107/messages",
+        "url": "=https://graph.facebook.com/v22.0/{{ $('datos wp').item.json.data.config.whatsapp.accounts[0].phone_number_id }}/messages",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
               "name": "Authorization",
-              "value": "Bearer EAAHeSgKjRYEBOZBi0kUskW4k3L6ZCO8EhqsGNjWLyfJ3U1NZCbDyQp9WSoX0Ouh8hh44Jue9ev7TMlygkZAMoqMReAJL9cNZBQZCZB508HXZB84HCNFZBIRlSa9cXFs0dXmR31XoO0iUZBOTx4VSnErdZC9OD1sQDKprPHpbK7NBrTZAWy8D6pvNi9w0w4c9pt2KE3stGwZDZD"
+              "value": "={{ $('Set Variables').item.json.auth_token }}"
             },
             {
               "name": "Content-Type",
@@ -5495,7 +5483,7 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger 2').item.json.messages[0].from }}\",\n  \"type\": \"interactive\",\n  \"interactive\": {\n    \"type\": \"button\",\n    \"body\": {\n      \"text\": \"✅ ¡Conexión exitosa! \\n\\nHemos recibido tu solicitud correctamente. En unos momentos uno de nuestros asesores se pondrá en contacto contigo para brindarte atención personalizada. \\n\\n¡Gracias por tu confianza! 🤝😊\\n\\nEn cualquier momento puedes regresar a la conversación escribiendo la palabra *Cerrar*\"\n    },\n    \"action\": {\n      \"buttons\": [\n        {\n          \"type\": \"reply\",\n          \"reply\": {\n            \"id\": \"salir\",\n            \"title\": \"Cerrar\"\n          }\n        }\n      ]\n    }\n  }\n}\n\n",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('incoming_data').item.json.incoming_wp.messages[0].from }}\",\n  \"type\": \"interactive\",\n  \"interactive\": {\n    \"type\": \"button\",\n    \"body\": {\n      \"text\": \"✅ ¡Conexión exitosa! \\n\\nHemos recibido tu solicitud correctamente. En unos momentos uno de nuestros asesores se pondrá en contacto contigo para brindarte atención personalizada. \\n\\n¡Gracias por tu confianza! 🤝😊\\n\\nEn cualquier momento puedes regresar a la conversación escribiendo la palabra *Cerrar*\"\n    },\n    \"action\": {\n      \"buttons\": [\n        {\n          \"type\": \"reply\",\n          \"reply\": {\n            \"id\": \"salir\",\n            \"title\": \"Cerrar\"\n          }\n        }\n      ]\n    }\n  }\n}\n\n",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
@@ -5555,7 +5543,7 @@
           "value": {
             "state": "={{ $json.state }}",
             "userId": "={{ $json.userStateId }}",
-            "phoneNumber": "={{ $('WhatsApp Trigger 2').item.json.messages[0].from }}",
+            "phoneNumber": "={{ $('incoming_data').item.json.incoming_wp.messages[0].from }}",
             "info": "={{ $('Edit Fields35').item.json.information }}",
             "information": "={{ $('Edit Fields35').item.json.information }}",
             "base_url": "={{ $('Set Variables').item.json.currentEnvironment }}",
@@ -5919,7 +5907,7 @@
           "value": {
             "state": "={{ $json.state }}",
             "userId": "={{ $json.userStateId }}",
-            "phoneNumber": "={{ $('WhatsApp Trigger 2').item.json.messages[0].from }}",
+            "phoneNumber": "={{ $('incoming_data').item.json.incoming_wp.messages[0].from }}",
             "info": "=espera respuesta faq",
             "information": "=espera respuesta faq",
             "base_url": "={{ $('Set Variables').item.json.currentEnvironment }}"
@@ -6058,13 +6046,13 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "https://graph.facebook.com/v22.0/626839230509107/messages",
+        "url": "=https://graph.facebook.com/v22.0/{{ $('datos wp').item.json.data.config.whatsapp.accounts[0].phone_number_id }}/messages",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
               "name": "Authorization",
-              "value": "Bearer EAAHeSgKjRYEBOZBi0kUskW4k3L6ZCO8EhqsGNjWLyfJ3U1NZCbDyQp9WSoX0Ouh8hh44Jue9ev7TMlygkZAMoqMReAJL9cNZBQZCZB508HXZB84HCNFZBIRlSa9cXFs0dXmR31XoO0iUZBOTx4VSnErdZC9OD1sQDKprPHpbK7NBrTZAWy8D6pvNi9w0w4c9pt2KE3stGwZDZD"
+              "value": "={{ $('Set Variables').item.json.auth_token }}"
             },
             {
               "name": "Content-Type",
@@ -6074,7 +6062,7 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger 2').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"😔 Lo sentimos, hubo un inconveniente al procesar tu solicitud.\\nPor favor, intenta de nuevo en unos minutos.\"\n  }\n}\n",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('incoming_data').item.json.incoming_wp.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"😔 Lo sentimos, hubo un inconveniente al procesar tu solicitud.\\nPor favor, intenta de nuevo en unos minutos.\"\n  }\n}\n",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
@@ -6093,7 +6081,7 @@
             {
               "id": "48ec0307-ac10-4918-9f51-d737ff63e5f5",
               "name": "validacion_message",
-              "value": "={{ $('WhatsApp Trigger 2').item.json.messages[0].text.body }}",
+              "value": "={{ $('incoming_data').item.json.incoming_wp.messages[0].text.body }}",
               "type": "string"
             }
           ]
@@ -6186,13 +6174,13 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "https://graph.facebook.com/v22.0/626839230509107/messages",
+        "url": "=https://graph.facebook.com/v22.0/{{ $('datos wp').item.json.data.config.whatsapp.accounts[0].phone_number_id }}/messages",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
               "name": "Authorization",
-              "value": "Bearer EAAHeSgKjRYEBOZBi0kUskW4k3L6ZCO8EhqsGNjWLyfJ3U1NZCbDyQp9WSoX0Ouh8hh44Jue9ev7TMlygkZAMoqMReAJL9cNZBQZCZB508HXZB84HCNFZBIRlSa9cXFs0dXmR31XoO0iUZBOTx4VSnErdZC9OD1sQDKprPHpbK7NBrTZAWy8D6pvNi9w0w4c9pt2KE3stGwZDZD"
+              "value": "={{ $('Set Variables').item.json.auth_token }}"
             },
             {
               "name": "Content-Type",
@@ -6202,7 +6190,7 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger 2').item.json.messages[0].from }}\",\n  \"type\": \"interactive\",\n  \"interactive\": {\n    \"type\": \"button\",\n    \"body\": {\n      \"text\": \"📋 Consentimiento de Uso de Datos\\n\\nCerebro utiliza tecnologías de IA para mejorar tu experiencia.  Los resultados pueden variar entre usuarios debido a la naturaleza de la tecnología. Los datos son privados y manejados bajo estrictas normas de confidencialidad.\\n\\nPara más detalles visita https://www.bioscerebro.com/aviso-de-privacidad\"\n    },\n    \"action\": {\n      \"buttons\": [\n        {\n          \"type\": \"reply\",\n          \"reply\": {\n            \"id\": \"aceptar\",\n            \"title\": \"Acepto\"\n          }\n        }\n      ]\n    }\n  }\n}\n",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('incoming_data').item.json.incoming_wp.messages[0].from }}\",\n  \"type\": \"interactive\",\n  \"interactive\": {\n    \"type\": \"button\",\n    \"body\": {\n      \"text\": \"📋 Consentimiento de Uso de Datos\\n\\nCerebro utiliza tecnologías de IA para mejorar tu experiencia.  Los resultados pueden variar entre usuarios debido a la naturaleza de la tecnología. Los datos son privados y manejados bajo estrictas normas de confidencialidad.\\n\\nPara más detalles visita https://www.bioscerebro.com/aviso-de-privacidad\"\n    },\n    \"action\": {\n      \"buttons\": [\n        {\n          \"type\": \"reply\",\n          \"reply\": {\n            \"id\": \"aceptar\",\n            \"title\": \"Acepto\"\n          }\n        }\n      ]\n    }\n  }\n}\n",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
@@ -6227,7 +6215,7 @@
           "value": {
             "state": "=respuesta_privacidad",
             "userId": "={{ $('Auth Guardian').item.json.data.session.user_id }}",
-            "phoneNumber": "={{ $('WhatsApp Trigger 2').item.json.messages[0].from }}",
+            "phoneNumber": "={{ $('incoming_data').item.json.incoming_wp.messages[0].from }}",
             "info": "=espera de respuesta aviso de privacidad",
             "information": "=espera de respuesta aviso de privacidad",
             "base_url": "={{ $('Set Variables').item.json.currentEnvironment }}"
@@ -6902,7 +6890,7 @@
           "conditions": [
             {
               "id": "2832003f-ac70-4a83-b6ec-ead07ea176f6",
-              "leftValue": "={{ $('WhatsApp Trigger 2').item.json.messages[0].interactive }}",
+              "leftValue": "={{ $('incoming_data').item.json.incoming_wp.messages[0].interactive }}",
               "rightValue": "",
               "operator": {
                 "type": "object",
@@ -6927,13 +6915,13 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "https://graph.facebook.com/v22.0/626839230509107/messages",
+        "url": "=https://graph.facebook.com/v22.0/{{ $('datos wp').item.json.data.config.whatsapp.accounts[0].phone_number_id }}/messages",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
               "name": "Authorization",
-              "value": "Bearer EAAHeSgKjRYEBOZBi0kUskW4k3L6ZCO8EhqsGNjWLyfJ3U1NZCbDyQp9WSoX0Ouh8hh44Jue9ev7TMlygkZAMoqMReAJL9cNZBQZCZB508HXZB84HCNFZBIRlSa9cXFs0dXmR31XoO0iUZBOTx4VSnErdZC9OD1sQDKprPHpbK7NBrTZAWy8D6pvNi9w0w4c9pt2KE3stGwZDZD"
+              "value": "={{ $('Set Variables').item.json.auth_token }}"
             },
             {
               "name": "Content-Type",
@@ -6943,7 +6931,7 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger 2').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"Tu número de WhatsApp ha sido validado exitosamente. Te damos la bienvenida a la comunicación en WhatsApp de tu colegio.\\nDurante estas primeras semanas irá aumentando la información que podrás consultar aquí.\\nMandame un *Hola* para empezar.\"\n  }\n}\n",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('incoming_data').item.json.incoming_wp.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"Tu número de WhatsApp ha sido validado exitosamente. Te damos la bienvenida a la comunicación en WhatsApp de tu colegio.\\nDurante estas primeras semanas irá aumentando la información que podrás consultar aquí.\\nMandame un *Hola* para empezar.\"\n  }\n}\n",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
@@ -6968,7 +6956,7 @@
           "value": {
             "state": "=menuInicial",
             "userId": "={{ $('Auth Guardian').item.json.data.session.user_id }}",
-            "phoneNumber": "={{ $('WhatsApp Trigger 2').item.json.messages[0].from }}",
+            "phoneNumber": "={{ $('incoming_data').item.json.incoming_wp.messages[0].from }}",
             "info": "=activación exitosa",
             "information": "=activación exitosa",
             "base_url": "={{ $('Set Variables').item.json.currentEnvironment }}"
@@ -7147,13 +7135,13 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "https://graph.facebook.com/v22.0/626839230509107/messages",
+        "url": "=https://graph.facebook.com/v22.0/{{ $('datos wp').item.json.data.config.whatsapp.accounts[0].phone_number_id }}/messages",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
               "name": "Authorization",
-              "value": "Bearer EAAHeSgKjRYEBOZBi0kUskW4k3L6ZCO8EhqsGNjWLyfJ3U1NZCbDyQp9WSoX0Ouh8hh44Jue9ev7TMlygkZAMoqMReAJL9cNZBQZCZB508HXZB84HCNFZBIRlSa9cXFs0dXmR31XoO0iUZBOTx4VSnErdZC9OD1sQDKprPHpbK7NBrTZAWy8D6pvNi9w0w4c9pt2KE3stGwZDZD"
+              "value": "={{ $('Set Variables').item.json.auth_token }}"
             },
             {
               "name": "Content-Type",
@@ -7163,7 +7151,7 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger 2').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"¡Hola! Para seguir chateando, necesito que aceptes el Aviso de Privacidad. No recibí tu confirmación, ¿puedes darle click al botón *Aceptar*? Así podré ayudarte.\"\n  }\n}\n",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('incoming_data').item.json.incoming_wp.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"¡Hola! Para seguir chateando, necesito que aceptes el Aviso de Privacidad. No recibí tu confirmación, ¿puedes darle click al botón *Aceptar*? Así podré ayudarte.\"\n  }\n}\n",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
@@ -8066,6 +8054,19 @@
       "typeVersion": 1,
       "id": "d21bc1ec-56c1-499d-8ba2-95f324c4cee3",
       "name": "Sticky Note13"
+    },
+    {
+      "parameters": {
+        "content": "## Flujo actualizado"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        912,
+        2144
+      ],
+      "typeVersion": 1,
+      "id": "b782e7ed-8093-4cdb-9280-ab492b9b5d49",
+      "name": "Sticky Note14"
     }
   ],
   "connections": {
@@ -10183,7 +10184,7 @@
       }
     ]
   },
-  "versionId": "7fbaaff7-4d43-4092-85c3-9f7102014739",
+  "versionId": "63f88ed4-7a93-4395-aa11-b279bcde13a9",
   "triggerCount": 0,
   "shared": [
     {
