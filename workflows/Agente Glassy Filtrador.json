@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-07-11T00:12:57.473Z",
-  "updatedAt": "2025-09-17T19:53:43.000Z",
+  "updatedAt": "2025-09-17T22:16:22.000Z",
   "id": "hqoczQMD5PHVvfTp",
   "name": "Agente Glassy Filtrador",
   "active": false,
@@ -8,12 +8,21 @@
   "nodes": [
     {
       "parameters": {
-        "inputSource": "passthrough"
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "query"
+            },
+            {
+              "name": "chat_id"
+            }
+          ]
+        }
       },
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "typeVersion": 1.1,
       "position": [
-        0,
+        -192,
         0
       ],
       "id": "ff656da6-e528-4150-943f-edbb11e3da3a",
@@ -45,7 +54,7 @@
     },
     {
       "parameters": {
-        "text": "={{ $json.query }}",
+        "text": "={{ $('When Executed by Another Workflow').item.json.query }}",
         "attributes": {
           "attributes": [
             {
@@ -216,6 +225,104 @@
           "name": "OpenAi account - GLASSY"
         }
       }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Obtiene el primer item que llega al nodo.\nconst item = items[0];\n\n// Extrae el string de la propiedad anidada \"content\".\n// La ruta ahora es: item -> json -> message -> content\nconst jsonString = item.json.message.content;\n\n// Convierte (parsea) el string a un objeto/array de JavaScript.\nconst cleanData = JSON.parse(jsonString);\n\n// Formatea cada elemento del array para que n8n lo reconozca\n// como un item individual en la salida.\nreturn cleanData.map(data => ({ json: data }));"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1952,
+        -96
+      ],
+      "id": "a7a7657b-bf57-4804-917a-ef901029cc16",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "tableId": "glassy_filtered_products",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "chat_id",
+              "fieldValue": "={{ $('When Executed by Another Workflow').item.json.chat_id }}"
+            },
+            {
+              "fieldId": "product_name",
+              "fieldValue": "={{ $json.nombre }}"
+            },
+            {
+              "fieldId": "imagenURL",
+              "fieldValue": "={{ $json.imagenURL }}"
+            },
+            {
+              "fieldId": "external_id",
+              "fieldValue": "={{ $json.identificadores.external_id }}"
+            },
+            {
+              "fieldId": "origin",
+              "fieldValue": "={{ $json.identificadores.origin }}"
+            },
+            {
+              "fieldId": "nag",
+              "fieldValue": "={{ $json.identificadores.nag }}"
+            },
+            {
+              "fieldId": "color",
+              "fieldValue": "={{ $json.caracteristicas.color }}"
+            },
+            {
+              "fieldId": "ad_info_a",
+              "fieldValue": "={{ $json.caracteristicas.ad_info_a }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        2160,
+        -96
+      ],
+      "id": "448e2c97-c95d-400a-8c22-6be4398c0ebf",
+      "name": "Create a row",
+      "credentials": {
+        "supabaseApi": {
+          "id": "ty0KiXsEYP1uJ8t9",
+          "name": "Supabase account - CANTERA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "tableId": "glassy_filtered_products",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "chat_id",
+              "condition": "eq",
+              "keyValue": "={{ $json.chat_id }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "f7ad0681-1ed9-49a3-b4f3-f522afd4925e",
+      "name": "Delete a row",
+      "alwaysOutputData": true,
+      "credentials": {
+        "supabaseApi": {
+          "id": "ty0KiXsEYP1uJ8t9",
+          "name": "Supabase account - CANTERA"
+        }
+      }
     }
   ],
   "connections": {
@@ -223,7 +330,7 @@
       "main": [
         [
           {
-            "node": "Information Extractor1",
+            "node": "Delete a row",
             "type": "main",
             "index": 0
           }
@@ -305,6 +412,44 @@
           }
         ]
       ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Create a row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a row": {
+      "main": [
+        []
+      ]
+    },
+    "Delete a row": {
+      "main": [
+        [
+          {
+            "node": "Information Extractor1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -318,12 +463,13 @@
     "When Executed by Another Workflow": [
       {
         "json": {
-          "query": "solicita los productos para el año 2012, la marca Volkswagen, el modelo Jetta, el tipo de automóvil 4 Door Sedan, el tipo de cristal Windshield y las siguientes características: sensor de lluvia."
+          "query": "solicita los productos para el año 2012, la marca Volkswagen, el modelo Jetta, el tipo de automóvil 4 Door Sedan, el tipo de cristal Windshield y las siguientes características: sensor de lluvia.",
+          "chat_id": "1526474745"
         }
       }
     ]
   },
-  "versionId": "d2edd82e-fa04-4cb0-8d89-3b152317fffe",
+  "versionId": "e1aa11a4-096d-40b4-98a4-3b5ae6ab79b2",
   "triggerCount": 0,
   "shared": [
     {
