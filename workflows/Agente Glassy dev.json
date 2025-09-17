@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-05-13T18:42:23.048Z",
-  "updatedAt": "2025-09-17T21:00:14.000Z",
+  "updatedAt": "2025-09-17T22:33:19.000Z",
   "id": "GJUKvC12lo7L8JjK",
   "name": "Agente Glassy dev",
   "active": true,
@@ -471,11 +471,35 @@
         },
         "workflowInputs": {
           "mappingMode": "defineBelow",
-          "value": {},
+          "value": {
+            "query": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('query', ``, 'string') }}",
+            "chat_id": "={{ $('Telegram Trigger').item.json.message.chat.id }}"
+          },
           "matchingColumns": [
             "listado_productos"
           ],
-          "schema": [],
+          "schema": [
+            {
+              "id": "query",
+              "displayName": "query",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "chat_id",
+              "displayName": "chat_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
           "attemptToConvertTypes": false,
           "convertFieldsToString": false
         }
@@ -763,6 +787,34 @@
           "name": "SMTP account Glasbil Dev"
         }
       }
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "tableId": "glassy_filtered_products",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "chat_id",
+              "keyValue": "={{ $('Telegram Trigger').item.json.message.chat.id }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabaseTool",
+      "typeVersion": 1,
+      "position": [
+        272,
+        880
+      ],
+      "id": "f5f5e5a6-ed13-4567-bbad-2655175ef9fd",
+      "name": "tool_detalle_producto",
+      "credentials": {
+        "supabaseApi": {
+          "id": "ty0KiXsEYP1uJ8t9",
+          "name": "Supabase account - CANTERA"
+        }
+      }
     }
   ],
   "connections": {
@@ -1019,6 +1071,17 @@
           }
         ]
       ]
+    },
+    "tool_detalle_producto": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -1037,7 +1100,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "ca0bdb51-7a08-4f01-9a11-7c1cff2bbe4c",
+  "versionId": "eae8c42d-dc03-4704-ba6b-704f7682ec88",
   "triggerCount": 2,
   "shared": [
     {
