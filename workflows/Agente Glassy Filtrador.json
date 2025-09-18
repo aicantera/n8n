@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-07-11T00:12:57.473Z",
-  "updatedAt": "2025-09-17T22:16:22.000Z",
+  "updatedAt": "2025-09-18T21:30:15.000Z",
   "id": "hqoczQMD5PHVvfTp",
   "name": "Agente Glassy Filtrador",
   "active": false,
@@ -228,13 +228,13 @@
     },
     {
       "parameters": {
-        "jsCode": "// Obtiene el primer item que llega al nodo.\nconst item = items[0];\n\n// Extrae el string de la propiedad anidada \"content\".\n// La ruta ahora es: item -> json -> message -> content\nconst jsonString = item.json.message.content;\n\n// Convierte (parsea) el string a un objeto/array de JavaScript.\nconst cleanData = JSON.parse(jsonString);\n\n// Formatea cada elemento del array para que n8n lo reconozca\n// como un item individual en la salida.\nreturn cleanData.map(data => ({ json: data }));"
+        "jsCode": "// Obtiene el primer item que llega al nodo.\nconst item = items[0];\n\n// Extrae el string de la propiedad \"output\".\nconst jsonString = item.json.output;\n\n// Convierte (parsea) el string a un objeto/array de JavaScript.\nconst cleanData = JSON.parse(jsonString);\n\n// n8n necesita que retornes un array de objetos, donde cada objeto\n// tiene una propiedad \"json\" que contiene tus datos.\n// Usamos .map() para transformar cada elemento del array al formato correcto.\nreturn cleanData.map(data => ({ json: data }));"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
         1952,
-        -96
+        128
       ],
       "id": "a7a7657b-bf57-4804-917a-ef901029cc16",
       "name": "Code"
@@ -323,6 +323,19 @@
           "name": "Supabase account - CANTERA"
         }
       }
+    },
+    {
+      "parameters": {
+        "jsCode": "// 1. Obtener el contenido del mensaje del modelo de IA.\n// Esta es la cadena de texto que puede venir con \"```json\" al inicio.\nlet content = $input.item.json.message.content;\n\n// 2. Limpiar la cadena de texto.\n// Este comando elimina el bloque de código Markdown \"```json\" del inicio \n// y \"```\" del final. Si no los encuentra, no hace nada. \n// Por eso funciona para ambos casos (cuando la salida es correcta y cuando no).\nconst cleanedString = content.replace(/^```json\\s*/, '').replace(/\\s*```$/, '');\n\n// 3. Convertir (parsear) la cadena limpia a un objeto JSON real.\n// Esto transforma el texto en datos que los siguientes nodos pueden entender.\nconst finalJson = JSON.parse(cleanedString);\n\n// 4. Devolver el objeto JSON limpio como salida de este nodo.\nreturn finalJson;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1952,
+        -96
+      ],
+      "id": "4099195c-c4f9-4a5c-b930-3d04bfa7ac12",
+      "name": "Limpia JSON"
     }
   ],
   "connections": {
@@ -415,13 +428,7 @@
     },
     "Code": {
       "main": [
-        [
-          {
-            "node": "Create a row",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "Create a row": {
@@ -444,7 +451,18 @@
       "main": [
         [
           {
-            "node": "Code",
+            "node": "Limpia JSON",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limpia JSON": {
+      "main": [
+        [
+          {
+            "node": "Create a row",
             "type": "main",
             "index": 0
           }
@@ -463,13 +481,13 @@
     "When Executed by Another Workflow": [
       {
         "json": {
-          "query": "solicita los productos para el año 2012, la marca Volkswagen, el modelo Jetta, el tipo de automóvil 4 Door Sedan, el tipo de cristal Windshield y las siguientes características: sensor de lluvia.",
-          "chat_id": "1526474745"
+          "query": "solicita los productos para el año 2012, la marca Volkswagen, el modelo Jetta, el tipo de automóvil 4 Door Sedan, el tipo de cristal Windshield y las siguientes características: sensor de lluvia",
+          "chat_id": 1526474745
         }
       }
     ]
   },
-  "versionId": "e1aa11a4-096d-40b4-98a4-3b5ae6ab79b2",
+  "versionId": "67edbcc5-982b-4547-9bdd-b36358155a3d",
   "triggerCount": 0,
   "shared": [
     {
