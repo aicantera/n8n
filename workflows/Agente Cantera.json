@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-05-13T16:37:03.099Z",
-  "updatedAt": "2025-09-18T17:35:53.000Z",
+  "updatedAt": "2025-09-21T20:50:39.000Z",
   "id": "PTbESRzX3rguwQN8",
   "name": "Agente Cantera",
   "active": true,
@@ -16,8 +16,8 @@
       "type": "n8n-nodes-base.whatsAppTrigger",
       "typeVersion": 1,
       "position": [
-        -3200,
-        -16
+        -3984,
+        -32
       ],
       "id": "df54a231-f313-4651-960a-c9d46e90dba1",
       "name": "WhatsApp Trigger",
@@ -188,8 +188,8 @@
       "type": "n8n-nodes-base.manualTrigger",
       "typeVersion": 1,
       "position": [
-        432,
-        -1520
+        160,
+        -1280
       ],
       "id": "1f2f7840-5375-46a5-b7ff-67645ad00b91",
       "name": "When clicking ‘Test workflow’"
@@ -2419,6 +2419,73 @@
           "name": "Supabase account - CANTERA"
         }
       }
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "tableId": "contacts",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "numero_id",
+              "keyValue": "=4455112255"
+            },
+            {
+              "keyName": "project_id",
+              "keyValue": "=1"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        -3696,
+        -144
+      ],
+      "id": "da624d7c-aa92-47cf-939a-3c0de539d785",
+      "name": "Get a row1",
+      "alwaysOutputData": true,
+      "credentials": {
+        "supabaseApi": {
+          "id": "ty0KiXsEYP1uJ8t9",
+          "name": "Supabase account - CANTERA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "1e20a387-a075-4a8e-af13-1151571dd11e",
+              "leftValue": "={{ $json.id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "number",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -3424,
+        -144
+      ],
+      "id": "9da36789-4ec7-4f42-887e-b515d77c3720",
+      "name": "If2"
     }
   ],
   "connections": {
@@ -2427,6 +2494,11 @@
         [
           {
             "node": "If1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get a row1",
             "type": "main",
             "index": 0
           }
@@ -2495,13 +2567,7 @@
     },
     "When clicking ‘Test workflow’": {
       "main": [
-        [
-          {
-            "node": "Postgres",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "typing indicator1": {
@@ -3015,6 +3081,23 @@
           }
         ]
       ]
+    },
+    "Get a row1": {
+      "main": [
+        [
+          {
+            "node": "If2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If2": {
+      "main": [
+        [],
+        []
+      ]
     }
   },
   "settings": {
@@ -3063,40 +3146,9 @@
           }
         }
       }
-    ],
-    "WhatsApp Trigger": [
-      {
-        "json": {
-          "messaging_product": "whatsapp",
-          "metadata": {
-            "display_phone_number": "5214431866819",
-            "phone_number_id": "676686782186843"
-          },
-          "contacts": [
-            {
-              "profile": {
-                "name": "."
-              },
-              "wa_id": "5216691469809"
-            }
-          ],
-          "messages": [
-            {
-              "from": "5216691469809",
-              "id": "wamid.HBgNNTIxNjY5MTQ2OTgwORUCABIYFDNBNTM3NDdEQzMxOEM1MDlBRDM0AA==",
-              "timestamp": "1758216763",
-              "text": {
-                "body": "Hola *Cantera Digital*. Necesito más información sobre sus servicios"
-              },
-              "type": "text"
-            }
-          ],
-          "field": "messages"
-        }
-      }
     ]
   },
-  "versionId": "9e8266d4-3926-4600-887c-316828033361",
+  "versionId": "ac95ace4-7775-4669-a74d-a7c68d5c0fd1",
   "triggerCount": 1,
   "shared": [
     {
