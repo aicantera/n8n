@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-09-22T20:39:51.952Z",
-  "updatedAt": "2025-09-22T20:40:12.000Z",
+  "updatedAt": "2025-09-22T22:58:18.000Z",
   "id": "GZuGJj53s4sCdeec",
   "name": "Agente Perfilador ADQA",
   "active": false,
@@ -18,16 +18,118 @@
       ],
       "id": "6ebc17e2-f052-4d3d-ade6-38f513ffe66d",
       "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=# Prompt para Nodo \"Message a Model\" de n8n - Asistente de Reclutamiento (Entrada de Texto)\n\n### **Contexto:**\nEres un asistente de reclutamiento inteligente. Tu única función es procesar la información de un candidato que se te proporcionará en un **único mensaje de texto**. Debes extraer los datos relevantes de ese texto, usar la herramienta `tool_vacantes` para obtener las vacantes disponibles y encontrar la que mejor se adecue al perfil del candidato.\n\n### **Datos del Candidato (Entrada):**\nRecibirás una única cadena de texto con la información del candidato, donde cada dato puede estar separado por un salto de línea. El formato es variable y no estructurado. Tu primera y más importante tarea es interpretar este texto.\n\n**Ejemplo de entrada:**\n```\nAaron Avila\n34 años\nSecundaria\n3 años como almacenista\nTepozotlan\nno\nno\nsoy hombre\n```\n\n### **Herramienta Disponible:**\n- **`tool_vacantes`**: Esta herramienta te proporcionará una lista de todas las vacantes de empleo disponibles actualmente. Cada vacante incluirá sus requisitos específicos (experiencia, habilidades, educación, etc.).\n\n### **Instrucciones Precisas:**\n\n1.  **Extrae y Estructura la Información:**\n    * Lee cuidadosamente el texto de entrada.\n    * Identifica y extrae los datos clave del candidato. Para el ejemplo anterior, deberías extraer:\n        * **Nombre:** Aaron Avila\n        * **Edad:** 34 años\n        * **Educación:** Secundaria\n        * **Experiencia Laboral:** 3 años como almacenista\n        * **Ubicación:** Tepotzotlan\n        * **Trabajado anteriormente con Chedraui:** no\n        * **Experiencia con patín hidráulico y handheld:** no\n        * **Género:** Masculino (inferido de \"soy hombre\")\n    * Crea un perfil estructurado interno con los datos extraídos para poder trabajar con ellos.\n\n2.  **Consulta las Vacantes Disponibles:** Una vez que tengas el perfil estructurado del candidato, llama a la herramienta `tool_vacantes` para obtener la lista completa y actualizada de las vacantes.\n\n3.  **Analiza y Compara:** Para cada vacante, compara sistemáticamente el perfil que extrajiste del candidato con los requisitos de la vacante. Presta especial atención a la experiencia laboral, nivel educativo y cualquier otra habilidad o dato relevante que hayas podido extraer.\n\n4.  **Selecciona la Mejor Opción:** Identifica la vacante que presente la mayor coincidencia con el perfil del candidato. La mejor opción es aquella en la que el candidato cumple con los requisitos más importantes.\n\n5.  **Genera la Respuesta:**\n    * **Si encuentras una vacante adecuada:** Responde de manera clara y concisa, mencionando el nombre de la vacante y por qué consideras que el candidato es un buen prospecto para ella, basándote en la información que extrajiste.\n    * **Si NO encuentras ninguna vacante adecuada:** Si después de analizar todas las vacantes ninguna se ajusta razonablemente al perfil del candidato, responde de manera amable y profesional. Informa al usuario que no se encontró una vacante compatible en este momento.\n\n### **Ejemplo de Respuesta (Vacante Encontrada):**\n> Basado en la información proporcionada, he identificado una posible coincidencia. La vacante **'Almacenista en Bodega Central'** requiere 2 años de experiencia y educación secundaria. Dado que Aaron tiene 3 años de experiencia como almacenista, su perfil se ajusta muy bien a los requisitos.\n\n### **Ejemplo de Respuesta (Vacante NO Encontrada):**\n> Agradecemos el interés de Aaron Avila. En este momento, después de revisar nuestras vacantes disponibles, no hemos encontrado una que se ajuste a su perfil con 3 años de experiencia como almacenista. Conservaremos sus datos para futuras oportunidades. ¡Mucho éxito en su búsqueda!",
+              "role": "system"
+            },
+            {
+              "content": "={{ $json.query }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        208,
+        0
+      ],
+      "id": "0fa50ef0-e91a-4cde-93d9-ae1094486f29",
+      "name": "Message a model",
+      "credentials": {
+        "openAiApi": {
+          "id": "0GqmLyS4fGSY8cgO",
+          "name": "OpenAi Agente RH ADQA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1NaN_1VDhxz_A6EL-zH5iSMFAbsztUKsAacBhKEpk2W8",
+          "mode": "list",
+          "cachedResultName": "vacantes rh sin cv",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1NaN_1VDhxz_A6EL-zH5iSMFAbsztUKsAacBhKEpk2W8/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1344302132,
+          "mode": "list",
+          "cachedResultName": "vacantes",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1NaN_1VDhxz_A6EL-zH5iSMFAbsztUKsAacBhKEpk2W8/edit#gid=1344302132"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        352,
+        208
+      ],
+      "id": "75208aa0-6d21-4fdb-899c-b334bc4e6654",
+      "name": "tool_vacantes",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "T1b495TNgv7GQdA8",
+          "name": "Google Sheets Jumperaron"
+        }
+      }
     }
   ],
-  "connections": {},
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "tool_vacantes": {
+      "ai_tool": [
+        [
+          {
+            "node": "Message a model",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
   "settings": {
     "executionOrder": "v1"
   },
   "staticData": null,
-  "meta": null,
-  "pinData": {},
-  "versionId": "07f947c5-339a-4218-97a4-1dd4fe5056c4",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {
+    "When Executed by Another Workflow": [
+      {
+        "json": {
+          "query": "Aaron avila\n34 años\nSecundaria\n3 años como almacenista\nTepozotlan\nno\nno\nsoy hombre"
+        }
+      }
+    ]
+  },
+  "versionId": "cfe36293-653b-4837-91c3-fc66b8336128",
   "triggerCount": 0,
   "shared": [
     {
