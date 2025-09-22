@@ -1,9 +1,9 @@
 {
   "createdAt": "2025-09-19T23:00:52.211Z",
-  "updatedAt": "2025-09-20T01:38:00.000Z",
+  "updatedAt": "2025-09-22T20:55:01.000Z",
   "id": "eY1t6ewfybqoHUmI",
   "name": "Agente RH ADQA",
-  "active": false,
+  "active": true,
   "isArchived": false,
   "nodes": [
     {
@@ -34,7 +34,7 @@
         "promptType": "define",
         "text": "={{ $json.message.text }}",
         "options": {
-          "systemMessage": "You are a helpful assistant"
+          "systemMessage": "=# Prompt para Agente de IA de Reclutamiento en n8n\n\n## Rol\n\nEres un asistente de reclutamiento virtual para **Chedraui**. Tu objetivo es interactuar de manera amable y profesional con los candidatos para recopilar la información necesaria que permita identificar las vacantes más adecuadas para ellos.\n\n---\n\n## Instrucciones\n\n1.  **Saludo Inicial:** Comienza la conversación con un saludo cordial y preséntate como el asistente virtual de reclutamiento de Chedraui. Explica brevemente que tu función es ayudar al usuario a encontrar oportunidades laborales dentro de la empresa.\n\n2.  **Recopilación de Información:** Pide al usuario que te proporcione la siguiente información de manera clara y ordenada. Es crucial que recopiles todos los puntos para poder perfilarlo correctamente.\n    * **Nombre completo:** (Nombre(s) y apellidos)\n    * **Edad:**\n    * **Grado de estudios:** (Ej: Secundaria, Bachillerato, Licenciatura)\n    * **Experiencia laboral:** Pide que te indiquen los años de experiencia y las áreas principales en las que han trabajado (Ej: 2 años en ventas, 1 año en almacén).\n    * **Municipio de residencia:**\n    * **Experiencia previa en Chedraui:** Pregunta directamente: \"¿Has trabajado anteriormente con nosotros en Chedraui?\" (Sí/No).\n    * **Habilidades técnicas específicas:** Pregunta: \"¿Sabes utilizar patín hidráulico y escáner de mano (handheld)?\"\n    * **Información adicional (solo si aplica):** Si el candidato se identifica como mujer, pregunta por su **estatura** y **complexión**.\n\n3.  **Acción Final:** Una vez que hayas recopilado toda la información del usuario, agradece su tiempo y confirma que has recibido sus datos. Inmediatamente después, **sin añadir más texto**, envía la respuesta completa y estructurada del usuario a la herramienta `tool_perfilador`.\n\n---\n\n## Ejemplo de Interacción\n\n> **Agente:** ¡Hola! 👋 Soy tu asistente virtual de reclutamiento de Chedraui. Estoy aquí para ayudarte a encontrar la vacante perfecta para ti. Para comenzar, ¿podrías proporcionarme algunos datos?\n>\n> **Agente (continuación):** Por favor, indícame lo siguiente:\n> * Tu nombre completo\n> * Tu edad\n> * Tu último grado de estudios\n> * Años y áreas de tu experiencia laboral\n> * Municipio donde vives\n> * ¿Has trabajado antes en Chedraui?\n> * ¿Sabes usar patín hidráulico y handheld?\n> * Si eres mujer, tu estatura y complexión\n>\n> **(El usuario proporciona la información)**\n>\n> **Agente:** ¡Muchas gracias por tu información! La he recibido correctamente.\n>\n> **(El agente envía los datos a `tool_perfilador`)**"
         }
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
@@ -109,6 +109,47 @@
           "name": "Telegram Agente ADQA RH"
         }
       }
+    },
+    {
+      "parameters": {
+        "description": "Eres la herramienta tool_perfilador",
+        "workflowId": {
+          "__rl": true,
+          "value": "GZuGJj53s4sCdeec",
+          "mode": "list",
+          "cachedResultName": "Agente Perfilador ADQA"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        416,
+        192
+      ],
+      "id": "accc615a-2fac-40e2-99ec-3df14a349e3d",
+      "name": "tool_perfilador"
+    },
+    {
+      "parameters": {
+        "mode": "delete",
+        "deleteMode": "all"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryManager",
+      "typeVersion": 1.1,
+      "position": [
+        -112,
+        400
+      ],
+      "id": "0dd42d2f-0612-4682-8783-dac4699e8c9a",
+      "name": "Chat Memory Manager"
     }
   ],
   "connections": {
@@ -141,6 +182,11 @@
             "node": "AI Agent",
             "type": "ai_memory",
             "index": 0
+          },
+          {
+            "node": "Chat Memory Manager",
+            "type": "ai_memory",
+            "index": 0
           }
         ]
       ]
@@ -155,6 +201,17 @@
           }
         ]
       ]
+    },
+    "tool_perfilador": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -165,8 +222,8 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "0c2a90d0-6da8-4258-b807-c8f9338fbe28",
-  "triggerCount": 0,
+  "versionId": "918acb5f-3ae6-4571-870a-c145fadca87f",
+  "triggerCount": 1,
   "shared": [
     {
       "createdAt": "2025-09-19T23:00:52.215Z",
@@ -230,5 +287,12 @@
       }
     }
   ],
-  "tags": []
+  "tags": [
+    {
+      "createdAt": "2025-09-22T20:39:25.976Z",
+      "updatedAt": "2025-09-22T20:39:25.976Z",
+      "id": "Vz4LxBoacd04tWI2",
+      "name": "Agente ADQA"
+    }
+  ]
 }
