@@ -1,0 +1,1134 @@
+{
+  "createdAt": "2025-09-22T19:22:12.848Z",
+  "updatedAt": "2025-09-22T19:45:02.000Z",
+  "id": "7gTy6AG3cydAiqOP",
+  "name": "agente canon dev",
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.text }}",
+        "options": {
+          "systemMessage": "=Eres un profesional de Canon Academy, el experto a cargo de la administración, promoción y venta de cursos, workshops, clínicas y summers. Tu objetivo principal es resolver las dudas, preguntas e inquietudes de los usuarios, utilizando un enfoque de **venta consultiva** para asegurar que encuentren el programa perfecto para sus necesidades y perfil.\n\n---\n\n### **Instrucciones para la respuesta del chatbot**\n\n* **Lenguaje:** Utiliza un lenguaje claro y directo, evitando la jerga.\n* **Formato: **Emplea **negritas** para resaltar palabras clave y emojis apropiados (como 📸, ✅, 🎓) para mejorar el tono y la retención del mensaje. Usa listas o viñetas para desglosar la información de manera concisa.\n* **Información:** Nunca des información errónea, inventada o que no exista. Mantén la conversación enfocada solo en los temas de Canon.\n\n---\n\n### **flujo de informacion directa**\nCuando te llegue un mensaje donde se requiera informacion directa sobre un curso sigue estos pasos \n\n1. **paso 1: obtencion de informcion**\n    *utiliza tu herramienta de 'obtener_cursos' usanso el id del curso que te mandan por mensaje para obtener la informacion\n2. al obtener la informacion tendras varios datos \n  data_curso teservira para tener la informacion y mandar un mensaje usando emogis y saltos de linea para dar toda la informacion correspondiente a ese curso, usa esa informacion para generar tu respuesta, no modifiques el dato solo agrega cosas visuales para mostrar la inforemaicon de manera correcta\n3. si en los datos viene un dato de imagen utiliza la herramienta de 'envio_fotografia' para que se engarge de enviar la imagen del curso directo\n4. *fin de la interacción** despues de generar este mensaje y enviar la foto termina el flujo y quedate en espera de un mensaje para proceder con el flujo de informacion conversacional\n\n## es importante que no agregues en el mensaje la imagen o el link de la imagen  ya que estya se enviara mediante la herramenta de 'envio_fotografia'\n\n### **Flujo de Conversación Paso a Paso**\n\n1.  **Paso 1: Saludo y Bienvenida.**\n    * Inicia la conversación con un saludo cálido y una pregunta general para entender cómo puedes ayudar.\n    * **Ejemplo de respuesta:**\n        ¡Hola! 📸 Bienvenido a **Canon Academy**, tu mejor opción para cursos, workshops, clínicas y summers en fotografía y video.\n        ¿En qué puedo ayudarte hoy?\n\n2.  **Paso 2: Mostrar Categorías Generales.**\n    * Si el usuario pide información sobre un curso, lista las categorías generales disponibles.\n    * **Ejemplo de respuesta:**\n        ¡Excelente! ✅ Tenemos una gran variedad de opciones:\n        * Principiantes\n        * Intermedios\n        * Avanzados y Profesionales\n        * También tenemos workshops** y **clínicas especializadas.\n        * Además de cursos de verano (summers).\n        ¿Qué tipo de curso te interesa?\n\n3.  **Paso 3: Refinar la Búsqueda.**\n    * Una vez que el usuario elija una categoría (por ejemplo, \"principiantes\"), usa la herramienta **`info_cursos`** para obtener y listar los cursos específicos que pertenecen a esa categoría.\n    * Después de listar las opciones, haz una pregunta para refinar aún más la búsqueda y ofrecer la mejor recomendación.\n    * **Ejemplo de respuesta (después de que el usuario elige \"principiantes\"):**\n        ¡Claro! Los cursos para principiantes incluyen:\n        * Summer Kids (para edades de 11 a 14 años)\n        * Summer Teens (para edades de 15 a 17 años)\n        * Curso de Fotografía para Principiantes (para adultos)\n        ¿Te gustaría que te dé más detalles de un curso en particular, o prefieres que busquemos por un rango de edad o especialización?\n\n4.  **Paso 4: Obtener y Mostrar Información Detallada.**\n    * Cuando el usuario elija un curso específico o una especialización, utiliza la herramienta **`info_cursos`** para obtener toda la información relevante (horarios, costos, requisitos, etc.) y preséntala de manera clara.\n\n5.  **Paso 5: Proceso de Compra.**\n    * Una vez que el usuario esté listo para comprar, solicita sus datos personales **uno a uno** para el registro y la confirmación.\n\n6.  **Paso 6: Conclusión de la Compra.**\n    * Cuando el usuario dé el visto bueno, proporciona el enlace de pago y el número de contacto (`5525601411`).\n    * Una vez que el pago esté confirmado, usa la herramienta **`consultar o insertar datos`** y luego **`correo_cursos`** para enviar la confirmación detallada de la compra.\n\n---\n\n### **Escenarios Posibles**\n\n* Si el usuario pide información de **más de un curso, workshop, clínica o summer**, o desea comprar más de uno, proporciona la información de cada uno en mensajes separados. No mezcles la información para evitar confusiones.\n\n---\n\n### **Herramientas disponibles**\n\n* **`info_cursos`**: Obtiene información de **cursos, workshops, clínicas y summers**. Proporciona datos precisos sobre nombres, horarios, costos y requisitos.\n* **`correo_cursos`**: Envía un correo de confirmación de compra. Necesita **nombre completo, correo electrónico y número de celular**. El correo debe ser detallado.\n* **`consultar o insertar datos`**: Verifica si el usuario ya existe y, si no, lo registra. Permite completar datos faltantes.\n\n### **Dato Extra**\n\n* Si el usuario pregunta por los **diplomados; como el de fundamentos, profesionalización y el curso de pre fundamentos**, envía el enlace correspondiente junto con la información que obtengas, ya que `info_cursos` no tiene todos los detalles, no inventes información de estos productos, mandar información erronea puede ser muy perjudicial:\n    * **Fundamentos (48 hrs):** `https://www.tiendacanon.com.mx/es_mx/p/diplomado-de-fotografia-y-video-modulo-fundamentos-sabatino`\n    * **Profesionalización (120 hrs):** `https://www.tiendacanon.com.mx/es_mx/p/diplomado-de-fotografia-y-video-modulo-profesionalizacion-sabatino`\n    * **Pre fundamentos:** `https://www.tiendacanon.com.mx/es_mx/p/curso-pre-fundamentos-vespertino-entre-semana`"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        480,
+        48
+      ],
+      "id": "9ff442f9-97c1-4cca-a441-dbebc0ed371b",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        432,
+        192
+      ],
+      "id": "e9cadfa4-ea06-4171-ac2e-684876a7de3d",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "0PNoojfjNHHXEtdv",
+          "name": "Test_Gael"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "exists",
+                      "singleValue": true
+                    },
+                    "id": "81145717-c846-4994-b521-38b433a26f12"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "texto"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "19666aed-eb33-4ab7-9647-f2ef9bd318e9",
+                    "leftValue": "={{ $json.message.voice.file_id }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "exists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "voz"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -208,
+        80
+      ],
+      "id": "91bafccd-5886-484b-b6bb-c8ca4d445094",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "3afb4b21-1923-41e7-a49c-672d6cf20141",
+              "name": "text",
+              "value": "={{ $json.message.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        0,
+        0
+      ],
+      "id": "8305ed7f-3ca6-4df9-8ab8-62b424ce0ad7",
+      "name": "Texto"
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "fileId": "={{ $('Trigger - Recibir mensaje').item.json.message.voice.file_id }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        192
+      ],
+      "id": "49a7d45a-0604-4053-8ff4-7b4ca3dacb7a",
+      "name": "Descargar audio",
+      "webhookId": "f145bc9e-37c1-4762-816b-386767c194fc",
+      "credentials": {
+        "telegramApi": {
+          "id": "M4yT4PHnQvsP26j3",
+          "name": "Demo_Canon"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "operation": "transcribe",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        240,
+        192
+      ],
+      "id": "d3a887e0-9e88-42a2-9377-95af3b1cefcd",
+      "name": "Transcribe audio",
+      "credentials": {
+        "openAiApi": {
+          "id": "0PNoojfjNHHXEtdv",
+          "name": "Test_Gael"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "={{ $json.output }}",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        880,
+        48
+      ],
+      "id": "8c3e83dd-3780-420d-8928-9f7452b11ab9",
+      "name": "Mandar respuesta",
+      "webhookId": "4e629ebe-1b24-4c90-adec-df21ae5d53f7",
+      "credentials": {
+        "telegramApi": {
+          "id": "M4yT4PHnQvsP26j3",
+          "name": "Demo_Canon"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "dataType": "binary",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1,
+      "position": [
+        -96,
+        1024
+      ],
+      "id": "fa369800-b4a0-4221-9162-776ec09033d5",
+      "name": "Default Data Loader"
+    },
+    {
+      "parameters": {
+        "chunkOverlap": 200,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+      "typeVersion": 1,
+      "position": [
+        -32,
+        1248
+      ],
+      "id": "146e5b73-0e2e-4c20-ad3f-2d2151acb125",
+      "name": "Recursive Character Text Splitter"
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "1-KKhLCtw5sZGukTogbVO6eAsRAOJlol1",
+          "mode": "list",
+          "cachedResultName": "Acordeon respuestas.pdf",
+          "cachedResultUrl": "https://drive.google.com/file/d/1-KKhLCtw5sZGukTogbVO6eAsRAOJlol1/view?usp=drivesdk"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -448,
+        800
+      ],
+      "id": "687173ae-e5a8-42cc-9a4d-f0566105cb46",
+      "name": "descargamos los documentos",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "1P9PgyGmxd7ggSGM",
+          "name": "Gael Drive"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -320,
+        1024
+      ],
+      "id": "7d42eafd-5e23-482e-acad-d13099c39479",
+      "name": "Embeddings OpenAI1",
+      "credentials": {
+        "openAiApi": {
+          "id": "0PNoojfjNHHXEtdv",
+          "name": "Test_Gael"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -656,
+        800
+      ],
+      "id": "8366deb5-ffa6-4b35-a4bc-0c6c947bec1a",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "tableName": {
+          "__rl": true,
+          "value": "documents",
+          "mode": "list",
+          "cachedResultName": "documents"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1.3,
+      "position": [
+        -240,
+        800
+      ],
+      "id": "30bb77d8-7ef6-44cc-a34e-30325e8f7871",
+      "name": "Supabase Vector Store",
+      "credentials": {
+        "supabaseApi": {
+          "id": "aNnbCn1D40iXK70A",
+          "name": "Gael Supabase"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "retrieve-as-tool",
+        "toolDescription": "aqui encuentras los archivos donde extraerás la información de los cursos y tu fuente de conocimiento para preguntas y dudas relacionadas sobre ello.",
+        "tableName": {
+          "__rl": true,
+          "value": "documents",
+          "mode": "list",
+          "cachedResultName": "documents"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1.3,
+      "position": [
+        912,
+        352
+      ],
+      "id": "5a73ba4d-74f6-449b-85c5-e72714549184",
+      "name": "Supabase Vector Store1",
+      "credentials": {
+        "supabaseApi": {
+          "id": "aNnbCn1D40iXK70A",
+          "name": "Gael Supabase"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        912,
+        512
+      ],
+      "id": "f2a95272-fcec-4a23-9ec1-2de660cf3d62",
+      "name": "Embeddings OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "0PNoojfjNHHXEtdv",
+          "name": "Test_Gael"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1ZQYiuPwE9UpwEmguNpXalq0aZfymWIX_PfB4n6NfiVM",
+          "mode": "list",
+          "cachedResultName": "test_datos_curso_Canon",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ZQYiuPwE9UpwEmguNpXalq0aZfymWIX_PfB4n6NfiVM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ZQYiuPwE9UpwEmguNpXalq0aZfymWIX_PfB4n6NfiVM/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "modalidad": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('modalidad', `si los recursos son presenciales u online`, 'string') }}",
+            "diplomado": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('diplomado', `si es que adquirió algún diplomado anteriormente`, 'string') }}",
+            "información_General": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('informaci_n_General', `información adicional como requisitos, perfil a quien va, si tiene cupo limitado o no y más información que se tiene que tomar en cuenta`, 'string') }}",
+            "nombre_Cursante": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('nombre_Cursante', `nombre de la persona que se contacta contigo, o quien tomara los recursos`, 'string') }}",
+            "ubicación_Curso": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('ubicaci_n_Curso', `ubicación de los recursos donde se impartirá`, 'string') }}",
+            "correo_Cursante": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('correo_Cursante', `correo electrónico de la persona que tomara los recursos`, 'string') }}",
+            "observaciones_Cursante": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('observaciones_Cursante', `si la persona cursante no tiene equipo necesario, alguna enfermedad a tomar en cuenta, o si tiene experiencia o no, etc`, 'string') }}",
+            "precio": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('precio', `el precio o costo de los recursos`, 'string') }}",
+            "numero_Celular": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('numero_Celular', `numero celular del cursante`, 'string') }}",
+            "producto/recurso_Adquirido": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('producto_recurso_Adquirido', `el nombre del producto o recurso (workshop, summer, curso o clínica) adquirido por el usuario `, 'string') }}",
+            "id": "={{ $('Telegram Trigger').item.json.message.chat.id }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "nombre_Cursante",
+              "displayName": "nombre_Cursante",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "diplomado",
+              "displayName": "diplomado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "producto/recurso_Adquirido",
+              "displayName": "producto/recurso_Adquirido",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "modalidad",
+              "displayName": "modalidad",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "ubicación_Curso",
+              "displayName": "ubicación_Curso",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "información_General",
+              "displayName": "información_General",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "correo_Cursante",
+              "displayName": "correo_Cursante",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "observaciones_Cursante",
+              "displayName": "observaciones_Cursante",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "precio",
+              "displayName": "precio",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "numero_Celular",
+              "displayName": "numero_Celular",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "link_Acceso",
+              "displayName": "link_Acceso",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.6,
+      "position": [
+        576,
+        448
+      ],
+      "id": "21021206-35a8-41cc-90a1-04cf81ca8398",
+      "name": "consultar o insertar datos",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "HveeygHL8BoPyTUe",
+          "name": "Gael Sheets"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "description": "llama a este subflujo cuando sea necesario crear el correo que se enviara al usuario, recuerda que llenas estos datos con la herramienta  **`consultar o insertar datos`**.",
+        "workflowId": {
+          "__rl": true,
+          "value": "z08CTdjm00oTJUJj",
+          "mode": "list",
+          "cachedResultName": "subflujo_correo_cursos"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "nombre_Cursante": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('nombre_Cursante', `nombre de la persona que tomara los recursos`, 'string') }}",
+            "precio": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('precio', \"extrae esta info de **`info_cursos`**, no la inventes ni la pidas al usuario\", 'string') }}",
+            "link_Acceso": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('link_Acceso', `el link del recurso, solo si aplica`, 'string') }}",
+            "ubicación_Curso": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('ubicaci_n_Curso', \"extrae esta info de **`info_cursos`**, no la inventes ni la pidas al usuario\", 'string') }}",
+            "información_General": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('informaci_n_General', \"información general de los recursos que encuentras en **`info_cursos`**, depende de los que selecciono el usuario, no inventes información \", 'string') }}",
+            "correo_Cursante": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('correo_Cursante', `correo electronico para recibir el corroe con la información de los productos que adquirio y seguimiento`, 'string') }}",
+            "observaciones_Cursante": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('observaciones_Cursante', `si hay alguna información que sea bueno saber, opcional`, 'string') }}",
+            "numero_Celular": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('numero_Celular', `número celular del cursante`, 'string') }}",
+            "modalidad": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('modalidad', \"extrae esta info de **`info_cursos`**, no la inventes ni la pidas al usuario\", 'string') }}",
+            "producto/recurso_Adquirido": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('producto_recurso_Adquirido', `el nombre del producto o recurso adquirido por el usuario`, 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "nombre_Cursante",
+              "displayName": "nombre_Cursante",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "producto/recurso_Adquirido",
+              "displayName": "producto/recurso_Adquirido",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "modalidad",
+              "displayName": "modalidad",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "ubicación_Curso",
+              "displayName": "ubicación_Curso",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "información_General",
+              "displayName": "información_General",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "correo_Cursante",
+              "displayName": "correo_Cursante",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "observaciones_Cursante",
+              "displayName": "observaciones_Cursante",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "precio",
+              "displayName": "precio",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "numero_Celular",
+              "displayName": "numero_Celular",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "link_Acceso",
+              "displayName": "link_Acceso",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        752,
+        352
+      ],
+      "id": "12a15202-a7f6-465c-bce7-eb3315d6afd8",
+      "name": "correo_cursos1"
+    },
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -384,
+        80
+      ],
+      "id": "e509e7e8-47bd-4377-a361-414dad024685",
+      "name": "Telegram Trigger",
+      "webhookId": "637c6711-d10c-4ce2-a945-a8e397c4408d",
+      "credentials": {
+        "telegramApi": {
+          "id": "M4yT4PHnQvsP26j3",
+          "name": "Demo_Canon"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Telegram Trigger').item.json.message.chat.id }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        448,
+        352
+      ],
+      "id": "f7a8183c-db41-43f8-8a6a-3bc58500ce3d",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolCalculator",
+      "typeVersion": 1,
+      "position": [
+        656,
+        304
+      ],
+      "id": "f5a3f6f7-73d2-4033-bdfb-9b75642ac459",
+      "name": "Calculator"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1pXNOPAMHn0z2QN_dPGHEBfoB0vA4Ky-8_6wye4Me414",
+          "mode": "list",
+          "cachedResultName": "data cursos",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1pXNOPAMHn0z2QN_dPGHEBfoB0vA4Ky-8_6wye4Me414/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1pXNOPAMHn0z2QN_dPGHEBfoB0vA4Ky-8_6wye4Me414/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "id_curso",
+              "lookupValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('values0_Value', ``, 'string') }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        784,
+        624
+      ],
+      "id": "e66b3116-03b5-45f3-a038-a675016abb30",
+      "name": "obtener_cursos",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "VrznAZQXjQh9WpvY",
+          "name": "Google Sheets - Cantera"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "description": "este flujo se encarga de enviar una imagen de canon se manda el id del chat y la url de la imagen ",
+        "workflowId": {
+          "__rl": true,
+          "value": "Gi7VPlNF4wJBMcOT",
+          "mode": "list",
+          "cachedResultName": "canon send image"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "url_imagen": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('url_imagen', ``, 'string') }}",
+            "chat_id": "={{ $('Telegram Trigger').item.json.message.chat.id }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "url_imagen",
+              "displayName": "url_imagen",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "chat_id",
+              "displayName": "chat_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        1024,
+        640
+      ],
+      "id": "6a364836-4734-4269-aca8-4f92ff68a42d",
+      "name": "envio_fotografia"
+    }
+  ],
+  "connections": {
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Texto",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Descargar audio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Descargar audio": {
+      "main": [
+        [
+          {
+            "node": "Transcribe audio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Texto": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transcribe audio": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Mandar respuesta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Default Data Loader": {
+      "ai_document": [
+        [
+          {
+            "node": "Supabase Vector Store",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recursive Character Text Splitter": {
+      "ai_textSplitter": [
+        [
+          {
+            "node": "Default Data Loader",
+            "type": "ai_textSplitter",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "descargamos los documentos": {
+      "main": [
+        [
+          {
+            "node": "Supabase Vector Store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI1": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Supabase Vector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "descargamos los documentos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase Vector Store1": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Supabase Vector Store1",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "consultar o insertar datos": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "correo_cursos1": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calculator": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "obtener_cursos": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "envio_fotografia": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {},
+  "versionId": "d39d6b7e-0dd1-4357-892f-d5d2a989851f",
+  "triggerCount": 1,
+  "shared": [
+    {
+      "createdAt": "2025-09-22T19:22:12.853Z",
+      "updatedAt": "2025-09-22T19:22:12.853Z",
+      "role": "workflow:owner",
+      "workflowId": "7gTy6AG3cydAiqOP",
+      "projectId": "BZ9Ta5yhe4RhzY78",
+      "project": {
+        "createdAt": "2025-05-13T15:56:28.209Z",
+        "updatedAt": "2025-05-13T16:18:54.372Z",
+        "id": "BZ9Ta5yhe4RhzY78",
+        "name": "CANTERA ADMIN <canteradigital7@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "projectRelations": [
+          {
+            "createdAt": "2025-05-13T15:56:28.209Z",
+            "updatedAt": "2025-05-13T15:56:28.209Z",
+            "role": "project:personalOwner",
+            "userId": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
+            "projectId": "BZ9Ta5yhe4RhzY78",
+            "user": {
+              "createdAt": "2025-05-13T15:56:27.880Z",
+              "updatedAt": "2025-09-22T06:00:32.000Z",
+              "id": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
+              "email": "canteradigital7@gmail.com",
+              "firstName": "CANTERA",
+              "lastName": "ADMIN",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-05-13T16:19:25.161Z",
+                "personalization_survey_n8n_version": "1.92.2",
+                "companySize": "<20",
+                "companyType": "saas",
+                "role": "customer-support",
+                "reportedSource": "event"
+              },
+              "settings": {
+                "userActivated": true,
+                "firstSuccessfulWorkflowId": "PTbESRzX3rguwQN8",
+                "userActivatedAt": 1747154580970,
+                "easyAIWorkflowOnboarded": true,
+                "npsSurvey": {
+                  "responded": true,
+                  "lastShownAt": 1748367494893
+                },
+                "dismissedCallouts": {
+                  "aiAgentStarterCallout": true,
+                  "preBuiltAgentsCalloutHttpRequest": true
+                }
+              },
+              "role": "global:owner",
+              "disabled": false,
+              "mfaEnabled": false,
+              "lastActiveAt": "2025-09-22",
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": [
+    {
+      "createdAt": "2025-05-13T17:01:17.387Z",
+      "updatedAt": "2025-05-13T17:01:17.387Z",
+      "id": "PwWwR5Yqz46trn75",
+      "name": "templates"
+    },
+    {
+      "createdAt": "2025-09-04T23:09:28.705Z",
+      "updatedAt": "2025-09-04T23:09:28.705Z",
+      "id": "lpJs7PRH5m0PBlDA",
+      "name": "Canon"
+    }
+  ]
+}
