@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-06-24T22:28:19.611Z",
-  "updatedAt": "2025-08-07T17:58:32.000Z",
+  "updatedAt": "2025-09-23T18:54:58.000Z",
   "id": "PetXIW4fDRVoHgK5",
   "name": "chatbot sales",
   "active": true,
@@ -26,14 +26,14 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 1,
       "position": [
-        -1860,
-        1160
+        -1856,
+        1168
       ],
       "id": "1ec9ea27-083f-478a-9832-0d65cd17fe52"
     },
     {
       "parameters": {
-        "url": "={{$node[\"Set Variables\"].json[\"currentEnvironment\"]}}/mbauth/auth_guardian?phone={{ $('WhatsApp Trigger').item.json.messages[0].from }}",
+        "url": "={{$node[\"Set Variables\"].json[\"currentEnvironment\"]}}/mbauth/auth_guardian?phone={{ $('sales cerebro').item.json.messages[0].from }}",
         "options": {}
       },
       "name": "Auth Guardian",
@@ -41,7 +41,7 @@
       "typeVersion": 1,
       "position": [
         -6240,
-        -2380
+        -2384
       ],
       "id": "9d3bc755-2ee3-4071-b7bb-d9b014d12eac"
     },
@@ -61,8 +61,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        -6020,
-        -2380
+        -6016,
+        -2384
       ],
       "id": "b21651bb-836f-4a74-b3aa-af4318763127"
     },
@@ -128,7 +128,7 @@
       "typeVersion": 1,
       "position": [
         -6240,
-        -2120
+        -2128
       ],
       "id": "03048936-dfd8-4ed9-8cbd-91d7db7e218e"
     },
@@ -136,13 +136,13 @@
       "parameters": {
         "collection": "user_state_sales",
         "options": {},
-        "query": "={\n  \"phoneNumber\":\"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\"\n}"
+        "query": "={\n  \"phoneNumber\":\"{{ $('sales cerebro').item.json.messages[0].from }}\"\n}"
       },
       "type": "n8n-nodes-base.mongoDb",
       "typeVersion": 1.1,
       "position": [
-        -1420,
-        1160
+        -1424,
+        1104
       ],
       "id": "6e1e51a1-9cf2-44ba-90c9-75840a766f59",
       "name": "MongoDB",
@@ -184,7 +184,7 @@
       "typeVersion": 2.2,
       "position": [
         -1200,
-        1160
+        1168
       ],
       "id": "98d74155-a71e-4404-b051-9e8f9f9385f9",
       "name": "If"
@@ -200,7 +200,7 @@
       "typeVersion": 1.1,
       "position": [
         -320,
-        1260
+        1264
       ],
       "id": "ae77e6a6-ecf2-4fe5-bb61-b5a0906b4aff",
       "name": "MongoDB1",
@@ -218,7 +218,7 @@
             {
               "id": "3631f4b8-c7de-42ac-a953-b78f8b10b879",
               "name": "phoneNumber",
-              "value": "={{ $('WhatsApp Trigger').item.json.messages[0].from }}",
+              "value": "={{ $('sales cerebro').item.json.messages[0].from }}",
               "type": "string"
             },
             {
@@ -252,46 +252,23 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -540,
-        1260
+        -544,
+        1264
       ],
       "id": "8c6b9021-6a79-42c7-b056-76633cf40d7c",
       "name": "Edit Fields"
     },
     {
       "parameters": {
-        "updates": [
-          "messages"
-        ],
-        "options": {}
-      },
-      "type": "n8n-nodes-base.whatsAppTrigger",
-      "typeVersion": 1,
-      "position": [
-        -2580,
-        760
-      ],
-      "id": "11077335-da47-487d-aebb-39c1d3e75a1c",
-      "name": "WhatsApp Trigger",
-      "webhookId": "79902303-7c8b-4b2f-b91e-30dfa471b049",
-      "credentials": {
-        "whatsAppTriggerApi": {
-          "id": "4llLGy8ampInXpaG",
-          "name": "WhatsApp OAuth account cerebro sales"
-        }
-      }
-    },
-    {
-      "parameters": {
         "collection": "user_state_sales",
         "options": {},
-        "query": "={\n  \"phoneNumber\":\"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\"\n}"
+        "query": "={\n  \"phoneNumber\":\"{{ $('sales cerebro').item.json.messages[0].from }}\"\n}"
       },
       "type": "n8n-nodes-base.mongoDb",
       "typeVersion": 1.1,
       "position": [
-        -100,
-        1260
+        -96,
+        1264
       ],
       "id": "0fbb77d5-28a4-4e8c-9f5b-4adb7815ef65",
       "name": "MongoDB2",
@@ -351,8 +328,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        120,
-        1060
+        128,
+        1072
       ],
       "id": "d0d2813b-75ac-4160-9527-f42875feafc2",
       "name": "Edit Fields1"
@@ -392,8 +369,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        120,
-        1260
+        128,
+        1264
       ],
       "id": "7700298c-8e36-48f0-80ee-dd78bbec5ce5",
       "name": "Edit Fields2"
@@ -560,7 +537,7 @@
       "typeVersion": 3.2,
       "position": [
         -2080,
-        700
+        704
       ],
       "id": "03b380d2-f30f-4499-aa9e-aeb762ad48ef",
       "name": "Switch1",
@@ -585,14 +562,14 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"Lo siento, en este momento no tengo la capacidad de interpretar notas de voz. Sin embargo, estamos trabajando para incluir esta función en futuras actualizaciones.  Gracias por tu comprensión.\"\n  }\n}\n",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('sales cerebro').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"Lo siento, en este momento no tengo la capacidad de interpretar notas de voz. Sin embargo, estamos trabajando para incluir esta función en futuras actualizaciones.  Gracias por tu comprensión.\"\n  }\n}\n",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -1860,
-        360
+        -1856,
+        368
       ],
       "id": "a36dae75-551f-4c17-a6bb-93e548ee9625",
       "name": "Error mensaje de voz"
@@ -616,13 +593,13 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"Lo siento, en este momento no tengo la capacidad de interpretar archivos. Gracias por tu comprensión.\"\n  }\n}\n",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('sales cerebro').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"Lo siento, en este momento no tengo la capacidad de interpretar archivos. Gracias por tu comprensión.\"\n  }\n}\n",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -1860,
+        -1856,
         560
       ],
       "id": "7d158440-f31f-4b59-9d80-647e262b91a7",
@@ -647,14 +624,14 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"Lo siento, en este momento no tengo la capacidad de interpretar imagenes. Sin embargo, estamos trabajando para incluir esta función en futuras actualizaciones. Gracias por tu comprensión.\"\n  }\n}\n",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('sales cerebro').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"Lo siento, en este momento no tengo la capacidad de interpretar imagenes. Sin embargo, estamos trabajando para incluir esta función en futuras actualizaciones. Gracias por tu comprensión.\"\n  }\n}\n",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -1860,
-        760
+        -1856,
+        768
       ],
       "id": "86316b3c-416c-4e62-a3a2-f74266a1b459",
       "name": "error imagen"
@@ -678,13 +655,13 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"Lo siento, en este momento no tengo la capacidad de interpretar notas de voz. Sin embargo, estamos trabajando para incluir esta función en futuras actualizaciones.  Gracias por tu comprensión.\"\n  }\n}\n",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('sales cerebro').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"Lo siento, en este momento no tengo la capacidad de interpretar notas de voz. Sin embargo, estamos trabajando para incluir esta función en futuras actualizaciones.  Gracias por tu comprensión.\"\n  }\n}\n",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -1860,
+        -1856,
         960
       ],
       "id": "e2e03cba-2df8-4df8-b216-34e0666c5fb3",
@@ -697,8 +674,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -760,
-        1260
+        -768,
+        1264
       ],
       "id": "74a3b06d-dfc7-4c8f-a3c8-8027c500cc31",
       "name": "Code",
@@ -733,7 +710,7 @@
       "typeVersion": 2.2,
       "position": [
         560,
-        1160
+        1168
       ],
       "id": "7f8dff70-c405-4787-bf48-3d95a12e225f",
       "name": "If9"
@@ -791,14 +768,14 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"status\":\"read\",\n  \"message_id\":\"{{ $('WhatsApp Trigger').item.json.messages[0].id }}\",\n  \"typing_indicator\": {\n    \"type\":\"text\"\n  }\n}\n",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"status\":\"read\",\n  \"message_id\":\"{{ $('sales cerebro').item.json.messages[0].id }}\",\n  \"typing_indicator\": {\n    \"type\":\"text\"\n  }\n}\n",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -100,
-        1060
+        -96,
+        1072
       ],
       "id": "38cea0e7-13ee-4c20-b3aa-710cbd6478f1",
       "name": "typing indicator1"
@@ -818,14 +795,14 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"status\":\"read\",\n  \"message_id\":\"{{ $('WhatsApp Trigger').item.json.messages[0].id }}\",\n  \"typing_indicator\": {\n    \"type\":\"text\"\n  }\n}\n",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"status\":\"read\",\n  \"message_id\":\"{{ $('sales cerebro').item.json.messages[0].id }}\",\n  \"typing_indicator\": {\n    \"type\":\"text\"\n  }\n}\n",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -980,
-        1260
+        -976,
+        1264
       ],
       "id": "31d483d2-54bc-4e54-bb3a-443243c1e8b4",
       "name": "typing indicator2"
@@ -854,8 +831,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 1,
       "position": [
-        -2300,
-        760
+        -2304,
+        768
       ],
       "id": "8cbd6a37-2a04-42b2-be31-90976fa13006"
     },
@@ -1144,8 +1121,8 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.2,
       "position": [
-        780,
-        1000
+        784,
+        1008
       ],
       "id": "6b61f4d1-58b2-48fe-b95c-ec8eedb5d012",
       "name": "Switch"
@@ -1223,8 +1200,8 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        4540,
-        -2280
+        4544,
+        -2288
       ],
       "id": "db2c5269-a65d-4cbd-ba77-02377e42e985",
       "name": "Execute Workflow"
@@ -1257,7 +1234,7 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        4120,
+        4128,
         -2160
       ],
       "id": "70814299-a8f6-4d6c-82b3-e2eeecc92625",
@@ -1293,7 +1270,7 @@
       "typeVersion": 3.4,
       "position": [
         4320,
-        -2280
+        -2288
       ],
       "id": "f077b3b3-bd2e-4f68-9176-5800a3cdc48a",
       "name": "Edit Fields5"
@@ -1305,8 +1282,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        340,
-        1160
+        352,
+        1168
       ],
       "id": "edec0766-ea03-4223-84c9-0e8491026044",
       "name": "Code2"
@@ -1370,8 +1347,8 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.2,
       "position": [
-        5540,
-        -2600
+        5552,
+        -2608
       ],
       "id": "bfea1332-db16-4ee4-a51f-7c1b159fe33f",
       "name": "Switch2"
@@ -1383,8 +1360,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        4340,
-        -1720
+        4352,
+        -1728
       ],
       "id": "9f7cee82-f0b6-4236-bd99-6c13c07d0951",
       "name": "Code3"
@@ -1396,7 +1373,7 @@
             {
               "id": "967bc904-1e28-4f4e-af20-bde631bb863a",
               "name": "selection",
-              "value": "={{ $('WhatsApp Trigger').item.json.messages[0].text.body }}",
+              "value": "={{ $('sales cerebro').item.json.messages[0].text.body }}",
               "type": "string"
             }
           ]
@@ -1407,7 +1384,7 @@
       "typeVersion": 3.4,
       "position": [
         4080,
-        -1720
+        -1728
       ],
       "id": "44caa38a-faf3-4977-b7ee-b1736bc294b9",
       "name": "obtenemos la respuesta del menu inicial"
@@ -1441,7 +1418,7 @@
       "typeVersion": 2.2,
       "position": [
         4560,
-        -1720
+        -1728
       ],
       "id": "afe4f66b-e131-494e-9415-67bfe5886956",
       "name": "verificamos que la seleccion sea valida"
@@ -1465,14 +1442,14 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"{{ $json.message }}\"\n  }\n}\n",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('sales cerebro').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"{{ $json.message }}\"\n  }\n}\n",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
         4800,
-        -1700
+        -1696
       ],
       "id": "3ff2f6dd-cf7b-4737-80dc-bf2f831a01ea",
       "name": "Error seleccion menu invalida"
@@ -1482,8 +1459,8 @@
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
       "position": [
-        5020,
-        -1700
+        5024,
+        -1696
       ],
       "id": "623335ff-8469-4170-a97f-e249ae8b38f7",
       "name": "No Operation, do nothing"
@@ -1507,14 +1484,14 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"Nos ubicamos en 📍Av. Cafetales 233, Coapa, Tlalpan, CDMX. A un lado del centro de entrenamiento Nelson Vargas. \\n\\n¿Para qué sección estás interesado? \\n\\nEscribe el número de la opción que deseas:\\n\\n1️⃣ Preescolar\\n2️⃣ Primaria \\n3️⃣ Secundaria\\n4️⃣ Bachillerato \\n5️⃣ La ubicación no me queda\"\n  }\n}\n",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('sales cerebro').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"Nos ubicamos en 📍Av. Cafetales 233, Coapa, Tlalpan, CDMX. A un lado del centro de entrenamiento Nelson Vargas. \\n\\n¿Para qué sección estás interesado? \\n\\nEscribe el número de la opción que deseas:\\n\\n1️⃣ Preescolar\\n2️⃣ Primaria \\n3️⃣ Secundaria\\n4️⃣ Bachillerato \\n5️⃣ La ubicación no me queda\"\n  }\n}\n",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        8680,
-        -2060
+        8688,
+        -2064
       ],
       "id": "534ac9e6-3f4e-43e6-ad26-c280eb6ac82e",
       "name": "envio de mensaje ubicación"
@@ -1592,8 +1569,8 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        9080,
-        -2060
+        9088,
+        -2064
       ],
       "id": "40198380-24dc-4fc3-8c6b-a7f86f6360ff",
       "name": "Execute Workflow1"
@@ -1627,8 +1604,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        8900,
-        -2060
+        8912,
+        -2064
       ],
       "id": "53b0a1f3-6429-4275-bea6-806adf88504b",
       "name": "body datos ubicacion"
@@ -1706,8 +1683,8 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        9140,
-        -1860
+        9152,
+        -1856
       ],
       "id": "317d7de1-3be6-4ea1-8936-fd94951c0415",
       "name": "Execute Workflow2"
@@ -1741,8 +1718,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        8920,
-        -1860
+        8928,
+        -1856
       ],
       "id": "4dd81662-7e81-46eb-bb22-1b65041dac53",
       "name": "body datos costos"
@@ -1820,8 +1797,8 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        9140,
-        -1660
+        9152,
+        -1664
       ],
       "id": "13217905-8dce-4ec6-965d-c4010cbc6ac0",
       "name": "Execute Workflow3"
@@ -1855,8 +1832,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        8920,
-        -1660
+        8928,
+        -1664
       ],
       "id": "eb87b902-9a49-485c-bd9f-780d663200ad",
       "name": "body datos costos1"
@@ -1934,8 +1911,8 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        9140,
-        -1480
+        9152,
+        -1488
       ],
       "id": "5c393447-19be-4ba5-a6d4-558cf57ce1f9",
       "name": "Execute Workflow4",
@@ -1970,8 +1947,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        8920,
-        -1480
+        8928,
+        -1488
       ],
       "id": "c59506fd-b9ae-4cbb-956f-66fea1e948f2",
       "name": "body datos costos2"
@@ -2049,8 +2026,8 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        9140,
-        -1320
+        9152,
+        -1328
       ],
       "id": "9458b8f3-ebee-4d81-9d4a-05140d58b98b",
       "name": "Execute Workflow5"
@@ -2084,8 +2061,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        8920,
-        -1320
+        8928,
+        -1328
       ],
       "id": "df57bd22-a620-4084-9c39-e4689dc8fe11",
       "name": "body datos costos3"
@@ -2131,7 +2108,7 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        5660,
+        5664,
         480
       ],
       "id": "c5f9bd5c-a751-4e44-8c26-c296803b1a6d",
@@ -2156,14 +2133,14 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"{{ $json.message }}\"\n  }\n}\n",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('sales cerebro').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"{{ $json.message }}\"\n  }\n}\n",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        5900,
-        500
+        5904,
+        512
       ],
       "id": "27d2d750-962a-4428-8bd3-bb6122635bcf",
       "name": "Error seleccion menu invalida1"
@@ -2173,8 +2150,8 @@
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
       "position": [
-        6120,
-        500
+        6128,
+        512
       ],
       "id": "be451cd9-1c33-412c-8e88-ab687df04b11",
       "name": "No Operation, do nothing1"
@@ -2186,7 +2163,7 @@
             {
               "id": "967bc904-1e28-4f4e-af20-bde631bb863a",
               "name": "selection",
-              "value": "={{ $('WhatsApp Trigger').item.json.messages[0].text.body }}",
+              "value": "={{ $('sales cerebro').item.json.messages[0].text.body }}",
               "type": "string"
             }
           ]
@@ -2196,7 +2173,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        5180,
+        5184,
         480
       ],
       "id": "3ed5b812-09b7-49cd-9392-c8993c8e9f5f",
@@ -2333,8 +2310,8 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.2,
       "position": [
-        8680,
-        -500
+        8688,
+        -496
       ],
       "id": "ea01d23c-df13-4225-95d5-7d719dc4d6cd",
       "name": "Switch3"
@@ -2412,8 +2389,8 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        10340,
-        -860
+        10352,
+        -864
       ],
       "id": "1d386c50-7770-4e0b-a307-149d26caafc0",
       "name": "Execute Workflow6"
@@ -2437,14 +2414,14 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"type\": \"image\",\n  \"image\": {\n    \"link\": \"{{ $json.image_url }}\",\n    \"caption\": \"Queremos conocerte y presentarte nuestro proyecto!\\n*Costos sujetos a ajuste sin previo aviso\\n\\nConoce nuestro proyecto\\nhttps://www.colegioreims.edu.mx/proyecto-educativo\"\n  }\n}",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('sales cerebro').item.json.messages[0].from }}\",\n  \"type\": \"image\",\n  \"image\": {\n    \"link\": \"{{ $json.image_url }}\",\n    \"caption\": \"Queremos conocerte y presentarte nuestro proyecto!\\n*Costos sujetos a ajuste sin previo aviso\\n\\nConoce nuestro proyecto\\nhttps://www.colegioreims.edu.mx/proyecto-educativo\"\n  }\n}",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        9740,
-        -780
+        9744,
+        -784
       ],
       "id": "b88d9328-e2f9-4585-a92c-259e22ff9652",
       "name": "info costo maternal"
@@ -2468,14 +2445,14 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"type\": \"image\",\n  \"image\": {\n    \"link\": \"{{ $json.image_url }}\",\n    \"caption\": \"Queremos conocerte y presentarte nuestro proyecto!\\n*Costos sujetos a ajuste sin previo aviso\\n\\nConoce nuestro proyecto\\nhttps://www.colegioreims.edu.mx/proyecto-educativo\"\n  }\n}",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('sales cerebro').item.json.messages[0].from }}\",\n  \"type\": \"image\",\n  \"image\": {\n    \"link\": \"{{ $json.image_url }}\",\n    \"caption\": \"Queremos conocerte y presentarte nuestro proyecto!\\n*Costos sujetos a ajuste sin previo aviso\\n\\nConoce nuestro proyecto\\nhttps://www.colegioreims.edu.mx/proyecto-educativo\"\n  }\n}",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        9740,
-        -620
+        9744,
+        -624
       ],
       "id": "c70e5a13-42a0-4dd8-bbe4-f5dc97a6a007",
       "name": "info costo pre escolar"
@@ -2499,14 +2476,14 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"type\": \"image\",\n  \"image\": {\n    \"link\": \"{{ $json.image_url }}\",\n    \"caption\": \"Queremos conocerte y presentarte nuestro proyecto!\\n*Costos sujetos a ajuste sin previo aviso\\n\\nConoce nuestro proyecto\\nhttps://www.colegioreims.edu.mx/proyecto-educativo\"\n  }\n}",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('sales cerebro').item.json.messages[0].from }}\",\n  \"type\": \"image\",\n  \"image\": {\n    \"link\": \"{{ $json.image_url }}\",\n    \"caption\": \"Queremos conocerte y presentarte nuestro proyecto!\\n*Costos sujetos a ajuste sin previo aviso\\n\\nConoce nuestro proyecto\\nhttps://www.colegioreims.edu.mx/proyecto-educativo\"\n  }\n}",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        9740,
-        -460
+        9744,
+        -464
       ],
       "id": "62e53aef-f6b2-4891-b39b-f7c467a065c5",
       "name": "info costo primaria"
@@ -2530,14 +2507,14 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"type\": \"image\",\n  \"image\": {\n    \"link\": \"{{ $json.image_url }}\",\n    \"caption\": \"Queremos conocerte y presentarte nuestro proyecto!\\n*Costos sujetos a ajuste sin previo aviso\\n\\nConoce nuestro proyecto\\nhttps://www.colegioreims.edu.mx/proyecto-educativo\"\n  }\n}",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('sales cerebro').item.json.messages[0].from }}\",\n  \"type\": \"image\",\n  \"image\": {\n    \"link\": \"{{ $json.image_url }}\",\n    \"caption\": \"Queremos conocerte y presentarte nuestro proyecto!\\n*Costos sujetos a ajuste sin previo aviso\\n\\nConoce nuestro proyecto\\nhttps://www.colegioreims.edu.mx/proyecto-educativo\"\n  }\n}",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        9740,
-        -300
+        9744,
+        -304
       ],
       "id": "177be801-3376-4fe1-8a3d-2fce3528c251",
       "name": "info costo secundaria"
@@ -2561,14 +2538,14 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"type\": \"image\",\n  \"image\": {\n    \"link\": \"{{ $json.image_url }}\",\n    \"caption\": \"Queremos conocerte y presentarte nuestro proyecto!\\n*Costos sujetos a ajuste sin previo aviso\\n\\nConoce nuestro proyecto\\nhttps://www.colegioreims.edu.mx/proyecto-educativo\"\n  }\n}",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('sales cerebro').item.json.messages[0].from }}\",\n  \"type\": \"image\",\n  \"image\": {\n    \"link\": \"{{ $json.image_url }}\",\n    \"caption\": \"Queremos conocerte y presentarte nuestro proyecto!\\n*Costos sujetos a ajuste sin previo aviso\\n\\nConoce nuestro proyecto\\nhttps://www.colegioreims.edu.mx/proyecto-educativo\"\n  }\n}",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        9740,
-        -140
+        9744,
+        -144
       ],
       "id": "b23116b8-10a3-469a-97aa-8bd63b4fd461",
       "name": "info costo bachillerato"
@@ -2592,14 +2569,14 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"Selecciona la opción deseada escribiendo el número:\\n1️⃣ Sí, quiero hablar con alguien!\\n2️⃣ Muchas gracias, por el momento es todo\"\n  }\n}\n",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('sales cerebro').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"Selecciona la opción deseada escribiendo el número:\\n1️⃣ Sí, quiero hablar con alguien!\\n2️⃣ Muchas gracias, por el momento es todo\"\n  }\n}\n",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        10360,
-        -420
+        10368,
+        -416
       ],
       "id": "a9234e23-113c-407d-9ab9-a8e0a1020910",
       "name": "envio de mensaje contacto costos"
@@ -2633,8 +2610,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        10360,
-        -660
+        10368,
+        -656
       ],
       "id": "d3ea2255-7841-4ada-8323-27783d4e98d6",
       "name": "body datos contacto costos"
@@ -2738,7 +2715,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        1020,
+        1024,
         640
       ],
       "id": "fa3bb810-bec0-4007-86f7-844a97030ed2",
@@ -2763,14 +2740,14 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"{{ $json.message }}\"\n  }\n}",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('sales cerebro').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"{{ $json.message }}\"\n  }\n}",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        4380,
-        520
+        4384,
+        528
       ],
       "id": "4f171c7e-846e-4964-853c-64394fe782c1",
       "name": "Error mensaje contacto costos"
@@ -2783,8 +2760,8 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        3620,
-        -2840
+        3632,
+        -2848
       ],
       "typeVersion": 1,
       "id": "62df9d47-0fa6-43ce-85b0-4fdeeb4ee4bb",
@@ -2799,8 +2776,8 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        7080,
-        -920
+        7088,
+        -928
       ],
       "typeVersion": 1,
       "id": "ac2d81ae-ab3f-4180-963d-c06e170d6d1a",
@@ -2814,8 +2791,8 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        -2180,
-        280
+        -2176,
+        288
       ],
       "typeVersion": 1,
       "id": "9374c8ca-a6f2-4032-ba04-2d2bbfbcc6a7",
@@ -2953,7 +2930,7 @@
       "typeVersion": 3.2,
       "position": [
         8080,
-        -1540
+        -1536
       ],
       "id": "5921e1e5-b69d-4f22-9e43-cfcbc9ae173b",
       "name": "Switch4"
@@ -2977,13 +2954,13 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"Hola! Bienvenid@ al Colegio Reims! 😃\\n\\n¿En qué te podemos ayudar? Escribe el número de la opción que deseas: \\n\\n1️⃣ Informes\\n2️⃣ Citas\"\n  }\n}\n",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('sales cerebro').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"Hola! Bienvenid@ al Colegio Reims! 😃\\n\\n¿En qué te podemos ayudar? Escribe el número de la opción que deseas: \\n\\n1️⃣ Informes\\n2️⃣ Citas\"\n  }\n}\n",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        3900,
+        3904,
         -2160
       ],
       "id": "82f639a3-d94d-4dfd-979c-7b3170f9b635",
@@ -3008,14 +2985,14 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"Gracias por solicitar información, ¿Sobre que necesitas saber?\\n\\n1️⃣ Ubicación\\n2️⃣ Costos \\n3️⃣ Horario Extendido\\n4️⃣ Programa Bilingüe\\n5️⃣ Contáctame 📲\\n\\n6️⃣ Gracias, ya estoy hablando con un asesor ✅\"\n  }\n}\n",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('sales cerebro').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"Gracias por solicitar información, ¿Sobre que necesitas saber?\\n\\n1️⃣ Ubicación\\n2️⃣ Costos \\n3️⃣ Horario Extendido\\n4️⃣ Programa Bilingüe\\n5️⃣ Contáctame 📲\\n\\n6️⃣ Gracias, ya estoy hablando con un asesor ✅\"\n  }\n}\n",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        5960,
-        -2920
+        5968,
+        -2928
       ],
       "id": "e8c40544-7e42-4734-8f46-99657fc61a97",
       "name": "Mensaje menu información"
@@ -3093,8 +3070,8 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        6360,
-        -2920
+        6368,
+        -2928
       ],
       "id": "1e54dff7-f359-472d-8742-d8dc0d07b6bb",
       "name": "Execute Workflow8"
@@ -3128,8 +3105,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        6180,
-        -2920
+        6192,
+        -2928
       ],
       "id": "12a9b213-23ee-4a16-9f29-90aff1bcafcd",
       "name": "body datos menu información"
@@ -3141,8 +3118,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        4280,
-        -1080
+        4288,
+        -1088
       ],
       "id": "dee5d6ec-1b49-4048-93c4-af91585d7652",
       "name": "Code5"
@@ -3154,7 +3131,7 @@
             {
               "id": "967bc904-1e28-4f4e-af20-bde631bb863a",
               "name": "selection",
-              "value": "={{ $('WhatsApp Trigger').item.json.messages[0].text.body }}",
+              "value": "={{ $('sales cerebro').item.json.messages[0].text.body }}",
               "type": "string"
             }
           ]
@@ -3164,8 +3141,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        4020,
-        -1080
+        4032,
+        -1088
       ],
       "id": "e92e68fd-fa61-4266-bd27-ce1f140dd140",
       "name": "obtenemos la respuesta del menu inicial1"
@@ -3198,8 +3175,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        4500,
-        -1080
+        4512,
+        -1088
       ],
       "id": "7033fa3e-af6c-4b08-8c30-789292335ce7",
       "name": "verificamos que la seleccion sea valida2"
@@ -3223,14 +3200,14 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"{{ $json.message }}\"\n  }\n}\n",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('sales cerebro').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"{{ $json.message }}\"\n  }\n}\n",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        4820,
-        -1080
+        4832,
+        -1088
       ],
       "id": "8ecc907d-1dac-4b77-9a78-2ffb6bd9cd1e",
       "name": "Error seleccion menu invalida2"
@@ -3241,7 +3218,7 @@
       "typeVersion": 1,
       "position": [
         5040,
-        -1080
+        -1088
       ],
       "id": "43d78ec7-0fcb-4307-b5a3-cdc67924b605",
       "name": "No Operation, do nothing2"
@@ -3265,14 +3242,14 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"¿Para qué grado estás interesad@? Escribe el número de la opción que deseas:\\n1️⃣ Maternal\\n2️⃣ Preescolar\\n3️⃣ Primaria\\n4️⃣ Secundaria\\n5️⃣ Bachillerato\\n\\n-----------------------------------------------------\\n\\n6️⃣  Regresar al menú anterior:\"\n  }\n}\n",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('sales cerebro').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"¿Para qué grado estás interesad@? Escribe el número de la opción que deseas:\\n1️⃣ Maternal\\n2️⃣ Preescolar\\n3️⃣ Primaria\\n4️⃣ Secundaria\\n5️⃣ Bachillerato\\n\\n-----------------------------------------------------\\n\\n6️⃣  Regresar al menú anterior:\"\n  }\n}\n",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        8680,
-        -1860
+        8688,
+        -1856
       ],
       "id": "21276aeb-dd6f-431b-a022-b2b305f1b7f2",
       "name": "envio de mensaje costo"
@@ -3296,14 +3273,14 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"Nuestro colegio cuenta con horario extendido hasta las 18:00 hrs.\\nDurante este horario los alumnos pueden comer, tomar una actividad deportiva, taller de tareas, certificaciones de inglés y más 😉 🔝\\nPara conocer las actividades que se ofrecen te invitamos a consultar el siguiente documento:\\nhttps://www.colegioreims.edu.mx/actividades-extraescolares\\nPermite que uno de nuestros especialistas te contacte para darte más información sobre nuestro proyecto educativo.\\nSelecciona la opción deseada escribiendo el número:\\n1️⃣ Sí, quiero hablar con alguien!\\n2️⃣ Muchas gracias, por el momento es todo\"\n  }\n}\n",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('sales cerebro').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"Nuestro colegio cuenta con horario extendido hasta las 18:00 hrs.\\nDurante este horario los alumnos pueden comer, tomar una actividad deportiva, taller de tareas, certificaciones de inglés y más 😉 🔝\\nPara conocer las actividades que se ofrecen te invitamos a consultar el siguiente documento:\\nhttps://www.colegioreims.edu.mx/actividades-extraescolares\\nPermite que uno de nuestros especialistas te contacte para darte más información sobre nuestro proyecto educativo.\\nSelecciona la opción deseada escribiendo el número:\\n1️⃣ Sí, quiero hablar con alguien!\\n2️⃣ Muchas gracias, por el momento es todo\"\n  }\n}\n",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        8680,
-        -1660
+        8688,
+        -1664
       ],
       "id": "fdaa6942-a1b6-47cf-9935-b5ea30e65146",
       "name": "envio de mensaje horario"
@@ -3327,14 +3304,14 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"Nuestro colegio ofrece inglés para todos los niveles.\\nA partir de Preprimaria (4 años) hasta 6to de primaria los alumn@s tienen mitad del día inglés y mitad del día español.\\nSecundaria y Bachillerato toman las clases por niveles y un aproximado de 5 hrs por semana.\\nTenemos certificaciones con Cambridge English:\\n🔴 Key (KET) ó A2 Key 🔵 Preliminary (PET) ó B1 Preliminary 🔴 First (FCE) ó B2 First 🔵 Advanced (CAE)\\n\\nPuedes seleccionar otra opción del menú\"\n  }\n}\n",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('sales cerebro').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"Nuestro colegio ofrece inglés para todos los niveles.\\nA partir de Preprimaria (4 años) hasta 6to de primaria los alumn@s tienen mitad del día inglés y mitad del día español.\\nSecundaria y Bachillerato toman las clases por niveles y un aproximado de 5 hrs por semana.\\nTenemos certificaciones con Cambridge English:\\n🔴 Key (KET) ó A2 Key 🔵 Preliminary (PET) ó B1 Preliminary 🔴 First (FCE) ó B2 First 🔵 Advanced (CAE)\\n\\nPuedes seleccionar otra opción del menú\"\n  }\n}\n",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        8680,
-        -1480
+        8688,
+        -1488
       ],
       "id": "f75385ae-59ea-4183-8b60-f038121efcdc",
       "name": "envio de mensaje bilingüe"
@@ -3358,14 +3335,14 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"Te gustaría una llamada telefónica para platicarte de nuestro Proyecto Educativo o Agendar una visita? Escribe el número de la opción que deseas: \\n\\n1️⃣ Llamada telefónica \\n2️⃣ Agendar visita \\n------------------------------------------------------\\n3️⃣ Regresar al menú anterior\"\n  }\n}\n",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('sales cerebro').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"Te gustaría una llamada telefónica para platicarte de nuestro Proyecto Educativo o Agendar una visita? Escribe el número de la opción que deseas: \\n\\n1️⃣ Llamada telefónica \\n2️⃣ Agendar visita \\n------------------------------------------------------\\n3️⃣ Regresar al menú anterior\"\n  }\n}\n",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        8680,
-        -1320
+        8688,
+        -1328
       ],
       "id": "5d83ee6b-c89f-4982-8e76-b3e4ba480349",
       "name": "envio de mensaje contactame"
@@ -3397,8 +3374,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        4460,
-        -1320
+        4464,
+        -1328
       ],
       "id": "97db9c00-8dc4-4d31-b2e3-50a458d6f73e",
       "name": "revisamos que ya esta hablando con alguien"
@@ -3476,8 +3453,8 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        7640,
-        -2140
+        7648,
+        -2144
       ],
       "id": "07862417-f5a2-4629-8e79-8d2e6dcf74ba",
       "name": "Execute Workflow9"
@@ -3511,8 +3488,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        7420,
-        -2140
+        7424,
+        -2144
       ],
       "id": "2420f821-7e2b-412e-a4eb-9de37899b467",
       "name": "body datos costos4"
@@ -3529,8 +3506,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        5960,
-        -2460
+        5968,
+        -2464
       ],
       "id": "f54bd586-11d6-4572-adea-5b23219499ef",
       "name": "HTTP Request",
@@ -3555,14 +3532,14 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"{{ $json.whatsapp_message.replace(/\\r?\\n/g, \"\\\\n\").replace(/^\\\\n+|\\\\n+$/g, \"\") }}\"\n  }\n}\n",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('sales cerebro').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"{{ $json.whatsapp_message.replace(/\\r?\\n/g, \"\\\\n\").replace(/^\\\\n+|\\\\n+$/g, \"\") }}\"\n  }\n}\n",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        6420,
-        -2460
+        6432,
+        -2464
       ],
       "id": "7e8100f5-ecb0-4e6d-959a-e316ac9eabab",
       "name": "Mensaje menu información1"
@@ -3641,7 +3618,7 @@
       "typeVersion": 1.2,
       "position": [
         7040,
-        -2460
+        -2464
       ],
       "id": "0cbd2232-12ce-4008-a72c-83787f7125b2",
       "name": "Execute Workflow10",
@@ -3676,8 +3653,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        6820,
-        -2460
+        6832,
+        -2464
       ],
       "id": "a5d2ada4-6a50-4d78-99e3-8b2b25a3e82e",
       "name": "body datos menu información1"
@@ -3694,7 +3671,7 @@
           "conditions": [
             {
               "id": "e734ff39-596a-4ecf-a624-74aa06e0cfb8",
-              "leftValue": "={{ $('WhatsApp Trigger').item.json.messages[0].type }}",
+              "leftValue": "={{ $('sales cerebro').item.json.messages[0].type }}",
               "rightValue": "text",
               "operator": {
                 "type": "string",
@@ -3709,7 +3686,7 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        3700,
+        3712,
         -80
       ],
       "id": "c02aabe9-94e3-4460-a8a6-f973c0a5e9b1",
@@ -3727,8 +3704,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        3940,
-        -60
+        3952,
+        -64
       ],
       "id": "bd172ae7-3326-40d8-adaf-b95b1561b75a",
       "name": "HTTP Request2",
@@ -3747,7 +3724,7 @@
             {
               "id": "bcaa87d7-34f9-47b2-b2c2-cce72f7b4951",
               "name": "selection",
-              "value": "={{ $('WhatsApp Trigger').item.json.messages[0].text.body }}",
+              "value": "={{ $('sales cerebro').item.json.messages[0].text.body }}",
               "type": "string"
             }
           ]
@@ -3758,7 +3735,7 @@
       "typeVersion": 3.4,
       "position": [
         4160,
-        -60
+        -64
       ],
       "id": "e4d470fe-858a-4334-8175-b6eb8d3ef6d5",
       "name": "datos para seleccionar dia de cita"
@@ -3770,8 +3747,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        4380,
-        -60
+        4384,
+        -64
       ],
       "id": "830cac52-39fc-4c39-bed5-e47c411b1a56",
       "name": "obtenemos el slot solicitado"
@@ -3804,8 +3781,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        4600,
-        -60
+        4608,
+        -64
       ],
       "id": "faf5f785-5d80-4a20-a5aa-afb11205b286",
       "name": "If1"
@@ -3829,7 +3806,7 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"{{ $json.message }}\"\n  }\n}\n",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('sales cerebro').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"{{ $json.message }}\"\n  }\n}\n",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
@@ -3847,7 +3824,7 @@
         "url": "={{ $('Set Variables').item.json.currentEnvironment }}/sales/book-appointment-chatbot",
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"tenant_id\": \"{{ $('Variables Wp').item.json.tenant_id }}\",\n  \"phone_number\": \"+{{ $('WhatsApp Trigger').item.json.messages[0].from }}\", \n  \"selection_number\": {{ $json.selected_slot.selection_number }},\n  \"selected_date\": \"{{ $json.selected_slot.date }}\",\n  \"selected_time\": \"{{ $json.selected_slot.start_time }}\",\n  \"vendor_id\": \"{{ $json.selected_slot.vendor_id }}\"\n}",
+        "jsonBody": "={\n  \"tenant_id\": \"{{ $('Variables Wp').item.json.tenant_id }}\",\n  \"phone_number\": \"+{{ $('sales cerebro').item.json.messages[0].from }}\", \n  \"selection_number\": {{ $json.selected_slot.selection_number }},\n  \"selected_date\": \"{{ $json.selected_slot.date }}\",\n  \"selected_time\": \"{{ $json.selected_slot.start_time }}\",\n  \"vendor_id\": \"{{ $json.selected_slot.vendor_id }}\"\n}",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
@@ -3889,8 +3866,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        5100,
-        120
+        5104,
+        128
       ],
       "id": "dfc84381-8671-4dcc-a8d3-2df1dac4a128",
       "name": "verificamos que halla un error"
@@ -3968,8 +3945,8 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        5860,
-        -20
+        5872,
+        -16
       ],
       "id": "92f14855-16b5-4f6e-8d18-95a88e20721b",
       "name": "Execute Workflow11"
@@ -4003,8 +3980,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        5640,
-        -20
+        5648,
+        -16
       ],
       "id": "e85d11b8-8ce0-4164-8296-bd0f5f894b87",
       "name": "body datos costos5"
@@ -4028,14 +4005,14 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"Lo siento, tu número telefónico no se encuentra registrado. Si necesitas más información, no dudes en contactarnos de nuevo.\"\n  }\n}\n",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('sales cerebro').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"Lo siento, tu número telefónico no se encuentra registrado. Si necesitas más información, no dudes en contactarnos de nuevo.\"\n  }\n}\n",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
         5360,
-        -20
+        -16
       ],
       "id": "56adbac5-d7c1-41ec-9091-e421c6f5e880",
       "name": "error usuario no registrado"
@@ -4113,8 +4090,8 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        5820,
-        200
+        5824,
+        208
       ],
       "id": "7032183b-4589-402b-86d1-345b842d07e6",
       "name": "Execute Workflow12"
@@ -4148,8 +4125,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        5620,
-        200
+        5632,
+        208
       ],
       "id": "dc3dbb7a-b3c1-4bad-bf14-d47143661cce",
       "name": "body datos costos6"
@@ -4161,8 +4138,8 @@
       "type": "n8n-nodes-base.wait",
       "typeVersion": 1.1,
       "position": [
-        10040,
-        -460
+        10048,
+        -464
       ],
       "id": "ef705569-e08c-41ca-99c0-3a99c170e012",
       "name": "Wait",
@@ -4175,7 +4152,7 @@
             {
               "id": "1f33c929-ae7b-4b64-a3f3-a3c2c7994d71",
               "name": "selection",
-              "value": "={{ $('WhatsApp Trigger').item.json.messages[0].text.body }}",
+              "value": "={{ $('sales cerebro').item.json.messages[0].text.body }}",
               "type": "string"
             }
           ]
@@ -4185,8 +4162,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        3340,
-        380
+        3344,
+        384
       ],
       "id": "1dbbb19e-5e77-48cf-8ea0-f755668e143d",
       "name": "tomamos la seleccion del usuario"
@@ -4198,8 +4175,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        3580,
-        440
+        3584,
+        448
       ],
       "id": "674d2d52-b77a-4120-aba8-5cd54cceba2a",
       "name": "Code6"
@@ -4232,8 +4209,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        3800,
-        440
+        3808,
+        448
       ],
       "id": "8770a27a-accc-49c7-8778-1b5eda74ba7f",
       "name": "estatus error?"
@@ -4243,8 +4220,8 @@
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
       "position": [
-        4600,
-        520
+        4608,
+        528
       ],
       "id": "0dc394a4-240c-4bc7-b138-da1fbd7a2181",
       "name": "No Operation, do nothing3"
@@ -4277,7 +4254,7 @@
       "typeVersion": 2.2,
       "position": [
         3920,
-        780
+        784
       ],
       "id": "945d3f3c-f8f9-4261-b9b7-e7eda4abb429",
       "name": "opcion es 1?"
@@ -4290,8 +4267,8 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        3660,
-        920
+        3664,
+        928
       ],
       "typeVersion": 1,
       "id": "49a937db-673f-4f37-a90a-b68601e40a65",
@@ -4303,7 +4280,7 @@
       "typeVersion": 1,
       "position": [
         4560,
-        1100
+        1104
       ],
       "id": "8681ae66-d40f-4216-8ed0-4fdfdc579335",
       "name": "No Operation, do nothing4"
@@ -4316,8 +4293,8 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        5880,
-        -3140
+        5888,
+        -3136
       ],
       "typeVersion": 1,
       "id": "1a8fb44f-c0ed-4ed0-9cb4-ce3aad2b2664",
@@ -4331,7 +4308,7 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        5940,
+        5952,
         -2560
       ],
       "typeVersion": 1,
@@ -4348,7 +4325,7 @@
       "type": "n8n-nodes-base.stickyNote",
       "position": [
         8000,
-        -2200
+        -2208
       ],
       "typeVersion": 1,
       "id": "23649219-af6a-41ca-86cd-6bb206a3bef0",
@@ -4381,7 +4358,7 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        7540,
+        7552,
         -480
       ],
       "id": "b80d1be7-a3e9-4931-8431-26c7603f3b3c",
@@ -4396,7 +4373,7 @@
       "typeVersion": 4.2,
       "position": [
         7840,
-        -460
+        -464
       ],
       "id": "3d5eefd1-5acb-442f-b956-35861dd93c29",
       "name": "HTTP Request1"
@@ -4424,8 +4401,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        8120,
-        -460
+        8128,
+        -464
       ],
       "id": "7ba3b7c8-dbcc-435c-812d-1913fc69f360",
       "name": "Edit Fields7"
@@ -4437,8 +4414,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        8420,
-        -460
+        8432,
+        -464
       ],
       "id": "5a3a87da-3030-4b2c-b1f9-1c131731bbc5",
       "name": "Code7"
@@ -4449,14 +4426,14 @@
         "url": "={{ $json.currentEnvironment }}/sales/upsert_sale_by_phone",
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n    \"tenant_id\" : \"{{ $('Variables Wp').item.json.tenant_id }}\",\n    \"phone\" : \"+{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n    \"name\" : \"{{ $('WhatsApp Trigger').item.json.contacts[0].profile.name }}\",\n    \"email\" : \"\"\n}",
+        "jsonBody": "={\n    \"tenant_id\" : \"{{ $('Variables Wp').item.json.tenant_id }}\",\n    \"phone\" : \"+{{ $('sales cerebro').item.json.messages[0].from }}\",\n    \"name\" : \"{{ $('sales cerebro').item.json.contacts[0].profile.name }}\",\n    \"email\" : \"\"\n}",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -1640,
-        1160
+        -1648,
+        1168
       ],
       "id": "2ece1371-00e5-40d3-a02f-fb84520d897d",
       "name": "upsert_sale_by_phone",
@@ -4481,14 +4458,14 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"{{ $json.whatsapp_message.replace(/\\r?\\n/g, \"\\\\n\").replace(/^\\\\n+|\\\\n+$/g, \"\") }}\"\n  }\n}\n",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('sales cerebro').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"{{ $json.whatsapp_message.replace(/\\r?\\n/g, \"\\\\n\").replace(/^\\\\n+|\\\\n+$/g, \"\") }}\"\n  }\n}\n",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
         5360,
-        200
+        208
       ],
       "id": "dad8e455-b6ec-4432-8b79-7582731ebb96",
       "name": "mensaje cita guardada"
@@ -4624,7 +4601,7 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.2,
       "position": [
-        3940,
+        3952,
         2240
       ],
       "id": "3d461dc4-7098-4af6-bac6-2b2f020da761",
@@ -4637,7 +4614,7 @@
             {
               "id": "15fb4991-badc-4bf8-89e4-bb9a8885998d",
               "name": "selection",
-              "value": "={{ $('WhatsApp Trigger').item.json.messages[0].text.body }}",
+              "value": "={{ $('sales cerebro').item.json.messages[0].text.body }}",
               "type": "string"
             }
           ]
@@ -4660,7 +4637,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        3220,
+        3232,
         2320
       ],
       "id": "75c294b2-efaf-4a05-9d5a-69b124e718d2",
@@ -4718,13 +4695,13 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"{{ $json.message }}\"\n  }\n}",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('sales cerebro').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"{{ $json.message }}\"\n  }\n}",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        3660,
+        3664,
         2480
       ],
       "id": "b3f7a187-e0d4-4569-ae76-d9cfcd0a794f",
@@ -4749,7 +4726,7 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"¿Para qué grado estás interesad@?  Escribe el número de la opción que deseas: \\n\\n1️⃣ Primer semestre\\n2️⃣ Segundo semestre\\n3️⃣ Tercer semestre\\n4️⃣ Cuarto semestre\\n5️⃣ Quinto semestre\\n6️⃣ Sexto semestre\"\n  }\n}",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('sales cerebro').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"¿Para qué grado estás interesad@?  Escribe el número de la opción que deseas: \\n\\n1️⃣ Primer semestre\\n2️⃣ Segundo semestre\\n3️⃣ Tercer semestre\\n4️⃣ Cuarto semestre\\n5️⃣ Quinto semestre\\n6️⃣ Sexto semestre\"\n  }\n}",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
@@ -4780,14 +4757,14 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"¿Para qué grado estás interesad@?  Escribe el número de la opción que deseas: \\n\\n1️⃣ Maternal (1.8 a 2.8 años)\\n2️⃣ Kinder I (2.9 a 3.7 años)\\n3️⃣ Kinder II (3.8 a 4.7 años)\\n4️⃣ Preprimaria (4.8 a 5.7 años)\"\n  }\n}",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('sales cerebro').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"¿Para qué grado estás interesad@?  Escribe el número de la opción que deseas: \\n\\n1️⃣ Maternal (1.8 a 2.8 años)\\n2️⃣ Kinder I (2.9 a 3.7 años)\\n3️⃣ Kinder II (3.8 a 4.7 años)\\n4️⃣ Preprimaria (4.8 a 5.7 años)\"\n  }\n}",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
         4400,
-        1900
+        1904
       ],
       "id": "95c605d0-c64b-4a49-af50-ab70328e209b",
       "name": "menu mensaje preescolar costos"
@@ -4811,7 +4788,7 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"¿Para qué grado estás interesad@?  Escribe el número de la opción que deseas: \\n\\n1️⃣ Primero\\n2️⃣ Segundo\\n3️⃣ Tercero \\n4️⃣ Cuarto \\n5️⃣ Quinto\\n6️⃣ Sexto\"\n  }\n}",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('sales cerebro').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"¿Para qué grado estás interesad@?  Escribe el número de la opción que deseas: \\n\\n1️⃣ Primero\\n2️⃣ Segundo\\n3️⃣ Tercero \\n4️⃣ Cuarto \\n5️⃣ Quinto\\n6️⃣ Sexto\"\n  }\n}",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
@@ -4842,14 +4819,14 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"¿Para qué grado estás interesad@?  Escribe el número de la opción que deseas: \\n\\n1️⃣ Primero\\n2️⃣ Segundo\\n3️⃣ Tercero\"\n  }\n}",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('sales cerebro').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"¿Para qué grado estás interesad@?  Escribe el número de la opción que deseas: \\n\\n1️⃣ Primero\\n2️⃣ Segundo\\n3️⃣ Tercero\"\n  }\n}",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
         4400,
-        2280
+        2288
       ],
       "id": "7a98d036-be69-48bd-838f-a7594726249e",
       "name": "costos secundaria"
@@ -4873,14 +4850,14 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"Entiendo, les deseo mucha suerte.\\n✨ Gracias por contactarnos.\"\n  }\n}",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('sales cerebro').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"Entiendo, les deseo mucha suerte.\\n✨ Gracias por contactarnos.\"\n  }\n}",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
         4400,
-        2680
+        2688
       ],
       "id": "1fc72150-ed61-4d38-86f2-a7984df960c9",
       "name": "ubicacion inconveniente"
@@ -4958,8 +4935,8 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        4860,
-        2680
+        4864,
+        2688
       ],
       "id": "d2e4ddc7-8b84-48e3-84b0-bec7e4b23012",
       "name": "Execute Workflow13"
@@ -4993,8 +4970,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        4620,
-        2680
+        4624,
+        2688
       ],
       "id": "afdb30d6-1c08-43e6-97a3-3f051f9eb7c1",
       "name": "datos ubicacion inconveniente"
@@ -5007,8 +4984,8 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        2840,
-        1800
+        2848,
+        1808
       ],
       "typeVersion": 1,
       "id": "97cb6cb1-f62d-467e-8841-705e2c1256ee",
@@ -5088,8 +5065,8 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        4860,
-        1900
+        4864,
+        1904
       ],
       "id": "4eb4b579-403c-4a01-979c-84971402d1cb",
       "name": "Execute Workflow14"
@@ -5123,8 +5100,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        4600,
-        1900
+        4608,
+        1904
       ],
       "id": "11783e59-d5ac-4485-ab27-60454bcb0f49",
       "name": "datos ubicacion inconveniente1"
@@ -5158,7 +5135,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        4600,
+        4608,
         2080
       ],
       "id": "fab8e19e-c8ab-41c0-b554-044e7a23974f",
@@ -5193,8 +5170,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        4600,
-        2280
+        4608,
+        2288
       ],
       "id": "c27e4f90-50e1-49fc-af4e-2b1fcda51a53",
       "name": "datos ubicacion inconveniente3"
@@ -5228,7 +5205,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        4600,
+        4608,
         2480
       ],
       "id": "c716d621-eb0b-4ec3-8f49-74de499c618b",
@@ -5308,7 +5285,7 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        4860,
+        4864,
         2080
       ],
       "id": "40cb9437-a300-4337-b957-c2fec32d4947",
@@ -5388,8 +5365,8 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        4860,
-        2280
+        4864,
+        2288
       ],
       "id": "1c3c8dcf-8db4-488a-a204-1ecfc8a7a3f3",
       "name": "Execute Workflow16"
@@ -5468,7 +5445,7 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        4860,
+        4864,
         2480
       ],
       "id": "154a9a10-16bc-491a-9db1-f22d2244a08d",
@@ -5609,8 +5586,8 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.2,
       "position": [
-        2940,
-        3640
+        2944,
+        3648
       ],
       "id": "eb76eb7d-b2cd-4561-86ae-7b3892a0e926",
       "name": "revisamos sub menu para informes costos"
@@ -5622,7 +5599,7 @@
             {
               "id": "aff2d5eb-178c-4255-b426-2f65ca17c7be",
               "name": "selection",
-              "value": "={{ $('WhatsApp Trigger').item.json.messages[0].text.body }}",
+              "value": "={{ $('sales cerebro').item.json.messages[0].text.body }}",
               "type": "string"
             }
           ]
@@ -5632,8 +5609,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        3240,
-        3140
+        3248,
+        3152
       ],
       "id": "159dd381-ab57-4c5c-ab9a-00e6e806fe13",
       "name": "seleccion primaria ubicacion contacto"
@@ -5645,8 +5622,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        3460,
-        3140
+        3472,
+        3152
       ],
       "id": "ade94d0c-9f27-4bb9-bdbc-984c933261c6",
       "name": "Code8"
@@ -5680,7 +5657,7 @@
       "typeVersion": 2.2,
       "position": [
         3680,
-        3140
+        3152
       ],
       "id": "a88ab3d1-3012-46b5-ba2d-ee17a0a63b22",
       "name": "If2"
@@ -5704,14 +5681,14 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"{{ $json.message }}\"\n  }\n}",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('sales cerebro').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"{{ $json.message }}\"\n  }\n}",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
         4880,
-        3820
+        3824
       ],
       "id": "55aeabdc-dae1-4d2a-ac14-f328bf36dbac",
       "name": "Error mensaje ubicacion menu1"
@@ -5735,14 +5712,14 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"Te gustaría una llamada telefónica para platicarte de nuestro Proyecto Educativo o Agendar una visita? Escribe el número de la opción que deseas: \\n\\n1️⃣ Llamada telefónica \\n2️⃣ Agendar visita\"\n  }\n}",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('sales cerebro').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"Te gustaría una llamada telefónica para platicarte de nuestro Proyecto Educativo o Agendar una visita? Escribe el número de la opción que deseas: \\n\\n1️⃣ Llamada telefónica \\n2️⃣ Agendar visita\"\n  }\n}",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        4900,
-        3100
+        4912,
+        3104
       ],
       "id": "ed5685b1-a25c-4df8-9c8e-b77f6d4f0a46",
       "name": "mensaje desicion contacto/cita"
@@ -5754,7 +5731,7 @@
             {
               "id": "aff2d5eb-178c-4255-b426-2f65ca17c7be",
               "name": "selection",
-              "value": "={{ $('WhatsApp Trigger').item.json.messages[0].text.body }}",
+              "value": "={{ $('sales cerebro').item.json.messages[0].text.body }}",
               "type": "string"
             }
           ]
@@ -5764,8 +5741,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        3240,
-        3460
+        3248,
+        3472
       ],
       "id": "13f91bca-bed2-4455-8c7b-125b11b6464e",
       "name": "seleccion primaria ubicacion contacto1"
@@ -5777,8 +5754,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        3460,
-        3460
+        3472,
+        3472
       ],
       "id": "3abb3ed0-7543-4620-a099-39774fef1974",
       "name": "Code9"
@@ -5812,7 +5789,7 @@
       "typeVersion": 2.2,
       "position": [
         3680,
-        3460
+        3472
       ],
       "id": "e6a11ae0-d747-46d9-9eca-7ee22651af34",
       "name": "If3"
@@ -5824,7 +5801,7 @@
             {
               "id": "aff2d5eb-178c-4255-b426-2f65ca17c7be",
               "name": "selection",
-              "value": "={{ $('WhatsApp Trigger').item.json.messages[0].text.body }}",
+              "value": "={{ $('sales cerebro').item.json.messages[0].text.body }}",
               "type": "string"
             }
           ]
@@ -5834,8 +5811,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        3220,
-        3940
+        3232,
+        3952
       ],
       "id": "0c74c4c0-0790-4e62-9c55-c66ca69827d5",
       "name": "seleccion primaria ubicacion contacto2"
@@ -5848,7 +5825,7 @@
       "typeVersion": 2,
       "position": [
         3440,
-        3940
+        3952
       ],
       "id": "862ac7a1-e606-46e1-be40-6693e1366498",
       "name": "Code10"
@@ -5881,8 +5858,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        3660,
-        3940
+        3664,
+        3952
       ],
       "id": "add51996-44ca-4c33-8506-5fc1f3a7659f",
       "name": "If4"
@@ -5894,7 +5871,7 @@
             {
               "id": "aff2d5eb-178c-4255-b426-2f65ca17c7be",
               "name": "selection",
-              "value": "={{ $('WhatsApp Trigger').item.json.messages[0].text.body }}",
+              "value": "={{ $('sales cerebro').item.json.messages[0].text.body }}",
               "type": "string"
             }
           ]
@@ -5904,8 +5881,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        3240,
-        3700
+        3248,
+        3712
       ],
       "id": "b4605817-c2fe-4c65-b515-709e0c6281a0",
       "name": "seleccion primaria ubicacion contacto3"
@@ -5917,8 +5894,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        3460,
-        3700
+        3472,
+        3712
       ],
       "id": "28dd9f25-5fbb-4c68-b4b3-1eec0ab4b1c7",
       "name": "Code11"
@@ -5952,7 +5929,7 @@
       "typeVersion": 2.2,
       "position": [
         3680,
-        3700
+        3712
       ],
       "id": "5318dc32-2023-44ae-8e53-09a7bf8a0c70",
       "name": "If5"
@@ -6032,7 +6009,7 @@
       "typeVersion": 1.2,
       "position": [
         5360,
-        3100
+        3104
       ],
       "id": "66eb7087-3d4b-4c36-a860-001d544e4d6f",
       "name": "Execute Workflow18"
@@ -6067,7 +6044,7 @@
       "typeVersion": 3.4,
       "position": [
         5120,
-        3100
+        3104
       ],
       "id": "edb23195-5061-4449-a427-e0ed2d8fb64b",
       "name": "datos ubicacion inconveniente5"
@@ -6079,7 +6056,7 @@
             {
               "id": "aff2d5eb-178c-4255-b426-2f65ca17c7be",
               "name": "selection",
-              "value": "={{ $('WhatsApp Trigger').item.json.messages[0].text.body }}",
+              "value": "={{ $('sales cerebro').item.json.messages[0].text.body }}",
               "type": "string"
             }
           ]
@@ -6089,8 +6066,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        3260,
-        4280
+        3264,
+        4288
       ],
       "id": "a1aa73bf-ae1e-43ae-b3ca-9c99cd05bde9",
       "name": "seleccion primaria ubicacion contacto4"
@@ -6102,8 +6079,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        3480,
-        4280
+        3488,
+        4288
       ],
       "id": "218287ac-6fb9-44ee-89ce-2433a9079ea3",
       "name": "Code12"
@@ -6136,8 +6113,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        3700,
-        4280
+        3712,
+        4288
       ],
       "id": "140d827d-8a11-4d43-88ae-043882441208",
       "name": "If6"
@@ -6202,7 +6179,7 @@
       "typeVersion": 3.2,
       "position": [
         4880,
-        4220
+        4224
       ],
       "id": "44a59931-9824-4f03-83a9-bf187f2797ea",
       "name": "Switch5"
@@ -6226,7 +6203,7 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"En breve te contactaremos por llamada 📞😁\"\n  }\n}",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('sales cerebro').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"En breve te contactaremos por llamada 📞😁\"\n  }\n}",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
@@ -6245,7 +6222,7 @@
             {
               "id": "aff2d5eb-178c-4255-b426-2f65ca17c7be",
               "name": "selection",
-              "value": "={{ $('WhatsApp Trigger').item.json.messages[0].text.body }}",
+              "value": "={{ $('sales cerebro').item.json.messages[0].text.body }}",
               "type": "string"
             }
           ]
@@ -6255,8 +6232,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        2140,
-        5080
+        2144,
+        5088
       ],
       "id": "794bff59-9361-4973-a4ed-61ea400b867b",
       "name": "seleccion primaria ubicacion contacto5"
@@ -6268,8 +6245,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        2360,
-        5080
+        2368,
+        5088
       ],
       "id": "8858a18a-314d-4b33-85ca-305c7334bb81",
       "name": "Code13"
@@ -6302,8 +6279,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        2580,
-        5080
+        2592,
+        5088
       ],
       "id": "104d7fb1-70de-404b-bcc8-d1e6710ddebc",
       "name": "If7"
@@ -6327,14 +6304,14 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"{{ $json.message }}\"\n  }\n}",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('sales cerebro').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"{{ $json.message }}\"\n  }\n}",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
         2880,
-        5240
+        5248
       ],
       "id": "a63a8329-b373-4b49-a0a6-286c7fce48c8",
       "name": "Error mensaje ubicacion menu2"
@@ -6398,8 +6375,8 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.2,
       "position": [
-        4980,
-        4340
+        4992,
+        4352
       ],
       "id": "e36ac603-f29f-4232-a15b-756918de972d",
       "name": "Switch6"
@@ -6464,7 +6441,7 @@
       "typeVersion": 3.2,
       "position": [
         3120,
-        5000
+        5008
       ],
       "id": "aa9f200e-c9b9-4d57-a4df-d025626e3fe8",
       "name": "Switch7"
@@ -6488,13 +6465,13 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"¡Perfecto! Fue un placer ayudarte. Que tengas un excelente día. 😊\"\n  }\n}",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('sales cerebro').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"¡Perfecto! Fue un placer ayudarte. Que tengas un excelente día. 😊\"\n  }\n}",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        3420,
+        3424,
         5040
       ],
       "id": "1788b4ea-2fc6-4fe5-9d13-ba427053706f",
@@ -6573,7 +6550,7 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        3880,
+        3888,
         5040
       ],
       "id": "584b7ddc-d60e-4523-9573-56455151f7be",
@@ -6608,7 +6585,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        3640,
+        3648,
         5040
       ],
       "id": "eb8795b3-c9e5-41bb-ac6b-ff800cf68353",
@@ -6621,7 +6598,7 @@
             {
               "id": "aff2d5eb-178c-4255-b426-2f65ca17c7be",
               "name": "selection",
-              "value": "={{ $('WhatsApp Trigger').item.json.messages[0].text.body }}",
+              "value": "={{ $('sales cerebro').item.json.messages[0].text.body }}",
               "type": "string"
             }
           ]
@@ -6631,8 +6608,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        2100,
-        5940
+        2112,
+        5952
       ],
       "id": "29312c1b-c29e-40a1-9a4b-57445fc14c09",
       "name": "seleccion primaria ubicacion contacto6"
@@ -6645,7 +6622,7 @@
       "typeVersion": 2,
       "position": [
         2320,
-        5940
+        5952
       ],
       "id": "e1830cb2-0326-490d-883b-e8e5c379f60c",
       "name": "Code14"
@@ -6678,8 +6655,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        2540,
-        5940
+        2544,
+        5952
       ],
       "id": "cc970433-c241-4832-abe6-93ed8c3689c0",
       "name": "If8"
@@ -6703,14 +6680,14 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"{{ $json.message }}\"\n  }\n}",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('sales cerebro').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"{{ $json.message }}\"\n  }\n}",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        2840,
-        6100
+        2848,
+        6112
       ],
       "id": "03e9f4a6-0648-45b0-961c-ad8c2ff3db42",
       "name": "Error mensaje ubicacion menu5"
@@ -6798,8 +6775,8 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.2,
       "position": [
-        3080,
-        5860
+        3088,
+        5872
       ],
       "id": "29c2e4cf-13a5-4fb0-bcce-ca533da4dad1",
       "name": "Switch8"
@@ -6823,14 +6800,14 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"¡Perfecto! Me alegra saber que ya estás en contacto. Si necesitas algo más, aquí estoy. 😊\"\n  }\n}\n",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('sales cerebro').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"¡Perfecto! Me alegra saber que ya estás en contacto. Si necesitas algo más, aquí estoy. 😊\"\n  }\n}\n",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
         7200,
-        -2140
+        -2144
       ],
       "id": "f1e19fa5-1f69-43f2-becd-6d93d0aa014f",
       "name": "mensaje despedida"
@@ -6908,7 +6885,7 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        5720,
+        5728,
         4080
       ],
       "id": "d7e1a771-20a7-44ae-9b23-004c94db23f8",
@@ -6943,7 +6920,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        5480,
+        5488,
         4080
       ],
       "id": "cc3d41eb-1bca-4023-a902-d5b6cd490263",
@@ -6968,14 +6945,14 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"En breve te contactaremos por llamada 📞😁\"\n  }\n}",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('sales cerebro').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"En breve te contactaremos por llamada 📞😁\"\n  }\n}",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        3880,
-        1100
+        3888,
+        1104
       ],
       "id": "016571e9-a40e-4250-b8cf-a505e0f5c946",
       "name": "confirmación llamada1"
@@ -7054,7 +7031,7 @@
       "typeVersion": 1.2,
       "position": [
         4320,
-        1100
+        1104
       ],
       "id": "7e4c35d4-c102-4eea-98bd-da466fe7c3f6",
       "name": "Execute Workflow21"
@@ -7089,7 +7066,7 @@
       "typeVersion": 3.4,
       "position": [
         4080,
-        1100
+        1104
       ],
       "id": "42aac2c3-91ef-43be-a946-7a9e2e07c9e7",
       "name": "datos ubicacion inconveniente8"
@@ -7113,14 +7090,14 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"type\": \"interactive\",\n  \"interactive\": {\n    \"type\": \"button\",\n    \"body\": {\n      \"text\": \"Para regresar, pulsa Menú anterior\"\n    },\n    \"action\": {\n      \"buttons\": [\n        {\n          \"type\": \"reply\",\n          \"reply\": {\n            \"id\": \"menu_anterior\",\n            \"title\": \"Menú anterior\"\n          }\n        }\n      ]\n    }\n  }\n}\n",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('sales cerebro').item.json.messages[0].from }}\",\n  \"type\": \"interactive\",\n  \"interactive\": {\n    \"type\": \"button\",\n    \"body\": {\n      \"text\": \"Para regresar, pulsa Menú anterior\"\n    },\n    \"action\": {\n      \"buttons\": [\n        {\n          \"type\": \"reply\",\n          \"reply\": {\n            \"id\": \"menu_anterior\",\n            \"title\": \"Menú anterior\"\n          }\n        }\n      ]\n    }\n  }\n}\n",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        6620,
-        -2460
+        6624,
+        -2464
       ],
       "id": "1b269b42-4d40-4159-82b0-277a2ae92a27",
       "name": "mesaje_regresar_menu"
@@ -7200,8 +7177,8 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        7640,
-        1380
+        7648,
+        1392
       ],
       "id": "689235fe-6802-4b35-bea5-51d7babef4c9",
       "name": "notificar error"
@@ -7213,8 +7190,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        6840,
-        1460
+        6848,
+        1472
       ],
       "id": "dec253d8-1d38-40fc-b528-ce12bf05fede",
       "name": "homologar /available-slots-chatbot"
@@ -7238,14 +7215,14 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"Ups… parece que algo no salió bien. Por favor, intenta de nuevo en unos minutos 🙏\"\n  }\n}\n",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('sales cerebro').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"Ups… parece que algo no salió bien. Por favor, intenta de nuevo en unos minutos 🙏\"\n  }\n}\n",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        7860,
-        1380
+        7872,
+        1392
       ],
       "id": "9dd977ff-494f-407f-8ed7-2b416831b602",
       "name": "Error seleccion menu invalida3"
@@ -7257,8 +7234,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        6840,
-        1320
+        6848,
+        1328
       ],
       "id": "c30b1e03-7749-4490-bcc9-9fb78de82420",
       "name": "homologar /sales/book-appointment-chatbot"
@@ -7270,11 +7247,121 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        6840,
-        1660
+        6848,
+        1664
       ],
       "id": "60cc8768-4e44-4701-9271-7ec1b90ed3f1",
       "name": "homologar /sales/upsert_sale_by_phone"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c98a6b36-7460-466a-80d5-8158cb79135a",
+              "name": "currentEnviroment",
+              "value": "https://86b657fc2e2b.ngrok-free.app",
+              "type": "string"
+            },
+            {
+              "id": "93d6d5a7-9724-4faf-9404-8a2d3b1d9083",
+              "name": "x-api-key",
+              "value": "bfc47ca54a9c812169f1e3c2b44c69d1",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -3856,
+        768
+      ],
+      "id": "754f56c8-0bb8-45d4-b14f-f10e2a3ff4ee",
+      "name": "Edit Fields3"
+    },
+    {
+      "parameters": {
+        "url": "={{ $('Edit Fields3').item.json.currentEnviroment }}/api/v1/grow/opportunities/phone/{{ $('WhatsApp Trigger').item.json.data[0].messages[0].from }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-api-key",
+              "value": "={{ $('Edit Fields3').item.json['x-api-key'] }}"
+            },
+            {
+              "name": "x-session-id",
+              "value": "={{ $json.data.session._id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -3456,
+        656
+      ],
+      "id": "bea2534e-aa4a-49e4-bfb6-2bca78c1df9c",
+      "name": "buscamos oportunidad"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.currentEnviroment }}/api/v1/authmb/auth_guardian?phone={{ $('WhatsApp Trigger').item.json.data[0].messages[0].from }}",
+        "options": {}
+      },
+      "name": "Auth Guardian1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        -3664,
+        768
+      ],
+      "id": "b97e6b80-3655-432d-af5a-bc062d920c6c",
+      "notesInFlow": false,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "updates": [
+          "messages"
+        ],
+        "options": {}
+      },
+      "type": "n8n-nodes-base.whatsAppTrigger",
+      "typeVersion": 1,
+      "position": [
+        -4352,
+        768
+      ],
+      "id": "11077335-da47-487d-aebb-39c1d3e75a1c",
+      "name": "sales cerebro",
+      "webhookId": "79902303-7c8b-4b2f-b91e-30dfa471b049",
+      "credentials": {
+        "whatsAppTriggerApi": {
+          "id": "4llLGy8ampInXpaG",
+          "name": "WhatsApp OAuth account cerebro sales"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        -4032,
+        768
+      ],
+      "id": "38d70ae9-bfc4-4994-be08-ed35e5a2f9eb",
+      "name": "WhatsApp Trigger",
+      "notes": "este nodo combina la entrada del nodo de whatsapp independientemente de donde llegue"
     }
   ],
   "connections": {
@@ -7356,17 +7443,6 @@
         [
           {
             "node": "MongoDB1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "WhatsApp Trigger": {
-      "main": [
-        [
-          {
-            "node": "Variables Wp",
             "type": "main",
             "index": 0
           }
@@ -9198,6 +9274,50 @@
           }
         ]
       ]
+    },
+    "Edit Fields3": {
+      "main": [
+        [
+          {
+            "node": "Auth Guardian1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Auth Guardian1": {
+      "main": [
+        [
+          {
+            "node": "buscamos oportunidad",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "sales cerebro": {
+      "main": [
+        [
+          {
+            "node": "WhatsApp Trigger",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "WhatsApp Trigger": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -9206,7 +9326,7 @@
   "staticData": null,
   "meta": null,
   "pinData": {
-    "WhatsApp Trigger": [
+    "sales cerebro": [
       {
         "json": {
           "messaging_product": "whatsapp",
@@ -9238,7 +9358,7 @@
       }
     ]
   },
-  "versionId": "4838bd4d-ed5e-412b-adf2-aa0dddb828a9",
+  "versionId": "f059df2f-3c9f-400c-9cfe-7f5b26a5d565",
   "triggerCount": 1,
   "shared": [
     {
