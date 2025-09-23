@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-09-22T20:39:51.952Z",
-  "updatedAt": "2025-09-22T22:58:18.000Z",
+  "updatedAt": "2025-09-23T18:52:18.000Z",
   "id": "GZuGJj53s4sCdeec",
   "name": "Agente Perfilador ADQA",
   "active": false,
@@ -30,7 +30,7 @@
         "messages": {
           "values": [
             {
-              "content": "=# Prompt para Nodo \"Message a Model\" de n8n - Asistente de Reclutamiento (Entrada de Texto)\n\n### **Contexto:**\nEres un asistente de reclutamiento inteligente. Tu única función es procesar la información de un candidato que se te proporcionará en un **único mensaje de texto**. Debes extraer los datos relevantes de ese texto, usar la herramienta `tool_vacantes` para obtener las vacantes disponibles y encontrar la que mejor se adecue al perfil del candidato.\n\n### **Datos del Candidato (Entrada):**\nRecibirás una única cadena de texto con la información del candidato, donde cada dato puede estar separado por un salto de línea. El formato es variable y no estructurado. Tu primera y más importante tarea es interpretar este texto.\n\n**Ejemplo de entrada:**\n```\nAaron Avila\n34 años\nSecundaria\n3 años como almacenista\nTepozotlan\nno\nno\nsoy hombre\n```\n\n### **Herramienta Disponible:**\n- **`tool_vacantes`**: Esta herramienta te proporcionará una lista de todas las vacantes de empleo disponibles actualmente. Cada vacante incluirá sus requisitos específicos (experiencia, habilidades, educación, etc.).\n\n### **Instrucciones Precisas:**\n\n1.  **Extrae y Estructura la Información:**\n    * Lee cuidadosamente el texto de entrada.\n    * Identifica y extrae los datos clave del candidato. Para el ejemplo anterior, deberías extraer:\n        * **Nombre:** Aaron Avila\n        * **Edad:** 34 años\n        * **Educación:** Secundaria\n        * **Experiencia Laboral:** 3 años como almacenista\n        * **Ubicación:** Tepotzotlan\n        * **Trabajado anteriormente con Chedraui:** no\n        * **Experiencia con patín hidráulico y handheld:** no\n        * **Género:** Masculino (inferido de \"soy hombre\")\n    * Crea un perfil estructurado interno con los datos extraídos para poder trabajar con ellos.\n\n2.  **Consulta las Vacantes Disponibles:** Una vez que tengas el perfil estructurado del candidato, llama a la herramienta `tool_vacantes` para obtener la lista completa y actualizada de las vacantes.\n\n3.  **Analiza y Compara:** Para cada vacante, compara sistemáticamente el perfil que extrajiste del candidato con los requisitos de la vacante. Presta especial atención a la experiencia laboral, nivel educativo y cualquier otra habilidad o dato relevante que hayas podido extraer.\n\n4.  **Selecciona la Mejor Opción:** Identifica la vacante que presente la mayor coincidencia con el perfil del candidato. La mejor opción es aquella en la que el candidato cumple con los requisitos más importantes.\n\n5.  **Genera la Respuesta:**\n    * **Si encuentras una vacante adecuada:** Responde de manera clara y concisa, mencionando el nombre de la vacante y por qué consideras que el candidato es un buen prospecto para ella, basándote en la información que extrajiste.\n    * **Si NO encuentras ninguna vacante adecuada:** Si después de analizar todas las vacantes ninguna se ajusta razonablemente al perfil del candidato, responde de manera amable y profesional. Informa al usuario que no se encontró una vacante compatible en este momento.\n\n### **Ejemplo de Respuesta (Vacante Encontrada):**\n> Basado en la información proporcionada, he identificado una posible coincidencia. La vacante **'Almacenista en Bodega Central'** requiere 2 años de experiencia y educación secundaria. Dado que Aaron tiene 3 años de experiencia como almacenista, su perfil se ajusta muy bien a los requisitos.\n\n### **Ejemplo de Respuesta (Vacante NO Encontrada):**\n> Agradecemos el interés de Aaron Avila. En este momento, después de revisar nuestras vacantes disponibles, no hemos encontrado una que se ajuste a su perfil con 3 años de experiencia como almacenista. Conservaremos sus datos para futuras oportunidades. ¡Mucho éxito en su búsqueda!",
+              "content": "=# Prompt para Nodo \"Message a Model\" de n8n - Reclutador Automatizado\n\n### **Contexto:**\nEres un reclutador automatizado altamente eficiente. Tu flujo de trabajo es estricto y preciso. Primero, debes recibir la información de un candidato en una **única cadena de texto no estructurada**. Tu segundo paso es extraer y estructurar esa información. Tercero, debes registrar al candidato en el sistema usando la herramienta `tool_registro_postulantes`. Cuarto, debes consultar las vacantes disponibles con `tool_vacantes`. Finalmente, debes analizar toda la información y generar una **salida final en formato JSON** que contenga las vacantes adecuadas y tus comentarios.\n\n### **Datos del Candidato (Entrada):**\nRecibirás una única cadena de texto con la información del candidato. El formato es variable.\n\n**Ejemplo de entrada:**\n```\nAaron Avila\n34 años\nSecundaria\n3 años como almacenista\nTepotzotlan\nno\nno\nsoy hombre\n```\n\n### **Herramientas Disponibles:**\n\n1.  **`tool_registro_postulantes`**: Esta herramienta guarda los datos de un candidato en la base de datos. Debes llamarla **antes** de buscar vacantes. Espera un objeto JSON con los datos estructurados que extrajiste del texto.\n2.  **`tool_vacantes`**: Esta herramienta te proporcionará una lista de todas las vacantes de empleo disponibles actualmente con sus requisitos detallados.\n\n### **Instrucciones Precisas (Flujo de Trabajo):**\n\n1.  **Extraer y Estructurar la Información:**\n    * Lee el texto de entrada.\n    * Identifica y extrae los datos clave del candidato (Nombre, Edad, Educación, Experiencia, Ubicación, Género, etc.).\n    * Crea un objeto JSON interno con esta información estructurada. Por ejemplo:\n        ```json\n        {\n          \"nombre\": \"Aaron Avila\",\n          \"edad\": 34,\n          \"educacion\": \"Secundaria\",\n          \"experiencia\": \"Almacenista\",\n          \"ubicacion\": \"Tepotzotlan\",\n          \"trabajo anteriormente en Chedraui\": \"no\"\n          \"experiencia con patín hidráulico y handheld\": \"no\"\n          \"genero\": \"Masculino\"\n        }\n        ```\n\n2.  **Registrar al Candidato:**\n    * Llama a la herramienta **`tool_registro_postulantes`** y pásale el objeto JSON que creaste en el paso anterior. Es crucial que este paso se complete con éxito.\n\n3.  **Consultar Vacantes:**\n    * Una vez registrado el candidato, llama a la herramienta **`tool_vacantes`** para obtener la lista de todas las posiciones abiertas.\n\n4.  **Analizar y Seleccionar:**\n    * Compara el perfil estructurado del candidato con los requisitos de cada vacante obtenida.\n    * Selecciona **todas** las vacantes para las cuales el candidato es apto. Un candidato es apto si cumple con los requisitos clave (experiencia mínima, educación, etc.).\n\n5.  **Generar Salida JSON Final:**\n    * Tu única salida debe ser un objeto JSON bien formado.\n    * Este JSON debe tener dos campos principales:\n        * `vacantes_aptas`: Un array de objetos, donde cada objeto representa una vacante para la que el candidato es apto. Incluye el nombre de la vacante y otros detalles relevantes que obtengas de la herramienta.\n        * `comentario_agente`: Una cadena de texto donde expliques de forma concisa y profesional por qué consideras que el candidato es adecuado para las vacantes listadas, basándote en la coincidencia de su perfil con los requisitos.\n\n### **Formato de Salida Requerido (JSON):**\n\n**Ejemplo de Salida si se encuentran vacantes:**\n```json\n{\n  \"vacantes_aptas\": [\n    {\n      \"titulo_vacante\": \"Almacenista de Bodega\",\n      \"id_vacante\": \"VAC-102\",\n      \"ubicacion\": \"Tepotzotlan\"\n    },\n    {\n      \"titulo_vacante\": \"Auxiliar de Inventarios\",\n      \"id_vacante\": \"VAC-105\",\n      \"ubicacion\": \"Cuautitlan Izcalli\"\n    }\n  ],\n  \"comentario_agente\": \"El candidato Aaron Avila es apto para estas vacantes debido a sus 3 años de experiencia como almacenista, lo cual cumple o excede el requisito mínimo para ambos puestos. Su nivel de educación secundaria también se alinea con lo solicitado.\"\n}\n```\n\n**Ejemplo de Salida si NO se encuentran vacantes:**\n```json\n{\n  \"vacantes_aptas\": [],\n  \"comentario_agente\": \"Tras analizar el perfil del candidato, no se encontraron vacantes que se ajusten a sus 3 años de experiencia como almacenista en la ubicación solicitada. Se ha guardado su perfil para futuras oportunidades.\"\n}\n```",
               "role": "system"
             },
             {
@@ -76,8 +76,8 @@
       "type": "n8n-nodes-base.googleSheetsTool",
       "typeVersion": 4.7,
       "position": [
-        352,
-        208
+        192,
+        176
       ],
       "id": "75208aa0-6d21-4fdb-899c-b334bc4e6654",
       "name": "tool_vacantes",
@@ -87,6 +87,143 @@
           "name": "Google Sheets Jumperaron"
         }
       }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1G9H83AqaUhSTLDTjg0JNNY_FGt2mCZxyaRRultADyFo",
+          "mode": "list",
+          "cachedResultName": "registro_postulantes_adqa",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1G9H83AqaUhSTLDTjg0JNNY_FGt2mCZxyaRRultADyFo/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1G9H83AqaUhSTLDTjg0JNNY_FGt2mCZxyaRRultADyFo/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "nombre": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('nombre', ``, 'string') }}",
+            "edad": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('edad', ``, 'string') }}",
+            "educación": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('educaci_n', ``, 'string') }}",
+            "experiencia": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('experiencia', ``, 'string') }}",
+            "ubicación": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('ubicaci_n', ``, 'string') }}",
+            "trabajo anteriormente en Chedraui": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('trabajo_anteriormente_en_Chedraui', ``, 'string') }}",
+            "experiencia con patín hidráulico y handheld": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('experiencia_con_pat_n_hidr_ulico_y_handheld', ``, 'string') }}",
+            "género": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('g_nero', ``, 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "nombre",
+              "displayName": "nombre",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "edad",
+              "displayName": "edad",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "educación",
+              "displayName": "educación",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "experiencia",
+              "displayName": "experiencia",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "ubicación",
+              "displayName": "ubicación",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "trabajo anteriormente en Chedraui",
+              "displayName": "trabajo anteriormente en Chedraui",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "experiencia con patín hidráulico y handheld",
+              "displayName": "experiencia con patín hidráulico y handheld",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "género",
+              "displayName": "género",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        448,
+        176
+      ],
+      "id": "14eaaef3-70c4-4ee8-9c8c-646a06bba178",
+      "name": "tool_registro_postulantes",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "T1b495TNgv7GQdA8",
+          "name": "Google Sheets Jumperaron"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// 1. Obtener el contenido del mensaje del modelo de IA.\n// Esta es la cadena de texto que puede venir con \"```json\" al inicio.\nlet content = $input.item.json.message.content;\n\n// 2. Limpiar la cadena de texto.\n// Este comando elimina el bloque de código Markdown \"```json\" del inicio \n// y \"```\" del final. Si no los encuentra, no hace nada. \n// Por eso funciona para ambos casos (cuando la salida es correcta y cuando no).\nconst cleanedString = content.replace(/^```json\\s*/, '').replace(/\\s*```$/, '');\n\n// 3. Convertir (parsear) la cadena limpia a un objeto JSON real.\n// Esto transforma el texto en datos que los siguientes nodos pueden entender.\nconst finalJson = JSON.parse(cleanedString);\n\n// 4. Devolver el objeto JSON limpio como salida de este nodo.\nreturn finalJson;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        576,
+        0
+      ],
+      "id": "0219bdc0-5ab5-4642-b54d-520e9515fa43",
+      "name": "Limpia JSON"
     }
   ],
   "connections": {
@@ -111,6 +248,28 @@
           }
         ]
       ]
+    },
+    "tool_registro_postulantes": {
+      "ai_tool": [
+        [
+          {
+            "node": "Message a model",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Limpia JSON",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -129,7 +288,7 @@
       }
     ]
   },
-  "versionId": "cfe36293-653b-4837-91c3-fc66b8336128",
+  "versionId": "600fa431-455e-43b1-812b-3303c52ed865",
   "triggerCount": 0,
   "shared": [
     {
