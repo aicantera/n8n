@@ -1,0 +1,224 @@
+{
+  "createdAt": "2025-09-24T20:45:29.348Z",
+  "updatedAt": "2025-09-24T20:59:56.000Z",
+  "id": "hdrv4Op7mf16MQwu",
+  "name": "Registro No Apto ADQA",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "fb5fa9ef-2bb0-46f2-87b7-f59e3578e539",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "text": "={{ $json.query }}",
+        "attributes": {
+          "attributes": [
+            {
+              "name": "nombre",
+              "description": "nombre del candidato",
+              "required": true
+            },
+            {
+              "name": "edad",
+              "description": "edad del candidato",
+              "required": true
+            },
+            {
+              "name": "escolaridad",
+              "description": "escolaridad del candidato",
+              "required": true
+            },
+            {
+              "name": "genero",
+              "description": "genero del candidato",
+              "required": true
+            },
+            {
+              "name": "estatura",
+              "description": "estatura del candidato",
+              "required": true
+            },
+            {
+              "name": "experiencia laboral",
+              "description": "Experiencia Laboral del candidato",
+              "required": true
+            },
+            {
+              "name": "ubicacion",
+              "description": "municipio o localidad donde se ubica el candidato",
+              "required": true
+            },
+            {
+              "name": "trabajo anteriormente en Chedraui",
+              "description": "Si el candidato trabajo anteriormente en Chedraui, puede ser un si o no",
+              "required": true
+            },
+            {
+              "name": "experiencia con patín hidráulico y handheld",
+              "description": "Si el candidato tiene experiencia con patín hidráulico y handheld, puede ser un si o no",
+              "required": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.informationExtractor",
+      "typeVersion": 1.2,
+      "position": [
+        208,
+        0
+      ],
+      "id": "7eccd5d2-181b-4fee-a3b9-c9d77692b37b",
+      "name": "Information Extractor"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        144,
+        208
+      ],
+      "id": "157ba67d-547d-4a30-97e4-9de96a358447",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "0GqmLyS4fGSY8cgO",
+          "name": "OpenAi Agente RH ADQA"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Information Extractor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Information Extractor",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {
+    "When Executed by Another Workflow": [
+      {
+        "json": {
+          "query": "Aaron Avila\n34 años\nSecundaria\nMasculino\n1.70\n3 años como almacenista\nTepotzotlan\nno\nno"
+        }
+      }
+    ]
+  },
+  "versionId": "0dc9ba05-8833-4283-b23d-8f98f16a8f47",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "createdAt": "2025-09-24T20:45:29.351Z",
+      "updatedAt": "2025-09-24T20:45:29.351Z",
+      "role": "workflow:owner",
+      "workflowId": "hdrv4Op7mf16MQwu",
+      "projectId": "BZ9Ta5yhe4RhzY78",
+      "project": {
+        "createdAt": "2025-05-13T15:56:28.209Z",
+        "updatedAt": "2025-05-13T16:18:54.372Z",
+        "id": "BZ9Ta5yhe4RhzY78",
+        "name": "CANTERA ADMIN <canteradigital7@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "projectRelations": [
+          {
+            "createdAt": "2025-05-13T15:56:28.209Z",
+            "updatedAt": "2025-05-13T15:56:28.209Z",
+            "role": "project:personalOwner",
+            "userId": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
+            "projectId": "BZ9Ta5yhe4RhzY78",
+            "user": {
+              "createdAt": "2025-05-13T15:56:27.880Z",
+              "updatedAt": "2025-09-24T06:00:52.000Z",
+              "id": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
+              "email": "canteradigital7@gmail.com",
+              "firstName": "CANTERA",
+              "lastName": "ADMIN",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-05-13T16:19:25.161Z",
+                "personalization_survey_n8n_version": "1.92.2",
+                "companySize": "<20",
+                "companyType": "saas",
+                "role": "customer-support",
+                "reportedSource": "event"
+              },
+              "settings": {
+                "userActivated": true,
+                "firstSuccessfulWorkflowId": "PTbESRzX3rguwQN8",
+                "userActivatedAt": 1747154580970,
+                "easyAIWorkflowOnboarded": true,
+                "npsSurvey": {
+                  "responded": true,
+                  "lastShownAt": 1748367494893
+                },
+                "dismissedCallouts": {
+                  "aiAgentStarterCallout": true,
+                  "preBuiltAgentsCalloutHttpRequest": true
+                }
+              },
+              "role": "global:owner",
+              "disabled": false,
+              "mfaEnabled": false,
+              "lastActiveAt": "2025-09-24",
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": [
+    {
+      "createdAt": "2025-09-22T20:39:25.976Z",
+      "updatedAt": "2025-09-22T20:39:25.976Z",
+      "id": "Vz4LxBoacd04tWI2",
+      "name": "Agente ADQA"
+    }
+  ]
+}
