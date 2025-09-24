@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-06-24T22:28:19.611Z",
-  "updatedAt": "2025-09-23T18:54:58.000Z",
+  "updatedAt": "2025-09-24T17:49:44.000Z",
   "id": "PetXIW4fDRVoHgK5",
   "name": "chatbot sales",
   "active": true,
@@ -7362,6 +7362,67 @@
       "id": "38d70ae9-bfc4-4994-be08-ed35e5a2f9eb",
       "name": "WhatsApp Trigger",
       "notes": "este nodo combina la entrada del nodo de whatsapp independientemente de donde llegue"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "b92b3487-a253-4ae4-a772-1ae4680de794",
+              "leftValue": "={{ $json.data.opportunities[0]._id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -3104,
+        752
+      ],
+      "id": "3496078a-b7a5-455d-aa8e-a719bc68203a",
+      "name": "existe la oportunidad?"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Edit Fields3').item.json.currentEnviroment }}/api/v1/grow/opportunity/simple",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-api-key",
+              "value": "={{ $('Edit Fields3').item.json['x-api-key'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n    \"guardian_first_name\": \"{{ $('WhatsApp Trigger').item.json.data[0].contacts[0].profile.name }}\",\n    \"guardian_last_name\": \"\", \n    \"phone\": \"{{ $('WhatsApp Trigger').item.json.data[0].messages[0].from }}\",\n    \"tenant_id\": \"{{ $('Auth Guardian1').item.json.data.session.tenant_id }}\",\n    \"phone_number_id\":\"{{ $('WhatsApp Trigger').item.json.data[0].metadata.phone_number_id }}\"\n} ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -2896,
+        848
+      ],
+      "id": "3ccebce3-669d-4a92-9f2b-3fd98472b9cc",
+      "name": "HTTP Request3"
     }
   ],
   "connections": {
@@ -9318,6 +9379,29 @@
           }
         ]
       ]
+    },
+    "buscamos oportunidad": {
+      "main": [
+        [
+          {
+            "node": "existe la oportunidad?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "existe la oportunidad?": {
+      "main": [
+        [],
+        [
+          {
+            "node": "HTTP Request3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -9358,7 +9442,7 @@
       }
     ]
   },
-  "versionId": "f059df2f-3c9f-400c-9cfe-7f5b26a5d565",
+  "versionId": "be798653-0bbb-410a-be73-5884c563d429",
   "triggerCount": 1,
   "shared": [
     {
@@ -9384,7 +9468,7 @@
             "projectId": "BsYMJSPwury6TiTn",
             "user": {
               "createdAt": "2025-06-06T20:24:22.275Z",
-              "updatedAt": "2025-09-23T15:14:23.000Z",
+              "updatedAt": "2025-09-24T17:07:38.000Z",
               "id": "f9268337-0922-4cba-994c-bf6b40332731",
               "email": "adolfocuentas123@gmail.com",
               "firstName": "adolfo",
@@ -9411,7 +9495,7 @@
               "role": "global:member",
               "disabled": false,
               "mfaEnabled": false,
-              "lastActiveAt": "2025-09-23",
+              "lastActiveAt": "2025-09-24",
               "isPending": false
             }
           }
