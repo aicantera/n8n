@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-06-24T22:28:19.611Z",
-  "updatedAt": "2025-09-24T17:49:44.000Z",
+  "updatedAt": "2025-09-24T19:19:43.000Z",
   "id": "PetXIW4fDRVoHgK5",
   "name": "chatbot sales",
   "active": true,
@@ -7400,7 +7400,7 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "={{ $('Edit Fields3').item.json.currentEnviroment }}/api/v1/grow/opportunity/simple",
+        "url": "={{ $('Edit Fields3').item.json.currentEnviroment }}/api/v1/grow/",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -7423,6 +7423,42 @@
       ],
       "id": "3ccebce3-669d-4a92-9f2b-3fd98472b9cc",
       "name": "HTTP Request3"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Edit Fields3').item.json.currentEnviroment }}/api/v1/messaging/whatsapp/webhook/sales",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n    \"tenant_id\": \"{{ $('Auth Guardian1').item.json.data.session.tenant_id }}\",\n    \"opportunity_id\": \"{{ $json.data.opportunity_id }}\",\n    \"wa_data\": {{ JSON.stringify($('WhatsApp Trigger').item.json.data) }}\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -2672,
+        784
+      ],
+      "id": "5aa7b980-be67-4547-bdc5-9d36868805eb",
+      "name": "envio mensaje a agente"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Edit Fields3').item.json.currentEnviroment }}/api/v1/messaging/whatsapp/webhook/sales",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n    \"tenant_id\": \"{{ $('Auth Guardian1').item.json.data.session.tenant_id }}\",\n    \"opportunity_id\": \"{{ $json.data.opportunity_id }}\",\n    \"wa_data\": {{ JSON.stringify($('WhatsApp Trigger').item.json.data) }}\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -2736,
+        560
+      ],
+      "id": "d27b9831-8327-4326-ad75-f3a0d2374ad6",
+      "name": "envio mensaje a agente1"
     }
   ],
   "connections": {
@@ -9402,6 +9438,17 @@
           }
         ]
       ]
+    },
+    "HTTP Request3": {
+      "main": [
+        [
+          {
+            "node": "envio mensaje a agente",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -9442,7 +9489,7 @@
       }
     ]
   },
-  "versionId": "be798653-0bbb-410a-be73-5884c563d429",
+  "versionId": "36f394ee-d876-4c4a-b173-e68624996895",
   "triggerCount": 1,
   "shared": [
     {
