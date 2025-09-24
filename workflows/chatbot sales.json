@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-06-24T22:28:19.611Z",
-  "updatedAt": "2025-09-24T19:19:43.000Z",
+  "updatedAt": "2025-09-24T22:44:44.000Z",
   "id": "PetXIW4fDRVoHgK5",
   "name": "chatbot sales",
   "active": true,
@@ -7276,7 +7276,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -3856,
+        -4240,
         768
       ],
       "id": "754f56c8-0bb8-45d4-b14f-f10e2a3ff4ee",
@@ -7284,7 +7284,7 @@
     },
     {
       "parameters": {
-        "url": "={{ $('Edit Fields3').item.json.currentEnviroment }}/api/v1/grow/opportunities/phone/{{ $('WhatsApp Trigger').item.json.data[0].messages[0].from }}",
+        "url": "={{ $('Edit Fields3').item.json.currentEnviroment }}/api/v1/grow/opportunities/phone/{{ $('WhatsApp Trigger').item.json.data[0].messages[0].from }}/{{ $json.data.config.tenant_id }}",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -7303,8 +7303,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -3456,
-        656
+        -3872,
+        768
       ],
       "id": "bea2534e-aa4a-49e4-bfb6-2bca78c1df9c",
       "name": "buscamos oportunidad"
@@ -7318,11 +7318,12 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        -3664,
-        768
+        -5040,
+        1072
       ],
       "id": "b97e6b80-3655-432d-af5a-bc062d920c6c",
       "notesInFlow": false,
+      "disabled": true,
       "onError": "continueErrorOutput"
     },
     {
@@ -7335,7 +7336,7 @@
       "type": "n8n-nodes-base.whatsAppTrigger",
       "typeVersion": 1,
       "position": [
-        -4352,
+        -4752,
         768
       ],
       "id": "11077335-da47-487d-aebb-39c1d3e75a1c",
@@ -7356,7 +7357,7 @@
       "type": "n8n-nodes-base.aggregate",
       "typeVersion": 1,
       "position": [
-        -4032,
+        -4432,
         768
       ],
       "id": "38d70ae9-bfc4-4994-be08-ed35e5a2f9eb",
@@ -7391,8 +7392,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        -3104,
-        752
+        -3664,
+        768
       ],
       "id": "3496078a-b7a5-455d-aa8e-a719bc68203a",
       "name": "existe la oportunidad?"
@@ -7418,8 +7419,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -2896,
-        848
+        -3456,
+        864
       ],
       "id": "3ccebce3-669d-4a92-9f2b-3fd98472b9cc",
       "name": "HTTP Request3"
@@ -7436,8 +7437,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -2672,
-        784
+        -3232,
+        800
       ],
       "id": "5aa7b980-be67-4547-bdc5-9d36868805eb",
       "name": "envio mensaje a agente"
@@ -7448,17 +7449,40 @@
         "url": "={{ $('Edit Fields3').item.json.currentEnviroment }}/api/v1/messaging/whatsapp/webhook/sales",
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n    \"tenant_id\": \"{{ $('Auth Guardian1').item.json.data.session.tenant_id }}\",\n    \"opportunity_id\": \"{{ $json.data.opportunity_id }}\",\n    \"wa_data\": {{ JSON.stringify($('WhatsApp Trigger').item.json.data) }}\n}",
+        "jsonBody": "={\n    \"tenant_id\": \"{{ $('datos_num').item.json.data.config.tenant_id }}\",\n    \"opportunity_id\": \"{{ $('buscamos oportunidad').item.json.data.opportunities[0]._id }}\",\n    \"wa_data\": {{ JSON.stringify($('WhatsApp Trigger').item.json.data) }}\n}",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -2736,
-        560
+        -3296,
+        576
       ],
       "id": "d27b9831-8327-4326-ad75-f3a0d2374ad6",
       "name": "envio mensaje a agente1"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.currentEnviroment }}/api/v1/messaging/whatsapp/get-config-sales/{{ $('WhatsApp Trigger').item.json.data[0].metadata.phone_number_id }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-api-key",
+              "value": "={{ $json['x-api-key'] }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -4048,
+        768
+      ],
+      "id": "bfb3fce6-8aca-4d25-8976-1199c7239655",
+      "name": "datos_num"
     }
   ],
   "connections": {
@@ -9376,7 +9400,7 @@
       "main": [
         [
           {
-            "node": "Auth Guardian1",
+            "node": "datos_num",
             "type": "main",
             "index": 0
           }
@@ -9385,13 +9409,7 @@
     },
     "Auth Guardian1": {
       "main": [
-        [
-          {
-            "node": "buscamos oportunidad",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "sales cerebro": {
@@ -9429,7 +9447,13 @@
     },
     "existe la oportunidad?": {
       "main": [
-        [],
+        [
+          {
+            "node": "envio mensaje a agente1",
+            "type": "main",
+            "index": 0
+          }
+        ],
         [
           {
             "node": "HTTP Request3",
@@ -9444,6 +9468,17 @@
         [
           {
             "node": "envio mensaje a agente",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "datos_num": {
+      "main": [
+        [
+          {
+            "node": "buscamos oportunidad",
             "type": "main",
             "index": 0
           }
@@ -9489,7 +9524,7 @@
       }
     ]
   },
-  "versionId": "36f394ee-d876-4c4a-b173-e68624996895",
+  "versionId": "bdcb3648-742c-4cdd-8aa1-30e22d189767",
   "triggerCount": 1,
   "shared": [
     {
