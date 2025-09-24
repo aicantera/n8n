@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-09-24T20:45:29.348Z",
-  "updatedAt": "2025-09-24T20:59:56.000Z",
+  "updatedAt": "2025-09-24T21:10:40.000Z",
   "id": "hdrv4Op7mf16MQwu",
   "name": "Registro No Apto ADQA",
   "active": false,
@@ -56,7 +56,7 @@
             },
             {
               "name": "ubicacion",
-              "description": "municipio o localidad donde se ubica el candidato",
+              "description": "De que municipio o localidad es originario el candidato o en que municipio o localidad vive",
               "required": true
             },
             {
@@ -106,6 +106,140 @@
           "name": "OpenAi Agente RH ADQA"
         }
       }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1G9H83AqaUhSTLDTjg0JNNY_FGt2mCZxyaRRultADyFo",
+          "mode": "list",
+          "cachedResultName": "registro_postulantes_adqa",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1G9H83AqaUhSTLDTjg0JNNY_FGt2mCZxyaRRultADyFo/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1403973985,
+          "mode": "list",
+          "cachedResultName": "No_Aptos",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1G9H83AqaUhSTLDTjg0JNNY_FGt2mCZxyaRRultADyFo/edit#gid=1403973985"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "nombre": "={{ $json.output.nombre }}",
+            "edad": "={{ $json.output.edad }}",
+            "escolaridad": "={{ $json.output.escolaridad }}",
+            "genero": "={{ $json.output.genero }}",
+            "estatura": "={{ $json.output.estatura }}",
+            "experiencia": "={{ $json.output['experiencia laboral'] }}",
+            "ubicación": "={{ $json.output.ubicacion }}",
+            "trabajo anteriormente en Chedraui": "={{ $json.output['trabajo anteriormente en Chedraui'] }}",
+            "experiencia con patín hidráulico y handheld": "={{ $json.output['experiencia con patín hidráulico y handheld'] }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "nombre",
+              "displayName": "nombre",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "edad",
+              "displayName": "edad",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "escolaridad",
+              "displayName": "escolaridad",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "genero",
+              "displayName": "genero",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "estatura",
+              "displayName": "estatura",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "experiencia",
+              "displayName": "experiencia",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "ubicación",
+              "displayName": "ubicación",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "trabajo anteriormente en Chedraui",
+              "displayName": "trabajo anteriormente en Chedraui",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "experiencia con patín hidráulico y handheld",
+              "displayName": "experiencia con patín hidráulico y handheld",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        560,
+        0
+      ],
+      "id": "42341b3f-1607-4e45-9628-e233c5c0ec1f",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "T1b495TNgv7GQdA8",
+          "name": "Google Sheets Jumperaron"
+        }
+      }
     }
   ],
   "connections": {
@@ -130,6 +264,17 @@
           }
         ]
       ]
+    },
+    "Information Extractor": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -143,12 +288,12 @@
     "When Executed by Another Workflow": [
       {
         "json": {
-          "query": "Aaron Avila\n34 años\nSecundaria\nMasculino\n1.70\n3 años como almacenista\nTepotzotlan\nno\nno"
+          "query": "Carlos Correa 34 años secundaria hombre 170 3 años de cedis de Tepotzotlan no y no"
         }
       }
     ]
   },
-  "versionId": "0dc9ba05-8833-4283-b23d-8f98f16a8f47",
+  "versionId": "21d5ba10-192c-4cbb-8b2e-77c31dc4297b",
   "triggerCount": 0,
   "shared": [
     {
