@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-06-24T22:28:19.611Z",
-  "updatedAt": "2025-09-24T22:44:44.000Z",
+  "updatedAt": "2025-09-25T17:44:42.000Z",
   "id": "PetXIW4fDRVoHgK5",
   "name": "chatbot sales",
   "active": true,
@@ -7291,10 +7291,6 @@
             {
               "name": "x-api-key",
               "value": "={{ $('Edit Fields3').item.json['x-api-key'] }}"
-            },
-            {
-              "name": "x-session-id",
-              "value": "={{ $json.data.session._id }}"
             }
           ]
         },
@@ -7401,37 +7397,10 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "={{ $('Edit Fields3').item.json.currentEnviroment }}/api/v1/grow/",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "x-api-key",
-              "value": "={{ $('Edit Fields3').item.json['x-api-key'] }}"
-            }
-          ]
-        },
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={\n    \"guardian_first_name\": \"{{ $('WhatsApp Trigger').item.json.data[0].contacts[0].profile.name }}\",\n    \"guardian_last_name\": \"\", \n    \"phone\": \"{{ $('WhatsApp Trigger').item.json.data[0].messages[0].from }}\",\n    \"tenant_id\": \"{{ $('Auth Guardian1').item.json.data.session.tenant_id }}\",\n    \"phone_number_id\":\"{{ $('WhatsApp Trigger').item.json.data[0].metadata.phone_number_id }}\"\n} ",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        -3456,
-        864
-      ],
-      "id": "3ccebce3-669d-4a92-9f2b-3fd98472b9cc",
-      "name": "HTTP Request3"
-    },
-    {
-      "parameters": {
-        "method": "POST",
         "url": "={{ $('Edit Fields3').item.json.currentEnviroment }}/api/v1/messaging/whatsapp/webhook/sales",
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n    \"tenant_id\": \"{{ $('Auth Guardian1').item.json.data.session.tenant_id }}\",\n    \"opportunity_id\": \"{{ $json.data.opportunity_id }}\",\n    \"wa_data\": {{ JSON.stringify($('WhatsApp Trigger').item.json.data) }}\n}",
+        "jsonBody": "={\n    \"tenant_id\": \"{{ $('datos_num').item.json.data.config.tenant_id }}\",\n    \"opportunity_id\": \"{{ $json.data.opportunity_id }}\",\n    \"wa_data\": {{ JSON.stringify($('WhatsApp Trigger').item.json.data) }}\n}",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
@@ -7483,6 +7452,33 @@
       ],
       "id": "bfb3fce6-8aca-4d25-8976-1199c7239655",
       "name": "datos_num"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Edit Fields3').item.json.currentEnviroment }}/api/v1/grow/opportunity/simple",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-api-key",
+              "value": "={{ $('Edit Fields3').item.json['x-api-key'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n    \"guardian_first_name\": \"{{ $('WhatsApp Trigger').item.json.data[0].contacts[0].profile.name }}\",\n    \"guardian_last_name\": \"\", \n    \"phone\": \"{{ $('WhatsApp Trigger').item.json.data[0].messages[0].from }}\",\n    \"tenant_id\": \"{{ $('datos_num').item.json.data.config.tenant_id }}\",\n    \"phone_number_id\":\"{{ $('WhatsApp Trigger').item.json.data[0].metadata.phone_number_id }}\"\n} ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -3456,
+        864
+      ],
+      "id": "3ccebce3-669d-4a92-9f2b-3fd98472b9cc",
+      "name": "creamos la oportunidad y el usuario"
     }
   ],
   "connections": {
@@ -9456,18 +9452,7 @@
         ],
         [
           {
-            "node": "HTTP Request3",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "HTTP Request3": {
-      "main": [
-        [
-          {
-            "node": "envio mensaje a agente",
+            "node": "creamos la oportunidad y el usuario",
             "type": "main",
             "index": 0
           }
@@ -9479,6 +9464,17 @@
         [
           {
             "node": "buscamos oportunidad",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "creamos la oportunidad y el usuario": {
+      "main": [
+        [
+          {
+            "node": "envio mensaje a agente",
             "type": "main",
             "index": 0
           }
@@ -9524,7 +9520,7 @@
       }
     ]
   },
-  "versionId": "bdcb3648-742c-4cdd-8aa1-30e22d189767",
+  "versionId": "538e4056-960d-472d-aa76-ca46bed4d9a4",
   "triggerCount": 1,
   "shared": [
     {
