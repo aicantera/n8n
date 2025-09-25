@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-09-15T15:39:29.471Z",
-  "updatedAt": "2025-09-24T20:09:35.000Z",
+  "updatedAt": "2025-09-24T23:57:20.000Z",
   "id": "BPnkCPlia5Iozaew",
   "name": "chatbot cerebro qa",
   "active": true,
@@ -45,7 +45,7 @@
     },
     {
       "parameters": {
-        "url": "={{$node[\"Set Variables\"].json[\"currentEnvironment\"]}}/api/v1/authmb/auth_guardian?phone={{ $('incoming_data').item.json.incoming_wp.messages[0].from }}",
+        "url": "={{$node[\"Set Variables\"].json[\"currentEnvironment\"]}}/api/v1/authmb/auth_guardian?phone={{ $('incoming_data').item.json.incoming_wp.messages[0].from }}&message={{ $('incoming_data').item.json.incoming_wp.messages[0].text.body || \"no_data\" }}",
         "options": {}
       },
       "name": "Auth Guardian",
@@ -7470,7 +7470,7 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('incoming_data').item.json.incoming_wp.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"No puedes acceder al servicio de Cerebro porque tu teléfono no ha sido validado todavía.\\nSi crees que esto es un error, mándanos un mensaje de WhatsApp al +52 56 4389 1280 y te atenderemos.\"\n  }\n}\n",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('incoming_data').item.json.incoming_wp.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"¡Atención! Para concluir tu registro es necesario que envíes el código generado cuando das click en “Abrir Whatsapp”.  Este código debe verse así: *VALIDAR-68d477….* No lo modifiques ni agregues nada. Si necesitas generarlo de nuevo, vuelve a la pantalla de verificar WhatsApp en tu navegador.\"\n  }\n}\n",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
@@ -7597,7 +7597,7 @@
             {
               "id": "dd4ab65f-73e9-4d0b-ac9a-b622d5f1b441",
               "name": "currentEnv",
-              "value": "https://api.pruebascerebro.online",
+              "value": "https://86b657fc2e2b.ngrok-free.app",
               "type": "string"
             },
             {
@@ -10473,21 +10473,13 @@
           ],
           "messages": [
             {
-              "context": {
-                "from": "5215545515382",
-                "id": "wamid.HBgNNTIxNTU0MzQ0NDkyNhUCABEYEkYzRUI2RTIwOEU0NDhCRjdBRgA="
-              },
               "from": "5215543444926",
-              "id": "wamid.HBgNNTIxNTU0MzQ0NDkyNhUCABIYFDNBREEyRUVCRTFDRjY3NEJBQURDAA==",
-              "timestamp": "1758558677",
-              "type": "interactive",
-              "interactive": {
-                "type": "button_reply",
-                "button_reply": {
-                  "id": "aceptar",
-                  "title": "Acepto"
-                }
-              }
+              "id": "wamid.HBgNNTIxNTU0MzQ0NDkyNhUCABIYFDNBNDJEOUVEODAyMjk1MjlFRkJEAA==",
+              "timestamp": "1758755180",
+              "text": {
+                "body": "VALIDAR-68d477ae6529a96c36ab9b46"
+              },
+              "type": "text"
             }
           ],
           "field": "messages"
@@ -10495,7 +10487,7 @@
       }
     ]
   },
-  "versionId": "6151b1b3-790d-446c-89a0-864ab75b444c",
+  "versionId": "e95cf842-6553-4b92-a40a-1bb8872c25f3",
   "triggerCount": 2,
   "shared": [
     {
