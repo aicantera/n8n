@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-07-11T00:12:57.473Z",
-  "updatedAt": "2025-09-29T15:31:32.000Z",
+  "updatedAt": "2025-09-29T16:18:37.000Z",
   "id": "hqoczQMD5PHVvfTp",
   "name": "Agente Glassy Filtrador",
   "active": false,
@@ -214,8 +214,8 @@
       "type": "@n8n/n8n-nodes-langchain.openAi",
       "typeVersion": 1.8,
       "position": [
-        1632,
-        -96
+        1552,
+        320
       ],
       "id": "036ecec6-55c2-4dac-a4f6-53c6ec05c708",
       "name": "Message a model",
@@ -233,8 +233,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1952,
-        128
+        2032,
+        336
       ],
       "id": "a7a7657b-bf57-4804-917a-ef901029cc16",
       "name": "Code"
@@ -326,16 +326,38 @@
     },
     {
       "parameters": {
-        "jsCode": "// 1. Obtener el contenido del mensaje del modelo de IA.\n// Esta es la cadena de texto que puede venir con \"```json\" al inicio.\nlet content = $input.item.json.message.content;\n\n// 2. Limpiar la cadena de texto.\n// Este comando elimina el bloque de código Markdown \"```json\" del inicio \n// y \"```\" del final. Si no los encuentra, no hace nada. \n// Por eso funciona para ambos casos (cuando la salida es correcta y cuando no).\nconst cleanedString = content.replace(/^```json\\s*/, '').replace(/\\s*```$/, '');\n\n// 3. Convertir (parsear) la cadena limpia a un objeto JSON real.\n// Esto transforma el texto en datos que los siguientes nodos pueden entender.\nconst finalJson = JSON.parse(cleanedString);\n\n// 4. Devolver el objeto JSON limpio como salida de este nodo.\nreturn finalJson;"
+        "jsCode": "// 1. Obtener el contenido del mensaje del modelo de IA.\n// Esta es la cadena de texto que puede venir con \"```json\" al inicio.\nlet content = $input.item.json.text;\n\n// 2. Limpiar la cadena de texto.\n// Este comando elimina el bloque de código Markdown \"```json\" del inicio \n// y \"```\" del final. Si no los encuentra, no hace nada. \n// Por eso funciona para ambos casos (cuando la salida es correcta y cuando no).\nconst cleanedString = content.replace(/^```json\\s*/, '').replace(/\\s*```$/, '');\n\n// 3. Convertir (parsear) la cadena limpia a un objeto JSON real.\n// Esto transforma el texto en datos que los siguientes nodos pueden entender.\nconst finalJson = JSON.parse(cleanedString);\n\n// 4. Devolver el objeto JSON limpio como salida de este nodo.\nreturn finalJson;"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1952,
+        1936,
         -96
       ],
       "id": "4099195c-c4f9-4a5c-b930-3d04bfa7ac12",
       "name": "Limpia JSON"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('AI Agent').item.json.output }}",
+        "messages": {
+          "messageValues": [
+            {
+              "message": "=### **Rol y Objetivo:**\nEres un asistente de automatización especializado en filtrar datos JSON. Tu única función es procesar una lista de productos y devolver una sub-lista basada en un criterio, o la lista completa si no se especifica ningún criterio.\n\n### **Entradas:**\n1.  **Lista de Productos:** Una lista de objetos JSON que recibes en el flujo de n8n.\n2.  **Criterio de Filtrado:** Las características deseadas, contenidas en la variable `{{ $('Information Extractor1').item.json.output.caracteristicas }}`.\n\n### **Lógica de Ejecución (Reglas Estrictas):**\n\n1.  **Verifica el Criterio de Filtrado:** Primero, inspecciona el valor de `{{ $('Information Extractor1').item.json.output.caracteristicas }}`.\n\n2.  **Ejecuta una de las siguientes dos acciones:**\n    * **CASO A: Si el valor es `ninguna`**\n        * Tu única acción es devolver la **lista de productos de entrada original**, completa y sin ninguna modificación.\n\n    * **CASO B: Si el valor es cualquier otro**\n        * Compara estas características con las de cada producto en la lista.\n        * Genera y devuelve una **nueva lista** que contenga únicamente los productos que coincidan con **todos** los criterios especificados.\n\n### **Formato de Salida Obligatorio:**\n* Tu respuesta debe ser **exclusivamente el arreglo JSON** de productos resultante.\n* **No incluyas texto introductorio, explicaciones, resúmenes o cualquier otra palabra.** La salida debe ser un JSON limpio y válido que pueda ser procesado por los siguientes nodos del flujo de trabajo."
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        1616,
+        -96
+      ],
+      "id": "651e4a57-1cdb-42cf-b081-b7e0fbe4f5e4",
+      "name": "Basic LLM Chain"
     }
   ],
   "connections": {
@@ -365,6 +387,11 @@
           },
           {
             "node": "Information Extractor",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Basic LLM Chain",
             "type": "ai_languageModel",
             "index": 0
           }
@@ -408,7 +435,7 @@
       "main": [
         [
           {
-            "node": "Message a model",
+            "node": "Basic LLM Chain",
             "type": "main",
             "index": 0
           }
@@ -449,13 +476,7 @@
     },
     "Message a model": {
       "main": [
-        [
-          {
-            "node": "Limpia JSON",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "Limpia JSON": {
@@ -463,6 +484,17 @@
         [
           {
             "node": "Create a row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Limpia JSON",
             "type": "main",
             "index": 0
           }
@@ -487,7 +519,7 @@
       }
     ]
   },
-  "versionId": "139b73d8-6314-4df0-a930-dff17fd1e6f0",
+  "versionId": "a52e781f-ecd3-4de7-b256-94a20f5f1598",
   "triggerCount": 0,
   "shared": [
     {
