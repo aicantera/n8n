@@ -1,0 +1,410 @@
+{
+  "createdAt": "2025-09-29T18:34:58.414Z",
+  "updatedAt": "2025-09-29T18:35:36.000Z",
+  "id": "DPdGj496yo4PjW0R",
+  "name": "Agente cotizados glasbil prod",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -1424,
+        -144
+      ],
+      "id": "f7200c5c-6a73-4b72-a54b-b3c7c482cc36",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.query }}",
+        "options": {
+          "systemMessage": "=Eres un agente dedicado a realizzar peticiones para hacer cotizaciónes de glasbil\ntu trabajo es hacer peticiones y poder retornar iinformacion\ntambien tienes la capacidad de realizzar cotizaciones todo esto usando herramientas de http request\n\ntienes acceso a estas herramientas\n\n'available_years': con esta herramienta puedes consultar los años disponibles en el sistema de glasbil\n\n'available_brands(year)': con esta herramienta puedes consultar las marcas disponibles dependiendo del año que te den, para esta es importante que te den el año para consultar\n\n'available_models(year,brand)': con esta herramienta seras capaz de realizar busquedas de los modelos de un auto usando el año y la marca es importante que estos dos datos te lleguen para poder cumplir con esta funcion\n\n'available_type_car(year,brand,model)': con esta herramienta podras obtener los tipos de carros dependiendo del año, marca y modelo es importante que estos datos te sean dados para que puedas cumplir tu funcion\n\n'available_type_glasses(year,brand,model,type_car)': con esta herramienta puedes obtener los tipos de cristales disponibles dependiendo del año, marca, modelo, tipo de carro, es importante que los datos los tengas todos para que puedas cumplir con tu funcion\n\n'search_products(year,brand,model,car_type,type_glass)': con esta herramienta puedes obtener los productos disponibles dependiendo del año, marca, modelo, tipo de carro, y tipo de cristal. Es importante que los datos los tengas todos para que puedas cumplir con tu funcion. En la información que retornes de cada producto incluye lo siguientes datos: 'external_id', 'origin' y 'nag'.\n\n'send_quote(contact_name, contact_phone, contact_email, brand, model, year, car_type, glass_type, product_external_id, product_origin, product_nag, product_name)': con esta herramienta puedes mandar la cotización del usuario. Es importante que los datos los tengas todos para que puedas cumplir con tu funcion"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.9,
+      "position": [
+        -1216,
+        -144
+      ],
+      "id": "1792ca20-efe7-4d0f-b803-c2f9bc4979f7",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -1296,
+        80
+      ],
+      "id": "a1111b15-5d9e-42fe-bd8b-17d6b0ea47c1",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "zZlJrTGKq8KER7gD",
+          "name": "OpenAi account - GLASSY"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "toolDescription": "Esta herramienta se dedica a buscar informacion sobre años de automoviles ",
+        "url": "https://butik-vidrio.canteradigital.mx/api/finder/availableYears",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.2,
+      "position": [
+        -464,
+        -64
+      ],
+      "id": "746d2b72-9ea5-4477-a4c7-221f2cdeb7a7",
+      "name": "available_years"
+    },
+    {
+      "parameters": {
+        "url": "= https://butik-vidrio.canteradigital.mx/api/finder/availableBrandsYear?year={{ $fromAI('year') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.2,
+      "position": [
+        -496,
+        144
+      ],
+      "id": "75836796-d0d0-45e3-ad2c-861b593ab806",
+      "name": "available_brands"
+    },
+    {
+      "parameters": {
+        "toolDescription": "Con esta herramienta seras capaz de realizar la busqueda de los modelos disponibles dependiendo del año y de la marca del vehiculo",
+        "url": "= https://butik-vidrio.canteradigital.mx/api/finder/availableModelsBrandYear?year={{$fromAI('year')}}&brand={{ $fromAI('brand') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.2,
+      "position": [
+        -624,
+        -208
+      ],
+      "id": "0fa38aaf-0220-4ca4-b37f-c948b49c4b93",
+      "name": "available_models"
+    },
+    {
+      "parameters": {
+        "toolDescription": "con esta herramienta podras mostrar los tipos de autos dependiendo del año, marca y modelo del vehiculo",
+        "url": "= https://butik-vidrio.canteradigital.mx/api/finder/availableCarTypesModelsBrandsYear?year={{$fromAI('year')}}&brand={{$fromAI('brand')}}&model={{ $fromAI('model') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.2,
+      "position": [
+        -576,
+        304
+      ],
+      "id": "1ba6e8b5-7c6c-46e6-9b98-2431cf5598cd",
+      "name": "available_type_car"
+    },
+    {
+      "parameters": {
+        "toolDescription": "Eesta herramienta te ayudara a obtener los tipos de cristales disponibles para un vehiculo de acuerdo a year,brand,model,type_car",
+        "url": "=\nhttps://butik-vidrio.canteradigital.mx/api/finder/availableGlassTypesModelsBrandsYearCartypes?year={{$fromAI('year')}}&brand={{$fromAI('brand')}}&model={{$fromAI('model')}}&type_car={{ $fromAI('type_car') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.2,
+      "position": [
+        -768,
+        336
+      ],
+      "id": "1f13bd50-550f-411d-a103-2b2df63e874e",
+      "name": "available_type_glasses"
+    },
+    {
+      "parameters": {
+        "toolDescription": "Esta herramienta te ayudara a obtener los productos disponibles para un vehiculo de acuerdo a year, brand, model, car_type, type_glass ",
+        "url": "=https://butik-vidrio.canteradigital.mx/api/finder/searchProducts/filtered?year={{$fromAI('year')}}&brand={{$fromAI('brand')}}&model={{$fromAI('model')}}&car_type={{$fromAI('car_type')}}&type_glass={{$fromAI('type_glass')}}&antenna=false&encapsulated=false&hud=false&heated=false&attachment=false&request_origin=chatbot",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.2,
+      "position": [
+        -944,
+        336
+      ],
+      "id": "1a9563f6-56f6-4bb9-8a01-547ebda02a36",
+      "name": "search_products"
+    },
+    {
+      "parameters": {
+        "toolDescription": "Esta herramienta te ayudara a mandar la cotización del usuario con los siguientes datos contact_name, contact_phone, contact_email, brand, model, year, car_type, glass_type, product_external_id, product_origin, product_nag, product_name",
+        "method": "POST",
+        "url": "https://butik-vidrio.canteradigital.mx/api/productQuotes",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "user_id",
+              "value": "={{ null }}"
+            },
+            {
+              "name": "contact_name",
+              "value": "={{ $fromAI('contact_name') }}"
+            },
+            {
+              "name": "contact_phone",
+              "value": "={{ $fromAI('contact_phone') }}"
+            },
+            {
+              "name": "contact_email",
+              "value": "={{ $fromAI('contact_email') }}"
+            },
+            {
+              "name": "brand",
+              "value": "={{ $fromAI('brand') }}"
+            },
+            {
+              "name": "model",
+              "value": "={{ $fromAI('model') }}"
+            },
+            {
+              "name": "year",
+              "value": "={{ $fromAI('year') }}"
+            },
+            {
+              "name": "car_type",
+              "value": "={{ $fromAI('car_type') }}"
+            },
+            {
+              "name": "glass_type",
+              "value": "={{ $fromAI('glass_type') }}"
+            },
+            {
+              "name": "product_external_id",
+              "value": "={{ $fromAI('product_external_id') }}"
+            },
+            {
+              "name": "product_origin",
+              "value": "={{ $fromAI('product_origin') }}"
+            },
+            {
+              "name": "product_nag",
+              "value": "={{ $fromAI('product_nag') }}"
+            },
+            {
+              "name": "product_name",
+              "value": "={{ $fromAI('product_name') }}"
+            },
+            {
+              "name": "postal_code",
+              "value": "={{ $fromAI('contact_postal_code') }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.2,
+      "position": [
+        -1136,
+        336
+      ],
+      "id": "679accae-956b-43eb-a4a3-8558ce392802",
+      "name": "send_quote"
+    }
+  ],
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "available_years": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "available_brands": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "available_models": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "available_type_car": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "available_type_glasses": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "search_products": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "send_quote": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {},
+  "versionId": "e63341dc-0894-4169-b35d-1131a250fec6",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "createdAt": "2025-09-29T18:34:58.420Z",
+      "updatedAt": "2025-09-29T18:34:58.420Z",
+      "role": "workflow:owner",
+      "workflowId": "DPdGj496yo4PjW0R",
+      "projectId": "BZ9Ta5yhe4RhzY78",
+      "project": {
+        "createdAt": "2025-05-13T15:56:28.209Z",
+        "updatedAt": "2025-05-13T16:18:54.372Z",
+        "id": "BZ9Ta5yhe4RhzY78",
+        "name": "CANTERA ADMIN <canteradigital7@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "projectRelations": [
+          {
+            "createdAt": "2025-05-13T15:56:28.209Z",
+            "updatedAt": "2025-05-13T15:56:28.209Z",
+            "role": "project:personalOwner",
+            "userId": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
+            "projectId": "BZ9Ta5yhe4RhzY78",
+            "user": {
+              "createdAt": "2025-05-13T15:56:27.880Z",
+              "updatedAt": "2025-09-29T05:01:29.000Z",
+              "id": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
+              "email": "canteradigital7@gmail.com",
+              "firstName": "CANTERA",
+              "lastName": "ADMIN",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-05-13T16:19:25.161Z",
+                "personalization_survey_n8n_version": "1.92.2",
+                "companySize": "<20",
+                "companyType": "saas",
+                "role": "customer-support",
+                "reportedSource": "event"
+              },
+              "settings": {
+                "userActivated": true,
+                "firstSuccessfulWorkflowId": "PTbESRzX3rguwQN8",
+                "userActivatedAt": 1747154580970,
+                "easyAIWorkflowOnboarded": true,
+                "npsSurvey": {
+                  "responded": true,
+                  "lastShownAt": 1748367494893
+                },
+                "dismissedCallouts": {
+                  "aiAgentStarterCallout": true,
+                  "preBuiltAgentsCalloutHttpRequest": true
+                }
+              },
+              "role": "global:owner",
+              "disabled": false,
+              "mfaEnabled": false,
+              "lastActiveAt": "2025-09-29",
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": [
+    {
+      "createdAt": "2025-05-13T18:42:21.332Z",
+      "updatedAt": "2025-05-13T18:42:21.332Z",
+      "id": "XE33dAVH8p6eXZMD",
+      "name": "AGENTE GLASSY"
+    }
+  ]
+}
