@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-05-15T17:24:39.085Z",
-  "updatedAt": "2025-09-29T18:41:12.000Z",
+  "updatedAt": "2025-09-29T20:00:09.000Z",
   "id": "FqLw4NrJ9drMRdhD",
   "name": "Agente Glassy prod",
   "active": false,
@@ -52,8 +52,8 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.2,
       "position": [
-        128,
-        560
+        64,
+        592
       ],
       "id": "7da251b0-b4a4-4ad5-9ef0-2414f76647e6",
       "name": "OpenAI Chat Model",
@@ -85,8 +85,8 @@
       "type": "n8n-nodes-base.googleSheetsTool",
       "typeVersion": 4.5,
       "position": [
-        640,
-        688
+        736,
+        528
       ],
       "id": "c21396ca-8cd4-4ed3-835b-077ca22883f6",
       "name": "codigos_postales",
@@ -104,8 +104,8 @@
       "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
       "typeVersion": 1.2,
       "position": [
-        992,
-        768
+        1024,
+        688
       ],
       "id": "58252f89-96ce-4144-8324-da5c928bf74b",
       "name": "Embeddings OpenAI",
@@ -135,8 +135,8 @@
       "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
       "typeVersion": 1.1,
       "position": [
-        720,
-        544
+        848,
+        528
       ],
       "id": "8b486e6a-ab7c-4107-bdae-b6164defaf81",
       "name": "kb_glasbil",
@@ -157,7 +157,7 @@
       "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
       "typeVersion": 1.3,
       "position": [
-        240,
+        208,
         672
       ],
       "id": "83e613fa-1096-4e6f-96df-6226ceaf92f2",
@@ -234,8 +234,8 @@
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 2.2,
       "position": [
-        480,
-        688
+        688,
+        880
       ],
       "id": "bed95be5-1365-41c7-b8d8-889213160a3e",
       "name": "agente_cotizzacion"
@@ -245,8 +245,8 @@
       "type": "@n8n/n8n-nodes-langchain.toolThink",
       "typeVersion": 1,
       "position": [
-        368,
-        624
+        320,
+        656
       ],
       "id": "52f38b59-5726-4f26-a4f7-a11e4c7e2d8b",
       "name": "Think"
@@ -346,6 +346,12 @@
               "name": "mensaje",
               "value": "={{ $('WhatsApp Trigger1').item.json.messages[0].text.body }}",
               "type": "string"
+            },
+            {
+              "id": "dace03eb-00d1-46c6-91c0-bfef5f82da75",
+              "name": "tipo_mensaje",
+              "value": "mensaje del usuario",
+              "type": "string"
             }
           ]
         },
@@ -354,7 +360,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        64,
+        -80,
         304
       ],
       "id": "9b8ac7be-a5e0-4aa2-a0f1-2a6f6b5ac0b2",
@@ -443,6 +449,16 @@
                 "operation": "equals",
                 "name": "filter.operator.equals"
               }
+            },
+            {
+              "id": "3b8fef68-a5b6-4a55-8c1a-243996c21d93",
+              "leftValue": "={{ $json.messages[0].type }}",
+              "rightValue": "image",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
             }
           ],
           "combinator": "or"
@@ -452,8 +468,8 @@
       "type": "n8n-nodes-base.filter",
       "typeVersion": 2.2,
       "position": [
-        -176,
-        304
+        -784,
+        416
       ],
       "id": "e97afb53-04ec-466e-b45c-b57cd4ff3956",
       "name": "Filter"
@@ -586,9 +602,9 @@
         "description": "Tu eres el agente_registro y te encargas de registrar la interacción inicial del usuario",
         "workflowId": {
           "__rl": true,
-          "value": "tGwY3sT6JSe2WZWY",
+          "value": "4Bp86iYxAdxVFbtE",
           "mode": "list",
-          "cachedResultName": "Agente Glassy Registro Interacción"
+          "cachedResultName": "Agente Glassy Registro Interacción Prod"
         },
         "workflowInputs": {
           "mappingMode": "defineBelow",
@@ -602,11 +618,335 @@
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 2.2,
       "position": [
-        640,
-        864
+        992,
+        880
       ],
       "id": "5dc3fe89-9f2c-4de8-8aa4-40effa7d95ba",
       "name": "agente_registro"
+    },
+    {
+      "parameters": {
+        "description": "Este es el agente_correo que se encarga de enviar un correo para notificar de una cotización",
+        "workflowId": {
+          "__rl": true,
+          "value": "ZGa1JuFKXVkC44ZZ",
+          "mode": "list",
+          "cachedResultName": "Agente Glassy Correo Prod"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        832,
+        880
+      ],
+      "id": "974e1063-08df-4eb7-9982-d875dfb2e5b9",
+      "name": "agente_correo"
+    },
+    {
+      "parameters": {
+        "description": "Te llamas `agente_filtrador` te activas cuando se soliciten los productos para la cotización",
+        "workflowId": {
+          "__rl": true,
+          "value": "5xylK7XDAkPDlQ99",
+          "mode": "list",
+          "cachedResultName": "Agente Glassy Filtrador Prod"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "query": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('query', ``, 'string') }}",
+            "chat_id": "={{ $('Telegram Trigger').item.json.message.chat.id }}"
+          },
+          "matchingColumns": [
+            "listado_productos"
+          ],
+          "schema": [
+            {
+              "id": "query",
+              "displayName": "query",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "chat_id",
+              "displayName": "chat_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        528,
+        880
+      ],
+      "id": "8c5d9703-08c3-49d0-acec-670d5ff16849",
+      "name": "agente_filtrador"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "daysInterval": 30
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -208,
+        1120
+      ],
+      "id": "e2997eba-290d-4b3c-9cba-47942b2980fa",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1L0yBRQss7tAWz9GFaVJkjsV1QP89hq0uBXwyHFGz1Dg",
+          "mode": "list",
+          "cachedResultName": "Registro de Interacción Glassy",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1L0yBRQss7tAWz9GFaVJkjsV1QP89hq0uBXwyHFGz1Dg/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1L0yBRQss7tAWz9GFaVJkjsV1QP89hq0uBXwyHFGz1Dg/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        16,
+        1120
+      ],
+      "id": "02e05df8-9522-4edd-966e-73f23ebeb966",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Vg1ihuXHaIOWrqDt",
+          "name": "Google Sheets Aaron Permanentes"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Mapeo de meses en español a número\nconst meses = {\n  'enero': 0, 'febrero': 1, 'marzo': 2, 'abril': 3,\n  'mayo': 4, 'junio': 5, 'julio': 6, 'agosto': 7,\n  'septiembre': 8, 'octubre': 9, 'noviembre': 10, 'diciembre': 11\n};\n\n// Obtenemos el mes y año actual\nconst ahora = new Date();\nconst mesActual = ahora.getMonth() - 1;\nconst anioActual = ahora.getFullYear();\n\n// Array para guardar los resultados filtrados\nconst resultadosFiltrados = [];\n\n// Iteramos sobre cada item (fila) que llega al nodo\nfor (const item of $input.all()) {\n  // Extraemos la fecha del JSON\n  const fechaString = item.json.Fecha;\n\n  // \"18 de agosto de 2025 13:28\" -> [\"18\", \"agosto\", \"2025\", \"13:28\"]\n  const partes = fechaString.replace(' de ', ' ').replace(' de ', ' ').split(' ');\n  const dia = parseInt(partes[0]);\n  const mes = meses[partes[1].toLowerCase()];\n  const anio = parseInt(partes[2]);\n\n  // Si el mes y el año de la fila coinciden con el actual, lo guardamos\n  if (mes === mesActual && anio === anioActual) {\n    resultadosFiltrados.push(item);\n  }\n}\n\n// Devolvemos solo los items que cumplen la condición\nreturn resultadosFiltrados;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        240,
+        1120
+      ],
+      "id": "6b5fac89-c139-4af7-832f-877303f7b0dd",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\n\nif (items.length === 0) {\n  return [{ json: { html: \"<p>No hay interacciones para reportar este mes.</p>\" } }];\n}\n\nlet tablaHtml = `\n  <h1>Reporte de Interacciones del Mes</h1>\n  <p>Total de interacciones: ${items.length}</p>\n  <table border=\"1\" style=\"width:100%; border-collapse: collapse;\">\n    <thead>\n      <tr>\n        <th style=\"padding: 8px; background-color: #f2f2f2;\">Fecha</th>\n        <th style=\"padding: 8px; background-color: #f2f2f2;\">Hora</th> <th style=\"padding: 8px; background-color: #f2f2f2;\">Nombre</th>\n        <th style=\"padding: 8px; background-color: #f2f2f2;\">Solicitud</th>\n      </tr>\n    </thead>\n    <tbody>\n`;\n\nfor (const item of items) {\n  // Asegúrate que los nombres de las propiedades (item.json.Fecha, item.json.Hora, etc.)\n  // coincidan EXACTAMENTE con los encabezados de tu Google Sheet.\n  tablaHtml += `\n    <tr>\n      <td style=\"padding: 8px;\">${item.json.Fecha}</td>\n      <td style=\"padding: 8px;\">${item.json.Hora || ''}</td> <td style=\"padding: 8px;\">${item.json.Nombre}</td>\n      <td style=\"padding: 8px;\">${item.json.Solicitud}</td>\n    </tr>\n  `;\n}\n\ntablaHtml += `\n    </tbody>\n  </table>\n`;\n\nreturn [{ json: { html: tablaHtml } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        464,
+        1120
+      ],
+      "id": "b831adc9-6d21-4a1b-b46d-11f2566e602b",
+      "name": "Code1"
+    },
+    {
+      "parameters": {
+        "sendTo": "testcmm@hotmail.com",
+        "subject": "Reporte Mensual de Interacciones con Glassy",
+        "message": "={{ $json.html }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        688,
+        1120
+      ],
+      "id": "d6e8b67f-5971-44f4-b046-e91f8d0082c0",
+      "name": "Send a message",
+      "webhookId": "69a784dc-bd77-4534-b14c-818049fc407f",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "I97E42GKdPjszGha",
+          "name": "Gmail account Aaron"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "fromEmail": "hola@glasbilbutik.com",
+        "toEmail": "hola@glasbilbutik.com",
+        "subject": "Reporte Mensual de Interacciones con Glassy",
+        "html": "={{ $json.html }}",
+        "options": {
+          "appendAttribution": false,
+          "attachments": "data"
+        }
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        688,
+        1296
+      ],
+      "id": "2d649267-348b-4b34-90ea-b91c65d92d02",
+      "name": "Send email",
+      "webhookId": "f833534a-1e48-4870-ad96-ee5e0d2ddef3",
+      "credentials": {
+        "smtp": {
+          "id": "F2sMAxnazmc9fzKE",
+          "name": "SMTP account Glasbil Dev"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "tableId": "glassy_filtered_products_prod",
+        "returnAll": true,
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "chat_id",
+              "condition": "eq",
+              "keyValue": "={{ $('Telegram Trigger').item.json.message.chat.id }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabaseTool",
+      "typeVersion": 1,
+      "position": [
+        352,
+        880
+      ],
+      "id": "0213fb1f-f567-441b-b4c0-2590fdeba42e",
+      "name": "tool_detalle_producto",
+      "credentials": {
+        "supabaseApi": {
+          "id": "ty0KiXsEYP1uJ8t9",
+          "name": "Supabase account - CANTERA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "a4a57203-f1fd-4b31-ad60-c37f0266bd98",
+              "leftValue": "={{ $json.messages[0].type }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "b297ec60-cf4f-407f-ae34-a9d28ae7f3af",
+              "leftValue": "={{ $json.messages[0].type }}",
+              "rightValue": "image",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -480,
+        336
+      ],
+      "id": "4aa08fb3-c2c6-4d58-8971-4fe0e3a3df35",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c186aeab-a5d4-4f37-99d6-409910e705b3",
+              "name": "telefono",
+              "value": "={{ $json.messages[0].from }}",
+              "type": "string"
+            },
+            {
+              "id": "37edbf6f-5ae8-4dd0-ab9b-690bfdc5c302",
+              "name": "name",
+              "value": "={{ $('WhatsApp Trigger1').item.json.contacts[0].profile.name }}",
+              "type": "string"
+            },
+            {
+              "id": "04f2160c-2f62-444d-b8e7-b9a4d9feda43",
+              "name": "mensaje",
+              "value": "=Imagen id = {{ $('WhatsApp Trigger1').item.json.messages[0].image.id }}",
+              "type": "string"
+            },
+            {
+              "id": "6cdacb7f-4917-4493-b9b5-ac8d1660252c",
+              "name": "tipo_mensaje",
+              "value": "archivo_imagen",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -80,
+        96
+      ],
+      "id": "7a7b8540-6abb-4108-938b-f5de5376505d",
+      "name": "Edit Fields1"
     }
   ],
   "connections": {
@@ -744,7 +1084,7 @@
       "main": [
         [
           {
-            "node": "Edit Fields",
+            "node": "If",
             "type": "main",
             "index": 0
           }
@@ -800,12 +1140,116 @@
           }
         ]
       ]
+    },
+    "agente_correo": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "agente_filtrador": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Code1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code1": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "tool_detalle_producto": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
     "executionOrder": "v1"
   },
-  "staticData": null,
+  "staticData": {
+    "node:Schedule Trigger": {
+      "recurrenceRules": []
+    }
+  },
   "meta": {
     "templateCredsSetupCompleted": true
   },
@@ -818,10 +1262,43 @@
           "mensaje": "hola"
         }
       }
+    ],
+    "WhatsApp Trigger1": [
+      {
+        "json": {
+          "messaging_product": "whatsapp",
+          "metadata": {
+            "display_phone_number": "5214431865276",
+            "phone_number_id": "736728182851111"
+          },
+          "contacts": [
+            {
+              "profile": {
+                "name": "Pruebas Desarrollo"
+              },
+              "wa_id": "5214432267282"
+            }
+          ],
+          "messages": [
+            {
+              "from": "5214432267282",
+              "id": "wamid.HBgNNTIxNDQzMjI2NzI4MhUCABIYIEFDNDNGRjI0RkEyRTEwNEI4RDI5NDBCMTVDNTU3NTc0AA==",
+              "timestamp": "1759168914",
+              "type": "image",
+              "image": {
+                "mime_type": "image/jpeg",
+                "sha256": "uVws5r5qWiQVUZI31vdcBf9c97VDGUghrjLfF7ke99I=",
+                "id": "566408056530788"
+              }
+            }
+          ],
+          "field": "messages"
+        }
+      }
     ]
   },
-  "versionId": "f2f1ec72-ad76-4b21-82f9-5a8d41d6ea25",
-  "triggerCount": 2,
+  "versionId": "fbedb6cc-6eb8-448b-b14b-6961b3dc50fd",
+  "triggerCount": 3,
   "shared": [
     {
       "createdAt": "2025-05-15T17:24:39.091Z",
