@@ -1,0 +1,529 @@
+{
+  "createdAt": "2025-09-29T19:02:12.427Z",
+  "updatedAt": "2025-09-29T19:03:08.000Z",
+  "id": "5xylK7XDAkPDlQ99",
+  "name": "Agente Glassy Filtrador Prod",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "query"
+            },
+            {
+              "name": "chat_id"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -2000,
+        -16
+      ],
+      "id": "8c046e2d-4d6b-45b3-b50d-f228631710bd",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -1344,
+        224
+      ],
+      "id": "7b7ae336-55e2-459e-82b7-51538012cf04",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "zZlJrTGKq8KER7gD",
+          "name": "OpenAi account - GLASSY"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "text": "={{ $('When Executed by Another Workflow').item.json.query }}",
+        "attributes": {
+          "attributes": [
+            {
+              "name": "year",
+              "description": "año del vehiculo",
+              "required": true
+            },
+            {
+              "name": "brand",
+              "description": "marca del vehiculo",
+              "required": true
+            },
+            {
+              "name": "model",
+              "description": "modelo del vehiculo",
+              "required": true
+            },
+            {
+              "name": "car_type",
+              "description": "tipo de automóvil",
+              "required": true
+            },
+            {
+              "name": "type_glass",
+              "description": "tipo de cristal",
+              "required": true
+            },
+            {
+              "name": "caracteristicas",
+              "description": "características",
+              "required": true
+            }
+          ]
+        },
+        "options": {
+          "systemPromptTemplate": "You are an expert extraction algorithm.\nOnly extract relevant information from the text.\nIf you do not know the value of an attribute asked to extract, you may omit the attribute's value."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.informationExtractor",
+      "typeVersion": 1.2,
+      "position": [
+        -1600,
+        -16
+      ],
+      "id": "0b56a71f-a07b-4d5c-ae29-d8bb757cc975",
+      "name": "Information Extractor1"
+    },
+    {
+      "parameters": {
+        "url": "=https://butik-vidrio.canteradigital.mx/api/finder/searchProducts/filtered?year={{ $json.output.year }}&brand={{ $json.output.brand }}&model={{ $json.output.model }}&car_type={{ $json.output.car_type }}&type_glass={{ $json.output.type_glass }}&antenna=false&encapsulated=false&hud=false&heated=false&attachment=false&request_origin=chatbot",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -1296,
+        -16
+      ],
+      "id": "7f5de426-9bc2-42fe-8232-792f87a3c545",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.data }}",
+        "options": {
+          "systemMessage": "=Tu única función es actuar como un procesador de datos JSON eficiente. Recibirás una lista de productos en el input `{{ $json.data }}`.\n\nTu tarea es filtrar y transformar esta lista. **Si varios productos comparten el mismo valor en el campo `nag`, solo debes procesar el primer producto que encuentres y descartar los duplicados posteriores.**\n\nPara cada producto único (según el criterio del 'nag'), crea un nuevo objeto JSON que contenga exclusivamente los siguientes campos:\n1.  `nombre`: extraído del campo `name`.\n2.  `imagenURL`: extraído del campo `nag_graphic`.\n3.  `identificadores`: un objeto que contenga `external_id`, `origin` y `nag`.\n4.  `caracteristicas`: un objeto que contenga `color` y `ad_info_a` del objeto anidado `nag_info`.\n\nEl resultado final debe ser un array JSON que contenga solo los objetos de los productos únicos y procesados. Si el input está vacío, devuelve un array vacío `[]`.\n\nTu respuesta DEBE ser únicamente el array JSON válido y nada más. No incluyas texto explicativo, comentarios, ni la palabra \"json\" antes del código."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        -1120,
+        -16
+      ],
+      "id": "b3827a7f-d12f-45cb-b125-35eb7eb7a958",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "text": "={{ $json.output }}",
+        "attributes": {
+          "attributes": [
+            {
+              "name": "cantidad_productos",
+              "type": "number",
+              "description": "Cuenta la cantidad de productos",
+              "required": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.informationExtractor",
+      "typeVersion": 1.2,
+      "position": [
+        -784,
+        -16
+      ],
+      "id": "e53b2b50-d300-4ab0-98aa-1718dcc09ee0",
+      "name": "Information Extractor"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "dbc67929-5076-4086-9cf7-a0ce31903029",
+              "leftValue": "={{ $json.output.cantidad_productos }}",
+              "rightValue": 1,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -400,
+        -16
+      ],
+      "id": "84c327a7-bbdd-4039-a68d-3a9830e64eba",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "tableId": "glassy_filtered_products",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "chat_id",
+              "fieldValue": "={{ $('When Executed by Another Workflow').item.json.chat_id }}"
+            },
+            {
+              "fieldId": "product_name",
+              "fieldValue": "={{ $json.nombre }}"
+            },
+            {
+              "fieldId": "imagenURL",
+              "fieldValue": "={{ $json.imagenURL }}"
+            },
+            {
+              "fieldId": "external_id",
+              "fieldValue": "={{ $json.identificadores.external_id }}"
+            },
+            {
+              "fieldId": "origin",
+              "fieldValue": "={{ $json.identificadores.origin }}"
+            },
+            {
+              "fieldId": "nag",
+              "fieldValue": "={{ $json.identificadores.nag }}"
+            },
+            {
+              "fieldId": "color",
+              "fieldValue": "={{ $json.caracteristicas.color }}"
+            },
+            {
+              "fieldId": "ad_info_a",
+              "fieldValue": "={{ $json.caracteristicas.ad_info_a }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        352,
+        -112
+      ],
+      "id": "c7c0bd81-e841-4ea7-8d55-b3730875a89f",
+      "name": "Create a row",
+      "credentials": {
+        "supabaseApi": {
+          "id": "ty0KiXsEYP1uJ8t9",
+          "name": "Supabase account - CANTERA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "tableId": "glassy_filtered_products",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "chat_id",
+              "condition": "eq",
+              "keyValue": "={{ $json.chat_id }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        -1808,
+        -16
+      ],
+      "id": "c0f12fe4-5f72-4b2f-8463-61fe90c412ec",
+      "name": "Delete a row",
+      "alwaysOutputData": true,
+      "credentials": {
+        "supabaseApi": {
+          "id": "ty0KiXsEYP1uJ8t9",
+          "name": "Supabase account - CANTERA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// 1. Obtener el contenido del mensaje del modelo de IA.\n// Esta es la cadena de texto que puede venir con \"```json\" al inicio.\nlet content = $input.item.json.text;\n\n// 2. Limpiar la cadena de texto.\n// Este comando elimina el bloque de código Markdown \"```json\" del inicio \n// y \"```\" del final. Si no los encuentra, no hace nada. \n// Por eso funciona para ambos casos (cuando la salida es correcta y cuando no).\nconst cleanedString = content.replace(/^```json\\s*/, '').replace(/\\s*```$/, '');\n\n// 3. Convertir (parsear) la cadena limpia a un objeto JSON real.\n// Esto transforma el texto en datos que los siguientes nodos pueden entender.\nconst finalJson = JSON.parse(cleanedString);\n\n// 4. Devolver el objeto JSON limpio como salida de este nodo.\nreturn finalJson;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        128,
+        -112
+      ],
+      "id": "3464a2f7-6832-4eac-a94a-6ebd13fe0f5f",
+      "name": "Limpia JSON"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('AI Agent').item.json.output }}",
+        "messages": {
+          "messageValues": [
+            {
+              "message": "=### **Rol y Objetivo:**\nEres un asistente de automatización especializado en filtrar datos JSON. Tu única función es procesar una lista de productos y devolver una sub-lista basada en un criterio, o la lista completa si no se especifica ningún criterio.\n\n### **Entradas:**\n1.  **Lista de Productos:** Una lista de objetos JSON que recibes en el flujo de n8n.\n2.  **Criterio de Filtrado:** Las características deseadas, contenidas en la variable `{{ $('Information Extractor1').item.json.output.caracteristicas }}`.\n\n### **Lógica de Ejecución (Reglas Estrictas):**\n\n1.  **Verifica el Criterio de Filtrado:** Primero, inspecciona el valor de `{{ $('Information Extractor1').item.json.output.caracteristicas }}`.\n\n2.  **Ejecuta una de las siguientes dos acciones:**\n    * **CASO A: Si el valor es `ninguna`**\n        * Tu única acción es devolver la **lista de productos de entrada original**, completa y sin ninguna modificación.\n\n    * **CASO B: Si el valor es cualquier otro**\n        * Compara estas características con las de cada producto en la lista.\n        * Genera y devuelve una **nueva lista** que contenga únicamente los productos que coincidan con **todos** los criterios especificados.\n\n### **Formato de Salida Obligatorio:**\n* Tu respuesta debe ser **exclusivamente el arreglo JSON** de productos resultante.\n* **No incluyas texto introductorio, explicaciones, resúmenes o cualquier otra palabra.** La salida debe ser un JSON limpio y válido que pueda ser procesado por los siguientes nodos del flujo de trabajo."
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        -192,
+        -112
+      ],
+      "id": "cf5ab6a5-28cb-4e85-a7b8-bf706f02d4e7",
+      "name": "Basic LLM Chain"
+    }
+  ],
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Delete a row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Information Extractor1",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Information Extractor",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Information Extractor1": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Information Extractor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Information Extractor": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete a row": {
+      "main": [
+        [
+          {
+            "node": "Information Extractor1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limpia JSON": {
+      "main": [
+        [
+          {
+            "node": "Create a row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Limpia JSON",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {
+    "When Executed by Another Workflow": [
+      {
+        "json": {
+          "query": "solicita los productos para el año 2012, la marca Volkswagen, el modelo Jetta, el tipo de automóvil 4 Door Sedan, el tipo de cristal Windshield y las siguientes características: sensor de lluvia",
+          "chat_id": 1526474745
+        }
+      }
+    ]
+  },
+  "versionId": "5374ef10-f5b4-40c5-adf8-1df254fbd42f",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "createdAt": "2025-09-29T19:02:12.431Z",
+      "updatedAt": "2025-09-29T19:02:12.431Z",
+      "role": "workflow:owner",
+      "workflowId": "5xylK7XDAkPDlQ99",
+      "projectId": "BZ9Ta5yhe4RhzY78",
+      "project": {
+        "createdAt": "2025-05-13T15:56:28.209Z",
+        "updatedAt": "2025-05-13T16:18:54.372Z",
+        "id": "BZ9Ta5yhe4RhzY78",
+        "name": "CANTERA ADMIN <canteradigital7@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "projectRelations": [
+          {
+            "createdAt": "2025-05-13T15:56:28.209Z",
+            "updatedAt": "2025-05-13T15:56:28.209Z",
+            "role": "project:personalOwner",
+            "userId": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
+            "projectId": "BZ9Ta5yhe4RhzY78",
+            "user": {
+              "createdAt": "2025-05-13T15:56:27.880Z",
+              "updatedAt": "2025-09-29T05:01:29.000Z",
+              "id": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
+              "email": "canteradigital7@gmail.com",
+              "firstName": "CANTERA",
+              "lastName": "ADMIN",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-05-13T16:19:25.161Z",
+                "personalization_survey_n8n_version": "1.92.2",
+                "companySize": "<20",
+                "companyType": "saas",
+                "role": "customer-support",
+                "reportedSource": "event"
+              },
+              "settings": {
+                "userActivated": true,
+                "firstSuccessfulWorkflowId": "PTbESRzX3rguwQN8",
+                "userActivatedAt": 1747154580970,
+                "easyAIWorkflowOnboarded": true,
+                "npsSurvey": {
+                  "responded": true,
+                  "lastShownAt": 1748367494893
+                },
+                "dismissedCallouts": {
+                  "aiAgentStarterCallout": true,
+                  "preBuiltAgentsCalloutHttpRequest": true
+                }
+              },
+              "role": "global:owner",
+              "disabled": false,
+              "mfaEnabled": false,
+              "lastActiveAt": "2025-09-29",
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": [
+    {
+      "createdAt": "2025-05-13T18:42:21.332Z",
+      "updatedAt": "2025-05-13T18:42:21.332Z",
+      "id": "XE33dAVH8p6eXZMD",
+      "name": "AGENTE GLASSY"
+    }
+  ]
+}
