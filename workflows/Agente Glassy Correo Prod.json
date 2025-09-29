@@ -1,0 +1,328 @@
+{
+  "createdAt": "2025-09-29T18:53:13.110Z",
+  "updatedAt": "2025-09-29T18:53:34.000Z",
+  "id": "ZGa1JuFKXVkC44ZZ",
+  "name": "Agente Glassy Correo Prod",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -672,
+        0
+      ],
+      "id": "f949bd86-ea9a-4c3f-a2a5-ec095182986d",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "text": "={{ $json.query }}",
+        "attributes": {
+          "attributes": [
+            {
+              "name": "year",
+              "type": "number",
+              "description": "Año del vehículo",
+              "required": true
+            },
+            {
+              "name": "brand",
+              "description": "Marca del vehículo",
+              "required": true
+            },
+            {
+              "name": "model",
+              "description": "Modelo del vehículo",
+              "required": true
+            },
+            {
+              "name": "car_type",
+              "description": "Tipo de automovil",
+              "required": true
+            },
+            {
+              "name": "glass_type",
+              "description": "tipo de cristal",
+              "required": true
+            },
+            {
+              "name": "user_name",
+              "description": "Nombre del usuario",
+              "required": true
+            },
+            {
+              "name": "chat_id",
+              "description": "Identificador del chat",
+              "required": true
+            },
+            {
+              "name": "file_id",
+              "description": "ID de la imagen",
+              "required": true
+            }
+          ]
+        },
+        "options": {
+          "systemPromptTemplate": "You are an expert extraction algorithm.\nOnly extract relevant information from the text.\nIf you do not know the value of an attribute asked to extract, you may omit the attribute's value."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.informationExtractor",
+      "typeVersion": 1.2,
+      "position": [
+        -448,
+        0
+      ],
+      "id": "2b69f7a4-6152-4d24-8709-2dc419b18900",
+      "name": "Information Extractor"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -480,
+        160
+      ],
+      "id": "0ec4bcdb-351f-4a65-a027-00c969bd7508",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "zZlJrTGKq8KER7gD",
+          "name": "OpenAi account - GLASSY"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "hola@glasbil.com",
+        "subject": "Solicitud de cotización",
+        "emailType": "text",
+        "message": "=Hola Betty,\n\nTe comparto la información de un nuevo cliente que está solicitando una cotización para un parabrisas.\n\nEl objetivo es que te comuniques con él a la brevedad para darle seguimiento y brindarle la asesoría necesaria.\n\nDatos del Cliente:\n\nNombre: {{ $('Information Extractor').item.json.output.user_name }}\n\nTeléfono: {{ $('Information Extractor').item.json.output.chat_id }}\n\nDatos del Vehículo Solicitado:\n\nTipo de cristal: {{ $('Information Extractor').item.json.output.glass_type }}\n\nMarca: {{ $('Information Extractor').item.json.output.brand }}\n\nModelo: {{ $('Information Extractor').item.json.output.model }}\n\nAño: {{ $('Information Extractor').item.json.output.year }}\n\nTipo de automóvil: {{ $('Information Extractor').item.json.output.car_type }}\n\nSaludos.",
+        "options": {
+          "appendAttribution": false,
+          "attachmentsUi": {
+            "attachmentsBinary": [
+              {}
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        96,
+        -96
+      ],
+      "id": "235e26a6-a744-457d-8672-8637ac71c7e4",
+      "name": "Send a message",
+      "webhookId": "72148adb-d0a0-4a63-82a5-9ea909cb5114",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "I97E42GKdPjszGha",
+          "name": "Gmail account Aaron"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "fileId": "={{ $json.output.file_id }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -128,
+        0
+      ],
+      "id": "8e9f1d39-bdc7-4aa2-88d4-72e02c9151de",
+      "name": "Get a file",
+      "webhookId": "32eb1716-8092-419b-b06c-6dbc54afb08d",
+      "credentials": {
+        "telegramApi": {
+          "id": "vcUHDLkV2ZD6YfU8",
+          "name": "Telegram account - GLASSY"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "hola@glasbilbutik.com",
+        "toEmail": "hola@glasbilbutik.com",
+        "subject": "Solicitud de cotización",
+        "html": "=<!DOCTYPE html>\n<html lang=\"es\">\n<head>\n<meta charset=\"UTF-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n<title>Solicitud de Cotización</title>\n<style>\n  body {\n    font-family: Arial, sans-serif;\n    line-height: 1.6;\n    color: #333333;\n  }\n  .container {\n    width: 90%;\n    max-width: 600px;\n    margin: 20px auto;\n    padding: 20px;\n    border: 1px solid #dddddd;\n    border-radius: 8px;\n    background-color: #f9f9f9;\n  }\n  .header {\n    font-size: 18px;\n    font-weight: bold;\n    color: #005a9c;\n    margin-bottom: 20px;\n  }\n  .data-section {\n    margin: 20px 0;\n    padding: 15px;\n    background-color: #ffffff;\n    border-left: 4px solid #005a9c;\n  }\n  .data-section h3 {\n    margin-top: 0;\n    font-size: 16px;\n    color: #333333;\n    border-bottom: 1px solid #eeeeee;\n    padding-bottom: 5px;\n  }\n  .data-section p {\n    margin: 5px 0;\n  }\n  .footer {\n    margin-top: 20px;\n    font-size: 14px;\n    text-align: center;\n  }\n  .footer img {\n    max-width: 100%;\n    height: auto;\n    margin-top: 15px;\n    border-radius: 5px;\n  }\n</style>\n</head>\n<body>\n\n<div class=\"container\">\n  <p class=\"header\">Solicitud de Cotización a Través de Glassy – Cliente Nuevo</p>\n\n  <p>Atender solicitud antes de 48 horas.</p>\n\n  <div class=\"data-section\">\n    <h3>Datos del Cliente</h3>\n    <p><strong>Nombre:</strong> {{ $('Information Extractor').item.json.output.user_name }}</p>\n    <p><strong>Teléfono:</strong> {{ $('Information Extractor').item.json.output.chat_id }}</p>\n  </div>\n\n  <div class=\"data-section\">\n    <h3>Detalles del Vehículo</h3>\n    <p><strong>Tipo de cristal:</strong> {{ $('Information Extractor').item.json.output.glass_type }}</p>\n    <p><strong>Marca:</strong> {{ $('Information Extractor').item.json.output.brand }}</p>\n    <p><strong>Modelo:</strong> {{ $('Information Extractor').item.json.output.model }}</p>\n    <p><strong>Año:</strong> {{ $('Information Extractor').item.json.output.year }}</p>\n    <p><strong>Tipo de automóvil:</strong> {{ $('Information Extractor').item.json.output.car_type }}</p>\n  </div>\n\n  <div class=\"footer\">\n    <img src=\"cid:data\" alt=\"Imagen de cristal\">\n  </div>\n</div>\n\n</body>\n</html>",
+        "options": {
+          "appendAttribution": false,
+          "attachments": "data"
+        }
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        96,
+        112
+      ],
+      "id": "df5d6653-4fa1-4a57-91f9-9c1ff155cdb7",
+      "name": "Send email",
+      "webhookId": "f833534a-1e48-4870-ad96-ee5e0d2ddef3",
+      "credentials": {
+        "smtp": {
+          "id": "F2sMAxnazmc9fzKE",
+          "name": "SMTP account Glasbil Dev"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Information Extractor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Information Extractor": {
+      "main": [
+        [
+          {
+            "node": "Get a file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Information Extractor",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get a file": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {
+    "When Executed by Another Workflow": [
+      {
+        "json": {
+          "query": "enviar correo con los siguientes datos del vehículo: año 2012, marca Volkswagen, modelo Jetta, tipo de automovil 4 Door Sedan, tipo de cristal Windshield, nombre del usuario Aaron, chatID 1526474745 y el ID de la imagen AgACAgEAAxkBAAIIbWiD8WRG5-qbF1UrgdbN6jHUQy0XAAJIrTEbE-UgRFxv4wXQ-dpNAQADAgADeQADNgQ."
+        }
+      }
+    ]
+  },
+  "versionId": "61322918-2c6d-47de-ae26-8be906289b31",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "createdAt": "2025-09-29T18:53:13.115Z",
+      "updatedAt": "2025-09-29T18:53:13.115Z",
+      "role": "workflow:owner",
+      "workflowId": "ZGa1JuFKXVkC44ZZ",
+      "projectId": "BZ9Ta5yhe4RhzY78",
+      "project": {
+        "createdAt": "2025-05-13T15:56:28.209Z",
+        "updatedAt": "2025-05-13T16:18:54.372Z",
+        "id": "BZ9Ta5yhe4RhzY78",
+        "name": "CANTERA ADMIN <canteradigital7@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "projectRelations": [
+          {
+            "createdAt": "2025-05-13T15:56:28.209Z",
+            "updatedAt": "2025-05-13T15:56:28.209Z",
+            "role": "project:personalOwner",
+            "userId": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
+            "projectId": "BZ9Ta5yhe4RhzY78",
+            "user": {
+              "createdAt": "2025-05-13T15:56:27.880Z",
+              "updatedAt": "2025-09-29T05:01:29.000Z",
+              "id": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
+              "email": "canteradigital7@gmail.com",
+              "firstName": "CANTERA",
+              "lastName": "ADMIN",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-05-13T16:19:25.161Z",
+                "personalization_survey_n8n_version": "1.92.2",
+                "companySize": "<20",
+                "companyType": "saas",
+                "role": "customer-support",
+                "reportedSource": "event"
+              },
+              "settings": {
+                "userActivated": true,
+                "firstSuccessfulWorkflowId": "PTbESRzX3rguwQN8",
+                "userActivatedAt": 1747154580970,
+                "easyAIWorkflowOnboarded": true,
+                "npsSurvey": {
+                  "responded": true,
+                  "lastShownAt": 1748367494893
+                },
+                "dismissedCallouts": {
+                  "aiAgentStarterCallout": true,
+                  "preBuiltAgentsCalloutHttpRequest": true
+                }
+              },
+              "role": "global:owner",
+              "disabled": false,
+              "mfaEnabled": false,
+              "lastActiveAt": "2025-09-29",
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": [
+    {
+      "createdAt": "2025-05-13T18:42:21.332Z",
+      "updatedAt": "2025-05-13T18:42:21.332Z",
+      "id": "XE33dAVH8p6eXZMD",
+      "name": "AGENTE GLASSY"
+    }
+  ]
+}
