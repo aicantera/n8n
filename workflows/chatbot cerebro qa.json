@@ -1,9 +1,9 @@
 {
   "createdAt": "2025-09-15T15:39:29.471Z",
-  "updatedAt": "2025-09-30T21:54:28.000Z",
+  "updatedAt": "2025-09-30T22:24:29.000Z",
   "id": "BPnkCPlia5Iozaew",
   "name": "chatbot cerebro qa",
-  "active": false,
+  "active": true,
   "isArchived": false,
   "nodes": [
     {
@@ -8645,7 +8645,7 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('incoming_data').item.json.incoming_wp.messages[0].from }}\",\n  \"type\": \"interactive\",\n  \"interactive\": {\n    \"type\": \"button\",\n    \"body\": {\n      \"text\":\"Si necesitas más información sobre algún evento en particular, solo indícame el número de la opción.\"\n    },\n    \"action\": {\n      \"buttons\": [\n        \n        {\n          \"type\": \"reply\",\n          \"reply\": {\n            \"id\": \"menu_inicial\",\n            \"title\": \"Regresar al Menú\"\n          }\n        }\n      ]\n    }\n } }\n\n",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('incoming_data').item.json.incoming_wp.messages[0].from }}\",\n  \"type\": \"interactive\",\n  \"interactive\": {\n    \"type\": \"button\",\n    \"body\": {\n      \"text\":\"Si necesitas más información sobre algún evento en particular, solo indícame el número de la opción.\"\n    },\n    \"action\": {\n      \"buttons\": [\n        {\n          \"type\": \"reply\",\n          \"reply\": {\n            \"id\": \"mas_eventos\",\n            \"title\": \"Ver más Eventos\"\n          }\n        },\n        {\n          \"type\": \"reply\",\n          \"reply\": {\n            \"id\": \"menu_inicial\",\n            \"title\": \"Regresar al Menú\"\n          }\n        }\n      ]\n    }\n } }\n\n",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
@@ -8656,6 +8656,40 @@
       ],
       "id": "0cc332ae-f895-47b3-bed8-48bc52c36885",
       "name": "botonera con mas eventos en calendario"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "e8717953-e6a5-4cef-beb6-0cf92aac6a89",
+              "leftValue": "={{ $('incoming_data').item.json.incoming_wp.messages[0].interactive.button_reply.id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -4160,
+        2720
+      ],
+      "id": "9279452c-d5ad-4344-97c3-183807d8d50d",
+      "name": "revisamos si el usuario respondio por boton2"
     }
   ],
   "connections": {
@@ -8743,7 +8777,13 @@
             "index": 0
           }
         ],
-        [],
+        [
+          {
+            "node": "revisamos si el usuario respondio por boton2",
+            "type": "main",
+            "index": 0
+          }
+        ],
         [
           {
             "node": "botón menú",
@@ -10853,6 +10893,17 @@
       "main": [
         []
       ]
+    },
+    "revisamos si el usuario respondio por boton2": {
+      "main": [
+        [
+          {
+            "node": "Code4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -10926,7 +10977,7 @@
       }
     ]
   },
-  "versionId": "7473a559-3013-4a0f-845e-1f30734618d1",
+  "versionId": "a7e9104f-e493-42fc-ba5f-b3cfd45be7e6",
   "triggerCount": 1,
   "shared": [
     {
