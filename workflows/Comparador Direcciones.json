@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-09-30T20:00:13.863Z",
-  "updatedAt": "2025-09-30T20:01:46.000Z",
+  "updatedAt": "2025-09-30T20:35:26.000Z",
   "id": "eLBq2cdfshR6ejqQ",
   "name": "Comparador Direcciones",
   "active": false,
@@ -22,7 +22,7 @@
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "typeVersion": 1.1,
       "position": [
-        -2752,
+        -1824,
         784
       ],
       "id": "c2e46604-55b3-42a8-85d3-9e03354b32f1",
@@ -84,7 +84,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -2272,
+        -1376,
         784
       ],
       "id": "e888e2be-0d2b-483c-9a24-1318d7dfa926",
@@ -138,7 +138,7 @@
             {
               "id": "c587ca31-072e-45c4-b799-1abc5847cb20",
               "leftValue": "={{$node[\"Calcular Distancia\"].json[\"rows\"][0][\"elements\"][0][\"distance\"][\"value\"]}}",
-              "rightValue": 7000,
+              "rightValue": 20000,
               "operator": {
                 "type": "number",
                 "operation": "lte"
@@ -160,7 +160,9 @@
     },
     {
       "parameters": {
-        "options": {}
+        "options": {
+          "reset": false
+        }
       },
       "type": "n8n-nodes-base.splitInBatches",
       "typeVersion": 3,
@@ -178,61 +180,55 @@
             {
               "id": "0b7ca478-bae8-43f7-a20a-6afc5130be51",
               "name": "EMPRESA",
-              "value": "={{ $json.empresa_cliente }}",
+              "value": "={{ $json.EMPRESA }}",
               "type": "string"
             },
             {
               "id": "2bd0cabb-064e-484f-bec8-01d4d3332ef2",
               "name": "PUESTO",
-              "value": "={{ $json.puesto }}",
+              "value": "={{ $json.PUESTO }}",
               "type": "string"
             },
             {
-              "id": "45b006c3-d11b-4c02-849d-e5848bc4d90a",
+              "id": "b30315c2-d131-45a1-a20d-f0e36dd6d2c1",
               "name": "UBICACIÓN",
-              "value": "={{ $json.ubicacion }}",
+              "value": "={{ $json['UBICACIÓN'] }}",
               "type": "string"
             },
             {
               "id": "d91d101b-84a7-4c21-b432-02f12d23189b",
               "name": "GIRO",
-              "value": "={{ $json.giro }}",
+              "value": "={{ $json.GIRO }}",
               "type": "string"
             },
             {
               "id": "2e5ffa72-8dd4-4e7a-884a-7f240e0ffdba",
               "name": "PERFIL",
-              "value": "={{ $json.perfil_requisitos }}",
+              "value": "={{ $json.PERFIL }}",
               "type": "string"
             },
             {
               "id": "2be09105-2e8b-481c-b8f7-d0d2617a7b3d",
               "name": "SUELDO SEMANAL LIBRE",
-              "value": "={{ $json.sueldo_semanal_libre }}",
+              "value": "={{ $json['SUELDO SEMANAL LIBRE'] }}",
               "type": "string"
             },
             {
               "id": "8d73484e-4a6a-4a5f-a3fe-88cedf431119",
               "name": "BENEFICIOS",
-              "value": "={{ $json.prestaciones_beneficios }}",
+              "value": "={{ $json.BENEFICIOS }}",
               "type": "string"
             },
             {
               "id": "3c5da0f2-5963-4462-ad2a-8a9895139464",
               "name": "HORARIO",
-              "value": "={{ $json.horario }}",
+              "value": "={{ $json.HORARIO }}",
               "type": "string"
             },
             {
               "id": "b15f06c4-e78d-4fb6-86e2-407f577a7b0d",
               "name": "TRANSPORTE",
-              "value": "={{ $json.ofrece_transporte }}",
-              "type": "string"
-            },
-            {
-              "id": "441a037f-879f-4abe-9663-ad58da47784e",
-              "name": "OBSERVACIONES",
-              "value": "={{ $json.observaciones }}",
+              "value": "={{ $json.TRANSPORTE }}",
               "type": "string"
             }
           ]
@@ -305,12 +301,6 @@
               "name": "TRANSPORTE",
               "value": "={{ $('Edit Fields').item.json.TRANSPORTE }}",
               "type": "string"
-            },
-            {
-              "id": "79c1c808-a0b2-43ae-b709-9e9ecafc6f53",
-              "name": "OBSERVACIONES",
-              "value": "={{ $('Edit Fields').item.json.OBSERVACIONES }}",
-              "type": "string"
             }
           ]
         },
@@ -338,34 +328,6 @@
       "id": "fcc49b38-f8b5-42a7-b617-117c6f50b6c0",
       "name": "Code1",
       "alwaysOutputData": true
-    },
-    {
-      "parameters": {
-        "operation": "pdf",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.extractFromFile",
-      "typeVersion": 1,
-      "position": [
-        -1632,
-        784
-      ],
-      "id": "2a3f6965-559f-4180-8682-e850199ae726",
-      "name": "Extract from File"
-    },
-    {
-      "parameters": {
-        "fieldToSplitOut": "vacantes",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.splitOut",
-      "typeVersion": 1,
-      "position": [
-        -1136,
-        784
-      ],
-      "id": "7df44c08-dbb0-4e28-b338-0cb245d0573f",
-      "name": "Split Out"
     },
     {
       "parameters": {
@@ -424,12 +386,6 @@
               "name": "TRANSPORTE",
               "value": "No aplica",
               "type": "string"
-            },
-            {
-              "id": "71bad80e-5719-4d4c-a24d-202463766e44",
-              "name": "OBSERVACIONES",
-              "value": "No aplica",
-              "type": "string"
             }
           ]
         },
@@ -446,20 +402,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// INPUT: items[0].json.text  (todo el texto del PDF)\n// OUTPUT: un único item con { vacantes: [...] } exactamente en el formato solicitado.\n\nfunction cleanText(t) {\n  return (t || \"\")\n    .replace(/\\u0000/g, \" \")\n    .replace(/\\r/g, \"\\n\")\n    .replace(/[ \\t]+/g, \" \")\n    .replace(/\\n[ \\t]+/g, \"\\n\")\n    .replace(/\\n{3,}/g, \"\\n\\n\")\n    .trim();\n}\n\nfunction pick(arr) {\n  return (arr || []).map(s => s.trim()).filter(Boolean);\n}\n\nfunction extractFirst(regex, str) {\n  const m = regex.exec(str);\n  return m ? (m[1] || m[0]).trim() : \"\";\n}\n\nfunction between(startLabel, endLabels, str) {\n  const start = str.indexOf(startLabel);\n  if (start < 0) return \"\";\n  const sub = str.slice(start + startLabel.length);\n  let end = sub.length;\n  for (const lab of endLabels) {\n    const i = sub.indexOf(lab);\n    if (i >= 0) end = Math.min(end, i);\n  }\n  return sub.slice(0, end).trim();\n}\n\nfunction linesToArray(block) {\n  // bullets tipo ✔, ●, •, -, * y líneas normales\n  return pick(\n    block\n      .split(\"\\n\")\n      .map(s => s.replace(/^[\\s•●\\-–—*✔]+/g, \"\").trim())\n  );\n}\n\nfunction detectTransporte(ofreceArr, fullBlock) {\n  const full = (ofreceArr.join(\" \") + \" \" + fullBlock).toLowerCase();\n  if (/(servicio de transporte|transporte de personal|apoyo de transporte|transporte incluido|cuentan con transporte)/i.test(full)) {\n    return \"Sí cuenta con transporte\";\n  }\n  if (/(no hay transporte|no tienen transporte|no cuenta con transporte)/i.test(full)) {\n    return \"No cuenta con transporte\";\n  }\n  return \"No cuenta con transporte\"; // por especificación: si no se menciona, marcar que no\n}\n\nfunction detectSueldo(ofreceArr) {\n  // Busca “Sueldo semanal”, “Pago Semanal”, “sueldo libre por semana”, etc.\n  const joined = ofreceArr.join(\" • \");\n  const rxs = [\n    /sueldo\\s*(?:semanal|por semana|semanales)?.{0,40}?(\\$\\s?[\\d\\.,]+)/i,\n    /pago\\s*semanal.{0,40}?(\\$\\s?[\\d\\.,]+)/i,\n    /sueldo\\s*libre.{0,40}?(\\$\\s?[\\d\\.,]+)/i\n  ];\n  for (const rx of rxs) {\n    const m = rx.exec(joined);\n    if (m) return m[1].replace(/\\s+/g, \"\");\n  }\n  return \"\";\n}\n\nfunction extractPuesto(block) {\n  // Tomamos lo que hay entre UBICACIÓN: ... y PERFIL:\n  const mid = between(\"UBICACIÓN:\", [\"PERFIL:\", \"Perfil:\", \"PERFIL :\", \"Perfil :\"], block);\n  if (mid) {\n    // nos quedamos con la última línea no vacía (suelen ser títulos del puesto)\n    const lines = pick(mid.split(\"\\n\"));\n    if (lines.length) {\n      return (lines[lines.length - 1] || \"\").trim();\n    }\n  }\n  // fallback: busca líneas en MAYÚSCULAS antes de PERFIL:\n  const beforePerfil = block.split(/PERFIL\\s*:/i)[0] || \"\";\n  const caps = pick(beforePerfil.split(\"\\n\"))\n    .filter(s => s.length <= 80 && /[A-ZÁÉÍÓÚÜÑ]{3}/.test(s) && !/^USUARIO:|^GIRO:|^UBICACIÓN:/i.test(s));\n  return caps.length ? caps[caps.length - 1] : \"\";\n}\n\nconst raw = items[0]?.json?.text || \"\";\nconst text = cleanText(raw);\n\n// Separamos por cada \"USUARIO:\" para obtener bloques de vacante/empresa\nlet parts = text.split(/(?:^|\\n)USUARIO:\\s*/i);\nif (parts[0].trim() === \"\") parts = parts.slice(1);\n\n// Reconstruimos añadiendo el prefijo \"USUARIO:\" a cada bloque\nconst blocks = parts.map(p => (\"USUARIO: \" + p).trim());\n\nconst vacantes = [];\n\nfor (const block of blocks) {\n  // Campos directos\n  const empresa = extractFirst(/USUARIO:\\s*([^\\n]+)/i, block);\n  const giro = extractFirst(/GIRO:\\s*([^\\n]+)/i, block);\n  const ubicacion = extractFirst(/UBICACIÓN:\\s*([^\\n]+)/i, block) || extractFirst(/UBICACION:\\s*([^\\n]+)/i, block);\n\n  // Secciones (ahora soporta también \"Horarios:\")\n  const perfilBlock = between(\"PERFIL:\", [\"OFRECE:\", \"Ofrece:\", \"HORARIO:\", \"Horario:\", \"HORARIOS:\", \"Horarios:\", \"OBSERVACIONES\", \"Observaciones\", \"USUARIO:\"], block);\n  const ofreceBlock = between(\"OFRECE:\", [\"HORARIO:\", \"Horario:\", \"HORARIOS:\", \"Horarios:\", \"OBSERVACIONES\", \"Observaciones\", \"USUARIO:\"], block);\n  const horarioText = between(\"HORARIO:\", [\"OBSERVACIONES\", \"Observaciones\", \"USUARIO:\"], block) || between(\"HORARIOS:\", [\"OBSERVACIONES\", \"Observaciones\", \"USUARIO:\"], block) || between(\"Horarios:\", [\"OBSERVACIONES\", \"Observaciones\", \"USUARIO:\"], block);\n  const obsBlock = between(\"OBSERVACIONES\", [\"USUARIO:\"], block) || between(\"Observaciones\", [\"USUARIO:\"], block);\n\n  const perfilArr = linesToArray(perfilBlock);\n  const ofreceArr = linesToArray(ofreceBlock);\n  const obsArr = linesToArray(obsBlock);\n\n  const puesto = extractPuesto(block);\n  const sueldo = detectSueldo(ofreceArr);\n  const transporte = detectTransporte(ofreceArr, block);\n\n  // Armamos objeto\n  const vac = {\n    \"puesto\": puesto || \"\",\n    \"empresa_cliente\": empresa || \"\",\n    \"giro\": giro || \"\",\n    \"ubicacion\": ubicacion || \"\",\n    \"perfil_requisitos\": perfilArr,\n    \"sueldo_semanal_libre\": sueldo,\n    \"prestaciones_beneficios\": ofreceArr,\n    \"horario\": (horarioText || \"\").replace(/\\s+/g, \" \").trim(),\n    \"ofrece_transporte\": transporte,\n    \"observaciones\": obsArr\n  };\n\n  // Filtra bloques basura y descarta los que no tengan ubicación\n  const ok =\n    (vac.empresa_cliente?.trim().length > 0) &&\n    (vac.ubicacion?.trim().length > 0) &&\n    (vac.perfil_requisitos.length > 0 || vac.prestaciones_beneficios.length > 0);\n\n  if (ok) vacantes.push(vac);\n}\n\n// Devuelve exactamente el JSON que pides\nreturn [{\n  json: { \"vacantes\": vacantes }\n}];\n\n\n\n\n"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        -1376,
-        784
-      ],
-      "id": "e6035470-8f61-43f6-8215-e6f43e86ec7f",
-      "name": "Code2"
-    },
-    {
-      "parameters": {
-        "tableId": "rh_vacantes_consultng_financial",
+        "tableId": "rh_vacantes_sin_cv",
         "fieldsUi": {
           "fieldValues": [
             {
@@ -501,10 +444,6 @@
             {
               "fieldId": "transporte",
               "fieldValue": "={{ $json.TRANSPORTE }}"
-            },
-            {
-              "fieldId": "observaciones",
-              "fieldValue": "={{ $json.OBSERVACIONES }}"
             }
           ]
         }
@@ -512,7 +451,7 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        -192,
+        -208,
         384
       ],
       "id": "226060dd-b26e-4b9e-b35e-03b0bba167ee",
@@ -527,7 +466,7 @@
     {
       "parameters": {
         "operation": "delete",
-        "tableId": "rh_vacantes_consultng_financial",
+        "tableId": "rh_vacantes_sin_cv",
         "filters": {
           "conditions": [
             {
@@ -541,7 +480,7 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        -2512,
+        -1600,
         784
       ],
       "id": "82e194ed-47ce-47fe-acb0-e01c8059fa56",
@@ -613,41 +552,34 @@
     },
     {
       "parameters": {
-        "operation": "download",
-        "fileId": "={{ $json.id }}"
+        "documentId": {
+          "__rl": true,
+          "value": "1oADK26iMWq0qCjPkKZeyHXWWu9pHkH1sCBgi1Vl-vR4",
+          "mode": "list",
+          "cachedResultName": "Vacantes RH sin CV",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1oADK26iMWq0qCjPkKZeyHXWWu9pHkH1sCBgi1Vl-vR4/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1oADK26iMWq0qCjPkKZeyHXWWu9pHkH1sCBgi1Vl-vR4/edit#gid=0"
+        },
+        "options": {}
       },
-      "type": "n8n-nodes-base.microsoftOneDrive",
-      "typeVersion": 1,
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
       "position": [
-        -1840,
+        -1168,
         784
       ],
-      "id": "cb9d7c6d-f79f-40b4-91c1-96eac922bc2c",
-      "name": "Download a file",
+      "id": "d72c8b08-060c-4c76-ab29-95358f5580fb",
+      "name": "Get row(s) in sheet",
       "credentials": {
-        "microsoftOneDriveOAuth2Api": {
-          "id": "zRflpxqGXm7lDItY",
-          "name": "Microsoft Drive Consulting Financial"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "operation": "search",
-        "query": "Manual Perfiles 2024.pdf"
-      },
-      "type": "n8n-nodes-base.microsoftOneDrive",
-      "typeVersion": 1,
-      "position": [
-        -2048,
-        784
-      ],
-      "id": "b3e7d95f-2872-4a9d-8d2f-6a1bb8c282b2",
-      "name": "Search a file",
-      "credentials": {
-        "microsoftOneDriveOAuth2Api": {
-          "id": "zRflpxqGXm7lDItY",
-          "name": "Microsoft Drive Consulting Financial"
+        "googleSheetsOAuth2Api": {
+          "id": "VrznAZQXjQh9WpvY",
+          "name": "Google Sheets - Cantera"
         }
       }
     }
@@ -679,7 +611,7 @@
       "main": [
         [
           {
-            "node": "Search a file",
+            "node": "Get row(s) in sheet",
             "type": "main",
             "index": 0
           }
@@ -726,11 +658,6 @@
         ],
         [
           {
-            "node": "Loop Over Items",
-            "type": "main",
-            "index": 0
-          },
-          {
             "node": "Edit Fields",
             "type": "main",
             "index": 0
@@ -771,44 +698,11 @@
         ]
       ]
     },
-    "Extract from File": {
-      "main": [
-        [
-          {
-            "node": "Code2",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Split Out": {
-      "main": [
-        [
-          {
-            "node": "Loop Over Items",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Edit Fields2": {
       "main": [
         [
           {
             "node": "Loop Over Items",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Code2": {
-      "main": [
-        [
-          {
-            "node": "Split Out",
             "type": "main",
             "index": 0
           }
@@ -844,22 +738,11 @@
         ]
       ]
     },
-    "Download a file": {
+    "Get row(s) in sheet": {
       "main": [
         [
           {
-            "node": "Extract from File",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Search a file": {
-      "main": [
-        [
-          {
-            "node": "Download a file",
+            "node": "Loop Over Items",
             "type": "main",
             "index": 0
           }
@@ -884,7 +767,7 @@
       }
     ]
   },
-  "versionId": "ba080138-5b75-4a42-86bd-11a280076d55",
+  "versionId": "e04122ca-cf67-4215-9eb8-4357d41ca8b1",
   "triggerCount": 0,
   "shared": [
     {
