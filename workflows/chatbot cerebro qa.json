@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-09-15T15:39:29.471Z",
-  "updatedAt": "2025-09-25T15:34:09.000Z",
+  "updatedAt": "2025-09-30T17:23:43.000Z",
   "id": "BPnkCPlia5Iozaew",
   "name": "chatbot cerebro qa",
   "active": false,
@@ -6771,14 +6771,14 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('incoming_data').item.json.incoming_wp.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": {{ JSON.stringify($json.data.message) }}\n  }\n}\n",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('incoming_data').item.json.incoming_wp.messages[0].from }}\",\n  \"type\": \"interactive\",\n  \"interactive\": {\n    \"type\": \"button\",\n    \"body\": {\n      \"text\": {{ JSON.stringify($json.data.message) }}\n    },\n    \"action\": {\n      \"buttons\": [\n        {\n          \"type\": \"reply\",\n          \"reply\": {\n            \"id\": \"entendido\",\n            \"title\": \"Entendido\"\n          }\n        }\n      ]\n    }\n  }\n}\n",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -1904,
-        2400
+        -1968,
+        2320
       ],
       "id": "ce2a0454-a007-46f1-a639-049a80fff239",
       "name": "mensaje evento sin foto"
@@ -6802,14 +6802,14 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('incoming_data').item.json.incoming_wp.messages[0].from }}\",\n  \"type\": \"image\",\n  \"image\": {\n    \"link\": \"{{ $json.data.event.image_url }}\",\n    \"caption\": {{ JSON.stringify($json.data.message) }}\n  }\n}",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('incoming_data').item.json.incoming_wp.messages[0].from }}\",\n  \"type\": \"image\",\n  \"image\": {\n    \"link\": \"{{ $json.data.event.image_url }}\"\n  }\n}",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -1904,
-        2176
+        -2096,
+        2144
       ],
       "id": "56341dbd-3070-4a7f-aafb-794d2c2a5a41",
       "name": "evento con foto"
@@ -8067,8 +8067,7 @@
           "id": "VnIdQJeuurWHKL4Q",
           "name": "WhatsApp OAuth colegio reims"
         }
-      },
-      "disabled": true
+      }
     },
     {
       "parameters": {
@@ -8277,6 +8276,283 @@
       ],
       "id": "52abae20-48be-41f0-bac6-96128da4db98",
       "name": "Execute Workflow4"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v22.0/{{ $('datos wp').item.json.data.config.whatsapp.accounts[0].phone_number_id }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ $('Set Variables').item.json.auth_token }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('incoming_data').item.json.incoming_wp.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": {{ JSON.stringify($('HTTP Request10').item.json.data.message) }}\n  }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -1872,
+        2144
+      ],
+      "id": "246c8457-6134-4358-b0d8-a29864cef795",
+      "name": "no respondio con boton1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "670342e3-e699-4e30-af27-04db7bace385",
+              "name": "user_id",
+              "value": "={{ $('Auth Guardian').item.json.data.session.user_id }}",
+              "type": "string"
+            },
+            {
+              "id": "391a519a-9e7c-4dee-8dfc-f8b38f7f8fc7",
+              "name": "information",
+              "value": "evento de calendario enviado",
+              "type": "string"
+            },
+            {
+              "id": "127efdf6-7193-4011-a155-fa072b66e80f",
+              "name": "userStateId",
+              "value": "={{ $('Auth Guardian').item.json.data.session.userId }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1632,
+        2224
+      ],
+      "id": "9a388e0e-d9df-42bb-95ed-d7e4cfda5f3c",
+      "name": "Edit Fields2"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e5baae19-924c-4972-8a51-b4d87aad8bad",
+              "name": "state",
+              "value": "espera_rerspuesta_presentar_calendario",
+              "type": "string"
+            },
+            {
+              "id": "127efdf6-7193-4011-a155-fa072b66e80f",
+              "name": "userStateId",
+              "value": "={{ $('Auth Guardian').item.json.data.session.user_id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1440,
+        2224
+      ],
+      "id": "6a3772f4-eda0-4137-8702-e07f0ed0be27",
+      "name": "Edit Fields23"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "fxGc0Kp6hEqyottE",
+          "mode": "list",
+          "cachedResultName": "chatbot cerebro cambio status"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "state": "={{ $json.state }}",
+            "userId": "={{ $json.userStateId }}",
+            "phoneNumber": "={{ $('incoming_data').item.json.incoming_wp.messages[0].from }}",
+            "info": "=espera respuesta envio de calendario",
+            "information": "=espera respuesta envio de calendario",
+            "base_url": "={{ $('Set Variables').item.json.currentEnvironment }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "state",
+              "displayName": "state",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "userId",
+              "displayName": "userId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "phoneNumber",
+              "displayName": "phoneNumber",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "info",
+              "displayName": "info",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "grade_state",
+              "displayName": "grade_state",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "type_conversation",
+              "displayName": "type_conversation",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "student_id",
+              "displayName": "student_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "course_selected",
+              "displayName": "course_selected",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "justify_state",
+              "displayName": "justify_state",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "justify_selected_date",
+              "displayName": "justify_selected_date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "information",
+              "displayName": "information",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "base_url",
+              "displayName": "base_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "ticket_type",
+              "displayName": "ticket_type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        -1216,
+        2224
+      ],
+      "id": "1b49fa12-4cda-4830-9052-dfa7401a8592",
+      "name": "Execute Workflow14"
+    },
+    {
+      "parameters": {
+        "updates": [
+          "messages"
+        ],
+        "options": {}
+      },
+      "type": "n8n-nodes-base.whatsAppTrigger",
+      "typeVersion": 1,
+      "position": [
+        -7744,
+        2000
+      ],
+      "id": "39539487-457e-4b99-af5e-b1f2359a66cc",
+      "name": "pruebas cerebro",
+      "webhookId": "cbdfa095-af47-405c-a244-7eba5e1b4e07",
+      "credentials": {
+        "whatsAppTriggerApi": {
+          "id": "KjIvhnZL5JWfXTr6",
+          "name": "WhatsApp OAuth pruebas cerebro"
+        }
+      }
     }
   ],
   "connections": {
@@ -10090,7 +10366,7 @@
       "main": [
         [
           {
-            "node": "Code4",
+            "node": "Edit Fields2",
             "type": "main",
             "index": 0
           }
@@ -10101,7 +10377,7 @@
       "main": [
         [
           {
-            "node": "Code4",
+            "node": "no respondio con boton1",
             "type": "main",
             "index": 0
           }
@@ -10385,6 +10661,50 @@
           }
         ]
       ]
+    },
+    "Edit Fields2": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields23",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields23": {
+      "main": [
+        [
+          {
+            "node": "Execute Workflow14",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "no respondio con boton1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "pruebas cerebro": {
+      "main": [
+        [
+          {
+            "node": "datos_combinados",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -10416,37 +10736,6 @@
               "from": "5214434901193",
               "id": "wamid.HBgNNTIxNDQzNDkwMTE5MxUCABIYFjNFQjA4NjhFMDkyNTdEQzIwRDc5Q0YA",
               "timestamp": "1757950935",
-              "text": {
-                "body": "hola"
-              },
-              "type": "text"
-            }
-          ],
-          "field": "messages"
-        }
-      }
-    ],
-    "colegio REIMS": [
-      {
-        "json": {
-          "messaging_product": "whatsapp",
-          "metadata": {
-            "display_phone_number": "5215639486960",
-            "phone_number_id": "665590369964646"
-          },
-          "contacts": [
-            {
-              "profile": {
-                "name": "Rick"
-              },
-              "wa_id": "5214434901193"
-            }
-          ],
-          "messages": [
-            {
-              "from": "5214434901193",
-              "id": "wamid.HBgNNTIxNDQzNDkwMTE5MxUCABIYFjNFQjBEQUI3NDg4MThCN0RFMjUzMkEA",
-              "timestamp": "1758296123",
               "text": {
                 "body": "hola"
               },
@@ -10489,7 +10778,7 @@
       }
     ]
   },
-  "versionId": "8e633b08-80ed-4a1a-a76c-891dfe73ed0a",
+  "versionId": "a34e2ff9-f916-4976-8d86-d9117243a267",
   "triggerCount": 2,
   "shared": [
     {
