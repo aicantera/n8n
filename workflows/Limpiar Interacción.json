@@ -1,0 +1,209 @@
+{
+  "createdAt": "2025-09-30T20:57:25.490Z",
+  "updatedAt": "2025-09-30T21:00:12.000Z",
+  "id": "MrxSnTfkxsv9xPQY",
+  "name": "Limpiar Interacción",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "chat_id",
+              "type": "number"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -368,
+        208
+      ],
+      "id": "8a995acd-e237-4938-9710-6124c4a5e3fd",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1RyBfbSXhsb6yFUzn1CRlmWvy0FYqOzDY0PzFpzOne-U",
+          "mode": "list",
+          "cachedResultName": "Registro Interacción",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1RyBfbSXhsb6yFUzn1CRlmWvy0FYqOzDY0PzFpzOne-U/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1RyBfbSXhsb6yFUzn1CRlmWvy0FYqOzDY0PzFpzOne-U/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "chat_id",
+              "lookupValue": "={{ $json.chat_id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        -176,
+        208
+      ],
+      "id": "83d28de4-b2b6-4259-a5e9-2e4fa35a1c84",
+      "name": "Busca chat id",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "VrznAZQXjQh9WpvY",
+          "name": "Google Sheets - Cantera"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "documentId": {
+          "__rl": true,
+          "value": "1RyBfbSXhsb6yFUzn1CRlmWvy0FYqOzDY0PzFpzOne-U",
+          "mode": "list",
+          "cachedResultName": "Registro Interacción",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1RyBfbSXhsb6yFUzn1CRlmWvy0FYqOzDY0PzFpzOne-U/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1dZcm0jG2eCp6Ooam-qKSiTyh3Ccnr4fqc_eyEUok0uQ/edit#gid=0"
+        },
+        "startIndex": "={{ $json.row_number }}"
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        16,
+        208
+      ],
+      "id": "fc295019-4855-48d4-8ad6-6ef67cb5a0ea",
+      "name": "Elimina chat id de tabla recordatorios",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "VrznAZQXjQh9WpvY",
+          "name": "Google Sheets - Cantera"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Busca chat id",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Busca chat id": {
+      "main": [
+        [
+          {
+            "node": "Elimina chat id de tabla recordatorios",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {
+    "When Executed by Another Workflow": [
+      {
+        "json": {
+          "chat_id": 1526474745
+        }
+      }
+    ]
+  },
+  "versionId": "32d09e04-da4f-498e-adf6-be4e5aa884fe",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "createdAt": "2025-09-30T20:57:25.495Z",
+      "updatedAt": "2025-09-30T20:57:25.495Z",
+      "role": "workflow:owner",
+      "workflowId": "MrxSnTfkxsv9xPQY",
+      "projectId": "BZ9Ta5yhe4RhzY78",
+      "project": {
+        "createdAt": "2025-05-13T15:56:28.209Z",
+        "updatedAt": "2025-05-13T16:18:54.372Z",
+        "id": "BZ9Ta5yhe4RhzY78",
+        "name": "CANTERA ADMIN <canteradigital7@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "projectRelations": [
+          {
+            "createdAt": "2025-05-13T15:56:28.209Z",
+            "updatedAt": "2025-05-13T15:56:28.209Z",
+            "role": "project:personalOwner",
+            "userId": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
+            "projectId": "BZ9Ta5yhe4RhzY78",
+            "user": {
+              "createdAt": "2025-05-13T15:56:27.880Z",
+              "updatedAt": "2025-09-30T04:00:52.000Z",
+              "id": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
+              "email": "canteradigital7@gmail.com",
+              "firstName": "CANTERA",
+              "lastName": "ADMIN",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-05-13T16:19:25.161Z",
+                "personalization_survey_n8n_version": "1.92.2",
+                "companySize": "<20",
+                "companyType": "saas",
+                "role": "customer-support",
+                "reportedSource": "event"
+              },
+              "settings": {
+                "userActivated": true,
+                "firstSuccessfulWorkflowId": "PTbESRzX3rguwQN8",
+                "userActivatedAt": 1747154580970,
+                "easyAIWorkflowOnboarded": true,
+                "npsSurvey": {
+                  "responded": true,
+                  "lastShownAt": 1748367494893
+                },
+                "dismissedCallouts": {
+                  "aiAgentStarterCallout": true,
+                  "preBuiltAgentsCalloutHttpRequest": true
+                }
+              },
+              "role": "global:owner",
+              "disabled": false,
+              "mfaEnabled": false,
+              "lastActiveAt": "2025-09-30",
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": []
+}
