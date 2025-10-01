@@ -1,9 +1,9 @@
 {
   "createdAt": "2025-09-15T15:39:29.471Z",
-  "updatedAt": "2025-10-01T00:56:56.000Z",
+  "updatedAt": "2025-10-01T02:00:05.000Z",
   "id": "BPnkCPlia5Iozaew",
   "name": "chatbot cerebro qa",
-  "active": false,
+  "active": true,
   "isArchived": false,
   "nodes": [
     {
@@ -583,7 +583,7 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"$('incoming_data').item.json.incoming_wp.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"Lo siento, en este momento no tengo la capacidad de interpretar notas de voz. Sin embargo, estamos trabajando para incluir esta función en futuras actualizaciones.  Gracias por tu comprensión.\"\n  }\n}\n",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{$('incoming_data').item.json.incoming_wp.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"Lo siento, en este momento no tengo la capacidad de interpretar notas de voz. Sin embargo, estamos trabajando para incluir esta función en futuras actualizaciones.  Gracias por tu comprensión.\"\n  }\n}\n",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
@@ -1403,6 +1403,12 @@
               "name": "mensaje_guardian_options",
               "value": "={{ $json.data.message }}",
               "type": "string"
+            },
+            {
+              "id": "8a37887a-8155-4ace-b3f0-119d5ca014f0",
+              "name": "more_messages",
+              "value": "={{ $json.data.more_message }}",
+              "type": "string"
             }
           ]
         },
@@ -1703,6 +1709,31 @@
               },
               "renameOutput": true,
               "outputKey": "menu inicial"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "1e0b8781-c620-460f-88b4-a3750a75ff3a",
+                    "leftValue": "={{ $('incoming_data').item.json.incoming_wp.messages[0].interactive.button_reply.id }}",
+                    "rightValue": "calendario",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "calendario"
             }
           ]
         },
@@ -6662,7 +6693,7 @@
     },
     {
       "parameters": {
-        "url": "={{ $('Set Variables').item.json.currentEnvironment }}/api/v1/smart-grader/calendar/family/wa/event/{{ $json.opcionElegida.event_ids[0] }}",
+        "url": "={{ $('Set Variables').item.json.currentEnvironment }}/api/v1/smart-grader/calendar/family/wa/event/{{ $json.events }}",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -6681,8 +6712,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -2432,
-        2304
+        -1760,
+        2352
       ],
       "id": "147251b1-9399-4d8f-a34d-e65899b2f35e",
       "name": "HTTP Request10"
@@ -6715,8 +6746,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        -2224,
-        2304
+        -1552,
+        2352
       ],
       "id": "7fc2b7b9-38cb-4479-99a1-9413108d48a1",
       "name": "If3"
@@ -6740,14 +6771,14 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('incoming_data').item.json.incoming_wp.messages[0].from }}\",\n  \"type\": \"interactive\",\n  \"interactive\": {\n    \"type\": \"button\",\n    \"body\": {\n      \"text\": {{ JSON.stringify($json.data.message) }}\n    },\n    \"action\": {\n      \"buttons\": [\n        {\n          \"type\": \"reply\",\n          \"reply\": {\n            \"id\": \"entendido\",\n            \"title\": \"Entendido\"\n          }\n        }\n      ]\n    }\n  }\n}\n",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{$('incoming_data').item.json.incoming_wp.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": {{ JSON.stringify($json.data.message) }}\n  }\n}\n",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -1968,
-        2320
+        -1296,
+        2528
       ],
       "id": "ce2a0454-a007-46f1-a639-049a80fff239",
       "name": "mensaje evento sin foto"
@@ -6771,14 +6802,14 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('incoming_data').item.json.incoming_wp.messages[0].from }}\",\n  \"type\": \"image\",\n  \"image\": {\n    \"link\": \"{{ $json.data.event.image_url }}\"\n  }\n}",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('incoming_data').item.json.incoming_wp.messages[0].from }}\",\n  \"type\": \"image\",\n  \"image\": {\n    \"link\": \"{{ $json.data.event.image_url }}\",\n    \"caption\": {{ JSON.stringify($json.data.message) }}\n  }\n}",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -2096,
-        2144
+        -1296,
+        2336
       ],
       "id": "56341dbd-3070-4a7f-aafb-794d2c2a5a41",
       "name": "evento con foto"
@@ -7566,7 +7597,7 @@
             {
               "id": "dd4ab65f-73e9-4d0b-ac9a-b622d5f1b441",
               "name": "currentEnv",
-              "value": "https://d5ec8dbc344b.ngrok-free.app",
+              "value": "https://api.pruebascerebro.online",
               "type": "string"
             },
             {
@@ -8254,37 +8285,6 @@
     },
     {
       "parameters": {
-        "method": "POST",
-        "url": "=https://graph.facebook.com/v22.0/{{ $('datos wp').item.json.data.config.whatsapp.accounts[0].phone_number_id }}/messages",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "Authorization",
-              "value": "={{ $('Set Variables').item.json.auth_token }}"
-            },
-            {
-              "name": "Content-Type",
-              "value": "application/json"
-            }
-          ]
-        },
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('incoming_data').item.json.incoming_wp.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": {{ JSON.stringify($('HTTP Request10').item.json.data.message) }}\n  }\n}\n",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        -1872,
-        2144
-      ],
-      "id": "246c8457-6134-4358-b0d8-a29864cef795",
-      "name": "no respondio con boton1"
-    },
-    {
-      "parameters": {
         "assignments": {
           "assignments": [
             {
@@ -8312,8 +8312,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -1632,
-        2224
+        -1536,
+        2208
       ],
       "id": "9a388e0e-d9df-42bb-95ed-d7e4cfda5f3c",
       "name": "Edit Fields2"
@@ -8341,8 +8341,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -1440,
-        2224
+        -1344,
+        2208
       ],
       "id": "6a3772f4-eda0-4137-8702-e07f0ed0be27",
       "name": "Edit Fields23"
@@ -8500,8 +8500,8 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        -1216,
-        2224
+        -1120,
+        2208
       ],
       "id": "1b49fa12-4cda-4830-9052-dfa7401a8592",
       "name": "Execute Workflow14"
@@ -8614,14 +8614,14 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('incoming_data').item.json.incoming_wp.messages[0].from }}\",\n  \"type\": \"interactive\",\n  \"interactive\": {\n    \"type\": \"button\",\n    \"body\": {\n      \"text\":\"Si necesitas más información sobre algún evento en particular, solo indícame el número de la opción.\"\n    },\n    \"action\": {\n      \"buttons\": [\n        {\n          \"type\": \"reply\",\n          \"reply\": {\n            \"id\": \"mas_eventos\",\n            \"title\": \"Ver más Eventos\"\n          }\n        },\n        {\n          \"type\": \"reply\",\n          \"reply\": {\n            \"id\": \"menu_inicial\",\n            \"title\": \"Regresar al Menú\"\n          }\n        }\n      ]\n    }\n } }\n\n",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('incoming_data').item.json.incoming_wp.messages[0].from }}\",\n  \"type\": \"interactive\",\n  \"interactive\": {\n    \"type\": \"button\",\n    \"body\": {\n      \"text\":\"Si necesitas más información sobre algún evento en particular, solo indícame el número de la opción.\"\n    },\n    \"action\": {\n      \"buttons\": [\n{\n          \"type\": \"reply\",\n          \"reply\": {\n            \"id\": \"menu_inicial\",\n            \"title\": \"Regresar al Menú\"\n          }\n        }\n      ]\n    }\n } }\n\n",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        1408,
-        1872
+        1312,
+        1888
       ],
       "id": "0cc332ae-f895-47b3-bed8-48bc52c36885",
       "name": "botonera con mas eventos en calendario"
@@ -8659,6 +8659,133 @@
       ],
       "id": "9279452c-d5ad-4344-97c3-183807d8d50d",
       "name": "revisamos si el usuario respondio por boton2"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v22.0/{{ $('datos wp').item.json.data.config.whatsapp.accounts[0].phone_number_id }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('datos wp').item.json.data.config.whatsapp.accounts[0].whatsapp_token }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{$('incoming_data').item.json.incoming_wp.messages[0].from }}\",\n  \"type\": \"text\",\n  \"text\": {\n    \"preview_url\": false,\n    \"body\":{{JSON.stringify($('Edit Fields14').item.json.more_messages) }}\n  }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        960,
+        1808
+      ],
+      "id": "208af73a-cf03-4570-b030-3d3693d32fbc",
+      "name": "enviamos mas datos de calendario"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "0cadd1e9-9928-46c9-be0b-94e1fbdc4b84",
+              "name": "events",
+              "value": "={{ $json.opcionElegida.event_ids }}",
+              "type": "array"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -2528,
+        2272
+      ],
+      "id": "9ae8d48e-87bd-4834-bfd5-cedef5673f23",
+      "name": "Edit Fields5"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -2096,
+        2272
+      ],
+      "id": "a9ee8e7c-13bf-4775-af43-16e1b00de9cb",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "events",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        -2320,
+        2272
+      ],
+      "id": "afe60b05-70e4-40e5-9957-a587293f6506",
+      "name": "Split Out"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v22.0/{{ $('datos wp').item.json.data.config.whatsapp.accounts[0].phone_number_id }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ $('Set Variables').item.json.auth_token }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('incoming_data').item.json.incoming_wp.messages[0].from }}\",\n  \"type\": \"interactive\",\n  \"interactive\": {\n    \"type\": \"button\",\n    \"body\": {\n      \"text\": \"Estos son los eventos para este día, ahora puede regresar al calendario\"\n    },\n    \"action\": {\n      \"buttons\": [\n        {\n          \"type\": \"reply\",\n          \"reply\": {\n            \"id\": \"calendario\",\n            \"title\": \"Calendario\"\n          }\n        }\n      ]\n    }\n  }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -1776,
+        2208
+      ],
+      "id": "c547ff23-ac12-4059-83dc-fa94d9b29c95",
+      "name": "boton regresar a calendario"
+    },
+    {
+      "parameters": {
+        "content": "## Envio de mensajes de eventos del día",
+        "height": 736,
+        "width": 1328
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -2192,
+        2064
+      ],
+      "typeVersion": 1,
+      "id": "159d7595-22fb-48ba-ae01-debabd9a705a",
+      "name": "Sticky Note15"
     }
   ],
   "connections": {
@@ -9188,6 +9315,13 @@
         [
           {
             "node": "multi student true?",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Code4",
             "type": "main",
             "index": 0
           }
@@ -10427,7 +10561,7 @@
       "main": [
         [
           {
-            "node": "HTTP Request10",
+            "node": "Edit Fields5",
             "type": "main",
             "index": 0
           }
@@ -10467,7 +10601,7 @@
       "main": [
         [
           {
-            "node": "Edit Fields2",
+            "node": "Loop Over Items",
             "type": "main",
             "index": 0
           }
@@ -10478,7 +10612,7 @@
       "main": [
         [
           {
-            "node": "no respondio con boton1",
+            "node": "Loop Over Items",
             "type": "main",
             "index": 0
           }
@@ -10785,17 +10919,6 @@
         ]
       ]
     },
-    "no respondio con boton1": {
-      "main": [
-        [
-          {
-            "node": "Edit Fields2",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "pruebas cerebro": {
       "main": [
         [
@@ -10822,12 +10945,18 @@
       "main": [
         [
           {
-            "node": "botonera con mas eventos en calendario",
+            "node": "enviamos mas datos de calendario",
             "type": "main",
             "index": 0
           }
         ],
-        []
+        [
+          {
+            "node": "botonera con mas eventos en calendario",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     },
     "botonera con mas eventos en calendario": {
@@ -10856,10 +10985,74 @@
           }
         ]
       ]
+    },
+    "enviamos mas datos de calendario": {
+      "main": [
+        [
+          {
+            "node": "botonera con mas eventos en calendario",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields5": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [
+          {
+            "node": "boton regresar a calendario",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "HTTP Request10",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "boton regresar a calendario": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
-    "executionOrder": "v1"
+    "executionOrder": "v1",
+    "timezone": "Etc/UTC",
+    "callerPolicy": "workflowsFromSameOwner"
   },
   "staticData": null,
   "meta": {
@@ -10948,17 +11141,17 @@
             {
               "context": {
                 "from": "5215639486960",
-                "id": "wamid.HBgNNTIxNDQzNDkwMTE5MxUCABEYEkU0ODA2QUI5MEZCNUQ0RjkxQQA="
+                "id": "wamid.HBgNNTIxNDQzNDkwMTE5MxUCABEYEjE3MzhDOUREN0UxNEEyRjU4MQA="
               },
               "from": "5214434901193",
-              "id": "wamid.HBgNNTIxNDQzNDkwMTE5MxUCABIYFjNFQjBDNzhBNjk5NTFEQTlEMjkyNTAA",
-              "timestamp": "1759271074",
+              "id": "wamid.HBgNNTIxNDQzNDkwMTE5MxUCABIYIEFDQkFDN0Q1NTJEQTgxMzdERjFDRjA1NDk4NUY3NTE0AA==",
+              "timestamp": "1759283630",
               "type": "interactive",
               "interactive": {
                 "type": "button_reply",
                 "button_reply": {
-                  "id": "menu_inicial",
-                  "title": "Regresar al Menú"
+                  "id": "calendario",
+                  "title": "Calendario"
                 }
               }
             }
@@ -10968,7 +11161,7 @@
       }
     ]
   },
-  "versionId": "54ab68c0-fc21-48b5-941a-8b159152b333",
+  "versionId": "0d9d803e-1f84-430c-9165-35fb5abee649",
   "triggerCount": 1,
   "shared": [
     {
@@ -10994,7 +11187,7 @@
             "projectId": "BsYMJSPwury6TiTn",
             "user": {
               "createdAt": "2025-06-06T20:24:22.275Z",
-              "updatedAt": "2025-09-30T16:00:35.000Z",
+              "updatedAt": "2025-10-01T01:54:07.000Z",
               "id": "f9268337-0922-4cba-994c-bf6b40332731",
               "email": "adolfocuentas123@gmail.com",
               "firstName": "adolfo",
@@ -11021,7 +11214,7 @@
               "role": "global:member",
               "disabled": false,
               "mfaEnabled": false,
-              "lastActiveAt": "2025-09-30",
+              "lastActiveAt": "2025-10-01",
               "isPending": false
             }
           }
