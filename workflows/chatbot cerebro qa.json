@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-09-15T15:39:29.471Z",
-  "updatedAt": "2025-10-01T02:00:05.000Z",
+  "updatedAt": "2025-10-02T17:41:05.000Z",
   "id": "BPnkCPlia5Iozaew",
   "name": "chatbot cerebro qa",
   "active": true,
@@ -6777,7 +6777,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -1296,
+        -1088,
         2528
       ],
       "id": "ce2a0454-a007-46f1-a639-049a80fff239",
@@ -8316,7 +8316,8 @@
         2208
       ],
       "id": "9a388e0e-d9df-42bb-95ed-d7e4cfda5f3c",
-      "name": "Edit Fields2"
+      "name": "Edit Fields2",
+      "executeOnce": true
     },
     {
       "parameters": {
@@ -8345,7 +8346,8 @@
         2208
       ],
       "id": "6a3772f4-eda0-4137-8702-e07f0ed0be27",
-      "name": "Edit Fields23"
+      "name": "Edit Fields23",
+      "executeOnce": true
     },
     {
       "parameters": {
@@ -8500,11 +8502,12 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        -1120,
+        -912,
         2208
       ],
       "id": "1b49fa12-4cda-4830-9052-dfa7401a8592",
-      "name": "Execute Workflow14"
+      "name": "Execute Workflow14",
+      "executeOnce": true
     },
     {
       "parameters": {
@@ -8770,7 +8773,8 @@
         2208
       ],
       "id": "c547ff23-ac12-4059-83dc-fa94d9b29c95",
-      "name": "boton regresar a calendario"
+      "name": "boton regresar a calendario",
+      "executeOnce": true
     },
     {
       "parameters": {
@@ -8786,6 +8790,51 @@
       "typeVersion": 1,
       "id": "159d7595-22fb-48ba-ae01-debabd9a705a",
       "name": "Sticky Note15"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v22.0/{{ $('datos wp').item.json.data.config.whatsapp.accounts[0].phone_number_id }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('datos wp').item.json.data.config.whatsapp.accounts[0].whatsapp_token }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('incoming_data').item.json.incoming_wp.messages[0].from }}\",\n  \"type\": \"interactive\",\n  \"interactive\": {\n    \"type\": \"button\",\n    \"body\": {\n      \"text\": \"Para poder obtener mas información sobre eventos selecciona la opcion *Calendario*\"\n    },\n    \"action\": {\n      \"buttons\": [\n        {\n          \"type\": \"reply\",\n          \"reply\": {\n            \"id\": \"calendario\",\n            \"title\": \"Calendario\"\n          }\n        }\n      ]\n    }\n  }\n}\n\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -3920,
+        2800
+      ],
+      "id": "8370c74e-e8d7-4518-a71f-18a0ff8ceff9",
+      "name": "no selecciono boton calendario"
+    },
+    {
+      "parameters": {
+        "amount": 1
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        -1088,
+        2336
+      ],
+      "id": "fcae15a4-7016-4daa-be49-52b733431341",
+      "name": "Wait",
+      "webhookId": "51c94d6b-2882-4780-b934-2ae6c5562882"
     }
   ],
   "connections": {
@@ -8894,13 +8943,7 @@
             "index": 0
           }
         ],
-        [
-          {
-            "node": "presiono el menu de inicio",
-            "type": "main",
-            "index": 0
-          }
-        ],
+        [],
         [],
         [
           {
@@ -9623,13 +9666,7 @@
     },
     "presiono el menu de inicio": {
       "main": [
-        [
-          {
-            "node": "multi student true?",
-            "type": "main",
-            "index": 0
-          }
-        ],
+        [],
         [
           {
             "node": "Filter",
@@ -10612,7 +10649,7 @@
       "main": [
         [
           {
-            "node": "Loop Over Items",
+            "node": "Wait",
             "type": "main",
             "index": 0
           }
@@ -10983,6 +11020,13 @@
             "type": "main",
             "index": 0
           }
+        ],
+        [
+          {
+            "node": "no selecciono boton calendario",
+            "type": "main",
+            "index": 0
+          }
         ]
       ]
     },
@@ -11042,6 +11086,17 @@
         [
           {
             "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
             "type": "main",
             "index": 0
           }
@@ -11139,21 +11194,13 @@
           ],
           "messages": [
             {
-              "context": {
-                "from": "5215639486960",
-                "id": "wamid.HBgNNTIxNDQzNDkwMTE5MxUCABEYEjE3MzhDOUREN0UxNEEyRjU4MQA="
-              },
               "from": "5214434901193",
-              "id": "wamid.HBgNNTIxNDQzNDkwMTE5MxUCABIYIEFDQkFDN0Q1NTJEQTgxMzdERjFDRjA1NDk4NUY3NTE0AA==",
-              "timestamp": "1759283630",
-              "type": "interactive",
-              "interactive": {
-                "type": "button_reply",
-                "button_reply": {
-                  "id": "calendario",
-                  "title": "Calendario"
-                }
-              }
+              "id": "wamid.HBgNNTIxNDQzNDkwMTE5MxUCABIYIEFDRTU0NkIzNTY2QjE1QzQwMzZFMUJBMTkxRDg3MkIxAA==",
+              "timestamp": "1759425824",
+              "text": {
+                "body": "2"
+              },
+              "type": "text"
             }
           ],
           "field": "messages"
@@ -11161,7 +11208,7 @@
       }
     ]
   },
-  "versionId": "0d9d803e-1f84-430c-9165-35fb5abee649",
+  "versionId": "bc66e2b2-8b18-411f-a71c-fbcacaee39e5",
   "triggerCount": 1,
   "shared": [
     {
