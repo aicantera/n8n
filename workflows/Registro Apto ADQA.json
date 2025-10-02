@@ -1,0 +1,360 @@
+{
+  "createdAt": "2025-10-01T23:48:13.127Z",
+  "updatedAt": "2025-10-01T23:51:25.000Z",
+  "id": "HkwcytK0s2SUJvsr",
+  "name": "Registro Apto ADQA",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -336,
+        -112
+      ],
+      "id": "18711a51-b73e-4cc7-91ba-2454361ea1e3",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "text": "={{ $json.query }}",
+        "attributes": {
+          "attributes": [
+            {
+              "name": "nombre",
+              "description": "nombre del candidato",
+              "required": true
+            },
+            {
+              "name": "edad",
+              "description": "edad del candidato",
+              "required": true
+            },
+            {
+              "name": "escolaridad",
+              "description": "escolaridad del candidato",
+              "required": true
+            },
+            {
+              "name": "genero",
+              "description": "genero del candidato",
+              "required": true
+            },
+            {
+              "name": "estatura",
+              "description": "estatura del candidato",
+              "required": true
+            },
+            {
+              "name": "experiencia laboral",
+              "description": "Experiencia Laboral del candidato",
+              "required": true
+            },
+            {
+              "name": "ubicacion",
+              "description": "De que municipio o localidad es originario el candidato o en que municipio o localidad vive",
+              "required": true
+            },
+            {
+              "name": "trabajo anteriormente en Chedraui",
+              "description": "Si el candidato trabajo anteriormente en Chedraui, puede ser un si o no",
+              "required": true
+            },
+            {
+              "name": "experiencia con patín hidráulico y handheld",
+              "description": "Si el candidato tiene experiencia con patín hidráulico y handheld, puede ser un si o no",
+              "required": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.informationExtractor",
+      "typeVersion": 1.2,
+      "position": [
+        -128,
+        -112
+      ],
+      "id": "92fc2757-7edc-40d4-82af-4adb16fccfd8",
+      "name": "Information Extractor"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -192,
+        96
+      ],
+      "id": "9c84a72d-cde3-4934-86ce-bc9c3cacdea8",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "0GqmLyS4fGSY8cgO",
+          "name": "OpenAi Agente RH ADQA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1G9H83AqaUhSTLDTjg0JNNY_FGt2mCZxyaRRultADyFo",
+          "mode": "list",
+          "cachedResultName": "registro_postulantes_adqa",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1G9H83AqaUhSTLDTjg0JNNY_FGt2mCZxyaRRultADyFo/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1297247710,
+          "mode": "list",
+          "cachedResultName": "Aptos",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1G9H83AqaUhSTLDTjg0JNNY_FGt2mCZxyaRRultADyFo/edit#gid=1297247710"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "nombre": "={{ $json.output.nombre }}",
+            "edad": "={{ $json.output.edad }}",
+            "escolaridad": "={{ $json.output.escolaridad }}",
+            "genero": "={{ $json.output.genero }}",
+            "estatura": "={{ $json.output.estatura }}",
+            "experiencia": "={{ $json.output['experiencia laboral'] }}",
+            "ubicación": "={{ $json.output.ubicacion }}",
+            "trabajo anteriormente en Chedraui": "={{ $json.output['trabajo anteriormente en Chedraui'] }}",
+            "experiencia con patín hidráulico y handheld": "={{ $json.output['experiencia con patín hidráulico y handheld'] }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "nombre",
+              "displayName": "nombre",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "edad",
+              "displayName": "edad",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "escolaridad",
+              "displayName": "escolaridad",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "genero",
+              "displayName": "genero",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "estatura",
+              "displayName": "estatura",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "experiencia",
+              "displayName": "experiencia",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "ubicación",
+              "displayName": "ubicación",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "trabajo anteriormente en Chedraui",
+              "displayName": "trabajo anteriormente en Chedraui",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "experiencia con patín hidráulico y handheld",
+              "displayName": "experiencia con patín hidráulico y handheld",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        224,
+        -112
+      ],
+      "id": "a3a4b69d-d53a-4c57-88cb-a797622380a9",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "T1b495TNgv7GQdA8",
+          "name": "Google Sheets Jumperaron"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Information Extractor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Information Extractor": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Information Extractor",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {
+    "When Executed by Another Workflow": [
+      {
+        "json": {
+          "query": "Carlos Correa 34 años secundaria hombre 170 3 años de cedis de Tepotzotlan no y no"
+        }
+      }
+    ]
+  },
+  "versionId": "a4d35125-53a8-4d6d-b3a7-a77ef3a06e3c",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "createdAt": "2025-10-01T23:48:13.134Z",
+      "updatedAt": "2025-10-01T23:48:13.134Z",
+      "role": "workflow:owner",
+      "workflowId": "HkwcytK0s2SUJvsr",
+      "projectId": "BZ9Ta5yhe4RhzY78",
+      "project": {
+        "createdAt": "2025-05-13T15:56:28.209Z",
+        "updatedAt": "2025-05-13T16:18:54.372Z",
+        "id": "BZ9Ta5yhe4RhzY78",
+        "name": "CANTERA ADMIN <canteradigital7@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "projectRelations": [
+          {
+            "createdAt": "2025-05-13T15:56:28.209Z",
+            "updatedAt": "2025-05-13T15:56:28.209Z",
+            "role": "project:personalOwner",
+            "userId": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
+            "projectId": "BZ9Ta5yhe4RhzY78",
+            "user": {
+              "createdAt": "2025-05-13T15:56:27.880Z",
+              "updatedAt": "2025-10-01T05:00:52.000Z",
+              "id": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
+              "email": "canteradigital7@gmail.com",
+              "firstName": "CANTERA",
+              "lastName": "ADMIN",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-05-13T16:19:25.161Z",
+                "personalization_survey_n8n_version": "1.92.2",
+                "companySize": "<20",
+                "companyType": "saas",
+                "role": "customer-support",
+                "reportedSource": "event"
+              },
+              "settings": {
+                "userActivated": true,
+                "firstSuccessfulWorkflowId": "PTbESRzX3rguwQN8",
+                "userActivatedAt": 1747154580970,
+                "easyAIWorkflowOnboarded": true,
+                "npsSurvey": {
+                  "responded": true,
+                  "lastShownAt": 1748367494893
+                },
+                "dismissedCallouts": {
+                  "aiAgentStarterCallout": true,
+                  "preBuiltAgentsCalloutHttpRequest": true
+                }
+              },
+              "role": "global:owner",
+              "disabled": false,
+              "mfaEnabled": false,
+              "lastActiveAt": "2025-10-01",
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": []
+}
