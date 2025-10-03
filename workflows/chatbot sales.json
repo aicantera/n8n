@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-06-24T22:28:19.611Z",
-  "updatedAt": "2025-10-03T17:34:41.000Z",
+  "updatedAt": "2025-10-03T19:46:50.000Z",
   "id": "PetXIW4fDRVoHgK5",
   "name": "chatbot sales",
   "active": false,
@@ -12,7 +12,7 @@
           "string": [
             {
               "name": "currentEnvironment",
-              "value": "https://cerebro-dev-7d8f30a4b3ff.herokuapp.com"
+              "value": "={{ $('enviroment').item.json.currentUrl }}"
             },
             {
               "name": "status_report",
@@ -288,7 +288,7 @@
                 },
                 "conditions": [
                   {
-                    "leftValue": "={{ $json.messages[0].audio.voice }}",
+                    "leftValue": "={{ $('WhatsApp Trigger').item.json.data[0].messages[0].audio.voice }}",
                     "rightValue": "",
                     "operator": {
                       "type": "boolean",
@@ -314,7 +314,7 @@
                 "conditions": [
                   {
                     "id": "1af6c276-b636-440b-bbe5-cbc837091bd2",
-                    "leftValue": "={{ $json.messages[0].type }}",
+                    "leftValue": "={{ $('WhatsApp Trigger').item.json.data[0].messages[0].type }}",
                     "rightValue": "document",
                     "operator": {
                       "type": "string",
@@ -339,7 +339,7 @@
                 "conditions": [
                   {
                     "id": "5618e653-a507-4ea4-979f-00b7f2b130d9",
-                    "leftValue": "={{ $json.messages[0].type }}",
+                    "leftValue": "={{ $('WhatsApp Trigger').item.json.data[0].messages[0].type }}",
                     "rightValue": "image",
                     "operator": {
                       "type": "string",
@@ -364,7 +364,7 @@
                 "conditions": [
                   {
                     "id": "da89dce8-8fe7-4db2-8fdf-ec07c5275504",
-                    "leftValue": "={{ $json.messages[0].type }}",
+                    "leftValue": "={{ $('WhatsApp Trigger').item.json.data[0].messages[0].type }}",
                     "rightValue": "video",
                     "operator": {
                       "type": "string",
@@ -389,7 +389,7 @@
                 "conditions": [
                   {
                     "id": "cb6a1619-9e4f-4fb1-ada2-ddbc8d0e9bc3",
-                    "leftValue": "={{ $json.messages[0].type }}",
+                    "leftValue": "={{ $('WhatsApp Trigger').item.json.data[0].messages[0].type }}",
                     "rightValue": "text",
                     "operator": {
                       "type": "string",
@@ -414,7 +414,7 @@
                 "conditions": [
                   {
                     "id": "8bb0b189-ee63-4c74-aaaf-62d744854522",
-                    "leftValue": "={{ $json.messages[0].interactive.type }}",
+                    "leftValue": "={{ $('WhatsApp Trigger').item.json.data[0].messages[0].type }}",
                     "rightValue": "",
                     "operator": {
                       "type": "string",
@@ -592,8 +592,8 @@
           "conditions": [
             {
               "id": "9b562075-a550-4abf-b109-c329dec77be5",
-              "leftValue": "={{ $json.type_conversation_finded || $json.type_conversation_edited }}",
-              "rightValue": "chatbot",
+              "leftValue": "={{ $json.data.session.type_conversation }}",
+              "rightValue": "wa_chatbot",
               "operator": {
                 "type": "string",
                 "operation": "equals",
@@ -678,15 +678,15 @@
           "string": [
             {
               "name": "clienteIdWp",
-              "value": "669848086217681"
+              "value": "={{ $json.data.config.phone_number_id }}"
             },
             {
               "name": "tokenWp",
-              "value": "Bearer EAAUX8tBNibUBO5oRM8xn7QQMJ949BYO49fUoAtXQZBkvdNqCZAbZC4sHTXZC0wyUBMLT2CvP0GpNdSaF3yd0F43HZC7m6ubsYitZBvzksq11tqPZC8omLgJlj5kSPHjhT1sIod9jsuW9z2i0rGu2xmIp7WD9I6ZCUhosuM31ANSp1tI554IQQbSVAyoIvoI6B1rohwZDZD"
+              "value": "=Bearer {{ $json.data.config.whatsapp_token }}"
             },
             {
               "name": "tenant_id",
-              "value": "fe8f5abe-abda-4223-8ab0-c81247aa9cec"
+              "value": "={{ $json.data.config.tenant_id }}"
             }
           ]
         },
@@ -715,7 +715,7 @@
                 },
                 "conditions": [
                   {
-                    "leftValue": "={{ $json.state_edited ? $json.state_edited : $json.state_finded}}",
+                    "leftValue": "={{ $json.data.session.states.parent_state }}",
                     "rightValue": "menuInicial",
                     "operator": {
                       "type": "string",
@@ -740,7 +740,7 @@
                 "conditions": [
                   {
                     "id": "49660bd6-0c53-49b6-a272-353eae4acf80",
-                    "leftValue": "={{ $json.state_edited ? $json.state_edited : $json.state_finded}}",
+                    "leftValue": "={{ $json.data.session.states.parent_state }}",
                     "rightValue": "esperando_respuesta_menu_inicial",
                     "operator": {
                       "type": "string",
@@ -765,7 +765,7 @@
                 "conditions": [
                   {
                     "id": "e63b8bcb-ffae-47fd-be83-4460047ee4f3",
-                    "leftValue": "={{ $json.state_edited ? $json.state_edited : $json.state_finded}}",
+                    "leftValue": "={{ $json.data.session.states.parent_state }}",
                     "rightValue": "esperando_respuesta_menu_informes",
                     "operator": {
                       "type": "string",
@@ -790,7 +790,7 @@
                 "conditions": [
                   {
                     "id": "faed8982-b54d-4cc9-85df-45c31ad392ec",
-                    "leftValue": "={{ $json.state_edited ? $json.state_edited : $json.state_finded}}",
+                    "leftValue": "={{ $json.data.session.states.parent_state }}",
                     "rightValue": "esperando_respuesta_dia_cita",
                     "operator": {
                       "type": "string",
@@ -815,7 +815,7 @@
                 "conditions": [
                   {
                     "id": "5d560ba0-a11a-45f3-9d2d-d13049d4df4c",
-                    "leftValue": "={{ $json.state_edited ? $json.state_edited : $json.state_finded}}",
+                    "leftValue": "={{ $json.data.session.states.parent_state }}",
                     "rightValue": "esperando_respuesta_menu_costos",
                     "operator": {
                       "type": "string",
@@ -840,7 +840,7 @@
                 "conditions": [
                   {
                     "id": "7ba99368-0eb6-48ed-af01-77c7c4768b41",
-                    "leftValue": "={{ $json.state_edited ? $json.state_edited : $json.state_finded}}",
+                    "leftValue": "={{ $json.data.session.states.parent_state }}",
                     "rightValue": "esperando_respuesta_menu_contacto_costos",
                     "operator": {
                       "type": "string",
@@ -865,7 +865,7 @@
                 "conditions": [
                   {
                     "id": "2d803248-e0f9-4478-8ff0-768db480b95d",
-                    "leftValue": "={{ $json.state_edited ? $json.state_edited : $json.state_finded}}",
+                    "leftValue": "={{ $json.data.session.states.parent_state }}",
                     "rightValue": "esperando_respuesta_menu_ubicacion",
                     "operator": {
                       "type": "string",
@@ -890,7 +890,7 @@
                 "conditions": [
                   {
                     "id": "5f2b8eb8-dca7-40cc-9d86-1ed8f85b1027",
-                    "leftValue": "={{ $json.state_edited ? $json.state_edited : $json.state_finded}}",
+                    "leftValue": "={{ $json.data.session.states.parent_state }}",
                     "rightValue": "respuesta_seleccion_nivel_escolar_ubicacion",
                     "operator": {
                       "type": "string",
@@ -915,7 +915,7 @@
                 "conditions": [
                   {
                     "id": "c17a27fb-f67a-48af-ab13-a78c9f77e4f8",
-                    "leftValue": "={{ $json.state_edited ? $json.state_edited : $json.state_finded}}",
+                    "leftValue": "={{ $json.data.session.states.parent_state }}",
                     "rightValue": "esperando_respuesta_menu_horario",
                     "operator": {
                       "type": "string",
@@ -940,7 +940,7 @@
                 "conditions": [
                   {
                     "id": "e897eb9e-7845-4596-b7e4-6e6299e2de6c",
-                    "leftValue": "={{ $json.state_edited ? $json.state_edited : $json.state_finded}}",
+                    "leftValue": "={{ $json.data.session.states.parent_state }}",
                     "rightValue": "esperando_respuesta_menu_contactame_informes",
                     "operator": {
                       "type": "string",
@@ -965,7 +965,7 @@
                 "conditions": [
                   {
                     "id": "59c5aacd-d431-4d88-a74c-4511477b8cfa",
-                    "leftValue": "={{ $json.state_edited ? $json.state_edited : $json.state_finded}}",
+                    "leftValue": "={{ $json.data.session.states.parent_state }}",
                     "rightValue": "proceso_calificaciones_estudiante",
                     "operator": {
                       "type": "string",
@@ -1065,8 +1065,8 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        4544,
-        -2288
+        4496,
+        -2160
       ],
       "id": "db2c5269-a65d-4cbd-ba77-02377e42e985",
       "name": "Execute Workflow"
@@ -1099,8 +1099,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        4128,
-        -2160
+        4288,
+        -2384
       ],
       "id": "70814299-a8f6-4d6c-82b3-e2eeecc92625",
       "name": "revisamos si ya existia"
@@ -1112,7 +1112,7 @@
             {
               "id": "cb5bf561-971f-493b-8312-772ff7f21da3",
               "name": "userStateId",
-              "value": "={{ $('Code2').item.json.user_state_final }}",
+              "value": "={{ $('Auth Guardian').item.json.data.session.user_id }}",
               "type": "string"
             },
             {
@@ -1124,7 +1124,7 @@
             {
               "id": "6b9a8f55-16af-4e52-b897-0ac1cfca6083",
               "name": "userId",
-              "value": "={{ $('Code2').item.json.user_id_finded || $('Code2').item.json.user_id_edited }}",
+              "value": "={{ $('Auth Guardian').item.json.data.session.user_id }}",
               "type": "string"
             }
           ]
@@ -1134,8 +1134,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        4320,
-        -2288
+        4304,
+        -2160
       ],
       "id": "f077b3b3-bd2e-4f68-9176-5800a3cdc48a",
       "name": "Edit Fields5"
@@ -2714,37 +2714,6 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('sales cerebro').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"Hola! Bienvenid@ al Colegio Reims! 😃\\n\\n¿En qué te podemos ayudar? Escribe el número de la opción que deseas: \\n\\n1️⃣ Informes\\n2️⃣ Citas\"\n  }\n}\n",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        3904,
-        -2160
-      ],
-      "id": "82f639a3-d94d-4dfd-979c-7b3170f9b635",
-      "name": "Mensaje menu inicial"
-    },
-    {
-      "parameters": {
-        "method": "POST",
-        "url": "=https://graph.facebook.com/v22.0/{{ $('Variables Wp').item.json.clienteIdWp }}/messages",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "Authorization",
-              "value": "={{ $('Variables Wp').item.json.tokenWp }}"
-            },
-            {
-              "name": "Content-Type",
-              "value": "application/json"
-            }
-          ]
-        },
-        "sendBody": true,
-        "specifyBody": "json",
         "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('sales cerebro').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"Gracias por solicitar información, ¿Sobre que necesitas saber?\\n\\n1️⃣ Ubicación\\n2️⃣ Costos \\n3️⃣ Horario Extendido\\n4️⃣ Programa Bilingüe\\n5️⃣ Contáctame 📲\\n\\n6️⃣ Gracias, ya estoy hablando con un asesor ✅\"\n  }\n}\n",
         "options": {}
       },
@@ -4192,8 +4161,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -192,
-        1216
+        -544,
+        1280
       ],
       "id": "2ece1371-00e5-40d3-a02f-fb84520d897d",
       "name": "upsert_sale_by_phone",
@@ -7242,7 +7211,7 @@
     },
     {
       "parameters": {
-        "url": "={{$node[\"Set Variables\"].json[\"currentEnvironment\"]}}/api/v1/authmb/auth_guardian?phone={{ $('incoming_data').item.json.incoming_wp.messages[0].from }}&message={{ $('incoming_data').item.json.incoming_wp.messages[0].text.body || \"no_data\" }}",
+        "url": "={{$node[\"Set Variables\"].json[\"currentEnvironment\"]}}/api/v1/authmb/auth_guardian/sales?phone={{ $('WhatsApp Trigger').item.json.data[0].messages[0].from }}",
         "options": {}
       },
       "name": "Auth Guardian",
@@ -7258,7 +7227,7 @@
     },
     {
       "parameters": {
-        "url": "={{ $json.currentUrl }}/api/v1/messaging/whatsapp/get-config/{{ $('WhatsApp Trigger').item.json.data[0].metadata.phone_number_id }}",
+        "url": "={{ $json.currentUrl }}/api/v1/messaging/whatsapp/get-config-sales/{{ $('WhatsApp Trigger').item.json.data[0].metadata.phone_number_id }}",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
@@ -7307,6 +7276,60 @@
       ],
       "id": "f3525633-9c04-42cb-9b56-a3f0879e2667",
       "name": "enviroment"
+    },
+    {
+      "parameters": {
+        "url": "={{ $('Set Variables').item.json.currentEnvironment }}/api/v1/grow/sales/wa/home-menu",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-api-key",
+              "value": "={{ $('enviroment').item.json['x-api-key'] }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3904,
+        -2160
+      ],
+      "id": "82f639a3-d94d-4dfd-979c-7b3170f9b635",
+      "name": "request menu inicial"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v22.0/{{ $('Variables Wp').item.json.clienteIdWp }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ $('Variables Wp').item.json.tokenWp }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('sales cerebro').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": {{ JSON.stringify($json.data.message_wa) }}\n  }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        4064,
+        -2160
+      ],
+      "id": "e2014c2a-ef9f-453b-b02c-16462cfe9928",
+      "name": "Mensaje menu inicial"
     }
   ],
   "connections": {
@@ -7314,7 +7337,7 @@
       "main": [
         [
           {
-            "node": "upsert_sale_by_phone",
+            "node": "Auth Guardian",
             "type": "main",
             "index": 0
           }
@@ -7510,7 +7533,7 @@
       "main": [
         [
           {
-            "node": "Mensaje menu inicial",
+            "node": "request menu inicial",
             "type": "main",
             "index": 0
           }
@@ -7582,13 +7605,7 @@
     },
     "revisamos si ya existia": {
       "main": [
-        [
-          {
-            "node": "Edit Fields5",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "Edit Fields5": {
@@ -7920,17 +7937,6 @@
         ]
       ]
     },
-    "Mensaje menu inicial": {
-      "main": [
-        [
-          {
-            "node": "revisamos si ya existia",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Mensaje menu información": {
       "main": [
         [
@@ -8165,7 +8171,7 @@
       "main": [
         [
           {
-            "node": "Mensaje menu inicial",
+            "node": "request menu inicial",
             "type": "main",
             "index": 0
           }
@@ -8377,7 +8383,7 @@
       "main": [
         [
           {
-            "node": "Mensaje menu inicial",
+            "node": "request menu inicial",
             "type": "main",
             "index": 0
           }
@@ -8426,13 +8432,7 @@
     },
     "upsert_sale_by_phone": {
       "main": [
-        [
-          {
-            "node": "Auth Guardian",
-            "type": "main",
-            "index": 0
-          }
-        ],
+        [],
         []
       ]
     },
@@ -9053,7 +9053,7 @@
         ],
         [
           {
-            "node": "Mensaje menu inicial",
+            "node": "request menu inicial",
             "type": "main",
             "index": 0
           }
@@ -9287,6 +9287,39 @@
           }
         ]
       ]
+    },
+    "datos_num1": {
+      "main": [
+        [
+          {
+            "node": "Variables Wp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "request menu inicial": {
+      "main": [
+        [
+          {
+            "node": "Mensaje menu inicial",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mensaje menu inicial": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -9327,7 +9360,7 @@
       }
     ]
   },
-  "versionId": "d2a2d2dc-9cdc-4434-bbbe-a1c18e6a04d5",
+  "versionId": "0905beec-8094-47de-a39e-8caca25a7061",
   "triggerCount": 1,
   "shared": [
     {
