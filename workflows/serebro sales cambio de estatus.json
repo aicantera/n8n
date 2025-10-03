@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-07-07T22:29:33.443Z",
-  "updatedAt": "2025-07-08T15:13:11.000Z",
+  "updatedAt": "2025-10-03T19:54:38.000Z",
   "id": "cOoCwRPN9qfk0P6y",
   "name": "serebro sales cambio de estatus",
   "active": false,
@@ -53,8 +53,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        760,
-        20
+        768,
+        -176
       ],
       "id": "86ef56d5-97ec-41ea-b9c0-d9d76273c860",
       "name": "Edit Fields3"
@@ -69,8 +69,8 @@
       "type": "n8n-nodes-base.mongoDb",
       "typeVersion": 1.1,
       "position": [
-        980,
-        20
+        992,
+        -176
       ],
       "id": "ee66f909-d39b-4c82-868d-7e8fbe626603",
       "name": "MongoDB4",
@@ -88,8 +88,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        100,
-        20
+        112,
+        -176
       ],
       "id": "d727b1e3-0ec1-4996-9828-23b7809c6d9c",
       "name": "Code1",
@@ -106,8 +106,8 @@
       "type": "n8n-nodes-base.mongoDb",
       "typeVersion": 1.1,
       "position": [
-        540,
-        20
+        544,
+        -176
       ],
       "id": "cc7908c0-9d02-4f32-ae78-73cae2a70e61",
       "name": "MongoDB5",
@@ -154,7 +154,7 @@
       "typeVersion": 3.4,
       "position": [
         320,
-        20
+        -176
       ],
       "id": "d5c90131-eaba-4465-aa15-f297810c7c7c",
       "name": "Edit Fields4"
@@ -177,6 +177,12 @@
             },
             {
               "name": "sub_menu"
+            },
+            {
+              "name": "base_url"
+            },
+            {
+              "name": "phone"
             }
           ]
         }
@@ -184,11 +190,55 @@
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "typeVersion": 1.1,
       "position": [
-        -120,
-        20
+        -128,
+        32
       ],
       "id": "321b05a8-4987-4194-bd8b-6d3b73cffc12",
       "name": "flujo de actualización base de datos"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Lee el objeto de entrada\nconst input = items[0]?.json ?? {};\n\n// Lista blanca de campos esperados (evita que se cuelen otros)\nconst allowedKeys = [\n  'state',\n  'child_state',\n  'userId',\n  'phone',\n  'info',\n  'grade_state',\n  'ticket_type',\n  'type_conversation',\n  'student_id',\n  'course_selected',\n  'justify_state',\n  'justify_selected_date',\n];\n\n// Función para detectar “vacío”\nconst isEmpty = (v) => (\n  v === null ||\n  v === undefined ||\n  (typeof v === 'string' && v.trim() === '') ||\n  (Array.isArray(v) && v.length === 0) ||\n  (typeof v === 'object' && !Array.isArray(v) && Object.keys(v).length === 0) ||\n  v === 'null' ||              // por si llega literal como string\n  v === 'undefined'            // idem\n);\n\n// Filtra solo claves permitidas y no vacías\nconst cleaned = Object.fromEntries(\n  Object.entries(input)\n    .filter(([k]) => allowedKeys.includes(k))\n    .filter(([_, v]) => !isEmpty(v))\n);\n\n// Agrega la fecha actual en formato requerido\ncleaned.now = new Date().toLocaleString('es-MX', {\n  timeZone: 'America/Mexico_City'\n});\n\n// Devuelve un único item con el objeto “limpio” + fecha\nreturn [{ json: cleaned }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        80,
+        32
+      ],
+      "id": "f25f9cfa-8bdb-44d7-965b-90f5f9eee48b",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('flujo de actualización base de datos').item.json.base_url }}/api/v1/engage/update_user_session_by_phone_sales",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{$json }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        480,
+        32
+      ],
+      "id": "cb2400b6-533d-4fd6-87e2-43f342239a57",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Tomamos el objeto limpio del nodo anterior\nconst input = items[0]?.json ?? {};\nconst states = {\n  parent_state:input.state,\n  child_state:input.child_state\n}\n\n// Construimos el body de la petición\nconst body = {\n  phone: input.phone,        // obligatorio\n  states: states,\nuser_id: input.userId,\n  information: input.info,         // mapeado a \"information\"\n  grade_state: input.grade_state,\n  type_conversation: input.type_conversation,\n  student_id: input.student_id,\n  course_selected: input.course_selected,\n  justify_state: input.justify_state,\n  ticket_type:input.ticket_type,\n  justify_selected_date: input.justify_selected_date,\n  date: input.now                   // si quieres mandar la fecha actual también\n};\n\n// Retornamos un único item con el body\nreturn [{ json: body }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        272,
+        32
+      ],
+      "id": "ada66bcc-6918-4d70-97a9-03ef436c76f6",
+      "name": "Code2"
     }
   ],
   "connections": {
@@ -240,7 +290,29 @@
       "main": [
         [
           {
-            "node": "Code1",
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Code2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code2": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
             "type": "main",
             "index": 0
           }
@@ -258,15 +330,17 @@
       {
         "json": {
           "state": "respuesta_seleccion_nivel_escolar_ubicacion",
-          "userId": "c0e55c73-3101-4ce3-9ae0-140446da0335",
+          "userId": "68dff92b13622be1bb57fb4b",
           "userStateId": "c0e55c73-3101-4ce3-9ae0-140446da0335",
           "info": "seleccion info de para ubicación en preescolar",
-          "sub_menu": "cita_llamada_info"
+          "sub_menu": "cita_llamada_info",
+          "base_url": "https://d5ec8dbc344b.ngrok-free.app",
+          "phone": "4434901193"
         }
       }
     ]
   },
-  "versionId": "6f0f94fc-2c40-47fa-90d8-f2537e81db76",
+  "versionId": "c1157a4a-063e-413b-8465-51dd4e828eb9",
   "triggerCount": 0,
   "shared": [
     {
