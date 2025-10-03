@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-07-07T22:29:33.443Z",
-  "updatedAt": "2025-10-03T19:54:38.000Z",
+  "updatedAt": "2025-10-03T20:23:38.000Z",
   "id": "cOoCwRPN9qfk0P6y",
   "name": "serebro sales cambio de estatus",
   "active": false,
@@ -183,6 +183,10 @@
             },
             {
               "name": "phone"
+            },
+            {
+              "name": "items_length",
+              "type": "number"
             }
           ]
         }
@@ -198,7 +202,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// Lee el objeto de entrada\nconst input = items[0]?.json ?? {};\n\n// Lista blanca de campos esperados (evita que se cuelen otros)\nconst allowedKeys = [\n  'state',\n  'child_state',\n  'userId',\n  'phone',\n  'info',\n  'grade_state',\n  'ticket_type',\n  'type_conversation',\n  'student_id',\n  'course_selected',\n  'justify_state',\n  'justify_selected_date',\n];\n\n// Función para detectar “vacío”\nconst isEmpty = (v) => (\n  v === null ||\n  v === undefined ||\n  (typeof v === 'string' && v.trim() === '') ||\n  (Array.isArray(v) && v.length === 0) ||\n  (typeof v === 'object' && !Array.isArray(v) && Object.keys(v).length === 0) ||\n  v === 'null' ||              // por si llega literal como string\n  v === 'undefined'            // idem\n);\n\n// Filtra solo claves permitidas y no vacías\nconst cleaned = Object.fromEntries(\n  Object.entries(input)\n    .filter(([k]) => allowedKeys.includes(k))\n    .filter(([_, v]) => !isEmpty(v))\n);\n\n// Agrega la fecha actual en formato requerido\ncleaned.now = new Date().toLocaleString('es-MX', {\n  timeZone: 'America/Mexico_City'\n});\n\n// Devuelve un único item con el objeto “limpio” + fecha\nreturn [{ json: cleaned }];\n"
+        "jsCode": "// Lee el objeto de entrada\nconst input = items[0]?.json ?? {};\n\n// Lista blanca de campos esperados (evita que se cuelen otros)\nconst allowedKeys = [\n  'state',\n  'child_state',\n  'userId',\n  'phone',\n  'info',\n  'type_conversation',\n  'items_length'\n];\n\n// Función para detectar “vacío”\nconst isEmpty = (v) => (\n  v === null ||\n  v === undefined ||\n  (typeof v === 'string' && v.trim() === '') ||\n  (Array.isArray(v) && v.length === 0) ||\n  (typeof v === 'object' && !Array.isArray(v) && Object.keys(v).length === 0) ||\n  v === 'null' ||              // por si llega literal como string\n  v === 'undefined'            // idem\n);\n\n// Filtra solo claves permitidas y no vacías\nconst cleaned = Object.fromEntries(\n  Object.entries(input)\n    .filter(([k]) => allowedKeys.includes(k))\n    .filter(([_, v]) => !isEmpty(v))\n);\n\n// Agrega la fecha actual en formato requerido\ncleaned.now = new Date().toLocaleString('es-MX', {\n  timeZone: 'America/Mexico_City'\n});\n\n// Devuelve un único item con el objeto “limpio” + fecha\nreturn [{ json: cleaned }];\n"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -229,7 +233,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// Tomamos el objeto limpio del nodo anterior\nconst input = items[0]?.json ?? {};\nconst states = {\n  parent_state:input.state,\n  child_state:input.child_state\n}\n\n// Construimos el body de la petición\nconst body = {\n  phone: input.phone,        // obligatorio\n  states: states,\nuser_id: input.userId,\n  information: input.info,         // mapeado a \"information\"\n  grade_state: input.grade_state,\n  type_conversation: input.type_conversation,\n  student_id: input.student_id,\n  course_selected: input.course_selected,\n  justify_state: input.justify_state,\n  ticket_type:input.ticket_type,\n  justify_selected_date: input.justify_selected_date,\n  date: input.now                   // si quieres mandar la fecha actual también\n};\n\n// Retornamos un único item con el body\nreturn [{ json: body }];\n"
+        "jsCode": "// Tomamos el objeto limpio del nodo anterior\nconst input = items[0]?.json ?? {};\nconst states = {\n  parent_state:input.state,\n  child_state:input.child_state\n}\n\n// Construimos el body de la petición\nconst body = {\n  phone: input.phone,        // obligatorio\n  states: states,\nuser_id: input.userId,\n  information: input.info,         // mapeado a \"information\"\n  grade_state: input.grade_state,\n  type_conversation: input.type_conversation,\n  student_id: input.student_id,\n  course_selected: input.course_selected,\n  justify_state: input.justify_state,\n  ticket_type:input.ticket_type,\n  justify_selected_date: input.justify_selected_date,\n  items_length: input.items_length,\n  date: input.now                   // si quieres mandar la fecha actual también\n};\n\n// Retornamos un único item con el body\nreturn [{ json: body }];\n"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -329,18 +333,18 @@
     "flujo de actualización base de datos": [
       {
         "json": {
-          "state": "respuesta_seleccion_nivel_escolar_ubicacion",
+          "state": "esperando_respuesta_menu_inicial",
           "userId": "68dff92b13622be1bb57fb4b",
-          "userStateId": "c0e55c73-3101-4ce3-9ae0-140446da0335",
-          "info": "seleccion info de para ubicación en preescolar",
-          "sub_menu": "cita_llamada_info",
+          "userStateId": "68dff92b13622be1bb57fb4b",
+          "info": "se presenta menú inicial",
+          "sub_menu": null,
           "base_url": "https://d5ec8dbc344b.ngrok-free.app",
-          "phone": "4434901193"
+          "phone": "5214434901193"
         }
       }
     ]
   },
-  "versionId": "c1157a4a-063e-413b-8465-51dd4e828eb9",
+  "versionId": "a9d4a22b-5ff2-48c1-8d52-949105b7594f",
   "triggerCount": 0,
   "shared": [
     {
