@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-06-24T22:28:19.611Z",
-  "updatedAt": "2025-10-03T20:24:34.000Z",
+  "updatedAt": "2025-10-03T23:41:59.000Z",
   "id": "PetXIW4fDRVoHgK5",
   "name": "chatbot sales",
   "active": false,
@@ -30,249 +30,6 @@
         1216
       ],
       "id": "1ec9ea27-083f-478a-9832-0d65cd17fe52"
-    },
-    {
-      "parameters": {
-        "collection": "user_state_sales",
-        "options": {},
-        "query": "={\n  \"phoneNumber\":\"{{ $('sales cerebro').item.json.messages[0].from }}\"\n}"
-      },
-      "type": "n8n-nodes-base.mongoDb",
-      "typeVersion": 1.1,
-      "position": [
-        -1728,
-        1664
-      ],
-      "id": "6e1e51a1-9cf2-44ba-90c9-75840a766f59",
-      "name": "MongoDB",
-      "alwaysOutputData": true,
-      "credentials": {
-        "mongoDb": {
-          "id": "xZYe0R0CRtWFmyv7",
-          "name": "MongoDB account cerebro core"
-        }
-      },
-      "notes": "sdi no encuentras datos lanza un mensaje de no data returned"
-    },
-    {
-      "parameters": {
-        "conditions": {
-          "options": {
-            "caseSensitive": true,
-            "leftValue": "",
-            "typeValidation": "strict",
-            "version": 2
-          },
-          "conditions": [
-            {
-              "id": "83be55d6-1bd8-4380-93b4-de2dd522cec4",
-              "leftValue": "={{ $json._id.toString() }}",
-              "rightValue": "",
-              "operator": {
-                "type": "string",
-                "operation": "exists",
-                "singleValue": true
-              }
-            }
-          ],
-          "combinator": "or"
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 2.2,
-      "position": [
-        -1504,
-        1728
-      ],
-      "id": "98d74155-a71e-4404-b051-9e8f9f9385f9",
-      "name": "If"
-    },
-    {
-      "parameters": {
-        "operation": "insert",
-        "collection": "user_state_sales",
-        "fields": "=phoneNumber ,state, userStateId, date, type_conversation",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.mongoDb",
-      "typeVersion": 1.1,
-      "position": [
-        -624,
-        1824
-      ],
-      "id": "ae77e6a6-ecf2-4fe5-bb61-b5a0906b4aff",
-      "name": "MongoDB1",
-      "credentials": {
-        "mongoDb": {
-          "id": "xZYe0R0CRtWFmyv7",
-          "name": "MongoDB account cerebro core"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "assignments": {
-          "assignments": [
-            {
-              "id": "3631f4b8-c7de-42ac-a953-b78f8b10b879",
-              "name": "phoneNumber",
-              "value": "={{ $('sales cerebro').item.json.messages[0].from }}",
-              "type": "string"
-            },
-            {
-              "id": "961af1d0-8fba-486d-b2ff-5acdf1625b55",
-              "name": "state",
-              "value": "menuInicial",
-              "type": "string"
-            },
-            {
-              "id": "5c9e798a-8608-42b9-9270-1f7f94f9cff8",
-              "name": "userStateId",
-              "value": "={{ $json.uuid }}",
-              "type": "string"
-            },
-            {
-              "id": "2dcff05b-66b8-45a5-abc6-c4fa9f78c174",
-              "name": "date",
-              "value": "={{ $json.now }}",
-              "type": "string"
-            },
-            {
-              "id": "cf0f54d3-8433-4a11-9d75-9815e05a876a",
-              "name": "type_conversation",
-              "value": "chatbot",
-              "type": "string"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
-      "position": [
-        -848,
-        1824
-      ],
-      "id": "8c6b9021-6a79-42c7-b056-76633cf40d7c",
-      "name": "Edit Fields"
-    },
-    {
-      "parameters": {
-        "collection": "user_state_sales",
-        "options": {},
-        "query": "={\n  \"phoneNumber\":\"{{ $('sales cerebro').item.json.messages[0].from }}\"\n}"
-      },
-      "type": "n8n-nodes-base.mongoDb",
-      "typeVersion": 1.1,
-      "position": [
-        -400,
-        1824
-      ],
-      "id": "0fbb77d5-28a4-4e8c-9f5b-4adb7815ef65",
-      "name": "MongoDB2",
-      "alwaysOutputData": true,
-      "credentials": {
-        "mongoDb": {
-          "id": "xZYe0R0CRtWFmyv7",
-          "name": "MongoDB account cerebro core"
-        }
-      },
-      "notes": "sdi no encuentras datos lanza un mensaje de no data returned"
-    },
-    {
-      "parameters": {
-        "assignments": {
-          "assignments": [
-            {
-              "id": "e1c21e64-5126-4a0c-a594-363efc7028d1",
-              "name": "phoneNumber_finded",
-              "value": "={{ $('MongoDB').item.json.phoneNumber }}",
-              "type": "string"
-            },
-            {
-              "id": "93580ec9-264e-4176-bc40-b50aaf34e1f2",
-              "name": "state_finded",
-              "value": "={{ $('MongoDB').item.json.state }}",
-              "type": "string"
-            },
-            {
-              "id": "ea7c6241-4996-49e5-8eea-1e84ac3d27d1",
-              "name": "type_conversation_finded",
-              "value": "={{ $('MongoDB').item.json.type_conversation }}",
-              "type": "string"
-            },
-            {
-              "id": "baefc287-abc1-42da-ace7-65a6859a8e25",
-              "name": "student_selected",
-              "value": "={{ $json.student_id }}",
-              "type": "string"
-            },
-            {
-              "id": "192aa38a-3a34-4956-aa99-29730cc29e9c",
-              "name": "user_id_finded",
-              "value": "={{ $('MongoDB').item.json.userStateId }}",
-              "type": "string"
-            },
-            {
-              "id": "3b3ec60b-83b0-4883-845e-1525cd12bdfa",
-              "name": "sub_menu_finded",
-              "value": "={{ $('MongoDB').item.json.sub_menu }}",
-              "type": "string"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
-      "position": [
-        -176,
-        1632
-      ],
-      "id": "d0d2813b-75ac-4160-9527-f42875feafc2",
-      "name": "Edit Fields1"
-    },
-    {
-      "parameters": {
-        "assignments": {
-          "assignments": [
-            {
-              "id": "e1c21e64-5126-4a0c-a594-363efc7028d1",
-              "name": "phoneNumber_edited",
-              "value": "={{ $json.phoneNumber }}",
-              "type": "string"
-            },
-            {
-              "id": "93580ec9-264e-4176-bc40-b50aaf34e1f2",
-              "name": "state_edited",
-              "value": "={{ $json.state }}",
-              "type": "string"
-            },
-            {
-              "id": "78d840a2-ae29-44c0-b0fc-1dcd3b44ff00",
-              "name": "type_conversation_edited",
-              "value": "={{ $json.type_conversation }}",
-              "type": "string"
-            },
-            {
-              "id": "a3888bbd-713a-45ba-883d-997e16a38877",
-              "name": "user_state_edited",
-              "value": "={{ $('MongoDB1').item.json.userStateId }}",
-              "type": "string"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
-      "position": [
-        -176,
-        1824
-      ],
-      "id": "7700298c-8e36-48f0-80ee-dd78bbec5ce5",
-      "name": "Edit Fields2"
     },
     {
       "parameters": {
@@ -568,20 +325,6 @@
     },
     {
       "parameters": {
-        "jsCode": "// Importante: Esto se coloca dentro de un nodo \"Code\" en n8n\n\nfunction uuidv4() {\n  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {\n    const r = Math.random() * 16 | 0;\n    const v = c === 'x' ? r : (r & 0x3 | 0x8);\n    return v.toString(16);\n  });\n}\n\nreturn [\n  {\n    json: {\n      uuid: uuidv4(),\n      now: new Date().toLocaleString('es-MX', {\n  timeZone: 'America/Mexico_City'\n})\n    }\n  }\n];\n"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        -1072,
-        1824
-      ],
-      "id": "74a3b06d-dfc7-4c8f-a3c8-8027c500cc31",
-      "name": "Code",
-      "alwaysOutputData": true
-    },
-    {
-      "parameters": {
         "conditions": {
           "options": {
             "caseSensitive": true,
@@ -613,64 +356,6 @@
       ],
       "id": "7f8dff70-c405-4787-bf48-3d95a12e225f",
       "name": "If9"
-    },
-    {
-      "parameters": {
-        "method": "POST",
-        "url": "=https://graph.facebook.com/v22.0/{{ $('Set Variables').item.json.clienteIdWp }}/messages",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "Authorization",
-              "value": "={{ $('Set Variables').item.json.tokenWp }}"
-            },
-            {
-              "name": "Content-Type",
-              "value": "application/json"
-            }
-          ]
-        },
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"status\":\"read\",\n  \"message_id\":\"{{ $('sales cerebro').item.json.messages[0].id }}\",\n  \"typing_indicator\": {\n    \"type\":\"text\"\n  }\n}\n",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        -400,
-        1632
-      ],
-      "id": "38cea0e7-13ee-4c20-b3aa-710cbd6478f1",
-      "name": "typing indicator1"
-    },
-    {
-      "parameters": {
-        "method": "POST",
-        "url": "=https://graph.facebook.com/v22.0/{{ $('Variables Wp').item.json.clienteIdWp }}/messages",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "Authorization",
-              "value": "={{ $('Set Variables').item.json.tokenWp }}"
-            }
-          ]
-        },
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"status\":\"read\",\n  \"message_id\":\"{{ $('sales cerebro').item.json.messages[0].id }}\",\n  \"typing_indicator\": {\n    \"type\":\"text\"\n  }\n}\n",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        -1280,
-        1824
-      ],
-      "id": "31d483d2-54bc-4e54-bb3a-443243c1e8b4",
-      "name": "typing indicator2"
     },
     {
       "parameters": {
@@ -766,7 +451,7 @@
                   {
                     "id": "e63b8bcb-ffae-47fd-be83-4460047ee4f3",
                     "leftValue": "={{ $json.data.session.states.parent_state }}",
-                    "rightValue": "esperando_respuesta_menu_informes",
+                    "rightValue": "esperando_respuesta_menu_sections",
                     "operator": {
                       "type": "string",
                       "operation": "equals",
@@ -777,7 +462,7 @@
                 "combinator": "and"
               },
               "renameOutput": true,
-              "outputKey": "rsp_informes"
+              "outputKey": "rsp_sections"
             },
             {
               "conditions": {
@@ -1175,19 +860,6 @@
     },
     {
       "parameters": {
-        "jsCode": "// Function node\nconst idInsertado  = $json.user_id_finded;             // viene de la rama de insert\nconst idActualizado = $json.user_state_edited;      // viene de la rama de update\nreturn [{ json: {\n  ...$json,\n  user_state_final: idActualizado || idInsertado,\n}}];\n"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        48,
-        1728
-      ],
-      "id": "edec0766-ea03-4223-84c9-0e8491026044",
-      "name": "Code2"
-    },
-    {
-      "parameters": {
         "rules": {
           "values": [
             {
@@ -1212,7 +884,7 @@
                 "combinator": "and"
               },
               "renameOutput": true,
-              "outputKey": "información"
+              "outputKey": "dejar datos"
             },
             {
               "conditions": {
@@ -1237,6 +909,54 @@
               },
               "renameOutput": true,
               "outputKey": "Citas"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "9ab496c0-5106-4bec-99c2-4af2cb3665b6",
+                    "leftValue": "={{ $json.selection }}",
+                    "rightValue": 3,
+                    "operator": {
+                      "type": "number",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "FAQ"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "eacd5b3d-f37b-4d70-a14c-a1e083dcd2e1",
+                    "leftValue": "={{ $json.selection }}",
+                    "rightValue": 4,
+                    "operator": {
+                      "type": "number",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "admicion"
             }
           ]
         },
@@ -1253,7 +973,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// Nodo “Function” de n8n\n// Valida items[0].json.selection y retorna status con mensajes amistosos\n\nconst raw = items[0].json.selection;\n\n// Usamos regex para validar que sea un número entero positivo sin signos ni símbolos\nconst validFormat = /^[0-9]+$/;\n\nlet result;\n\nif (!validFormat.test(raw)) {\n  // Tiene caracteres no permitidos (letras, signos, espacios, etc.)\n  result = {\n    status: 'error',\n    message: `Ups, parece que tu elección “${raw}” contiene símbolos o no es un número válido. Por favor escribe un número del 1 al 2 sin signos ni espacios.`\n  };\n} else {\n  const sel = Number(raw);\n\n  if (!Number.isInteger(sel)) {\n    result = {\n      status: 'error',\n      message: `Veo que has ingresado ${raw}, pero necesitamos un número entero. Por favor elige un número sin decimales entre 1 y 2.`\n    };\n  } else if (sel < 1 || sel > 2) {\n    result = {\n      status: 'error',\n      message: `Tu selección es ${sel}, pero debe estar entre 1 y 2. Intenta de nuevo con un número dentro de ese rango.`\n    };\n  } else {\n    result = {\n      status: 'success',\n      message: `¡Genial! Has seleccionado la opción número ${sel}.`,\n      selection: sel\n    };\n  }\n}\n\n// Devolver resultado\nreturn [{ json: result }];\n"
+        "jsCode": "// Nodo “Function” de n8n\n// Valida items[0].json.selection y retorna status con mensajes amistosos\n\nconst raw = items[0].json.selection;\nconst items_length = items[0].json.items_length;\n\n// Usamos regex para validar que sea un número entero positivo sin signos ni símbolos\nconst validFormat = /^[0-9]+$/;\n\nlet result;\n\nif (!validFormat.test(raw)) {\n  // Tiene caracteres no permitidos (letras, signos, espacios, etc.)\n  result = {\n    status: 'error',\n    message: `Ups, parece que tu elección “${raw}” contiene símbolos o no es un número válido. Por favor escribe un número del 1 al ${items_length} sin signos ni espacios.`\n  };\n} else {\n  const sel = Number(raw);\n\n  if (!Number.isInteger(sel)) {\n    result = {\n      status: 'error',\n      message: `Veo que has ingresado ${raw}, pero necesitamos un número entero. Por favor elige un número sin decimales entre 1 y ${items_length}.`\n    };\n  } else if (sel < 1 || sel > items_length) {\n    result = {\n      status: 'error',\n      message: `Tu selección es ${sel}, pero debe estar entre 1 y ${items_length}. Intenta de nuevo con un número dentro de ese rango.`\n    };\n  } else {\n    result = {\n      status: 'success',\n      message: `¡Genial! Has seleccionado la opción número ${sel}.`,\n      selection: sel\n    };\n  }\n}\n\n// Devolver resultado\nreturn [{ json: result }];\n"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -1273,6 +993,12 @@
               "name": "selection",
               "value": "={{ $('sales cerebro').item.json.messages[0].text.body }}",
               "type": "string"
+            },
+            {
+              "id": "d9483e97-b102-467c-b113-7a877d2d5537",
+              "name": "items_length",
+              "value": "={{ $('Auth Guardian').item.json.data.session.items_length }}",
+              "type": "number"
             }
           ]
         },
@@ -1388,8 +1114,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        8688,
-        -2064
+        15632,
+        -3328
       ],
       "id": "534ac9e6-3f4e-43e6-ad26-c280eb6ac82e",
       "name": "envio de mensaje ubicación"
@@ -1467,8 +1193,8 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        9088,
-        -2064
+        16032,
+        -3328
       ],
       "id": "40198380-24dc-4fc3-8c6b-a7f86f6360ff",
       "name": "Execute Workflow1"
@@ -1502,8 +1228,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        8912,
-        -2064
+        15856,
+        -3328
       ],
       "id": "53b0a1f3-6429-4275-bea6-806adf88504b",
       "name": "body datos ubicacion"
@@ -1581,8 +1307,8 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        9152,
-        -1856
+        16096,
+        -3120
       ],
       "id": "317d7de1-3be6-4ea1-8936-fd94951c0415",
       "name": "Execute Workflow2"
@@ -1616,8 +1342,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        8928,
-        -1856
+        15872,
+        -3120
       ],
       "id": "4dd81662-7e81-46eb-bb22-1b65041dac53",
       "name": "body datos costos"
@@ -1695,8 +1421,8 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        9152,
-        -1664
+        16096,
+        -2928
       ],
       "id": "13217905-8dce-4ec6-965d-c4010cbc6ac0",
       "name": "Execute Workflow3"
@@ -1730,8 +1456,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        8928,
-        -1664
+        15872,
+        -2928
       ],
       "id": "eb87b902-9a49-485c-bd9f-780d663200ad",
       "name": "body datos costos1"
@@ -1809,8 +1535,8 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        9152,
-        -1488
+        16096,
+        -2752
       ],
       "id": "5c393447-19be-4ba5-a6d4-558cf57ce1f9",
       "name": "Execute Workflow4",
@@ -1845,8 +1571,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        8928,
-        -1488
+        15872,
+        -2752
       ],
       "id": "c59506fd-b9ae-4cbb-956f-66fea1e948f2",
       "name": "body datos costos2"
@@ -1924,8 +1650,8 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        9152,
-        -1328
+        16096,
+        -2592
       ],
       "id": "9458b8f3-ebee-4d81-9d4a-05140d58b98b",
       "name": "Execute Workflow5"
@@ -1959,8 +1685,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        8928,
-        -1328
+        15872,
+        -2592
       ],
       "id": "df57bd22-a620-4084-9c39-e4689dc8fe11",
       "name": "body datos costos3"
@@ -1972,8 +1698,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        5440,
-        480
+        14592,
+        1008
       ],
       "id": "a7afe98b-490b-4535-814d-edec5edaf877",
       "name": "Code4"
@@ -2006,8 +1732,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        5664,
-        480
+        14816,
+        1008
       ],
       "id": "c5f9bd5c-a751-4e44-8c26-c296803b1a6d",
       "name": "verificamos que la seleccion sea valida1"
@@ -2037,8 +1763,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        5904,
-        512
+        15056,
+        1040
       ],
       "id": "27d2d750-962a-4428-8bd3-bb6122635bcf",
       "name": "Error seleccion menu invalida1"
@@ -2048,8 +1774,8 @@
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
       "position": [
-        6128,
-        512
+        15280,
+        1040
       ],
       "id": "be451cd9-1c33-412c-8e88-ab687df04b11",
       "name": "No Operation, do nothing1"
@@ -2071,8 +1797,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        5184,
-        480
+        14336,
+        1008
       ],
       "id": "3ed5b812-09b7-49cd-9392-c8993c8e9f5f",
       "name": "obtenemos la respuesta del menu costos"
@@ -2208,8 +1934,8 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.2,
       "position": [
-        8688,
-        -496
+        17840,
+        32
       ],
       "id": "ea01d23c-df13-4225-95d5-7d719dc4d6cd",
       "name": "Switch3"
@@ -2287,8 +2013,8 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        10352,
-        -864
+        19504,
+        -336
       ],
       "id": "1d386c50-7770-4e0b-a307-149d26caafc0",
       "name": "Execute Workflow6"
@@ -2318,8 +2044,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        9744,
-        -784
+        18896,
+        -256
       ],
       "id": "b88d9328-e2f9-4585-a92c-259e22ff9652",
       "name": "info costo maternal"
@@ -2349,8 +2075,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        9744,
-        -624
+        18896,
+        -96
       ],
       "id": "c70e5a13-42a0-4dd8-bbe4-f5dc97a6a007",
       "name": "info costo pre escolar"
@@ -2380,8 +2106,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        9744,
-        -464
+        18896,
+        64
       ],
       "id": "62e53aef-f6b2-4891-b39b-f7c467a065c5",
       "name": "info costo primaria"
@@ -2411,8 +2137,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        9744,
-        -304
+        18896,
+        224
       ],
       "id": "177be801-3376-4fe1-8a3d-2fce3528c251",
       "name": "info costo secundaria"
@@ -2442,8 +2168,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        9744,
-        -144
+        18896,
+        384
       ],
       "id": "b23116b8-10a3-469a-97aa-8bd63b4fd461",
       "name": "info costo bachillerato"
@@ -2473,8 +2199,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        10368,
-        -416
+        19520,
+        112
       ],
       "id": "a9234e23-113c-407d-9ab9-a8e0a1020910",
       "name": "envio de mensaje contacto costos"
@@ -2508,8 +2234,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        10368,
-        -656
+        19520,
+        -128
       ],
       "id": "d3ea2255-7841-4ada-8323-27783d4e98d6",
       "name": "body datos contacto costos"
@@ -2539,8 +2265,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        4384,
-        528
+        13536,
+        1056
       ],
       "id": "4f171c7e-846e-4964-853c-64394fe782c1",
       "name": "Error mensaje contacto costos"
@@ -2569,8 +2295,8 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        7088,
-        -928
+        16240,
+        -400
       ],
       "typeVersion": 1,
       "id": "ac2d81ae-ab3f-4180-963d-c06e170d6d1a",
@@ -2722,42 +2448,11 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.2,
       "position": [
-        8080,
-        -1536
+        15024,
+        -2800
       ],
       "id": "5921e1e5-b69d-4f22-9e43-cfcbc9ae173b",
       "name": "Switch4"
-    },
-    {
-      "parameters": {
-        "method": "POST",
-        "url": "=https://graph.facebook.com/v22.0/{{ $('Variables Wp').item.json.clienteIdWp }}/messages",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "Authorization",
-              "value": "={{ $('Variables Wp').item.json.tokenWp }}"
-            },
-            {
-              "name": "Content-Type",
-              "value": "application/json"
-            }
-          ]
-        },
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('sales cerebro').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"Gracias por solicitar información, ¿Sobre que necesitas saber?\\n\\n1️⃣ Ubicación\\n2️⃣ Costos \\n3️⃣ Horario Extendido\\n4️⃣ Programa Bilingüe\\n5️⃣ Contáctame 📲\\n\\n6️⃣ Gracias, ya estoy hablando con un asesor ✅\"\n  }\n}\n",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        5968,
-        -2928
-      ],
-      "id": "e8c40544-7e42-4734-8f46-99657fc61a97",
-      "name": "Mensaje menu información"
     },
     {
       "parameters": {
@@ -2770,10 +2465,13 @@
         "workflowInputs": {
           "mappingMode": "defineBelow",
           "value": {
-            "state": "esperando_respuesta_menu_informes",
+            "state": "esperando_respuesta_menu_sections",
             "userStateId": "={{ $json.userStateId }}",
             "userId": "={{ $json.userId }}",
-            "info": "={{ $json.info }}"
+            "info": "=se presento menu de secciones",
+            "base_url": "={{ $('enviroment').item.json.currentUrl }}",
+            "phone": "={{ $('WhatsApp Trigger').item.json.data[0].messages[0].from }}",
+            "items_length": "={{ $('request sections').item.json.data.items_length }}"
           },
           "matchingColumns": [],
           "schema": [
@@ -2822,6 +2520,36 @@
               "canBeUsedToMatch": true,
               "type": "string",
               "removed": true
+            },
+            {
+              "id": "base_url",
+              "displayName": "base_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "phone",
+              "displayName": "phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "items_length",
+              "displayName": "items_length",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "number",
+              "removed": false
             }
           ],
           "attemptToConvertTypes": false,
@@ -2832,7 +2560,7 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        6368,
+        6576,
         -2928
       ],
       "id": "1e54dff7-f359-472d-8742-d8dc0d07b6bb",
@@ -2845,19 +2573,13 @@
             {
               "id": "cb5bf561-971f-493b-8312-772ff7f21da3",
               "name": "userStateId",
-              "value": "={{ $('Code2').item.json.user_state_final }}",
-              "type": "string"
-            },
-            {
-              "id": "1356aa24-d7f3-4700-9568-aa9b6ece9b4c",
-              "name": "info",
-              "value": "se presenta menu de informes",
+              "value": "={{ $('Auth Guardian').item.json.data.session.user_id }}",
               "type": "string"
             },
             {
               "id": "6b9a8f55-16af-4e52-b897-0ac1cfca6083",
               "name": "userId",
-              "value": "={{ $('Code2').item.json.user_id_finded || $('Code2').item.json.user_id_edited }}",
+              "value": "={{ $('Auth Guardian').item.json.data.session.user_id }}",
               "type": "string"
             }
           ]
@@ -2867,7 +2589,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        6192,
+        6400,
         -2928
       ],
       "id": "12a9b213-23ee-4a16-9f29-90aff1bcafcd",
@@ -2880,8 +2602,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        4288,
-        -1088
+        13440,
+        -560
       ],
       "id": "dee5d6ec-1b49-4048-93c4-af91585d7652",
       "name": "Code5"
@@ -2903,8 +2625,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        4032,
-        -1088
+        13184,
+        -560
       ],
       "id": "e92e68fd-fa61-4266-bd27-ce1f140dd140",
       "name": "obtenemos la respuesta del menu inicial1"
@@ -2937,8 +2659,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        4512,
-        -1088
+        13664,
+        -560
       ],
       "id": "7033fa3e-af6c-4b08-8c30-789292335ce7",
       "name": "verificamos que la seleccion sea valida2"
@@ -2968,8 +2690,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        4832,
-        -1088
+        13984,
+        -560
       ],
       "id": "8ecc907d-1dac-4b77-9a78-2ffb6bd9cd1e",
       "name": "Error seleccion menu invalida2"
@@ -2979,8 +2701,8 @@
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
       "position": [
-        5040,
-        -1088
+        14192,
+        -560
       ],
       "id": "43d78ec7-0fcb-4307-b5a3-cdc67924b605",
       "name": "No Operation, do nothing2"
@@ -3010,8 +2732,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        8688,
-        -1856
+        15632,
+        -3120
       ],
       "id": "21276aeb-dd6f-431b-a022-b2b305f1b7f2",
       "name": "envio de mensaje costo"
@@ -3041,8 +2763,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        8688,
-        -1664
+        15632,
+        -2928
       ],
       "id": "fdaa6942-a1b6-47cf-9935-b5ea30e65146",
       "name": "envio de mensaje horario"
@@ -3072,8 +2794,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        8688,
-        -1488
+        15632,
+        -2752
       ],
       "id": "f75385ae-59ea-4183-8b60-f038121efcdc",
       "name": "envio de mensaje bilingüe"
@@ -3103,8 +2825,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        8688,
-        -1328
+        15632,
+        -2592
       ],
       "id": "5d83ee6b-c89f-4982-8e76-b3e4ba480349",
       "name": "envio de mensaje contactame"
@@ -3136,8 +2858,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        4464,
-        -1328
+        13536,
+        -2640
       ],
       "id": "97db9c00-8dc4-4d31-b2e3-50a458d6f73e",
       "name": "revisamos que ya esta hablando con alguien"
@@ -3215,8 +2937,8 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        7648,
-        -2144
+        14576,
+        -3392
       ],
       "id": "07862417-f5a2-4629-8e79-8d2e6dcf74ba",
       "name": "Execute Workflow9"
@@ -3250,8 +2972,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        7424,
-        -2144
+        14352,
+        -3392
       ],
       "id": "2420f821-7e2b-412e-a4eb-9de37899b467",
       "name": "body datos costos4"
@@ -3268,7 +2990,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        5968,
+        6176,
         -2464
       ],
       "id": "f54bd586-11d6-4572-adea-5b23219499ef",
@@ -3300,7 +3022,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        6432,
+        6640,
         -2464
       ],
       "id": "7e8100f5-ecb0-4e6d-959a-e316ac9eabab",
@@ -3379,7 +3101,7 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        7040,
+        7248,
         -2464
       ],
       "id": "0cbd2232-12ce-4008-a72c-83787f7125b2",
@@ -3415,7 +3137,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        6832,
+        7040,
         -2464
       ],
       "id": "a5d2ada4-6a50-4d78-99e3-8b2b25a3e82e",
@@ -3448,8 +3170,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        3712,
-        -80
+        12864,
+        448
       ],
       "id": "c02aabe9-94e3-4460-a8a6-f973c0a5e9b1",
       "name": "revisamos si viene boton de menu anterior"
@@ -3466,8 +3188,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        3952,
-        -64
+        13104,
+        464
       ],
       "id": "bd172ae7-3326-40d8-adaf-b95b1561b75a",
       "name": "HTTP Request2",
@@ -3496,8 +3218,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        4160,
-        -64
+        13312,
+        464
       ],
       "id": "e4d470fe-858a-4334-8175-b6eb8d3ef6d5",
       "name": "datos para seleccionar dia de cita"
@@ -3509,8 +3231,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        4384,
-        -64
+        13536,
+        464
       ],
       "id": "830cac52-39fc-4c39-bed5-e47c411b1a56",
       "name": "obtenemos el slot solicitado"
@@ -3543,8 +3265,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        4608,
-        -64
+        13760,
+        464
       ],
       "id": "faf5f785-5d80-4a20-a5aa-afb11205b286",
       "name": "If1"
@@ -3574,8 +3296,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        4880,
-        -80
+        14032,
+        448
       ],
       "id": "8e64b5d8-8633-4189-92dd-c322365ffbb8",
       "name": "error de seleccion de dia"
@@ -3592,8 +3314,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        4880,
-        80
+        14032,
+        608
       ],
       "id": "5c47f6bc-5bb1-438d-bbdc-6d0c8e96711f",
       "name": "guardamos la cita",
@@ -3628,8 +3350,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        5104,
-        128
+        14256,
+        656
       ],
       "id": "dfc84381-8671-4dcc-a8d3-2df1dac4a128",
       "name": "verificamos que halla un error"
@@ -3707,8 +3429,8 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        5872,
-        -16
+        15024,
+        512
       ],
       "id": "92f14855-16b5-4f6e-8d18-95a88e20721b",
       "name": "Execute Workflow11"
@@ -3742,8 +3464,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        5648,
-        -16
+        14800,
+        512
       ],
       "id": "e85d11b8-8ce0-4164-8296-bd0f5f894b87",
       "name": "body datos costos5"
@@ -3773,8 +3495,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        5360,
-        -16
+        14512,
+        512
       ],
       "id": "56adbac5-d7c1-41ec-9091-e421c6f5e880",
       "name": "error usuario no registrado"
@@ -3852,8 +3574,8 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        5824,
-        208
+        14976,
+        736
       ],
       "id": "7032183b-4589-402b-86d1-345b842d07e6",
       "name": "Execute Workflow12"
@@ -3887,8 +3609,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        5632,
-        208
+        14784,
+        736
       ],
       "id": "dc3dbb7a-b3c1-4bad-bf14-d47143661cce",
       "name": "body datos costos6"
@@ -3900,8 +3622,8 @@
       "type": "n8n-nodes-base.wait",
       "typeVersion": 1.1,
       "position": [
-        10048,
-        -464
+        19200,
+        64
       ],
       "id": "ef705569-e08c-41ca-99c0-3a99c170e012",
       "name": "Wait",
@@ -3924,8 +3646,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        3344,
-        384
+        12496,
+        912
       ],
       "id": "1dbbb19e-5e77-48cf-8ea0-f755668e143d",
       "name": "tomamos la seleccion del usuario"
@@ -3937,8 +3659,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        3584,
-        448
+        12736,
+        976
       ],
       "id": "674d2d52-b77a-4120-aba8-5cd54cceba2a",
       "name": "Code6"
@@ -3971,8 +3693,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        3808,
-        448
+        12960,
+        976
       ],
       "id": "8770a27a-accc-49c7-8778-1b5eda74ba7f",
       "name": "estatus error?"
@@ -3982,8 +3704,8 @@
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
       "position": [
-        4608,
-        528
+        13760,
+        1056
       ],
       "id": "0dc394a4-240c-4bc7-b138-da1fbd7a2181",
       "name": "No Operation, do nothing3"
@@ -4015,8 +3737,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        3920,
-        784
+        13072,
+        1312
       ],
       "id": "945d3f3c-f8f9-4261-b9b7-e7eda4abb429",
       "name": "opcion es 1?"
@@ -4029,8 +3751,8 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        3664,
-        928
+        12816,
+        1456
       ],
       "typeVersion": 1,
       "id": "49a937db-673f-4f37-a90a-b68601e40a65",
@@ -4041,8 +3763,8 @@
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
       "position": [
-        4560,
-        1104
+        13712,
+        1632
       ],
       "id": "8681ae66-d40f-4216-8ed0-4fdfdc579335",
       "name": "No Operation, do nothing4"
@@ -4086,8 +3808,8 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        8000,
-        -2208
+        15040,
+        -3552
       ],
       "typeVersion": 1,
       "id": "23649219-af6a-41ca-86cd-6bb206a3bef0",
@@ -4120,8 +3842,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        7552,
-        -480
+        16704,
+        48
       ],
       "id": "b80d1be7-a3e9-4931-8431-26c7603f3b3c",
       "name": "validamos si se selecciono menu anterior desde costos"
@@ -4134,8 +3856,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        7840,
-        -464
+        16992,
+        64
       ],
       "id": "3d5eefd1-5acb-442f-b956-35861dd93c29",
       "name": "HTTP Request1"
@@ -4163,8 +3885,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        8128,
-        -464
+        17280,
+        64
       ],
       "id": "7ba3b7c8-dbcc-435c-812d-1913fc69f360",
       "name": "Edit Fields7"
@@ -4176,8 +3898,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        8432,
-        -464
+        17584,
+        64
       ],
       "id": "5a3a87da-3030-4b2c-b1f9-1c131731bbc5",
       "name": "Code7"
@@ -4226,8 +3948,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        5360,
-        208
+        14512,
+        736
       ],
       "id": "dad8e455-b6ec-4432-8b79-7582731ebb96",
       "name": "mensaje cita guardada"
@@ -4363,8 +4085,8 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.2,
       "position": [
-        3952,
-        2240
+        13792,
+        3408
       ],
       "id": "3d461dc4-7098-4af6-bac6-2b2f020da761",
       "name": "opcion de menu de ubicación"
@@ -4386,8 +4108,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        2960,
-        2320
+        12800,
+        3488
       ],
       "id": "37e314f4-5166-4967-be27-2f05139ecd12",
       "name": "solicitud del cliente"
@@ -4399,8 +4121,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        3232,
-        2320
+        13072,
+        3488
       ],
       "id": "75c294b2-efaf-4a05-9d5a-69b124e718d2",
       "name": "revisamos que la seleccion de menu ubicacion es correcta"
@@ -4432,8 +4154,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        3440,
-        2320
+        13280,
+        3488
       ],
       "id": "d0962d4b-a1ac-400c-b84f-8e99864451c1",
       "name": "opcion correcta ubicación?"
@@ -4463,8 +4185,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        3664,
-        2480
+        13504,
+        3648
       ],
       "id": "b3f7a187-e0d4-4569-ae76-d9cfcd0a794f",
       "name": "Error mensaje ubicacion menu"
@@ -4494,8 +4216,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        4400,
-        2480
+        14240,
+        3648
       ],
       "id": "f83537d1-7e5c-484a-b943-6fbc6a058baf",
       "name": "Error mensaje ubicacion menu4"
@@ -4525,8 +4247,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        4400,
-        1904
+        14240,
+        3072
       ],
       "id": "95c605d0-c64b-4a49-af50-ab70328e209b",
       "name": "menu mensaje preescolar costos"
@@ -4556,8 +4278,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        4400,
-        2080
+        14240,
+        3248
       ],
       "id": "33202667-2758-40b6-82a5-be348a4021bf",
       "name": "menu costos primaria"
@@ -4587,8 +4309,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        4400,
-        2288
+        14240,
+        3456
       ],
       "id": "7a98d036-be69-48bd-838f-a7594726249e",
       "name": "costos secundaria"
@@ -4618,8 +4340,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        4400,
-        2688
+        14240,
+        3856
       ],
       "id": "1fc72150-ed61-4d38-86f2-a7984df960c9",
       "name": "ubicacion inconveniente"
@@ -4697,8 +4419,8 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        4864,
-        2688
+        14704,
+        3856
       ],
       "id": "d2e4ddc7-8b84-48e3-84b0-bec7e4b23012",
       "name": "Execute Workflow13"
@@ -4732,8 +4454,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        4624,
-        2688
+        14464,
+        3856
       ],
       "id": "afdb30d6-1c08-43e6-97a3-3f051f9eb7c1",
       "name": "datos ubicacion inconveniente"
@@ -4746,8 +4468,8 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        2848,
-        1808
+        12688,
+        2976
       ],
       "typeVersion": 1,
       "id": "97cb6cb1-f62d-467e-8841-705e2c1256ee",
@@ -4827,8 +4549,8 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        4864,
-        1904
+        14704,
+        3072
       ],
       "id": "4eb4b579-403c-4a01-979c-84971402d1cb",
       "name": "Execute Workflow14"
@@ -4862,8 +4584,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        4608,
-        1904
+        14448,
+        3072
       ],
       "id": "11783e59-d5ac-4485-ab27-60454bcb0f49",
       "name": "datos ubicacion inconveniente1"
@@ -4897,8 +4619,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        4608,
-        2080
+        14448,
+        3248
       ],
       "id": "fab8e19e-c8ab-41c0-b554-044e7a23974f",
       "name": "datos ubicacion inconveniente2"
@@ -4932,8 +4654,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        4608,
-        2288
+        14448,
+        3456
       ],
       "id": "c27e4f90-50e1-49fc-af4e-2b1fcda51a53",
       "name": "datos ubicacion inconveniente3"
@@ -4967,8 +4689,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        4608,
-        2480
+        14448,
+        3648
       ],
       "id": "c716d621-eb0b-4ec3-8f49-74de499c618b",
       "name": "datos ubicacion inconveniente4"
@@ -5047,8 +4769,8 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        4864,
-        2080
+        14704,
+        3248
       ],
       "id": "40cb9437-a300-4337-b957-c2fec32d4947",
       "name": "Execute Workflow15"
@@ -5127,8 +4849,8 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        4864,
-        2288
+        14704,
+        3456
       ],
       "id": "1c3c8dcf-8db4-488a-a204-1ecfc8a7a3f3",
       "name": "Execute Workflow16"
@@ -5207,8 +4929,8 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        4864,
-        2480
+        14704,
+        3648
       ],
       "id": "154a9a10-16bc-491a-9db1-f22d2244a08d",
       "name": "Execute Workflow17"
@@ -5348,8 +5070,8 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.2,
       "position": [
-        2944,
-        3648
+        12784,
+        4816
       ],
       "id": "eb76eb7d-b2cd-4561-86ae-7b3892a0e926",
       "name": "revisamos sub menu para informes costos"
@@ -5371,8 +5093,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        3248,
-        3152
+        13088,
+        4320
       ],
       "id": "159dd381-ab57-4c5c-ab9a-00e6e806fe13",
       "name": "seleccion primaria ubicacion contacto"
@@ -5384,8 +5106,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        3472,
-        3152
+        13312,
+        4320
       ],
       "id": "ade94d0c-9f27-4bb9-bdbc-984c933261c6",
       "name": "Code8"
@@ -5418,8 +5140,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        3680,
-        3152
+        13520,
+        4320
       ],
       "id": "a88ab3d1-3012-46b5-ba2d-ee17a0a63b22",
       "name": "If2"
@@ -5449,8 +5171,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        4880,
-        3824
+        14720,
+        4992
       ],
       "id": "55aeabdc-dae1-4d2a-ac14-f328bf36dbac",
       "name": "Error mensaje ubicacion menu1"
@@ -5480,8 +5202,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        4912,
-        3104
+        14752,
+        4272
       ],
       "id": "ed5685b1-a25c-4df8-9c8e-b77f6d4f0a46",
       "name": "mensaje desicion contacto/cita"
@@ -5503,8 +5225,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        3248,
-        3472
+        13088,
+        4640
       ],
       "id": "13f91bca-bed2-4455-8c7b-125b11b6464e",
       "name": "seleccion primaria ubicacion contacto1"
@@ -5516,8 +5238,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        3472,
-        3472
+        13312,
+        4640
       ],
       "id": "3abb3ed0-7543-4620-a099-39774fef1974",
       "name": "Code9"
@@ -5550,8 +5272,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        3680,
-        3472
+        13520,
+        4640
       ],
       "id": "e6a11ae0-d747-46d9-9eca-7ee22651af34",
       "name": "If3"
@@ -5573,8 +5295,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        3232,
-        3952
+        13072,
+        5120
       ],
       "id": "0c74c4c0-0790-4e62-9c55-c66ca69827d5",
       "name": "seleccion primaria ubicacion contacto2"
@@ -5586,8 +5308,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        3440,
-        3952
+        13280,
+        5120
       ],
       "id": "862ac7a1-e606-46e1-be40-6693e1366498",
       "name": "Code10"
@@ -5620,8 +5342,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        3664,
-        3952
+        13504,
+        5120
       ],
       "id": "add51996-44ca-4c33-8506-5fc1f3a7659f",
       "name": "If4"
@@ -5643,8 +5365,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        3248,
-        3712
+        13088,
+        4880
       ],
       "id": "b4605817-c2fe-4c65-b515-709e0c6281a0",
       "name": "seleccion primaria ubicacion contacto3"
@@ -5656,8 +5378,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        3472,
-        3712
+        13312,
+        4880
       ],
       "id": "28dd9f25-5fbb-4c68-b4b3-1eec0ab4b1c7",
       "name": "Code11"
@@ -5690,8 +5412,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        3680,
-        3712
+        13520,
+        4880
       ],
       "id": "5318dc32-2023-44ae-8e53-09a7bf8a0c70",
       "name": "If5"
@@ -5770,8 +5492,8 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        5360,
-        3104
+        15200,
+        4272
       ],
       "id": "66eb7087-3d4b-4c36-a860-001d544e4d6f",
       "name": "Execute Workflow18"
@@ -5805,8 +5527,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        5120,
-        3104
+        14960,
+        4272
       ],
       "id": "edb23195-5061-4449-a427-e0ed2d8fb64b",
       "name": "datos ubicacion inconveniente5"
@@ -5828,8 +5550,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        3264,
-        4288
+        13104,
+        5456
       ],
       "id": "a1aa73bf-ae1e-43ae-b3ca-9c99cd05bde9",
       "name": "seleccion primaria ubicacion contacto4"
@@ -5841,8 +5563,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        3488,
-        4288
+        13328,
+        5456
       ],
       "id": "218287ac-6fb9-44ee-89ce-2433a9079ea3",
       "name": "Code12"
@@ -5875,8 +5597,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        3712,
-        4288
+        13552,
+        5456
       ],
       "id": "140d827d-8a11-4d43-88ae-043882441208",
       "name": "If6"
@@ -5940,8 +5662,8 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.2,
       "position": [
-        4880,
-        4224
+        14720,
+        5392
       ],
       "id": "44a59931-9824-4f03-83a9-bf187f2797ea",
       "name": "Switch5"
@@ -5971,8 +5693,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        5280,
-        4080
+        15120,
+        5248
       ],
       "id": "1a0e8164-701d-4479-8e37-a97b25d8f1f7",
       "name": "confirmación llamada"
@@ -5994,8 +5716,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        2144,
-        5088
+        11984,
+        6256
       ],
       "id": "794bff59-9361-4973-a4ed-61ea400b867b",
       "name": "seleccion primaria ubicacion contacto5"
@@ -6007,8 +5729,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        2368,
-        5088
+        12208,
+        6256
       ],
       "id": "8858a18a-314d-4b33-85ca-305c7334bb81",
       "name": "Code13"
@@ -6041,8 +5763,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        2592,
-        5088
+        12432,
+        6256
       ],
       "id": "104d7fb1-70de-404b-bcc8-d1e6710ddebc",
       "name": "If7"
@@ -6072,8 +5794,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        2880,
-        5248
+        12720,
+        6416
       ],
       "id": "a63a8329-b373-4b49-a0a6-286c7fce48c8",
       "name": "Error mensaje ubicacion menu2"
@@ -6137,8 +5859,8 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.2,
       "position": [
-        4992,
-        4352
+        14832,
+        5520
       ],
       "id": "e36ac603-f29f-4232-a15b-756918de972d",
       "name": "Switch6"
@@ -6202,8 +5924,8 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.2,
       "position": [
-        3120,
-        5008
+        12960,
+        6176
       ],
       "id": "aa9f200e-c9b9-4d57-a4df-d025626e3fe8",
       "name": "Switch7"
@@ -6233,8 +5955,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        3424,
-        5040
+        13264,
+        6208
       ],
       "id": "1788b4ea-2fc6-4fe5-9d13-ba427053706f",
       "name": "Error mensaje ubicacion menu3"
@@ -6312,8 +6034,8 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        3888,
-        5040
+        13728,
+        6208
       ],
       "id": "584b7ddc-d60e-4523-9573-56455151f7be",
       "name": "Execute Workflow19"
@@ -6347,8 +6069,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        3648,
-        5040
+        13488,
+        6208
       ],
       "id": "eb8795b3-c9e5-41bb-ac6b-ff800cf68353",
       "name": "datos ubicacion inconveniente6"
@@ -6370,8 +6092,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        2112,
-        5952
+        11952,
+        7120
       ],
       "id": "29312c1b-c29e-40a1-9a4b-57445fc14c09",
       "name": "seleccion primaria ubicacion contacto6"
@@ -6383,8 +6105,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        2320,
-        5952
+        12160,
+        7120
       ],
       "id": "e1830cb2-0326-490d-883b-e8e5c379f60c",
       "name": "Code14"
@@ -6417,8 +6139,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        2544,
-        5952
+        12384,
+        7120
       ],
       "id": "cc970433-c241-4832-abe6-93ed8c3689c0",
       "name": "If8"
@@ -6448,8 +6170,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        2848,
-        6112
+        12688,
+        7280
       ],
       "id": "03e9f4a6-0648-45b0-961c-ad8c2ff3db42",
       "name": "Error mensaje ubicacion menu5"
@@ -6537,8 +6259,8 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.2,
       "position": [
-        3088,
-        5872
+        12928,
+        7040
       ],
       "id": "29c2e4cf-13a5-4fb0-bcce-ca533da4dad1",
       "name": "Switch8"
@@ -6568,8 +6290,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        7200,
-        -2144
+        14128,
+        -3392
       ],
       "id": "f1e19fa5-1f69-43f2-becd-6d93d0aa014f",
       "name": "mensaje despedida"
@@ -6647,8 +6369,8 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        5728,
-        4080
+        15568,
+        5248
       ],
       "id": "d7e1a771-20a7-44ae-9b23-004c94db23f8",
       "name": "Execute Workflow20"
@@ -6682,8 +6404,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        5488,
-        4080
+        15328,
+        5248
       ],
       "id": "cc3d41eb-1bca-4023-a902-d5b6cd490263",
       "name": "datos ubicacion inconveniente7"
@@ -6713,8 +6435,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        3888,
-        1104
+        13040,
+        1632
       ],
       "id": "016571e9-a40e-4250-b8cf-a505e0f5c946",
       "name": "confirmación llamada1"
@@ -6792,8 +6514,8 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        4320,
-        1104
+        13472,
+        1632
       ],
       "id": "7e4c35d4-c102-4eea-98bd-da466fe7c3f6",
       "name": "Execute Workflow21"
@@ -6827,8 +6549,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        4080,
-        1104
+        13232,
+        1632
       ],
       "id": "42aac2c3-91ef-43be-a946-7a9e2e07c9e7",
       "name": "datos ubicacion inconveniente8"
@@ -6858,7 +6580,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        6624,
+        6832,
         -2464
       ],
       "id": "1b269b42-4d40-4159-82b0-277a2ae92a27",
@@ -6939,8 +6661,8 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        7648,
-        1392
+        17008,
+        1920
       ],
       "id": "689235fe-6802-4b35-bea5-51d7babef4c9",
       "name": "notificar error"
@@ -6952,8 +6674,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        6848,
-        1472
+        16208,
+        2000
       ],
       "id": "dec253d8-1d38-40fc-b528-ce12bf05fede",
       "name": "homologar /available-slots-chatbot"
@@ -6983,8 +6705,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        7568,
-        1952
+        16928,
+        2480
       ],
       "id": "9dd977ff-494f-407f-8ed7-2b416831b602",
       "name": "Error seleccion menu invalida3"
@@ -6996,8 +6718,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        6848,
-        1328
+        16000,
+        1856
       ],
       "id": "c30b1e03-7749-4490-bcc9-9fb78de82420",
       "name": "homologar /sales/book-appointment-chatbot"
@@ -7009,8 +6731,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        6848,
-        1664
+        16688,
+        2832
       ],
       "id": "60cc8768-4e44-4701-9271-7ec1b90ed3f1",
       "name": "homologar /sales/upsert_sale_by_phone"
@@ -7363,6 +7085,638 @@
       ],
       "id": "e2014c2a-ef9f-453b-b02c-16462cfe9928",
       "name": "Mensaje menu inicial"
+    },
+    {
+      "parameters": {
+        "url": "={{ $('enviroment').item.json.currentUrl }}/api/v1/grow/sales/wa/school-sections",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-api-key",
+              "value": "={{ $('enviroment').item.json['x-api-key'] }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        5952,
+        -2928
+      ],
+      "id": "03e358c0-1632-43a8-b651-5b4bcbbf2348",
+      "name": "request sections"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v22.0/{{ $('Variables Wp').item.json.clienteIdWp }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ $('Variables Wp').item.json.tokenWp }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('sales cerebro').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": {{ JSON.stringify($json.data.message_wa) }}\n  }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        6208,
+        -2928
+      ],
+      "id": "e8c40544-7e42-4734-8f46-99657fc61a97",
+      "name": "Mensaje menu secciones"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Nodo “Function” de n8n\n// Valida items[0].json.selection y retorna status con mensajes amistosos\n\nconst raw = items[0].json.selection;\nconst items_length = items[0].json.items_length;\n\n// Usamos regex para validar que sea un número entero positivo sin signos ni símbolos\nconst validFormat = /^[0-9]+$/;\n\nlet result;\n\nif (!validFormat.test(raw)) {\n  // Tiene caracteres no permitidos (letras, signos, espacios, etc.)\n  result = {\n    status: 'error',\n    message: `Ups, parece que tu elección “${raw}” contiene símbolos o no es un número válido. Por favor escribe un número del 1 al ${items_length} sin signos ni espacios.`\n  };\n} else {\n  const sel = Number(raw);\n\n  if (!Number.isInteger(sel)) {\n    result = {\n      status: 'error',\n      message: `Veo que has ingresado ${raw}, pero necesitamos un número entero. Por favor elige un número sin decimales entre 1 y ${items_length}.`\n    };\n  } else if (sel < 1 || sel > items_length) {\n    result = {\n      status: 'error',\n      message: `Tu selección es ${sel}, pero debe estar entre 1 y ${items_length}. Intenta de nuevo con un número dentro de ese rango.`\n    };\n  } else {\n    result = {\n      status: 'success',\n      message: `¡Genial! Has seleccionado la opción número ${sel}.`,\n      selection: sel\n    };\n  }\n}\n\n// Devolver resultado\nreturn [{ json: result }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        4336,
+        -832
+      ],
+      "id": "0accdab6-24cf-4098-b5a7-05667b723239",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "967bc904-1e28-4f4e-af20-bde631bb863a",
+              "name": "selection",
+              "value": "={{ $('sales cerebro').item.json.messages[0].text.body }}",
+              "type": "string"
+            },
+            {
+              "id": "d9483e97-b102-467c-b113-7a877d2d5537",
+              "name": "items_length",
+              "value": "={{ $('Auth Guardian').item.json.data.session.items_length }}",
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        4064,
+        -832
+      ],
+      "id": "b467494e-91ec-4538-ae6e-6fd9f7ba2cb4",
+      "name": "obtenemos la respuesta del menu inicial2"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "1b2792b2-4d4e-4e50-af12-cb3d4c3e0e08",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "success",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        4544,
+        -832
+      ],
+      "id": "d8752c64-72b7-4f49-831c-406fecf5ab7b",
+      "name": "verificamos que la seleccion sea valida3"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v22.0/{{ $('Variables Wp').item.json.clienteIdWp }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ $('Variables Wp').item.json.tokenWp }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('sales cerebro').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"{{ $json.message }}\"\n  }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        4976,
+        -688
+      ],
+      "id": "2880c677-3e0d-4afc-94bd-c29509eb558c",
+      "name": "Error seleccion menu invalida4"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        5200,
+        -688
+      ],
+      "id": "c5af53e5-cafb-401f-bf31-e0d191e287b9",
+      "name": "No Operation, do nothing5"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('Code').item.json.selection }}",
+                    "rightValue": 1,
+                    "operator": {
+                      "type": "number",
+                      "operation": "equals"
+                    },
+                    "id": "6f7b2060-af41-4559-bbfb-7ac41ceb3091"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "maternal"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "5a969ce2-2d9e-400d-9058-e9686ab50d02",
+                    "leftValue": "={{ $('Code').item.json.selection }}",
+                    "rightValue": 2,
+                    "operator": {
+                      "type": "number",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "preescolar"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "dd4a50a5-f08c-4bf7-b9c2-7d4626ba2cc2",
+                    "leftValue": "={{ $('Code').item.json.selection }}",
+                    "rightValue": 3,
+                    "operator": {
+                      "type": "number",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "primaria"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "5e69f0a7-cb9f-4330-99d2-e637322242a1",
+                    "leftValue": "={{ $('Code').item.json.selection }}",
+                    "rightValue": 4,
+                    "operator": {
+                      "type": "number",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "secundaria"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "3812c246-c17e-4583-8a0f-e0117828aca1",
+                    "leftValue": "={{ $('Code').item.json.selection }}",
+                    "rightValue": 5,
+                    "operator": {
+                      "type": "number",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "bachillerato"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        5520,
+        -944
+      ],
+      "id": "1abd0769-cd9a-43d9-bf80-0e887ab2058a",
+      "name": "Switch9"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "cOoCwRPN9qfk0P6y",
+          "mode": "list",
+          "cachedResultName": "serebro sales cambio de estatus"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "state": "esperando_respuesta_menu_contacto_costos",
+            "userStateId": "={{ $json.userStateId }}",
+            "userId": "={{ $json.userId }}",
+            "info": "={{ $json.info }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "state",
+              "displayName": "state",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "userId",
+              "displayName": "userId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "userStateId",
+              "displayName": "userStateId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "info",
+              "displayName": "info",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "sub_menu",
+              "displayName": "sub_menu",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        6976,
+        -1312
+      ],
+      "id": "2fc7aeea-1c43-4258-b989-4a08d5259a7f",
+      "name": "Execute Workflow7"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v22.0/{{ $('Variables Wp').item.json.clienteIdWp }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ $('Variables Wp').item.json.tokenWp }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('sales cerebro').item.json.messages[0].from }}\",\n  \"type\": \"image\",\n  \"image\": {\n    \"link\": \"{{ $json.image_url }}\",\n    \"caption\": \"Queremos conocerte y presentarte nuestro proyecto!\\n*Costos sujetos a ajuste sin previo aviso\\n\\nConoce nuestro proyecto\\nhttps://www.colegioreims.edu.mx/proyecto-educativo\"\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        6576,
+        -1232
+      ],
+      "id": "0f3736bb-2e79-4050-ab96-4eb6452caf37",
+      "name": "info costo maternal1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v22.0/{{ $('Variables Wp').item.json.clienteIdWp }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ $('Variables Wp').item.json.tokenWp }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('sales cerebro').item.json.messages[0].from }}\",\n  \"type\": \"image\",\n  \"image\": {\n    \"link\": \"{{ $json.image_url }}\",\n    \"caption\": \"Queremos conocerte y presentarte nuestro proyecto!\\n*Costos sujetos a ajuste sin previo aviso\\n\\nConoce nuestro proyecto\\nhttps://www.colegioreims.edu.mx/proyecto-educativo\"\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        6576,
+        -1072
+      ],
+      "id": "f28c3a50-8aef-43c8-bef8-33cb80575118",
+      "name": "info costo pre escolar1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v22.0/{{ $('Variables Wp').item.json.clienteIdWp }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ $('Variables Wp').item.json.tokenWp }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('sales cerebro').item.json.messages[0].from }}\",\n  \"type\": \"image\",\n  \"image\": {\n    \"link\": \"{{ $json.image_url }}\",\n    \"caption\": \"Queremos conocerte y presentarte nuestro proyecto!\\n*Costos sujetos a ajuste sin previo aviso\\n\\nConoce nuestro proyecto\\nhttps://www.colegioreims.edu.mx/proyecto-educativo\"\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        6576,
+        -912
+      ],
+      "id": "f9777fc4-a809-4faa-94e2-f409c87dea32",
+      "name": "info costo primaria1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v22.0/{{ $('Variables Wp').item.json.clienteIdWp }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ $('Variables Wp').item.json.tokenWp }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('sales cerebro').item.json.messages[0].from }}\",\n  \"type\": \"image\",\n  \"image\": {\n    \"link\": \"{{ $json.image_url }}\",\n    \"caption\": \"Queremos conocerte y presentarte nuestro proyecto!\\n*Costos sujetos a ajuste sin previo aviso\\n\\nConoce nuestro proyecto\\nhttps://www.colegioreims.edu.mx/proyecto-educativo\"\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        6576,
+        -752
+      ],
+      "id": "a62ee7eb-6885-4e9d-8e0f-c75eb7f13ccf",
+      "name": "info costo secundaria1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v22.0/{{ $('Variables Wp').item.json.clienteIdWp }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ $('Variables Wp').item.json.tokenWp }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('sales cerebro').item.json.messages[0].from }}\",\n  \"type\": \"image\",\n  \"image\": {\n    \"link\": \"{{ $json.data.img }}\",\n    \"caption\": {{ JSON.stringify($json.data.message_wa) }}\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        6576,
+        -592
+      ],
+      "id": "33ff2713-d87d-4a54-99e1-227f848675e3",
+      "name": "info costo bachillerato1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v22.0/{{ $('Variables Wp').item.json.clienteIdWp }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ $('Variables Wp').item.json.tokenWp }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('sales cerebro').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"Selecciona la opción deseada escribiendo el número:\\n1️⃣ Sí, quiero hablar con alguien!\\n2️⃣ Muchas gracias, por el momento es todo\"\n  }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        13536,
+        0
+      ],
+      "id": "a22f6001-1d47-4aa6-bbaf-15b038c0f2cd",
+      "name": "envio de mensaje contacto costos1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "cb5bf561-971f-493b-8312-772ff7f21da3",
+              "name": "userStateId",
+              "value": "={{ $('Code2').item.json.user_state_final }}",
+              "type": "string"
+            },
+            {
+              "id": "1356aa24-d7f3-4700-9568-aa9b6ece9b4c",
+              "name": "info",
+              "value": "=se presenta informacion de costo {{ $('Code4').item.json.type }}",
+              "type": "string"
+            },
+            {
+              "id": "6b9a8f55-16af-4e52-b897-0ac1cfca6083",
+              "name": "userId",
+              "value": "={{ $('Code2').item.json.user_id_finded || $('Code2').item.json.user_id_edited }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        6992,
+        -1104
+      ],
+      "id": "170f8495-0305-4e0a-9386-c833cea8f9f1",
+      "name": "body datos contacto costos1"
+    },
+    {
+      "parameters": {
+        "url": "={{ $('enviroment').item.json.currentUrl }}/api/v1/grow//sales/wa/info-message/{{ $('obtenemos la respuesta del menu inicial2').item.json.selection }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-api-key",
+              "value": "={{ $('enviroment').item.json['x-api-key'] }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        5104,
+        -896
+      ],
+      "id": "82fc5dab-8b25-40be-865a-73787dbc5904",
+      "name": "obtenemos informacion sobre la seccion"
     }
   ],
   "connections": {
@@ -7371,90 +7725,6 @@
         [
           {
             "node": "Auth Guardian",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "MongoDB": {
-      "main": [
-        [
-          {
-            "node": "If",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "If": {
-      "main": [
-        [
-          {
-            "node": "typing indicator1",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "typing indicator2",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "MongoDB1": {
-      "main": [
-        [
-          {
-            "node": "MongoDB2",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Edit Fields": {
-      "main": [
-        [
-          {
-            "node": "MongoDB1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "MongoDB2": {
-      "main": [
-        [
-          {
-            "node": "Edit Fields2",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Edit Fields1": {
-      "main": [
-        [
-          {
-            "node": "Code2",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Edit Fields2": {
-      "main": [
-        [
-          {
-            "node": "Code2",
             "type": "main",
             "index": 0
           }
@@ -7507,39 +7777,6 @@
         ]
       ]
     },
-    "Code": {
-      "main": [
-        [
-          {
-            "node": "Edit Fields",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "typing indicator1": {
-      "main": [
-        [
-          {
-            "node": "Edit Fields1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "typing indicator2": {
-      "main": [
-        [
-          {
-            "node": "Code",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Variables Wp": {
       "main": [
         [
@@ -7580,60 +7817,18 @@
         ],
         [
           {
-            "node": "obtenemos la respuesta del menu inicial1",
+            "node": "obtenemos la respuesta del menu inicial2",
             "type": "main",
             "index": 0
           }
         ],
-        [
-          {
-            "node": "revisamos si viene boton de menu anterior",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "obtenemos la respuesta del menu costos",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "tomamos la seleccion del usuario",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "solicitud del cliente",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "revisamos sub menu para informes costos",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "seleccion primaria ubicacion contacto5",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "seleccion primaria ubicacion contacto6",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        []
       ]
     },
     "revisamos si ya existia": {
@@ -7650,11 +7845,6 @@
             "index": 0
           }
         ]
-      ]
-    },
-    "Code2": {
-      "main": [
-        []
       ]
     },
     "Code3": {
@@ -7712,7 +7902,7 @@
       "main": [
         [
           {
-            "node": "Mensaje menu información",
+            "node": "request sections",
             "type": "main",
             "index": 0
           }
@@ -7723,7 +7913,9 @@
             "type": "main",
             "index": 0
           }
-        ]
+        ],
+        [],
+        []
       ]
     },
     "envio de mensaje ubicación": {
@@ -7970,17 +8162,6 @@
         ]
       ]
     },
-    "Mensaje menu información": {
-      "main": [
-        [
-          {
-            "node": "body datos menu información",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "body datos menu información": {
       "main": [
         [
@@ -8169,13 +8350,7 @@
             "index": 0
           }
         ],
-        [
-          {
-            "node": "homologar /available-slots-chatbot",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "Mensaje menu información1": {
@@ -8202,13 +8377,7 @@
     },
     "revisamos si viene boton de menu anterior": {
       "main": [
-        [
-          {
-            "node": "request menu inicial",
-            "type": "main",
-            "index": 0
-          }
-        ],
+        [],
         [
           {
             "node": "HTTP Request2",
@@ -8414,13 +8583,7 @@
     },
     "validamos si se selecciono menu anterior desde costos": {
       "main": [
-        [
-          {
-            "node": "request menu inicial",
-            "type": "main",
-            "index": 0
-          }
-        ],
+        [],
         [
           {
             "node": "HTTP Request1",
@@ -8939,13 +9102,7 @@
             "index": 0
           }
         ],
-        [
-          {
-            "node": "HTTP Request",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "seleccion primaria ubicacion contacto5": {
@@ -9077,20 +9234,8 @@
             "index": 0
           }
         ],
-        [
-          {
-            "node": "HTTP Request",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "request menu inicial",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        [],
+        []
       ]
     },
     "mensaje despedida": {
@@ -9301,13 +9446,7 @@
             "index": 0
           }
         ],
-        [
-          {
-            "node": "homologar /sales/upsert_sale_by_phone",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "enviroment": {
@@ -9353,6 +9492,145 @@
           }
         ]
       ]
+    },
+    "request sections": {
+      "main": [
+        [
+          {
+            "node": "Mensaje menu secciones",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mensaje menu secciones": {
+      "main": [
+        [
+          {
+            "node": "body datos menu información",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "verificamos que la seleccion sea valida3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "obtenemos la respuesta del menu inicial2": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "verificamos que la seleccion sea valida3": {
+      "main": [
+        [
+          {
+            "node": "obtenemos informacion sobre la seccion",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Error seleccion menu invalida4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Error seleccion menu invalida4": {
+      "main": [
+        [
+          {
+            "node": "No Operation, do nothing5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch9": {
+      "main": [
+        [
+          {
+            "node": "info costo maternal1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "info costo pre escolar1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "info costo primaria1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "info costo secundaria1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "info costo bachillerato1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "envio de mensaje contacto costos1": {
+      "main": [
+        []
+      ]
+    },
+    "body datos contacto costos1": {
+      "main": [
+        [
+          {
+            "node": "Execute Workflow7",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "obtenemos informacion sobre la seccion": {
+      "main": [
+        [
+          {
+            "node": "Switch9",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -9383,7 +9661,7 @@
               "id": "wamid.HBgNNTIxNDQzNDkwMTE5MxUCABIYFjNFQjBCNjBEQ0ZGN0M2NDYwNzNCOEUA",
               "timestamp": "1753198509",
               "text": {
-                "body": "hola buenos dias"
+                "body": "5"
               },
               "type": "text"
             }
@@ -9393,7 +9671,7 @@
       }
     ]
   },
-  "versionId": "1cbcf262-91b0-48da-88e2-7458bb500401",
+  "versionId": "ea25a1d1-abdc-4dbc-9288-247a6b6ca1c2",
   "triggerCount": 1,
   "shared": [
     {
