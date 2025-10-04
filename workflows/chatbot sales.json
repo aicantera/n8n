@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-06-24T22:28:19.611Z",
-  "updatedAt": "2025-10-03T23:41:59.000Z",
+  "updatedAt": "2025-10-04T01:24:19.000Z",
   "id": "PetXIW4fDRVoHgK5",
   "name": "chatbot sales",
   "active": false,
@@ -476,7 +476,7 @@
                   {
                     "id": "faed8982-b54d-4cc9-85df-45c31ad392ec",
                     "leftValue": "={{ $json.data.session.states.parent_state }}",
-                    "rightValue": "esperando_respuesta_dia_cita",
+                    "rightValue": "esperando_respuesta_seccion",
                     "operator": {
                       "type": "string",
                       "operation": "equals",
@@ -487,7 +487,7 @@
                 "combinator": "and"
               },
               "renameOutput": true,
-              "outputKey": "cita_rsp"
+              "outputKey": "rsp_section"
             },
             {
               "conditions": {
@@ -3916,8 +3916,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -544,
-        1280
+        -992,
+        1584
       ],
       "id": "2ece1371-00e5-40d3-a02f-fb84520d897d",
       "name": "upsert_sale_by_phone",
@@ -7406,10 +7406,13 @@
         "workflowInputs": {
           "mappingMode": "defineBelow",
           "value": {
-            "state": "esperando_respuesta_menu_contacto_costos",
+            "state": "esperando_respuesta_seccion",
             "userStateId": "={{ $json.userStateId }}",
             "userId": "={{ $json.userId }}",
-            "info": "={{ $json.info }}"
+            "info": "={{ $json.info }}",
+            "items_length": "={{ $('obtenemos informacion sobre la seccion').item.json.data.items_length }}",
+            "base_url": "={{ $('enviroment').item.json.currentUrl }}",
+            "phone": "={{ $('WhatsApp Trigger').item.json.data[0].messages[0].from }}"
           },
           "matchingColumns": [],
           "schema": [
@@ -7458,6 +7461,36 @@
               "canBeUsedToMatch": true,
               "type": "string",
               "removed": true
+            },
+            {
+              "id": "base_url",
+              "displayName": "base_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "phone",
+              "displayName": "phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "items_length",
+              "displayName": "items_length",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "number",
+              "removed": false
             }
           ],
           "attemptToConvertTypes": false,
@@ -7468,8 +7501,8 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        6976,
-        -1312
+        7120,
+        -912
       ],
       "id": "2fc7aeea-1c43-4258-b989-4a08d5259a7f",
       "name": "Execute Workflow7"
@@ -7667,19 +7700,19 @@
             {
               "id": "cb5bf561-971f-493b-8312-772ff7f21da3",
               "name": "userStateId",
-              "value": "={{ $('Code2').item.json.user_state_final }}",
+              "value": "={{ $('Auth Guardian').item.json.data.session.user_id }}",
               "type": "string"
             },
             {
               "id": "1356aa24-d7f3-4700-9568-aa9b6ece9b4c",
               "name": "info",
-              "value": "=se presenta informacion de costo {{ $('Code4').item.json.type }}",
+              "value": "=se muestra informacion de un escolar",
               "type": "string"
             },
             {
               "id": "6b9a8f55-16af-4e52-b897-0ac1cfca6083",
               "name": "userId",
-              "value": "={{ $('Code2').item.json.user_id_finded || $('Code2').item.json.user_id_edited }}",
+              "value": "={{ $('Auth Guardian').item.json.data.session.user_id }}",
               "type": "string"
             }
           ]
@@ -7689,8 +7722,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        6992,
-        -1104
+        6928,
+        -912
       ],
       "id": "170f8495-0305-4e0a-9386-c833cea8f9f1",
       "name": "body datos contacto costos1"
@@ -7717,6 +7750,178 @@
       ],
       "id": "82fc5dab-8b25-40be-865a-73787dbc5904",
       "name": "obtenemos informacion sobre la seccion"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Nodo “Function” de n8n\n// Valida items[0].json.selection y retorna status con mensajes amistosos\n\nconst raw = items[0].json.selection;\nconst items_length = items[0].json.items_length;\n\n// Usamos regex para validar que sea un número entero positivo sin signos ni símbolos\nconst validFormat = /^[0-9]+$/;\n\nlet result;\n\nif (!validFormat.test(raw)) {\n  // Tiene caracteres no permitidos (letras, signos, espacios, etc.)\n  result = {\n    status: 'error',\n    message: `Ups, parece que tu elección “${raw}” contiene símbolos o no es un número válido. Por favor escribe un número del 1 al ${items_length} sin signos ni espacios.`\n  };\n} else {\n  const sel = Number(raw);\n\n  if (!Number.isInteger(sel)) {\n    result = {\n      status: 'error',\n      message: `Veo que has ingresado ${raw}, pero necesitamos un número entero. Por favor elige un número sin decimales entre 1 y ${items_length}.`\n    };\n  } else if (sel < 1 || sel > items_length) {\n    result = {\n      status: 'error',\n      message: `Tu selección es ${sel}, pero debe estar entre 1 y ${items_length}. Intenta de nuevo con un número dentro de ese rango.`\n    };\n  } else {\n    result = {\n      status: 'success',\n      message: `¡Genial! Has seleccionado la opción número ${sel}.`,\n      selection: sel\n    };\n  }\n}\n\n// Devolver resultado\nreturn [{ json: result }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        4304,
+        -240
+      ],
+      "id": "857ae728-e722-44ad-bb31-318ee7d9cfb6",
+      "name": "Code1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "967bc904-1e28-4f4e-af20-bde631bb863a",
+              "name": "selection",
+              "value": "={{ $('sales cerebro').item.json.messages[0].text.body }}",
+              "type": "string"
+            },
+            {
+              "id": "d9483e97-b102-467c-b113-7a877d2d5537",
+              "name": "items_length",
+              "value": "={{ $('Auth Guardian').item.json.data.session.items_length }}",
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        4032,
+        -240
+      ],
+      "id": "6e1becd3-b0b0-477e-9969-427f164bdc26",
+      "name": "obtenemos la respuesta del menu inicial3"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "1b2792b2-4d4e-4e50-af12-cb3d4c3e0e08",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "success",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        4512,
+        -240
+      ],
+      "id": "45beec41-57dc-4c3d-882e-97bdc50cba55",
+      "name": "verificamos que la seleccion sea valida4"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v22.0/{{ $('Variables Wp').item.json.clienteIdWp }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ $('Variables Wp').item.json.tokenWp }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('sales cerebro').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"{{ $json.message }}\"\n  }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        4944,
+        -96
+      ],
+      "id": "d059de77-ec14-4ec2-b9cb-0eff405b36fd",
+      "name": "Error seleccion menu invalida5"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        5168,
+        -96
+      ],
+      "id": "360a8907-7e3b-4e1c-b5fb-7fa31eb6ce80",
+      "name": "No Operation, do nothing6"
+    },
+    {
+      "parameters": {
+        "url": "={{ $('enviroment').item.json.currentUrl }}/api/v1/grow/sales/wa/cerebro-contact-url",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-api-key",
+              "value": "={{ $('enviroment').item.json['x-api-key'] }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        4816,
+        -304
+      ],
+      "id": "2127b6a8-a13d-47aa-8980-cd610c7dd671",
+      "name": "request mensaje citas"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v22.0/{{ $('datos_num1').item.json.data.config.phone_number_id }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('datos_num1').item.json.data.config.whatsapp_token }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.data[0].messages[0].from }}\",\n  \"type\": \"interactive\",\n  \"interactive\": {\n    \"type\": \"button\",\n    \"body\": {\n      \"text\": {{ JSON.stringify($json.data.message_wa) }}\n    },\n    \"action\": {\n      \"buttons\": [\n        {\n          \"type\": \"reply\",\n          \"reply\": {\n            \"id\": \"menu_inicial\",\n            \"title\": \"Menú Inicial\"\n          }\n        }\n      ]\n    }\n  }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        5072,
+        -304
+      ],
+      "id": "fc092d0c-9c6f-4ea1-8b93-787ba5d2be9b",
+      "name": "se manda la url del sitio de citas y el boton"
     }
   ],
   "connections": {
@@ -7822,7 +8027,13 @@
             "index": 0
           }
         ],
-        [],
+        [
+          {
+            "node": "obtenemos la respuesta del menu inicial3",
+            "type": "main",
+            "index": 0
+          }
+        ],
         [],
         [],
         [],
@@ -9631,6 +9842,123 @@
           }
         ]
       ]
+    },
+    "info costo maternal1": {
+      "main": [
+        [
+          {
+            "node": "body datos contacto costos1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "info costo pre escolar1": {
+      "main": [
+        [
+          {
+            "node": "body datos contacto costos1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "info costo primaria1": {
+      "main": [
+        [
+          {
+            "node": "body datos contacto costos1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "info costo secundaria1": {
+      "main": [
+        [
+          {
+            "node": "body datos contacto costos1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "info costo bachillerato1": {
+      "main": [
+        [
+          {
+            "node": "body datos contacto costos1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code1": {
+      "main": [
+        [
+          {
+            "node": "verificamos que la seleccion sea valida4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "obtenemos la respuesta del menu inicial3": {
+      "main": [
+        [
+          {
+            "node": "Code1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "verificamos que la seleccion sea valida4": {
+      "main": [
+        [
+          {
+            "node": "request mensaje citas",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Error seleccion menu invalida5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Error seleccion menu invalida5": {
+      "main": [
+        [
+          {
+            "node": "No Operation, do nothing6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "request mensaje citas": {
+      "main": [
+        [
+          {
+            "node": "se manda la url del sitio de citas y el boton",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -9661,7 +9989,7 @@
               "id": "wamid.HBgNNTIxNDQzNDkwMTE5MxUCABIYFjNFQjBCNjBEQ0ZGN0M2NDYwNzNCOEUA",
               "timestamp": "1753198509",
               "text": {
-                "body": "5"
+                "body": "1"
               },
               "type": "text"
             }
@@ -9671,7 +9999,7 @@
       }
     ]
   },
-  "versionId": "ea25a1d1-abdc-4dbc-9288-247a6b6ca1c2",
+  "versionId": "391a8d68-e467-4ad0-a90e-6b9d0becbbcb",
   "triggerCount": 1,
   "shared": [
     {
@@ -9697,7 +10025,7 @@
             "projectId": "BsYMJSPwury6TiTn",
             "user": {
               "createdAt": "2025-06-06T20:24:22.275Z",
-              "updatedAt": "2025-10-04T00:58:03.000Z",
+              "updatedAt": "2025-10-04T01:43:02.000Z",
               "id": "f9268337-0922-4cba-994c-bf6b40332731",
               "email": "adolfocuentas123@gmail.com",
               "firstName": "adolfo",
@@ -9724,7 +10052,7 @@
               "role": "global:member",
               "disabled": false,
               "mfaEnabled": false,
-              "lastActiveAt": "2025-10-03",
+              "lastActiveAt": "2025-10-04",
               "isPending": false
             }
           }
