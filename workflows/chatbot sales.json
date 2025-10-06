@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-06-24T22:28:19.611Z",
-  "updatedAt": "2025-10-06T18:46:19.000Z",
+  "updatedAt": "2025-10-06T21:56:40.000Z",
   "id": "PetXIW4fDRVoHgK5",
   "name": "chatbot sales",
   "active": false,
@@ -526,7 +526,7 @@
                   {
                     "id": "7ba99368-0eb6-48ed-af01-77c7c4768b41",
                     "leftValue": "={{ $json.data.session.states.parent_state }}",
-                    "rightValue": "esperando_respuesta_menu_contacto_costos",
+                    "rightValue": "espera_respuesta_faq",
                     "operator": {
                       "type": "string",
                       "operation": "equals",
@@ -537,132 +537,7 @@
                 "combinator": "and"
               },
               "renameOutput": true,
-              "outputKey": "contacto costos"
-            },
-            {
-              "conditions": {
-                "options": {
-                  "caseSensitive": true,
-                  "leftValue": "",
-                  "typeValidation": "strict",
-                  "version": 2
-                },
-                "conditions": [
-                  {
-                    "id": "2d803248-e0f9-4478-8ff0-768db480b95d",
-                    "leftValue": "={{ $json.data.session.states.parent_state }}",
-                    "rightValue": "esperando_respuesta_menu_ubicacion",
-                    "operator": {
-                      "type": "string",
-                      "operation": "equals",
-                      "name": "filter.operator.equals"
-                    }
-                  }
-                ],
-                "combinator": "and"
-              },
-              "renameOutput": true,
-              "outputKey": "menu ubicacion"
-            },
-            {
-              "conditions": {
-                "options": {
-                  "caseSensitive": true,
-                  "leftValue": "",
-                  "typeValidation": "strict",
-                  "version": 2
-                },
-                "conditions": [
-                  {
-                    "id": "5f2b8eb8-dca7-40cc-9d86-1ed8f85b1027",
-                    "leftValue": "={{ $json.data.session.states.parent_state }}",
-                    "rightValue": "respuesta_seleccion_nivel_escolar_ubicacion",
-                    "operator": {
-                      "type": "string",
-                      "operation": "equals",
-                      "name": "filter.operator.equals"
-                    }
-                  }
-                ],
-                "combinator": "and"
-              },
-              "renameOutput": true,
-              "outputKey": "rsp nivel esc ubi"
-            },
-            {
-              "conditions": {
-                "options": {
-                  "caseSensitive": true,
-                  "leftValue": "",
-                  "typeValidation": "strict",
-                  "version": 2
-                },
-                "conditions": [
-                  {
-                    "id": "c17a27fb-f67a-48af-ab13-a78c9f77e4f8",
-                    "leftValue": "={{ $json.data.session.states.parent_state }}",
-                    "rightValue": "esperando_respuesta_menu_horario",
-                    "operator": {
-                      "type": "string",
-                      "operation": "equals",
-                      "name": "filter.operator.equals"
-                    }
-                  }
-                ],
-                "combinator": "and"
-              },
-              "renameOutput": true,
-              "outputKey": "re_m_horario"
-            },
-            {
-              "conditions": {
-                "options": {
-                  "caseSensitive": true,
-                  "leftValue": "",
-                  "typeValidation": "strict",
-                  "version": 2
-                },
-                "conditions": [
-                  {
-                    "id": "e897eb9e-7845-4596-b7e4-6e6299e2de6c",
-                    "leftValue": "={{ $json.data.session.states.parent_state }}",
-                    "rightValue": "esperando_respuesta_menu_contactame_informes",
-                    "operator": {
-                      "type": "string",
-                      "operation": "equals",
-                      "name": "filter.operator.equals"
-                    }
-                  }
-                ],
-                "combinator": "and"
-              },
-              "renameOutput": true,
-              "outputKey": "contacto_inf"
-            },
-            {
-              "conditions": {
-                "options": {
-                  "caseSensitive": true,
-                  "leftValue": "",
-                  "typeValidation": "strict",
-                  "version": 2
-                },
-                "conditions": [
-                  {
-                    "id": "59c5aacd-d431-4d88-a74c-4511477b8cfa",
-                    "leftValue": "={{ $json.data.session.states.parent_state }}",
-                    "rightValue": "proceso_calificaciones_estudiante",
-                    "operator": {
-                      "type": "string",
-                      "operation": "equals",
-                      "name": "filter.operator.equals"
-                    }
-                  }
-                ],
-                "combinator": "and"
-              },
-              "renameOutput": true,
-              "outputKey": "calificaciones"
+              "outputKey": "pregunta_fqa"
             }
           ]
         },
@@ -3042,7 +2917,8 @@
             "state": "esperando_respuesta_dia_cita",
             "userStateId": "={{ $json.userStateId }}",
             "userId": "={{ $json.userId }}",
-            "info": "={{ $json.info }}"
+            "info": "={{ $json.info }}",
+            "items_length": 0
           },
           "matchingColumns": [],
           "schema": [
@@ -3091,6 +2967,36 @@
               "canBeUsedToMatch": true,
               "type": "string",
               "removed": true
+            },
+            {
+              "id": "base_url",
+              "displayName": "base_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "phone",
+              "displayName": "phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "items_length",
+              "displayName": "items_length",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "number",
+              "removed": false
             }
           ],
           "attemptToConvertTypes": false,
@@ -3771,24 +3677,9 @@
     },
     {
       "parameters": {
-        "content": "## menú sobre información\n\nGracias por solicitar información, ¿Sobre que necesitas saber?\\n\\n1️⃣ Ubicación\\n2️⃣ Costos \n3️⃣ Horario Extendido\n4️⃣ Programa Bilingüe\n5️⃣ Contáctame 📲\n\n6️⃣ Gracias, ya estoy hablando con un asesor ✅",
-        "height": 400,
-        "width": 740
-      },
-      "type": "n8n-nodes-base.stickyNote",
-      "position": [
-        6896,
-        -3184
-      ],
-      "typeVersion": 1,
-      "id": "1a8fb44f-c0ed-4ed0-9cb4-ce3aad2b2664",
-      "name": "Sticky Note4"
-    },
-    {
-      "parameters": {
         "content": "## Menú sobre información y dias de cita disponible",
         "height": 260,
-        "width": 1140
+        "width": 1540
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
@@ -7128,7 +7019,7 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('sales cerebro').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": {{ JSON.stringify($json.data.message_wa) }}\n  }\n}\n",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.data[0].messages[0].from }}\",\n  \"type\": \"interactive\",\n  \"interactive\": {\n    \"type\": \"button\",\n    \"body\": {\n      \"text\": {{ JSON.stringify($json.data.message_wa) }}\n    },\n    \"action\": {\n      \"buttons\": [\n        {\n          \"type\": \"reply\",\n          \"reply\": {\n            \"id\": \"menu_inicial\",\n            \"title\": \"Volver al menú\"\n          }\n        }\n      ]\n    }\n } }\n\n\n",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
@@ -8167,6 +8058,931 @@
       ],
       "id": "b3326199-5026-4b5c-a12f-57b6789e9753",
       "name": "Execute Workflow22"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "670342e3-e699-4e30-af27-04db7bace385",
+              "name": "user_id",
+              "value": "={{ $('Auth Guardian').item.json.data.session.user_id }}",
+              "type": "string"
+            },
+            {
+              "id": "391a519a-9e7c-4dee-8dfc-f8b38f7f8fc7",
+              "name": "information",
+              "value": "se presenta menu preguntas frecuentes",
+              "type": "string"
+            },
+            {
+              "id": "915b68b5-3dee-44ad-82f6-65a3d9a74629",
+              "name": "log_id",
+              "value": "={{ $json.uuid }}",
+              "type": "string"
+            },
+            {
+              "id": "f07b7183-62a0-4d4a-90a7-ad93e7acd220",
+              "name": "date",
+              "value": "={{ $json.now }}",
+              "type": "string"
+            },
+            {
+              "id": "e5baae19-924c-4972-8a51-b4d87aad8bad",
+              "name": "state",
+              "value": "espera_respuesta_menu_inicial",
+              "type": "string"
+            },
+            {
+              "id": "127efdf6-7193-4011-a155-fa072b66e80f",
+              "name": "userStateId",
+              "value": "={{ $('Auth Guardian').item.json.data.session.user_id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        5568,
+        208
+      ],
+      "id": "18e4497b-4ac0-4e13-b04a-d6b51801415d",
+      "name": "Edit Fields9"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f07b7183-62a0-4d4a-90a7-ad93e7acd220",
+              "name": "date",
+              "value": "={{ $('Code15').item.json.now }}",
+              "type": "string"
+            },
+            {
+              "id": "e5baae19-924c-4972-8a51-b4d87aad8bad",
+              "name": "state",
+              "value": "espera_respuesta_faq",
+              "type": "string"
+            },
+            {
+              "id": "127efdf6-7193-4011-a155-fa072b66e80f",
+              "name": "userStateId",
+              "value": "={{ $('Auth Guardian').item.json.data.session.user_id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        5920,
+        208
+      ],
+      "id": "74fb1604-a20e-44d3-afcd-a3db0c12da70",
+      "name": "Edit Fields10"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v22.0/{{ $('datos_num1').item.json.data.config.phone_number_id }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('datos_num1').item.json.data.config.whatsapp_token }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.data[0].messages[0].from }}\",\n  \"type\": \"interactive\",\n  \"interactive\": {\n    \"type\": \"button\",\n    \"body\": {\n      \"text\": \"✨ ¡Bienvenido a la sección de Preguntas Frecuentes! ✨ Aquí te puedo ayudar a responder las dudas más comunes sobre el colegio.\\n\\n¿Tienes alguna pregunta específica?💬\"\n    },\n    \"action\": {\n      \"buttons\": [\n        {\n          \"type\": \"reply\",\n          \"reply\": {\n            \"id\": \"menu_inicial\",\n            \"title\": \"Volver al menú\"\n          }\n        }\n      ]\n    }\n } }\n\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        5744,
+        208
+      ],
+      "id": "10f21715-a864-4691-b72f-cc6f8228f450",
+      "name": "mensaje inicial FAQ"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "6fca4a7f-bcc2-4d06-97ea-acb43394a3fd",
+              "name": "userInput",
+              "value": "={{ $('WhatsApp Trigger').item.json.data[0].messages[0].text.body }}",
+              "type": "string"
+            },
+            {
+              "id": "86549ade-0332-43fd-b37c-415894d6c28c",
+              "name": "items_length",
+              "value": "={{ $json.data.session.items_length }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        4288,
+        368
+      ],
+      "id": "e4a9ebf5-8f10-47fe-9f1c-d09abb5f6f3d",
+      "name": "guardamos la respuesta de academico1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "2dc06912-029b-4432-914a-89c6216f4d07",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "Error",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        4784,
+        368
+      ],
+      "id": "98853ed7-518e-4d02-b754-0b62a7089f18",
+      "name": "revisamos que la respuesta no sea erronea1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "670342e3-e699-4e30-af27-04db7bace385",
+              "name": "user_id",
+              "value": "={{ $('Auth Guardian').item.json.data.session.user_id }}",
+              "type": "string"
+            },
+            {
+              "id": "391a519a-9e7c-4dee-8dfc-f8b38f7f8fc7",
+              "name": "information",
+              "value": "se presenta menu interacción humana",
+              "type": "string"
+            },
+            {
+              "id": "915b68b5-3dee-44ad-82f6-65a3d9a74629",
+              "name": "log_id",
+              "value": "={{ $json.uuid }}",
+              "type": "string"
+            },
+            {
+              "id": "f07b7183-62a0-4d4a-90a7-ad93e7acd220",
+              "name": "date",
+              "value": "={{ $json.now }}",
+              "type": "string"
+            },
+            {
+              "id": "127efdf6-7193-4011-a155-fa072b66e80f",
+              "name": "userStateId",
+              "value": "={{ $('Auth Guardian').item.json.data.session.user_id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        5568,
+        432
+      ],
+      "id": "db156c4e-aa1a-4a1d-abf1-d457a24671fc",
+      "name": "Edit Fields31"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Importante: Esto se coloca dentro de un nodo \"Code\" en n8n\n\nfunction uuidv4() {\n  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {\n    const r = Math.random() * 16 | 0;\n    const v = c === 'x' ? r : (r & 0x3 | 0x8);\n    return v.toString(16);\n  });\n}\n\nreturn [\n  {\n    json: {\n      uuid: uuidv4(),\n      now: new Date().toLocaleString('es-MX', {\n  timeZone: 'America/Mexico_City'\n})\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        5344,
+        432
+      ],
+      "id": "317c988a-22d5-4caa-aaa6-2101ba892509",
+      "name": "Code31",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f07b7183-62a0-4d4a-90a7-ad93e7acd220",
+              "name": "date",
+              "value": "={{ $('Code31').item.json.now }}",
+              "type": "string"
+            },
+            {
+              "id": "e5baae19-924c-4972-8a51-b4d87aad8bad",
+              "name": "state",
+              "value": "espera_respuesta_trasbordo",
+              "type": "string"
+            },
+            {
+              "id": "127efdf6-7193-4011-a155-fa072b66e80f",
+              "name": "userStateId",
+              "value": "={{ $('Auth Guardian').item.json.data.session.user_id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        5920,
+        432
+      ],
+      "id": "857d2cb7-e10b-4e35-a872-97b639c098d7",
+      "name": "Edit Fields32"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v22.0/{{ $('datos_num1').item.json.data.config.phone_number_id }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('datos_num1').item.json.data.config.whatsapp_token }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.data[0].messages[0].from }}\",\n  \"type\": \"interactive\",\n  \"interactive\": {\n    \"type\": \"button\",\n    \"body\": {\n      \"text\": \"¡Gracias por contactarnos! 🌟\\nPara dirigirte al área correcta, por favor elige una de las siguientes opciones:\\n\\n1️⃣ Finanzas\\n2️⃣ Administrativo\\n3️⃣ Extraescolares\\n4️⃣ Académico\\n\\nSolo responde con el número de la opción que prefieras. 😊\"\n    },\n    \"action\": {\n      \"buttons\": [\n        {\n          \"type\": \"reply\",\n          \"reply\": {\n            \"id\": \"menu_inicial\",\n            \"title\": \"Volver al menú\"\n          }\n        }\n      ]\n    }\n } }\n\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        5744,
+        432
+      ],
+      "id": "f2ab1ad6-7ddf-4e30-ae77-7126c52a2bd5",
+      "name": "mensaje inicial FAQ1"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Importante: Esto se coloca dentro de un nodo \"Code\" en n8n\n\nfunction uuidv4() {\n  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {\n    const r = Math.random() * 16 | 0;\n    const v = c === 'x' ? r : (r & 0x3 | 0x8);\n    return v.toString(16);\n  });\n}\n\nreturn [\n  {\n    json: {\n      uuid: uuidv4(),\n      now: new Date().toLocaleString('es-MX', {\n  timeZone: 'America/Mexico_City'\n})\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        5344,
+        208
+      ],
+      "id": "3cc10296-9129-41aa-9a60-5c78b8c18943",
+      "name": "Code15",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.selection }}",
+                    "rightValue": 1,
+                    "operator": {
+                      "type": "number",
+                      "operation": "equals"
+                    },
+                    "id": "9ff7f440-eb05-4329-ada1-9633190ce5d8"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "IA"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "39cf8e0b-a920-48a0-ac07-d4dd23bbde4f",
+                    "leftValue": "={{ $json.selection }}",
+                    "rightValue": 2,
+                    "operator": {
+                      "type": "number",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Humano"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        5008,
+        336
+      ],
+      "id": "2a780918-b954-4b90-8577-41bf8da5f0ae",
+      "name": "Switch10"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "ddf0020f-affc-4e34-8acc-ba0cbe6b025d",
+              "leftValue": "={{ $('WhatsApp Trigger').item.json.data[0].messages[0].interactive }}",
+              "rightValue": "",
+              "operator": {
+                "type": "object",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        3680,
+        320
+      ],
+      "id": "6b33235f-08bb-4987-b99b-d75e01fb0754",
+      "name": "boton menu inicial"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Nodo “Function” de n8n\n// Valida items[0].json.selection y retorna status con mensajes amistosos\n\nconst raw = items[0].json.userInput;\nconst items_length = items[0].json.items_length;\n\n// Usamos regex para validar que sea un número entero positivo sin signos ni símbolos\nconst validFormat = /^[0-9]+$/;\n\nlet result;\n\nif (!validFormat.test(raw)) {\n  // Tiene caracteres no permitidos (letras, signos, espacios, etc.)\n  result = {\n    status: 'error',\n    message: `Ups, parece que tu elección “${raw}” contiene símbolos o no es un número válido. Por favor escribe un número del 1 al ${items_length} sin signos ni espacios.`\n  };\n} else {\n  const sel = Number(raw);\n\n  if (!Number.isInteger(sel)) {\n    result = {\n      status: 'error',\n      message: `Veo que has ingresado ${raw}, pero necesitamos un número entero. Por favor elige un número sin decimales entre 1 y ${items_length}.`\n    };\n  } else if (sel < 1 || sel > items_length) {\n    result = {\n      status: 'error',\n      message: `Tu selección es ${sel}, pero debe estar entre 1 y ${items_length}. Intenta de nuevo con un número dentro de ese rango.`\n    };\n  } else {\n    result = {\n      status: 'success',\n      message: `¡Genial! Has seleccionado la opción número ${sel}.`,\n      selection: sel\n    };\n  }\n}\n\n// Devolver resultado\nreturn [{ json: result }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        4528,
+        368
+      ],
+      "id": "a264afcf-2a2c-40c3-a9ff-8873ef9d1e87",
+      "name": "Code2"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        5232,
+        608
+      ],
+      "id": "60df2ec0-49f7-4f28-a1a7-783c62726a6e",
+      "name": "No Operation, do nothing7"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v22.0/{{ $('Variables Wp').item.json.clienteIdWp }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ $('Variables Wp').item.json.tokenWp }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('sales cerebro').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": \"{{ $json.message }}\"\n  }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        5008,
+        608
+      ],
+      "id": "9f92cc09-ac5e-4354-91d2-8bdac7a50add",
+      "name": "Error section invalida1"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "cOoCwRPN9qfk0P6y",
+          "mode": "list",
+          "cachedResultName": "serebro sales cambio de estatus"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "userStateId": "={{ $('Auth Guardian').item.json.data.session.user_id }}",
+            "userId": "={{ $('Auth Guardian').item.json.data.session.user_id }}",
+            "info": "={{ $('Edit Fields9').item.json.information }}",
+            "base_url": "={{ $('enviroment').item.json.currentUrl }}",
+            "phone": "={{ $('WhatsApp Trigger').item.json.data[0].messages[0].from }}",
+            "items_length": 0,
+            "state": "={{ $json.state }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "state",
+              "displayName": "state",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "userId",
+              "displayName": "userId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "userStateId",
+              "displayName": "userStateId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "info",
+              "displayName": "info",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "sub_menu",
+              "displayName": "sub_menu",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "base_url",
+              "displayName": "base_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "phone",
+              "displayName": "phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "items_length",
+              "displayName": "items_length",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "number",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        6144,
+        208
+      ],
+      "id": "7fba3c96-5039-46e3-8ba5-9c0e42ee9b34",
+      "name": "Execute Workflow23"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "4bae602d-2cf2-49f0-9d2f-6a5c39f866d2",
+              "name": "pregunta_guardian",
+              "value": "={{ $('WhatsApp Trigger').item.json.data[0].messages[0].text.body }}",
+              "type": "string"
+            },
+            {
+              "id": "2ea85c48-62a7-4785-af88-6d9c347933c5",
+              "name": "nombre_guardian",
+              "value": "={{ $('Auth Guardian').item.json.data.session.user_first_name }}",
+              "type": "string"
+            },
+            {
+              "id": "6f5b24cd-016b-4a88-b6b0-5294494a2a47",
+              "name": "tenant",
+              "value": "={{ $('datos_num1').item.json.data.config.tenant_id }}",
+              "type": "string"
+            },
+            {
+              "id": "7b089c53-4ecf-49fd-9fee-0dec2eba653f",
+              "name": "user_id",
+              "value": "={{ $('Auth Guardian').item.json.data.session.user_id }}",
+              "type": "string"
+            },
+            {
+              "id": "22c1f197-cdf8-4cd9-827f-978ab626a62f",
+              "name": "urlTest",
+              "value": "={{ $('Set Variables').item.json.currentEnvironment }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        4560,
+        1152
+      ],
+      "id": "1d9e547a-8491-4534-9c6f-a42f88b0bbb6",
+      "name": "cuerpo funcion response_worker_FAQ"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "b74a5ca4-02b0-412f-98f8-5e6a71bce930",
+              "leftValue": "={{ $('WhatsApp Trigger').item.json.data[0].messages[0].interactive.type }}",
+              "rightValue": "button_reply",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1760,
+        1328
+      ],
+      "id": "bbf7eaf7-6b0b-439d-807c-18734fae513c",
+      "name": "revisamos si se responde por boton"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "6c7f1cd2-b359-4352-8450-20749aa9e023",
+              "leftValue": "={{ $('WhatsApp Trigger').item.json.data[0].messages[0].interactive.button_reply.id }}",
+              "rightValue": "menu_inicial",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            },
+            {
+              "id": "950d5f79-b05e-4b79-892c-ea83e08ca16a",
+              "leftValue": "={{ $('WhatsApp Trigger').item.json.data[0].messages[0].interactive.button_reply.id }}",
+              "rightValue": "main_menu",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        2432,
+        1200
+      ],
+      "id": "99f7715e-faad-4133-99b4-dde98e0fd956",
+      "name": "el boton es menu inicial"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Set Variables').item.json.currentEnvironment }}/api/v1/common_llms/chat_with_context",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-session-id",
+              "value": "={{ $('Auth Guardian').item.json.data.session._id }}"
+            },
+            {
+              "name": "x-api-key",
+              "value": "={{ $('enviroment').item.json['x-api-key'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"question\":\"{{ $json.pregunta_guardian }}\",\n  \"chat_type\":\"family_qa_assistant\"\n\n} ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        4928,
+        1152
+      ],
+      "id": "596affa4-ef4e-4766-a451-6ac06b7f1f02",
+      "name": "HTTP Request7"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e5baae19-924c-4972-8a51-b4d87aad8bad",
+              "name": "state",
+              "value": "espera_respuesta_faq",
+              "type": "string"
+            },
+            {
+              "id": "127efdf6-7193-4011-a155-fa072b66e80f",
+              "name": "userStateId",
+              "value": "={{ $('Auth Guardian').item.json.data.session.user_id }}",
+              "type": "string"
+            },
+            {
+              "id": "ab883aa4-801b-4f34-9c58-b293d6212b0c",
+              "name": "information",
+              "value": "solicitud de pregunta enviada",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        5136,
+        1152
+      ],
+      "id": "0bf4e8b4-3387-45fd-ac5b-e8edbf1b58b0",
+      "name": "Edit Fields22"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "cOoCwRPN9qfk0P6y",
+          "mode": "list",
+          "cachedResultName": "serebro sales cambio de estatus"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "userStateId": "={{ $('Auth Guardian').item.json.data.session.user_id }}",
+            "userId": "={{ $('Auth Guardian').item.json.data.session.user_id }}",
+            "info": "={{ $('Edit Fields22').item.json.information }}",
+            "base_url": "={{ $('enviroment').item.json.currentUrl }}",
+            "phone": "={{ $('WhatsApp Trigger').item.json.data[0].messages[0].from }}",
+            "items_length": 0,
+            "state": "={{ $json.state }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "state",
+              "displayName": "state",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "userId",
+              "displayName": "userId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "userStateId",
+              "displayName": "userStateId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "info",
+              "displayName": "info",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "sub_menu",
+              "displayName": "sub_menu",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "base_url",
+              "displayName": "base_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "phone",
+              "displayName": "phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "items_length",
+              "displayName": "items_length",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "number",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        5344,
+        1152
+      ],
+      "id": "ce291e5b-589b-49dc-9779-8af7c6ea6c6d",
+      "name": "Execute Workflow24"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "ddf0020f-affc-4e34-8acc-ba0cbe6b025d",
+              "leftValue": "={{ $('WhatsApp Trigger').item.json.data[0].messages[0].interactive }}",
+              "rightValue": "",
+              "operator": {
+                "type": "object",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        3632,
+        -1248
+      ],
+      "id": "f83facca-f2b8-4300-8373-82c5718cbc4f",
+      "name": "boton menu inicial1"
     }
   ],
   "connections": {
@@ -8260,7 +9076,7 @@
         ],
         [
           {
-            "node": "obtenemos la respuesta del menu inicial",
+            "node": "boton menu inicial1",
             "type": "main",
             "index": 0
           }
@@ -8279,12 +9095,20 @@
             "index": 0
           }
         ],
-        [],
-        [],
-        [],
-        [],
-        [],
-        []
+        [
+          {
+            "node": "boton menu inicial",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "revisamos si se responde por boton",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     },
     "revisamos si ya existia": {
@@ -10254,6 +11078,255 @@
           }
         ]
       ]
+    },
+    "Edit Fields9": {
+      "main": [
+        [
+          {
+            "node": "mensaje inicial FAQ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields10": {
+      "main": [
+        [
+          {
+            "node": "Execute Workflow23",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "mensaje inicial FAQ": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields10",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "guardamos la respuesta de academico1": {
+      "main": [
+        [
+          {
+            "node": "Code2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "revisamos que la respuesta no sea erronea1": {
+      "main": [
+        [
+          {
+            "node": "Switch10",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Error section invalida1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields31": {
+      "main": [
+        [
+          {
+            "node": "mensaje inicial FAQ1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code31": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields31",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields32": {
+      "main": [
+        []
+      ]
+    },
+    "mensaje inicial FAQ1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields32",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code15": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields9",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch10": {
+      "main": [
+        [
+          {
+            "node": "Code15",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Code31",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "boton menu inicial": {
+      "main": [
+        [
+          {
+            "node": "request menu inicial",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "guardamos la respuesta de academico1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code2": {
+      "main": [
+        [
+          {
+            "node": "revisamos que la respuesta no sea erronea1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Error section invalida1": {
+      "main": [
+        [
+          {
+            "node": "No Operation, do nothing7",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "cuerpo funcion response_worker_FAQ": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request7",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "revisamos si se responde por boton": {
+      "main": [
+        [
+          {
+            "node": "el boton es menu inicial",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "cuerpo funcion response_worker_FAQ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request7": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields22",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields22": {
+      "main": [
+        [
+          {
+            "node": "Execute Workflow24",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "el boton es menu inicial": {
+      "main": [
+        [
+          {
+            "node": "request menu inicial",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "boton menu inicial1": {
+      "main": [
+        [
+          {
+            "node": "request menu inicial",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "obtenemos la respuesta del menu inicial",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -10262,7 +11335,7 @@
   "staticData": null,
   "meta": null,
   "pinData": {},
-  "versionId": "b5ca0fc9-3f7b-4c1a-a8a2-3f544504acae",
+  "versionId": "e6a8d4a1-ce29-4b9c-a19f-c691981bfe8d",
   "triggerCount": 1,
   "shared": [
     {
