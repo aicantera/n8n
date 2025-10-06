@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-10-06T20:24:09.722Z",
-  "updatedAt": "2025-10-06T20:38:10.000Z",
+  "updatedAt": "2025-10-06T21:15:21.000Z",
   "id": "RcU5AYZa5n53s5ya",
   "name": "Datos Entrevista ADQA",
   "active": false,
@@ -14,7 +14,7 @@
               "name": "nombre_candidato"
             },
             {
-              "name": "municipio"
+              "name": "oficina"
             }
           ]
         }
@@ -30,42 +30,107 @@
     },
     {
       "parameters": {
-        "promptType": "define",
-        "text": "={{ $json.municipio }}",
-        "batching": {}
-      },
-      "type": "@n8n/n8n-nodes-langchain.chainLlm",
-      "typeVersion": 1.7,
-      "position": [
-        208,
-        0
-      ],
-      "id": "97a5b460-797d-419a-8155-47f3420d5945",
-      "name": "Basic LLM Chain"
-    },
-    {
-      "parameters": {
-        "model": {
+        "documentId": {
           "__rl": true,
+          "value": "1l47Ez7S2iYSPl5eAfPtkMDIVuoNWvYFqYUcWMzq1W_0",
           "mode": "list",
-          "value": "gpt-4.1-mini"
+          "cachedResultName": "Datos Entrevista ADQA",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1l47Ez7S2iYSPl5eAfPtkMDIVuoNWvYFqYUcWMzq1W_0/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1l47Ez7S2iYSPl5eAfPtkMDIVuoNWvYFqYUcWMzq1W_0/edit#gid=0"
         },
         "options": {}
       },
-      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
-      "typeVersion": 1.2,
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
       "position": [
-        160,
-        160
+        224,
+        0
       ],
-      "id": "6c880732-61a6-40bf-b747-119525fbbf3d",
-      "name": "OpenAI Chat Model",
+      "id": "f7ce7d30-6f57-4412-8bf4-203a7c3894c5",
+      "name": "Get row(s) in sheet",
       "credentials": {
-        "openAiApi": {
-          "id": "0GqmLyS4fGSY8cgO",
-          "name": "OpenAi Agente RH ADQA"
+        "googleSheetsOAuth2Api": {
+          "id": "T1b495TNgv7GQdA8",
+          "name": "Google Sheets Jumperaron"
         }
       }
+    },
+    {
+      "parameters": {
+        "jsCode": "// --- Lógica para procesar los datos de la entrevista ---\n\n// Obtenemos el primer item de la entrada (los datos de la hoja de cálculo)\nconst interviewData = $items('Get row(s) in sheet')[0].json;\n\n// --- 1. Lógica para calcular la próxima fecha de entrevista ---\n\nconst dayMap = {\n  'domingo': 0, 'lunes': 1, 'martes': 2, 'miércoles': 3, 'miercoles': 3, \n  'jueves': 4, 'viernes': 5, 'sábado': 6\n};\n\nconst horario = (interviewData.HORARIO || '').toLowerCase();\n\n// Expresiones regulares para extraer días y horas\nconst dayRegex = /de (lunes|martes|miércoles|miercoles|jueves|viernes|sábado|domingo) a (lunes|martes|miércoles|miercoles|jueves|viernes|sábado|domingo)/;\nconst timeRegex = /(\\d{1,2}:\\d{2}\\s?(am|pm))/g;\n\nconst dayMatch = horario.match(dayRegex);\nconst timeMatches = horario.match(timeRegex);\n\nlet confirmationSentence = \"No se pudo determinar un horario. Favor de verificar el formato en la celda 'HORARIO'.\";\n\nif (dayMatch && timeMatches) {\n  const startDay = dayMap[dayMatch[1]];\n  const endDay = dayMap[dayMatch[2]];\n  const interviewStartTime = timeMatches[0];\n\n  // CORRECCIÓN: Se establece la zona horaria de México para el cálculo.\n  const timeZone = 'America/Mexico_City';\n  const nowInMexico = new Date().toLocaleString('en-US', { timeZone });\n  const todayInMexico = new Date(nowInMexico);\n\n  let foundDate = null;\n\n  // El bucle ahora usará `todayInMexico` como base para ser preciso.\n  // Busca en los próximos 14 días, empezando desde mañana (i=1).\n  for (let i = 1; i <= 14; i++) {\n    let futureDate = new Date(todayInMexico);\n    futureDate.setDate(futureDate.getDate() + i);\n    let currentDayOfWeek = futureDate.getDay();\n\n    if (currentDayOfWeek >= startDay && currentDayOfWeek <= endDay) {\n      // Encontramos la primera fecha válida y la guardamos\n      foundDate = futureDate;\n      break;\n    }\n  }\n\n  if (foundDate) {\n    // Formateamos la fecha a un formato amigable en español\n    const options = { weekday: 'long', day: 'numeric', month: 'long' };\n    const formattedDate = foundDate.toLocaleDateString('es-ES', options);\n    \n    // Construimos la oración de confirmación\n    confirmationSentence = `Te confirmamos tu entrevista para el día ${formattedDate} a las ${interviewStartTime}`;\n  } else {\n    confirmationSentence = \"No se encontraron fechas disponibles en las próximas 2 semanas.\"\n  }\n}\n\n// --- 2. Lógica para formatear las listas (documentos, importante, notas) ---\nconst formatList = (text) => {\n  if (!text) return '';\n  // Reemplaza las diagonal con saltos de línea y quita espacios extra\n  return text.split('/').map(s => `• ${s.trim()}`).join('\\n');\n}\n\n// --- 3. Preparamos el objeto de salida ---\n\n// Copiamos los datos originales\nconst output = { ...interviewData };\n\n// Añadimos los nuevos campos formateados\noutput.formattedConfirmation = confirmationSentence;\noutput.formattedDocuments = formatList(interviewData[\"DOCUMENTACION A PRESENTAR\"]);\noutput.formattedImportant = formatList(interviewData.IMPORTANTE);\noutput.formattedNote = formatList(interviewData.NOTA);\n\n// Devolvemos el resultado para que el siguiente nodo lo pueda usar\nreturn output;\n"
+      },
+      "name": "2. Calcular Fecha y Formatear Texto1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [
+        656,
+        -16
+      ],
+      "id": "4d1f4064-9dfa-4bb0-8f58-f30810e7b7e4",
+      "notes": "Este nodo contiene la lógica principal:\n1.  Lee el campo `HORARIO`.\n2.  Calcula la fecha de la próxima entrevista disponible a partir del día siguiente, **usando la zona horaria de México.**\n3.  Formatea las listas de documentos, notas, etc., para que se muestren correctamente."
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "mensajeFinal",
+              "value": "={{`${$('When Executed by Another Workflow').first().json.nombre_candidato}:\nGracias por la información proporcionada.\n${$json.formattedConfirmation}\n\n📌 Documentación a presentar:\n${$json.formattedDocuments}\n\n🚩 Importante:\n${$json.formattedImportant}\n\n🏢 Empresa: ${$json.EMPRESA}\n📍 Ubicación: ${$json.UBICACION}\n🗺️ Ver ubicación en Google Maps: ${$json.MAPA}\n\n🛎️ Nota:\n${$json.formattedNote}\n\nQuedamos atentos a cualquier duda. ¡Mucho éxito en tu entrevista!`}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "3. Construir Mensaje Final1",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        880,
+        -16
+      ],
+      "id": "512b3dec-ea11-4642-979f-6a121de4daae",
+      "notes": "Este nodo une toda la información (tanto la original como la procesada por el nodo de Código) para crear el mensaje de texto final y limpio que puedes enviar por WhatsApp, correo, etc."
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "a772fba6-2199-4d4f-92ea-aedaa7236f27",
+              "leftValue": "={{ $('When Executed by Another Workflow').item.json.oficina }}",
+              "rightValue": "={{ $json.OFICINA }}",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        432,
+        0
+      ],
+      "id": "01934eb4-1822-4a6b-b077-009e00ee8dea",
+      "name": "If"
     }
   ],
   "connections": {
@@ -73,19 +138,41 @@
       "main": [
         [
           {
-            "node": "Basic LLM Chain",
+            "node": "Get row(s) in sheet",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "OpenAI Chat Model": {
-      "ai_languageModel": [
+    "Get row(s) in sheet": {
+      "main": [
         [
           {
-            "node": "Basic LLM Chain",
-            "type": "ai_languageModel",
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "2. Calcular Fecha y Formatear Texto1": {
+      "main": [
+        [
+          {
+            "node": "3. Construir Mensaje Final1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "2. Calcular Fecha y Formatear Texto1",
+            "type": "main",
             "index": 0
           }
         ]
@@ -104,12 +191,12 @@
       {
         "json": {
           "nombre_candidato": "Rafael Gutierrez",
-          "municipio": "Tizayuca de Juárez"
+          "oficina": "ADQA ZUMPANGO"
         }
       }
     ]
   },
-  "versionId": "2892f4ce-64bb-4e8a-a374-dbb9502fc119",
+  "versionId": "cca08bcb-aa6f-4d26-989a-f8ca47bc02f2",
   "triggerCount": 0,
   "shared": [
     {
