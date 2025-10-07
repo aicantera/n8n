@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-06-24T22:28:19.611Z",
-  "updatedAt": "2025-10-07T15:25:40.000Z",
+  "updatedAt": "2025-10-07T16:44:05.000Z",
   "id": "PetXIW4fDRVoHgK5",
   "name": "chatbot sales",
   "active": true,
@@ -957,14 +957,14 @@
     },
     {
       "parameters": {
-        "content": "## Primer menú para el cliente\n* Aquí se seleccionan datos de informacion, costos, direccion, contactos entre otras cosas *\nHola! Bienvenid@ al Colegio Reims! 😃\n\n¿En qué te podemos ayudar? Escribe el número de la opción que deseas: \n1️⃣ Informes\n2️⃣ Ubicación \n\n\n\n\n// anterior\n1️⃣ Ubicación\n2️⃣ Costos \n3️⃣ Horario Extendido\n4️⃣ Programa Bilingüe\n5️⃣ Contáctame 📲\n\n6️⃣ Gracias, ya estoy hablando con un asesor ✅\n",
-        "height": 1140,
+        "content": "## Primer menú para el cliente\n",
+        "height": 196,
         "width": 1360
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        3632,
-        -2848
+        3728,
+        -2416
       ],
       "typeVersion": 1,
       "id": "62df9d47-0fa6-43ce-85b0-4fdeeb4ee4bb",
@@ -1302,14 +1302,14 @@
     },
     {
       "parameters": {
-        "content": "## Menú sobre información y dias de cita disponible",
+        "content": "## Menú sobre información de cita",
         "height": 260,
         "width": 1540
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        6960,
-        -2608
+        7552,
+        -2624
       ],
       "typeVersion": 1,
       "id": "790ec6fc-6482-401b-b61c-2592e4847711",
@@ -1327,8 +1327,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -992,
-        1584
+        -1312,
+        1264
       ],
       "id": "2ece1371-00e5-40d3-a02f-fb84520d897d",
       "name": "upsert_sale_by_phone",
@@ -1367,75 +1367,6 @@
     },
     {
       "parameters": {
-        "assignments": {
-          "assignments": [
-            {
-              "id": "c98a6b36-7460-466a-80d5-8158cb79135a",
-              "name": "currentEnviroment",
-              "value": "https://d5ec8dbc344b.ngrok-free.app",
-              "type": "string"
-            },
-            {
-              "id": "93d6d5a7-9724-4faf-9404-8a2d3b1d9083",
-              "name": "x-api-key",
-              "value": "bfc47ca54a9c812169f1e3c2b44c69d1",
-              "type": "string"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
-      "position": [
-        -4240,
-        768
-      ],
-      "id": "754f56c8-0bb8-45d4-b14f-f10e2a3ff4ee",
-      "name": "Edit Fields3"
-    },
-    {
-      "parameters": {
-        "url": "={{ $('Edit Fields3').item.json.currentEnviroment }}/api/v1/grow/opportunities/phone/{{ $('WhatsApp Trigger').item.json.data[0].messages[0].from }}/{{ $json.data.config.tenant_id }}",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "x-api-key",
-              "value": "={{ $('Edit Fields3').item.json['x-api-key'] }}"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        -3872,
-        768
-      ],
-      "id": "bea2534e-aa4a-49e4-bfb6-2bca78c1df9c",
-      "name": "buscamos oportunidad"
-    },
-    {
-      "parameters": {
-        "url": "={{ $json.currentEnviroment }}/api/v1/authmb/auth_guardian?phone={{ $('WhatsApp Trigger').item.json.data[0].messages[0].from }}",
-        "options": {}
-      },
-      "name": "Auth Guardian1",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 1,
-      "position": [
-        -5040,
-        1072
-      ],
-      "id": "b97e6b80-3655-432d-af5a-bc062d920c6c",
-      "notesInFlow": false,
-      "disabled": true,
-      "onError": "continueErrorOutput"
-    },
-    {
-      "parameters": {
         "updates": [
           "messages"
         ],
@@ -1471,126 +1402,6 @@
       "id": "38d70ae9-bfc4-4994-be08-ed35e5a2f9eb",
       "name": "WhatsApp Trigger",
       "notes": "este nodo combina la entrada del nodo de whatsapp independientemente de donde llegue"
-    },
-    {
-      "parameters": {
-        "conditions": {
-          "options": {
-            "caseSensitive": true,
-            "leftValue": "",
-            "typeValidation": "strict",
-            "version": 2
-          },
-          "conditions": [
-            {
-              "id": "b92b3487-a253-4ae4-a772-1ae4680de794",
-              "leftValue": "={{ $json.data.opportunities[0]._id }}",
-              "rightValue": "",
-              "operator": {
-                "type": "string",
-                "operation": "exists",
-                "singleValue": true
-              }
-            }
-          ],
-          "combinator": "and"
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 2.2,
-      "position": [
-        -3664,
-        768
-      ],
-      "id": "3496078a-b7a5-455d-aa8e-a719bc68203a",
-      "name": "existe la oportunidad?"
-    },
-    {
-      "parameters": {
-        "method": "POST",
-        "url": "={{ $('Edit Fields3').item.json.currentEnviroment }}/api/v1/messaging/whatsapp/webhook/sales",
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={\n    \"tenant_id\": \"{{ $('datos_num').item.json.data.config.tenant_id }}\",\n    \"opportunity_id\": \"{{ $json.data.opportunity_id }}\",\n    \"wa_data\": {{ JSON.stringify($('WhatsApp Trigger').item.json.data) }}\n}",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        -3232,
-        800
-      ],
-      "id": "5aa7b980-be67-4547-bdc5-9d36868805eb",
-      "name": "envio mensaje a agente"
-    },
-    {
-      "parameters": {
-        "method": "POST",
-        "url": "={{ $('Edit Fields3').item.json.currentEnviroment }}/api/v1/messaging/whatsapp/webhook/sales",
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={\n    \"tenant_id\": \"{{ $('datos_num').item.json.data.config.tenant_id }}\",\n    \"opportunity_id\": \"{{ $('buscamos oportunidad').item.json.data.opportunities[0]._id }}\",\n    \"wa_data\": {{ JSON.stringify($('WhatsApp Trigger').item.json.data) }}\n}",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        -3296,
-        576
-      ],
-      "id": "d27b9831-8327-4326-ad75-f3a0d2374ad6",
-      "name": "envio mensaje a agente1"
-    },
-    {
-      "parameters": {
-        "url": "={{ $json.currentEnviroment }}/api/v1/messaging/whatsapp/get-config-sales/{{ $('WhatsApp Trigger').item.json.data[0].metadata.phone_number_id }}",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "x-api-key",
-              "value": "={{ $json['x-api-key'] }}"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        -4048,
-        768
-      ],
-      "id": "bfb3fce6-8aca-4d25-8976-1199c7239655",
-      "name": "datos_num"
-    },
-    {
-      "parameters": {
-        "method": "POST",
-        "url": "={{ $('Edit Fields3').item.json.currentEnviroment }}/api/v1/grow/opportunity/simple",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "x-api-key",
-              "value": "={{ $('Edit Fields3').item.json['x-api-key'] }}"
-            }
-          ]
-        },
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={\n    \"guardian_first_name\": \"{{ $('WhatsApp Trigger').item.json.data[0].contacts[0].profile.name }}\",\n    \"guardian_last_name\": \"\", \n    \"phone\": \"{{ $('WhatsApp Trigger').item.json.data[0].messages[0].from }}\",\n    \"tenant_id\": \"{{ $('datos_num').item.json.data.config.tenant_id }}\",\n    \"phone_number_id\":\"{{ $('WhatsApp Trigger').item.json.data[0].metadata.phone_number_id }}\"\n} ",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        -3456,
-        864
-      ],
-      "id": "3ccebce3-669d-4a92-9f2b-3fd98472b9cc",
-      "name": "creamos la oportunidad y el usuario"
     },
     {
       "parameters": {
@@ -2473,8 +2284,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        6688,
-        -1744
+        7728,
+        -2096
       ],
       "id": "155d2a58-95c7-4ba1-94b0-e50b773eb844",
       "name": "Code30",
@@ -2527,8 +2338,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        6880,
-        -1744
+        7920,
+        -2096
       ],
       "id": "22b7cc35-d456-4157-b7f5-c8a9f234d7aa",
       "name": "Edit Fields29"
@@ -2562,8 +2373,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        7088,
-        -1744
+        8128,
+        -2096
       ],
       "id": "9cd388b4-0eba-4cf6-9193-657338e136df",
       "name": "Edit Fields30"
@@ -2593,8 +2404,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        7296,
-        -1744
+        8336,
+        -2096
       ],
       "id": "8e5f3a9d-ed03-4594-9812-8a72ca04fd05",
       "name": "mensaje desición ai/humano"
@@ -2705,8 +2516,8 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        7520,
-        -1744
+        8560,
+        -2096
       ],
       "id": "b3326199-5026-4b5c-a12f-57b6789e9753",
       "name": "Execute Workflow22"
@@ -4225,6 +4036,246 @@
       "typeVersion": 1,
       "id": "8afa3694-1f6d-4edb-aecf-bcd8e3b9ebf9",
       "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "## Mensaje de informacion para dejar datos",
+        "height": 260,
+        "width": 1540
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        6896,
+        -3248
+      ],
+      "typeVersion": 1,
+      "id": "f83c7cd9-4381-49ff-b587-1fdba0377621",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "content": "## INicio de proceso de FAQ",
+        "height": 260,
+        "width": 1540
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        7600,
+        -2192
+      ],
+      "typeVersion": 1,
+      "id": "f25ed081-773a-498c-8b3f-de0e2d3fd04c",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "cOoCwRPN9qfk0P6y",
+          "mode": "list",
+          "cachedResultName": "serebro sales cambio de estatus"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "state": "esperando_respuesta_menu_admicion",
+            "userStateId": "={{ $json.userStateId }}",
+            "userId": "={{ $json.userId }}",
+            "info": "=se presento menu de secciones",
+            "base_url": "={{ $('enviroment').item.json.currentUrl }}",
+            "phone": "={{ $('WhatsApp Trigger').item.json.data[0].messages[0].from }}",
+            "items_length": "={{ $('request sections1').item.json.data.items_length }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "state",
+              "displayName": "state",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "userId",
+              "displayName": "userId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "userStateId",
+              "displayName": "userStateId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "info",
+              "displayName": "info",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "sub_menu",
+              "displayName": "sub_menu",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "base_url",
+              "displayName": "base_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "phone",
+              "displayName": "phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "items_length",
+              "displayName": "items_length",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "number",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        8240,
+        -1664
+      ],
+      "id": "a2992a43-8825-48d5-be04-ac3b636a51bc",
+      "name": "Execute Workflow9"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "cb5bf561-971f-493b-8312-772ff7f21da3",
+              "name": "userStateId",
+              "value": "={{ $('Auth Guardian').item.json.data.session.user_id }}",
+              "type": "string"
+            },
+            {
+              "id": "6b9a8f55-16af-4e52-b897-0ac1cfca6083",
+              "name": "userId",
+              "value": "={{ $('Auth Guardian').item.json.data.session.user_id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        8064,
+        -1664
+      ],
+      "id": "639d7c66-5b97-4357-ba67-f43612c3868b",
+      "name": "body datos menu información2"
+    },
+    {
+      "parameters": {
+        "url": "={{ $('enviroment').item.json.currentUrl }}/api/v1/grow/sales/wa/school-sections",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-api-key",
+              "value": "={{ $('enviroment').item.json['x-api-key'] }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        7616,
+        -1664
+      ],
+      "id": "899e9e8e-f3d1-4d9b-955a-6af079bd54a3",
+      "name": "request sections1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v22.0/{{ $('Variables Wp').item.json.clienteIdWp }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ $('Variables Wp').item.json.tokenWp }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.data[0].messages[0].from }}\",\n  \"type\": \"interactive\",\n  \"interactive\": {\n    \"type\": \"button\",\n    \"body\": {\n      \"text\": {{ JSON.stringify($json.data.message_wa) }}\n    },\n    \"action\": {\n      \"buttons\": [\n        {\n          \"type\": \"reply\",\n          \"reply\": {\n            \"id\": \"menu_inicial\",\n            \"title\": \"Volver al menú\"\n          }\n        }\n      ]\n    }\n } }\n\n\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        7872,
+        -1664
+      ],
+      "id": "3ead2820-f59a-4301-adb5-dfaae8aa6c6d",
+      "name": "Mensaje menu secciones1"
+    },
+    {
+      "parameters": {
+        "content": "## proceso de admición",
+        "height": 260,
+        "width": 1540
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        7520,
+        -1760
+      ],
+      "typeVersion": 1,
+      "id": "8669256d-271a-42cd-833a-668b214fe3d9",
+      "name": "Sticky Note8"
     }
   ],
   "connections": {
@@ -4452,7 +4503,13 @@
             "index": 0
           }
         ],
-        []
+        [
+          {
+            "node": "request sections1",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     },
     "body datos menu información": {
@@ -4506,22 +4563,6 @@
         ]
       ]
     },
-    "Edit Fields3": {
-      "main": [
-        [
-          {
-            "node": "datos_num",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Auth Guardian1": {
-      "main": [
-        []
-      ]
-    },
     "sales cerebro": {
       "main": [
         [
@@ -4538,57 +4579,6 @@
         [
           {
             "node": "enviroment",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "buscamos oportunidad": {
-      "main": [
-        [
-          {
-            "node": "existe la oportunidad?",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "existe la oportunidad?": {
-      "main": [
-        [
-          {
-            "node": "envio mensaje a agente1",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "creamos la oportunidad y el usuario",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "datos_num": {
-      "main": [
-        [
-          {
-            "node": "buscamos oportunidad",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "creamos la oportunidad y el usuario": {
-      "main": [
-        [
-          {
-            "node": "envio mensaje a agente",
             "type": "main",
             "index": 0
           }
@@ -5383,6 +5373,39 @@
           }
         ]
       ]
+    },
+    "body datos menu información2": {
+      "main": [
+        [
+          {
+            "node": "Execute Workflow9",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "request sections1": {
+      "main": [
+        [
+          {
+            "node": "Mensaje menu secciones1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mensaje menu secciones1": {
+      "main": [
+        [
+          {
+            "node": "body datos menu información2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -5391,7 +5414,7 @@
   "staticData": null,
   "meta": null,
   "pinData": {},
-  "versionId": "6027c649-976e-412c-9db0-2f601653eb0f",
+  "versionId": "d3c4fee5-313a-43ef-a8b4-902c119fd207",
   "triggerCount": 1,
   "shared": [
     {
