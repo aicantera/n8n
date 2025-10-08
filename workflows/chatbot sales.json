@@ -1,9 +1,9 @@
 {
   "createdAt": "2025-06-24T22:28:19.611Z",
-  "updatedAt": "2025-10-08T16:59:05.000Z",
+  "updatedAt": "2025-10-08T17:38:03.000Z",
   "id": "PetXIW4fDRVoHgK5",
   "name": "chatbot sales",
-  "active": true,
+  "active": false,
   "isArchived": false,
   "nodes": [
     {
@@ -359,11 +359,11 @@
           "string": [
             {
               "name": "clienteIdWp",
-              "value": "={{ $json.data.config.phone_number_id }}"
+              "value": "={{ $('datos_num1').item.json.data.config.phone_number_id }}"
             },
             {
               "name": "tokenWp",
-              "value": "=Bearer {{ $json.data.config.whatsapp_token }}"
+              "value": "=Bearer {{ $('datos_num1').item.json.data.config.whatsapp_token }}"
             },
             {
               "name": "tenant_id",
@@ -1025,7 +1025,7 @@
       "type": "n8n-nodes-base.stickyNote",
       "position": [
         -2176,
-        288
+        320
       ],
       "typeVersion": 1,
       "id": "9374c8ca-a6f2-4032-ba04-2d2bbfbcc6a7",
@@ -1418,8 +1418,8 @@
       "type": "n8n-nodes-base.whatsAppTrigger",
       "typeVersion": 1,
       "position": [
-        -1776,
-        816
+        -2800,
+        800
       ],
       "id": "11077335-da47-487d-aebb-39c1d3e75a1c",
       "name": "sales cerebro",
@@ -1439,8 +1439,8 @@
       "type": "n8n-nodes-base.aggregate",
       "typeVersion": 1,
       "position": [
-        -1456,
-        816
+        -2480,
+        800
       ],
       "id": "38d70ae9-bfc4-4994-be08-ed35e5a2f9eb",
       "name": "WhatsApp Trigger",
@@ -1479,11 +1479,12 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -1056,
-        816
+        -2080,
+        800
       ],
       "id": "036f587c-00c2-4404-8b84-3e73ea13454c",
-      "name": "datos_num1"
+      "name": "datos_num1",
+      "executeOnce": true
     },
     {
       "parameters": {
@@ -1508,8 +1509,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -1248,
-        816
+        -2272,
+        800
       ],
       "id": "f3525633-9c04-42cb-9b56-a3f0879e2667",
       "name": "enviroment"
@@ -3058,7 +3059,8 @@
             "base_url": "={{ $('enviroment').item.json.currentUrl }}",
             "phone": "={{ $('WhatsApp Trigger').item.json.data[0].messages[0].from }}",
             "items_length": 0,
-            "state": "={{ $json.state }}"
+            "state": "={{ $json.state }}",
+            "tenant_id": "={{ $('datos_num1').item.json.data.config.tenant_id }}"
           },
           "matchingColumns": [],
           "schema": [
@@ -3136,6 +3138,26 @@
               "display": true,
               "canBeUsedToMatch": true,
               "type": "number",
+              "removed": false
+            },
+            {
+              "id": "type_conversation",
+              "displayName": "type_conversation",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "tenant_id",
+              "displayName": "tenant_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
               "removed": false
             }
           ],
@@ -3297,7 +3319,7 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"question\":\"{{ $json.pregunta_guardian }}\",\n  \"chat_type\":\"family_qa_assistant\"\n\n} ",
+        "jsonBody": "={\n  \"question\":\"{{ $json.pregunta_guardian }}\",\n  \"chat_type\":\"family_qa_assistant\",\n  \"phone_number_id\":\"{{ $('datos_num1').item.json.data.config.phone_number_id }}\"\n\n} ",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
@@ -3688,7 +3710,7 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('sales cerebro').item.json.messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": {{ JSON.stringify($json.data.message_wa) }}\n  }\n}\n",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('WhatsApp Trigger').item.json.data[0].messages[0].from }}\",\n  \"text\": \"interactive\",\n  \"text\": {\n    \"body\": {{ JSON.stringify($json.data.message_wa) }}\n  }\n}\n",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
@@ -3802,7 +3824,7 @@
           "parameters": [
             {
               "name": "x-api-key",
-              "value": "={{ $('Edit Fields3').item.json['x-api-key'] }}"
+              "value": "={{ $('enviroment').item.json['x-api-key'] }}"
             }
           ]
         },
@@ -4801,6 +4823,90 @@
       ],
       "id": "7bfc3885-a529-469b-aa36-61b6045ef989",
       "name": "No Operation, do nothing8"
+    },
+    {
+      "parameters": {
+        "url": "={{ $('enviroment').item.json.currentUrl }}/api/v1/grow/opportunities/phone/{{ $('WhatsApp Trigger').item.json.data[0].messages[0].from }}/{{ $('datos_num1').item.json.data.config.tenant_id }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-api-key",
+              "value": "={{ $('enviroment').item.json['x-api-key'] }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -1712,
+        816
+      ],
+      "id": "e6e8d58e-a8f1-4a86-b6c4-065f60a12b76",
+      "name": "buscamos oportunidad"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "b92b3487-a253-4ae4-a772-1ae4680de794",
+              "leftValue": "={{ $json.data.user._id }}{{ $('enviroment').item.json['x-api-key'] }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -1504,
+        816
+      ],
+      "id": "3968000d-aaf6-4fa5-be66-34372cc2f52b",
+      "name": "existe la oportunidad?"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('enviroment').item.json.currentUrl }}/api/v1/grow/opportunity/simple",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-api-key",
+              "value": "={{ $('enviroment').item.json['x-api-key'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n    \"guardian_first_name\": \"{{ $('WhatsApp Trigger').item.json.data[0].contacts[0].profile.name }}\",\n    \"guardian_last_name\": \"\", \n    \"phone\": \"{{ $('WhatsApp Trigger').item.json.data[0].messages[0].from }}\",\n    \"tenant_id\": \"{{ $('datos_num1').item.json.data.config.tenant_id }}\",\n    \"phone_number_id\":\"{{ $('WhatsApp Trigger').item.json.data[0].metadata.phone_number_id }}\"\n} ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -1296,
+        912
+      ],
+      "id": "79c81c31-717e-40a1-881b-c110af70b62c",
+      "name": "creamos la oportunidad y el usuario"
     }
   ],
   "connections": {
@@ -5151,7 +5257,7 @@
       "main": [
         [
           {
-            "node": "Variables Wp",
+            "node": "buscamos oportunidad",
             "type": "main",
             "index": 0
           }
@@ -6109,6 +6215,46 @@
           }
         ]
       ]
+    },
+    "buscamos oportunidad": {
+      "main": [
+        [
+          {
+            "node": "existe la oportunidad?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "existe la oportunidad?": {
+      "main": [
+        [
+          {
+            "node": "Variables Wp",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "creamos la oportunidad y el usuario",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "creamos la oportunidad y el usuario": {
+      "main": [
+        [
+          {
+            "node": "Variables Wp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -6116,40 +6262,8 @@
   },
   "staticData": null,
   "meta": null,
-  "pinData": {
-    "sales cerebro": [
-      {
-        "json": {
-          "messaging_product": "whatsapp",
-          "metadata": {
-            "display_phone_number": "5215665139893",
-            "phone_number_id": "669848086217681"
-          },
-          "contacts": [
-            {
-              "profile": {
-                "name": "Rick"
-              },
-              "wa_id": "5214434901193"
-            }
-          ],
-          "messages": [
-            {
-              "from": "5214434901193",
-              "id": "wamid.HBgNNTIxNDQzNDkwMTE5MxUCABIYFjNFQjA5REJGQTA0MjkzM0I1QjRGODUA",
-              "timestamp": "1759942623",
-              "text": {
-                "body": "1"
-              },
-              "type": "text"
-            }
-          ],
-          "field": "messages"
-        }
-      }
-    ]
-  },
-  "versionId": "16c4cc68-c755-4da7-8368-f441760e07b0",
+  "pinData": {},
+  "versionId": "cefe55bc-fa1f-4429-88b1-c268c185243a",
   "triggerCount": 1,
   "shared": [
     {
