@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-07-07T22:29:33.443Z",
-  "updatedAt": "2025-10-08T16:40:50.000Z",
+  "updatedAt": "2025-10-08T17:34:31.000Z",
   "id": "cOoCwRPN9qfk0P6y",
   "name": "serebro sales cambio de estatus",
   "active": false,
@@ -37,6 +37,9 @@
             },
             {
               "name": "type_conversation"
+            },
+            {
+              "name": "tenant_id"
             }
           ]
         }
@@ -52,7 +55,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// Lee el objeto de entrada\nconst input = items[0]?.json ?? {};\n\n// Lista blanca de campos esperados (evita que se cuelen otros)\nconst allowedKeys = [\n  'state',\n  'child_state',\n  'userId',\n  'phone',\n  'info',\n  'type_conversation',\n  'items_length'\n];\n\n// Función para detectar “vacío”\nconst isEmpty = (v) => (\n  v === null ||\n  v === undefined ||\n  (typeof v === 'string' && v.trim() === '') ||\n  (Array.isArray(v) && v.length === 0) ||\n  (typeof v === 'object' && !Array.isArray(v) && Object.keys(v).length === 0) ||\n  v === 'null' ||              // por si llega literal como string\n  v === 'undefined'            // idem\n);\n\n// Filtra solo claves permitidas y no vacías\nconst cleaned = Object.fromEntries(\n  Object.entries(input)\n    .filter(([k]) => allowedKeys.includes(k))\n    .filter(([_, v]) => !isEmpty(v))\n);\n\n// Agrega la fecha actual en formato requerido\ncleaned.now = new Date().toLocaleString('es-MX', {\n  timeZone: 'America/Mexico_City'\n});\n\n// Devuelve un único item con el objeto “limpio” + fecha\nreturn [{ json: cleaned }];\n"
+        "jsCode": "// Lee el objeto de entrada\nconst input = items[0]?.json ?? {};\n\n// Lista blanca de campos esperados (evita que se cuelen otros)\nconst allowedKeys = [\n  'state',\n  'child_state',\n  'userId',\n  'phone',\n  'info',\n  'type_conversation',\n  'items_length',\n  'tenant_id',\n];\n\n// Función para detectar “vacío”\nconst isEmpty = (v) => (\n  v === null ||\n  v === undefined ||\n  (typeof v === 'string' && v.trim() === '') ||\n  (Array.isArray(v) && v.length === 0) ||\n  (typeof v === 'object' && !Array.isArray(v) && Object.keys(v).length === 0) ||\n  v === 'null' ||              // por si llega literal como string\n  v === 'undefined'            // idem\n);\n\n// Filtra solo claves permitidas y no vacías\nconst cleaned = Object.fromEntries(\n  Object.entries(input)\n    .filter(([k]) => allowedKeys.includes(k))\n    .filter(([_, v]) => !isEmpty(v))\n);\n\n// Agrega la fecha actual en formato requerido\ncleaned.now = new Date().toLocaleString('es-MX', {\n  timeZone: 'America/Mexico_City'\n});\n\n// Devuelve un único item con el objeto “limpio” + fecha\nreturn [{ json: cleaned }];\n"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -83,7 +86,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// Tomamos el objeto limpio del nodo anterior\nconst input = items[0]?.json ?? {};\nconst states = {\n  parent_state:input.state,\n  child_state:input.child_state\n}\n\n// Construimos el body de la petición\nconst body = {\n  phone: input.phone,        // obligatorio\n  states: states,\nuser_id: input.userId,\n  information: input.info,         // mapeado a \"information\"\n  grade_state: input.grade_state,\n  type_conversation: input.type_conversation,\n  student_id: input.student_id,\n  course_selected: input.course_selected,\n  justify_state: input.justify_state,\n  ticket_type:input.ticket_type,\n  justify_selected_date: input.justify_selected_date,\n  items_length: input.items_length,\n  date: input.now                   // si quieres mandar la fecha actual también\n};\n\n// Retornamos un único item con el body\nreturn [{ json: body }];\n"
+        "jsCode": "// Tomamos el objeto limpio del nodo anterior\nconst input = items[0]?.json ?? {};\nconst states = {\n  parent_state:input.state,\n  child_state:input.child_state\n}\n\n// Construimos el body de la petición\nconst body = {\n  phone: input.phone,        // obligatorio\n  states: states,\nuser_id: input.userId,\n  information: input.info,         // mapeado a \"information\"\n  grade_state: input.grade_state,\n  type_conversation: input.type_conversation,\n  student_id: input.student_id,\n  course_selected: input.course_selected,\n  justify_state: input.justify_state,\n  ticket_type:input.ticket_type,\n  justify_selected_date: input.justify_selected_date,\n  items_length: input.items_length,\n  tenant_id: input.tenant_id,\n  date: input.now                   // si quieres mandar la fecha actual también\n};\n\n// Retornamos un único item con el body\nreturn [{ json: body }];\n"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -135,8 +138,25 @@
   },
   "staticData": null,
   "meta": null,
-  "pinData": {},
-  "versionId": "211e55eb-3812-4da6-827e-7a15365ae23b",
+  "pinData": {
+    "flujo de actualización base de datos": [
+      {
+        "json": {
+          "state": "espera_respuesta_faq",
+          "userId": "68e69b804cf75a1516c857dc",
+          "userStateId": "68e69b804cf75a1516c857dc",
+          "info": "se presenta menu preguntas frecuentes",
+          "sub_menu": null,
+          "base_url": "https://f61855b17e9d.ngrok-free.app",
+          "phone": "5214434901193",
+          "items_length": 0,
+          "type_conversation": null,
+          "tenant_id": "688aaaa45827994aef69c2ce"
+        }
+      }
+    ]
+  },
+  "versionId": "85b8d78d-af86-4dd9-9959-91c460a3e9b1",
   "triggerCount": 0,
   "shared": [
     {
