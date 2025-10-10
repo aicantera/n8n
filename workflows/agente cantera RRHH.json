@@ -1,9 +1,9 @@
 {
   "createdAt": "2025-07-04T01:32:16.335Z",
-  "updatedAt": "2025-10-08T23:19:59.000Z",
+  "updatedAt": "2025-10-10T17:22:19.000Z",
   "id": "MnOTeasqFgObIPRb",
   "name": "agente cantera RRHH",
-  "active": true,
+  "active": false,
   "isArchived": false,
   "nodes": [
     {
@@ -75,7 +75,7 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 2,
       "position": [
-        1592,
+        1600,
         -128
       ],
       "id": "72531901-be57-4378-8ee5-ab15bc5187db",
@@ -110,8 +110,9 @@
       "parameters": {
         "model": {
           "__rl": true,
+          "value": "gpt-4o-mini",
           "mode": "list",
-          "value": "gpt-4.1-mini"
+          "cachedResultName": "gpt-4o-mini"
         },
         "options": {}
       },
@@ -144,39 +145,6 @@
       ],
       "id": "e5501589-f0bf-4f22-8a6b-4ef99a5c5710",
       "name": "Simple Memory"
-    },
-    {
-      "parameters": {
-        "documentId": {
-          "__rl": true,
-          "value": "1lgYkZzul17dNtn4Qw_fJhFNw58HNZhlZcZKzXlIdRjU",
-          "mode": "list",
-          "cachedResultName": "puestos disponibles",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1lgYkZzul17dNtn4Qw_fJhFNw58HNZhlZcZKzXlIdRjU/edit?usp=drivesdk"
-        },
-        "sheetName": {
-          "__rl": true,
-          "value": "gid=0",
-          "mode": "list",
-          "cachedResultName": "Puestos",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1lgYkZzul17dNtn4Qw_fJhFNw58HNZhlZcZKzXlIdRjU/edit#gid=0"
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.googleSheetsTool",
-      "typeVersion": 4.6,
-      "position": [
-        1600,
-        96
-      ],
-      "id": "8b436fde-00da-416d-b1fd-536098caea89",
-      "name": "tool_vacantes",
-      "credentials": {
-        "googleSheetsOAuth2Api": {
-          "id": "VrznAZQXjQh9WpvY",
-          "name": "Google Sheets - Cantera"
-        }
-      }
     },
     {
       "parameters": {
@@ -950,6 +918,69 @@
           "name": "Supabase account - CANTERA"
         }
       }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1lgYkZzul17dNtn4Qw_fJhFNw58HNZhlZcZKzXlIdRjU",
+          "mode": "list",
+          "cachedResultName": "puestos disponibles",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1lgYkZzul17dNtn4Qw_fJhFNw58HNZhlZcZKzXlIdRjU/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Puestos",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1lgYkZzul17dNtn4Qw_fJhFNw58HNZhlZcZKzXlIdRjU/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.6,
+      "position": [
+        1344,
+        -32
+      ],
+      "id": "8b436fde-00da-416d-b1fd-536098caea89",
+      "name": "tool_vacantes1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "VrznAZQXjQh9WpvY",
+          "name": "Google Sheets - Cantera"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "tableId": "puestos_empresariales",
+        "limit": 500,
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "project_id",
+              "condition": "eq",
+              "keyValue": "2"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabaseTool",
+      "typeVersion": 1,
+      "position": [
+        1600,
+        96
+      ],
+      "id": "44e3ea70-5009-4463-9de1-45856892bdcd",
+      "name": "Get many rows in Supabase",
+      "credentials": {
+        "supabaseApi": {
+          "id": "ty0KiXsEYP1uJ8t9",
+          "name": "Supabase account - CANTERA"
+        }
+      }
     }
   ],
   "connections": {
@@ -1008,17 +1039,6 @@
           {
             "node": "AI Agent",
             "type": "ai_memory",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "tool_vacantes": {
-      "ai_tool": [
-        [
-          {
-            "node": "AI Agent",
-            "type": "ai_tool",
             "index": 0
           }
         ]
@@ -1184,6 +1204,22 @@
           }
         ]
       ]
+    },
+    "tool_vacantes1": {
+      "ai_tool": [
+        []
+      ]
+    },
+    "Get many rows in Supabase": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -1195,36 +1231,8 @@
   "meta": {
     "templateCredsSetupCompleted": true
   },
-  "pinData": {
-    "Telegram Trigger": [
-      {
-        "json": {
-          "update_id": 379369191,
-          "message": {
-            "message_id": 311,
-            "from": {
-              "id": 775456693,
-              "is_bot": false,
-              "first_name": "Ricardo",
-              "last_name": "Correa",
-              "username": "CorreaRicardo",
-              "language_code": "es"
-            },
-            "chat": {
-              "id": 775456693,
-              "first_name": "Ricardo",
-              "last_name": "Correa",
-              "username": "CorreaRicardo",
-              "type": "private"
-            },
-            "date": 1759453894,
-            "text": "tengo un año sabatico me gustaria que fuera en enero del año que viene a la hora que sea"
-          }
-        }
-      }
-    ]
-  },
-  "versionId": "a5f83e77-17c3-4f0a-9ee0-93d74c7aabbd",
+  "pinData": {},
+  "versionId": "5bcab12c-bf0d-46df-ae49-9c3530cd64e8",
   "triggerCount": 1,
   "shared": [
     {
