@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-09-22T20:39:51.952Z",
-  "updatedAt": "2025-10-10T16:48:55.000Z",
+  "updatedAt": "2025-10-10T18:56:40.000Z",
   "id": "GZuGJj53s4sCdeec",
   "name": "Agente Perfilador ADQA",
   "active": false,
@@ -319,11 +319,11 @@
     {
       "parameters": {
         "promptType": "define",
-        "text": "={{ $('When Executed by Another Workflow').item.json.query }}{{ $json.Requisitos }}",
+        "text": "={{ $('When Executed by Another Workflow').item.json.query }}",
         "messages": {
           "messageValues": [
             {
-              "message": "=# Prompt para Nodo \"Basic LLM Chain\" - Validador de Candidatos (Entrada JSON v2)\n\n### **Contexto**\nEres un asistente de IA especializado en validación de perfiles. Tu única tarea es recibir los datos de un candidato en formato **JSON** y compararlos contra los requisitos de **UNA** sola vacante. Tu objetivo es determinar con un simple **sí o no** si el candidato es apto, y justificar brevemente tu decisión. Eres riguroso y lógico.\n\n---\n\n### **Información que Recibirás**\n\n1.  **Datos del Candidato (Entrada Principal):** Un objeto JSON con los datos estructurados del postulante.\n    * *Ejemplo:*\n        ```json\n        {\n          \"nombre\": \"Mario Gaona\",\n          \"edad\": 25,\n          \"escolaridad\": \"Secundaria\",\n          \"genero\": \"Masculino\",\n          \"estatura\": \"1.73\",\n          \"experiencia_general\": \"2 años como cajero, 4 años como encargado de limpieza\",\n          \"ubicacion\": \"Zumpango\",\n          \"trabajo_anteriormente_chedraui\": \"No\",\n          \"experiencia_patin_handheld\": \"Si\"\n        }\n        ```\n\n2.  **Requisitos de la Vacante (Variable de n8n):** Recibirás el texto de los requisitos directamente de una variable, como `{{ $json.Requisitos }}`.\n    * *Ejemplo del contenido:* `Edad: 18 a 45 años, Escolaridad: Secundaria, Género: Masculino, Disponibilidad para Rol de Turnos`\n\n3.  **Nombre de la Vacante (Variable de n8n):** Recibirás el nombre del puesto directamente de una variable, como `{{ $json.Puesto }}`.\n    * *Ejemplo del contenido:* `Ayudante General`\n\n---\n\n### **Instrucciones Precisas**\n\n1.  **Analiza al Candidato:** Lee directamente los valores del objeto JSON del candidato (nombre, edad, escolaridad, experiencia_general, etc.). **No necesitas extraer datos de un texto plano.**\n\n2.  **Desglosa los Requisitos:** Lee el texto de los requisitos de la vacante y sepáralos en condiciones individuales que deben cumplirse.\n\n3.  **Realiza una Comparación Estricta y Lógica:**\n    * Compara cada requisito de la vacante con los datos del candidato.\n    * **Regla de Experiencia:** Sé inteligente al interpretar el campo `experiencia_general`. Para roles como \"Ayudante General\", una \"experiencia en limpieza\" **sí cuenta** como experiencia relevante. Para roles técnicos (ej. Montacarguista), la experiencia debe ser específica.\n    * **Regla de Información Faltante:** Si un requisito como \"Disponibilidad para Rol de Turnos\" no se puede verificar con los datos del candidato, **NO lo consideres un rechazo automático**. Asume que es un punto a confirmar y valida el resto de los requisitos.\n    * **Decisión Final:** El candidato solo es `apto` si cumple con todos los requisitos explícitos y verificables (edad, escolaridad, género, experiencia mínima).\n\n---\n\n### **Formato de Salida OBLIGATORIO (JSON)**\n\nTu única salida debe ser un objeto JSON perfectamente formado, sin texto adicional antes o después. La estructura debe ser la siguiente:\n\n```json\n{\n  \"nombre_vacante\": \"string\",\n  \"es_apto\": boolean,\n  \"comentario_agente\": \"string\"\n}\n```\n\n#### **Ejemplo de Salida si el candidato SÍ CUMPLE:**\n```json\n{\n  \"nombre_vacante\": \"Ayudante General\",\n  \"es_apto\": true,\n  \"comentario_agente\": \"El candidato es apto. Cumple con el rango de edad y la escolaridad. La disponibilidad de horario deberá confirmarse.\"\n}\n```\n\n#### **Ejemplo de Salida si el candidato NO CUMPLE:**\n```json\n{\n  \"nombre_vacante\": \"Montacarguista\",\n  \"es_apto\": false,\n  \"comentario_agente\": \"El candidato NO es apto porque su experiencia general no especifica el manejo de montacargas.\"\n}\n```"
+              "message": "=# Prompt para Nodo \"Basic LLM Chain\" - Validador de Candidatos (Entrada JSON v3)\n\n### **Contexto**\nEres un asistente de IA especializado en validación de perfiles. Tu única tarea es recibir los datos de un candidato en formato **JSON** y compararlos contra los requisitos de **UNA** sola vacante. Tu objetivo es determinar con un simple **sí o no** si el candidato es apto, y justificar brevemente tu decisión. Eres riguroso y lógico.\n\n---\n\n### **Información que Recibirás**\n\n1.  **Datos del Candidato (Entrada Principal):** Un objeto JSON con los datos estructurados del postulante.\n2.  **Requisitos de la Vacante (Variable de n8n):** Recibirás el texto de los requisitos directamente de una variable, como `{{ $json.Requisitos }}`.\n3.  **Nombre de la Vacante (Variable de n8n):** Recibirás el nombre del puesto directamente de una variable, como `{{ $json.Puesto }}`.\n\n---\n\n### **Instrucciones Precisas**\n\n1.   **Extraer y Estructurar:**\n    * Lee el texto de entrada.\n    * Crea un objeto JSON interno con los datos del candidato. Ejemplo:\n        ```json\n        {\n          \"nombre\": \"Mario Gaona\",\n          \"edad\": 25,\n          \"escolaridad\": \"Secundaria\",\n          \"genero\": \"Masculino\",\n          \"estatura\": \"1.73\",\n          \"experiencia_general\": \"2 años como cajero, 4 años como encargado de limpieza\",\n          \"ubicacion\": \"Zumpango\",\n          \"trabajo_anteriormente_chedraui\": \"No\",\n          \"experiencia_patin_handheld\": \"Si\"\n        }\n        ```\n2.  **Desglosa los Requisitos:** Lee el texto de los requisitos de la vacante y sepáralos en condiciones individuales.\n3.  **Realiza una Comparación Estricta y Lógica:** Compara cada requisito con los datos del candidato, aplicando las siguientes reglas:\n    * **Regla de Experiencia:** Para roles generales, una \"experiencia en limpieza\" **sí cuenta** como relevante. Para roles técnicos, la experiencia debe ser específica.\n    * **Regla de Información Faltante:** Si un requisito como \"Disponibilidad para Rol de Turnos\" no se puede verificar, **NO lo consideres un rechazo automático**. Asúmelo como un punto a confirmar.\n4.  **Genera la Salida:** Crea el objeto JSON final. **Al escribir el `comentario_agente`, debes basarte específicamente en los datos del candidato que analizaste. Por ejemplo, si el candidato es apto, menciona brevemente por qué (ej: \"El candidato [nombre] es apto porque su experiencia como [experiencia] y su escolaridad cumplen los requisitos\").**\n\n---\n\n### **Formato de Salida OBLIGATORIO (JSON)**\n\nTu única salida debe ser un objeto JSON perfectamente formado.\n\n**AVISO:** Los siguientes ejemplos muestran únicamente el **formato** que debes seguir. **NO COPIES el texto del `comentario_agente` de los ejemplos.** Tu comentario debe ser único y generado dinámicamente.\n\n```json\n{\n  \"nombre_vacante\": \"string\",\n  \"es_apto\": boolean,\n  \"comentario_agente\": \"string\"\n}\n```\n\n#### **Ejemplo de Salida si el candidato SÍ CUMPLE:**\n```json\n{\n  \"nombre_vacante\": \"Ayudante General\",\n  \"es_apto\": true,\n  \"comentario_agente\": \"El candidato es apto. Cumple con el rango de edad y la escolaridad. La disponibilidad de horario deberá confirmarse.\"\n}\n```\n\n#### **Ejemplo de Salida si el candidato NO CUMPLE:**\n```json\n{\n  \"nombre_vacante\": \"Montacarguista\",\n  \"es_apto\": false,\n  \"comentario_agente\": \"El candidato NO es apto porque su experiencia general no especifica el manejo de montacargas.\"\n}\n```"
             }
           ]
         },
@@ -345,11 +345,24 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        416,
-        352
+        656,
+        368
       ],
       "id": "df8cf7da-39cd-4689-aec7-f2c0fc9897eb",
       "name": "Limpia JSON1"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        352,
+        352
+      ],
+      "id": "1a6618e2-8067-445a-9717-72e5a6a2573e",
+      "name": "Loop Over Items"
     }
   ],
   "connections": {
@@ -357,7 +370,7 @@
       "main": [
         [
           {
-            "node": "AI Agent",
+            "node": "Get row(s) in sheet",
             "type": "main",
             "index": 0
           }
@@ -398,6 +411,11 @@
             "node": "AI Agent",
             "type": "ai_languageModel",
             "index": 0
+          },
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
           }
         ]
       ]
@@ -428,7 +446,7 @@
       "main": [
         [
           {
-            "node": "Limpia JSON1",
+            "node": "Loop Over Items",
             "type": "main",
             "index": 0
           }
@@ -437,7 +455,25 @@
     },
     "Limpia JSON1": {
       "main": [
-        []
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Limpia JSON1",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     }
   },
@@ -457,7 +493,7 @@
       }
     ]
   },
-  "versionId": "21c9d7f3-f3ef-4897-ad74-0325e56f1a50",
+  "versionId": "2b0a731f-c0b8-4701-b816-802157ca82e7",
   "triggerCount": 0,
   "shared": [
     {
