@@ -1,0 +1,417 @@
+{
+  "createdAt": "2025-10-28T00:00:07.937Z",
+  "updatedAt": "2025-10-28T18:48:35.000Z",
+  "id": "7lzqv35Kh80vbZkE",
+  "name": "envio de documentacion a correo AI",
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "910a6999-c4fb-4a6c-890e-ec629a571100",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -224,
+        -608
+      ],
+      "id": "5f70a611-063f-4088-94c7-3f0be850dc25",
+      "name": "Webhook",
+      "webhookId": "910a6999-c4fb-4a6c-890e-ec629a571100"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.body.content }}",
+        "hasOutputParser": true,
+        "messages": {
+          "messageValues": [
+            {
+              "message": "Actúas como redactor-maquetador para Google Docs.\n\nObjetivo: Convierte el siguiente Markdown en HTML semántico LIMPIO y profesional, listo para importarse a Google Docs.\n\nRequisitos:\n- Usa etiquetas HTML estándar: <h1>, <h2>, <h3>, <p>, <ul>/<ol>/<li>, <strong>/<em>, <a>, <blockquote>, <code> (solo inline si es estrictamente necesario), <table>/<thead>/<tbody>/<tr>/<th>/<td>.\n- No devuelvas ninguna sintaxis de Markdown (nada de #, ##, **, ``` ni | : - crudos de tabla).\n- Las TABLAS deben ser SIEMPRE tablas HTML con <thead> y <tbody> y columnas claras.\n- El tono debe ser formal y claro, con redacción profesional y estructura lógica (encabezados y secciones coherentes).\n- No incluyas explicaciones fuera del JSON.\n\nDevuelve SOLO un JSON con este esquema EXACTO:\n{\n  \"title\": \"titulo para el documento\",\n  \"html\": \"<!doctype html><html><head><meta charset=\\\"utf-8\\\"><title>...</title></head><body>...contenido en HTML semántico...</body></html>\"\n}\n\nContenido a convertir:\n---\n{{ $json.body.content }}\n---"
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        48,
+        -640
+      ],
+      "id": "a63606dd-4782-422a-87a0-1b8deaf23801",
+      "name": "Basic LLM Chain1"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -48,
+        -400
+      ],
+      "id": "0f67d42c-74f5-4941-9094-604e05ca0052",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "ZmWqQ5PGylh4Y05s",
+          "name": "OpenAi account - CANTERA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"title\": \"titulo para el documento\",\n  \"html\": \"<!doctype html><html>...</html>\",\n  \"subject\":\"texto para enviar correo\",\n  \"message\":\"contenido de correo electronico para envio\"\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        144,
+        -400
+      ],
+      "id": "6542710e-65d5-4e31-bdeb-a116e826a167",
+      "name": "Structured Output Parser1"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"status\": 200,\n  \"title\": \"={{ $json.output.title }}\",\n  \"driveFileId\": \"={{ $json.id }}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        1456,
+        -640
+      ],
+      "id": "6f19ade9-3f52-4dee-bbca-23976421f122",
+      "name": "Respond to Webhook1"
+    },
+    {
+      "parameters": {
+        "jsCode": "const text = $input.first().json.output.html\nconst buffer = Buffer.from(text, 'utf8');\nconst binaryData = {\n  data: buffer.toString('base64'),\n  mimeType: 'application/octet-stream',\n  fileName: '$input.first().json.output.title.html',\n};\nitems[0].binary = { data: binaryData };\nreturn items;\n"
+      },
+      "id": "447893e8-8bf5-415e-9d72-43b6e7a3d2fa",
+      "name": "Convert HTML to File",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        432,
+        -640
+      ],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://v2.convertapi.com/convert/html/to/pdf",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpQueryAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Accept",
+              "value": "application/octet-stream"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "parameterType": "formBinaryData",
+              "name": "=file",
+              "inputDataFieldName": "data"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      },
+      "id": "77537e21-08e4-4ce5-ab53-91e43c9796a9",
+      "name": "Convert File to PDF",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        720,
+        -640
+      ],
+      "notesInFlow": true,
+      "typeVersion": 4.2,
+      "credentials": {
+        "httpQueryAuth": {
+          "id": "c1grKMtHaEdFJuje",
+          "name": "Query Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "toRecipients": "={{ $('Webhook').item.json.body.email }}",
+        "subject": "={{ $json.output.subject }}",
+        "bodyContent": "={{ $json.output.message }}",
+        "additionalFields": {
+          "attachments": {
+            "attachments": [
+              {
+                "binaryPropertyName": "data"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.microsoftOutlook",
+      "typeVersion": 2,
+      "position": [
+        1216,
+        -640
+      ],
+      "id": "55875c62-e5fd-4c1c-a290-a0d2d7adc1e7",
+      "name": "Send a message",
+      "webhookId": "c846d414-2d3e-47cb-ab86-caed5ae65143",
+      "credentials": {
+        "microsoftOutlookOAuth2Api": {
+          "id": "1e9fbzjIiV9wNv2j",
+          "name": "Microsoft Outlook account - azure@canteradigital.mx"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Si tu binary se llama distinto a \"data\", cámbialo aquí\nconst binField = 'data';\nconst nombre_file= $input.first().json.output.title + '.pdf'\n\nfor (const item of items) {\n  if (item.binary?.[binField]) {\n    item.binary[binField].fileName = nombre_file;\n    item.binary[binField].fileExtension = 'pdf';\n    item.binary[binField].mimeType = 'application/pdf'; // opcional pero recomendable\n  }\n}\nreturn items;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        944,
+        -640
+      ],
+      "id": "11266da7-8e76-4741-9892-34d31634cdf4",
+      "name": "Code in JavaScript"
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain1": {
+      "main": [
+        [
+          {
+            "node": "Convert HTML to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser1": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Basic LLM Chain1",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert HTML to File": {
+      "main": [
+        [
+          {
+            "node": "Convert File to PDF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert File to PDF": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {
+    "Webhook": [
+      {
+        "json": {
+          "headers": {
+            "host": "ia.canteradigital.mx",
+            "user-agent": "Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko); compatible; ChatGPT-User/1.0; +https://openai.com/bot",
+            "content-length": "9514",
+            "accept": "*/*",
+            "accept-encoding": "gzip, deflate, br",
+            "content-type": "application/json",
+            "openai-conversation-id": "bbb26404-c4ec-5848-b17e-11120db71a91",
+            "openai-ephemeral-user-id": "a9b8671a-ab18-5cd2-9475-ab14d570c2df",
+            "openai-gpt-id": "g-68f67e65a7848191ae0707b29d70bb32",
+            "traceparent": "00-6900f91f000000000426dc9b43cbffc0-d37be48663ebfa8b-00",
+            "tracestate": "dd=s:-1;p:60b0608adee7c408;t.dm:-3",
+            "x-datadog-parent-id": "10364327038150401336",
+            "x-datadog-sampling-priority": "-1",
+            "x-datadog-tags": "_dd.p.tid=6900f91f00000000,_dd.p.dm=-3",
+            "x-datadog-trace-id": "299168984682201024",
+            "x-forwarded-for": "52.252.113.244",
+            "x-forwarded-host": "ia.canteradigital.mx",
+            "x-forwarded-port": "443",
+            "x-forwarded-proto": "https",
+            "x-forwarded-server": "ff7b5d3c7aa9",
+            "x-real-ip": "52.252.113.244",
+            "x-request-id": "05d91f56-8a2b-4c0c-a3b7-407bff8f91e7/2ti8"
+          },
+          "params": {},
+          "query": {},
+          "body": {
+            "content": "## 🧩 Documentación completa del flujo de soporte técnico - Cantera Digital\n\n---\n\n### 1. Resumen general del sistema\n\nEl sistema de soporte técnico de **Cantera Digital** está compuesto por **dos flujos de n8n interconectados** que automatizan la atención al cliente, la generación de tickets y la notificación al equipo interno.\n\n**Objetivo general:** Automatizar el proceso de soporte técnico para clientes que se comunican desde la página web, garantizando una atención empática, estructurada y con registro automático en la base de datos y canales internos.\n\n**Componentes principales:**\n\n1. 💬 **Flujo principal:** `Canterin - Asistente de soporte técnico`\n2. 📩 **Flujo secundario:** `Notificación soporte técnico`\n\n---\n\n### 2. Flujo principal: Canterin - Asistente de soporte técnico\n\n#### 🧠 Propósito\n\nEste flujo actúa como asistente conversacional que interactúa directamente con el cliente. Su función es **recibir mensajes desde el chat web**, identificar automáticamente el proyecto relacionado, recopilar la información del incidente y enviar los datos consolidados al flujo de notificación.\n\n#### 🧩 Nodos principales y funciones\n\n1. **When chat message received (@n8n/n8n-nodes-langchain.chatTrigger)**\n\n   - **Tipo:** Disparador (Trigger)\n   - **Función:** Activa el flujo cuando un usuario envía un mensaje desde el chat de la página web.\n   - **Entradas esperadas:**\n     - `chatInput`: mensaje del cliente.\n     - `metadata`: contiene metadatos del cliente (project_id, nombre, correo, teléfono).\n   - **Conexión:** Envía el mensaje al nodo **AI Agent**.\n\n2. **AI Agent (@n8n/n8n-nodes-langchain.agent)**\n\n   - **Tipo:** Agente de lenguaje natural con rol definido.\n   - **Función:** Simula al asistente **Canterin**, quien guía al cliente mediante una conversación empática y estructurada.\n   - **Configuraciones clave:**\n     - **Rol:** Asistente técnico empático y paciente.\n     - **Objetivo:** Identificar el problema, obtener datos del cliente y confirmar la información antes de generar el ticket.\n     - **Herramientas integradas:**\n       - `get_project_by_id`: Consulta información del proyecto desde Supabase.\n       - `get_pm_by_id`: Obtiene datos del project manager asignado.\n       - `send_message_and_ticket`: Llama al flujo de notificación.\n\n3. **OpenAI Chat Model (@n8n/n8n-nodes-langchain.lmChatOpenAi)**\n\n   - **Modelo:** GPT-4.1-mini.\n   - **Función:** Provee la capacidad de conversación del agente Canterin.\n   - **Credenciales:** `OpenAi account - CANTERA`.\n\n4. **Simple Memory / Simple Memory1 (@n8n/n8n-nodes-langchain.memoryBufferWindow)**\n\n   - **Función:** Mantiene la memoria de la conversación.\n   - **Ventana de contexto:** 30-80 mensajes según el nodo.\n   - **Uso:** Permite que Canterin recuerde los mensajes anteriores y dé continuidad a la conversación.\n\n5. **get_project_by_id (Supabase)**\n\n   - **Función:** Busca el proyecto correspondiente usando el `project_id` recibido en los metadatos.\n   - **Base de datos:** `project`.\n   - **Retorno:** Información del proyecto y su project manager.\n\n6. **get_pm_by_id (Supabase)**\n\n   - **Función:** Obtiene la información del project manager (nombre, correo, contacto) asociado al proyecto.\n   - **Base de datos:** `project_manager`.\n\n7. **send_message_and_ticket (@n8n/n8n-nodes-langchain.toolWorkflow)**\n\n   - **Función:** Envía al flujo de notificación todos los datos recopilados del cliente y el incidente.\n   - **Workflow vinculado:** `notificación soporte técnico (EYAzFuhpPB4EoUMe)`.\n   - **Datos enviados:**\n     - `mensaje_soporte`\n     - `numero_soporte`\n     - `email_pm`\n     - `project_id`\n     - `subject`\n\n#### 🧭 Flujo conversacional de Canterin\n\n1. Saludo inicial e identificación automática del proyecto.\n2. Detección del problema reportado por el cliente.\n3. Recolección de detalles técnicos (inicio, impacto, síntomas, folios previos, etc.).\n4. Solicitud de datos de contacto (nombre, teléfono, correo).\n5. Confirmación y envío del resumen del soporte técnico.\n6. Llamada al flujo secundario para generar el ticket y notificar al equipo.\n\n---\n\n### 3. Flujo secundario: Notificación soporte técnico\n\n#### 🧠 Propósito\n\nRecibir la información del incidente desde el flujo principal y ejecutar las acciones internas:\n\n- Enviar alertas a Telegram y Outlook.\n- Registrar el ticket en la base de datos Supabase.\n- Generar un folio único para seguimiento.\n\n#### 🧩 Nodos principales y funciones\n\n1. **inicio (Execute Workflow Trigger)**\n\n   - **Función:** Recibe las variables enviadas desde el flujo principal:\n     - `mensaje_soporte`\n     - `numero_soporte`\n     - `email_pm`\n     - `project_id`\n     - `subject`\n\n2. **Send a text message (Telegram)**\n\n   - **Función:** Envía un mensaje al canal de Telegram de alertas.\n   - **Chat ID:** `775456693`.\n   - **Mensaje:** Contiene el texto del reporte (`mensaje_soporte`).\n\n3. **Send a message (Microsoft Outlook)**\n\n   - **Función:** Envía un correo electrónico de soporte al asesor comercial.\n   - **Destinatario:** `rcorrea@canteradigital.mx`.\n   - **Asunto:** `subject` del reporte.\n   - **Cuerpo:** Contenido del mensaje de soporte.\n\n4. **Code in JavaScript (n8n Code Node)**\n\n   - **Función:** Genera un número de folio único usando el timestamp actual:\n     ```js\n     return { folio: Date.now().toString() }\n     ```\n\n5. **Create a row (Supabase)**\n\n   - **Función:** Crea un registro en la tabla `ticket`.\n   - **Campos guardados:** `folio`, `description`, `project_id`.\n\n6. **Edit Fields (Set Node)**\n\n   - **Función:** Añade campos de salida finales:\n     - `respuesta`: “mensaje enviado de manera exitosa”.\n     - `folio`: folio generado.\n\n#### 🔄 Flujo general de notificación\n\n1. Recibe los datos del flujo Canterin.\n2. Envía alerta a Telegram.\n3. Envía correo de confirmación a Outlook.\n4. Genera folio único.\n5. Crea registro en Supabase.\n6. Devuelve mensaje de éxito y folio.\n\n---\n\n### 4. Integración entre flujos\n\n- El nodo **send_message_and_ticket** del flujo *Canterin* invoca el flujo *Notificación soporte técnico*.\n- Los datos se transfieren mediante `workflowInputs` definidos explícitamente.\n- Esto permite modularidad: Canterin puede ejecutar el flujo de notificación sin duplicar nodos.\n\n---\n\n### 5. Ejemplo de ejecución completa\n\n**Cliente envía mensaje desde la web:**\n\n> “Hola, mi agente no responde correctamente.”\n\n**Metadatos recibidos:**\n\n```json\n{\n  \"project_id\": 14,\n  \"nombre\": \"Ricardo Correa\",\n  \"correo\": \"ricardo@gmail.com\",\n  \"telefono\": \"4422115544\"\n}\n```\n\n**Flujo:**\n\n1. El webhook activa Canterin.\n2. Canterin identifica el proyecto automáticamente vía `get_project_by_id`.\n3. Obtiene los datos del PM con `get_pm_by_id`.\n4. Conversa con el cliente recopilando todos los detalles del problema.\n5. Valida la información y genera el resumen del soporte.\n6. Envía los datos al flujo de notificación.\n7. El flujo de notificación:\n   - Envía alerta a Telegram.\n   - Envía correo de reporte.\n   - Registra el ticket en Supabase.\n   - Retorna el folio generado.\n\n**Resultado final:**\n\n> “Listo, he registrado tu caso con el folio **1761153348588**. El project manager se pondrá en contacto contigo muy pronto.”\n\n---\n\n### 6. Notas técnicas y recomendaciones\n\n- **Seguridad:** Nunca exponer IDs internos o correos en la conversación con el cliente.\n- **Zona horaria:** Todos los registros usan hora de Ciudad de México (CDMX).\n- **Manejo de errores:** Si Supabase o Outlook fallan, configurar retry o fallback vía alertas.\n- **Mantenimiento:** Revisar periódicamente credenciales de OpenAI, Supabase y Outlook.\n\n---\n\n### 7. 🧭 Diagrama visual del flujo completo\n\nRepresentación general del proceso:\n\n```\n[Cliente en Web]\n     │\n     ▼\n[When chat message received]\n     │\n     ▼\n[AI Agent - Canterin]\n     │  ├─> [get_project_by_id]\n     │  ├─> [get_pm_by_id]\n     │  └─> [send_message_and_ticket]\n                     │\n                     ▼\n         [Flujo: Notificación soporte técnico]\n                     │\n         ├─> [Telegram - alerta]\n         ├─> [Outlook - correo]\n         ├─> [Generar folio JS]\n         ├─> [Crear ticket en Supabase]\n         └─> [Confirmar envío + folio]\n```\n\n---\n\n**📘 Resultado final:** Un sistema de soporte técnico automatizado, empático y estructurado que permite a Cantera Digital atender incidencias de clientes de forma eficiente, registrando todo en base de datos y notificando en tiempo real a los responsables de proyecto.",
+            "email": "rcorrea@canteradigital.mx"
+          },
+          "webhookUrl": "https://ia.canteradigital.mx/webhook/910a6999-c4fb-4a6c-890e-ec629a571100",
+          "executionMode": "production"
+        }
+      }
+    ]
+  },
+  "versionId": "ac57c6d5-7f6c-4867-a970-c086e00a3a5e",
+  "triggerCount": 1,
+  "shared": [
+    {
+      "createdAt": "2025-10-28T00:00:07.982Z",
+      "updatedAt": "2025-10-28T00:00:07.982Z",
+      "role": "workflow:owner",
+      "workflowId": "7lzqv35Kh80vbZkE",
+      "projectId": "BZ9Ta5yhe4RhzY78",
+      "project": {
+        "createdAt": "2025-05-13T15:56:28.209Z",
+        "updatedAt": "2025-05-13T16:18:54.372Z",
+        "id": "BZ9Ta5yhe4RhzY78",
+        "name": "CANTERA ADMIN <canteradigital7@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "projectRelations": [
+          {
+            "createdAt": "2025-05-13T15:56:28.209Z",
+            "updatedAt": "2025-05-13T15:56:28.209Z",
+            "userId": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
+            "projectId": "BZ9Ta5yhe4RhzY78",
+            "user": {
+              "createdAt": "2025-05-13T15:56:27.880Z",
+              "updatedAt": "2025-10-28T06:00:52.000Z",
+              "id": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
+              "email": "canteradigital7@gmail.com",
+              "firstName": "CANTERA",
+              "lastName": "ADMIN",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-05-13T16:19:25.161Z",
+                "personalization_survey_n8n_version": "1.92.2",
+                "companySize": "<20",
+                "companyType": "saas",
+                "role": "customer-support",
+                "reportedSource": "event"
+              },
+              "settings": {
+                "userActivated": true,
+                "firstSuccessfulWorkflowId": "PTbESRzX3rguwQN8",
+                "userActivatedAt": 1747154580970,
+                "easyAIWorkflowOnboarded": true,
+                "npsSurvey": {
+                  "responded": true,
+                  "lastShownAt": 1748367494893
+                },
+                "dismissedCallouts": {
+                  "aiAgentStarterCallout": true,
+                  "preBuiltAgentsCalloutHttpRequest": true
+                }
+              },
+              "disabled": false,
+              "mfaEnabled": false,
+              "lastActiveAt": "2025-10-28",
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": [
+    {
+      "createdAt": "2025-10-28T18:48:34.188Z",
+      "updatedAt": "2025-10-28T18:48:34.188Z",
+      "id": "Xu9RqWctIBPp9sqw",
+      "name": "tools"
+    }
+  ]
+}
