@@ -1,0 +1,670 @@
+{
+  "createdAt": "2025-10-22T19:07:27.391Z",
+  "updatedAt": "2025-10-31T23:40:04.000Z",
+  "id": "7wrKSqw7yzvOhqOg",
+  "name": "alex agente conversacional cantera",
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -736,
+        400
+      ],
+      "id": "ab2091f3-18e2-4458-9b47-6faf37384e50",
+      "name": "Telegram Trigger",
+      "webhookId": "1967f184-7545-4dbb-aea3-542d7d87c94c",
+      "credentials": {
+        "telegramApi": {
+          "id": "Q6LlLbjeWbLhcdok",
+          "name": "Telegram account - Agente conversacional cantera"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -64,
+        208
+      ],
+      "id": "d554b436-bca3-4473-aee8-c59942df8971",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "ZmWqQ5PGylh4Y05s",
+          "name": "OpenAi account - CANTERA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "contextWindowLength": 100
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        64,
+        208
+      ],
+      "id": "ef77039e-9cde-47a4-94e1-878af0aab7e5",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "mode": "retrieve-as-tool",
+        "toolDescription": "AQUI OBTIENES TODO LO RELACIONADO CON CANTERA DIGITAL",
+        "tableName": {
+          "__rl": true,
+          "value": "documents_cantera",
+          "mode": "list",
+          "cachedResultName": "documents_cantera"
+        },
+        "options": {
+          "queryName": "match_documents_cantera"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1.3,
+      "position": [
+        192,
+        208
+      ],
+      "id": "f9d1ebde-f568-48f0-9ab1-4ed599d47dd9",
+      "name": "Supabase Vector Store",
+      "credentials": {
+        "supabaseApi": {
+          "id": "ty0KiXsEYP1uJ8t9",
+          "name": "Supabase account - CANTERA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        272,
+        416
+      ],
+      "id": "a9188f87-b719-4415-a132-d1b134d6f7fa",
+      "name": "Embeddings OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "ZmWqQ5PGylh4Y05s",
+          "name": "OpenAi account - CANTERA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "={{ $json.output }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        560,
+        96
+      ],
+      "id": "92e83e90-e4a1-43e7-b8de-4f1ba568b80f",
+      "name": "Send a text message",
+      "webhookId": "04997c06-78dd-48cd-8893-a60548f7be6d",
+      "credentials": {
+        "telegramApi": {
+          "id": "Q6LlLbjeWbLhcdok",
+          "name": "Telegram account - Agente conversacional cantera"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "VCLg3xyOMNJgn1zp",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/VCLg3xyOMNJgn1zp",
+          "cachedResultName": "asistente inserta mensajes"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "number": "={{ $('Telegram Trigger').item.json.message.chat.id.toString() }}",
+            "human_messaage": "={{ $('Telegram Trigger').item.json.message.text }}",
+            "agent_message": "={{ $('alex').item.json.output }}",
+            "contact_name": "={{ $('Telegram Trigger').item.json.message.chat.first_name }} {{ $('Telegram Trigger').item.json.message.chat.last_name }}",
+            "project_id": 15
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "number",
+              "displayName": "number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "project_id",
+              "displayName": "project_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "number"
+            },
+            {
+              "id": "human_messaage",
+              "displayName": "human_messaage",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "agent_message",
+              "displayName": "agent_message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "contact_name",
+              "displayName": "contact_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        560,
+        288
+      ],
+      "id": "16257c14-0b5d-472f-9214-a0d24cf178ce",
+      "name": "Execute Workflow2"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "WYPGNpK2ChZhUG3v",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/WYPGNpK2ChZhUG3v",
+          "cachedResultName": "busqueda de contacto"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "number": "={{ $json.message.chat.id.toString() }}",
+            "project_id": 15
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "number",
+              "displayName": "number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "project_id",
+              "displayName": "project_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "number"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        -512,
+        400
+      ],
+      "id": "639617da-15d3-4461-8a42-7c815b8256c2",
+      "name": "sonsultamos al usuario"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "59c7eada-fd13-481b-acd1-8ecfa1162f54",
+              "leftValue": "={{ $json.type_conversation }}",
+              "rightValue": "chatbot",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -288,
+        400
+      ],
+      "id": "8f8b555b-c32c-4471-b8bb-3d2b64ff1126",
+      "name": "puede responder el agente?"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "3TRmy5xQe7htpSEH",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/3TRmy5xQe7htpSEH",
+          "cachedResultName": "asistente inserta mensajes refactored"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "number": "={{ $('Telegram Trigger').item.json.message.chat.id.toString() }}",
+            "human_messaage": "={{ $('Telegram Trigger').item.json.message.text }}",
+            "contact_name": "={{ $('Telegram Trigger').item.json.message.from.first_name }}",
+            "project_id": 15,
+            "tipo_entrega": "human"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "number",
+              "displayName": "number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "project_id",
+              "displayName": "project_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "number"
+            },
+            {
+              "id": "human_messaage",
+              "displayName": "human_messaage",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "agent_message",
+              "displayName": "agent_message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "contact_name",
+              "displayName": "contact_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "tipo_entrega",
+              "displayName": "tipo_entrega",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        144,
+        592
+      ],
+      "id": "34d70431-a69b-4db4-b157-a68f50a5ed74",
+      "name": "enviamos el mensaje para respuesta por un humano"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "tableId": "contacts",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "id",
+              "condition": "eq",
+              "keyValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('conditions0_Field_Value', ``, 'string') }}"
+            }
+          ]
+        },
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "type_conversation",
+              "fieldValue": "agente"
+            },
+            {
+              "fieldId": "alerta_humano",
+              "fieldValue": "true"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabaseTool",
+      "typeVersion": 1,
+      "position": [
+        128,
+        400
+      ],
+      "id": "2c465e89-ed3e-4cdd-9d60-686fb3d43ead",
+      "name": "contacto_humano",
+      "credentials": {
+        "supabaseApi": {
+          "id": "ty0KiXsEYP1uJ8t9",
+          "name": "Supabase account - CANTERA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('Telegram Trigger').item.json.message.text }}",
+        "options": {
+          "systemMessage": "=# Alex - Asistente Conversacional de Cantera Digital\n\n## Identidad y Personalidad\nEres Alex, el asistente conversacional oficial de Cantera Digital. Tu personalidad es:\n- Amistoso y approachable\n- Profesional pero cercano\n- Paciente y comprensivo\n- Siempre dispuesto a ayudar\n- Mantienes un tono cálido y positivo\n\n## Propósito Principal\nResponder preguntas y consultas relacionadas exclusivamente con Cantera Digital, proporcionando información útil y precisa basada en tu conocimiento especializado almacenado en el Supabase Vector Store.\n\n## Base de Conocimiento - Supabase Vector Store\n- **Fuente única de información**: Todas tus respuestas deben basarse exclusivamente en datos almacenados en el Supabase Vector Store\n- **No inventes información**: Jamás proporciones datos, hechos o detalles que no estén verificados en el vector store\n- **Si no tienes información**: Responde honestamente que no tienes esa información disponible\n- **Respuesta para información faltante**: \"Lo siento, no tengo esa información disponible en mi base de conocimientos. ¿Puedo ayudarte con otra pregunta sobre Cantera Digital?\"\n\n## Alcance de Conocimientos\nPuedes responder preguntas sobre información que esté disponible en el Supabase Vector Store, incluyendo:\n- Servicios y programas de Cantera Digital\n- Procesos de formación y capacitación\n- Información institucional\n- Horarios y disponibilidad de servicios\n- Políticas y procedimientos internos\n- Información general sobre proyectos y equipos\n- Preguntas frecuentes sobre la plataforma\n\n## Transferencia a Atención Humana\n- **Activación**: Cuando el usuario exprese explícitamente que quiere hablar con un asistente humano\n- **Flujo de preguntas**: Haz preguntas secuenciales (una a la vez) sobre su consulta y necesidades\n  - \"¿Cuál es tu consulta específica?\"\n  - \"¿Qué necesitas exactamente?\"\n- **Espera respuestas**: No continues hasta tener respuesta a cada pregunta\n- **Activación de herramienta**: Una vez tengas la información, usa `contacto_humano`\n- **Despedida**: \"Entiendo tu necesidad. Te transfiero con un asistente humano que se comunicará contigo pronto.\"\n- **Retorno de usuarios**: Si el usuario regresa (terminó conversación humana o por inactividad), atiéndelo normalmente hasta que solicite humano nuevamente\n\n## Herramientas Disponibles\n- **contacto_humano**: Transfiere la conversación a un asistente humano\n  - Parámetros requeridos: contact_id (viene de {{ $json.contact_id }}), consulta, necesidad\n  - **Uso**: Solo activar después de recopilar información del usuario sobre su consulta y necesidad\n  - Retorna: confirmación de transferencia exitosa\n**NO puedes responder preguntas sobre:**\n- Mapas o direcciones geográficas\n- Código de programación o desarrollo técnico\n- Tareas escolares o académicas\n- Temas religiosos o espirituales\n- Política nacional o internacional\n- Asuntos personales o consejos médicos\n- Información financiera o inversiones\n- Cualquier tema no relacionado con Cantera Digital\n\n**Respuesta estándar para temas fuera de alcance:**\n\"Lo siento, pero solo puedo ayudarte con información relacionada a Cantera Digital. ¿Tienes alguna pregunta sobre nuestros servicios o programas? 😊\"\n\n**Respuesta estándar para información no disponible:**\n\"No tengo esa información específica en mi base de conocimientos. ¿Puedo ayudarte con otra pregunta sobre Cantera Digital?\"\n\n## Estilo de Comunicación\n- **Amistoso y profesional**: Usa un tono cálido pero mantiene la formalidad apropiada\n- **Respuestas claras**: Sé directo pero amable en tus explicaciones\n- **Conciso pero completo**: Proporciona la información necesaria sin ser verboso\n- **Empático**: Muestra comprensión cuando sea apropiado\n- **Máximo un emoji por mensaje**: Solo usa emojis cuando realmente agreguen valor emocional (felicidad, comprensión, celebración)\n  - ✅ Emojis permitidos: 😊, 👍, 🤔, 💡, 📅, etc.\n  - ❌ Evita emojis excesivos o inapropiados\n\n## Estructura de Respuestas\n1. **Saludo inicial**: Si es la primera interacción, preséntate brevemente\n2. **Respuesta directa**: Contesta la pregunta de manera clara\n3. **Información adicional**: Ofrece contexto útil si es relevante\n4. **Cierre amable**: Termina con una oferta de ayuda adicional si corresponde\n\n## Ejemplos de Interacciones\n\n**Pregunta válida:**\nUsuario: \"¿Cuáles son los horarios de atención?\"\nAlex: \"¡Hola! Los horarios de atención de Cantera Digital son de lunes a viernes de 8:00 AM a 6:00 PM. ¿Te puedo ayudar con algo más? 😊\"\n\n**Pregunta fuera de alcance:**\nUsuario: \"¿Cómo llego al centro comercial más cercano?\"\nAlex: \"Lo siento, pero solo puedo ayudarte con información relacionada a Cantera Digital. ¿Tienes alguna pregunta sobre nuestros servicios o programas? 🤔\"\n\n**Pregunta sobre política:**\nUsuario: \"¿Qué opinas sobre las elecciones?\"\nAlex: \"Disculpa, pero no puedo opinar sobre temas políticos. Mi especialidad es Cantera Digital. ¿En qué te puedo ayudar con nuestros servicios? 👍\"\n\n**Información no disponible en vector store:**\nUsuario: \"¿Cuál es el código de descuento actual?\"\nAlex: \"No tengo esa información específica en mi base de conocimientos. ¿Puedo ayudarte con otra pregunta sobre Cantera Digital?\"\n\n**Transferencia a humano:**\nUsuario: \"Quiero hablar con un asistente humano\"\nAlex: \"¿Cuál es tu consulta específica?\"\nUsuario: \"Tengo un problema con mi cuenta\"\nAlex: \"¿Qué necesitas exactamente?\"\nUsuario: \"Ayuda para recuperar mi contraseña\"\nAlex: \"Entiendo tu necesidad. Te transfiero con un asistente humano que se comunicará contigo pronto.\"\n\n## Consideraciones Especiales\n- **Verificación de información**: Siempre consulta el Supabase Vector Store antes de responder cualquier pregunta\n- **Precisión sobre invento**: Jamás proporciones información que no esté verificada en la base de datos\n- **Actualidad**: Tu conocimiento se basa en información actualizada almacenada en el vector store\n- **Transferencias a humano**: Solo activa `contacto_humano` cuando el usuario lo solicite explícitamente\n- **Retorno de usuarios**: Si un usuario regresa después de hablar con humano, atiéndelo normalmente hasta nueva solicitud\n- **Mantén la confidencialidad**: No compartas información sensible o privada\n- **Redireccionamiento**: Si la pregunta está parcialmente relacionada, redirígela hacia temas válidos\n- **Escalamiento**: Si no puedes responder adecuadamente, sugiere contactar al equipo correspondiente\n\n## Frases Útiles\n- \"¡Hola! Soy Alex, ¿en qué te puedo ayudar hoy?\"\n- \"Excelente pregunta sobre Cantera Digital...\"\n- \"Me alegra poder ayudarte con eso...\"\n- \"Para más detalles específicos, te recomiendo contactar a...\"\n- \"¿Hay algo más en lo que te pueda apoyar?\"\n- \"¿Cuál es tu consulta específica?\"\n- \"¿Qué necesitas exactamente?\"\n- \"Entiendo tu necesidad. Te transfiero con un asistente humano que se comunicará contigo pronto.\"\n\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        -16,
+        -16
+      ],
+      "id": "d7765461-9e73-439a-83a3-cfda2a7f3b31",
+      "name": "alex"
+    }
+  ],
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "sonsultamos al usuario",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "alex",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "alex",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase Vector Store": {
+      "ai_tool": [
+        [
+          {
+            "node": "alex",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Supabase Vector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "sonsultamos al usuario": {
+      "main": [
+        [
+          {
+            "node": "puede responder el agente?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "puede responder el agente?": {
+      "main": [
+        [
+          {
+            "node": "alex",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "enviamos el mensaje para respuesta por un humano",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "contacto_humano": {
+      "ai_tool": [
+        [
+          {
+            "node": "alex",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "alex": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Execute Workflow2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {
+    "Telegram Trigger": [
+      {
+        "json": {
+          "update_id": 142233536,
+          "message": {
+            "message_id": 21,
+            "from": {
+              "id": 775456693,
+              "is_bot": false,
+              "first_name": "Ricardo",
+              "last_name": "Correa",
+              "username": "CorreaRicardo",
+              "language_code": "es"
+            },
+            "chat": {
+              "id": 775456693,
+              "first_name": "Ricardo",
+              "last_name": "Correa",
+              "username": "CorreaRicardo",
+              "type": "private"
+            },
+            "date": 1761604290,
+            "text": "quiero mas info"
+          }
+        }
+      }
+    ]
+  },
+  "versionId": "12f12cdc-1bdd-427e-a233-65f779a1c655",
+  "triggerCount": 1,
+  "shared": [
+    {
+      "createdAt": "2025-10-22T19:07:27.395Z",
+      "updatedAt": "2025-10-22T19:07:27.395Z",
+      "role": "workflow:owner",
+      "workflowId": "7wrKSqw7yzvOhqOg",
+      "projectId": "BZ9Ta5yhe4RhzY78",
+      "project": {
+        "createdAt": "2025-05-13T15:56:28.209Z",
+        "updatedAt": "2025-05-13T16:18:54.372Z",
+        "id": "BZ9Ta5yhe4RhzY78",
+        "name": "CANTERA ADMIN <canteradigital7@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "projectRelations": [
+          {
+            "createdAt": "2025-05-13T15:56:28.209Z",
+            "updatedAt": "2025-05-13T15:56:28.209Z",
+            "userId": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
+            "projectId": "BZ9Ta5yhe4RhzY78",
+            "user": {
+              "createdAt": "2025-05-13T15:56:27.880Z",
+              "updatedAt": "2025-10-31T05:01:12.000Z",
+              "id": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
+              "email": "canteradigital7@gmail.com",
+              "firstName": "CANTERA",
+              "lastName": "ADMIN",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-05-13T16:19:25.161Z",
+                "personalization_survey_n8n_version": "1.92.2",
+                "companySize": "<20",
+                "companyType": "saas",
+                "role": "customer-support",
+                "reportedSource": "event"
+              },
+              "settings": {
+                "userActivated": true,
+                "firstSuccessfulWorkflowId": "PTbESRzX3rguwQN8",
+                "userActivatedAt": 1747154580970,
+                "easyAIWorkflowOnboarded": true,
+                "npsSurvey": {
+                  "responded": true,
+                  "lastShownAt": 1748367494893
+                },
+                "dismissedCallouts": {
+                  "aiAgentStarterCallout": true,
+                  "preBuiltAgentsCalloutHttpRequest": true
+                }
+              },
+              "disabled": false,
+              "mfaEnabled": false,
+              "lastActiveAt": "2025-10-31",
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": []
+}
