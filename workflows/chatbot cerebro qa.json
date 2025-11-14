@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-09-15T15:39:29.471Z",
-  "updatedAt": "2025-11-10T01:59:18.000Z",
+  "updatedAt": "2025-11-14T14:21:12.000Z",
   "id": "BPnkCPlia5Iozaew",
   "name": "chatbot cerebro qa",
   "active": true,
@@ -38,10 +38,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 1,
       "position": [
-        -6736,
-        -3232
+        -6064,
+        2336
       ],
-      "id": "7f9757d6-19bb-48c2-aa5b-26eef6379415"
+      "id": "f662a286-6fc8-460d-8328-3706de2d2c30"
     },
     {
       "parameters": {
@@ -52,10 +52,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
       "position": [
-        -6544,
-        -3232
+        -5872,
+        2336
       ],
-      "id": "1f8b765a-8a3f-48bc-9f20-9a7042db2384",
+      "id": "18476b05-76d7-4d56-b875-f4e5000634b0",
       "notesInFlow": false,
       "onError": "continueErrorOutput"
     },
@@ -75,10 +75,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        -6160,
-        -3232
+        -5488,
+        2336
       ],
-      "id": "38904367-d895-4700-8889-1dd64e3d810a"
+      "id": "e60d23a4-f739-456e-a1fd-e974728ef2ab"
     },
     {
       "parameters": {
@@ -457,6 +457,31 @@
               },
               "renameOutput": true,
               "outputKey": "aviso_privacidad"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+                    "leftValue": "={{ $json.state_final }}",
+                    "rightValue": "espera_respuesta_ayuda",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "ayuda"
             }
           ]
         },
@@ -465,10 +490,10 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.2,
       "position": [
-        -5296,
-        -3392
+        -4624,
+        2176
       ],
-      "id": "070ef870-5037-478f-b2e0-7bd361ef1672",
+      "id": "cfb7a69e-f190-43ac-aa52-4dfb8ff5dc73",
       "name": "Switch"
     },
     {
@@ -496,10 +521,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -6640,
-        -4032
+        -5968,
+        1536
       ],
-      "id": "5621abd4-5126-4b83-bdab-35102c8be9fb",
+      "id": "8809e050-cf2b-4555-8a70-77f33b278119",
       "name": "Error mensaje de voz"
     },
     {
@@ -527,10 +552,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -6640,
-        -3824
+        -5968,
+        1744
       ],
-      "id": "c476de6a-12a9-4996-9c21-fda0506cdac4",
+      "id": "0dde6280-ae8c-42ff-8720-508a3a29f5db",
       "name": "error documento"
     },
     {
@@ -558,10 +583,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -6640,
-        -3632
+        -5968,
+        1936
       ],
-      "id": "db3e0b76-668c-42f7-8a55-ef191ddfd510",
+      "id": "7dcf0504-ae6a-4a5f-b0fd-a8da56064f2d",
       "name": "error imagen"
     },
     {
@@ -589,10 +614,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -6640,
-        -3424
+        -5968,
+        2144
       ],
-      "id": "275a4845-7e74-4653-b5d3-324d4bb56c8c",
+      "id": "d3b12e10-f5fa-4143-bba3-b284f42fe553",
       "name": "error video"
     },
     {
@@ -616,10 +641,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -1072,
-        -5408
+        -400,
+        160
       ],
-      "id": "82113dcc-7afe-477b-ba4b-7c5dee81fad3",
+      "id": "645d9716-89ea-4243-a336-515c185f1c92",
       "name": "HTTP Request"
     },
     {
@@ -645,10 +670,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -1072,
-        -5008
+        -400,
+        560
       ],
-      "id": "3bac46cc-376a-44d9-a488-f06f3421919a",
+      "id": "f164374a-afb3-4f2e-8c44-cb8556bc8378",
       "name": "student_id"
     },
     {
@@ -670,16 +695,16 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('incoming_data').item.json.incoming_wp.messages[0].from }}\",\n  \"type\": \"interactive\",\n  \"interactive\": {\n    \"type\": \"button\",\n    \"body\": {\n      \"text\": \"¡Hola! 😊 Estoy aquí para ayudarte a encontrar la información que necesitas.\\n\\n👉 Presiona 'Calendario' 📅 para ver la información de los siguientes eventos programados.\\n👉 Presiona 'Preguntas frecuentes'❓ para resolver dudas frecuentes.\"\n    },\n    \"action\": {\n      \"buttons\": [\n        {\n          \"type\": \"reply\",\n          \"reply\": {\n            \"id\": \"calendario\",\n            \"title\": \"Calendario\"\n          }\n        },\n        {\n          \"type\": \"reply\",\n          \"reply\": {\n            \"id\": \"preguntas_frecuentes\",\n            \"title\": \"Preguntas Frecuentes\"\n          }\n        }\n      ]\n    }\n  }\n}\n",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('incoming_data').item.json.incoming_wp.messages[0].from }}\",\n  \"type\": \"interactive\",\n  \"interactive\": {\n    \"type\": \"button\",\n    \"body\": {\n      \"text\": \"¡Hola! 😊 Estoy aquí para ayudarte a encontrar la información que necesitas.\\n\\n👉 Presiona 'Calendario' 📅 para ver la información de los siguientes eventos programados.\\n👉 Presiona 'Preguntas frecuentes'❓ para resolver dudas frecuentes.\\n👉 Presiona 'Ayuda' 🆘 para obtener información de contacto.\"\n    },\n    \"action\": {\n      \"buttons\": [\n        {\n          \"type\": \"reply\",\n          \"reply\": {\n            \"id\": \"calendario\",\n            \"title\": \"Calendario\"\n          }\n        },\n        {\n          \"type\": \"reply\",\n          \"reply\": {\n            \"id\": \"preguntas_frecuentes\",\n            \"title\": \"Preguntas Frecuentes\"\n          }\n        },\n        {\n          \"type\": \"reply\",\n          \"reply\": {\n            \"id\": \"ayuda\",\n            \"title\": \"Ayuda\"\n          }\n        }\n      ]\n    }\n  }\n}\n",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -192,
-        -5024
+        480,
+        544
       ],
-      "id": "69bba6fa-0a08-4e0d-9185-a66b8e3db8a6",
+      "id": "e1d9371b-102e-48cb-9335-c07b525ff696",
       "name": "menu principal"
     },
     {
@@ -723,10 +748,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -624,
-        -5008
+        48,
+        560
       ],
-      "id": "9fb4bf2b-86be-4d25-ab81-7b1643c454e8",
+      "id": "6d82cae6-8fdc-4536-952d-91c07f7a8357",
       "name": "Edit Fields3"
     },
     {
@@ -736,10 +761,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -848,
-        -5008
+        -176,
+        560
       ],
-      "id": "a21fddc9-cbb7-4f22-ab9d-e63a84292249",
+      "id": "a9d86d71-6a41-4883-8953-fb25e7daae81",
       "name": "Code1",
       "alwaysOutputData": true
     },
@@ -772,10 +797,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -432,
-        -5008
+        240,
+        560
       ],
-      "id": "13419f9c-fbb4-48b4-9790-2b5f54b06625",
+      "id": "92b40cb7-5031-4965-9173-717ca7746f05",
       "name": "Edit Fields4"
     },
     {
@@ -799,10 +824,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -736,
-        -3760
+        -64,
+        1808
       ],
-      "id": "75046834-c542-4409-861e-749d1fca9e93",
+      "id": "ad668398-ba6d-4a66-b7a9-4efe025c8846",
       "name": "HTTP Request1"
     },
     {
@@ -852,10 +877,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -960,
-        -3760
+        -288,
+        1808
       ],
-      "id": "14235114-f997-4f92-9028-5615a65f422b",
+      "id": "36aa099e-2366-46a6-87df-664967226bcd",
       "name": "Edit Fields8"
     },
     {
@@ -865,10 +890,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -1184,
-        -3760
+        -512,
+        1808
       ],
-      "id": "3e45db7a-3da5-4d52-9e7b-5c0964752ff1",
+      "id": "0dcadaae-d82a-477a-ae15-e89234c8e2d4",
       "name": "Code4",
       "alwaysOutputData": true
     },
@@ -907,10 +932,10 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.2,
       "position": [
-        -3856,
-        -4592
+        -3184,
+        976
       ],
-      "id": "8428f1ef-793e-46ea-8b99-c1e8f3db9249",
+      "id": "3719ecab-8a35-4340-811d-83be79d784b1",
       "name": "Switch3"
     },
     {
@@ -960,10 +985,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -3344,
-        -672
+        -2672,
+        4896
       ],
-      "id": "bdf2673a-941a-47f8-85e4-932b67b2713c",
+      "id": "3cee9131-fc0a-4ef1-8231-f2d3f818c484",
       "name": "Edit Fields9"
     },
     {
@@ -973,10 +998,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -3568,
-        -672
+        -2896,
+        4896
       ],
-      "id": "6865328e-f3ea-4ec4-a9e8-2d541696bd71",
+      "id": "648a817d-a564-4c9f-8d28-1b4312cfe9b8",
       "name": "Code5",
       "alwaysOutputData": true
     },
@@ -1009,10 +1034,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -2992,
-        -672
+        -2320,
+        4896
       ],
-      "id": "a6fc1e84-f535-4b44-96ee-a3906e4fef38",
+      "id": "196ee4fa-0afd-424d-ae76-f8ae6957934d",
       "name": "Edit Fields10"
     },
     {
@@ -1062,10 +1087,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -1120,
-        -3472
+        -448,
+        2096
       ],
-      "id": "302babac-f9a3-405e-9072-8334794fbac1",
+      "id": "caee09d9-de43-4ad3-aa28-64e1860d53a5",
       "name": "cuerpo funcion response_worker_FAQ"
     },
     {
@@ -1093,10 +1118,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -624,
-        -5616
+        48,
+        -48
       ],
-      "id": "12e7f6c9-aaea-4379-a43b-c27cb3173caa",
+      "id": "4d02837a-4f6a-41e8-8acd-b07b14750eeb",
       "name": "seleccionar usuario mensaje"
     },
     {
@@ -1106,10 +1131,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -400,
-        -5616
+        272,
+        -48
       ],
-      "id": "6377bed7-a983-458d-8559-04fa4ab6b3a1",
+      "id": "74fea7e1-d0df-4c75-8ce6-70c809a4a108",
       "name": "Code7",
       "alwaysOutputData": true
     },
@@ -1142,10 +1167,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -192,
-        -5616
+        480,
+        -48
       ],
-      "id": "89c72774-e6de-4588-a35d-488fc7eb290c",
+      "id": "443ae86d-481f-4f06-b686-c30a6fe0bfc8",
       "name": "body estatus seleccion_alumno"
     },
     {
@@ -1183,10 +1208,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        80,
-        -5616
+        752,
+        -48
       ],
-      "id": "3a409a9e-4786-491f-b087-1d82056bcdd5",
+      "id": "eeec0635-d748-436c-befc-38dd2f89b8a9",
       "name": "body presentacion menu selec student"
     },
     {
@@ -1212,10 +1237,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -624,
-        -5312
+        48,
+        256
       ],
-      "id": "19906176-8280-4d23-9d07-2ccafbf30e03",
+      "id": "be6559af-3bb8-43cb-8ede-579145536f57",
       "name": "Edit Fields11"
     },
     {
@@ -1225,10 +1250,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -400,
-        -5312
+        272,
+        256
       ],
-      "id": "6f7bc117-a07d-4dc8-b883-4f84e655e0e6",
+      "id": "8ab912bf-17a0-4df7-8386-cc40c550b077",
       "name": "Code8"
     },
     {
@@ -1254,10 +1279,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        32,
-        -5216
+        704,
+        352
       ],
-      "id": "d512dc11-df1d-4ed5-ba5b-a3e67d29012d",
+      "id": "3c483aeb-b4a7-48a2-b8c8-fc85f7d8015a",
       "name": "student_id1"
     },
     {
@@ -1279,16 +1304,16 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('incoming_data').item.json.incoming_wp.messages[0].from }}\",\n  \"type\": \"interactive\",\n  \"interactive\": {\n    \"type\": \"button\",\n    \"body\": {\n      \"text\": \"¡Hola! 😊 Estoy aquí para ayudarte a encontrar la información que necesitas.\\n\\n👉 Presiona 'Calendario' 📅 para ver la información de los siguientes eventos programados.\\n👉 Presiona 'Preguntas frecuentes'❓ para resolver dudas frecuentes.\"\n    },\n    \"action\": {\n      \"buttons\": [\n        {\n          \"type\": \"reply\",\n          \"reply\": {\n            \"id\": \"calendario\",\n            \"title\": \"Calendario\"\n          }\n        },\n        {\n          \"type\": \"reply\",\n          \"reply\": {\n            \"id\": \"preguntas_frecuentes\",\n            \"title\": \"Preguntas Frecuentes\"\n          }\n        }\n      ]\n    }\n  }\n}\n",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('incoming_data').item.json.incoming_wp.messages[0].from }}\",\n  \"type\": \"interactive\",\n  \"interactive\": {\n    \"type\": \"button\",\n    \"body\": {\n      \"text\": \"¡Hola! 😊 Estoy aquí para ayudarte a encontrar la información que necesitas.\\n\\n👉 Presiona 'Calendario' 📅 para ver la información de los siguientes eventos programados.\\n👉 Presiona 'Preguntas frecuentes'❓ para resolver dudas frecuentes.\\n👉 Presiona 'Ayuda' 🆘 para obtener información de contacto.\"\n    },\n    \"action\": {\n      \"buttons\": [\n        {\n          \"type\": \"reply\",\n          \"reply\": {\n            \"id\": \"calendario\",\n            \"title\": \"Calendario\"\n          }\n        },\n        {\n          \"type\": \"reply\",\n          \"reply\": {\n            \"id\": \"preguntas_frecuentes\",\n            \"title\": \"Preguntas Frecuentes\"\n          }\n        },\n        {\n          \"type\": \"reply\",\n          \"reply\": {\n            \"id\": \"ayuda\",\n            \"title\": \"Ayuda\"\n          }\n        }\n      ]\n    }\n  }\n}\n",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        1008,
-        -5216
+        1680,
+        352
       ],
-      "id": "3004cae5-8ac7-46cd-aa62-4e728bfdfcfe",
+      "id": "411914d0-3572-480e-87ad-68d978136bb7",
       "name": "menu principal4"
     },
     {
@@ -1338,10 +1363,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        496,
-        -5216
+        1168,
+        352
       ],
-      "id": "e903af09-dbdc-4206-8785-862c83b95f97",
+      "id": "69a61848-5d71-470f-b36f-a62b68d90d5d",
       "name": "Edit Fields12",
       "disabled": true
     },
@@ -1352,10 +1377,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        272,
-        -5216
+        944,
+        352
       ],
-      "id": "e3ca7676-2d4a-422f-9d1d-457dc6e5a42f",
+      "id": "bbf62882-9be5-409d-bcd3-0dfaf2ee248d",
       "name": "Code9",
       "alwaysOutputData": true
     },
@@ -1388,10 +1413,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        736,
-        -5216
+        1408,
+        352
       ],
-      "id": "d8ea8a2c-31c1-453b-bd5c-250e1d6a8e02",
+      "id": "d71c48aa-1498-431d-bb72-e41a39cb8626",
       "name": "Edit Fields13"
     },
     {
@@ -1417,10 +1442,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -464,
-        -3760
+        208,
+        1808
       ],
-      "id": "2740df6e-bbc3-40aa-9c6d-bb69d2a9bf16",
+      "id": "89fa481d-d1c3-483b-8722-1ecf8babbfe8",
       "name": "Edit Fields14"
     },
     {
@@ -1452,10 +1477,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        1232,
-        -3728
+        1904,
+        1840
       ],
-      "id": "936441ea-0d32-4d76-97e2-6ef0a0ead7e6",
+      "id": "166bdd78-1fe9-446c-8252-733da2031186",
       "name": "Edit Fields15"
     },
     {
@@ -1465,10 +1490,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1008,
-        -3728
+        1680,
+        1840
       ],
-      "id": "8dac57e8-2f13-4ccf-a66d-7b6b0e110f77",
+      "id": "508796a5-e9f6-4152-aafd-e804c60b9a08",
       "name": "Code10",
       "alwaysOutputData": true
     },
@@ -1519,10 +1544,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -368,
-        -2544
+        304,
+        3024
       ],
-      "id": "beaf4dd8-e213-467b-a800-35d193c0905b",
+      "id": "f7da35d2-5927-4217-9700-cab07b06234e",
       "name": "Edit Fields16"
     },
     {
@@ -1532,10 +1557,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -592,
-        -2544
+        80,
+        3024
       ],
-      "id": "36ab4eb0-bd81-4545-9ae3-44db0f9b6079",
+      "id": "27da72e8-69b7-4143-a798-e22e1a60b36a",
       "name": "Code11",
       "alwaysOutputData": true
     },
@@ -1564,10 +1589,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -128,
-        -2544
+        544,
+        3024
       ],
-      "id": "06aa6347-c135-4d1d-9182-b282d81ddc19",
+      "id": "ca09119e-be86-4a82-8d90-9c88ff10df3a",
       "name": "menu academico"
     },
     {
@@ -1598,10 +1623,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        -5712,
-        -3248
+        -5040,
+        2320
       ],
-      "id": "6d2b5fad-9e6d-4de9-a4ec-0ca5306e3dd1",
+      "id": "6892699a-8070-443d-9c01-a7dd810d1555",
       "name": "If10"
     },
     {
@@ -1632,10 +1657,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        -1408,
-        -3376
+        -736,
+        2192
       ],
-      "id": "9fafc437-f766-42e3-9acb-59296b66b62c",
+      "id": "8fa916c5-9904-4005-832b-8f2e1e7b0cf6",
       "name": "revisamos si se responde por boton"
     },
     {
@@ -1676,10 +1701,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        -1152,
-        -3232
+        -480,
+        2336
       ],
-      "id": "9230305e-0cb0-40d1-8340-b3194d9c14c9",
+      "id": "9fe8e17d-8006-4684-833b-2c548336cb74",
       "name": "el boton es menu inicial"
     },
     {
@@ -1742,10 +1767,10 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.2,
       "position": [
-        -4256,
-        -3680
+        -3584,
+        1888
       ],
-      "id": "0a5dd00d-63b2-449b-a79d-bc947680aa41",
+      "id": "b6b50455-b99a-4233-a557-db6e33cc07c6",
       "name": "comparamos respuesta de menu de calendario inicial"
     },
     {
@@ -1777,10 +1802,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        80,
-        -2544
+        752,
+        3024
       ],
-      "id": "753ec2dd-dcce-4669-907b-5c3d5b4f6517",
+      "id": "49eca6aa-25ad-4c81-85a6-014c3ea94aa8",
       "name": "seteamos estatus de espera_respuesta_academico"
     },
     {
@@ -1800,10 +1825,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -4608,
-        -2368
+        -3936,
+        3200
       ],
-      "id": "9185efb7-0fcd-4ef0-8b5a-c22d17f653bb",
+      "id": "bc4f057e-a566-426d-ade5-cb0dc4f240ca",
       "name": "guardamos la respuesta de academico"
     },
     {
@@ -1813,10 +1838,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -4384,
-        -2400
+        -3712,
+        3168
       ],
-      "id": "b575f731-eb5d-4d0d-9eb3-45dc4bf2f0d9",
+      "id": "ba58e981-a1fb-4c9e-9583-298e29f0db6a",
       "name": "Revisamos que el valor este dentro de lo permitido"
     },
     {
@@ -1846,10 +1871,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        -4160,
-        -2480
+        -3488,
+        3088
       ],
-      "id": "71d4c557-6de5-47af-adbb-57a71abe9df8",
+      "id": "caf7979f-f729-4f49-bd12-4ac225c84bc1",
       "name": "revisamos que la respuesta no sea erronea"
     },
     {
@@ -1877,10 +1902,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -3904,
-        -2256
+        -3232,
+        3312
       ],
-      "id": "8b291f97-0296-4337-b634-364ed8fa803c",
+      "id": "b1e10693-13bd-45f2-bdfa-125592bc49b0",
       "name": "mensaje de error de academico"
     },
     {
@@ -1968,10 +1993,10 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.2,
       "position": [
-        -2800,
-        -1856
+        -2128,
+        3712
       ],
-      "id": "4ffecf12-59ff-4ddd-8e52-abe7552e9982",
+      "id": "41c219ab-2236-40ca-a5b5-487063350340",
       "name": "Switch4"
     },
     {
@@ -1995,10 +2020,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -2576,
-        -2208
+        -1904,
+        3360
       ],
-      "id": "4536523b-1b0a-44f3-b7ff-9afbe403717b",
+      "id": "6adb846e-bd76-4e1f-98b1-868474ff6571",
       "name": "HTTP Request4",
       "alwaysOutputData": true
     },
@@ -2023,10 +2048,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -2144,
-        -1616
+        -1472,
+        3952
       ],
-      "id": "881b1d5e-2dc1-47b6-8f6f-9457fac4a6d5",
+      "id": "a5905036-a9d8-4839-8731-6f40b2a1969e",
       "name": "HTTP Request5"
     },
     {
@@ -2057,10 +2082,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        -1920,
-        -1616
+        -1248,
+        3952
       ],
-      "id": "14719ef3-18f7-457e-be2d-1f4beee89189",
+      "id": "8c871ee3-6a21-4a93-8748-0f9434abc213",
       "name": "revisamos si hay actividades para la semana"
     },
     {
@@ -2096,10 +2121,10 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.2,
       "position": [
-        -3584,
-        -3520
+        -2912,
+        2048
       ],
-      "id": "360558dc-2d76-4600-9e76-643b3a97dd2e",
+      "id": "44b5cd26-7a81-4db4-acaf-661556feeca9",
       "name": "Switch5"
     },
     {
@@ -2179,6 +2204,31 @@
               },
               "renameOutput": true,
               "outputKey": "calendario"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "f1g2h3i4-j5k6-7890-lmno-pq1234567890",
+                    "leftValue": "={{ $('incoming_data').item.json.incoming_wp.messages[0].interactive.button_reply.id }}",
+                    "rightValue": "ayuda",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "ayuda"
             }
           ]
         },
@@ -2187,10 +2237,10 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.2,
       "position": [
-        -1728,
-        -4144
+        -1056,
+        1424
       ],
-      "id": "3d0f0f5c-33df-4bb9-8ce2-003e817488f3",
+      "id": "1869e16f-2503-4109-9445-954e29388de5",
       "name": "respuesta del menu de inicio"
     },
     {
@@ -2221,10 +2271,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        -2368,
-        -2208
+        -1696,
+        3360
       ],
-      "id": "72d130f3-2a6c-4e97-a5a4-f64d72d41cd1",
+      "id": "0eea75b9-7dfd-4780-9d6d-2f9f0c8e2178",
       "name": "revisamos si hay error"
     },
     {
@@ -2252,10 +2302,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -1696,
-        -2112
+        -1024,
+        3456
       ],
-      "id": "16ba39f3-6ba9-4f94-b2d0-88ca8a451c6e",
+      "id": "8ea861c6-6d45-4cfd-a403-dfe6b6df7c17",
       "name": "mensaje de error de academico2"
     },
     {
@@ -2283,10 +2333,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -1424,
-        -2416
+        -752,
+        3152
       ],
-      "id": "8b7ccdb8-4998-4b0b-87f4-c4d5b72d153f",
+      "id": "c567157f-1cbe-4c86-8b62-d0861395d2f4",
       "name": "mensaje de sin actividades"
     },
     {
@@ -2314,10 +2364,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -1696,
-        -1728
+        -1024,
+        3840
       ],
-      "id": "be1ec0c3-0d1a-4f29-9c38-8f2cbd74b01a",
+      "id": "295e4c8e-35e7-44ab-83d1-cff4b6adb9fe",
       "name": "actividades enviadas correctamente"
     },
     {
@@ -2348,10 +2398,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        -4736,
-        -3232
+        -4064,
+        2336
       ],
-      "id": "5ee7f353-29aa-4d39-bda6-2ecfd8742256",
+      "id": "ed722654-d312-4abd-9766-a08caef769bf",
       "name": "revisamos si el usuario respondio por boton"
     },
     {
@@ -2382,10 +2432,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        -1936,
-        -4048
+        -1264,
+        1520
       ],
-      "id": "046e0380-f589-4c1b-97df-c4ab271550d9",
+      "id": "1bcbca32-070c-44eb-8520-6e5d446254d3",
       "name": "revisamos si el usuario respondio por boton1"
     },
     {
@@ -2396,10 +2446,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -2096,
-        -1088
+        -1424,
+        4480
       ],
-      "id": "16318822-674d-49f5-b252-2bc0d4e51ca6",
+      "id": "5b2ad695-3ed7-48de-828c-5e18b0a53fb4",
       "name": "get_courses_by_student_id"
     },
     {
@@ -2437,10 +2487,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -1664,
-        -1088
+        -992,
+        4480
       ],
-      "id": "1ffec666-18ff-487c-87b8-e7fe56d18451",
+      "id": "c74c0ee6-84fb-4400-a5d7-ecbd71474524",
       "name": "Edit Fields26"
     },
     {
@@ -2450,10 +2500,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -1888,
-        -1088
+        -1216,
+        4480
       ],
-      "id": "e7d259d7-1374-4c0f-91da-e09f18be73b8",
+      "id": "32ea430b-2759-4be3-b8c0-b6abe9a43ca0",
       "name": "Code26",
       "alwaysOutputData": true
     },
@@ -2467,10 +2517,10 @@
       "type": "n8n-nodes-base.mongoDb",
       "typeVersion": 1.1,
       "position": [
-        -992,
-        -1088
+        -320,
+        4480
       ],
-      "id": "db481e29-4e48-40dc-a1bd-b60eaeb2df2c",
+      "id": "cc02531f-9caa-4682-87d0-8c893e269901",
       "name": "MongoDB30",
       "credentials": {
         "mongoDb": {
@@ -2514,10 +2564,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -1216,
-        -1088
+        -544,
+        4480
       ],
-      "id": "0f6b0369-4131-4b4f-a9f5-62444fcfe28f",
+      "id": "b81f134b-73b6-4586-8f57-7b94055b3f1e",
       "name": "mostramos el set para la pantalla de fechas para justificacion4"
     },
     {
@@ -2531,10 +2581,10 @@
       "type": "n8n-nodes-base.mongoDb",
       "typeVersion": 1.1,
       "position": [
-        -1440,
-        -1088
+        -768,
+        4480
       ],
-      "id": "3462f63f-cc8e-4db5-a297-30cb2eff353a",
+      "id": "d994f6d7-e230-47fd-b4b7-30ea311dda60",
       "name": "MongoDB31",
       "credentials": {
         "mongoDb": {
@@ -2568,10 +2618,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -560,
-        -1088
+        112,
+        4480
       ],
-      "id": "933f9aef-0f3b-4c1b-b48d-c5dd0b7f7930",
+      "id": "04fb4839-ab1a-4be0-b1f5-dee63e6aa4f8",
       "name": "comienzo con el porceso de calificaciones (cursos)"
     },
     {
@@ -2609,10 +2659,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -5904,
-        -3248
+        -5232,
+        2320
       ],
-      "id": "b8bb03d5-91c3-4b30-b663-8b79cb6c0ed3",
+      "id": "975ecb62-e70f-4100-9c1a-6308e680a84f",
       "name": "datosFinalesUser"
     },
     {
@@ -2640,10 +2690,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -800,
-        -1088
+        -128,
+        4480
       ],
-      "id": "e3ff4f3a-e406-4761-a930-d90743af1b1f",
+      "id": "5d31f49d-4a30-40e9-b2ed-d4ca593db627",
       "name": "no hay actividades en la semana para enviar1"
     },
     {
@@ -2654,11 +2704,11 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        -384,
-        -2928
+        288,
+        2640
       ],
       "typeVersion": 1,
-      "id": "b2a7e59b-a530-42d4-b241-1c93acd87d20",
+      "id": "7b1923dc-818d-4ce2-b7ac-e74bde4a702b",
       "name": "Sticky Note2"
     },
     {
@@ -2722,10 +2772,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 1,
       "position": [
-        -6352,
-        -3232
+        -5680,
+        2336
       ],
-      "id": "32c607e5-878e-4bcb-acd9-9412a11baa1a"
+      "id": "1dd4853d-5c4f-4421-b879-8716550d9b03"
     },
     {
       "parameters": {
@@ -2881,10 +2931,10 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        320,
-        -5616
+        992,
+        -48
       ],
-      "id": "194a6e6b-feec-4538-834d-a05449bbcb96",
+      "id": "009ca0c4-1ebe-4176-8e1b-675aa2549d4f",
       "name": "Execute Workflow"
     },
     {
@@ -3041,10 +3091,10 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        1008,
-        -5024
+        1680,
+        544
       ],
-      "id": "658489f1-a606-415e-96bb-b2b7da3ac7c0",
+      "id": "8f7e5e18-3a02-44ba-845b-4ca2f3e0a578",
       "name": "Execute Workflow1"
     },
     {
@@ -3190,10 +3240,10 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        1472,
-        -3728
+        2144,
+        1840
       ],
-      "id": "9dd3299a-17d2-4b50-aa22-b69a97cfdcf7",
+      "id": "edc06c54-cd4c-4fb7-a19d-a196d859abb1",
       "name": "Execute Workflow2"
     },
     {
@@ -3339,10 +3389,10 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        320,
-        -2544
+        992,
+        3024
       ],
-      "id": "09004168-2b88-4c38-90c9-c3576e4f9c8b",
+      "id": "158925a2-eca4-466d-8443-79b2baed8aeb",
       "name": "Execute Workflow5"
     },
     {
@@ -3366,10 +3416,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -7872,
-        -2864
+        -7200,
+        2704
       ],
-      "id": "698338d0-4bc0-4b7f-8001-13b684c590d6",
+      "id": "958c3699-2395-4e7a-a443-716fdfe525eb",
       "name": "Cambiamos status mensaje"
     },
     {
@@ -3392,10 +3442,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 1,
       "position": [
-        -7872,
-        -3088
+        -7200,
+        2480
       ],
-      "id": "5f02657b-3cb1-4412-9ea8-4e07a42eccae"
+      "id": "c6cbfc8c-6ecf-4b17-a875-c714172cce6f"
     },
     {
       "parameters": {
@@ -3404,10 +3454,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -7872,
-        -3296
+        -7200,
+        2272
       ],
-      "id": "a67753dc-c16e-43b7-9db3-13a5148b6df8",
+      "id": "0b2f2ca3-721a-42c3-9160-3e256c6c3aa7",
       "name": "Code29"
     },
     {
@@ -3438,10 +3488,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        -4896,
-        -2448
+        -4224,
+        3120
       ],
-      "id": "98847324-16d8-442c-a324-40cd0e94e073",
+      "id": "00812dbe-b493-45ae-bd70-acba558c352d",
       "name": "botón menú"
     },
     {
@@ -3469,10 +3519,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -3168,
-        -672
+        -2496,
+        4896
       ],
-      "id": "c304185f-35ae-47db-8242-028f2996355f",
+      "id": "9e2c576d-9b4d-4b41-bd6f-b207289ee09b",
       "name": "mensaje inicial FAQ"
     },
     {
@@ -3482,10 +3532,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -1504,
-        -4400
+        -832,
+        1168
       ],
-      "id": "8069385c-cf6a-4f3e-a44a-1329feb09d85",
+      "id": "05725299-ffd6-4c19-9a4a-4fe895426724",
       "name": "Code30",
       "alwaysOutputData": true
     },
@@ -3536,10 +3586,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -1312,
-        -4400
+        -640,
+        1168
       ],
-      "id": "89575013-d1cc-46b3-8844-4941c644ba3c",
+      "id": "862bf99e-2720-4473-90fa-445e2fc1391b",
       "name": "Edit Fields29"
     },
     {
@@ -3571,10 +3621,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -1104,
-        -4400
+        -432,
+        1168
       ],
-      "id": "2040989d-36fb-4111-8e0e-b3301704a446",
+      "id": "60fb0361-7072-4085-8357-63e9a3a41687",
       "name": "Edit Fields30"
     },
     {
@@ -3602,10 +3652,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -896,
-        -4400
+        -224,
+        1168
       ],
-      "id": "8263d27b-9a16-4fee-8491-be2b636b5e1f",
+      "id": "9adf3a3e-6c57-4f5b-8c23-1ff6746b4580",
       "name": "mensaje desición ai/humano"
     },
     {
@@ -3636,10 +3686,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        -4864,
-        -624
+        -4192,
+        4944
       ],
-      "id": "2d00d55a-0e71-42b2-88e6-6964766b8ed2",
+      "id": "c5d0d061-4cd0-4ec0-abe5-e331b7b3e2d5",
       "name": "If11"
     },
     {
@@ -3659,10 +3709,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -4624,
-        -512
+        -3952,
+        5056
       ],
-      "id": "57f83f6e-57c8-435f-94c5-0c387841c91c",
+      "id": "fb0d763a-b728-47f0-9eff-7ea74c3263c5",
       "name": "guardamos la respuesta de academico1"
     },
     {
@@ -3672,10 +3722,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -4384,
-        -512
+        -3712,
+        5056
       ],
-      "id": "6a415c57-d4db-4cc2-bf1d-e4c54e26c433",
+      "id": "e9af29b3-8312-4e3c-bc2e-e62521bb6f40",
       "name": "Revisamos que el valor este dentro de lo permitido1"
     },
     {
@@ -3705,10 +3755,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        -4128,
-        -512
+        -3456,
+        5056
       ],
-      "id": "a3486e36-7b24-4062-918b-535865cad320",
+      "id": "d4e5772f-8696-4ef9-b86d-0a11a46b2ce8",
       "name": "revisamos que la respuesta no sea erronea1"
     },
     {
@@ -3736,10 +3786,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -3968,
-        -336
+        -3296,
+        5232
       ],
-      "id": "e894fcb3-e973-4daf-840f-60f66b6948d9",
+      "id": "f5dff2dd-9314-4145-9db5-8ee541d28d7d",
       "name": "mensaje de error de academico1"
     },
     {
@@ -3750,11 +3800,11 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        -5344,
-        -800
+        -4672,
+        4768
       ],
       "typeVersion": 1,
-      "id": "3f60478a-fc32-4726-a5ae-45558a54e06a",
+      "id": "9627dacb-d013-45aa-a1ba-e11676c9bd40",
       "name": "Sticky Note4"
     },
     {
@@ -3817,10 +3867,10 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.2,
       "position": [
-        -3904,
-        -544
+        -3232,
+        5024
       ],
-      "id": "d91fb101-247e-4ea2-ada0-eff466bcd2de",
+      "id": "0aa66ef7-1d70-4628-8cb9-4bdcfa8d2523",
       "name": "Switch6"
     },
     {
@@ -3966,11 +4016,105 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        -2768,
-        -672
+        -2096,
+        4896
       ],
-      "id": "c7636bc0-7cdf-40d1-92de-424965dd2486",
+      "id": "55462ba8-18d8-4ec3-9ea5-36d0cebf1196",
       "name": "Execute Workflow7"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Importante: Esto se coloca dentro de un nodo \"Code\" en n8n\n\nfunction uuidv4() {\n  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {\n    const r = Math.random() * 16 | 0;\n    const v = c === 'x' ? r : (r & 0x3 | 0x8);\n    return v.toString(16);\n  });\n}\n\nreturn [\n  {\n    json: {\n      uuid: uuidv4(),\n      now: new Date().toLocaleString('es-MX', {\n  timeZone: 'America/Mexico_City'\n})\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -2896,
+        4768
+      ],
+      "id": "99991e1c-f53c-4242-aa65-9a2c3d1a8797",
+      "name": "Code Ayuda",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "u1v2w3x4-y5z6-7890-abcd-ef2345678901",
+              "name": "date",
+              "value": "={{ $('Code Ayuda').item.json.now }}",
+              "type": "string"
+            },
+            {
+              "id": "a2b3c4d5-e6f7-8901-ghij-kl3456789012",
+              "name": "state",
+              "value": "espera_respuesta_ayuda",
+              "type": "string"
+            },
+            {
+              "id": "p3q4r5s6-t7u8-9012-vwxy-z4567890123",
+              "name": "userStateId",
+              "value": "={{ $('Auth Guardian').item.json.data.session.user_id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -2320,
+        4768
+      ],
+      "id": "d38b27a1-95c3-4cde-b37d-587dc6ddfc5e",
+      "name": "Edit Fields Ayuda"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v22.0/{{ $('datos wp').item.json.data.config.account.phone_number_id }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('datos wp').item.json.data.config.account.whatsapp_token }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('incoming_data').item.json.incoming_wp.messages[0].from }}\",\n  \"type\": \"text\",\n  \"text\": {\n    \"body\": \"🆘 ¿Necesitas ayuda?\\n\\nPuedes contactarnos:\\n📞 Teléfono: +52 55 1234 5678\\n📧 Email: soporte@colegio.edu.mx\\n\\nHorario de atención:\\nLunes a Viernes: 8:00 AM - 6:00 PM\"\n  }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -2496,
+        4768
+      ],
+      "id": "061a2b52-23d6-4917-9dcd-f4fc655c7888",
+      "name": "mensaje ayuda"
+    },
+    {
+      "parameters": {
+        "workflowId": "update_user_state",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        -2096,
+        4768
+      ],
+      "id": "fd998893-3569-44ed-861e-6a77f816c3c6",
+      "name": "Execute Workflow Ayuda"
     },
     {
       "parameters": {
@@ -4013,10 +4157,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -3344,
-        -448
+        -2672,
+        5120
       ],
-      "id": "cf6bcb09-35b9-449d-b80b-4470f5028d58",
+      "id": "a12c67be-3704-4069-bead-73c0e2fcd02b",
       "name": "Edit Fields31"
     },
     {
@@ -4026,10 +4170,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -3568,
-        -448
+        -2896,
+        5120
       ],
-      "id": "c22cd1b7-b183-46be-a2e6-0e9d586f305b",
+      "id": "7cf25955-5f2c-4fbd-a106-65b625378a96",
       "name": "Code31",
       "alwaysOutputData": true
     },
@@ -4062,10 +4206,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -2992,
-        -448
+        -2320,
+        5120
       ],
-      "id": "43a62754-a272-4502-bd89-6d4a1e12800d",
+      "id": "82e01dea-6925-4cb3-8694-63ca2144b702",
       "name": "Edit Fields32"
     },
     {
@@ -4093,10 +4237,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -3168,
-        -448
+        -2496,
+        5120
       ],
-      "id": "0f2e5dc1-7e45-4d07-983a-176578b7dac3",
+      "id": "fba24824-cdc4-4be3-a2a1-bfede885dc31",
       "name": "mensaje inicial FAQ1"
     },
     {
@@ -4242,10 +4386,10 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        -2784,
-        -448
+        -2112,
+        5120
       ],
-      "id": "bf19ddca-6a62-4c42-ad1a-f26f1c8c7fd8",
+      "id": "d211dcb5-a9ba-47e4-8390-f323cda8cc74",
       "name": "Execute Workflow8"
     },
     {
@@ -4276,10 +4420,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        -5008,
-        0
+        -4336,
+        5568
       ],
-      "id": "ae159467-beff-4d9b-9f30-de7185861f5c",
+      "id": "0fa0ae3c-7eab-421e-8f17-1abd1d6b585f",
       "name": "If12"
     },
     {
@@ -4299,10 +4443,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -4768,
-        112
+        -4096,
+        5680
       ],
-      "id": "19d01619-af9a-49a1-9d9c-9e0a4b0e6224",
+      "id": "72685501-f237-4ae2-9547-bd28720afdac",
       "name": "guardamos la respuesta de academico2"
     },
     {
@@ -4312,10 +4456,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -4528,
-        112
+        -3856,
+        5680
       ],
-      "id": "89d20f12-cb3d-4707-b3e8-c7b860770989",
+      "id": "0389da75-042c-4d1a-8f7e-c1dfa8fc128f",
       "name": "Revisamos que el valor este dentro de lo permitido2"
     },
     {
@@ -4345,10 +4489,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        -4272,
-        112
+        -3600,
+        5680
       ],
-      "id": "1a9cd954-5fa6-4c55-a856-84fc01092ae5",
+      "id": "35c21445-4d60-4b0c-be53-fdf4274860e2",
       "name": "revisamos que la respuesta no sea erronea2"
     },
     {
@@ -4376,10 +4520,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -3904,
-        288
+        -3232,
+        5856
       ],
-      "id": "ca36cf2e-8614-42a8-8110-7aba3a39e39a",
+      "id": "7503a38a-5535-4b7f-a8e1-89e4d490c2d0",
       "name": "mensaje de error de academico3"
     },
     {
@@ -4394,10 +4538,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -3648,
-        16
+        -2976,
+        5584
       ],
-      "id": "99fca01b-360a-4748-9598-3fa7badfc5f2",
+      "id": "39aae186-b3fc-4a72-8557-61921e500532",
       "name": "activar mensaje trasbordo"
     },
     {
@@ -4417,10 +4561,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -4064,
-        16
+        -3392,
+        5584
       ],
-      "id": "7b47538a-13e6-4e6e-9a09-de48207757a7",
+      "id": "67800359-6177-4159-b395-06ff43d9e57b",
       "name": "Edit Fields33"
     },
     {
@@ -4430,10 +4574,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -3856,
-        16
+        -3184,
+        5584
       ],
-      "id": "012f9c6d-f441-4f82-9b59-a5c20540964b",
+      "id": "66a4437f-3b98-4202-8de4-ddad4010d747",
       "name": "Code32"
     },
     {
@@ -4464,10 +4608,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        -3440,
-        16
+        -2768,
+        5584
       ],
-      "id": "5923ea2d-c73d-46a3-b16c-57fc2489e83b",
+      "id": "2aeaa1ec-f7a6-4018-992d-f3d700e707f4",
       "name": "mensaje guardado correctamente"
     },
     {
@@ -4495,10 +4639,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -3200,
-        0
+        -2528,
+        5568
       ],
-      "id": "9d5dca8a-1c86-4147-9bf2-230750981141",
+      "id": "ee712b19-954e-40a8-a6b2-dc3d946d0be5",
       "name": "trasbordo corecto"
     },
     {
@@ -4530,10 +4674,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -2448,
-        0
+        -1776,
+        5568
       ],
-      "id": "ac9ce226-4bb3-43eb-9168-2c3e345b8398",
+      "id": "428f48e5-58d5-450b-8c78-d191d5933025",
       "name": "Edit Fields34"
     },
     {
@@ -4691,10 +4835,10 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        -2240,
-        0
+        -1568,
+        5568
       ],
-      "id": "f9698bc2-3c88-4a5a-a701-de17d48fa995",
+      "id": "6b637ba5-e446-4fdc-a7d0-deaa3b71f6cf",
       "name": "Execute Workflow9"
     },
     {
@@ -4732,10 +4876,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -2656,
-        0
+        -1984,
+        5568
       ],
-      "id": "3dbc8dba-d190-4027-8b34-5ba9257fb1b0",
+      "id": "60b6154b-b657-4771-a865-7b69f0dbd7ef",
       "name": "Edit Fields35"
     },
     {
@@ -4745,10 +4889,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -2912,
-        0
+        -2240,
+        5568
       ],
-      "id": "772f24bc-b210-44de-93c8-352dbb2bf38b",
+      "id": "1957dcf4-e0a2-4d9a-b64d-cab2034d10bb",
       "name": "Code33",
       "alwaysOutputData": true
     },
@@ -4764,10 +4908,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -5472,
-        -3328
+        -4800,
+        2240
       ],
-      "id": "c797b285-9b0b-4a45-ad36-6e7eb3c04675",
+      "id": "71814e5e-8a6f-4c73-bafc-fe14526d0b05",
       "name": "envio mensaje a agente"
     },
     {
@@ -4778,11 +4922,11 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        1120,
-        -5280
+        1792,
+        288
       ],
       "typeVersion": 1,
-      "id": "6148a664-a3bd-4661-bfaa-b699c7997915",
+      "id": "71f15219-218e-4d93-b023-3c7b8b16ff93",
       "name": "Sticky Note5"
     },
     {
@@ -4810,10 +4954,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -752,
-        -3472
+        -80,
+        2096
       ],
-      "id": "ed57d60f-cdaa-44a1-a9a6-8a072037c723",
+      "id": "3dce875c-78b0-436e-acdc-f3bbfd531a0f",
       "name": "HTTP Request7"
     },
     {
@@ -4845,10 +4989,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -320,
-        -3472
+        352,
+        2096
       ],
-      "id": "93b3566a-4657-4b45-bb16-5b340a94da5b",
+      "id": "c6c2c7ba-044b-4a24-8670-4cbb29d48877",
       "name": "Edit Fields"
     },
     {
@@ -4858,10 +5002,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -544,
-        -3472
+        128,
+        2096
       ],
-      "id": "c8bd8d6b-cec3-4dfa-8f07-9f1b0dcb8e4f",
+      "id": "844009f4-6524-43f4-93dd-3bf4ea83db6e",
       "name": "Code",
       "alwaysOutputData": true
     },
@@ -4894,10 +5038,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -128,
-        -3472
+        544,
+        2096
       ],
-      "id": "98847a1d-0e69-40f0-afcd-c40b1c01bd63",
+      "id": "b568d8d9-4546-4496-b954-18b011c56a32",
       "name": "Edit Fields22"
     },
     {
@@ -5043,10 +5187,10 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        96,
-        -3472
+        768,
+        2096
       ],
-      "id": "7240d048-8f1a-466b-93c7-77e8d8d33bf7",
+      "id": "2781476d-5952-44fb-a80b-078fa91d1656",
       "name": "Execute Workflow10"
     },
     {
@@ -5074,10 +5218,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -3120,
-        160
+        -2448,
+        5728
       ],
-      "id": "c64c9e3b-4ec2-4d20-9d5c-74181c3a472f",
+      "id": "8a13ae3a-2433-4986-a671-81690a7da86a",
       "name": "trasbordo incorrecto"
     },
     {
@@ -5097,10 +5241,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -6432,
-        -1952
+        -5760,
+        3616
       ],
-      "id": "ba0f57f6-a1dd-4fcc-998f-b07ab6a299f1",
+      "id": "14bab0d9-93b1-4fde-a609-be6c0cd08912",
       "name": "Edit Fields1"
     },
     {
@@ -5110,10 +5254,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -6224,
-        -1952
+        -5552,
+        3616
       ],
-      "id": "602246a3-eb24-404b-b920-caa908f87921",
+      "id": "42d22d42-f7e1-4b69-b398-7909a84a6140",
       "name": "limpiamos el mensaje de validación"
     },
     {
@@ -5137,10 +5281,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -6448,
-        -1744
+        -5776,
+        3824
       ],
-      "id": "56d31ad4-7cb0-49e2-9a5e-a5d65835d24a",
+      "id": "bdff76ee-8f1c-45a2-a895-02d258b7cb9b",
       "name": "validamos el usuario"
     },
     {
@@ -5171,10 +5315,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        -6240,
-        -1744
+        -5568,
+        3824
       ],
-      "id": "f533f78a-7b9d-421c-a7fc-7b5f6b12a9dd",
+      "id": "e4117cef-2309-4d2b-ab87-63b9f90f3b72",
       "name": "revisamos respuesta de autorizacion"
     },
     {
@@ -5202,10 +5346,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -5888,
-        -1904
+        -5216,
+        3664
       ],
-      "id": "8f165747-1dcf-4cc5-bc4e-2a645f0bebc8",
+      "id": "4776db39-038c-49c5-b5e9-7c6d2f683fa8",
       "name": "validación correcta"
     },
     {
@@ -5361,10 +5505,10 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        -5664,
-        -1904
+        -4992,
+        3664
       ],
-      "id": "174db370-30f0-4c42-b803-ae1a845bca6d",
+      "id": "75be93f6-71da-4637-8d96-2807d146cb6b",
       "name": "Execute Workflow11"
     },
     {
@@ -5522,10 +5666,10 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        48,
-        -5024
+        720,
+        544
       ],
-      "id": "580fd294-9cac-4778-b712-e5deb7ebce7a",
+      "id": "28738670-329d-4dfa-9c5a-af886b2dcdb1",
       "name": "Execute Workflow12"
     },
     {
@@ -5549,10 +5693,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -4016,
-        -3216
+        -3344,
+        2352
       ],
-      "id": "f60183a4-6150-445f-bdd5-7450d047cab4",
+      "id": "ca5e2f05-1b8b-474c-b37a-85f845808f57",
       "name": "HTTP Request9"
     },
     {
@@ -5602,10 +5746,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -4240,
-        -3216
+        -3568,
+        2352
       ],
-      "id": "e3dd63e8-710a-4196-ade2-6454dabf25fb",
+      "id": "ba69ae0e-7cd5-443d-a337-5aed135b08ce",
       "name": "Edit Fields20"
     },
     {
@@ -5615,10 +5759,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -4464,
-        -3216
+        -3792,
+        2352
       ],
-      "id": "c9ff60ee-1c5a-4fef-b86d-ad90b91a6096",
+      "id": "e910e314-047e-4899-85b9-501c8d44fe34",
       "name": "Code6",
       "alwaysOutputData": true
     },
@@ -5645,10 +5789,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -3744,
-        -3216
+        -3072,
+        2352
       ],
-      "id": "4d89fb5e-12d1-4344-8127-bae7bcc07522",
+      "id": "91472ac7-253e-4d0f-a2d6-2ce534f86205",
       "name": "Edit Fields21"
     },
     {
@@ -5658,10 +5802,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -3536,
-        -3216
+        -2864,
+        2352
       ],
-      "id": "16622c57-b319-4fa6-ad1a-6beeadbde2c2",
+      "id": "1b08c3dc-842c-4ebd-917e-3455c3de58cb",
       "name": "Code15"
     },
     {
@@ -5692,10 +5836,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        -3328,
-        -3216
+        -2656,
+        2352
       ],
-      "id": "ffbfc969-8ccb-4b05-ae0b-5ad43b75480c",
+      "id": "d699a9ac-1f7d-4479-82ad-3d8e191ae93f",
       "name": "If2"
     },
     {
@@ -5719,10 +5863,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -2384,
-        -3264
+        -1712,
+        2304
       ],
-      "id": "ee42e94a-05aa-4eb9-8d7f-88ada43ea2cd",
+      "id": "43c75d40-21eb-4fba-88cf-21e6b7bab23d",
       "name": "HTTP Request10"
     },
     {
@@ -5753,10 +5897,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        -2176,
-        -3264
+        -1504,
+        2304
       ],
-      "id": "0519359b-3adc-4fa5-b869-31572b560eb9",
+      "id": "ae41e5c9-e0d2-439b-903e-c933e1aef271",
       "name": "If3"
     },
     {
@@ -5784,10 +5928,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -1712,
-        -3088
+        -1040,
+        2480
       ],
-      "id": "d501cc17-2b5a-43d8-a3ef-06afb2742d56",
+      "id": "0dee81fb-4c23-4004-9b81-566bd748fed2",
       "name": "mensaje evento sin foto"
     },
     {
@@ -5815,10 +5959,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -1920,
-        -3280
+        -1248,
+        2288
       ],
-      "id": "b46dd219-b309-4786-a419-77c62a57fb30",
+      "id": "5d6c1b28-fc8d-458f-9a27-a1947b1d44cb",
       "name": "evento con foto"
     },
     {
@@ -5879,10 +6023,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        -5696,
-        -3392
+        -5024,
+        2176
       ],
-      "id": "55c1db67-51e4-4e82-8a07-5f192a834625",
+      "id": "f99e377d-9efa-4060-b983-bf64f2ee9e2d",
       "name": "If6"
     },
     {
@@ -5913,10 +6057,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        -6480,
-        -1296
+        -5808,
+        4272
       ],
-      "id": "86f17b49-46e6-4e61-8f04-2343723afa47",
+      "id": "daf8a473-87e9-425c-b883-44093c25ae4d",
       "name": "If"
     },
     {
@@ -5944,10 +6088,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -6160,
-        -1408
+        -5488,
+        4160
       ],
-      "id": "114cb4e6-042d-4c64-870f-c9759443b20d",
+      "id": "596e06c6-acb3-4182-9f31-5402e0ae58c4",
       "name": "validación correcta1",
       "retryOnFail": true
     },
@@ -6104,10 +6248,10 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        -5920,
-        -1408
+        -5248,
+        4160
       ],
-      "id": "95a4a114-3f0c-4baa-af8f-efd4c2166dcf",
+      "id": "8455492a-eccf-43ed-a891-86ef37defd97",
       "name": "Execute Workflow13"
     },
     {
@@ -6118,11 +6262,11 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        -6928,
-        -2016
+        -6256,
+        3552
       ],
       "typeVersion": 1,
-      "id": "310c2fb8-059b-4cf1-a64d-d48b8238ecab",
+      "id": "6f5a1aa5-b9d9-417e-b8ea-4947ab26c64a",
       "name": "Sticky Note6"
     },
     {
@@ -6133,11 +6277,11 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        -2096,
-        -1296
+        -1424,
+        4272
       ],
       "typeVersion": 1,
-      "id": "f3f93694-50de-4257-ad6d-cf240726db07",
+      "id": "22814805-2053-4cd4-88ca-425a4a83b610",
       "name": "Sticky Note1"
     },
     {
@@ -6165,10 +6309,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -6240,
-        -1200
+        -5568,
+        4368
       ],
-      "id": "dc619418-1d17-4ecf-91e0-60b8919cadf5",
+      "id": "1bb800c5-ceb9-4ab3-8fd8-92d185745303",
       "name": "validación correcta2"
     },
     {
@@ -6176,10 +6320,10 @@
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
       "position": [
-        -6032,
-        -1200
+        -5360,
+        4368
       ],
-      "id": "bc3f3eef-349c-4f67-a65b-61cb86f9329d",
+      "id": "cf58f5fb-704a-44df-aaee-bb48b6c92deb",
       "name": "No Operation, do nothing"
     },
     {
@@ -6190,11 +6334,11 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        -480,
-        -4512
+        192,
+        1056
       ],
       "typeVersion": 1,
-      "id": "dd8d6aab-ad6b-4123-8f71-e96e7aba7b9c",
+      "id": "876159e2-b9fb-4710-a0ef-f6f96fd03600",
       "name": "Sticky Note7"
     },
     {
@@ -6340,10 +6484,10 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        -688,
-        -4400
+        -16,
+        1168
       ],
-      "id": "968c2918-4d71-47f9-94d9-2688abaa478d",
+      "id": "7b185993-e3ee-432b-84fd-aedc517510e7",
       "name": "Execute Workflow6"
     },
     {
@@ -6353,11 +6497,11 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        -1136,
-        -4080
+        -464,
+        1488
       ],
       "typeVersion": 1,
-      "id": "08bb894e-bb84-4a60-b9e8-623417bffb29",
+      "id": "2cf096a5-c340-424b-9676-2c6a67850b6f",
       "name": "Sticky Note8"
     },
     {
@@ -6421,10 +6565,10 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.2,
       "position": [
-        -7168,
-        -2864
+        -6496,
+        2704
       ],
-      "id": "5995708a-259c-47eb-b376-7c3fb8c05053",
+      "id": "3ee8c4a4-8718-4d78-8131-09d87745fa37",
       "name": "Switch2"
     },
     {
@@ -6452,10 +6596,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -6832,
-        -2736
+        -6160,
+        2832
       ],
-      "id": "518bd5bd-1329-4178-ba49-34405c090ee3",
+      "id": "fa302743-efc8-4ff8-a284-e49fdca215d1",
       "name": "usuario no encontrado"
     },
     {
@@ -6483,10 +6627,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -6832,
-        -2912
+        -6160,
+        2656
       ],
-      "id": "b66ace06-8476-468c-ad55-49a0fdb7c79c",
+      "id": "16142b96-26ff-4bcd-9564-e5116f9cf39f",
       "name": "usuario no validado"
     },
     {
@@ -6514,10 +6658,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -6832,
-        -2544
+        -6160,
+        3024
       ],
-      "id": "e7856327-21de-4f12-8d0c-c1f92df29052",
+      "id": "cbf797ce-bb83-49cb-90a8-0dd7b20fd738",
       "name": "error desconocido"
     },
     {
@@ -6540,10 +6684,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 1,
       "position": [
-        -7280,
-        -3616
+        -6608,
+        1952
       ],
-      "id": "9215ed60-b00b-4901-9ad0-93fa3a9e14e5"
+      "id": "eef1a94a-a926-4242-b4aa-e16183dc22c9"
     },
     {
       "parameters": {
@@ -6553,10 +6697,10 @@
       "type": "n8n-nodes-base.aggregate",
       "typeVersion": 1,
       "position": [
-        -7936,
-        -3616
+        -7264,
+        1952
       ],
-      "id": "54d9c947-a5c7-45a4-a0df-0a36782fc5dc",
+      "id": "c896096e-c702-4ca1-bc53-5a858c8fcb00",
       "name": "datos_combinados"
     },
     {
@@ -6567,11 +6711,11 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        -8544,
-        -4304
+        -7872,
+        1264
       ],
       "typeVersion": 1,
-      "id": "b50180e4-1e9e-4660-84bb-21b5f3758329",
+      "id": "4eacc200-6269-4b63-9a60-4693c46b63bb",
       "name": "Sticky Note9"
     },
     {
@@ -6591,10 +6735,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -7488,
-        -3616
+        -6816,
+        1952
       ],
-      "id": "51ddb97c-1029-45ca-b2de-0914757d9c97",
+      "id": "d1ffb4fc-f7e1-4231-821e-81b12b68e445",
       "name": "datos_num"
     },
     {
@@ -6632,10 +6776,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -7712,
-        -3616
+        -7040,
+        1952
       ],
-      "id": "5e92649f-05db-4d05-a209-76da1a11472a",
+      "id": "c37907af-1265-4896-b280-07cc2fcfa68c",
       "name": "incoming_data"
     },
     {
@@ -6824,10 +6968,10 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.2,
       "position": [
-        -7072,
-        -3696
+        -6400,
+        1872
       ],
-      "id": "2d9916a1-f530-4587-a0d2-306623200e5a",
+      "id": "5e5c88e1-222e-4d05-8dbf-d445f1315d4d",
       "name": "verificamos tipo de mensaje",
       "alwaysOutputData": false
     },
@@ -6859,10 +7003,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        -1296,
-        -5232
+        -624,
+        336
       ],
-      "id": "4ba55e2d-5169-4dd7-9536-c7625f564aba",
+      "id": "cb0308e8-2d82-4048-beee-a4a87d0c179b",
       "name": "multi student true?"
     },
     {
@@ -6892,10 +7036,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        -848,
-        -5408
+        -176,
+        160
       ],
-      "id": "135c5178-94bc-4070-9bbb-739095807431",
+      "id": "97571479-589b-4eba-bfde-8b38120f30e0",
       "name": "no esta seleccionando un alumno aun?"
     },
     {
@@ -6926,10 +7070,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        -192,
-        -5312
+        480,
+        256
       ],
-      "id": "b80b6580-19a6-4263-af4c-4fb4033d28e5",
+      "id": "12678608-02a8-4152-908e-045408240790",
       "name": "hay un error en seleccion?"
     },
     {
@@ -6957,10 +7101,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        48,
-        -5408
+        720,
+        160
       ],
-      "id": "06f1855e-ae56-4fe6-920a-8996086f5b29",
+      "id": "07e20274-ea3a-488b-8269-43441367292a",
       "name": "error seleccion alumno"
     },
     {
@@ -6969,11 +7113,11 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        -1456,
-        -5488
+        -784,
+        80
       ],
       "typeVersion": 1,
-      "id": "05bf4635-ce6f-4d7c-a317-0a672d38f013",
+      "id": "564a2d24-3bb3-415f-af98-59f58c5de95c",
       "name": "Sticky Note10"
     },
     {
@@ -7001,10 +7145,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -1728,
-        -3824
+        -1056,
+        1744
       ],
-      "id": "2b0ebdca-9393-417b-b73a-9cb12e584ba3",
+      "id": "a7bde846-1391-413f-90a5-e4500f456fdc",
       "name": "no respondio con boton"
     },
     {
@@ -7013,11 +7157,11 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        -1200,
-        -4496
+        -528,
+        1072
       ],
       "typeVersion": 1,
-      "id": "6ddc0d30-a866-4680-b097-7dadbe64ea9b",
+      "id": "5969a40e-db3e-4db9-b2b2-5ae97576b6f5",
       "name": "Sticky Note11"
     },
     {
@@ -7026,11 +7170,11 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        1696,
-        -3760
+        2368,
+        1808
       ],
       "typeVersion": 1,
-      "id": "5a4c20e0-bbc4-4608-a92c-e089a04262ae",
+      "id": "d9f948d5-51da-40f3-b542-aff5dc029228",
       "name": "Sticky Note12"
     },
     {
@@ -7039,11 +7183,11 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        448,
-        -2576
+        1120,
+        2992
       ],
       "typeVersion": 1,
-      "id": "64cfb522-f0dc-4907-b8cb-c0b47cda2904",
+      "id": "c5209602-db6d-487b-a06d-37c2517e6a65",
       "name": "Sticky Note13"
     },
     {
@@ -7052,11 +7196,11 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        288,
-        -3472
+        960,
+        2096
       ],
       "typeVersion": 1,
-      "id": "3bca72cc-c899-4539-b0f1-652991a7567e",
+      "id": "fb99e8d3-d9cf-4b3f-b7f1-a8cdc35d9e0e",
       "name": "Sticky Note14"
     },
     {
@@ -7073,10 +7217,10 @@
       "type": "n8n-nodes-base.whatsAppTrigger",
       "typeVersion": 1,
       "position": [
-        -8352,
-        -4000
+        -7680,
+        1568
       ],
-      "id": "2287ced3-f02e-4d3c-9405-d31da807bad2",
+      "id": "ef339523-3bf4-4fb2-95e6-323680e87078",
       "name": "colegio REIMS",
       "webhookId": "a6a936fa-234f-4ea5-8035-fcedf4cc5a75",
       "credentials": {
@@ -7096,10 +7240,10 @@
       "type": "n8n-nodes-base.whatsAppTrigger",
       "typeVersion": 1,
       "position": [
-        -8352,
-        -4176
+        -7680,
+        1392
       ],
-      "id": "2541fc77-6965-4baf-b8af-4d1e1a372273",
+      "id": "22e12e74-919c-4141-ac4c-35aac5c5f519",
       "name": "colegio CEREBRO",
       "webhookId": "ca490f9e-fbfe-4e9e-9712-acf9aee21621",
       "credentials": {
@@ -7120,10 +7264,10 @@
       "type": "n8n-nodes-base.whatsAppTrigger",
       "typeVersion": 1,
       "position": [
-        -8352,
-        -3824
+        -7680,
+        1744
       ],
-      "id": "4b52cdc4-ceb1-4254-96c4-be5695027056",
+      "id": "de2444d7-9758-416d-a43d-62687e8e7a36",
       "name": "la salle pedregal",
       "webhookId": "52e1956e-39f3-4370-81da-e345829f4204",
       "credentials": {
@@ -7288,10 +7432,10 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        256,
-        -5408
+        928,
+        160
       ],
-      "id": "b31db0bb-014d-4e43-8442-a9f74dbf7960",
+      "id": "f6179359-1943-4053-835c-12d7ebc18ce7",
       "name": "Execute Workflow4"
     },
     {
@@ -7323,10 +7467,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -2160,
-        -3408
+        -1488,
+        2160
       ],
-      "id": "9fcb6c24-3f49-463b-aeb8-73952d5cf02c",
+      "id": "c9eadf25-eac6-462c-9264-8585ef8908ec",
       "name": "Edit Fields2",
       "executeOnce": true
     },
@@ -7353,10 +7497,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -1968,
-        -3408
+        -1296,
+        2160
       ],
-      "id": "127668f2-dc6a-4a49-a071-fb7995622248",
+      "id": "66727d45-41cd-4c4c-bcca-5ebaeebd87c2",
       "name": "Edit Fields23",
       "executeOnce": true
     },
@@ -7513,10 +7657,10 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        -1536,
-        -3408
+        -864,
+        2160
       ],
-      "id": "e43dad52-4fa5-4404-9bed-b5bc275cea68",
+      "id": "979eca93-57b6-4242-9a56-4f0e9518e0e7",
       "name": "Execute Workflow14",
       "executeOnce": true
     },
@@ -7530,10 +7674,10 @@
       "type": "n8n-nodes-base.whatsAppTrigger",
       "typeVersion": 1,
       "position": [
-        -8368,
-        -3616
+        -7696,
+        1952
       ],
-      "id": "3928e4c2-fb9c-4895-829e-14041945d467",
+      "id": "14c1e6d1-d6bd-4bb0-8025-4cebc5e037df",
       "name": "pruebas cerebro",
       "webhookId": "cbdfa095-af47-405c-a244-7eba5e1b4e07",
       "credentials": {
@@ -7569,10 +7713,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -176,
-        -3760
+        496,
+        1808
       ],
-      "id": "156885b0-d94b-4cb7-af65-116ec040f6c1",
+      "id": "03caaf83-17ee-489f-9d3f-acbb1f995514",
       "name": "enviamos datos de calendario"
     },
     {
@@ -7603,10 +7747,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        32,
-        -3760
+        704,
+        1808
       ],
-      "id": "b342d519-d3b6-4e07-ad6b-e78260dcebac",
+      "id": "30009ed0-f59b-4671-9566-9f43b4332c00",
       "name": "revisamos si tiene mas dias"
     },
     {
@@ -7634,10 +7778,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        688,
-        -3728
+        1360,
+        1840
       ],
-      "id": "95e961ec-07e5-4cc2-88ed-a66b7407f754",
+      "id": "f2d1ca69-a848-4dc4-9c61-ee42a9d6bdec",
       "name": "botonera con mas eventos en calendario"
     },
     {
@@ -7668,10 +7812,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        -4784,
-        -2896
+        -4112,
+        2672
       ],
-      "id": "17acfa12-4f68-4bca-90f3-6ac8b065c771",
+      "id": "b92f03cc-f8d0-446c-83f3-73dd5ebe3bdf",
       "name": "revisamos si el usuario respondio por boton2"
     },
     {
@@ -7699,10 +7843,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        336,
-        -3808
+        1008,
+        1760
       ],
-      "id": "5316e53d-38ca-4fc1-bc8b-889449f74678",
+      "id": "3f60822c-0796-4177-bfb4-0cb780c365e9",
       "name": "enviamos mas datos de calendario"
     },
     {
@@ -7722,10 +7866,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -3152,
-        -3344
+        -2480,
+        2224
       ],
-      "id": "b6a564b3-003c-48f6-96f7-d410a701e467",
+      "id": "a0a0d852-ddb1-49a7-8f5d-44f53de7b204",
       "name": "Edit Fields5"
     },
     {
@@ -7735,10 +7879,10 @@
       "type": "n8n-nodes-base.splitInBatches",
       "typeVersion": 3,
       "position": [
-        -2720,
-        -3344
+        -2048,
+        2224
       ],
-      "id": "c20922ca-465c-4ec4-886c-6008271f0d25",
+      "id": "4ae4c487-bd58-4cc0-84a6-b75323321707",
       "name": "Loop Over Items"
     },
     {
@@ -7749,10 +7893,10 @@
       "type": "n8n-nodes-base.splitOut",
       "typeVersion": 1,
       "position": [
-        -2944,
-        -3344
+        -2272,
+        2224
       ],
-      "id": "0e633d23-32ee-44c6-95aa-c2ad93f5edb9",
+      "id": "3a1b4723-5d73-4f4b-a5cb-8306da7b669d",
       "name": "Split Out"
     },
     {
@@ -7780,10 +7924,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -2400,
-        -3408
+        -1728,
+        2160
       ],
-      "id": "f0e7e2bc-10cb-4c87-b12d-442a64afcd59",
+      "id": "17d3a253-c224-4db4-9ebf-3ce5fd6f08eb",
       "name": "boton regresar a calendario",
       "executeOnce": true
     },
@@ -7795,11 +7939,11 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        -2816,
-        -3552
+        -2144,
+        2016
       ],
       "typeVersion": 1,
-      "id": "f8d0456e-5a92-4bd9-a403-2be1650198a4",
+      "id": "4193efc4-c348-4b41-8040-08153b3b1ca7",
       "name": "Sticky Note15"
     },
     {
@@ -7827,10 +7971,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -4544,
-        -2816
+        -3872,
+        2752
       ],
-      "id": "76bfa68e-549d-4020-b44a-6f8fba3c94a0",
+      "id": "fb0784dc-6d5e-423d-9b59-0ce1b52a6892",
       "name": "no selecciono boton calendario"
     },
     {
@@ -7840,10 +7984,10 @@
       "type": "n8n-nodes-base.wait",
       "typeVersion": 1.1,
       "position": [
-        -1712,
-        -3280
+        -1040,
+        2288
       ],
-      "id": "1848baab-0ea7-4432-a867-f584d93a38e8",
+      "id": "469a8c0f-e1f6-4a75-a666-fdf6874ff0ca",
       "name": "Wait",
       "webhookId": "51c94d6b-2882-4780-b934-2ae6c5562882"
     },
@@ -7872,10 +8016,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -3088,
-        -3120
+        -2416,
+        2448
       ],
-      "id": "887f0730-9ebe-4ffd-87b9-ca37c2334f72",
+      "id": "4f09778b-c268-4c0b-a039-8cb772bcec5f",
       "name": "error seleccion alumno1"
     }
   ],
@@ -8011,6 +8155,46 @@
         [
           {
             "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "mensaje ayuda",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code Ayuda": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields Ayuda",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields Ayuda": {
+      "main": [
+        [
+          {
+            "node": "mensaje ayuda",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "mensaje ayuda": {
+      "main": [
+        [
+          {
+            "node": "Execute Workflow Ayuda",
             "type": "main",
             "index": 0
           }
@@ -8556,6 +8740,13 @@
         [
           {
             "node": "Code4",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Code Ayuda",
             "type": "main",
             "index": 0
           }
@@ -9834,37 +10025,6 @@
         }
       }
     ],
-    "la salle pedregal": [
-      {
-        "json": {
-          "messaging_product": "whatsapp",
-          "metadata": {
-            "display_phone_number": "5215545515382",
-            "phone_number_id": "790845937442271"
-          },
-          "contacts": [
-            {
-              "profile": {
-                "name": "Roco Casillas"
-              },
-              "wa_id": "5215543444926"
-            }
-          ],
-          "messages": [
-            {
-              "from": "5215543444926",
-              "id": "wamid.HBgNNTIxNTU0MzQ0NDkyNhUCABIYFDNBNDJEOUVEODAyMjk1MjlFRkJEAA==",
-              "timestamp": "1758755180",
-              "text": {
-                "body": "VALIDAR-68d477ae6529a96c36ab9b46"
-              },
-              "type": "text"
-            }
-          ],
-          "field": "messages"
-        }
-      }
-    ],
     "colegio CEREBRO": [
       {
         "json": {
@@ -9895,9 +10055,40 @@
           "field": "messages"
         }
       }
+    ],
+    "la salle pedregal": [
+      {
+        "json": {
+          "messaging_product": "whatsapp",
+          "metadata": {
+            "display_phone_number": "5215545515382",
+            "phone_number_id": "790845937442271"
+          },
+          "contacts": [
+            {
+              "profile": {
+                "name": "Roco Casillas"
+              },
+              "wa_id": "5215543444926"
+            }
+          ],
+          "messages": [
+            {
+              "from": "5215543444926",
+              "id": "wamid.HBgNNTIxNTU0MzQ0NDkyNhUCABIYFDNBNDJEOUVEODAyMjk1MjlFRkJEAA==",
+              "timestamp": "1758755180",
+              "text": {
+                "body": "VALIDAR-68d477ae6529a96c36ab9b46"
+              },
+              "type": "text"
+            }
+          ],
+          "field": "messages"
+        }
+      }
     ]
   },
-  "versionId": "94192982-5586-4e69-80de-f8dfcce42a9e",
+  "versionId": "7f88cd19-dbaa-4d2c-bc18-06700e97195d",
   "triggerCount": 1,
   "shared": [
     {
