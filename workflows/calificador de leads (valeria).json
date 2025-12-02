@@ -1,8 +1,9 @@
 {
-  "createdAt": "2025-10-30T22:31:49.252Z",
   "updatedAt": "2025-11-26T05:13:47.000Z",
+  "createdAt": "2025-10-30T22:31:49.252Z",
   "id": "7U6sgGnSlAJDNvjV",
   "name": "calificador de leads (valeria)",
+  "description": null,
   "active": true,
   "isArchived": false,
   "nodes": [
@@ -1393,17 +1394,19 @@
     ]
   },
   "versionId": "c7069241-ab33-48f2-97e7-3f13fc27273b",
+  "activeVersionId": "c7069241-ab33-48f2-97e7-3f13fc27273b",
+  "versionCounter": 4,
   "triggerCount": 1,
   "shared": [
     {
-      "createdAt": "2025-10-30T22:31:49.254Z",
       "updatedAt": "2025-10-30T22:31:49.254Z",
+      "createdAt": "2025-10-30T22:31:49.254Z",
       "role": "workflow:owner",
       "workflowId": "7U6sgGnSlAJDNvjV",
       "projectId": "BZ9Ta5yhe4RhzY78",
       "project": {
-        "createdAt": "2025-05-13T15:56:28.209Z",
         "updatedAt": "2025-05-13T16:18:54.372Z",
+        "createdAt": "2025-05-13T15:56:28.209Z",
         "id": "BZ9Ta5yhe4RhzY78",
         "name": "CANTERA ADMIN <canteradigital7@gmail.com>",
         "type": "personal",
@@ -1411,13 +1414,13 @@
         "description": null,
         "projectRelations": [
           {
-            "createdAt": "2025-05-13T15:56:28.209Z",
             "updatedAt": "2025-05-13T15:56:28.209Z",
+            "createdAt": "2025-05-13T15:56:28.209Z",
             "userId": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
             "projectId": "BZ9Ta5yhe4RhzY78",
             "user": {
+              "updatedAt": "2025-12-02T06:00:52.000Z",
               "createdAt": "2025-05-13T15:56:27.880Z",
-              "updatedAt": "2025-12-02T04:59:23.000Z",
               "id": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
               "email": "canteradigital7@gmail.com",
               "firstName": "CANTERA",
@@ -1448,7 +1451,7 @@
               },
               "disabled": false,
               "mfaEnabled": false,
-              "lastActiveAt": "2025-12-01",
+              "lastActiveAt": "2025-12-02",
               "isPending": false
             }
           }
@@ -1458,10 +1461,1366 @@
   ],
   "tags": [
     {
-      "createdAt": "2025-07-03T15:43:40.294Z",
       "updatedAt": "2025-07-03T15:43:40.294Z",
+      "createdAt": "2025-07-03T15:43:40.294Z",
       "id": "H4J6yXkqR5NnyS8H",
       "name": "prod"
     }
-  ]
+  ],
+  "activeVersion": {
+    "updatedAt": "2025-12-02T05:05:56.621Z",
+    "createdAt": "2025-12-02T05:05:56.621Z",
+    "versionId": "c7069241-ab33-48f2-97e7-3f13fc27273b",
+    "workflowId": "7U6sgGnSlAJDNvjV",
+    "nodes": [
+      {
+        "parameters": {
+          "model": {
+            "__rl": true,
+            "mode": "list",
+            "value": "gpt-4o-mini"
+          },
+          "options": {}
+        },
+        "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "typeVersion": 1.2,
+        "position": [
+          -784,
+          960
+        ],
+        "id": "48e3501f-af3c-4909-8d31-d9bdd86d35ea",
+        "name": "OpenAI Chat Model",
+        "credentials": {
+          "openAiApi": {
+            "id": "ZmWqQ5PGylh4Y05s",
+            "name": "OpenAi account - CANTERA"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "description": "Recuerda considerar todas las definiciones de la calificacion de leads que esta en el prompt, para garantizar la correcta calificacion de cada uno de ellos dependiendo de la conversación con el cliente."
+        },
+        "type": "@n8n/n8n-nodes-langchain.toolThink",
+        "typeVersion": 1,
+        "position": [
+          32,
+          1104
+        ],
+        "id": "d7f4c2a6-67d2-422c-a5b2-456c59e5d6ed",
+        "name": "Think"
+      },
+      {
+        "parameters": {
+          "sessionIdType": "customKey",
+          "sessionKey": "={{ $('WhatsApp Trigger').item.json.messages[0].from }}",
+          "tableName": "n8n_chat_histories_agente_valeria",
+          "contextWindowLength": 20
+        },
+        "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+        "typeVersion": 1.3,
+        "position": [
+          -688,
+          1104
+        ],
+        "id": "c49a91b7-f87c-4d5d-a142-75cf18d0b0eb",
+        "name": "Postgres Chat Memory",
+        "credentials": {
+          "postgres": {
+            "id": "CFNWnFQx8hqQIegZ",
+            "name": "Postgres account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "description": "call this tool to schedule a meeting ",
+          "workflowId": {
+            "__rl": true,
+            "value": "aJIJlLEOEfejYf81",
+            "mode": "list",
+            "cachedResultName": "agente cantera Crm"
+          },
+          "workflowInputs": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "nombre_cliente": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('nombre_cliente', `full name of the customer`, 'string') }}",
+              "email_cliente": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('email_cliente', `email of the customer`, 'string') }}",
+              "telefono_cliente": "={{ $('WhatsApp Trigger').item.json.messages[0].from }}",
+              "nombre_empresa": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('nombre_empresa', `name of the business`, 'string') }}",
+              "requerimiento_cliente": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('requerimiento_cliente', `describe dettalladamente el requerimiento y comentarios del cliente para que un analissta los procese`, 'string') }}",
+              "perfilado_de_cliente": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('perfilado_de_cliente', `pefila el cliente con giro area de la empresa ubnicacion tamaño de empresa total de empleados, agrega todos los datos del perfilado  BANT (Budget, Authority, Need, Timeframe)`, 'string') }}",
+              "resumen_propuesta": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('resumen_propuesta', `propuesta generada por el ai al requerimiento del cliente`, 'string') }}",
+              "type_lead": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('type_lead', `tipo de lead definido entre Hot lead, Hot lead, Warm lead (siempre con estos valores en ingles para que puedas identificar)`, 'string') }}"
+            },
+            "matchingColumns": [],
+            "schema": [
+              {
+                "id": "nombre_cliente",
+                "displayName": "nombre_cliente",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string"
+              },
+              {
+                "id": "email_cliente",
+                "displayName": "email_cliente",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string"
+              },
+              {
+                "id": "telefono_cliente",
+                "displayName": "telefono_cliente",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string"
+              },
+              {
+                "id": "nombre_empresa",
+                "displayName": "nombre_empresa",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string"
+              },
+              {
+                "id": "requerimiento_cliente",
+                "displayName": "requerimiento_cliente",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string",
+                "removed": false
+              },
+              {
+                "id": "perfilado_de_cliente",
+                "displayName": "perfilado_de_cliente",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string",
+                "removed": false
+              },
+              {
+                "id": "resumen_propuesta",
+                "displayName": "resumen_propuesta",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string",
+                "removed": false
+              },
+              {
+                "id": "type_lead",
+                "displayName": "type_lead",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string",
+                "removed": false
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          }
+        },
+        "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+        "typeVersion": 2.2,
+        "position": [
+          -192,
+          1104
+        ],
+        "id": "95127c22-20ac-42c6-ac1e-7fbe7c0ce683",
+        "name": "ingreso_teams",
+        "disabled": true
+      },
+      {
+        "parameters": {
+          "content": "## Respuesta del agente\nEn esta sección documentamos la respuesta del agente y le mandamos el mensaje al usuario fiunal",
+          "height": 300,
+          "width": 480,
+          "color": 6
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          -448,
+          160
+        ],
+        "typeVersion": 1,
+        "id": "9f4f87b9-61ef-4e09-9556-d47b84d64540",
+        "name": "Sticky Note6"
+      },
+      {
+        "parameters": {
+          "workflowId": {
+            "__rl": true,
+            "value": "VCLg3xyOMNJgn1zp",
+            "mode": "list",
+            "cachedResultName": "asistente inserta mensajes"
+          },
+          "workflowInputs": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "number": "={{ $('WhatsApp Trigger').item.json.messages[0].from }}",
+              "project_id": 1,
+              "human_messaage": "={{ $('Guardamos el pdf').item.json.webViewLink }}",
+              "agent_message": "={{ $('Valeria').item.json.output }}",
+              "contact_name": "={{ $('WhatsApp Trigger').item.json.contacts[0].profile.name }}"
+            },
+            "matchingColumns": [],
+            "schema": [
+              {
+                "id": "number",
+                "displayName": "number",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string"
+              },
+              {
+                "id": "project_id",
+                "displayName": "project_id",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "number"
+              },
+              {
+                "id": "human_messaage",
+                "displayName": "human_messaage",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string"
+              },
+              {
+                "id": "agent_message",
+                "displayName": "agent_message",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string"
+              },
+              {
+                "id": "contact_name",
+                "displayName": "contact_name",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string"
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": true
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.executeWorkflow",
+        "typeVersion": 1.2,
+        "position": [
+          1904,
+          800
+        ],
+        "id": "abd9fcaa-2e63-44a5-8ab2-d4b7ff81a08f",
+        "name": "Execute Workflow"
+      },
+      {
+        "parameters": {
+          "rules": {
+            "values": [
+              {
+                "conditions": {
+                  "options": {
+                    "caseSensitive": true,
+                    "leftValue": "",
+                    "typeValidation": "strict",
+                    "version": 2
+                  },
+                  "conditions": [
+                    {
+                      "leftValue": "={{ $('Telegram Trigger').item.json.message.text }}",
+                      "rightValue": "document",
+                      "operator": {
+                        "type": "string",
+                        "operation": "notExists",
+                        "singleValue": true
+                      },
+                      "id": "a247cc34-e341-4f90-a236-c39e85bf65cd"
+                    }
+                  ],
+                  "combinator": "and"
+                },
+                "renameOutput": true,
+                "outputKey": "documento"
+              }
+            ]
+          },
+          "options": {
+            "fallbackOutput": "extra",
+            "renameFallbackOutput": "texto/audio"
+          }
+        },
+        "type": "n8n-nodes-base.switch",
+        "typeVersion": 3.2,
+        "position": [
+          1568,
+          768
+        ],
+        "id": "e1498541-8b38-474b-91e0-78bb25ae8d90",
+        "name": "Switch3",
+        "disabled": true
+      },
+      {
+        "parameters": {
+          "conditions": {
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 2
+            },
+            "conditions": [
+              {
+                "id": "eb0c902c-3e8e-49b4-82ab-fa86ba0984c4",
+                "leftValue": "={{ $('Guardamos el pdf') }}",
+                "rightValue": "",
+                "operator": {
+                  "type": "object",
+                  "operation": "notEmpty",
+                  "singleValue": true
+                }
+              }
+            ],
+            "combinator": "and"
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2.2,
+        "position": [
+          1680,
+          896
+        ],
+        "id": "98f77364-3097-40b0-850a-6be0b6dea2bd",
+        "name": "If"
+      },
+      {
+        "parameters": {
+          "workflowId": {
+            "__rl": true,
+            "value": "VCLg3xyOMNJgn1zp",
+            "mode": "list",
+            "cachedResultName": "asistente inserta mensajes"
+          },
+          "workflowInputs": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "number": "={{ $('WhatsApp Trigger').item.json.messages[0].from }}",
+              "project_id": 1,
+              "human_messaage": "={{ $('buscamos el archivo copia que procesamos').item.json.webViewLink }}",
+              "agent_message": "={{ $('Valeria').item.json.output }}",
+              "contact_name": "={{ $('WhatsApp Trigger').item.json.contacts[0].profile.name }}"
+            },
+            "matchingColumns": [],
+            "schema": [
+              {
+                "id": "number",
+                "displayName": "number",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string"
+              },
+              {
+                "id": "project_id",
+                "displayName": "project_id",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "number"
+              },
+              {
+                "id": "human_messaage",
+                "displayName": "human_messaage",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string"
+              },
+              {
+                "id": "agent_message",
+                "displayName": "agent_message",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string"
+              },
+              {
+                "id": "contact_name",
+                "displayName": "contact_name",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string"
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": true
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.executeWorkflow",
+        "typeVersion": 1.2,
+        "position": [
+          1904,
+          1024
+        ],
+        "id": "5744374e-324c-494c-a13f-a10f8f626889",
+        "name": "Execute Workflow1"
+      },
+      {
+        "parameters": {
+          "workflowId": {
+            "__rl": true,
+            "value": "3TRmy5xQe7htpSEH",
+            "mode": "list",
+            "cachedResultUrl": "/workflow/3TRmy5xQe7htpSEH",
+            "cachedResultName": "asistente inserta mensajes refactored"
+          },
+          "workflowInputs": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "number": "={{ $('WhatsApp Trigger').item.json.messages[0].from }}",
+              "project_id": 19,
+              "human_messaage": "={{ $('Aggregate').item.json.data[0].text }}",
+              "agent_message": "={{ $json.output }}",
+              "contact_name": "={{ $('WhatsApp Trigger').item.json.contacts[0].profile.name }}"
+            },
+            "matchingColumns": [],
+            "schema": [
+              {
+                "id": "number",
+                "displayName": "number",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string"
+              },
+              {
+                "id": "project_id",
+                "displayName": "project_id",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "number"
+              },
+              {
+                "id": "human_messaage",
+                "displayName": "human_messaage",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string"
+              },
+              {
+                "id": "agent_message",
+                "displayName": "agent_message",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string"
+              },
+              {
+                "id": "contact_name",
+                "displayName": "contact_name",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string"
+              },
+              {
+                "id": "tipo_entrega",
+                "displayName": "tipo_entrega",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string",
+                "removed": true
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": true
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.executeWorkflow",
+        "typeVersion": 1.2,
+        "position": [
+          448,
+          688
+        ],
+        "id": "24ea65bd-89e4-458a-b7e5-63a52bfb6080",
+        "name": "Execute Workflow2"
+      },
+      {
+        "parameters": {
+          "content": "## Proceso del guardado de información de la conversación",
+          "height": 900,
+          "width": 740
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          208,
+          80
+        ],
+        "typeVersion": 1,
+        "id": "163ab2cf-136c-490b-a8af-5a695be3aa54",
+        "name": "Sticky Note9"
+      },
+      {
+        "parameters": {
+          "tableId": "leads",
+          "fieldsUi": {
+            "fieldValues": [
+              {
+                "fieldId": "name",
+                "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues0_Field_Value', `Nombre completo del lead`, 'string') }}"
+              },
+              {
+                "fieldId": "company",
+                "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues1_Field_Value', `Empresa o institución a la que pertenece el lead`, 'string') }}"
+              },
+              {
+                "fieldId": "email",
+                "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues2_Field_Value', `Correo electrónico del lead`, 'string') }}"
+              },
+              {
+                "fieldId": "phone",
+                "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues3_Field_Value', `Número telefónico del lead`, 'string') }}"
+              },
+              {
+                "fieldId": "location",
+                "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues4_Field_Value', `Ciudad y país donde se ubica el lead`, 'string') }}"
+              },
+              {
+                "fieldId": "interest_level",
+                "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues5_Field_Value', `Nivel de interés del lead (frío, templado, caliente)`, 'string') }}"
+              },
+              {
+                "fieldId": "service_interest",
+                "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues6_Field_Value', `Servicio de interes del usuario (pdesarrollo web, aplicacion movil, etc)`, 'string') }}"
+              },
+              {
+                "fieldId": "need_detected",
+                "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues7_Field_Value', `Necesidad o problema detectado durante la conversación`, 'string') }}"
+              },
+              {
+                "fieldId": "start_timeline",
+                "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues8_Field_Value', `Tiempo estimado para comenzar el servicio (ej. en una semana, este mes)\n`, 'string') }}"
+              },
+              {
+                "fieldId": "notes",
+                "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues9_Field_Value', `Observaciones generales del lead\n`, 'string') }}"
+              },
+              {
+                "fieldId": "status",
+                "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues10_Field_Value', `status del lead dependiendo si es caliente o no \nlead caliente = \"new\"\nlead templado = \"new\"\nlead frio = \"lost\"`, 'string') }}"
+              },
+              {
+                "fieldId": "project_id",
+                "fieldValue": "19"
+              }
+            ]
+          }
+        },
+        "type": "n8n-nodes-base.supabaseTool",
+        "typeVersion": 1,
+        "position": [
+          -448,
+          1104
+        ],
+        "id": "4bceb4db-61d1-474a-8b92-6eaa16ad2b2b",
+        "name": "clasificacion_leads",
+        "credentials": {
+          "supabaseApi": {
+            "id": "ty0KiXsEYP1uJ8t9",
+            "name": "Supabase account - CANTERA"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "promptType": "define",
+          "text": "={{ $('Aggregate').item.json.data[0].text }}",
+          "options": {
+            "systemMessage": "=## 🎯 Rol del Agente\n\nEres **Valeria**, el agente conversacional oficial de **Cantera Digital**, especializado exclusivamente en la venta de **soluciones de Inteligencia Artificial (IA)** y **agentes de IA**. Tu propósito es:\n\n1.  **Informar** sobre las soluciones y agentes de IA de Cantera Digital: casos de éxito, tecnologías, contacto.\n2.  **Detectar si una solución de IA o un agente de IA puede resolver sus necesidades actuales.**\n3.  **Responder sus dudas clave con claridad, rapidez y confianza sobre IA y agentes de IA.**\n4.  **Realizar una calificación del lead a través de preguntas estratégicas, enfocadas en IA.**\n5.  **Recopilar datos relevantes para habilitar un contacto posterior efectivo por parte del equipo comercial, específicamente para soluciones de IA.**\n6.  Saluda presentándote y reta al usuario. Menciona un dato interesante sobre los ahorros en tiempo y dinero que la IA puede generar, usando algún caso famoso. Luego, lanza el reto: pídele que te cuente un problema que tenga en su empresa (a nivel de operaciones, soporte, técnico, humano, o cualquier otro) y dile que **tú se lo resolverás con IA**. Haz repreguntas y preguntas específicas sobre el problema para perfilar al cliente. Pregunta sutilmente cuántos trabajadores tiene, en qué zona está ubicado y el giro de la empresa, todo ello para poder ofrecer una propuesta increíble centrada en IA.\n\nLos datos del cliente son: el nombre que aparece en su teléfono es este{{ $('WhatsApp Trigger').item.json.messages[0].from }} , pero **siempre pregunta el nombre y apellido completo para confirmar**. Ocasionalmente usa el nombre del usuario para personalizar tus respuestas. El día de hoy es {{ $now.minus({ hours: 0 }).setLocale('es').toFormat(\"dd 'de' LLLL 'de'yyyy HH:mm\") }} hora de CDMX, MX.\n\n---\n\n## 🧠 Estilo y Tono\n\n-   **Profesional, disruptivo y retador**, pero siempre accesible. Si te preguntan algo, responde que eres experta **solucionando todo tipo de problemas con IA** y que te pongan a prueba. Pide retos a las personas y haz propuestas concretas de cómo lo solucionarías **específicamente con IA, Machine Learning, Computer Vision, Automatización inteligente, RPA impulsado por IA, etc.**\n-   Actúa siempre de forma profesional, amable, y orientada a soluciones. Guía a la persona con quien hablas, especialmente si no tiene formación técnica, pero si es un experto en su área de negocio, adáptate a su nivel. Recuerda, eres una **consultora de IA para soluciones inteligentes** que se adapta al usuario.\n-   **Retadora e informativa:** **siempre empieza con un dato impactante sobre IA** seguido de una pregunta provocadora.\n-   Usa emojis en tus respuestas largas y en tus preguntas. Formatea tus respuestas para ser leídas en WhatsApp. Usa negritas y formato de WhatsApp para hacer tus mensajes más divertidos y fáciles de leer.\n-   Responde con empatía, pero guía con claridad hacia descubrir necesidades reales **que puedan ser resueltas con IA**, calificar el lead con preguntas clave, y lograr que se convierta en contacto directo o lead calificado para el equipo comercial de soluciones IA.\n-   No presiones la venta. Tu meta es generar una excelente primera impresión, descubrir necesidades reales de IA, **calificar el lead con preguntas clave (de IA)**, y lograr que se convierta en contacto directo, agendamiento o lead calificado para el equipo comercial.\n-   No das respuestas falsas. Si no sabes algo, lo admites con elegancia y rediriges a un especialista de IA.\n\n---\n\n## 💬 Flujo Conversacional Ideal\n\n**Etapa 1: Saludo y presentación (primer mensaje)**\n• Da la bienvenida con cordialidad y presenta brevemente a Valeria, destacando tu especialización en IA.\n• Aclara que estás aquí para ayudar con las **soluciones y agentes de Inteligencia Artificial de Cantera Digital.**\nEjemplo: “¡Hola! Soy **Valeria**, la especialista en **Inteligencia Artificial de Cantera Digital**. ¿Sabías que las empresas que adoptan IA están viendo ahorros del 15% en costos operativos? ¡Te reto a que me cuentes un problema de tu empresa y te diré cómo la IA puede resolverlo! 🚀 ¿Cuál es tu nombre completo y en qué te puedo ayudar hoy?”\n\n**Etapa 2: Detección de intención / necesidad (¡Solo IA!)**\n• Escucha el motivo del contacto. **Si no está relacionado con IA, redirige o cierra amablemente (ver reglas internas).**\n• Si es claro que busca algo relacionado con IA, profundiza. Si no es claro, ofrece opciones **exclusivamente de IA** para guiar la conversación.\nValeria debe identificar si el usuario busca:\n-   **Desarrollo con Inteligencia Artificial**\n-   **Agentes Digitales Inteligentes (impulsados por IA)**\n\n**Si la intención no es clara o no menciona IA, debe preguntar directamente si el problema se relaciona con la posibilidad de implementar IA.**\n📌 **Desarrollo con Inteligencia Artificial**\n• ¿Qué problema de negocio te gustaría resolver **específicamente con IA**?\n• ¿Has explorado alguna solución de IA previamente? ¿Qué tan clara es tu idea sobre la aplicación de IA?\n• ¿Qué tipo de IA crees que necesitas: análisis de texto, imágenes, predicción, automatización inteligente, optimización de procesos, etc.?\n• ¿Tienes datos propios que podamos usar para entrenar la IA?\n• ¿Cuál es tu presupuesto o expectativa de retorno de inversión para una solución de IA?\n\n📌 **Agentes Digitales Inteligentes**\n• ¿Qué tareas o procesos deseas automatizar con un **agente de IA**?\n• ¿Dónde te gustaría que funcione el agente? (WhatsApp, web, redes, CRM…)\n• ¿Qué tipo de interacción quieres que tenga tu agente de IA? (soporte inteligente, ventas con calificación de leads, agendamiento automatizado, etc.)\n• ¿Ya tienes herramientas conectadas que deba integrar (CRM, WhatsApp Business, bases de conocimiento) para que el agente de IA funcione mejor?\n• ¿Con qué urgencia te gustaría tener el agente funcionando?\n\n**Etapa 3: Calificación básica del lead (Enfocada en IA)**\nHaz preguntas clave para calificar al usuario sin sonar interrogativo, siempre con un enfoque en IA:\n-   ¿En qué industria trabajas y cómo crees que la IA podría impactar tus operaciones?\n-   ¿Tienes un proyecto de IA activo o estás evaluando opciones para implementar IA en tu empresa?\n-   ¿Qué tipo de solución de IA estás buscando específicamente?\n-   ¿Cuál es tu urgencia para comenzar un proyecto de IA?\n\nRecopilación de Datos , siempre separa las preguntas en varios mensajes para hacer progresiva la levantamiento de información usa el método de perfilado BANT (Budget, Authority, Need, Timeframe):\n\n\"¡Excelente decisión! ¿Me podrías indicar el nombre de tu empresa y aproximadamente cuántos empleados tienen?\"\nHas un perfilado completo con metodología BANT **enfocada en la inversión en IA** antes de recopilar sus datos.\n(Esperar) \"¿Cuentas con los recursos financieros para adquirir una solución de Inteligencia Artificial?\"\n(Esperar) \"¿Tienes el poder de decisión o influencia en la compra de soluciones tecnológicas de IA para tu empresa?\"\n(Esperar) \"¿Cuándo planeas tomar una decisión sobre la implementación de esta solución de IA?\"\n(Esperar) \"Perfecto. ¿Estás listo para tomar una decisión dentro de 30 días, o tienes otro plazo en mente?\"\n(Esperar) \"Gracias. ¿Cuál es tu nombre completo y tu cargo en la empresa?\"\n(Esperar) \"Perfecto,{{ $('WhatsApp Trigger').item.json.contacts[0].profile.name }} . ¿Cuál es tu correo electrónico corporativo?\"\n\nDebes etiquetar internamente al lead como caliente, templado o frío, para facilitar su seguimiento por parte del equipo comercial.\n\n**Nota:**\nCuando hagas la pregunta acerca del presupuesto (Budget), no es viable que te quedes con una respuesta de sí o no. Tienes que indagar para poder saber cuál es el presupuesto que maneja en términos monetarios **para la inversión en IA.**\n\n** importante: **\nLa definicion del tiempo es importante si un lead pide con extrema urgencia un proyecto no hay que considerarlo como un lead caliente ya que el time frame de un proyecto es importante y realista debe ser no menos a 3 meses para consiuderarse caliente**\n🔥 **LEAD CALIENTE**\n* **Definición:** El usuario tiene un proyecto de **IA** claramente definido y puede describirlo.\n• Ya tiene un proyecto de IA definido.\n• Maneja un presupuesto mayor a 200,000 MXN (peso mexicano) o decisión en puerta **para IA**.\n• Está solicitando cotización, reunión, contacto inmediato o incluso se muestra interesado en una solución tecnológica **de IA**.\n• Maneja un *time frame* realista, no menos de 3 meses por ejemplo **paso super importante para considerar lead caliente**.\n• Es la persona que toma las decisiones o tiene la capacidad de alterar el rumbo del proyecto **de IA**.\n• Acción: agradecer, confirmar datos y asegurar contacto inmediato con asesor especializado en IA.\n• Ejemplo: “¡Increíble! Gracias por compartir tu información,{{ $('WhatsApp Trigger').item.json.contacts[0].profile.name }} . Ya tengo todo lo necesario. En breve, uno de nuestros especialistas en **Inteligencia Artificial** se pondrá en contacto contigo para ayudarte a llevar tu proyecto al siguiente nivel.”\n\n🌡️ **LEAD TEMPLADO**\n* **Definición:** Está explorando ideas o evaluando si la **Inteligencia Artificial** puede resolver un problema, pero el proyecto no está completamente definido.\n• Está evaluando opciones de IA.\n• Tiene dudas sobre servicios o procesos de IA.\n• No tiene urgencia definida, pero muestra curiosidad real por la IA.\n• Maneja un presupuesto limitado o no tiene ningún presupuesto definido para IA.\n• Maneja tiempos poco realistas.\n• Acción: ofrecer más información, sugerir seguimiento posterior.\n• Ejemplo: “Gracias por compartir tu situación. Te enviaré más información sobre cómo la **IA** puede transformar tu empresa a tu correo para que puedas analizarla con calma. Si más adelante deseas que un asesor de IA te contacte, estaré aquí para ayudarte.”\n\n❄️ **LEAD FRÍO**\n* **Definición:** Solo busca información general o superficial sobre IA (ej. \"¿Qué es la IA?\"). Su necesidad no encaja claramente con la oferta de soluciones de IA o agentes de IA. **También aplica si el usuario pregunta por servicios NO relacionados con IA.**\n• Solo busca información superficial sobre IA.\n• Está lejos de tomar decisión sobre IA.\n• El servicio de IA no es adecuado para su situación o su necesidad no es de IA.\n• No maneja ningún tipo de presupuesto para IA.\n• No menciona tiempos exactos o requiere de tiempos urgentes (menores a 1 mes por ejemplo) para IA.\n• No es la persona directa que toma decisiones en la empresa.\n• Acción: agradecer y cerrar con cortesía, aparte de solicitar datos para poder dar seguimiento después **solo si es relevante, de lo contrario, cerrar la conversación enfocada en IA.**\n• Ejemplo: “Gracias por tu interés en la **Inteligencia Artificial**. Si en el futuro necesitas apoyo con soluciones de IA o deseas conocer más sobre cómo puede beneficiar tu negocio, estaré encantada de ayudarte.”\n\n📊 **Clasificación Interna del Lead (para CRM o planilla)**\nValeria debe registrar junto con los datos del lead una clasificación según este esquema:\n-   Nivel: 🔥 Caliente / 🌡️ Templado / ❄️ Frío\n-   **Servicio de interés: Desarrollo con IA / Agentes Digitales Inteligentes**\n-   Tiempo estimado de decisión\n-   Comentario adicional relevante (**siempre enfocado en IA**)\n\n**Importante:** La clasificación de lead (caliente, tibio o frío) es algo que no debes mostrar al cliente, es para un proceso interno. En ningún momento menciones que es un lead caliente, frío o tibio.\n\n**Etapa 4: Llamado a la acción y recolección de datos**\nDespués de calificar al lead (siempre que la necesidad sea de IA), solicita amablemente los siguientes datos:\n-   Nombre completo\n-   Correo electrónico\n-   Empresa o institución\n-   Teléfono\n-   Ciudad y país\nValidaciones:\n**Todos los datos a solicitar son obligatorios, no podemos completar el flujo si uno falta.**\nCorreo electrónico: Asegúrate de que esté bien formado.\nTeléfono: Solicita número completo con código de país.\n\n**Etapa 5: Registro de información**\nSin pedir ninguna clase de confirmación es necesario que realices lo siguiente:\nAl terminar todas las etapas previas, tendrás a la mano toda la información necesaria para poder hacer el registro del usuario en la tabla 'leads' de Supabase utilizando la herramienta llamada `'clasificacion_leads'` (un nodo de Supabase en n8n que inserta datos en la base de datos). En esta tendrás que guardar la siguiente información, tomada de la información que el usuario compartió contigo:\n\n**Todos los datos son obligatorios, asegurate de tener todos estos datos para avanzar si alguno no lo tienes preguntalo hasta que te lo den**\n-   name: Nombre completo del lead\n-   company: Empresa o institución a la que pertenece el lead\n-   email: Correo electrónico del lead\n-   phone: Número telefónico del lead\n-   location: Ciudad y país donde se ubica el lead\n-   interest_level: Nivel de interés del lead (frío, templado, caliente)\n-   service_interest: Servicio de interés del usuario (Desarrollo con Inteligencia Artificial o Agentes Digitales Inteligentes)\n-   need_detected: Necesidad o problema detectado durante la conversación\n-   start_timeline: Tiempo estimado para comenzar el servicio (ej. en una semana, este mes)\n-   notes: Observaciones generales del lead\n-   status: **Condicional según nivel de interés:**\n    - Si el lead es **caliente o templado**: status = \"new\"\n    - Si el lead es **frío**: status = \"lost\"\n-   project_id: 16\n\nDe la misma forma y en formato JSON vas a hacer el llamado a tu herramienta de `'ingreso_teams'` para enviar los datos y que esta se encargue de gestionarlos para mandar un mensaje en un grupo y almacenar la información en otro medio.\n\nAparte de generar:\n-   Observaciones (generada de manera automática de acuerdo a la conversación con el usuario, **siempre enfocada en IA o la pertinencia de IA para su caso**).\n\n**Instrucción final para registro:** Una vez que hayas recopilado todos los datos obligatorios y determinado el nivel de interés del lead (frío, templado o caliente), invoca la herramienta 'clasificacion_leads' de Supabase para guardar la información en la tabla 'leads'. Proporciona los valores en el formato esperado por el nodo, utilizando los datos recopilados: name (Nombre), company (Empresa), email (Email), phone (Telefono), location (Ubicacion), interest_level (Nivel de interes), service_interest (Desarrollo con Inteligencia Artificial o Agentes Digitales Inteligentes), need_detected (Necesidad detectada), start_timeline (Plazo de inicio), notes (Observaciones), status (**'new' si el lead es caliente o templado, 'lost' si el lead es frío**), project_id ('16').\n\n**Etapa 6: Cierre adecuado según nivel de interés**\n-   Lead caliente: Agradece y confirma que un asesor **especialista en IA** lo contactará.\n-   Lead templado: Ofrece continuar en otro momento o dejar contacto para **explorar más sobre IA**.\n-   Lead frío: Agradece el interés y ofrece apoyo futuro **si surge una necesidad de IA**.\n\n**EJEMPLO DE RESUMEN DEL LEAD – Generado por Valeria**\n\n📛 Nombre: Carlos Gutiérrez\n🏢 Empresa: AgroLogix\n📩 Email: carlos@agrologix.mx\n📞 Teléfono: +52 55 1234 5678\n📍 Ubicación: León, México\n🎯 Servicio de interés: **Agentes Digitales IA**\n📝 Necesidad detectada: Automatizar la atención de leads en su sitio web y canal de WhatsApp **utilizando IA conversacional avanzada**.\n⏳ Plazo de inicio: Inmediato (1-2 semanas)\n💬 Observaciones: Ya intentó usar chatbots tradicionales, **está buscando una solución con IA más inteligente que permita la calificación y el soporte predictivo.** Dispuesto a invertir, quiere demo de agente IA.\n\n---\n\n## Servicios de Cantera Digital (**¡Solo los de IA!**)\n\n• Desarrollo con Inteligencia Artificial\n• Agentes Digitales Inteligentes\n\n---\n\n## 🧾 Si el usuario quiere información de la empresa (**¡Solo con enfoque IA!**)\n\nClaro, te cuento:\n\n🔹 Cantera Digital es una empresa experta en **soluciones de inteligencia artificial y transformación digital**, con presencia en México, EE. UU. y Canadá.\n🔹 Desde 2015 ayudamos a empresas a optimizar procesos, crear software a medida y **escalar operaciones con IA, automatización inteligente y análisis de datos avanzados.**\n🔹 Ofrecemos desarrollo de software **con IA, UX/UI enfocado en sistemas inteligentes, QA para soluciones de IA, staff augmentation de talento en IA** y más.\n\n¿Quieres conocer algún servicio **de IA** en específico o saber cómo podríamos ayudarte **con Inteligencia Artificial**?\n\n---\n\n## ⚙️ Reglas internas del agente\n\n• Detecta la intención del usuario, incluso si no está explícita, **pero siempre prioriza si esa intención puede ser resuelta con IA.**\n• Adapta tu lenguaje al nivel técnico del usuario.\n• Responde con claridad y brevedad, **siempre enfocado en IA**. Amplía solo si el usuario lo solicita.\n• Guía la conversación hacia una acción concreta **relacionada con la IA.**\n• Redirige con amabilidad si el usuario repite preguntas o desvía el tema. **Si el tema no es IA, indícaselo cortésmente.**\n• Si el usuario proporciona información personal, respóndele con cortesía y confirma que será tratada con privacidad.\n• Usa lenguaje inclusivo y neutral.\n• Escala a un asesor humano **especialista en IA** si detectas frustración o situación compleja relacionada con un proyecto de IA.\n• No inventes respuestas. Redirige con elegancia si no sabes algo **sobre IA**.\n• Refuerza con naturalidad la identidad de Cantera Digital como **líder en soluciones de IA.**\n• Si una pregunta es ambigua, solicita con amabilidad mayor claridad, **siempre con la óptica de la IA.**\n\n---\n\n## 🙋‍♂️ Objeciones Comunes y Respuestas Sugeridas (**Adaptadas a IA**)\n📍 Está caro / Tengo poco presupuesto\n> Entiendo, la inversión en **IA** puede parecer significativa, pero trabajamos con diferentes enfoques según las necesidades y el alcance para asegurar un **ROI claro en tus proyectos de IA**. ¿Te gustaría que exploremos una opción más enfocada en tus objetivos actuales **con IA**?\n\n📍 Estoy evaluando otras opciones\n> ¡Perfecto! Es muy válido comparar. ¿Te gustaría que te comparta algunos **casos de éxito o ejemplos de soluciones de IA** que hemos desarrollado, para que tengas una mejor idea de lo que podemos lograr con **Inteligencia Artificial**?\n\n📍 Ya trabajamos con otra agencia\n> ¡Excelente! ¿Y cómo les ha ido **con sus implementaciones de IA**? Siempre estamos abiertos a colaborar o complementar equipos existentes si hay alguna necesidad puntual **en el ámbito de la Inteligencia Artificial.**\n\n📍 Solo estoy viendo, gracias\n> Perfecto. Si en algún momento deseas profundizar o resolver una duda específica **sobre Inteligencia Artificial o cómo puede beneficiar a tu empresa**, estaré por aquí para ayudarte.\n\n📍 ¿Qué me garantiza que funcionen sus soluciones?\n> Excelente pregunta. Contamos con **casos de éxito probados en diferentes industrias con soluciones de IA**, talento altamente calificado en el desarrollo de **Inteligencia Artificial** y procesos ágiles que nos permiten entregar resultados reales. ¿Te gustaría que te comparta un par de ejemplos **de nuestros proyectos de IA**?\n\n---\n\n## Temas fuera de alcance (**Estrictamente solo IA**)\n• No conversas sobre política, religión, deporte, entretenimiento, temas personales o cualquier asunto no relacionado con las **soluciones de Inteligencia Artificial o agentes de IA de la empresa.**\n• Siempre mantienes una posición neutral y profesional en temas delicados o controversiales.\n• Si un usuario insiste en cambiar el tema, puedes decir con amabilidad: “Estoy aquí para ayudarte con información sobre las **soluciones de Inteligencia Artificial y agentes de IA de Cantera Digital**. Si tienes otra duda relacionada con eso, con gusto te apoyo.”\n\n---\n\n## si te pregunta sobre Cantera Digital o información de la empresa, usa esta base de conocimiento: (**Solo la parte de IA**)\n\nPerfil Detallado para Entrenamiento de IA: Cantera Digital\n\nCantera Digital es una empresa de origen mexicano, operando bajo el nombre legal Cantera Digital S.A. de C.V. y el nombre comercial Cantera Digital. Su misión es proporcionar **soluciones de software a medida orientadas a la transformación digital de empresas, con un enfoque particular en la innovación tecnológica dentro de mercados internacionales, especialmente con Inteligencia Artificial.** Su visión es servir como puente tecnológico entre las demandas de empresas en Norteamérica y la capacidad de innovación de México, **enfocada en IA.**\nCantera Digital S.A. de C.V., conocida comercialmente como Cantera Digital, es una empresa tecnológica con más de 10 años de experiencia, especializada en **soluciones de inteligencia artificial, desarrollo de software a medida, automatización inteligente** y servicios de Staff Augmentation. Tiene presencia operativa y comercial en México, Estados Unidos, Canadá y España, con más de 250 desarrolladores certificados que manejan español e inglés.\nSu misión es impulsar la transformación digital mediante **soluciones tecnológicas personalizadas, con un fuerte componente de IA.** La visión de la empresa es conectar las necesidades tecnológicas de empresas en Norteamérica con la innovación mexicana, **destacando su expertise en Inteligencia Artificial.** Sus valores corporativos están resumidos en el acrónimo CREAR: Compromiso, Rapidez, Empatía, Actitud positiva y Respeto. La excelencia en el servicio al cliente y la transparencia son pilares fundamentales.\n**Casos de éxito destacados incluyen proyectos con un fuerte componente de IA como:**\n• Educare Nimbus: Plataforma educativa **con elementos de IA.**\n• Zucarmex: Implementación de sistema de calidad en tiempo real **impulsado por IA.**\n• Click Transporte: Solución para gestión turística **que utiliza IA.**\n• DKT: Plataforma médica **con inteligencia artificial.**\n• Pollo Pechugón: Desarrollo de aplicación móvil, **chatbot inteligente y CMS impulsados por IA.**\n• SEATSA: Automatización de procesos documentales **con IA.**\n• Liithos (California): Proveedor de staffing especializado **para la industria del gaming, incluyendo perfiles de IA.**\n• Proyectos en salud y finanzas con Star Médica, Sofomes, blockchain y divisas, **integrando soluciones de IA.**\nCantera Digital cuenta con la certificación MOPROSOFT y numerosas certificaciones individuales (Scrum Master, Product Owner, etc.). El equipo es bilingüe (español-inglés), y trabaja con metodologías ágiles/Scrum, respaldadas por documentación formal (NDAs, contratos, plantillas), procesos de seguridad con cifrado, trazabilidad y acceso controlado.\nLa tarifa promedio es de $600 MXN por hora, con posibilidad de descuentos por volumen o contratos anuales. Una cotización estándar toma aproximadamente 5 días en generarse.\nContactos directos:\n• Contacto General: contacto@canteradigital.mx\n• Ventas: Janette Cano – janette.cano@canteradigital.mx\n• Staffing: Andrea García – rh@canteradigital.mx\n• **IA: Vladimir Díaz – vladimir@canteradigital.mx (¡Este es clave!)**\n• IT/Soporte: Luis Fragoso – luis.fragoso@canteradigital.mx, soporte@canteradigital.mx\n• WhatsApp Comercial: +52 5535516913\n• Sitio Web: https://cantera.digital/\n```"
+          }
+        },
+        "type": "@n8n/n8n-nodes-langchain.agent",
+        "typeVersion": 1.9,
+        "position": [
+          -752,
+          640
+        ],
+        "id": "835fca08-414d-4c9a-b551-4486c18ac0eb",
+        "name": "Valeria"
+      },
+      {
+        "parameters": {
+          "rules": {
+            "values": [
+              {
+                "conditions": {
+                  "options": {
+                    "caseSensitive": true,
+                    "leftValue": "",
+                    "typeValidation": "strict",
+                    "version": 2
+                  },
+                  "conditions": [
+                    {
+                      "leftValue": "={{ $json.messages[0].type }}",
+                      "rightValue": "text",
+                      "operator": {
+                        "type": "string",
+                        "operation": "equals"
+                      },
+                      "id": "81145717-c846-4994-b521-38b433a26f12"
+                    }
+                  ],
+                  "combinator": "and"
+                },
+                "renameOutput": true,
+                "outputKey": "texto"
+              },
+              {
+                "conditions": {
+                  "options": {
+                    "caseSensitive": true,
+                    "leftValue": "",
+                    "typeValidation": "strict",
+                    "version": 2
+                  },
+                  "conditions": [
+                    {
+                      "id": "19666aed-eb33-4ab7-9647-f2ef9bd318e9",
+                      "leftValue": "={{ $json.message.voice.file_id }}",
+                      "rightValue": "",
+                      "operator": {
+                        "type": "string",
+                        "operation": "exists",
+                        "singleValue": true
+                      }
+                    }
+                  ],
+                  "combinator": "and"
+                },
+                "renameOutput": true,
+                "outputKey": "voz"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.switch",
+        "typeVersion": 3.2,
+        "position": [
+          -2336,
+          608
+        ],
+        "id": "f7c9d4b6-4a43-4862-8656-a9c61fe8a7e2",
+        "name": "Switch"
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "3afb4b21-1923-41e7-a49c-672d6cf20141",
+                "name": "text",
+                "value": "={{ $('WhatsApp Trigger').item.json.messages[0].text.body }}",
+                "type": "string"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          -1680,
+          560
+        ],
+        "id": "cec529e6-2ed6-4268-b9b9-ac3c509100db",
+        "name": "Texto"
+      },
+      {
+        "parameters": {
+          "resource": "file",
+          "fileId": "={{ $json.message.voice.file_id }}",
+          "additionalFields": {}
+        },
+        "type": "n8n-nodes-base.telegram",
+        "typeVersion": 1.2,
+        "position": [
+          -2128,
+          720
+        ],
+        "id": "39243138-edaa-46ff-afd0-08a3ef9e8bdf",
+        "name": "Descargar audio",
+        "webhookId": "f145bc9e-37c1-4762-816b-386767c194fc",
+        "credentials": {
+          "telegramApi": {
+            "id": "IGeR6syA8qMpXl8w",
+            "name": "agente leads (valeria)"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "resource": "audio",
+          "operation": "transcribe",
+          "options": {}
+        },
+        "type": "@n8n/n8n-nodes-langchain.openAi",
+        "typeVersion": 1.8,
+        "position": [
+          -1888,
+          720
+        ],
+        "id": "56da1570-770f-429a-93aa-375ec41b0138",
+        "name": "Transcribe audio",
+        "credentials": {
+          "openAiApi": {
+            "id": "ZmWqQ5PGylh4Y05s",
+            "name": "OpenAi account - CANTERA"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "3afb4b21-1923-41e7-a49c-672d6cf20141",
+                "name": "text",
+                "value": "={{ $json.text }}",
+                "type": "string"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          -1680,
+          720
+        ],
+        "id": "0677dded-c145-44a4-ab86-56363e3499ec",
+        "name": "Texto1"
+      },
+      {
+        "parameters": {
+          "aggregate": "aggregateAllItemData",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.aggregate",
+        "typeVersion": 1,
+        "position": [
+          -1344,
+          688
+        ],
+        "id": "3c9b71a9-fd35-4d08-a62d-d589c7e5fff0",
+        "name": "Aggregate"
+      },
+      {
+        "parameters": {
+          "workflowId": {
+            "__rl": true,
+            "value": "WYPGNpK2ChZhUG3v",
+            "mode": "list",
+            "cachedResultUrl": "/workflow/WYPGNpK2ChZhUG3v",
+            "cachedResultName": "busqueda de contacto"
+          },
+          "workflowInputs": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "number": "={{ $('WhatsApp Trigger').item.json.messages[0].from }}",
+              "project_id": 19
+            },
+            "matchingColumns": [],
+            "schema": [
+              {
+                "id": "number",
+                "displayName": "number",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string"
+              },
+              {
+                "id": "project_id",
+                "displayName": "project_id",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "number"
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": true
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.executeWorkflow",
+        "typeVersion": 1.2,
+        "position": [
+          -1120,
+          688
+        ],
+        "id": "8a301894-86a9-47d9-9092-eabb46506efe",
+        "name": "sonsultamos al usuario"
+      },
+      {
+        "parameters": {
+          "conditions": {
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 2
+            },
+            "conditions": [
+              {
+                "id": "59c7eada-fd13-481b-acd1-8ecfa1162f54",
+                "leftValue": "={{ $json.type_conversation }}",
+                "rightValue": "chatbot",
+                "operator": {
+                  "type": "string",
+                  "operation": "equals",
+                  "name": "filter.operator.equals"
+                }
+              }
+            ],
+            "combinator": "and"
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2.2,
+        "position": [
+          -944,
+          688
+        ],
+        "id": "6245f8af-dbf2-4785-8e9e-125d2ef0109a",
+        "name": "puede responder el agente?"
+      },
+      {
+        "parameters": {
+          "workflowId": {
+            "__rl": true,
+            "value": "3TRmy5xQe7htpSEH",
+            "mode": "list",
+            "cachedResultUrl": "/workflow/3TRmy5xQe7htpSEH",
+            "cachedResultName": "asistente inserta mensajes refactored"
+          },
+          "workflowInputs": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "number": "={{ $('WhatsApp Trigger').item.json.messages[0].from }}",
+              "human_messaage": "={{ $('Aggregate').item.json.data[0].text }}",
+              "contact_name": "={{ $('WhatsApp Trigger').item.json.contacts[0].profile.name }}",
+              "project_id": 19,
+              "tipo_entrega": "human"
+            },
+            "matchingColumns": [],
+            "schema": [
+              {
+                "id": "number",
+                "displayName": "number",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string"
+              },
+              {
+                "id": "project_id",
+                "displayName": "project_id",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "number"
+              },
+              {
+                "id": "human_messaage",
+                "displayName": "human_messaage",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string"
+              },
+              {
+                "id": "agent_message",
+                "displayName": "agent_message",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string",
+                "removed": true
+              },
+              {
+                "id": "contact_name",
+                "displayName": "contact_name",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string"
+              },
+              {
+                "id": "tipo_entrega",
+                "displayName": "tipo_entrega",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string",
+                "removed": false
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": true
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.executeWorkflow",
+        "typeVersion": 1.2,
+        "position": [
+          -1088,
+          1088
+        ],
+        "id": "403dc433-27b8-4cb1-9203-e7ac465bc4b3",
+        "name": "enviamos el mensaje para respuesta por un humano"
+      },
+      {
+        "parameters": {
+          "updates": [
+            "messages"
+          ],
+          "options": {}
+        },
+        "type": "n8n-nodes-base.whatsAppTrigger",
+        "typeVersion": 1,
+        "position": [
+          -2544,
+          608
+        ],
+        "id": "ac854454-5671-4344-b6e1-6e2969d71184",
+        "name": "WhatsApp Trigger",
+        "webhookId": "622bbabc-1c5f-4995-bfd6-2a94ae5597fb",
+        "credentials": {
+          "whatsAppTriggerApi": {
+            "id": "F6QRLQT7WpBcjqH4",
+            "name": "WhatsApp OAuth account valeria"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "send",
+          "phoneNumberId": "837471926123285",
+          "recipientPhoneNumber": "={{ $('WhatsApp Trigger').item.json.messages[0].from }}",
+          "textBody": "={{ $json.output }}",
+          "additionalFields": {}
+        },
+        "type": "n8n-nodes-base.whatsApp",
+        "typeVersion": 1.1,
+        "position": [
+          -64,
+          304
+        ],
+        "id": "90b29f58-697d-4ab9-a635-2bc359892e61",
+        "name": "Send message",
+        "webhookId": "fa675480-11eb-4289-b143-262b584f95e4",
+        "credentials": {
+          "whatsAppApi": {
+            "id": "O53NyGS7mxmGkAfT",
+            "name": "whatsapp valeria"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "7c71e98c-1598-43d2-a47a-f52545f2b7ad",
+                "name": "id",
+                "value": "={{ $execution.id }}",
+                "type": "string"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          864,
+          848
+        ],
+        "id": "8c3c52cc-2dcf-41b1-ac82-6feba316ce9b",
+        "name": "Edit Fields"
+      },
+      {
+        "parameters": {
+          "url": "=http://127.0.0.1:5678/rest/executions/{{ $json.id }}",
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "X-N8N-API-KEY",
+                "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjYzNjZmU1ZS1lZThjLTQ3NDAtOTNkMy03Y2Y3MTQzY2NjZTMiLCJpc3MiOiJuOG4iLCJhdWQiOiJwdWJsaWMtYXBpIiwiaWF0IjoxNzY0MDI3MzMwfQ.ubpE_5p05xNSCaXpAyKhrrp4_eF-kbW3VCbS1thPiQw"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          1088,
+          864
+        ],
+        "id": "4399c311-fba9-4d96-8eaa-1b057e98c8b5",
+        "name": "HTTP Request"
+      },
+      {
+        "parameters": {
+          "description": "este funciona cuando estas en contacto humano ",
+          "workflowId": {
+            "__rl": true,
+            "value": "5TA7GPdM66ClKALh",
+            "mode": "list",
+            "cachedResultUrl": "/workflow/5TA7GPdM66ClKALh",
+            "cachedResultName": "cambio ststua y notificacion"
+          },
+          "workflowInputs": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "contact_id": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('contact_id', ``, 'number') }}",
+              "fuera_horario": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fuera_horario', ``, 'boolean') }}"
+            },
+            "matchingColumns": [],
+            "schema": [
+              {
+                "id": "contact_id",
+                "displayName": "contact_id",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "number"
+              },
+              {
+                "id": "fuera_horario",
+                "displayName": "fuera_horario",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "boolean",
+                "removed": false
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          }
+        },
+        "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+        "typeVersion": 2.2,
+        "position": [
+          -592,
+          976
+        ],
+        "id": "d9c2abfe-49c6-462d-8994-a83f7b1f9239",
+        "name": "contacto_humano"
+      }
+    ],
+    "connections": {
+      "OpenAI Chat Model": {
+        "ai_languageModel": [
+          [
+            {
+              "node": "Valeria",
+              "type": "ai_languageModel",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Think": {
+        "ai_tool": [
+          [
+            {
+              "node": "Valeria",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Postgres Chat Memory": {
+        "ai_memory": [
+          [
+            {
+              "node": "Valeria",
+              "type": "ai_memory",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "ingreso_teams": {
+        "ai_tool": [
+          [
+            {
+              "node": "Valeria",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Switch3": {
+        "main": [
+          [],
+          []
+        ]
+      },
+      "If": {
+        "main": [
+          [
+            {
+              "node": "Execute Workflow",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Execute Workflow1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "clasificacion_leads": {
+        "ai_tool": [
+          [
+            {
+              "node": "Valeria",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Valeria": {
+        "main": [
+          [
+            {
+              "node": "Execute Workflow2",
+              "type": "main",
+              "index": 0
+            },
+            {
+              "node": "Send message",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Switch": {
+        "main": [
+          [
+            {
+              "node": "Texto",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Descargar audio",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Descargar audio": {
+        "main": [
+          [
+            {
+              "node": "Transcribe audio",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Transcribe audio": {
+        "main": [
+          [
+            {
+              "node": "Texto1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Texto": {
+        "main": [
+          [
+            {
+              "node": "Aggregate",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Texto1": {
+        "main": [
+          [
+            {
+              "node": "Aggregate",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Aggregate": {
+        "main": [
+          [
+            {
+              "node": "sonsultamos al usuario",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "sonsultamos al usuario": {
+        "main": [
+          [
+            {
+              "node": "puede responder el agente?",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "puede responder el agente?": {
+        "main": [
+          [
+            {
+              "node": "Valeria",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "enviamos el mensaje para respuesta por un humano",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "WhatsApp Trigger": {
+        "main": [
+          [
+            {
+              "node": "Switch",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Execute Workflow2": {
+        "main": [
+          []
+        ]
+      },
+      "Edit Fields": {
+        "main": [
+          [
+            {
+              "node": "HTTP Request",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "contacto_humano": {
+        "ai_tool": [
+          [
+            {
+              "node": "Valeria",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "authors": "system migration",
+    "name": null,
+    "description": null
+  }
 }
