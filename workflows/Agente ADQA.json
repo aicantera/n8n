@@ -1,8 +1,9 @@
 {
-  "createdAt": "2025-09-11T14:01:40.630Z",
   "updatedAt": "2025-09-12T23:52:50.000Z",
+  "createdAt": "2025-09-11T14:01:40.630Z",
   "id": "7RniuisFkZxT4pnE",
   "name": "Agente ADQA",
+  "description": null,
   "active": true,
   "isArchived": false,
   "nodes": [
@@ -1355,17 +1356,19 @@
   },
   "pinData": {},
   "versionId": "a35cdcee-ba2a-4cf6-9781-79ae506b44bb",
+  "activeVersionId": "a35cdcee-ba2a-4cf6-9781-79ae506b44bb",
+  "versionCounter": 4,
   "triggerCount": 1,
   "shared": [
     {
-      "createdAt": "2025-09-11T14:01:40.633Z",
       "updatedAt": "2025-09-11T14:01:40.633Z",
+      "createdAt": "2025-09-11T14:01:40.633Z",
       "role": "workflow:owner",
       "workflowId": "7RniuisFkZxT4pnE",
       "projectId": "6D91TcMmlphV2lVS",
       "project": {
-        "createdAt": "2025-07-14T23:58:54.932Z",
         "updatedAt": "2025-07-15T00:03:17.549Z",
+        "createdAt": "2025-07-14T23:58:54.932Z",
         "id": "6D91TcMmlphV2lVS",
         "name": "Gael  Graciano <gael.graciano@canteradigital.mx>",
         "type": "personal",
@@ -1373,13 +1376,13 @@
         "description": null,
         "projectRelations": [
           {
-            "createdAt": "2025-07-14T23:58:54.935Z",
             "updatedAt": "2025-07-14T23:58:54.935Z",
+            "createdAt": "2025-07-14T23:58:54.935Z",
             "userId": "bff7f19f-b5be-48d6-aea2-dfc3de153ccc",
             "projectId": "6D91TcMmlphV2lVS",
             "user": {
-              "createdAt": "2025-07-14T23:58:54.930Z",
               "updatedAt": "2025-11-12T08:44:24.000Z",
+              "createdAt": "2025-07-14T23:58:54.930Z",
               "id": "bff7f19f-b5be-48d6-aea2-dfc3de153ccc",
               "email": "gael.graciano@canteradigital.mx",
               "firstName": "Gael ",
@@ -1422,5 +1425,1355 @@
       }
     }
   ],
-  "tags": []
+  "tags": [],
+  "activeVersion": {
+    "updatedAt": "2025-12-02T05:05:56.621Z",
+    "createdAt": "2025-12-02T05:05:56.621Z",
+    "versionId": "a35cdcee-ba2a-4cf6-9781-79ae506b44bb",
+    "workflowId": "7RniuisFkZxT4pnE",
+    "nodes": [
+      {
+        "parameters": {
+          "updates": [
+            "message"
+          ],
+          "additionalFields": {
+            "download": false
+          }
+        },
+        "type": "n8n-nodes-base.telegramTrigger",
+        "typeVersion": 1.2,
+        "position": [
+          -432,
+          0
+        ],
+        "id": "5e31899e-2594-4868-9968-6c2f0bdeb3c8",
+        "name": "Telegram Trigger",
+        "webhookId": "9879aba6-62e4-4904-b85b-88c4bd289bdd",
+        "credentials": {
+          "telegramApi": {
+            "id": "X4QUuvNeZg5hzh7s",
+            "name": "Agente ADQA"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "promptType": "define",
+          "text": "={{ $json.text }}",
+          "options": {
+            "systemMessage": "=Rol del Agente:\n\nActuarás como un agente de Recursos Humanos de Chedraui. Tu principal responsabilidad es llevar a cabo la primera etapa de entrevistas con los postulantes para las vacantes en las áreas de Secos (Preparadores Armadores, Recibidores, Ayudantes generales, Patineros Eléctricos y Montacargas) y Fríos (Refrigeración, Embutidos y Alimentos fríos). Tu objetivo es evaluar la idoneidad del candidato, recopilar información clave y, al finalizar, determinar si es apto o no. La interacción debe ser orgánica, profesional y respetuosa.\n\nInstrucciones y Flujo de la Conversación:\n\nInicio de la Interacción:\n\nSaluda al postulante de manera amable y preséntate como el personal de Recursos Humanos de Chedraui.\n\nCaptura de Datos y Uso de Herramientas:\n\nDespués de la primera respuesta del usuario, solicita su nombre completo, edad, genero, etc y, utilizando la herramienta \"Consultar/Insertar_Filtros\", genera un id_Postulante único. Este ID se compartirá automáticamente con el resto de las herramientas para identificar al usuario.\n\nContinúa la conversación pidiendo la información personal necesaria de uno en uno, de forma natural y fluida, para llenar los campos de \"Consultar/Insertar_Filtros\". Recuerda: una pregunta a la vez.\n\nMientras recopilas los datos, utiliza la herramienta \"Consultar/Insertar_Motivos_Rechazo\" para verificar si el postulante cumple con alguno de los criterios de rechazo.\n\nSi se detecta un motivo de rechazo, no lo notifiques de inmediato. Debes continuar la entrevista hasta el final, tal como si el candidato fuera apto.\n\nMantén un registro interno de este estado para notificarlo al concluir la entrevista.\n\nEvaluación de Vacantes y Requisitos:\n\nUna vez que hayas recopilado la información personal, pregunta al candidato sobre su experiencia laboral relevante para las vacantes de Chedraui.\n\nDependiendo de si el postulante eligió \"Secos\" o \"Fríos\" al inicio, utiliza la herramienta correspondiente (\"Consultar/Insertar_VacantesSecos\" o \"Consultar/Insertar_VacantesFrios\") para consultar los requisitos específicos y hacer preguntas que evalúen su idoneidad para esas áreas.\n\nPor ejemplo, si el postulante mencionó interés en \"Patinero Eléctrico\", pregunta sobre su experiencia manejando equipo similar. Si se interesa en el área de \"Embutidos\", indaga sobre su experiencia en el manejo de alimentos fríos o refrigerados.\n\nNotificación de Documentación:\n\nCuando hayas completado la evaluación de la experiencia, utiliza la herramienta Consultar/Insertar_Documentacion.\n\nInforma al postulante de manera clara y organizada sobre la documentación necesaria, especificando cuáles son obligatorios y cuál es el único documento opcional.\n\nFinalización y Resultado de la Entrevista:\n\nAgradece al postulante por su tiempo y por la información proporcionada.\n\nDependiendo de la evaluación, utiliza la herramienta adecuada para almacenar sus datos:\n\nSi el postulante es apto para una vacante y no tiene motivos de rechazo, utiliza \"Consultar/Insertar_Postulantes_Aptos\" para guardar su id_Postulante y sus datos. Finaliza la conversación indicando que su información será revisada por el equipo de selección y que se le contactará pronto.\n\nSi el postulante no es apto (porque no cumplió con los requisitos o porque se activó un motivo de rechazo), utiliza \"Consultar/Insertar_Postulantes_NoAptos\". La notificación debe ser respetuosa, amable y apreciando su tiempo. Un ejemplo de notificación podría ser: \"Agradecemos mucho tu tiempo e interés en Chedraui. Tu perfil es muy valioso, pero por el momento no contamos con una vacante que se ajuste completamente a tu experiencia. Sin embargo, hemos guardado tus datos para futuras oportunidades que se adapten mejor a ti. Te deseamos mucho éxito en tu búsqueda.\"\n\nCriterios de Interacción:\n\nUna pregunta a la vez: El agente debe formular una sola pregunta por turno para evitar abrumar al usuario.\n\nLenguaje natural y empático: Mantén un tono de voz conversacional y empático durante toda la entrevista.\n\nConexión entre herramientas: El id_Postulante es el hilo conductor. Asegúrate de que todas las herramientas lo utilicen para almacenar o consultar la información del mismo usuario."
+          }
+        },
+        "type": "@n8n/n8n-nodes-langchain.agent",
+        "typeVersion": 2.2,
+        "position": [
+          656,
+          16
+        ],
+        "id": "042e8878-cf84-49bb-946f-3ebad2a7e205",
+        "name": "AI Agent"
+      },
+      {
+        "parameters": {
+          "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+          "text": "={{ $json.output }}",
+          "additionalFields": {
+            "appendAttribution": false
+          }
+        },
+        "type": "n8n-nodes-base.telegram",
+        "typeVersion": 1.2,
+        "position": [
+          1008,
+          16
+        ],
+        "id": "4bd9449f-2b7e-415b-9aa2-969f680ae3b0",
+        "name": "Send a text message",
+        "webhookId": "74da98c6-ba5c-47b1-be63-667ff42dad72",
+        "credentials": {
+          "telegramApi": {
+            "id": "X4QUuvNeZg5hzh7s",
+            "name": "Agente ADQA"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "model": {
+            "__rl": true,
+            "mode": "list",
+            "value": "gpt-4.1-mini"
+          },
+          "options": {}
+        },
+        "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "typeVersion": 1.2,
+        "position": [
+          480,
+          144
+        ],
+        "id": "5ff00415-44c0-42a4-9593-a98dd2d2648d",
+        "name": "OpenAI Chat Model",
+        "credentials": {
+          "openAiApi": {
+            "id": "0PNoojfjNHHXEtdv",
+            "name": "Test_Gael"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "sessionIdType": "customKey",
+          "sessionKey": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+          "contextWindowLength": 50
+        },
+        "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+        "typeVersion": 1.3,
+        "position": [
+          608,
+          192
+        ],
+        "id": "6ebd1de4-007f-4a43-ace7-6f36e95640d5",
+        "name": "Simple Memory"
+      },
+      {
+        "parameters": {
+          "rules": {
+            "values": [
+              {
+                "conditions": {
+                  "options": {
+                    "caseSensitive": true,
+                    "leftValue": "",
+                    "typeValidation": "strict",
+                    "version": 2
+                  },
+                  "conditions": [
+                    {
+                      "leftValue": "={{ $json.message.text }}",
+                      "rightValue": "",
+                      "operator": {
+                        "type": "string",
+                        "operation": "exists",
+                        "singleValue": true
+                      },
+                      "id": "81145717-c846-4994-b521-38b433a26f12"
+                    }
+                  ],
+                  "combinator": "and"
+                },
+                "renameOutput": true,
+                "outputKey": "texto"
+              },
+              {
+                "conditions": {
+                  "options": {
+                    "caseSensitive": true,
+                    "leftValue": "",
+                    "typeValidation": "strict",
+                    "version": 2
+                  },
+                  "conditions": [
+                    {
+                      "id": "19666aed-eb33-4ab7-9647-f2ef9bd318e9",
+                      "leftValue": "={{ $json.message.voice.file_id }}",
+                      "rightValue": "",
+                      "operator": {
+                        "type": "string",
+                        "operation": "exists",
+                        "singleValue": true
+                      }
+                    }
+                  ],
+                  "combinator": "and"
+                },
+                "renameOutput": true,
+                "outputKey": "voz"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.switch",
+        "typeVersion": 3.2,
+        "position": [
+          -224,
+          0
+        ],
+        "id": "cde74af3-af49-415c-b470-6a31a434b2ba",
+        "name": "Switch"
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "3afb4b21-1923-41e7-a49c-672d6cf20141",
+                "name": "text",
+                "value": "={{ $json.message.text }}",
+                "type": "string"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          48,
+          -128
+        ],
+        "id": "f1c32c1e-a2f0-4ab8-bfd7-42edeac7aeef",
+        "name": "Texto"
+      },
+      {
+        "parameters": {
+          "resource": "file",
+          "fileId": "={{ $('Trigger - Recibir mensaje').item.json.message.voice.file_id }}",
+          "additionalFields": {}
+        },
+        "type": "n8n-nodes-base.telegram",
+        "typeVersion": 1.2,
+        "position": [
+          -48,
+          128
+        ],
+        "id": "c6305a24-5ce6-4437-9994-8ae2d64f4741",
+        "name": "Descargar audio",
+        "webhookId": "f145bc9e-37c1-4762-816b-386767c194fc",
+        "credentials": {
+          "telegramApi": {
+            "id": "M4yT4PHnQvsP26j3",
+            "name": "Demo_Canon"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "resource": "audio",
+          "operation": "transcribe",
+          "options": {}
+        },
+        "type": "@n8n/n8n-nodes-langchain.openAi",
+        "typeVersion": 1.8,
+        "position": [
+          144,
+          128
+        ],
+        "id": "afe2f8be-d582-4717-b9f6-9867d45d316a",
+        "name": "Transcribe audio",
+        "credentials": {
+          "openAiApi": {
+            "id": "0PNoojfjNHHXEtdv",
+            "name": "Test_Gael"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "appendOrUpdate",
+          "documentId": {
+            "__rl": true,
+            "value": "1e-M1wF-v-R2wFhi204EDb4LcbfRtoX2-1wX-lfQ11ZU",
+            "mode": "list",
+            "cachedResultName": "Chedrahui",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1e-M1wF-v-R2wFhi204EDb4LcbfRtoX2-1wX-lfQ11ZU/edit?usp=drivesdk"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": 664487545,
+            "mode": "list",
+            "cachedResultName": "Filtros",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1e-M1wF-v-R2wFhi204EDb4LcbfRtoX2-1wX-lfQ11ZU/edit#gid=664487545"
+          },
+          "columns": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "id_Postulante": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('id_Postulante__using_to_match_', ``, 'string') }}",
+              "Nombre completo": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Nombre_completo', ``, 'string') }}",
+              "Edad": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Edad', ``, 'string') }}",
+              "Genero": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Genero', ``, 'string') }}",
+              "Ultimo grado de estudios con certificado": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Ultimo_grado_de_estudios_con_certificado', ``, 'string') }}",
+              "¿Actualmente estas trabajando?": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('_Actualmente_estas_trabajando_', ``, 'string') }}",
+              "Experiencia laboral (años y áreas en las que has trabajado)": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Experiencia_laboral__a_os_y__reas_en_las_que_has_trabajado_', ``, 'string') }}",
+              "Municipio de residencia": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Municipio_de_residencia', ``, 'string') }}",
+              "Disponibilidad para entrevista": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Disponibilidad_para_entrevista', ``, 'string') }}",
+              "Vacante de tu interés": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Vacante_de_tu_inter_s', ``, 'string') }}",
+              "¿Sabe utilizar patín hidráulico y/o algún escáner (handheld)": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('_Sabe_utilizar_pat_n_hidr_ulico_y_o_alg_n_esc_ner__handheld_', ``, 'string') }}",
+              "Validación de rutas de trasporte": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Validaci_n_de_rutas_de_trasporte', ``, 'string') }}"
+            },
+            "matchingColumns": [
+              "id_Postulante"
+            ],
+            "schema": [
+              {
+                "id": "id_Postulante",
+                "displayName": "id_Postulante",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "Nombre completo",
+                "displayName": "Nombre completo",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "Edad",
+                "displayName": "Edad",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "Genero",
+                "displayName": "Genero",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "Ultimo grado de estudios con certificado",
+                "displayName": "Ultimo grado de estudios con certificado",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "¿Actualmente estas trabajando?",
+                "displayName": "¿Actualmente estas trabajando?",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "Experiencia laboral (años y áreas en las que has trabajado)",
+                "displayName": "Experiencia laboral (años y áreas en las que has trabajado)",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "Municipio de residencia",
+                "displayName": "Municipio de residencia",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "Disponibilidad para entrevista",
+                "displayName": "Disponibilidad para entrevista",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "Vacante de tu interés",
+                "displayName": "Vacante de tu interés",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "¿Sabe utilizar patín hidráulico y/o algún escáner (handheld)",
+                "displayName": "¿Sabe utilizar patín hidráulico y/o algún escáner (handheld)",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "Validación de rutas de trasporte",
+                "displayName": "Validación de rutas de trasporte",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleSheetsTool",
+        "typeVersion": 4.7,
+        "position": [
+          624,
+          384
+        ],
+        "id": "2e48a30d-ed40-4547-b1ad-22590850f825",
+        "name": "Consultar/Insertar_Filtros",
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "HveeygHL8BoPyTUe",
+            "name": "Gael Sheets"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "appendOrUpdate",
+          "documentId": {
+            "__rl": true,
+            "value": "1e-M1wF-v-R2wFhi204EDb4LcbfRtoX2-1wX-lfQ11ZU",
+            "mode": "list",
+            "cachedResultName": "Chedrahui",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1e-M1wF-v-R2wFhi204EDb4LcbfRtoX2-1wX-lfQ11ZU/edit?usp=drivesdk"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": 2100250233,
+            "mode": "list",
+            "cachedResultName": "Motivos_Rechazo",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1e-M1wF-v-R2wFhi204EDb4LcbfRtoX2-1wX-lfQ11ZU/edit#gid=2100250233"
+          },
+          "columns": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "id_Postulante": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('id_Postulante__using_to_match_', ``, 'string') }}",
+              "Edad máxima 45 años (vacantes operativas)": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Edad_m_xima_45_a_os__vacantes_operativas_', ``, 'string') }}",
+              "Pagamos por medio del banco Santander ¿Tienes inconveniente con este banco?": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Pagamos_por_medio_del_banco_Santander__Tienes_inconveniente_con', ``, 'string') }}",
+              "En caso de manejar cuenta Santander ¿Esta activa?": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('En_caso_de_manejar_cuenta_Santander__Esta_activa_', ``, 'string') }}",
+              "No se aceptan reingresos": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('No_se_aceptan_reingresos', ``, 'string') }}",
+              "Que los candidatos no vivan a más de una hora de distancia": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Que_los_candidatos_no_vivan_a_m_s_de_una_hora_de_distancia', ``, 'string') }}",
+              "Falta de algún documento": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Falta_de_alg_n_documento', ``, 'string') }}",
+              "Infonavit o fonacot para vacantes operativas no ser mayor a $3,000 mil pesos": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Infonavit_o_fonacot_para_vacantes_operativas_no_ser_mayor_a__3_', ``, 'string') }}",
+              "Fracturas": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Fracturas', ``, 'string') }}",
+              "Consumo de drogas o antidepresivos (Antidoping)": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Consumo_de_drogas_o_antidepresivos__Antidoping_', ``, 'string') }}",
+              "En caso de mujeres no medir menos de 1.60": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('En_caso_de_mujeres_no_medir_menos_de_1_60', ``, 'string') }}",
+              "Alguna enfermedad crónica o degenerativa": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Alguna_enfermedad_cr_nica_o_degenerativa', ``, 'string') }}",
+              "En caso de tener miopía o astigmatismo y no contar con lentes tendra que tramitarlos antes de ingresar": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('En_caso_de_tener_miop_a_o_astigmatismo_y_no_contar_con_lentes_t', ``, 'string') }}"
+            },
+            "matchingColumns": [
+              "id_Postulante"
+            ],
+            "schema": [
+              {
+                "id": "id_Postulante",
+                "displayName": "id_Postulante",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "Edad máxima 45 años (vacantes operativas)",
+                "displayName": "Edad máxima 45 años (vacantes operativas)",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "Pagamos por medio del banco Santander ¿Tienes inconveniente con este banco?",
+                "displayName": "Pagamos por medio del banco Santander ¿Tienes inconveniente con este banco?",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "En caso de manejar cuenta Santander ¿Esta activa?",
+                "displayName": "En caso de manejar cuenta Santander ¿Esta activa?",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "No se aceptan reingresos",
+                "displayName": "No se aceptan reingresos",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "Que los candidatos no vivan a más de una hora de distancia",
+                "displayName": "Que los candidatos no vivan a más de una hora de distancia",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "Falta de algún documento",
+                "displayName": "Falta de algún documento",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "Infonavit o fonacot para vacantes operativas no ser mayor a $3,000 mil pesos",
+                "displayName": "Infonavit o fonacot para vacantes operativas no ser mayor a $3,000 mil pesos",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "Fracturas",
+                "displayName": "Fracturas",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "Consumo de drogas o antidepresivos (Antidoping)",
+                "displayName": "Consumo de drogas o antidepresivos (Antidoping)",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "En caso de mujeres no medir menos de 1.60",
+                "displayName": "En caso de mujeres no medir menos de 1.60",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "Alguna enfermedad crónica o degenerativa",
+                "displayName": "Alguna enfermedad crónica o degenerativa",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "En caso de tener miopía o astigmatismo y no contar con lentes tendra que tramitarlos antes de ingresar",
+                "displayName": "En caso de tener miopía o astigmatismo y no contar con lentes tendra que tramitarlos antes de ingresar",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleSheetsTool",
+        "typeVersion": 4.7,
+        "position": [
+          816,
+          496
+        ],
+        "id": "e1bc72a3-3643-4f90-a40e-04b8d8263d98",
+        "name": "Consultar/Insertar_Motivos_Rechazo",
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "HveeygHL8BoPyTUe",
+            "name": "Gael Sheets"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "appendOrUpdate",
+          "documentId": {
+            "__rl": true,
+            "value": "1e-M1wF-v-R2wFhi204EDb4LcbfRtoX2-1wX-lfQ11ZU",
+            "mode": "list",
+            "cachedResultName": "Chedrahui",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1e-M1wF-v-R2wFhi204EDb4LcbfRtoX2-1wX-lfQ11ZU/edit?usp=drivesdk"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": "gid=0",
+            "mode": "list",
+            "cachedResultName": "Documentación",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1e-M1wF-v-R2wFhi204EDb4LcbfRtoX2-1wX-lfQ11ZU/edit#gid=0"
+          },
+          "columns": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "id_Postulante": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('id_Postulante__using_to_match_', ``, 'string') }}",
+              "CONSTANCIA DE SITUACIÓN FISCAL (Obligatorio) (No mayor a tres meses)": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('CONSTANCIA_DE_SITUACI_N_FISCAL__Obligatorio___No_mayor_a_tres_m', ``, 'string') }}",
+              "CUENTA DE NOMINA SANTANDER (Obligatorio)": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('CUENTA_DE_NOMINA_SANTANDER__Obligatorio_', ``, 'string') }}",
+              "CAPTURA DE CORREO ELECTRONICO (Obligatorio)": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('CAPTURA_DE_CORREO_ELECTRONICO__Obligatorio_', ``, 'string') }}",
+              "ACTA DE NACIMIENTO (Obligatorio)": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('ACTA_DE_NACIMIENTO__Obligatorio_', ``, 'string') }}",
+              "CURP (Obligatorio)": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('CURP__Obligatorio_', ``, 'string') }}",
+              "INE(AMBOS LADOS) (Obligatorio)": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('INE_AMBOS_LADOS___Obligatorio_', ``, 'string') }}",
+              "NUMERO DE SEGURO SOCIAL (Obligatorio) (Actualizado y desactualizado)": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('NUMERO_DE_SEGURO_SOCIAL__Obligatorio___Actualizado_y_desactuali', ``, 'string') }}",
+              "COMPROBANTE DE DOMICILIO (Obligatorio)": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('COMPROBANTE_DE_DOMICILIO__Obligatorio_', ``, 'string') }}",
+              "COMPROBANTE DE ESTUDIOS CERTIFICADO (Obligatorio)": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('COMPROBANTE_DE_ESTUDIOS_CERTIFICADO__Obligatorio_', ``, 'string') }}",
+              "ESTADO DE CUENTA INFONAVIT O FONACOT (Opcional) Solo si aplica": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('ESTADO_DE_CUENTA_INFONAVIT_O_FONACOT__Opcional__Solo_si_aplica', ``, 'string') }}",
+              "FOTOGRAFIA": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('FOTOGRAFIA', ``, 'string') }}"
+            },
+            "matchingColumns": [
+              "id_Postulante"
+            ],
+            "schema": [
+              {
+                "id": "id_Postulante",
+                "displayName": "id_Postulante",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "CONSTANCIA DE SITUACIÓN FISCAL (Obligatorio) (No mayor a tres meses)",
+                "displayName": "CONSTANCIA DE SITUACIÓN FISCAL (Obligatorio) (No mayor a tres meses)",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "CUENTA DE NOMINA SANTANDER (Obligatorio)",
+                "displayName": "CUENTA DE NOMINA SANTANDER (Obligatorio)",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "CAPTURA DE CORREO ELECTRONICO (Obligatorio)",
+                "displayName": "CAPTURA DE CORREO ELECTRONICO (Obligatorio)",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "ACTA DE NACIMIENTO (Obligatorio)",
+                "displayName": "ACTA DE NACIMIENTO (Obligatorio)",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "CURP (Obligatorio)",
+                "displayName": "CURP (Obligatorio)",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "INE(AMBOS LADOS) (Obligatorio)",
+                "displayName": "INE(AMBOS LADOS) (Obligatorio)",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "NUMERO DE SEGURO SOCIAL (Obligatorio) (Actualizado y desactualizado)",
+                "displayName": "NUMERO DE SEGURO SOCIAL (Obligatorio) (Actualizado y desactualizado)",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "COMPROBANTE DE DOMICILIO (Obligatorio)",
+                "displayName": "COMPROBANTE DE DOMICILIO (Obligatorio)",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "COMPROBANTE DE ESTUDIOS CERTIFICADO (Obligatorio)",
+                "displayName": "COMPROBANTE DE ESTUDIOS CERTIFICADO (Obligatorio)",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "ESTADO DE CUENTA INFONAVIT O FONACOT (Opcional) Solo si aplica",
+                "displayName": "ESTADO DE CUENTA INFONAVIT O FONACOT (Opcional) Solo si aplica",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "FOTOGRAFIA",
+                "displayName": "FOTOGRAFIA",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleSheetsTool",
+        "typeVersion": 4.7,
+        "position": [
+          768,
+          288
+        ],
+        "id": "0992c77c-8047-4129-a68c-0211026451e9",
+        "name": "Consultar/Insertar_Documentacion",
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "HveeygHL8BoPyTUe",
+            "name": "Gael Sheets"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "appendOrUpdate",
+          "documentId": {
+            "__rl": true,
+            "value": "1e-M1wF-v-R2wFhi204EDb4LcbfRtoX2-1wX-lfQ11ZU",
+            "mode": "list",
+            "cachedResultName": "Chedrahui",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1e-M1wF-v-R2wFhi204EDb4LcbfRtoX2-1wX-lfQ11ZU/edit?usp=drivesdk"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": 618836548,
+            "mode": "list",
+            "cachedResultName": "Postulantes_Aptos",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1e-M1wF-v-R2wFhi204EDb4LcbfRtoX2-1wX-lfQ11ZU/edit#gid=618836548"
+          },
+          "columns": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "id_Postulante": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('id_Postulante', ``, 'string') }}"
+            },
+            "matchingColumns": [
+              "id_Postulante"
+            ],
+            "schema": [
+              {
+                "id": "id_Postulante",
+                "displayName": "id_Postulante",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleSheetsTool",
+        "typeVersion": 4.7,
+        "position": [
+          1104,
+          384
+        ],
+        "id": "a15c13c5-1ea6-4001-8583-11116a723525",
+        "name": "Consultar/Insertar_Postulantes_Aptos",
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "HveeygHL8BoPyTUe",
+            "name": "Gael Sheets"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "appendOrUpdate",
+          "documentId": {
+            "__rl": true,
+            "value": "1e-M1wF-v-R2wFhi204EDb4LcbfRtoX2-1wX-lfQ11ZU",
+            "mode": "list",
+            "cachedResultName": "Chedrahui",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1e-M1wF-v-R2wFhi204EDb4LcbfRtoX2-1wX-lfQ11ZU/edit?usp=drivesdk"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": 1039530764,
+            "mode": "list",
+            "cachedResultName": "Postulantes_NoAptos",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1e-M1wF-v-R2wFhi204EDb4LcbfRtoX2-1wX-lfQ11ZU/edit#gid=1039530764"
+          },
+          "columns": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "id_Postulante": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('id_Postulante__using_to_match_', ``, 'string') }}"
+            },
+            "matchingColumns": [
+              "id_Postulante"
+            ],
+            "schema": [
+              {
+                "id": "id_Postulante",
+                "displayName": "id_Postulante",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleSheetsTool",
+        "typeVersion": 4.7,
+        "position": [
+          1184,
+          560
+        ],
+        "id": "02f88c73-19de-4bc9-bd12-de0ff9e7c10d",
+        "name": "Consultar/Insertar_Postulantes_NoAptos",
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "HveeygHL8BoPyTUe",
+            "name": "Gael Sheets"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "appendOrUpdate",
+          "documentId": {
+            "__rl": true,
+            "value": "1e-M1wF-v-R2wFhi204EDb4LcbfRtoX2-1wX-lfQ11ZU",
+            "mode": "list",
+            "cachedResultName": "Chedrahui",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1e-M1wF-v-R2wFhi204EDb4LcbfRtoX2-1wX-lfQ11ZU/edit?usp=drivesdk"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": 845339065,
+            "mode": "list",
+            "cachedResultName": "Vacantes Frios",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1e-M1wF-v-R2wFhi204EDb4LcbfRtoX2-1wX-lfQ11ZU/edit#gid=845339065"
+          },
+          "columns": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "id_Postulante": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('id_Postulante__using_to_match_', ``, 'string') }}",
+              "¿Alguna vez has trabajado en el area de frios?": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('_Alguna_vez_has_trabajado_en_el_area_de_frios_', ``, 'string') }}",
+              "¿Cuentas con disponibilidad de tiempo?": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('_Cuentas_con_disponibilidad_de_tiempo_', ``, 'string') }}",
+              "¿Tienes alguna enfermedad respiratoria?": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('_Tienes_alguna_enfermedad_respiratoria_', ``, 'string') }}",
+              "¿Conocimientos matematicos?": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('_Conocimientos_matematicos_', ``, 'string') }}",
+              "No operaciones, ni fracturas": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('No_operaciones__ni_fracturas', ``, 'string') }}",
+              "Condicion enfermiza": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Condicion_enfermiza', ``, 'string') }}",
+              "No mujeres": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('No_mujeres', ``, 'string') }}"
+            },
+            "matchingColumns": [
+              "id_Postulante"
+            ],
+            "schema": [
+              {
+                "id": "id_Postulante",
+                "displayName": "id_Postulante",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "¿Alguna vez has trabajado en el area de frios?",
+                "displayName": "¿Alguna vez has trabajado en el area de frios?",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "¿Cuentas con disponibilidad de tiempo?",
+                "displayName": "¿Cuentas con disponibilidad de tiempo?",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "¿Tienes alguna enfermedad respiratoria?",
+                "displayName": "¿Tienes alguna enfermedad respiratoria?",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "¿Conocimientos matematicos?",
+                "displayName": "¿Conocimientos matematicos?",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "No operaciones, ni fracturas",
+                "displayName": "No operaciones, ni fracturas",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "Condicion enfermiza",
+                "displayName": "Condicion enfermiza",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "No mujeres",
+                "displayName": "No mujeres",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleSheetsTool",
+        "typeVersion": 4.7,
+        "position": [
+          928,
+          368
+        ],
+        "id": "ba7081a3-73da-4112-be09-8dfc4a0dabc9",
+        "name": "Consultar/Insertar_VacantesFrios",
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "HveeygHL8BoPyTUe",
+            "name": "Gael Sheets"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "appendOrUpdate",
+          "documentId": {
+            "__rl": true,
+            "value": "1e-M1wF-v-R2wFhi204EDb4LcbfRtoX2-1wX-lfQ11ZU",
+            "mode": "list",
+            "cachedResultName": "Chedrahui",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1e-M1wF-v-R2wFhi204EDb4LcbfRtoX2-1wX-lfQ11ZU/edit?usp=drivesdk"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": 845339065,
+            "mode": "list",
+            "cachedResultName": "Vacantes Frios",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1e-M1wF-v-R2wFhi204EDb4LcbfRtoX2-1wX-lfQ11ZU/edit#gid=845339065"
+          },
+          "columns": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "id_Postulante": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('id_Postulante__using_to_match_', ``, 'string') }}",
+              "¿Alguna vez has trabajado en el area de frios?": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('_Alguna_vez_has_trabajado_en_el_area_de_frios_', ``, 'string') }}",
+              "¿Cuentas con disponibilidad de tiempo?": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('_Cuentas_con_disponibilidad_de_tiempo_', ``, 'string') }}",
+              "¿Tienes alguna enfermedad respiratoria?": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('_Tienes_alguna_enfermedad_respiratoria_', ``, 'string') }}",
+              "¿Conocimientos matematicos?": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('_Conocimientos_matematicos_', ``, 'string') }}",
+              "No operaciones, ni fracturas": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('No_operaciones__ni_fracturas', ``, 'string') }}",
+              "Condicion enfermiza": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Condicion_enfermiza', ``, 'string') }}",
+              "No mujeres": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('No_mujeres', ``, 'string') }}"
+            },
+            "matchingColumns": [
+              "id_Postulante"
+            ],
+            "schema": [
+              {
+                "id": "id_Postulante",
+                "displayName": "id_Postulante",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "¿Alguna vez has trabajado en el area de frios?",
+                "displayName": "¿Alguna vez has trabajado en el area de frios?",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "¿Cuentas con disponibilidad de tiempo?",
+                "displayName": "¿Cuentas con disponibilidad de tiempo?",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "¿Tienes alguna enfermedad respiratoria?",
+                "displayName": "¿Tienes alguna enfermedad respiratoria?",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "¿Conocimientos matematicos?",
+                "displayName": "¿Conocimientos matematicos?",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "No operaciones, ni fracturas",
+                "displayName": "No operaciones, ni fracturas",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "Condicion enfermiza",
+                "displayName": "Condicion enfermiza",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "No mujeres",
+                "displayName": "No mujeres",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleSheetsTool",
+        "typeVersion": 4.7,
+        "position": [
+          1008,
+          560
+        ],
+        "id": "d421fa63-813f-4be9-a72b-8963455a3a9d",
+        "name": "Consultar/Insertar_VacantesSecos",
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "HveeygHL8BoPyTUe",
+            "name": "Gael Sheets"
+          }
+        }
+      }
+    ],
+    "connections": {
+      "Telegram Trigger": {
+        "main": [
+          [
+            {
+              "node": "Switch",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "AI Agent": {
+        "main": [
+          [
+            {
+              "node": "Send a text message",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "OpenAI Chat Model": {
+        "ai_languageModel": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "ai_languageModel",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Simple Memory": {
+        "ai_memory": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "ai_memory",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Switch": {
+        "main": [
+          [
+            {
+              "node": "Texto",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Descargar audio",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Descargar audio": {
+        "main": [
+          [
+            {
+              "node": "Transcribe audio",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Texto": {
+        "main": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Transcribe audio": {
+        "main": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Consultar/Insertar_Filtros": {
+        "ai_tool": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Consultar/Insertar_Motivos_Rechazo": {
+        "ai_tool": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Consultar/Insertar_Documentacion": {
+        "ai_tool": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Consultar/Insertar_Postulantes_Aptos": {
+        "ai_tool": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Consultar/Insertar_Postulantes_NoAptos": {
+        "ai_tool": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Consultar/Insertar_VacantesFrios": {
+        "ai_tool": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Consultar/Insertar_VacantesSecos": {
+        "ai_tool": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "authors": "system migration",
+    "name": null,
+    "description": null
+  }
 }
