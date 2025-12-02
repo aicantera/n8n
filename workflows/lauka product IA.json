@@ -1,8 +1,9 @@
 {
-  "createdAt": "2025-06-05T02:22:24.606Z",
   "updatedAt": "2025-07-17T23:18:24.000Z",
+  "createdAt": "2025-06-05T02:22:24.606Z",
   "id": "1RCUwQw4PrzwGHpK",
   "name": "lauka product IA",
+  "description": null,
   "active": true,
   "isArchived": false,
   "nodes": [
@@ -91,17 +92,19 @@
   },
   "pinData": {},
   "versionId": "34cd7110-8c92-44cc-8f07-d888a568ce22",
+  "activeVersionId": "34cd7110-8c92-44cc-8f07-d888a568ce22",
+  "versionCounter": 4,
   "triggerCount": 1,
   "shared": [
     {
-      "createdAt": "2025-06-05T02:22:24.609Z",
       "updatedAt": "2025-06-05T02:22:24.609Z",
+      "createdAt": "2025-06-05T02:22:24.609Z",
       "role": "workflow:owner",
       "workflowId": "1RCUwQw4PrzwGHpK",
       "projectId": "BZ9Ta5yhe4RhzY78",
       "project": {
-        "createdAt": "2025-05-13T15:56:28.209Z",
         "updatedAt": "2025-05-13T16:18:54.372Z",
+        "createdAt": "2025-05-13T15:56:28.209Z",
         "id": "BZ9Ta5yhe4RhzY78",
         "name": "CANTERA ADMIN <canteradigital7@gmail.com>",
         "type": "personal",
@@ -109,13 +112,13 @@
         "description": null,
         "projectRelations": [
           {
-            "createdAt": "2025-05-13T15:56:28.209Z",
             "updatedAt": "2025-05-13T15:56:28.209Z",
+            "createdAt": "2025-05-13T15:56:28.209Z",
             "userId": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
             "projectId": "BZ9Ta5yhe4RhzY78",
             "user": {
+              "updatedAt": "2025-12-02T06:00:52.000Z",
               "createdAt": "2025-05-13T15:56:27.880Z",
-              "updatedAt": "2025-12-02T04:59:23.000Z",
               "id": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
               "email": "canteradigital7@gmail.com",
               "firstName": "CANTERA",
@@ -146,7 +149,7 @@
               },
               "disabled": false,
               "mfaEnabled": false,
-              "lastActiveAt": "2025-12-01",
+              "lastActiveAt": "2025-12-02",
               "isPending": false
             }
           }
@@ -154,5 +157,91 @@
       }
     }
   ],
-  "tags": []
+  "tags": [],
+  "activeVersion": {
+    "updatedAt": "2025-12-02T05:05:56.621Z",
+    "createdAt": "2025-12-02T05:05:56.621Z",
+    "versionId": "34cd7110-8c92-44cc-8f07-d888a568ce22",
+    "workflowId": "1RCUwQw4PrzwGHpK",
+    "nodes": [
+      {
+        "parameters": {
+          "path": "productos",
+          "responseMode": "responseNode",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.webhook",
+        "typeVersion": 2,
+        "position": [
+          -620,
+          -40
+        ],
+        "id": "8e4d29e0-3c3d-41bc-8b2d-1e7fd1e0fa86",
+        "name": "Webhook",
+        "webhookId": "feeed3af-fe88-42f7-910b-3f3b619e4dac"
+      },
+      {
+        "parameters": {
+          "operation": "getAll",
+          "tableId": "vista_productos_enriquecidos_con_marca",
+          "returnAll": true
+        },
+        "type": "n8n-nodes-base.supabase",
+        "typeVersion": 1,
+        "position": [
+          -180,
+          -80
+        ],
+        "id": "dea16e1f-053b-4143-80f4-b1c588e74823",
+        "name": "Get many rows",
+        "credentials": {
+          "supabaseApi": {
+            "id": "YkMNoFk7VC7sBrAd",
+            "name": "SUAPBASE LAUKA"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "respondWith": "allIncomingItems",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.respondToWebhook",
+        "typeVersion": 1.4,
+        "position": [
+          340,
+          -40
+        ],
+        "id": "7f349f34-1058-44d3-b0a6-6bf9fba3a3ac",
+        "name": "Respond to Webhook"
+      }
+    ],
+    "connections": {
+      "Webhook": {
+        "main": [
+          [
+            {
+              "node": "Get many rows",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Get many rows": {
+        "main": [
+          [
+            {
+              "node": "Respond to Webhook",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "authors": "system migration",
+    "name": null,
+    "description": null
+  }
 }
