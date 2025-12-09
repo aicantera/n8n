@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2025-12-09T20:45:35.000Z",
+  "updatedAt": "2025-12-09T21:22:48.000Z",
   "createdAt": "2025-12-09T19:59:24.098Z",
   "id": "5NDkGEiGe5RMoUci",
   "name": "Agente Actualizador de Estado de Solicitud de Vacaciones",
@@ -29,6 +29,106 @@
     },
     {
       "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.resolucion_final }}",
+                    "rightValue": "aprobada",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "b9703b2e-6495-4db3-8045-bc28b3c7c02b"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Aprobada"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "e7daca8a-af80-494b-aba6-990ce79b88ae",
+                    "leftValue": "={{ $json.resolucion_final }}",
+                    "rightValue": "rechazada",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Rechazada"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "4d6d3282-ffdc-4897-84c8-5f9af37bc287",
+                    "leftValue": "={{ $json.resolucion_final }}",
+                    "rightValue": "pendiente",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Pendiente"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.3,
+      "position": [
+        624,
+        -16
+      ],
+      "id": "7371110b-1af8-4bc4-8eba-d3f981c40a31",
+      "name": "Switch"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        848,
+        176
+      ],
+      "id": "5138d57f-c953-4481-96ac-96c90effba27",
+      "name": "No Operation, do nothing"
+    },
+    {
+      "parameters": {
         "operation": "get",
         "tableId": "cantera_connect_solicitud_vacaciones",
         "filters": {
@@ -47,7 +147,7 @@
         0
       ],
       "id": "274035c7-7d71-40b8-803b-4d4dda99be7e",
-      "name": "Get a row",
+      "name": "Get datos solicitud",
       "credentials": {
         "supabaseApi": {
           "id": "ty0KiXsEYP1uJ8t9",
@@ -57,85 +157,136 @@
     },
     {
       "parameters": {
-        "assignments": {
-          "assignments": [
-            {
-              "id": "6b70d56a-d606-43bf-aad1-889876ab8df2",
-              "name": "aprobacion_rh",
-              "value": "={{ $json.aprobacion_rh }}",
-              "type": "boolean"
-            }
-          ]
-        },
-        "options": {}
+        "jsCode": "return items.map(item => {\n  const data = item.json;\n\n  // 1. Ponemos las 3 aprobaciones en una lista para facilitar el conteo\n  // Asegúrate que los nombres de los campos coincidan exactamente con tu salida anterior\n  const aprobaciones = [\n    data.aprobacion_rh,\n    data.aprobacion_lider,\n    data.aprobacion_pm\n  ];\n\n  // 2. Contamos cuántos True y cuántos False hay\n  // Nota: Filtramos estrictamente por valor booleano\n  const votosPositivos = aprobaciones.filter(v => v === true).length;\n  const votosNegativos = aprobaciones.filter(v => v === false).length;\n\n  // 3. Lógica de Mayoría (2 de 3)\n  let resolucion = 'pendiente'; // Estado por defecto (si hay nulls o empate 1-1)\n\n  if (votosPositivos >= 2) {\n    resolucion = 'aprobada';\n  } else if (votosNegativos >= 2) {\n    resolucion = 'rechazada';\n  }\n\n  // 4. Agregamos el nuevo campo al objeto JSON\n  item.json.resolucion_final = resolucion;\n  \n  // Opcional: Agregar detalles del conteo por si quieres depurar\n  item.json.conteo_votos = { afavor: votosPositivos, encontra: votosNegativos };\n\n  return item;\n});"
       },
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
       "position": [
         416,
         0
       ],
-      "id": "9189ec39-2c05-497d-861b-ea437789f0e0",
-      "name": "Edit Fields"
+      "id": "bf5418de-88b3-483f-acce-d8afde81c951",
+      "name": "Code revisar aprobaciones"
     },
     {
       "parameters": {
-        "numberInputs": 3
-      },
-      "type": "n8n-nodes-base.merge",
-      "typeVersion": 3.2,
-      "position": [
-        736,
-        160
-      ],
-      "id": "964740da-5f87-4ae9-a821-3605668feb29",
-      "name": "Merge"
-    },
-    {
-      "parameters": {
-        "assignments": {
-          "assignments": [
+        "operation": "update",
+        "tableId": "cantera_connect_solicitud_vacaciones",
+        "filters": {
+          "conditions": [
             {
-              "id": "d55f5d4b-8113-4883-a69f-3be2c730b00f",
-              "name": "aprobacion_lider",
-              "value": "={{ $json.aprobacion_lider }}",
-              "type": "string"
+              "keyName": "id",
+              "condition": "eq",
+              "keyValue": "={{ $('When Executed by Another Workflow').item.json.solicitud_id }}"
             }
           ]
         },
-        "options": {}
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "estado",
+              "fieldValue": "aceptada"
+            }
+          ]
+        }
       },
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
       "position": [
-        416,
-        176
+        848,
+        -192
       ],
-      "id": "187ecd16-d885-4b1a-b2ac-65a3a0a155db",
-      "name": "Edit Fields1"
+      "id": "364e4a99-50a5-4f6d-99b1-2b6c9fa380cb",
+      "name": "Update estado aceptada",
+      "credentials": {
+        "supabaseApi": {
+          "id": "ty0KiXsEYP1uJ8t9",
+          "name": "Supabase account - CANTERA"
+        }
+      }
     },
     {
       "parameters": {
-        "assignments": {
-          "assignments": [
+        "operation": "update",
+        "tableId": "cantera_connect_solicitud_vacaciones",
+        "filters": {
+          "conditions": [
             {
-              "id": "1f188953-91c0-4bef-8884-f2891f6206bf",
-              "name": "aprobacion_pm",
-              "value": "={{ $json.aprobacion_pm }}",
-              "type": "string"
+              "keyName": "id",
+              "condition": "eq",
+              "keyValue": "={{ $('When Executed by Another Workflow').item.json.solicitud_id }}"
             }
           ]
         },
-        "options": {}
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "estado",
+              "fieldValue": "rechazada"
+            }
+          ]
+        }
       },
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
       "position": [
-        416,
-        352
+        848,
+        0
       ],
-      "id": "90790f82-fe4d-49a3-b84d-29bef22c4ab9",
-      "name": "Edit Fields2"
+      "id": "e8b5f2d6-3e62-4db8-9e44-3edd6fea626e",
+      "name": "Update estado rechazada",
+      "credentials": {
+        "supabaseApi": {
+          "id": "ty0KiXsEYP1uJ8t9",
+          "name": "Supabase account - CANTERA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "toRecipients": "={{ $('Get datos solicitud').item.json.correo }}",
+        "subject": "=Solicitud de vacaciones aceptada",
+        "bodyContent": "=Estimado {{ $('Get datos solicitud').item.json.nombre }}\nTe infomamos que tu solicitud de {{ $('Get datos solicitud').item.json.cantidad_dias }} dia(s) de vacaciones para las fechas {{ $('Get datos solicitud').item.json.fechas }} fue aceptada.\n\nCualquier duda o comentario favor de comunicarte con Andrea",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.microsoftOutlook",
+      "typeVersion": 2,
+      "position": [
+        1072,
+        -192
+      ],
+      "id": "03d4a55f-ef91-4fe0-bb6b-a21a63ea6e99",
+      "name": "Send confirmación aceptada",
+      "webhookId": "0e70a859-049b-4da1-8b31-13facd314fb7",
+      "credentials": {
+        "microsoftOutlookOAuth2Api": {
+          "id": "1e9fbzjIiV9wNv2j",
+          "name": "Microsoft Outlook account - azure@canteradigital.mx"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "toRecipients": "={{ $('Get datos solicitud').item.json.correo }}",
+        "subject": "=Solicitud de vacaciones rechazada",
+        "bodyContent": "=Estimado {{ $('Get datos solicitud').item.json.nombre }}\nTe infomamos que tu solicitud de {{ $('Get datos solicitud').item.json.cantidad_dias }} dia(s) de vacaciones para las fechas {{ $('Get datos solicitud').item.json.fechas }} fue rechazada.\n\nCualquier duda o comentario favor de comunicarte con Andrea",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.microsoftOutlook",
+      "typeVersion": 2,
+      "position": [
+        1072,
+        0
+      ],
+      "id": "e9c2ef8b-3374-4c20-ac88-02c3929aacb7",
+      "name": "Send confirmación rechazada",
+      "webhookId": "0e70a859-049b-4da1-8b31-13facd314fb7",
+      "credentials": {
+        "microsoftOutlookOAuth2Api": {
+          "id": "1e9fbzjIiV9wNv2j",
+          "name": "Microsoft Outlook account - azure@canteradigital.mx"
+        }
+      }
     }
   ],
   "connections": {
@@ -143,63 +294,78 @@
       "main": [
         [
           {
-            "node": "Get a row",
+            "node": "Get datos solicitud",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Get a row": {
+    "Switch": {
       "main": [
         [
           {
-            "node": "Edit Fields",
+            "node": "Update estado aceptada",
             "type": "main",
             "index": 0
-          },
+          }
+        ],
+        [
           {
-            "node": "Edit Fields1",
+            "node": "Update estado rechazada",
             "type": "main",
             "index": 0
-          },
+          }
+        ],
+        [
           {
-            "node": "Edit Fields2",
+            "node": "No Operation, do nothing",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Edit Fields": {
+    "Get datos solicitud": {
       "main": [
         [
           {
-            "node": "Merge",
+            "node": "Code revisar aprobaciones",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Edit Fields1": {
+    "Code revisar aprobaciones": {
       "main": [
         [
           {
-            "node": "Merge",
+            "node": "Switch",
             "type": "main",
-            "index": 1
+            "index": 0
           }
         ]
       ]
     },
-    "Edit Fields2": {
+    "Update estado aceptada": {
       "main": [
         [
           {
-            "node": "Merge",
+            "node": "Send confirmación aceptada",
             "type": "main",
-            "index": 2
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update estado rechazada": {
+      "main": [
+        [
+          {
+            "node": "Send confirmación rechazada",
+            "type": "main",
+            "index": 0
           }
         ]
       ]
@@ -221,9 +387,9 @@
       }
     ]
   },
-  "versionId": "0c2e04dd-ab77-4b7c-a7ac-ffca4a6e8159",
+  "versionId": "d7531662-ae26-420a-9246-50476e36bb76",
   "activeVersionId": null,
-  "versionCounter": 13,
+  "versionCounter": 17,
   "triggerCount": 0,
   "shared": [
     {
