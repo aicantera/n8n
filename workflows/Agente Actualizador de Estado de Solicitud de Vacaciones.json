@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2025-12-10T19:44:20.000Z",
+  "updatedAt": "2025-12-10T20:01:03.000Z",
   "createdAt": "2025-12-09T19:59:24.098Z",
   "id": "5NDkGEiGe5RMoUci",
   "name": "Agente Actualizador de Estado de Solicitud de Vacaciones",
@@ -290,6 +290,34 @@
     },
     {
       "parameters": {
+        "operation": "get",
+        "tableId": "colaboradores",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "correo",
+              "keyValue": "={{ $('Get datos solicitud').item.json.correo }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        1280,
+        -192
+      ],
+      "id": "5075f0c3-df30-4205-92cc-b93ff4e67859",
+      "name": "Get días actuales vacaciones",
+      "credentials": {
+        "supabaseApi": {
+          "id": "ty0KiXsEYP1uJ8t9",
+          "name": "Supabase account - CANTERA"
+        }
+      }
+    },
+    {
+      "parameters": {
         "operation": "update",
         "tableId": "colaboradores",
         "filters": {
@@ -317,35 +345,7 @@
         -192
       ],
       "id": "940097aa-91a2-43d0-8024-93b1c918980f",
-      "name": "Update a row",
-      "credentials": {
-        "supabaseApi": {
-          "id": "ty0KiXsEYP1uJ8t9",
-          "name": "Supabase account - CANTERA"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "operation": "get",
-        "tableId": "colaboradores",
-        "filters": {
-          "conditions": [
-            {
-              "keyName": "correo",
-              "keyValue": "={{ $('Get datos solicitud').item.json.correo }}"
-            }
-          ]
-        }
-      },
-      "type": "n8n-nodes-base.supabase",
-      "typeVersion": 1,
-      "position": [
-        1280,
-        -192
-      ],
-      "id": "5075f0c3-df30-4205-92cc-b93ff4e67859",
-      "name": "Get a row",
+      "name": "Update días restantes de vaaciones",
       "credentials": {
         "supabaseApi": {
           "id": "ty0KiXsEYP1uJ8t9",
@@ -439,18 +439,18 @@
       "main": [
         [
           {
-            "node": "Get a row",
+            "node": "Get días actuales vacaciones",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Get a row": {
+    "Get días actuales vacaciones": {
       "main": [
         [
           {
-            "node": "Update a row",
+            "node": "Update días restantes de vaaciones",
             "type": "main",
             "index": 0
           }
@@ -474,9 +474,9 @@
       }
     ]
   },
-  "versionId": "83872882-f657-45de-aef8-0a87d6ece929",
+  "versionId": "8743bb2f-de1b-49ba-9d78-ceb804b18b53",
   "activeVersionId": null,
-  "versionCounter": 22,
+  "versionCounter": 23,
   "triggerCount": 0,
   "shared": [
     {
