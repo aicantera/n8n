@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2025-12-09T21:22:48.000Z",
+  "updatedAt": "2025-12-10T19:44:20.000Z",
   "createdAt": "2025-12-09T19:59:24.098Z",
   "id": "5NDkGEiGe5RMoUci",
   "name": "Agente Actualizador de Estado de Solicitud de Vacaciones",
@@ -287,6 +287,71 @@
           "name": "Microsoft Outlook account - azure@canteradigital.mx"
         }
       }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "tableId": "colaboradores",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "id",
+              "condition": "eq",
+              "keyValue": "={{ $json.id }}"
+            }
+          ]
+        },
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "dias_vacaciones_restantes",
+              "fieldValue": "={{ $json.dias_vacaciones_restantes - $('Get datos solicitud').item.json.cantidad_dias }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        1488,
+        -192
+      ],
+      "id": "940097aa-91a2-43d0-8024-93b1c918980f",
+      "name": "Update a row",
+      "credentials": {
+        "supabaseApi": {
+          "id": "ty0KiXsEYP1uJ8t9",
+          "name": "Supabase account - CANTERA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "tableId": "colaboradores",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "correo",
+              "keyValue": "={{ $('Get datos solicitud').item.json.correo }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        1280,
+        -192
+      ],
+      "id": "5075f0c3-df30-4205-92cc-b93ff4e67859",
+      "name": "Get a row",
+      "credentials": {
+        "supabaseApi": {
+          "id": "ty0KiXsEYP1uJ8t9",
+          "name": "Supabase account - CANTERA"
+        }
+      }
     }
   ],
   "connections": {
@@ -369,6 +434,28 @@
           }
         ]
       ]
+    },
+    "Send confirmación aceptada": {
+      "main": [
+        [
+          {
+            "node": "Get a row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get a row": {
+      "main": [
+        [
+          {
+            "node": "Update a row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -387,9 +474,9 @@
       }
     ]
   },
-  "versionId": "d7531662-ae26-420a-9246-50476e36bb76",
+  "versionId": "83872882-f657-45de-aef8-0a87d6ece929",
   "activeVersionId": null,
-  "versionCounter": 17,
+  "versionCounter": 22,
   "triggerCount": 0,
   "shared": [
     {
