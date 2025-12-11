@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2025-12-10T20:01:03.000Z",
+  "updatedAt": "2025-12-10T23:50:23.000Z",
   "createdAt": "2025-12-09T19:59:24.098Z",
   "id": "5NDkGEiGe5RMoUci",
   "name": "Agente Actualizador de Estado de Solicitud de Vacaciones",
@@ -115,17 +115,6 @@
       ],
       "id": "7371110b-1af8-4bc4-8eba-d3f981c40a31",
       "name": "Switch"
-    },
-    {
-      "parameters": {},
-      "type": "n8n-nodes-base.noOp",
-      "typeVersion": 1,
-      "position": [
-        848,
-        176
-      ],
-      "id": "5138d57f-c953-4481-96ac-96c90effba27",
-      "name": "No Operation, do nothing"
     },
     {
       "parameters": {
@@ -352,6 +341,43 @@
           "name": "Supabase account - CANTERA"
         }
       }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "tableId": "cantera_connect_solicitud_vacaciones",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "id",
+              "condition": "eq",
+              "keyValue": "={{ $('When Executed by Another Workflow').item.json.solicitud_id }}"
+            }
+          ]
+        },
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "estado",
+              "fieldValue": "pendiente"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        848,
+        208
+      ],
+      "id": "9bc4c888-bc91-4e33-a18f-44da978301dc",
+      "name": "Update estado pendiente",
+      "credentials": {
+        "supabaseApi": {
+          "id": "ty0KiXsEYP1uJ8t9",
+          "name": "Supabase account - CANTERA"
+        }
+      }
     }
   ],
   "connections": {
@@ -384,7 +410,7 @@
         ],
         [
           {
-            "node": "No Operation, do nothing",
+            "node": "Update estado pendiente",
             "type": "main",
             "index": 0
           }
@@ -474,9 +500,9 @@
       }
     ]
   },
-  "versionId": "8743bb2f-de1b-49ba-9d78-ceb804b18b53",
+  "versionId": "7b454243-501e-427f-8f7a-e0b0a6d04e77",
   "activeVersionId": null,
-  "versionCounter": 23,
+  "versionCounter": 24,
   "triggerCount": 0,
   "shared": [
     {
