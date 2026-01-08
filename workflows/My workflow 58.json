@@ -1,7 +1,7 @@
 {
-  "updatedAt": "2025-12-12T18:59:39.000Z",
-  "createdAt": "2025-12-12T18:48:01.995Z",
-  "id": "2EYSCfaCyQza8Czt",
+  "updatedAt": "2026-01-08T16:32:12.000Z",
+  "createdAt": "2026-01-08T16:23:54.830Z",
+  "id": "4xctjEcb7QYFJAuQ",
   "name": "My workflow 58",
   "description": null,
   "active": false,
@@ -9,177 +9,160 @@
   "nodes": [
     {
       "parameters": {
-        "httpMethod": "POST",
-        "path": "documents/upload",
-        "responseMode": "responseNode",
-        "options": {}
+        "rule": {
+          "interval": [
+            {
+              "field": "hours"
+            }
+          ]
+        }
       },
-      "type": "n8n-nodes-base.webhook",
-      "typeVersion": 2.1,
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
       "position": [
-        -368,
-        48
+        0,
+        0
       ],
-      "id": "891210e1-de62-4f6b-ba68-070fef4bb7c6",
-      "name": "Webhook",
-      "webhookId": "035babb7-5b82-476b-8ef3-53f4b03332d8"
+      "id": "fb14b1a2-9db6-4727-88ae-b1f9acf5da66",
+      "name": "Schedule Trigger"
     },
     {
       "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1pYMpa9A_dKm0-BTiQ1Y1dtK6F-dw0cjNaaWUr9Rh7kU",
+          "mode": "list",
+          "cachedResultName": "hoteleria_demo",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1pYMpa9A_dKm0-BTiQ1Y1dtK6F-dw0cjNaaWUr9Rh7kU/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "reservaciones_hoteleria_demo",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1pYMpa9A_dKm0-BTiQ1Y1dtK6F-dw0cjNaaWUr9Rh7kU/edit#gid=0"
+        },
         "options": {}
       },
-      "type": "n8n-nodes-base.respondToWebhook",
-      "typeVersion": 1.4,
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
       "position": [
-        528,
-        32
+        208,
+        0
       ],
-      "id": "6fe2de15-1237-49af-a180-2d510fd9959d",
-      "name": "Respond to Webhook"
+      "id": "3adc4811-8176-4ee8-91c7-902b95779161",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "VrznAZQXjQh9WpvY",
+          "name": "Google Sheets - Cantera"
+        }
+      }
     },
     {
       "parameters": {
-        "operation": "get",
-        "tableId": "project",
-        "filters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
           "conditions": [
             {
-              "keyName": "id",
-              "keyValue": "={{ $json.body.project_id }}"
-            }
-          ]
-        }
-      },
-      "type": "n8n-nodes-base.supabase",
-      "typeVersion": 1,
-      "position": [
-        -144,
-        208
-      ],
-      "id": "9fd5c23e-91a5-4fae-b625-136850ebfc6f",
-      "name": "Get a row",
-      "credentials": {
-        "supabaseApi": {
-          "id": "ty0KiXsEYP1uJ8t9",
-          "name": "Supabase account - CANTERA"
-        }
-      }
-    },
-    {
-      "parameters": {},
-      "type": "n8n-nodes-base.merge",
-      "typeVersion": 3.2,
-      "position": [
-        80,
-        48
-      ],
-      "id": "6ea6ef9a-e1ff-487a-aacc-cd4519f0ac16",
-      "name": "Merge"
-    },
-    {
-      "parameters": {
-        "inputDataFieldName": "document",
-        "name": "=",
-        "driveId": {
-          "__rl": true,
-          "mode": "list",
-          "value": "My Drive"
-        },
-        "folderId": {
-          "__rl": true,
-          "value": "={{ $('Get a row').item.json.drive_link }}",
-          "mode": "url"
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.googleDrive",
-      "typeVersion": 3,
-      "position": [
-        288,
-        48
-      ],
-      "id": "d4e0c2f7-3e57-4fa3-9716-7735033248db",
-      "name": "Upload file",
-      "credentials": {
-        "googleDriveOAuth2Api": {
-          "id": "PKQpxniTUryv7dE9",
-          "name": "Google Drive account - DRIVE CANTERA"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "assignments": {
-          "assignments": [
+              "id": "11c59af2-b5f1-4b2f-ab0a-56dc9fa3d3a3",
+              "leftValue": "={{$json.NotificationSent}}",
+              "rightValue": "false",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            },
             {
-              "id": "08741f27-e216-41a9-84eb-78847c4a3acd",
-              "name": "={{$json.data.}}",
-              "value": "",
-              "type": "string"
+              "id": "478994f6-dd28-4108-9fc2-989f7b527108",
+              "leftValue": "={{$json.Status}}",
+              "rightValue": "Pendiente",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            },
+            {
+              "id": "5b52d8eb-d354-4636-bc88-fa9d70241d01",
+              "leftValue": "={{ (new Date($json.CheckInDateTime).getTime() - Date.now()) / 3600000 }}",
+              "rightValue": 1,
+              "operator": {
+                "type": "number",
+                "operation": "lte"
+              }
             }
-          ]
+          ],
+          "combinator": "and"
         },
         "options": {}
       },
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
       "position": [
-        -224,
-        96
+        416,
+        0
       ],
-      "id": "fe0f2151-f9ac-442f-b289-ca4ed4b9ccc5",
-      "name": "Edit Fields"
+      "id": "0b27445f-0c00-4ab9-83e4-8c285e64f111",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "chatId": "={{$json.ContactInfo}}",
+        "text": "Hola, soy tu ayudante hotelero. ¿Te gustaría evitar la fila y hacer el check‑in directamente conmigo?",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        592,
+        -16
+      ],
+      "id": "e0392eec-f503-4fc8-a9f4-8c505977e850",
+      "name": "Send a text message",
+      "webhookId": "4c9e6ccf-e9ac-4844-9fc6-964ee08cb0d7",
+      "credentials": {
+        "telegramApi": {
+          "id": "rcqJFeNHCdILlLRP",
+          "name": "Telegram RRHH cantera"
+        }
+      }
     }
   ],
   "connections": {
-    "Webhook": {
+    "Schedule Trigger": {
       "main": [
         [
           {
-            "node": "Get a row",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Merge",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Edit Fields",
+            "node": "Get row(s) in sheet",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Get a row": {
+    "Get row(s) in sheet": {
       "main": [
         [
           {
-            "node": "Merge",
-            "type": "main",
-            "index": 1
-          }
-        ]
-      ]
-    },
-    "Merge": {
-      "main": [
-        [
-          {
-            "node": "Upload file",
+            "node": "If",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Upload file": {
+    "If": {
       "main": [
         [
           {
-            "node": "Respond to Webhook",
+            "node": "Send a text message",
             "type": "main",
             "index": 0
           }
@@ -195,16 +178,16 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "0e8e7d8b-fe8e-4fe8-8158-2bf7d354ba0d",
+  "versionId": "fd6970a7-88ae-4fb7-b311-dc215df2e85f",
   "activeVersionId": null,
-  "versionCounter": 4,
+  "versionCounter": 2,
   "triggerCount": 0,
   "shared": [
     {
-      "updatedAt": "2025-12-12T18:48:02.002Z",
-      "createdAt": "2025-12-12T18:48:02.002Z",
+      "updatedAt": "2026-01-08T16:23:54.834Z",
+      "createdAt": "2026-01-08T16:23:54.834Z",
       "role": "workflow:owner",
-      "workflowId": "2EYSCfaCyQza8Czt",
+      "workflowId": "4xctjEcb7QYFJAuQ",
       "projectId": "BZ9Ta5yhe4RhzY78",
       "project": {
         "updatedAt": "2025-05-13T16:18:54.372Z",
@@ -221,7 +204,7 @@
             "userId": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
             "projectId": "BZ9Ta5yhe4RhzY78",
             "user": {
-              "updatedAt": "2025-12-12T06:00:52.000Z",
+              "updatedAt": "2026-01-08T06:00:52.000Z",
               "createdAt": "2025-05-13T15:56:27.880Z",
               "id": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
               "email": "canteradigital7@gmail.com",
@@ -252,7 +235,7 @@
               },
               "disabled": false,
               "mfaEnabled": false,
-              "lastActiveAt": "2025-12-12",
+              "lastActiveAt": "2026-01-08",
               "isPending": false
             }
           }
