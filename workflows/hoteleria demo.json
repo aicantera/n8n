@@ -1,0 +1,2146 @@
+{
+  "updatedAt": "2026-01-08T18:20:09.000Z",
+  "createdAt": "2026-01-08T16:23:54.830Z",
+  "id": "4xctjEcb7QYFJAuQ",
+  "name": "hoteleria demo",
+  "description": null,
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        0,
+        -160
+      ],
+      "id": "fb14b1a2-9db6-4727-88ae-b1f9acf5da66",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1pYMpa9A_dKm0-BTiQ1Y1dtK6F-dw0cjNaaWUr9Rh7kU",
+          "mode": "list",
+          "cachedResultName": "hoteleria_demo",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1pYMpa9A_dKm0-BTiQ1Y1dtK6F-dw0cjNaaWUr9Rh7kU/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "reservaciones_hoteleria_demo",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1pYMpa9A_dKm0-BTiQ1Y1dtK6F-dw0cjNaaWUr9Rh7kU/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        224,
+        -160
+      ],
+      "id": "3adc4811-8176-4ee8-91c7-902b95779161",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "VrznAZQXjQh9WpvY",
+          "name": "Google Sheets - Cantera"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "11c59af2-b5f1-4b2f-ab0a-56dc9fa3d3a3",
+              "leftValue": "={{$json.NotificationSent}}",
+              "rightValue": "false",
+              "operator": {
+                "type": "boolean",
+                "operation": "false",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "478994f6-dd28-4108-9fc2-989f7b527108",
+              "leftValue": "={{$json.Status}}",
+              "rightValue": "Pendiente",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            },
+            {
+              "id": "5b52d8eb-d354-4636-bc88-fa9d70241d01",
+              "leftValue": "={{ (new Date($json.CheckInDateTime).getTime() - Date.now()) / 3600000 }}",
+              "rightValue": 1,
+              "operator": {
+                "type": "number",
+                "operation": "lte"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        448,
+        -160
+      ],
+      "id": "0b27445f-0c00-4ab9-83e4-8c285e64f111",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Get row(s) in sheet').item.json.GuestIDNumber }}",
+        "text": "={{ $json.output }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1696,
+        -176
+      ],
+      "id": "e0392eec-f503-4fc8-a9f4-8c505977e850",
+      "name": "Send a text message",
+      "webhookId": "4c9e6ccf-e9ac-4844-9fc6-964ee08cb0d7",
+      "credentials": {
+        "telegramApi": {
+          "id": "0PttPOkyecDULF5R",
+          "name": "Telegram account hoteleria demo"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        688,
+        0
+      ],
+      "id": "41f76462-5ecd-4120-abc1-d094f3236de8",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "0PNoojfjNHHXEtdv",
+          "name": "Test_Gael"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        -456
+      ],
+      "id": "0c2ba899-b234-4005-8f4e-1a5c98da6f4c",
+      "name": "Telegram Trigger",
+      "webhookId": "4791aca7-fba3-4af6-b893-545c1f875bb6",
+      "credentials": {
+        "telegramApi": {
+          "id": "0PttPOkyecDULF5R",
+          "name": "Telegram account hoteleria demo"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1pYMpa9A_dKm0-BTiQ1Y1dtK6F-dw0cjNaaWUr9Rh7kU",
+          "mode": "list",
+          "cachedResultName": "hoteleria_demo",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1pYMpa9A_dKm0-BTiQ1Y1dtK6F-dw0cjNaaWUr9Rh7kU/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "reservaciones_hoteleria_demo",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1pYMpa9A_dKm0-BTiQ1Y1dtK6F-dw0cjNaaWUr9Rh7kU/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "GuestIDNumber",
+              "lookupValue": "={{ $json.message.chat.id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        224,
+        -456
+      ],
+      "id": "5fd9e177-8b6c-42d3-af73-14af4bd73f0d",
+      "name": "Get row(s) in sheet1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "VrznAZQXjQh9WpvY",
+          "name": "Google Sheets - Cantera"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('Telegram Trigger').item.json.message.text }}",
+        "options": {
+          "systemMessage": "=Eres un agentes especialiado en check in para un hotel\naqui estan los datos de la reservacion y el usuario que necesitas \nid_reservacion: {{ $json.ReservationID }}\nnombre: {{ $json.GuestName }}\ncontacto_reservacion: {{ $json.GuestIDNumber }}\nnumero_de_espacios: {{ $json.GroupSize }}\nhora de entrada: {{ $json.CheckInDateTime }}\nhabitacion asignada: {{ $json.RoomAssigned }}\nresreva restaurante: {{ $json.RestaurantReservationTime }}\ninformacion de reservacion y contacto: {{ $json.ContactInfo }}\nestatus de reservacion: {{ $json.Status }}\nse envio notificacion: {{ $json.NotificationSent }}\n\ntu trabajo cono agente es dar seguimiento al check in del usuario asi como asignarle una habitacion y preguntarle si necesita hacer reservacion a algun restaurante de los que tiene \n\ntu trabajo es buscar una habitacion disponible segun los datso de la reserva y asignarla al usuario \ndespues de eso mostraras topdas las amenidades de la habitacion seleccionada\npara despues preguntar si requiere realizar una reservacion en algun restaurante del hotel y le mostraras todos los datos de lso restaurantes y si elige uno tambien actualizaras los datos de su reserva para agregar el restaurtante solicitado y la hora que solicite dentroi del horario de atencion del restaurante\n\nen este caso vas a tener una colección de herramientas\n1.- update_reservacion_data\n  con esta podras actualiar los datos de la reservacion como numero de habitacion, reservacion a restaurante, el estatus de la persona a check in success, actualizar el numero de habitacion, restaurante reservado si es que lo necesita\n\n2.- get_restaurants\n  en esta podras obtener la informacion de todos los restaurtantes que tuiene el hotel y ofrecerlos como opciones\n\n3.- get_rooms\n  con esta podras obtener todas las habitaciones disponibles y poder asignar segun la necesidad del usuario la que necesite\n\n4.- update_rooms\n  con esto cambiaras el estatus de una habitación cuando se asigne a una persona"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        696,
+        -560
+      ],
+      "id": "30d5cb42-22d3-4cfb-aa50-45694352cdde",
+      "name": "AI Agent1"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        448,
+        -336
+      ],
+      "id": "2be0de71-d922-47ca-a7d7-185d7ddd4985",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "0PNoojfjNHHXEtdv",
+          "name": "Test_Gael"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1pYMpa9A_dKm0-BTiQ1Y1dtK6F-dw0cjNaaWUr9Rh7kU",
+          "mode": "list",
+          "cachedResultName": "hoteleria_demo",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1pYMpa9A_dKm0-BTiQ1Y1dtK6F-dw0cjNaaWUr9Rh7kU/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 568355178,
+          "mode": "list",
+          "cachedResultName": "habitaciones_hoteleria_demo",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1pYMpa9A_dKm0-BTiQ1Y1dtK6F-dw0cjNaaWUr9Rh7kU/edit#gid=568355178"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "RoomNumber": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('RoomNumber__using_to_match_', ``, 'string') }}",
+            "Status": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Status', ``, 'string') }}",
+            "AssignedToReservationID": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('AssignedToReservationID', ``, 'string') }}"
+          },
+          "matchingColumns": [
+            "RoomNumber"
+          ],
+          "schema": [
+            {
+              "id": "RoomNumber",
+              "displayName": "RoomNumber",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Type",
+              "displayName": "Type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Capacity",
+              "displayName": "Capacity",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Amenities",
+              "displayName": "Amenities",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "AssignedToReservationID",
+              "displayName": "AssignedToReservationID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        1040,
+        -336
+      ],
+      "id": "b54c5bab-4a3a-4868-afb7-965984bbcea7",
+      "name": "update_rooms",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "VrznAZQXjQh9WpvY",
+          "name": "Google Sheets - Cantera"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1pYMpa9A_dKm0-BTiQ1Y1dtK6F-dw0cjNaaWUr9Rh7kU",
+          "mode": "list",
+          "cachedResultName": "hoteleria_demo",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1pYMpa9A_dKm0-BTiQ1Y1dtK6F-dw0cjNaaWUr9Rh7kU/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 568355178,
+          "mode": "list",
+          "cachedResultName": "habitaciones_hoteleria_demo",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1pYMpa9A_dKm0-BTiQ1Y1dtK6F-dw0cjNaaWUr9Rh7kU/edit#gid=568355178"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        1168,
+        -336
+      ],
+      "id": "23d713de-ad1e-43c0-a4ca-35bca402d8f6",
+      "name": "get_rooms",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "VrznAZQXjQh9WpvY",
+          "name": "Google Sheets - Cantera"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1pYMpa9A_dKm0-BTiQ1Y1dtK6F-dw0cjNaaWUr9Rh7kU",
+          "mode": "list",
+          "cachedResultName": "hoteleria_demo",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1pYMpa9A_dKm0-BTiQ1Y1dtK6F-dw0cjNaaWUr9Rh7kU/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1386117967,
+          "mode": "list",
+          "cachedResultName": "restaurantes_hoteleria_demo",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1pYMpa9A_dKm0-BTiQ1Y1dtK6F-dw0cjNaaWUr9Rh7kU/edit#gid=1386117967"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        1296,
+        -336
+      ],
+      "id": "9a0183d4-ca20-445c-908f-846e2aa62f33",
+      "name": "get_restaurants",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "VrznAZQXjQh9WpvY",
+          "name": "Google Sheets - Cantera"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1pYMpa9A_dKm0-BTiQ1Y1dtK6F-dw0cjNaaWUr9Rh7kU",
+          "mode": "list",
+          "cachedResultName": "hoteleria_demo",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1pYMpa9A_dKm0-BTiQ1Y1dtK6F-dw0cjNaaWUr9Rh7kU/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "reservaciones_hoteleria_demo",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1pYMpa9A_dKm0-BTiQ1Y1dtK6F-dw0cjNaaWUr9Rh7kU/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "RoomAssigned": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('RoomAssigned', ``, 'string') }}",
+            "RestaurantReservationTime": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('RestaurantReservationTime', ``, 'string') }}",
+            "restauranteReservation": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('restauranteReservation', ``, 'string') }}",
+            "Status": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Status', ``, 'string') }}",
+            "ReservationID": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('ReservationID__using_to_match_', ``, 'string') }}"
+          },
+          "matchingColumns": [
+            "ReservationID"
+          ],
+          "schema": [
+            {
+              "id": "ReservationID",
+              "displayName": "ReservationID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "GuestName",
+              "displayName": "GuestName",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "GuestIDNumber",
+              "displayName": "GuestIDNumber",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "GroupSize",
+              "displayName": "GroupSize",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "CheckInDateTime",
+              "displayName": "CheckInDateTime",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "RoomAssigned",
+              "displayName": "RoomAssigned",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "RestaurantReservationTime",
+              "displayName": "RestaurantReservationTime",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "restauranteReservation",
+              "displayName": "restauranteReservation",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "ContactInfo",
+              "displayName": "ContactInfo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "NotificationSent",
+              "displayName": "NotificationSent",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        1424,
+        -336
+      ],
+      "id": "f84ab84a-f663-4561-9140-961cea6f0247",
+      "name": "update_reservacion_data",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "VrznAZQXjQh9WpvY",
+          "name": "Google Sheets - Cantera"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1pYMpa9A_dKm0-BTiQ1Y1dtK6F-dw0cjNaaWUr9Rh7kU",
+          "mode": "list",
+          "cachedResultName": "hoteleria_demo",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1pYMpa9A_dKm0-BTiQ1Y1dtK6F-dw0cjNaaWUr9Rh7kU/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "reservaciones_hoteleria_demo",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1pYMpa9A_dKm0-BTiQ1Y1dtK6F-dw0cjNaaWUr9Rh7kU/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "GuestIDNumber": "={{ $json.result.chat.id }}",
+            "NotificationSent": "true"
+          },
+          "matchingColumns": [
+            "GuestIDNumber"
+          ],
+          "schema": [
+            {
+              "id": "ReservationID",
+              "displayName": "ReservationID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "GuestName",
+              "displayName": "GuestName",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "GuestIDNumber",
+              "displayName": "GuestIDNumber",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "GroupSize",
+              "displayName": "GroupSize",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "CheckInDateTime",
+              "displayName": "CheckInDateTime",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "RoomAssigned",
+              "displayName": "RoomAssigned",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "RestaurantReservationTime",
+              "displayName": "RestaurantReservationTime",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "restauranteReservation",
+              "displayName": "restauranteReservation",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "ContactInfo",
+              "displayName": "ContactInfo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "NotificationSent",
+              "displayName": "NotificationSent",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1920,
+        -176
+      ],
+      "id": "449d0128-f78b-41ae-a455-30cf240699dd",
+      "name": "Append or update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "VrznAZQXjQh9WpvY",
+          "name": "Google Sheets - Cantera"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=genera un mensaje amistoso donde indiques al usuario que esta apounto de tener su reservacion y que si le gustaria generar el checkin contigo para evitar fila y contratiempos\nidentificate como erl agente hotelero de ia y genera el mensaje inicial \nasegurate de guardar esta interaccion en la memoria\n",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        736,
+        -176
+      ],
+      "id": "00b1c571-3e0b-4f63-b2a9-2e6a135fe58f",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Get row(s) in sheet').item.json.GuestIDNumber }}",
+        "tableName": "n8n_chat_histories_hoteleria_demo",
+        "contextWindowLength": 40
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "typeVersion": 1.3,
+      "position": [
+        848,
+        64
+      ],
+      "id": "74e80160-1fc6-4166-be89-50a9009c39b4",
+      "name": "Postgres Chat Memory",
+      "credentials": {
+        "postgres": {
+          "id": "CFNWnFQx8hqQIegZ",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "tableName": "n8n_chat_histories_hoteleria_demo",
+        "contextWindowLength": 40
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "typeVersion": 1.3,
+      "position": [
+        752,
+        -336
+      ],
+      "id": "9bbdbbb5-d64b-42a7-9c59-5e75547cc361",
+      "name": "Postgres Chat Memory1",
+      "credentials": {
+        "postgres": {
+          "id": "CFNWnFQx8hqQIegZ",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "={{ $json.output }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1056,
+        -560
+      ],
+      "id": "f2a6e96c-73ff-4b27-b6bd-0c7416422b2f",
+      "name": "Send a text message1",
+      "webhookId": "47f93b97-02a0-4506-8aed-9e20172039ce",
+      "credentials": {
+        "telegramApi": {
+          "id": "0PttPOkyecDULF5R",
+          "name": "Telegram account hoteleria demo"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet1": {
+      "main": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "update_rooms": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "get_rooms": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "get_restaurants": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "update_reservacion_data": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a text message": {
+      "main": [
+        [
+          {
+            "node": "Append or update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres Chat Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres Chat Memory1": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent1": {
+      "main": [
+        [
+          {
+            "node": "Send a text message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": {
+    "node:Schedule Trigger": {
+      "recurrenceRules": []
+    }
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {
+    "Telegram Trigger": [
+      {
+        "json": {
+          "update_id": 186534452,
+          "message": {
+            "message_id": 8,
+            "from": {
+              "id": 775456693,
+              "is_bot": false,
+              "first_name": "Ricardo",
+              "last_name": "Correa",
+              "username": "CorreaRicardo",
+              "language_code": "en"
+            },
+            "chat": {
+              "id": 775456693,
+              "first_name": "Ricardo",
+              "last_name": "Correa",
+              "username": "CorreaRicardo",
+              "type": "private"
+            },
+            "date": 1767895506,
+            "text": "si claro"
+          }
+        }
+      }
+    ]
+  },
+  "versionId": "d30aae3b-bcab-446e-a31c-99cf460fb632",
+  "activeVersionId": "d30aae3b-bcab-446e-a31c-99cf460fb632",
+  "versionCounter": 14,
+  "triggerCount": 2,
+  "shared": [
+    {
+      "updatedAt": "2026-01-08T16:23:54.834Z",
+      "createdAt": "2026-01-08T16:23:54.834Z",
+      "role": "workflow:owner",
+      "workflowId": "4xctjEcb7QYFJAuQ",
+      "projectId": "BZ9Ta5yhe4RhzY78",
+      "project": {
+        "updatedAt": "2025-05-13T16:18:54.372Z",
+        "createdAt": "2025-05-13T15:56:28.209Z",
+        "id": "BZ9Ta5yhe4RhzY78",
+        "name": "CANTERA ADMIN <canteradigital7@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "projectRelations": [
+          {
+            "updatedAt": "2025-05-13T15:56:28.209Z",
+            "createdAt": "2025-05-13T15:56:28.209Z",
+            "userId": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
+            "projectId": "BZ9Ta5yhe4RhzY78",
+            "user": {
+              "updatedAt": "2026-01-08T06:00:52.000Z",
+              "createdAt": "2025-05-13T15:56:27.880Z",
+              "id": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
+              "email": "canteradigital7@gmail.com",
+              "firstName": "CANTERA",
+              "lastName": "ADMIN",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-05-13T16:19:25.161Z",
+                "personalization_survey_n8n_version": "1.92.2",
+                "companySize": "<20",
+                "companyType": "saas",
+                "role": "customer-support",
+                "reportedSource": "event"
+              },
+              "settings": {
+                "userActivated": true,
+                "firstSuccessfulWorkflowId": "PTbESRzX3rguwQN8",
+                "userActivatedAt": 1747154580970,
+                "easyAIWorkflowOnboarded": true,
+                "npsSurvey": {
+                  "responded": true,
+                  "lastShownAt": 1765302536772
+                },
+                "dismissedCallouts": {
+                  "aiAgentStarterCallout": true,
+                  "preBuiltAgentsCalloutHttpRequest": true
+                }
+              },
+              "disabled": false,
+              "mfaEnabled": false,
+              "lastActiveAt": "2026-01-08",
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": [],
+  "activeVersion": {
+    "updatedAt": "2026-01-08T18:20:09.592Z",
+    "createdAt": "2026-01-08T18:20:09.592Z",
+    "versionId": "d30aae3b-bcab-446e-a31c-99cf460fb632",
+    "workflowId": "4xctjEcb7QYFJAuQ",
+    "nodes": [
+      {
+        "parameters": {
+          "rule": {
+            "interval": [
+              {
+                "field": "hours"
+              }
+            ]
+          }
+        },
+        "type": "n8n-nodes-base.scheduleTrigger",
+        "typeVersion": 1.3,
+        "position": [
+          0,
+          -160
+        ],
+        "id": "fb14b1a2-9db6-4727-88ae-b1f9acf5da66",
+        "name": "Schedule Trigger"
+      },
+      {
+        "parameters": {
+          "documentId": {
+            "__rl": true,
+            "value": "1pYMpa9A_dKm0-BTiQ1Y1dtK6F-dw0cjNaaWUr9Rh7kU",
+            "mode": "list",
+            "cachedResultName": "hoteleria_demo",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1pYMpa9A_dKm0-BTiQ1Y1dtK6F-dw0cjNaaWUr9Rh7kU/edit?usp=drivesdk"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": "gid=0",
+            "mode": "list",
+            "cachedResultName": "reservaciones_hoteleria_demo",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1pYMpa9A_dKm0-BTiQ1Y1dtK6F-dw0cjNaaWUr9Rh7kU/edit#gid=0"
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleSheets",
+        "typeVersion": 4.7,
+        "position": [
+          224,
+          -160
+        ],
+        "id": "3adc4811-8176-4ee8-91c7-902b95779161",
+        "name": "Get row(s) in sheet",
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "VrznAZQXjQh9WpvY",
+            "name": "Google Sheets - Cantera"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "conditions": {
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 2
+            },
+            "conditions": [
+              {
+                "id": "11c59af2-b5f1-4b2f-ab0a-56dc9fa3d3a3",
+                "leftValue": "={{$json.NotificationSent}}",
+                "rightValue": "false",
+                "operator": {
+                  "type": "boolean",
+                  "operation": "false",
+                  "singleValue": true
+                }
+              },
+              {
+                "id": "478994f6-dd28-4108-9fc2-989f7b527108",
+                "leftValue": "={{$json.Status}}",
+                "rightValue": "Pendiente",
+                "operator": {
+                  "type": "string",
+                  "operation": "equals",
+                  "name": "filter.operator.equals"
+                }
+              },
+              {
+                "id": "5b52d8eb-d354-4636-bc88-fa9d70241d01",
+                "leftValue": "={{ (new Date($json.CheckInDateTime).getTime() - Date.now()) / 3600000 }}",
+                "rightValue": 1,
+                "operator": {
+                  "type": "number",
+                  "operation": "lte"
+                }
+              }
+            ],
+            "combinator": "and"
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2.2,
+        "position": [
+          448,
+          -160
+        ],
+        "id": "0b27445f-0c00-4ab9-83e4-8c285e64f111",
+        "name": "If"
+      },
+      {
+        "parameters": {
+          "chatId": "={{ $('Get row(s) in sheet').item.json.GuestIDNumber }}",
+          "text": "={{ $json.output }}",
+          "additionalFields": {
+            "appendAttribution": false
+          }
+        },
+        "type": "n8n-nodes-base.telegram",
+        "typeVersion": 1.2,
+        "position": [
+          1696,
+          -176
+        ],
+        "id": "e0392eec-f503-4fc8-a9f4-8c505977e850",
+        "name": "Send a text message",
+        "webhookId": "4c9e6ccf-e9ac-4844-9fc6-964ee08cb0d7",
+        "credentials": {
+          "telegramApi": {
+            "id": "0PttPOkyecDULF5R",
+            "name": "Telegram account hoteleria demo"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "model": {
+            "__rl": true,
+            "mode": "list",
+            "value": "gpt-4.1-mini"
+          },
+          "builtInTools": {},
+          "options": {}
+        },
+        "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "typeVersion": 1.3,
+        "position": [
+          688,
+          0
+        ],
+        "id": "41f76462-5ecd-4120-abc1-d094f3236de8",
+        "name": "OpenAI Chat Model",
+        "credentials": {
+          "openAiApi": {
+            "id": "0PNoojfjNHHXEtdv",
+            "name": "Test_Gael"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "updates": [
+            "message"
+          ],
+          "additionalFields": {}
+        },
+        "type": "n8n-nodes-base.telegramTrigger",
+        "typeVersion": 1.2,
+        "position": [
+          0,
+          -456
+        ],
+        "id": "0c2ba899-b234-4005-8f4e-1a5c98da6f4c",
+        "name": "Telegram Trigger",
+        "webhookId": "4791aca7-fba3-4af6-b893-545c1f875bb6",
+        "credentials": {
+          "telegramApi": {
+            "id": "0PttPOkyecDULF5R",
+            "name": "Telegram account hoteleria demo"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "documentId": {
+            "__rl": true,
+            "value": "1pYMpa9A_dKm0-BTiQ1Y1dtK6F-dw0cjNaaWUr9Rh7kU",
+            "mode": "list",
+            "cachedResultName": "hoteleria_demo",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1pYMpa9A_dKm0-BTiQ1Y1dtK6F-dw0cjNaaWUr9Rh7kU/edit?usp=drivesdk"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": "gid=0",
+            "mode": "list",
+            "cachedResultName": "reservaciones_hoteleria_demo",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1pYMpa9A_dKm0-BTiQ1Y1dtK6F-dw0cjNaaWUr9Rh7kU/edit#gid=0"
+          },
+          "filtersUI": {
+            "values": [
+              {
+                "lookupColumn": "GuestIDNumber",
+                "lookupValue": "={{ $json.message.chat.id }}"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleSheets",
+        "typeVersion": 4.7,
+        "position": [
+          224,
+          -456
+        ],
+        "id": "5fd9e177-8b6c-42d3-af73-14af4bd73f0d",
+        "name": "Get row(s) in sheet1",
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "VrznAZQXjQh9WpvY",
+            "name": "Google Sheets - Cantera"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "promptType": "define",
+          "text": "={{ $('Telegram Trigger').item.json.message.text }}",
+          "options": {
+            "systemMessage": "=Eres un agentes especialiado en check in para un hotel\naqui estan los datos de la reservacion y el usuario que necesitas \nid_reservacion: {{ $json.ReservationID }}\nnombre: {{ $json.GuestName }}\ncontacto_reservacion: {{ $json.GuestIDNumber }}\nnumero_de_espacios: {{ $json.GroupSize }}\nhora de entrada: {{ $json.CheckInDateTime }}\nhabitacion asignada: {{ $json.RoomAssigned }}\nresreva restaurante: {{ $json.RestaurantReservationTime }}\ninformacion de reservacion y contacto: {{ $json.ContactInfo }}\nestatus de reservacion: {{ $json.Status }}\nse envio notificacion: {{ $json.NotificationSent }}\n\ntu trabajo cono agente es dar seguimiento al check in del usuario asi como asignarle una habitacion y preguntarle si necesita hacer reservacion a algun restaurante de los que tiene \n\ntu trabajo es buscar una habitacion disponible segun los datso de la reserva y asignarla al usuario \ndespues de eso mostraras topdas las amenidades de la habitacion seleccionada\npara despues preguntar si requiere realizar una reservacion en algun restaurante del hotel y le mostraras todos los datos de lso restaurantes y si elige uno tambien actualizaras los datos de su reserva para agregar el restaurtante solicitado y la hora que solicite dentroi del horario de atencion del restaurante\n\nen este caso vas a tener una colección de herramientas\n1.- update_reservacion_data\n  con esta podras actualiar los datos de la reservacion como numero de habitacion, reservacion a restaurante, el estatus de la persona a check in success, actualizar el numero de habitacion, restaurante reservado si es que lo necesita\n\n2.- get_restaurants\n  en esta podras obtener la informacion de todos los restaurtantes que tuiene el hotel y ofrecerlos como opciones\n\n3.- get_rooms\n  con esta podras obtener todas las habitaciones disponibles y poder asignar segun la necesidad del usuario la que necesite\n\n4.- update_rooms\n  con esto cambiaras el estatus de una habitación cuando se asigne a una persona"
+          }
+        },
+        "type": "@n8n/n8n-nodes-langchain.agent",
+        "typeVersion": 3,
+        "position": [
+          696,
+          -560
+        ],
+        "id": "30d5cb42-22d3-4cfb-aa50-45694352cdde",
+        "name": "AI Agent1"
+      },
+      {
+        "parameters": {
+          "model": {
+            "__rl": true,
+            "mode": "list",
+            "value": "gpt-4.1-mini"
+          },
+          "builtInTools": {},
+          "options": {}
+        },
+        "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "typeVersion": 1.3,
+        "position": [
+          448,
+          -336
+        ],
+        "id": "2be0de71-d922-47ca-a7d7-185d7ddd4985",
+        "name": "OpenAI Chat Model1",
+        "credentials": {
+          "openAiApi": {
+            "id": "0PNoojfjNHHXEtdv",
+            "name": "Test_Gael"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "appendOrUpdate",
+          "documentId": {
+            "__rl": true,
+            "value": "1pYMpa9A_dKm0-BTiQ1Y1dtK6F-dw0cjNaaWUr9Rh7kU",
+            "mode": "list",
+            "cachedResultName": "hoteleria_demo",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1pYMpa9A_dKm0-BTiQ1Y1dtK6F-dw0cjNaaWUr9Rh7kU/edit?usp=drivesdk"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": 568355178,
+            "mode": "list",
+            "cachedResultName": "habitaciones_hoteleria_demo",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1pYMpa9A_dKm0-BTiQ1Y1dtK6F-dw0cjNaaWUr9Rh7kU/edit#gid=568355178"
+          },
+          "columns": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "RoomNumber": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('RoomNumber__using_to_match_', ``, 'string') }}",
+              "Status": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Status', ``, 'string') }}",
+              "AssignedToReservationID": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('AssignedToReservationID', ``, 'string') }}"
+            },
+            "matchingColumns": [
+              "RoomNumber"
+            ],
+            "schema": [
+              {
+                "id": "RoomNumber",
+                "displayName": "RoomNumber",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "Type",
+                "displayName": "Type",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": true
+              },
+              {
+                "id": "Capacity",
+                "displayName": "Capacity",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": true
+              },
+              {
+                "id": "Amenities",
+                "displayName": "Amenities",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": true
+              },
+              {
+                "id": "Status",
+                "displayName": "Status",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "AssignedToReservationID",
+                "displayName": "AssignedToReservationID",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleSheetsTool",
+        "typeVersion": 4.7,
+        "position": [
+          1040,
+          -336
+        ],
+        "id": "b54c5bab-4a3a-4868-afb7-965984bbcea7",
+        "name": "update_rooms",
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "VrznAZQXjQh9WpvY",
+            "name": "Google Sheets - Cantera"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "documentId": {
+            "__rl": true,
+            "value": "1pYMpa9A_dKm0-BTiQ1Y1dtK6F-dw0cjNaaWUr9Rh7kU",
+            "mode": "list",
+            "cachedResultName": "hoteleria_demo",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1pYMpa9A_dKm0-BTiQ1Y1dtK6F-dw0cjNaaWUr9Rh7kU/edit?usp=drivesdk"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": 568355178,
+            "mode": "list",
+            "cachedResultName": "habitaciones_hoteleria_demo",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1pYMpa9A_dKm0-BTiQ1Y1dtK6F-dw0cjNaaWUr9Rh7kU/edit#gid=568355178"
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleSheetsTool",
+        "typeVersion": 4.7,
+        "position": [
+          1168,
+          -336
+        ],
+        "id": "23d713de-ad1e-43c0-a4ca-35bca402d8f6",
+        "name": "get_rooms",
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "VrznAZQXjQh9WpvY",
+            "name": "Google Sheets - Cantera"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "documentId": {
+            "__rl": true,
+            "value": "1pYMpa9A_dKm0-BTiQ1Y1dtK6F-dw0cjNaaWUr9Rh7kU",
+            "mode": "list",
+            "cachedResultName": "hoteleria_demo",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1pYMpa9A_dKm0-BTiQ1Y1dtK6F-dw0cjNaaWUr9Rh7kU/edit?usp=drivesdk"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": 1386117967,
+            "mode": "list",
+            "cachedResultName": "restaurantes_hoteleria_demo",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1pYMpa9A_dKm0-BTiQ1Y1dtK6F-dw0cjNaaWUr9Rh7kU/edit#gid=1386117967"
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleSheetsTool",
+        "typeVersion": 4.7,
+        "position": [
+          1296,
+          -336
+        ],
+        "id": "9a0183d4-ca20-445c-908f-846e2aa62f33",
+        "name": "get_restaurants",
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "VrznAZQXjQh9WpvY",
+            "name": "Google Sheets - Cantera"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "appendOrUpdate",
+          "documentId": {
+            "__rl": true,
+            "value": "1pYMpa9A_dKm0-BTiQ1Y1dtK6F-dw0cjNaaWUr9Rh7kU",
+            "mode": "list",
+            "cachedResultName": "hoteleria_demo",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1pYMpa9A_dKm0-BTiQ1Y1dtK6F-dw0cjNaaWUr9Rh7kU/edit?usp=drivesdk"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": "gid=0",
+            "mode": "list",
+            "cachedResultName": "reservaciones_hoteleria_demo",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1pYMpa9A_dKm0-BTiQ1Y1dtK6F-dw0cjNaaWUr9Rh7kU/edit#gid=0"
+          },
+          "columns": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "RoomAssigned": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('RoomAssigned', ``, 'string') }}",
+              "RestaurantReservationTime": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('RestaurantReservationTime', ``, 'string') }}",
+              "restauranteReservation": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('restauranteReservation', ``, 'string') }}",
+              "Status": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Status', ``, 'string') }}",
+              "ReservationID": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('ReservationID__using_to_match_', ``, 'string') }}"
+            },
+            "matchingColumns": [
+              "ReservationID"
+            ],
+            "schema": [
+              {
+                "id": "ReservationID",
+                "displayName": "ReservationID",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "GuestName",
+                "displayName": "GuestName",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": true
+              },
+              {
+                "id": "GuestIDNumber",
+                "displayName": "GuestIDNumber",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": true
+              },
+              {
+                "id": "GroupSize",
+                "displayName": "GroupSize",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": true
+              },
+              {
+                "id": "CheckInDateTime",
+                "displayName": "CheckInDateTime",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": true
+              },
+              {
+                "id": "RoomAssigned",
+                "displayName": "RoomAssigned",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "RestaurantReservationTime",
+                "displayName": "RestaurantReservationTime",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "restauranteReservation",
+                "displayName": "restauranteReservation",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "ContactInfo",
+                "displayName": "ContactInfo",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": true
+              },
+              {
+                "id": "Status",
+                "displayName": "Status",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "NotificationSent",
+                "displayName": "NotificationSent",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": true
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleSheetsTool",
+        "typeVersion": 4.7,
+        "position": [
+          1424,
+          -336
+        ],
+        "id": "f84ab84a-f663-4561-9140-961cea6f0247",
+        "name": "update_reservacion_data",
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "VrznAZQXjQh9WpvY",
+            "name": "Google Sheets - Cantera"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "appendOrUpdate",
+          "documentId": {
+            "__rl": true,
+            "value": "1pYMpa9A_dKm0-BTiQ1Y1dtK6F-dw0cjNaaWUr9Rh7kU",
+            "mode": "list",
+            "cachedResultName": "hoteleria_demo",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1pYMpa9A_dKm0-BTiQ1Y1dtK6F-dw0cjNaaWUr9Rh7kU/edit?usp=drivesdk"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": "gid=0",
+            "mode": "list",
+            "cachedResultName": "reservaciones_hoteleria_demo",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1pYMpa9A_dKm0-BTiQ1Y1dtK6F-dw0cjNaaWUr9Rh7kU/edit#gid=0"
+          },
+          "columns": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "GuestIDNumber": "={{ $json.result.chat.id }}",
+              "NotificationSent": "true"
+            },
+            "matchingColumns": [
+              "GuestIDNumber"
+            ],
+            "schema": [
+              {
+                "id": "ReservationID",
+                "displayName": "ReservationID",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": true
+              },
+              {
+                "id": "GuestName",
+                "displayName": "GuestName",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": true
+              },
+              {
+                "id": "GuestIDNumber",
+                "displayName": "GuestIDNumber",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "GroupSize",
+                "displayName": "GroupSize",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": true
+              },
+              {
+                "id": "CheckInDateTime",
+                "displayName": "CheckInDateTime",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": true
+              },
+              {
+                "id": "RoomAssigned",
+                "displayName": "RoomAssigned",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": true
+              },
+              {
+                "id": "RestaurantReservationTime",
+                "displayName": "RestaurantReservationTime",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": true
+              },
+              {
+                "id": "restauranteReservation",
+                "displayName": "restauranteReservation",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": true
+              },
+              {
+                "id": "ContactInfo",
+                "displayName": "ContactInfo",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": true
+              },
+              {
+                "id": "Status",
+                "displayName": "Status",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": true
+              },
+              {
+                "id": "NotificationSent",
+                "displayName": "NotificationSent",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleSheets",
+        "typeVersion": 4.7,
+        "position": [
+          1920,
+          -176
+        ],
+        "id": "449d0128-f78b-41ae-a455-30cf240699dd",
+        "name": "Append or update row in sheet",
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "VrznAZQXjQh9WpvY",
+            "name": "Google Sheets - Cantera"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "promptType": "define",
+          "text": "=genera un mensaje amistoso donde indiques al usuario que esta apounto de tener su reservacion y que si le gustaria generar el checkin contigo para evitar fila y contratiempos\nidentificate como erl agente hotelero de ia y genera el mensaje inicial \nasegurate de guardar esta interaccion en la memoria\n",
+          "options": {}
+        },
+        "type": "@n8n/n8n-nodes-langchain.agent",
+        "typeVersion": 3,
+        "position": [
+          736,
+          -176
+        ],
+        "id": "00b1c571-3e0b-4f63-b2a9-2e6a135fe58f",
+        "name": "AI Agent"
+      },
+      {
+        "parameters": {
+          "sessionIdType": "customKey",
+          "sessionKey": "={{ $('Get row(s) in sheet').item.json.GuestIDNumber }}",
+          "tableName": "n8n_chat_histories_hoteleria_demo",
+          "contextWindowLength": 40
+        },
+        "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+        "typeVersion": 1.3,
+        "position": [
+          848,
+          64
+        ],
+        "id": "74e80160-1fc6-4166-be89-50a9009c39b4",
+        "name": "Postgres Chat Memory",
+        "credentials": {
+          "postgres": {
+            "id": "CFNWnFQx8hqQIegZ",
+            "name": "Postgres account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "sessionIdType": "customKey",
+          "sessionKey": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+          "tableName": "n8n_chat_histories_hoteleria_demo",
+          "contextWindowLength": 40
+        },
+        "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+        "typeVersion": 1.3,
+        "position": [
+          752,
+          -336
+        ],
+        "id": "9bbdbbb5-d64b-42a7-9c59-5e75547cc361",
+        "name": "Postgres Chat Memory1",
+        "credentials": {
+          "postgres": {
+            "id": "CFNWnFQx8hqQIegZ",
+            "name": "Postgres account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+          "text": "={{ $json.output }}",
+          "additionalFields": {
+            "appendAttribution": false
+          }
+        },
+        "type": "n8n-nodes-base.telegram",
+        "typeVersion": 1.2,
+        "position": [
+          1056,
+          -560
+        ],
+        "id": "f2a6e96c-73ff-4b27-b6bd-0c7416422b2f",
+        "name": "Send a text message1",
+        "webhookId": "47f93b97-02a0-4506-8aed-9e20172039ce",
+        "credentials": {
+          "telegramApi": {
+            "id": "0PttPOkyecDULF5R",
+            "name": "Telegram account hoteleria demo"
+          }
+        }
+      }
+    ],
+    "connections": {
+      "Schedule Trigger": {
+        "main": [
+          [
+            {
+              "node": "Get row(s) in sheet",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Get row(s) in sheet": {
+        "main": [
+          [
+            {
+              "node": "If",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "If": {
+        "main": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          []
+        ]
+      },
+      "OpenAI Chat Model": {
+        "ai_languageModel": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "ai_languageModel",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Telegram Trigger": {
+        "main": [
+          [
+            {
+              "node": "Get row(s) in sheet1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Get row(s) in sheet1": {
+        "main": [
+          [
+            {
+              "node": "AI Agent1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "OpenAI Chat Model1": {
+        "ai_languageModel": [
+          [
+            {
+              "node": "AI Agent1",
+              "type": "ai_languageModel",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "update_rooms": {
+        "ai_tool": [
+          [
+            {
+              "node": "AI Agent1",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "get_rooms": {
+        "ai_tool": [
+          [
+            {
+              "node": "AI Agent1",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "get_restaurants": {
+        "ai_tool": [
+          [
+            {
+              "node": "AI Agent1",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "update_reservacion_data": {
+        "ai_tool": [
+          [
+            {
+              "node": "AI Agent1",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Send a text message": {
+        "main": [
+          [
+            {
+              "node": "Append or update row in sheet",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "AI Agent": {
+        "main": [
+          [
+            {
+              "node": "Send a text message",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Postgres Chat Memory": {
+        "ai_memory": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "ai_memory",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Postgres Chat Memory1": {
+        "ai_memory": [
+          [
+            {
+              "node": "AI Agent1",
+              "type": "ai_memory",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "AI Agent1": {
+        "main": [
+          [
+            {
+              "node": "Send a text message1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "authors": "CANTERA ADMIN",
+    "name": null,
+    "description": null
+  }
+}
