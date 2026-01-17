@@ -1,0 +1,899 @@
+{
+  "updatedAt": "2026-01-16T23:05:22.000Z",
+  "createdAt": "2026-01-16T22:48:05.120Z",
+  "id": "8ufeBtYTl12g4ziy",
+  "name": "desarrollo MueblerIA",
+  "description": null,
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('WhatsApp Trigger').item.json.messages[0].text.body }}",
+        "options": {
+          "systemMessage": "=# NOVA - ASISTENTE CONVERSACIONAL\n\nTu nombre es \"Nova\" y eres un asistente conversacional. Tu trabajo es responder preguntas únicamente con base en tu base de conocimiento, que está almacenada en un vector store de Supabase.\n\n**📅 CONTEXTO TEMPORAL:**\nEl día de hoy es: {{ $now.minus({ hours: 0 }).setLocale('es').toFormat(\"dd 'de' LLLL 'de' yyyy HH:mm\") }}\n\n---\n\n## 📋 REGLAS GENERALES DE COMPORTAMIENTO\n\n### Consulta de Base de Conocimiento\n- Siempre que el usuario haga una pregunta, DEBES primero consultar tu base de conocimiento.\n- No debes inventar información ni responder con contenidos que no aparezcan o no se puedan sustentar en tu base de conocimiento.\n- Si la información encontrada es ambigua, insuficiente o contradictoria, responde de forma honesta indicando que no tienes una respuesta suficientemente confiable.\n- Si no encuentras información relevante en tu base de conocimiento, debes decir explícitamente que no tienes una respuesta basada en tu base de conocimiento.\n\n### Manejo de Respuestas que No Puedes Contestar\n- Lleva un conteo interno de las veces consecutivas que NO puedes responder adecuadamente porque:\n  - No hay información en la base de conocimiento, o\n  - La información no es suficiente/confiable para dar una buena respuesta.\n- Cada vez que esto ocurra, informa al usuario algo como: \"No tengo una respuesta basada en mi base de conocimiento para esta pregunta.\"\n- Si esto sucede **3 veces seguidas** en una misma conversación:\n  - Debes ofrecer al usuario la opción de ser atendido por una persona humana.\n  - Pregunta algo como: \"He llegado al límite de lo que puedo responder con mi base de conocimiento. ¿Te gustaría que te conecte con una persona de nuestro equipo?\"\n  - Si el usuario responde que **sí**, sigue el protocolo de contacto humano descrito más abajo.\n\n---\n\n## � RESTRICCIONES Y LÍMITES DEL AGENTE\n\n### Temas Prohibidos\n**NO debes** hablar, discutir o dar opiniones sobre:\n- ❌ **Religión** - Cualquier tema relacionado con creencias religiosas, doctrinas o prácticas religiosas\n- ❌ **Fútbol** - Discusiones sobre equipos, partidos, jugadores o cualquier tema futbolístico\n- ❌ **Partidos políticos** - Temas sobre política, partidos políticos, ideologías políticas o figuras políticas\n\nSi el usuario pregunta sobre estos temas, responde:\n> \"Lo siento, no puedo ayudarte con temas de [religión/fútbol/política]. Mi función es responder preguntas basándome en mi base de conocimiento. ¿Hay algo en lo que pueda ayudarte?\"\n\n### Funcionalidades NO Permitidas\n**NO debes** realizar las siguientes tareas, incluso si el usuario te lo solicita:\n- ❌ **Tareas de matemáticas** - No resuelves problemas matemáticos, ejercicios o tareas escolares\n- ❌ **Ensayos o poemas** - No escribes ensayos, composiciones literarias, poemas o textos creativos\n- ❌ **Chistes** - No cuentas chistes ni haces humor\n\nSi el usuario solicita alguna de estas tareas, responde:\n> \"Lo siento, no puedo ayudarte con [ese tipo de solicitud]. Mi función específica es responder preguntas consultando mi base de conocimiento. ¿Tienes alguna pregunta?\"\n\n### Alcance de Funcionalidad\n**Tu única tarea es:**\n1. ✅ Responder preguntas consultando tu base de conocimiento\n2. ✅ Derivar a atención humana cuando sea necesario según el protocolo establecido\n\n**Importante:** Si una solicitud está fuera de estos dos propósitos, debes declinarla educadamente y redirigir al usuario hacia lo que sí puedes hacer.\n\n---\n\n## �� HERRAMIENTA DISPONIBLE\n\n### `contacto_humano` - Transferir conversación a agente humano\n- **Uso:** Cuando el usuario lo solicita o después de 3 intentos fallidos de respuesta\n- **Parámetros:** \n  - `contact_id`: {{ $('sonsultamos al usuario').item.json.contact_id }}\n  - `fuera_horario`: true/false (según corresponda)\n\n---\n\n## 📞 INSTRUCCIONES DE SOPORTE HUMANO\n\n### Reglas de derivación a agentes humanos\n\n1. **Verificación de horarios (OBLIGATORIO)**:\n   - Antes de derivar a un humano, verifica el horario de atención.\n   - Horario predeterminado: lunes a domingo, 9:00 AM a 7:00 PM.\n   - Variables disponibles:\n     - Horario regular: {{ $json.week_days || 'lunes a domingo, 9:00 AM a 7:00 PM' }}\n     - Días no laborales: {{ $json.non_working_days || 'ninguno' }}\n     - Fecha y hora actual: {{ $json.now }}\n\n2. **Protocolo de transferencia (SECUENCIAL)**:\n   - Cuando un usuario solicite hablar con un agente humano, solicita:\n     - Nombre completo\n     - Correo electrónico\n     - Número telefónico de contacto\n   - Una vez obtenidos, invoca la herramienta 'contacto_humano' con:\n     - contact_id: {{ $('sonsultamos al usuario').item.json.contact_id }}\n     - fuera_horario: true/false (según corresponda)\n\n3. **Gestión de horarios especiales**:\n   - Si la solicitud ocurre fuera del horario regular o en día no laboral:\n     - Informa claramente al usuario esta situación\n     - Invoca 'contacto_humano' con el parámetro 'fuera_horario' en true\n     - Explica que un agente revisará su solicitud en el siguiente horario laboral\n     - IMPORTANTE: En este caso, PUEDES seguir atendiendo al usuario normalmente, ya que solo se envía un aviso al equipo humano\n\n4. **Cierre de la conversación (IMPORTANTE)**:\n   - SOLO cuando invocas 'contacto_humano' en horario laboral (sin 'fuera_horario'), no podrás seguir respondiendo\n   - En ese caso, despídete cordialmente con: \"Gracias por tu consulta. Un agente humano se comunicará contigo pronto. Si necesitas ayuda en el futuro, estaré disponible.\"\n\n5. **Retorno del usuario**:\n   - Si el usuario regresa después de haber sido transferido en horario laboral, significa que la comunicación con el agente humano finalizó\n   - Trátalo normalmente a menos que solicite nuevamente hablar con un humano (en ese caso, repite el protocolo)\n\n### Indicadores de prioridad\n\n- **Alta prioridad**: Derivar inmediatamente si el usuario menciona problemas críticos, urgencias o expresa frustración evidente\n- **Media prioridad**: Usuario solicita explícitamente hablar con un humano sin urgencia\n- **Baja prioridad**: Consultas que podrías resolver pero el usuario prefiere atención humana\n\n### Frases de transición recomendadas\n\n- \"Entiendo que prefieres hablar con un agente humano. Para conectarte, necesito algunos datos.\"\n- \"Voy a transferirte con un especialista. Para ello, requiero la siguiente información...\"\n- \"He registrado tu solicitud para atención humana. Un especialista revisará tu caso [en horario laboral/pronto].\"\n\n### CASOS ESPECIALES PARA OFRECER SOPORTE HUMANO PROACTIVAMENTE\n\n**Cuando el agente debe ofrecer ayuda humana sin que el usuario lo solicite:**\n\n1. **Usuario confundido o con errores repetidos**:\n   - Si el usuario comete errores repetidos (3+ veces) al intentar la misma acción\n   - Si muestra signos claros de confusión o frustración con las respuestas del agente\n   - Respuesta sugerida: \"Noto que estamos teniendo dificultades para resolver tu consulta. ¿Te gustaría que te conecte con un especialista humano para ayudarte mejor?\"\n\n2. **Consultas persistentes fuera de alcance**:\n   - Si el usuario insiste en temas o solicitudes que están claramente fuera de tus capacidades\n   - Si después de 3-5 intercambios sigue pidiendo información que no puedes proporcionar\n   - Respuesta sugerida: \"Veo que necesitas información más específica sobre [tema]. Un especialista humano podría ayudarte mejor. ¿Te gustaría que te conecte con uno?\"\n\n3. **Solicitudes técnicamente complejas**:\n   - Cuando el usuario solicita análisis profundos que requieren expertise humano\n   - Cuando solicita decisiones críticas que están fuera de tu autorización\n   - Respuesta sugerida: \"Esta [consulta/decisión] requiere un análisis más especializado. ¿Te gustaría hablar con un experto humano para obtener una evaluación más detallada?\"\n\n4. **Consultas fuera de conocimiento o habilidades**:\n   - Cuando el usuario hace preguntas sobre temas que no están en tu base de conocimiento\n   - Cuando solicita funcionalidades o acciones que están fuera de tus capacidades técnicas\n   - Cuando pide información actualizada posterior a tu última actualización de conocimientos\n   - Respuesta sugerida: \"Esta consulta sobre [tema] está fuera de mi base de conocimiento/capacidades actuales. Un especialista humano podría proporcionarte información más precisa y actualizada. ¿Deseas que te conecte con uno?\"\n\n**Importante**: Siempre ofrece la opción de soporte humano como una sugerencia, no como obligación. Si el usuario prefiere continuar contigo, respeta su decisión y haz tu mejor esfuerzo para ayudar dentro de tus capacidades."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        -112,
+        128
+      ],
+      "id": "32143f63-cf04-46dc-bebb-d66ef2dc4e4d",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -512,
+        352
+      ],
+      "id": "262af94c-0177-45c9-86ba-31b6c6b7f9b3",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "0PNoojfjNHHXEtdv",
+          "name": "Test_Gael"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "WYPGNpK2ChZhUG3v",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/WYPGNpK2ChZhUG3v",
+          "cachedResultName": "busqueda de contacto"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "number": "={{ $json.messages[0].from }}",
+            "project_id": 32
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "number",
+              "displayName": "number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "project_id",
+              "displayName": "project_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "number"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        -1184,
+        224
+      ],
+      "id": "2627a927-a6dc-40ae-90cb-330910255073",
+      "name": "sonsultamos al usuario"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "59c7eada-fd13-481b-acd1-8ecfa1162f54",
+              "leftValue": "={{ $json.type_conversation }}",
+              "rightValue": "chatbot",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -960,
+        224
+      ],
+      "id": "64d5d3e3-f691-4ed4-9dd7-ce8f52ce2229",
+      "name": "puede responder el agente?"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "3TRmy5xQe7htpSEH",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/3TRmy5xQe7htpSEH",
+          "cachedResultName": "asistente inserta mensajes refactored"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "number": "={{ $('WhatsApp Trigger').item.json.messages[0].from }}",
+            "human_messaage": "={{ $('WhatsApp Trigger').item.json.messages[0].text.body }}",
+            "contact_name": "={{ $('WhatsApp Trigger').item.json.contacts[0].profile.name }}",
+            "tipo_entrega": "human",
+            "project_id": 32
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "number",
+              "displayName": "number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "project_id",
+              "displayName": "project_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "number"
+            },
+            {
+              "id": "human_messaage",
+              "displayName": "human_messaage",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "agent_message",
+              "displayName": "agent_message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "contact_name",
+              "displayName": "contact_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "tipo_entrega",
+              "displayName": "tipo_entrega",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        -736,
+        320
+      ],
+      "id": "0494decb-31bd-4767-a291-bc9a600490d9",
+      "name": "enviamos el mensaje para respuesta por un humano"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "3TRmy5xQe7htpSEH",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/3TRmy5xQe7htpSEH",
+          "cachedResultName": "asistente inserta mensajes refactored"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "number": "={{ $('WhatsApp Trigger').item.json.messages[0].from }}",
+            "agent_message": "={{ $json.output }}",
+            "human_messaage": "={{ $('WhatsApp Trigger').item.json.messages[0].text.body }}",
+            "contact_name": "={{ $('WhatsApp Trigger').item.json.contacts[0].profile.name }}",
+            "project_id": 32
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "number",
+              "displayName": "number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "project_id",
+              "displayName": "project_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "number"
+            },
+            {
+              "id": "human_messaage",
+              "displayName": "human_messaage",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "agent_message",
+              "displayName": "agent_message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "contact_name",
+              "displayName": "contact_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "tipo_entrega",
+              "displayName": "tipo_entrega",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        784,
+        224
+      ],
+      "id": "0270e6b4-6b76-4034-a3c8-fb92725fcb25",
+      "name": "guardamos el mensaje y la respuesta del agente"
+    },
+    {
+      "parameters": {
+        "description": "este funciona cuando estas en contacto humano ",
+        "workflowId": {
+          "__rl": true,
+          "value": "5TA7GPdM66ClKALh",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/5TA7GPdM66ClKALh",
+          "cachedResultName": "cambio ststua y notificacion"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "contact_id": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('contact_id', ``, 'number') }}",
+            "fuera_horario": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fuera_horario', ``, 'boolean') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "contact_id",
+              "displayName": "contact_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "number"
+            },
+            {
+              "id": "fuera_horario",
+              "displayName": "fuera_horario",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "boolean",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        -176,
+        352
+      ],
+      "id": "40e457d0-d7ea-4939-b769-25a7a1e76daa",
+      "name": "contacto_humano"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "Fhsry6l8tGWSG98J",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/Fhsry6l8tGWSG98J",
+          "cachedResultName": "revision horario atencion"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "project_id": "32"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "project_id",
+              "displayName": "project_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        -736,
+        128
+      ],
+      "id": "19d7f182-ad87-4f01-a969-0088894ccf96",
+      "name": "Call 'revision horario atencion'"
+    },
+    {
+      "parameters": {
+        "updates": [
+          "messages"
+        ],
+        "options": {}
+      },
+      "type": "n8n-nodes-base.whatsAppTrigger",
+      "typeVersion": 1,
+      "position": [
+        -1632,
+        128
+      ],
+      "id": "56349aa7-e4ce-4d64-a7ff-3747f234d3f8",
+      "name": "WhatsApp Trigger",
+      "webhookId": "6f10d1ee-fc93-4b8f-be34-c3ca740a9f35",
+      "credentials": {
+        "whatsAppTriggerApi": {
+          "id": "jwKFSSZa4mMQH0nt",
+          "name": "WhatsApp OAuth account maria"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "phoneNumberId": "873169942547997",
+        "recipientPhoneNumber": "={{ $('WhatsApp Trigger').item.json.messages[0].from }}",
+        "textBody": "={{ $json.output }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1.1,
+      "position": [
+        784,
+        32
+      ],
+      "id": "8bc23d3f-8bc1-47c9-ace6-cdf797f7567f",
+      "name": "Send message",
+      "webhookId": "63c5cf7f-2760-42c1-b307-d54df6b1cb34",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "GZNtglJAlqQWO4R9",
+          "name": "WhatsApp nova send message"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "retrieve-as-tool",
+        "toolDescription": "aqui puedes obteenr toda tu informacion al respecto ",
+        "tableName": {
+          "__rl": true,
+          "value": "documents_marla",
+          "mode": "list",
+          "cachedResultName": "documents_marla"
+        },
+        "options": {
+          "queryName": "match_documents_marla"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1.3,
+      "position": [
+        -32,
+        352
+      ],
+      "id": "71b4ea60-490e-4262-bee3-e1d50506a8f0",
+      "name": "Supabase Vector Store",
+      "credentials": {
+        "supabaseApi": {
+          "id": "ty0KiXsEYP1uJ8t9",
+          "name": "Supabase account - CANTERA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        48,
+        560
+      ],
+      "id": "1f1ab98c-c348-4627-9466-ee8052d41f7d",
+      "name": "Embeddings OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "0PNoojfjNHHXEtdv",
+          "name": "Test_Gael"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "f401b724-0e3a-49ac-990d-ff2b6e40746d",
+              "leftValue": "={{ $json.messages[0].text }}",
+              "rightValue": "",
+              "operator": {
+                "type": "object",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        -1408,
+        224
+      ],
+      "id": "e310af37-0620-4b4e-ab2c-ab6714bfae8c",
+      "name": "Filter"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v22.0/873169942547997/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer EAAVvTrherq0BQfhrhRbieXwZBFlsTjGiVBBqUZCgYXpr01yUiQWNap7TNAHIovtnqrERWt5xOt1MfBpzGZBBO5fnBhZA064EFbHNZCFCZBCQuPdqX6yMudXuJvabXjgZC408mtV4WJ1BhjsdEuiRd8LL9Q84PpQfYBS7b1iDqoPm8Q37m0xgt5dZBB0I2ZByGWsV0RQZDZD"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"status\":\"read\",\n  \"message_id\":\"{{ $('WhatsApp Trigger').item.json.messages[0].id }}\",\n  \"typing_indicator\": {\n    \"type\":\"text\"\n  }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -1408,
+        32
+      ],
+      "id": "afd79890-3cec-4119-a200-6b742dcfc52f",
+      "name": "typing indicator1"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('WhatsApp Trigger').item.json.messages[0].from }}",
+        "tableName": "n8n_chat_histories_demo_desarrollo",
+        "contextWindowLength": 40
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "typeVersion": 1.3,
+      "position": [
+        -336,
+        352
+      ],
+      "id": "c42d9d03-0373-4129-adfc-108ade37096e",
+      "name": "Postgres Chat Memory",
+      "credentials": {
+        "postgres": {
+          "id": "CFNWnFQx8hqQIegZ",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -176,
+        -48
+      ],
+      "id": "9d61a43f-5bf2-4a34-b71e-8cc51529caf1",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "operation": "deleteTable",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "n8n_chat_histories_nova_demo",
+          "mode": "list",
+          "cachedResultName": "n8n_chat_histories_nova_demo"
+        },
+        "deleteCommand": "delete",
+        "where": {
+          "values": [
+            {
+              "column": "id",
+              "condition": ">",
+              "value": "0"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        48,
+        -48
+      ],
+      "id": "1486d173-71e2-493c-9913-4e3b8c9c3f95",
+      "name": "Delete table or rows",
+      "credentials": {
+        "postgres": {
+          "id": "CFNWnFQx8hqQIegZ",
+          "name": "Postgres account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "guardamos el mensaje y la respuesta del agente",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "sonsultamos al usuario": {
+      "main": [
+        [
+          {
+            "node": "puede responder el agente?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "puede responder el agente?": {
+      "main": [
+        [
+          {
+            "node": "Call 'revision horario atencion'",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "enviamos el mensaje para respuesta por un humano",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "contacto_humano": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'revision horario atencion'": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "WhatsApp Trigger": {
+      "main": [
+        [
+          {
+            "node": "Filter",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "typing indicator1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase Vector Store": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Supabase Vector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter": {
+      "main": [
+        [
+          {
+            "node": "sonsultamos al usuario",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres Chat Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Delete table or rows",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {
+    "WhatsApp Trigger": [
+      {
+        "json": {
+          "messaging_product": "whatsapp",
+          "metadata": {
+            "display_phone_number": "5214431205262",
+            "phone_number_id": "873169942547997"
+          },
+          "contacts": [
+            {
+              "profile": {
+                "name": "Ricardo Correa Bautista"
+              },
+              "wa_id": "5214434901193"
+            }
+          ],
+          "messages": [
+            {
+              "from": "5214434901193",
+              "id": "wamid.HBgNNTIxNDQzNDkwMTE5MxUCABIYFjNFQjA0NDNFRDVBMUZBNUI5MEI4MTAA",
+              "timestamp": "1767023829",
+              "text": {
+                "body": "hola"
+              },
+              "type": "text"
+            }
+          ],
+          "field": "messages"
+        }
+      }
+    ]
+  },
+  "versionId": "06c60875-3112-417a-b2c3-35c4f2685fe4",
+  "activeVersionId": null,
+  "versionCounter": 4,
+  "triggerCount": 0,
+  "shared": [
+    {
+      "updatedAt": "2026-01-16T22:48:05.123Z",
+      "createdAt": "2026-01-16T22:48:05.123Z",
+      "role": "workflow:owner",
+      "workflowId": "8ufeBtYTl12g4ziy",
+      "projectId": "BZ9Ta5yhe4RhzY78",
+      "project": {
+        "updatedAt": "2025-05-13T16:18:54.372Z",
+        "createdAt": "2025-05-13T15:56:28.209Z",
+        "id": "BZ9Ta5yhe4RhzY78",
+        "name": "CANTERA ADMIN <canteradigital7@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "projectRelations": [
+          {
+            "updatedAt": "2025-05-13T15:56:28.209Z",
+            "createdAt": "2025-05-13T15:56:28.209Z",
+            "userId": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
+            "projectId": "BZ9Ta5yhe4RhzY78",
+            "user": {
+              "updatedAt": "2026-01-16T06:00:59.000Z",
+              "createdAt": "2025-05-13T15:56:27.880Z",
+              "id": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
+              "email": "canteradigital7@gmail.com",
+              "firstName": "CANTERA",
+              "lastName": "ADMIN",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-05-13T16:19:25.161Z",
+                "personalization_survey_n8n_version": "1.92.2",
+                "companySize": "<20",
+                "companyType": "saas",
+                "role": "customer-support",
+                "reportedSource": "event"
+              },
+              "settings": {
+                "userActivated": true,
+                "firstSuccessfulWorkflowId": "PTbESRzX3rguwQN8",
+                "userActivatedAt": 1747154580970,
+                "easyAIWorkflowOnboarded": true,
+                "npsSurvey": {
+                  "responded": true,
+                  "lastShownAt": 1765302536772
+                },
+                "dismissedCallouts": {
+                  "aiAgentStarterCallout": true,
+                  "preBuiltAgentsCalloutHttpRequest": true
+                }
+              },
+              "disabled": false,
+              "mfaEnabled": false,
+              "lastActiveAt": "2026-01-16",
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": [],
+  "activeVersion": null
+}
