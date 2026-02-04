@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-02-04T06:30:42.000Z",
+  "updatedAt": "2026-02-04T07:15:48.000Z",
   "createdAt": "2026-02-04T05:36:49.282Z",
   "id": "6uBtZjC0t1kCAWEQ",
   "name": "Agente IA Consultorio Médico Avanzado",
@@ -18,8 +18,8 @@
       "type": "n8n-nodes-base.telegramTrigger",
       "typeVersion": 1,
       "position": [
-        -1360,
-        160
+        -1424,
+        -96
       ],
       "id": "813dd24f-32df-42b5-92b6-59be67603fa6",
       "webhookId": "7f421738-bd50-447a-be1c-dedc2202dc0a",
@@ -38,8 +38,8 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        -1248,
-        352
+        -1424,
+        400
       ],
       "id": "47c5fe73-cf80-4d96-bc81-08ed67dfbf29",
       "disabled": true
@@ -162,44 +162,57 @@
     },
     {
       "parameters": {
-        "modelId": {
-          "__rl": true,
-          "mode": "list",
-          "value": ""
-        },
-        "messages": {
-          "values": [
-            {}
-          ]
-        },
+        "promptType": "define",
+        "text": "Eres un asistente virtual de un consultorio médico.\n\nTu objetivo es agendar una cita médica conversando de forma natural con el paciente.\n\nDebes obtener los siguientes datos UNO POR UNO:\n1. Nombre completo\n2. Edad\n3. Teléfono\n4. Email\n5. Dirección\n6. Fecha deseada\n7. Hora deseada\n\nReglas:\n- No pidas todos los datos a la vez\n- Sé amable y profesional\n- Si el paciente pide una fecha u hora no disponible, ofrece alternativas\n- Cuando tengas TODOS los datos, responde SOLO en formato JSON válido con esta estructura exacta:\n\n{\n  \"nombre\": \"\",\n  \"edad\": \"\",\n  \"telefono\": \"\",\n  \"email\": \"\",\n  \"direccion\": \"\",\n  \"fecha\": \"YYYY-MM-DD\",\n  \"hora\": \"HH:MM\"\n}\n\nSi faltan datos, responde solo con texto para continuar la conversación.\n",
         "options": {}
       },
-      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -1136,
+        80
+      ],
+      "id": "d411f391-0287-4b33-b4c0-fea0fe1b227c",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
       "typeVersion": 1,
       "position": [
-        -1088,
-        160
+        -1168,
+        320
       ],
-      "id": "2f9f3bb9-be45-46f7-a0ec-b393df767b65",
-      "name": "Message a model",
+      "id": "1a44d306-0408-478f-bd85-7dc810ee5684",
+      "name": "Google Gemini Chat Model",
       "credentials": {
         "googlePalmApi": {
-          "id": "qSUospT9hgxVHp3V",
+          "id": "mryu21IhMxvdIVwm",
           "name": "Google Gemini(PaLM) Api account 2"
         }
       }
+    },
+    {
+      "parameters": {
+        "message": "hola\n",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chat",
+      "typeVersion": 1,
+      "position": [
+        -1360,
+        160
+      ],
+      "id": "4524bef1-46a4-4cfc-9bba-96a9751444ee",
+      "name": "Respond to Chat"
     }
   ],
   "connections": {
     "Telegram Trigger": {
       "main": [
-        [
-          {
-            "node": "Message a model",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "Normalizar Mensaje": {
@@ -251,6 +264,28 @@
           }
         ]
       ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respond to Chat": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -261,9 +296,9 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "51de113c-ccaf-48ea-9c37-3a454538c7b9",
+  "versionId": "8647b905-7ac3-4654-a7bf-2841575222fd",
   "activeVersionId": null,
-  "versionCounter": 2,
+  "versionCounter": 3,
   "triggerCount": 0,
   "shared": [
     {
