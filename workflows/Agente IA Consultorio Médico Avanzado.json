@@ -1,0 +1,317 @@
+{
+  "updatedAt": "2026-02-04T05:36:49.282Z",
+  "createdAt": "2026-02-04T05:36:49.282Z",
+  "id": "6uBtZjC0t1kCAWEQ",
+  "name": "Agente IA Consultorio Médico Avanzado",
+  "description": null,
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "name": "Telegram Trigger",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1,
+      "position": [
+        -1360,
+        160
+      ],
+      "id": "813dd24f-32df-42b5-92b6-59be67603fa6",
+      "webhookId": "7f421738-bd50-447a-be1c-dedc2202dc0a",
+      "credentials": {
+        "telegramApi": {
+          "id": "mQYQILF8NLqKtw8a",
+          "name": "Telegram account 4"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "return [{ json: { chat_id: $json.message.chat.id, mensaje: $json.message.text } }];"
+      },
+      "name": "Normalizar Mensaje",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        -1152,
+        160
+      ],
+      "id": "47c5fe73-cf80-4d96-bc81-08ed67dfbf29"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent",
+        "authentication": "query",
+        "options": {}
+      },
+      "name": "Google Gemini",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        -944,
+        160
+      ],
+      "id": "69b0e85f-5f3f-4978-980c-2bf07c9045c8"
+    },
+    {
+      "parameters": {
+        "functionCode": "const r = items[0].json.candidates[0].content.parts[0].text;\ntry {\n  return [{ json: JSON.parse(r) }];\n} catch {\n  return [{ json: { respuesta: r } }];\n}"
+      },
+      "name": "Parsear Respuesta IA",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        -720,
+        160
+      ],
+      "id": "a740c896-f59b-4db0-adff-13868882a5fa"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json.nombre}}",
+              "operation": "isNotEmpty"
+            }
+          ]
+        }
+      },
+      "name": "¿Datos completos?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        -496,
+        160
+      ],
+      "id": "d43f01ab-c0a3-49c3-bd57-9ce2f8d2c32e"
+    },
+    {
+      "parameters": {
+        "chatId": "={{$node['Telegram Trigger'].json.message.chat.id}}",
+        "text": "={{$json.respuesta}}",
+        "additionalFields": {}
+      },
+      "name": "Responder Conversación",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        -496,
+        368
+      ],
+      "id": "a7a56356-af40-4cd3-a455-7e8bf60f69b8",
+      "webhookId": "13f25b5b-a327-42b7-8bbf-25bf71f4c856",
+      "credentials": {
+        "telegramApi": {
+          "id": "mQYQILF8NLqKtw8a",
+          "name": "Telegram account 4"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        }
+      },
+      "name": "Guardar Paciente",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [
+        -256,
+        48
+      ],
+      "id": "c3984695-386e-410e-a500-5953177a31aa"
+    },
+    {
+      "parameters": {
+        "calendar": "primary",
+        "start": "={{$json.fecha + 'T' + $json.hora + ':00'}}",
+        "end": "={{$json.fecha + 'T' + $json.hora + ':30'}}",
+        "additionalFields": {}
+      },
+      "name": "Crear Evento",
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1,
+      "position": [
+        -256,
+        272
+      ],
+      "id": "c226a9dd-15bc-4a50-a861-8f3c99c4d0f6"
+    },
+    {
+      "parameters": {
+        "chatId": "={{$node['Telegram Trigger'].json.message.chat.id}}",
+        "text": "✅ Tu cita ha sido confirmada. Recibirás un recordatorio automático. ¡Te esperamos!",
+        "additionalFields": {}
+      },
+      "name": "Confirmación Final",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        -16,
+        160
+      ],
+      "id": "0c0248cf-3f14-41d6-b7db-3ac1e42f36f4",
+      "webhookId": "945d04fc-1a32-4ad5-87d0-7d35646cc615",
+      "credentials": {
+        "telegramApi": {
+          "id": "mQYQILF8NLqKtw8a",
+          "name": "Telegram account 4"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Normalizar Mensaje",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalizar Mensaje": {
+      "main": [
+        [
+          {
+            "node": "Google Gemini",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini": {
+      "main": [
+        [
+          {
+            "node": "Parsear Respuesta IA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parsear Respuesta IA": {
+      "main": [
+        [
+          {
+            "node": "¿Datos completos?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Datos completos?": {
+      "main": [
+        [
+          {
+            "node": "Guardar Paciente",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Crear Evento",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Responder Conversación",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Crear Evento": {
+      "main": [
+        [
+          {
+            "node": "Confirmación Final",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "b7109d1a-5c8e-4190-8f19-35364b76ac88",
+  "activeVersionId": null,
+  "versionCounter": 1,
+  "triggerCount": 0,
+  "shared": [
+    {
+      "updatedAt": "2026-02-04T05:36:49.283Z",
+      "createdAt": "2026-02-04T05:36:49.283Z",
+      "role": "workflow:owner",
+      "workflowId": "6uBtZjC0t1kCAWEQ",
+      "projectId": "zPCyuR02t4ps6g3w",
+      "project": {
+        "updatedAt": "2026-01-12T19:21:36.375Z",
+        "createdAt": "2026-01-12T19:20:08.695Z",
+        "id": "zPCyuR02t4ps6g3w",
+        "name": "Luis  Fragoso <luis.fragoso@canteradigital.mx>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "projectRelations": [
+          {
+            "updatedAt": "2026-01-12T19:20:08.697Z",
+            "createdAt": "2026-01-12T19:20:08.697Z",
+            "userId": "6d8752f8-4ad7-44a0-a688-b12bd4e8b82e",
+            "projectId": "zPCyuR02t4ps6g3w",
+            "user": {
+              "updatedAt": "2026-02-04T06:01:06.000Z",
+              "createdAt": "2026-01-12T19:20:08.691Z",
+              "id": "6d8752f8-4ad7-44a0-a688-b12bd4e8b82e",
+              "email": "luis.fragoso@canteradigital.mx",
+              "firstName": "Luis ",
+              "lastName": "Fragoso",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2026-01-12T19:21:41.098Z",
+                "personalization_survey_n8n_version": "1.122.4"
+              },
+              "settings": null,
+              "disabled": false,
+              "mfaEnabled": false,
+              "lastActiveAt": "2026-02-04",
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": [],
+  "activeVersion": null
+}
