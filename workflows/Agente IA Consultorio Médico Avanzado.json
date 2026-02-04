@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-02-04T05:36:49.282Z",
+  "updatedAt": "2026-02-04T06:30:42.000Z",
   "createdAt": "2026-02-04T05:36:49.282Z",
   "id": "6uBtZjC0t1kCAWEQ",
   "name": "Agente IA Consultorio Médico Avanzado",
@@ -25,8 +25,8 @@
       "webhookId": "7f421738-bd50-447a-be1c-dedc2202dc0a",
       "credentials": {
         "telegramApi": {
-          "id": "mQYQILF8NLqKtw8a",
-          "name": "Telegram account 4"
+          "id": "RUxoLmbycxvTPUV3",
+          "name": "Telegram account 5"
         }
       }
     },
@@ -38,26 +38,11 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        -1152,
-        160
+        -1248,
+        352
       ],
-      "id": "47c5fe73-cf80-4d96-bc81-08ed67dfbf29"
-    },
-    {
-      "parameters": {
-        "method": "POST",
-        "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent",
-        "authentication": "query",
-        "options": {}
-      },
-      "name": "Google Gemini",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4,
-      "position": [
-        -944,
-        160
-      ],
-      "id": "69b0e85f-5f3f-4978-980c-2bf07c9045c8"
+      "id": "47c5fe73-cf80-4d96-bc81-08ed67dfbf29",
+      "disabled": true
     },
     {
       "parameters": {
@@ -174,6 +159,35 @@
           "name": "Telegram account 4"
         }
       }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        },
+        "messages": {
+          "values": [
+            {}
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        -1088,
+        160
+      ],
+      "id": "2f9f3bb9-be45-46f7-a0ec-b393df767b65",
+      "name": "Message a model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "qSUospT9hgxVHp3V",
+          "name": "Google Gemini(PaLM) Api account 2"
+        }
+      }
     }
   ],
   "connections": {
@@ -181,7 +195,7 @@
       "main": [
         [
           {
-            "node": "Normalizar Mensaje",
+            "node": "Message a model",
             "type": "main",
             "index": 0
           }
@@ -190,24 +204,7 @@
     },
     "Normalizar Mensaje": {
       "main": [
-        [
-          {
-            "node": "Google Gemini",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Google Gemini": {
-      "main": [
-        [
-          {
-            "node": "Parsear Respuesta IA",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "Parsear Respuesta IA": {
@@ -264,9 +261,9 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "b7109d1a-5c8e-4190-8f19-35364b76ac88",
+  "versionId": "51de113c-ccaf-48ea-9c37-3a454538c7b9",
   "activeVersionId": null,
-  "versionCounter": 1,
+  "versionCounter": 2,
   "triggerCount": 0,
   "shared": [
     {
@@ -290,7 +287,7 @@
             "userId": "6d8752f8-4ad7-44a0-a688-b12bd4e8b82e",
             "projectId": "zPCyuR02t4ps6g3w",
             "user": {
-              "updatedAt": "2026-02-04T06:01:06.000Z",
+              "updatedAt": "2026-02-04T06:30:43.336Z",
               "createdAt": "2026-01-12T19:20:08.691Z",
               "id": "6d8752f8-4ad7-44a0-a688-b12bd4e8b82e",
               "email": "luis.fragoso@canteradigital.mx",
@@ -301,7 +298,9 @@
                 "personalization_survey_submitted_at": "2026-01-12T19:21:41.098Z",
                 "personalization_survey_n8n_version": "1.122.4"
               },
-              "settings": null,
+              "settings": {
+                "easyAIWorkflowOnboarded": true
+              },
               "disabled": false,
               "mfaEnabled": false,
               "lastActiveAt": "2026-02-04",
