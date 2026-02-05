@@ -1,0 +1,3703 @@
+{
+  "updatedAt": "2026-02-04T23:51:54.939Z",
+  "createdAt": "2026-02-04T23:51:54.939Z",
+  "id": "0qOhsmLQ8QdCw4cA",
+  "name": "Swartz_copy",
+  "description": null,
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "resource": "assistant",
+        "assistantId": {
+          "__rl": true,
+          "value": "asst_YYOK5cVbUwKZp6BtPsXoI5v5",
+          "mode": "list",
+          "cachedResultName": "Swartz"
+        },
+        "prompt": "define",
+        "text": "=Responde ÚNICAMENTE con base en los documentos que tienes cargados.  Revisa exaustivamente tu base de conocimiento, nunca salas de esta. ignora signos de interrogacion u omitelos para una mejor comprension de lo que necesita el usuario, Revisa putno por punto para una mejor atencion.\n\nProhibido mencionar plataformas que no sean de transporte de pasajeros (ejemplo: Uber Eats, DiDi Food, Amazon, Airbnb).  \n\nPregunta del usuario: {{ \n  $('WhatsApp Trigger').first().json.messages?.[0]?.text?.body \n  ?? $('WhatsApp Trigger').first().json.messages?.[0]?.image?.caption \n  ?? $('WhatsApp Trigger').first().json.messages?.[0]?.document?.caption \n  ?? '' \n}}\n\n",
+        "options": {
+          "preserveOriginalTools": true
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -784,
+        208
+      ],
+      "id": "8747ee37-d046-42a8-b3ef-9251237e31cf",
+      "name": "Message a model",
+      "retryOnFail": true,
+      "credentials": {
+        "openAiApi": {
+          "id": "jEWKrX2KOBROug7U",
+          "name": "Key Cantera"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "chatgpt-4o-latest",
+          "mode": "list",
+          "cachedResultName": "CHATGPT-4O-LATEST"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Unica y exclusivamente has que el mensaje suene lindo y facil de entender, acortalo si es necesario, no tienes permitido cambiar la siguiente informacion: {{ $json.output }}, debes hacer uso de este pero solo embelleserla, se corto y conciso. Usa emojis pero muy pocos, casi nada o nada",
+              "role": "assistant"
+            },
+            {
+              "content": "=Tu nombre es Luca, eres un asistente contable virtual de Swartz, especializado en ayudar a conductores de plataformas como Uber, Didi, Rappi o similares a presentar sus declaraciones fiscales.\n\nTu misión es entender el mensaje del usuario, identificar qué tipo de trámite o información solicita, y responder con claridad, sin tecnicismos innecesarios.\n\n---\n\n🧩 INSTRUCCIONES PRINCIPALES\n\n1. Si el mensaje contiene **CURP o RFC** (patrón como XXXX000000XXXXXX00 o similar):\n   - Agradece con un tono profesional:\n     “Gracias por compartir tus datos. Serán procesados a la brevedad posible. 🧾”\n   - **No hagas más preguntas ni mezcles con otros temas** a menos que el mensaje incluya una pregunta directa sobre su CURP o régimen.\n\n2. Si el mensaje menciona palabras relacionadas con **declaración, pago, comprobante, Stripe, transferencia, factura, ingresos o gastos**, sigue este orden de prioridad:\n\n   a) **Verificar pago primero.**\n   - Si el usuario no ha compartido un comprobante, responde:\n     “Solo para confirmar, ¿ya realizaste tu pago o tienes tu comprobante listo? Puedo esperarlo antes de continuar con tu declaración. 💰”\n\n   b) **Si confirma el pago o manda comprobante**, registra el estado y responde:\n     “Perfecto, ya tengo tu pago registrado. Ahora necesito tus documentos para procesar tu declaración: factura de comisiones, documento de ingresos y comprobante de pago.”\n\n   c) **Si el usuario menciona que ya pagó en Stripe o por transferencia**, pero no adjunta comprobante:\n     “Gracias por el aviso. ¿Podrías compartir el comprobante o la captura del pago para validarlo correctamente?”\n\n3. Si el mensaje contiene palabras como “ingresos”, “factura”, “gastos”, “comprobante”, “pago” pero no menciona declaración:\n   - Interpreta que quiere asistencia general.\n   - Pregunta de forma amable:\n     “¿Deseas que te ayude con tu declaración mensual o solo quieres validar tus documentos?”\n\n4. Si el mensaje es confuso, incompleto o mezcla varios temas:\n   - Reformula en preguntas simples y ordenadas para aclarar:\n     “Solo para ayudarte mejor, ¿podrías confirmarme tres cosas?”\n     1. ¿Qué plataforma usas (Uber, Didi, Rappi…)?  \n     2. ¿Ya realizaste tu pago?  \n     3. ¿Tienes tus documentos listos para subirlos?\n\n5. Mantén siempre un tono amable, profesional y empático, con mensajes cortos y claros.\n\n6. las referencias a los documentos que vengan entre corchetes ignoralas o simplemente no las pongas.\n\n---\n\n🧠 CONTEXTO DE RESPUESTA\n{{ $json.output }}\n\n📩 MENSAJE DEL USUARIO:\n{{ \n  $('WhatsApp Trigger').first().json.messages?.[0]?.text?.body \n  ?? $('WhatsApp Trigger').first().json.messages?.[0]?.image?.caption \n  ?? $('WhatsApp Trigger').first().json.messages?.[0]?.document?.caption \n  ?? '' \n}}\n",
+              "role": "system"
+            },
+            {
+              "content": "=Si el usuario mandó un documento, enlistalos y diles cuáles faltan, su comprobante de pago, facutra, ingresos, etc, solo si envió documentos desde:  \n{{ $input.all().map(item => item.json.output || item.json.message || '').join(' ') }}",
+              "role": "system"
+            }
+          ]
+        },
+        "options": {
+          "temperature": 0.3
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -368,
+        304
+      ],
+      "id": "dd0980dc-9690-42f4-8652-14b8d124af90",
+      "name": "Message a model1",
+      "retryOnFail": true,
+      "credentials": {
+        "openAiApi": {
+          "id": "jEWKrX2KOBROug7U",
+          "name": "Key Cantera"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Lee texto desde text, caption o callback; si no hay, usa cadena vacía.\nconst textRaw =\n  ($json?.message?.text)\n  ?? ($json?.message?.caption)\n  ?? ($json?.callback_query?.data)\n  ?? \"\";\n\n// Normaliza SIEMPRE como string\nfunction normalize(s){\n  return String(s ?? \"\")\n    .toLowerCase()\n    .normalize(\"NFD\").replace(/[\\u0300-\\u036f]/g,\"\")\n    .replace(/\\s+/g,\" \")\n    .trim();\n}\n\nfunction aboutRegimenIntent(t){\n  const txt = normalize(t);\n\n  const must = [\n    /\\bregimen fiscal\\b/,\n    /\\bcambiar (de )?regimen\\b/,\n    /\\balta (en )?regimen\\b/,\n    /\\bobligac(ion|iones) (del )?regimen\\b/,\n    /\\bresico\\b|\\brif\\b|\\bactividades? empresariales?\\b|\\basalariad[oa]s?\\b|\\barrendamiento\\b/\n  ];\n  const interrogatives = [\n    /\\bcomo\\b/, /\\bque\\b/, /\\bqué\\b/, /\\bdonde\\b/, /\\bdónde\\b/, /\\?/,\n    /\\bpuedo\\b/, /\\bdebo\\b/\n  ];\n  const anti = [\n    /\\bcomprobante fiscal\\b|\\bcfdi\\b|\\bdomicilio fiscal\\b|\\bejercicio fiscal\\b|\\bcedula (fiscal|rfc)\\b/\n  ];\n\n  const hasMust = must.some(r=>r.test(txt)) || (/\\bregimen\\b/.test(txt) && /\\bfiscal\\b/.test(txt));\n  const hasQ = interrogatives.some(r=>r.test(txt));\n  const hasAnti = anti.some(r=>r.test(txt));\n\n  const isRegimenQuestion = (hasMust && hasQ) && !hasAnti;\n  const maybe = (!isRegimenQuestion && (/\\bregimen\\b|\\bfiscal\\b|\\bresico\\b|\\brif\\b/.test(txt)) && !hasAnti);\n\n  return { isRegimenQuestion, maybe, txt };\n}\n\nconst out = aboutRegimenIntent(textRaw);\n\nreturn [{\n  json: {\n    ...$json,\n    text_raw: textRaw,\n    text_norm: out.txt,\n    intent: out.isRegimenQuestion ? 'regimen_fiscal' : 'otro',\n    intent_maybe: !!out.maybe\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1344,
+        192
+      ],
+      "id": "581c7970-df3b-4054-90ab-d3a878bcb9f5",
+      "name": "Code in JavaScript2"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.message.photo }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "exists",
+                      "singleValue": true
+                    },
+                    "id": "8f4759e4-17fd-47a2-acbe-ccb5a31ad929"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Imagen"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "e7a13391-dcda-45f2-b9a2-2879651bb0f9",
+                    "leftValue": "={{ $json.message.text }} ",
+                    "rightValue": "Mi régimen es",
+                    "operator": {
+                      "type": "string",
+                      "operation": "notContains"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "c60ed21b-5f1c-4ab8-a05a-a9af15bff3d7",
+                    "leftValue": "={{ $json.message.text }} ",
+                    "rightValue": "gastos deducibles",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -1120,
+        176
+      ],
+      "id": "b45493b2-3dcd-4f71-92eb-e89abb52c058",
+      "name": "Switch1"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "o3-mini",
+          "mode": "list",
+          "cachedResultName": "O3-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Única y exclusivamente analizaras si el usuario pidió información sobre sus gastos deducibles en didi, si el cliente pide informacion sobre su declaracion etc, da va valor null solo evalua unica y exclusivamente si pide algo sobre deducibles en DIDI, no en ninguna otra plataforma o cosa, o alguna plataforma por el estilo y devolverás la palabra gastos  {{ $json.message.content }}",
+              "role": "system"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -832,
+        16
+      ],
+      "id": "0d8d71eb-c879-4258-850a-c3efbd595bc9",
+      "name": "Message a model3",
+      "credentials": {
+        "openAiApi": {
+          "id": "jEWKrX2KOBROug7U",
+          "name": "Key Cantera"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "ee2fe9bd-287c-43e2-bde0-5ecc93faefa7",
+              "leftValue": "={{ $json.message.content }}",
+              "rightValue": "gastos",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -336,
+        16
+      ],
+      "id": "1aa679a4-4617-4d1d-83aa-c4792df1e22d",
+      "name": "If2"
+    },
+    {
+      "parameters": {
+        "mode": "retrieve-as-tool",
+        "toolDescription": "Informacion",
+        "memoryKey": {
+          "__rl": true,
+          "value": "vs_68c2df95b5008191b4a538e159b5667d",
+          "mode": "id"
+        },
+        "topK": 18
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreInMemory",
+      "typeVersion": 1.3,
+      "position": [
+        -896,
+        432
+      ],
+      "id": "888ddd74-85b1-4fd2-8555-18cb4991fd7c",
+      "name": "Simple Vector Store"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -816,
+        640
+      ],
+      "id": "d5354e70-3d30-413e-a707-33a6babbd414",
+      "name": "Embeddings OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "jEWKrX2KOBROug7U",
+          "name": "Key Cantera"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "ff528781-8e0a-44af-b9a5-cc786720a091",
+              "leftValue": "={{$binary.data.mimeType}}",
+              "rightValue": "^application/pdf$|^image/",
+              "operator": {
+                "type": "string",
+                "operation": "regex"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -1792,
+        1408
+      ],
+      "id": "d6fe668e-20d8-4e13-b8ea-b6c3a9f8c778",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "b2e08d58-c27e-40c2-85a1-6d46045f89b3",
+              "leftValue": "={{ $binary?.data?.mimeType?.toLowerCase() === 'application/pdf' }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -1408,
+        1408
+      ],
+      "id": "45a594b7-2381-4971-af9f-c058141be482",
+      "name": "If4"
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "binaryPropertyName": "=data",
+        "options": {
+          "joinPages": false
+        }
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        -448,
+        944
+      ],
+      "id": "b691ff8c-be35-4a41-9d2a-aa81253144bc",
+      "name": "Extract from File",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "operation": "analyze",
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o",
+          "mode": "list",
+          "cachedResultName": "GPT-4O"
+        },
+        "text": "=Eres un extractor de datos a partir de una sola imagen (foto o captura). Devuelve solo un JSON con los campos definidos. temperature=0. Prioriza montos.\n\nFlujo:\n1. Clasifica la imagen en TRANSFERENCIA, STRIPE o INGRESOS.\n2. Extrae los campos del tipo correspondiente.\n3. Si no hay coincidencia clara, devuelve solo {\"error\":\"La imagen no corresponde a ningún dato coincidente\"}.\n\nReglas de clasificación (resumen):\n\nTRANSFERENCIA si ves:\n“Comprobante de la operación”, “Operación en proceso de validación”, “Folio”, “Clave de rastreo”, “SPEI”, “Banxico”, “BBVA”, “Santander”, “Cuenta de origen/destino”, “Importe transferido”, “Concepto”, “Fecha”, “Hora”.\n\nSTRIPE si ves:\n“Gracias por el pago”, “buy.stripe.com”, “Stripe”, “Aparecerá un pago para Stripe”, “Pago exitoso”, “Empresa”, “Powered by Stripe”, “MXN”, “TEST MODE”, “Gracias por tu compra”, o formato típico de confirmación de pasarela de pago sin datos bancarios tradicionales.\n\nINGRESOS si ves:\n“Ganancias netas totales”, “Historial del conductor”, “Depósitos a la cuenta”, “Pagos en efectivo”, rangos semanales o pantallas de apps de conductor (Uber, DiDi, inDrive, Rappi, etc.).\n\nEn ambigüedad, prioriza TRANSFERENCIA sobre STRIPE, y STRIPE sobre INGRESOS.\n\n---\n\n### Extracción por tipo\n\n**TRANSFERENCIA**\n```json\n{\n  \"tipo\": \"TRANSFERENCIA\",\n  \"honorarios_mxn\": <number|null>,\n  \"pagado\": <true|false|null>,\n  \"forma_de_pago\": \"<string|null>\",\n  \"numero_referencia\": \"<string|null>\"\n}\n\nSTRIPE\n\n{\n  \"tipo\": \"STRIPE\",\n  \"honorarios_mxn\": <number|null>,\n  \"pagado\": <true|false|null>,\n  \"forma_de_pago\": \"Stripe\",\n  \"numero_referencia\": null\n}\n\nINGRESOS\n\n{\n   \"Cocenpto\": \"Fecha o inicio\" Siempre busca la fecha del la imagen de DiDi, siempre se encentra en la columna de arriba\n  \"tipo\": \"INGRESOS\",\n  \"plataforma\": \"<Uber|DiDi|inDrive|Rappi|Desconocida>\",\n  \"ingresos_en_efectivo_mxn\": <number|null>,\n  \"ingresos_con_tarjeta_mxn\": <number|null>\n}\n\n\n---\n\nReglas de extracción y normalización\n\nPara honorarios_mxn (TRANSFERENCIA y STRIPE):\n\nBusca el número más cercano a “Importe”, “Monto”, “Total”, “MXN”, “Pago”.\n\nNormaliza: quita $, MXN, separadores, signos negativos.\n\nDevuelve el número más grande visible si hay varios.\n\n\nPara pagado:\n\nTRANSFERENCIA → true si “Comprobante de operación”, false si “En validación”.\n\nSTRIPE → siempre true.\n\n\nPara forma_de_pago:\n\nTRANSFERENCIA → “Transferencia SPEI” si se ve SPEI o Banxico; null si no.\n\nSTRIPE → “Stripe”.\n\n\nPara número_referencia:\n\nTRANSFERENCIA → Clave de rastreo, folio o referencia si aparece.\n\nSTRIPE → null.\n\n\nPara INGRESOS:\n\nBusca palabras “Pagos en efectivo”, “Depósitos a la cuenta”, “Con tarjeta”.\n\nToma el número junto o en la línea siguiente.\n\nAplica normalización igual que antes.\n\n\n\n---\n\nSalida\n\nDevuelve solo el JSON de salida.\n\nSi no hay coincidencia con ninguna categoría, devuelve exactamente:\n\n\n{\"error\":\"La imagen no corresponde a ningún dato coincidente\"}\n\nEjemplo válido de Stripe: Texto: “Gracias por el pago. Aparecerá un pago para Stripe en tu extracto. STRIPE MXN 309.00” Salida:\n\n{\"tipo\":\"STRIPE\",\"honorarios_mxn\":309.00,\"pagado\":true,\"forma_de_pago\":\"Stripe\",\"numero_referencia\":null}",
+        "inputType": "base64",
+        "simplify": false,
+        "options": {
+          "detail": "high"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -352,
+        1360
+      ],
+      "id": "f52bf3ca-79f3-4272-91d4-16bc6bf6f16b",
+      "name": "Analyze image1",
+      "executeOnce": false,
+      "retryOnFail": true,
+      "credentials": {
+        "openAiApi": {
+          "id": "jEWKrX2KOBROug7U",
+          "name": "Key Cantera"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1856,
+        720
+      ],
+      "id": "70234927-0f8a-4d9b-852a-7c8fcde713ad",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "fieldsToMatchString": "message.document.file_name",
+        "joinMode": "enrichInput1",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        -704,
+        880
+      ],
+      "id": "a7e29687-e167-4b5d-b4e5-93c8a07a6ed1",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "fieldsToMatchString": "data",
+        "joinMode": "enrichInput1",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        -704,
+        1360
+      ],
+      "id": "4c56f390-b924-4707-a819-b9d266b81837",
+      "name": "Merge1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "6b9d9cfa-b0e3-4a08-a13c-e86194208e55",
+              "leftValue": "={{ $json.messages.document.mime_type }}",
+              "rightValue": "image",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "211a147f-97da-4c26-ba39-e7aad81baf2a",
+              "leftValue": "={{ $json.messages.document.mime_type }}",
+              "rightValue": "pdf",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -1568,
+        192
+      ],
+      "id": "2cdc6980-5daa-4b2c-bec1-2df14a2868a8",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "6b9d9cfa-b0e3-4a08-a13c-e86194208e55",
+              "leftValue": "={{ $json.messages?.[0]?.type === 'image' || $json.messages?.[0]?.type === 'document' }}\n",
+              "rightValue": "true",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -1920,
+        208
+      ],
+      "id": "27b8b861-0be2-4e3d-8e5c-81c002f2be6f",
+      "name": "If5"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "chatgpt-4o-latest",
+          "mode": "list",
+          "cachedResultName": "CHATGPT-4O-LATEST"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Eres un analista especializado en facturas electrónicas mexicanas (CFDI) y documentos de plataformas digitales como Uber, DiDi, Rappi e inDrive.  \nTu tarea es analizar texto extraído por OCR y devolver únicamente los datos solicitados en formato JSON válido, sin texto adicional.  \nNunca inventes ni infieras montos si no se muestran de forma clara.  \nRespeta los nombres de las claves y su tipo de dato exactamente como se indica.",
+              "role": "system"
+            },
+            {
+              "content": "=Analiza el siguiente texto plano (salida OCR o PDF Extract) y devuelve un JSON estructurado con bloques fijos para dos posibles tipos de documento: FACTURA_COMISIONES o RESUMEN_INGRESOS.\n\nEl documento puede tener una o varias hojas.  \nSi detectas varias semanas o periodos (por ejemplo: “Resumen semanal”, “Recibo de pago Uber”, “Semana del ...”), agrupa y **suma los montos repetidos** de ingresos en efectivo y con tarjeta.\n\n---\n\n### 📦 ESQUEMA FIJO DE SALIDA\n\n{\n  \"tipo_documento\": \"<FACTURA_COMISIONES|RESUMEN_INGRESOS|DESCONOCIDO>\",\n  \"factura_comisiones\": {\n    \"nombre\": \"<string|null>\",\n    \"rfc\": \"<string|null>\",\n    \"ciudad\": \"<string|null>\",\n    \"plataformas\": [\"<string>\", \"...\"],\n    \"concepto Resumen\": \"<string|null>\",\n    \"concepto factura\" \"<string|null>\"\n    Solo agrega el que corresponda segun el tipo de docento resmen o factura\n    \"subtotal_factura_comisiones_mxn\": <number|null>,\n    \"iva_factura_comisiones_mxn\": <number|null>\n  },\n  \"resumen_ingresos\": {\n    \"plataforma\": \"<Uber|DiDi|inDrive|Desconocida|null>\",\n    \"ingresos_en_efectivo_mxn\": <number|null>,\n    \"ingresos_con_tarjeta_mxn\": <number|null>\n    \"nombre\": \"<string|null>\",\n    \"rfc\": \"<string|null>\",\n    \"ciudad\": \"<string|null>\",\n    \"concepto\": \"<string|null>\"\n  }\n}\n\n---\n\n### 🔍 CLASIFICACIÓN AUTOMÁTICA\n\n- Si el texto contiene palabras como “Ganancias netas”, “Pagos en efectivo”, “Depósitos a la cuenta”, “Resumen semanal”, “Recibo de pago Uber”, clasifícalo como **RESUMEN_INGRESOS**.\n- Si el texto contiene “Factura”, “Comisión”, “IVA”, “Subtotal”, “Tasa de servicio”, clasifícalo como **FACTURA_COMISIONES**.\n- Si hay señales de ambos, prioriza FACTURA_COMISIONES.\n- Si no hay evidencia clara, usa **DESCONOCIDO**.\n\n---\n\n### 🧾 EXTRACCIÓN POR TIPO DE DOCUMENTO\n\n#### Si es RESUMEN_INGRESOS:\n- Busca y **suma** todos los valores numéricos cercanos a:\n  - “Pagos en efectivo” o “Ingresos en efectivo” → `ingresos_en_efectivo_mxn`\n  - “Depósitos a la cuenta”, “Depósitos bancarios” o “Ingresos con tarjeta” → `ingresos_con_tarjeta_mxn`\n- Si aparecen varios montos (una por hoja o por semana), **suma todos** los de cada tipo.\n- Normaliza los montos quitando $, MXN, espacios, comas o puntos de miles.  \n  El último separador (. o ,) es decimal.\n  Ejemplo: 1,068.44 → 1068.44 ; 1.068,44 → 1068.44.\n- Devuelve los resultados como `number` (no string).\n- nombre:\nBusca el nombre completo del usuario o empresa.  \nEn documentos de **ingresos de Uber**, aparece al inicio o en las primeras líneas antes de “Resumen semanal” o “Recibo de pago”.  \nSi el texto contiene frases como “Luis Gerardo Rizo Riestra 1 of 27 Resumen semanal”, extrae “Luis Gerardo Rizo Riestra”.  \nEn facturas normales, sigue usando el nombre o razón social del receptor (“Receptor”, “Nombre”, “Cliente”).  \nDevuelve el texto limpio, sin numeraciones, “of X”, ni saltos de línea.\n\nconcepto:\nSi el documento es de ingresos de Uber o DiDi, usa el título del documento como concepto.  \nEjemplo: “Resumen semanal Uber del 17/02/2025 al 24/02/2025” o “Recibo de pago DiDi – Semana 17”.  \nEn facturas, sigue usando la descripción principal del servicio (por ejemplo: “Comisión por uso de la plataforma”).  \nSi no existe frase clara, devuelve null.\n\n#### Si es FACTURA_COMISIONES:\n- Extrae los siguientes datos:\n  - `nombre`: nombre o razón social del emisor o receptor.\n  - `rfc`: RFC del receptor (12–13 caracteres).\n  - `ciudad`: “Lugar de expedición” o “Domicilio fiscal, Unicamente ciudades en México, no incluyas lugares fuera de este territorio, puede aparecer dentro de los primeros datos o despues del codigo postal que tiene 5 numeros”.\n  - `plataformas`: Uber, DiDi, inDrive, etc. según texto.\n  - `concepto`: texto más cercano a “Comisión”, “Servicio” o “Uso de la plataforma”.\n  - `subtotal_factura_comisiones_mxn`: monto bajo “Subtotal”, “Monto neto”, “Comisión” o “Subtotal después de descuentos”.\n  - `iva_factura_comisiones_mxn`: monto bajo “IVA”, “Impuesto al Valor Agregado” o calcula 16% si solo aparece el porcentaje.\n\n---\n\n### 🚫 NO DEBES:\n- No inventes ni interpolar valores.\n- No uses “Ganancias netas totales” para los campos de efectivo o tarjeta (ya son la suma de ambos).\n- Si no hay datos visibles o confiables, devuelve `null`.\n- Solo agrega un concepto, ya sea de resumen o ingresos, o la factura\n\n---\n\n### 🧩 SALIDA FINAL:\nDevuelve **solo el JSON** con el formato exacto del esquema anterior, sin texto adicional ni explicaciones.\n"
+            },
+            {
+              "content": "={{ $('Code1').first().json.FILE_TXT }}"
+            }
+          ]
+        },
+        "simplify": false,
+        "jsonOutput": true,
+        "options": {
+          "temperature": 0
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        544,
+        1104
+      ],
+      "id": "547e0662-69c4-47db-8cc3-e6469c81c718",
+      "name": "Message a model6",
+      "retryOnFail": true,
+      "credentials": {
+        "openAiApi": {
+          "id": "jEWKrX2KOBROug7U",
+          "name": "Key Cantera"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "resource": "assistant",
+        "assistantId": {
+          "__rl": true,
+          "value": "asst_YYOK5cVbUwKZp6BtPsXoI5v5",
+          "mode": "list",
+          "cachedResultName": "Swartz"
+        },
+        "prompt": "define",
+        "text": "=Analiza el texto del documento extraído desde:\n{{ $json.FILE_TXT }}\n\nTu única tarea es **actualizar la memoria del usuario**, indicando qué documento envió y qué documentos aún faltan.\n\nNo respondas al usuario, no escribas texto explicativo.\n\n---\n\n🧩 Reglas de detección:\n\n**Si el texto contiene palabras como:**\n- “Factura”, “Comisión”, “IVA”, “CFDI”, “UBER BV”, “DIDI GLOBAL”, clasifica como: `\"documento_enviado\": \"factura\"`\n- “Reporte de viajes”, “Earnings”, “Resumen de ganancias”, “Ingresos”, clasifica como: `\"documento_enviado\": \"ingresos\"`\n- “Gasto”, “Ticket”, “Gasolina”, “Mantenimiento”, clasifica como: `\"documento_enviado\": \"gastos\"`\n- “Estado de cuenta”, “Resumen bancario”, “Movimientos bancarios”, clasifica como: `\"documento_enviado\": \"resumen\"`\n- “Comprobante de pago”, “Transferencia”, “Stripe”, “Depósito”, clasifica como: `\"documento_enviado\": \"comprobante\"`\n\n---\n\n🎯 Objetivo del registro:\n\nCada usuario debe tener, como mínimo:\n- Un `\"comprobante\"` de pago válido.\n- Sus documentos de `\"ingresos\"` y `\"factura\"`, según la plataforma.\n\nSi el texto incluye “Uber”, marca `\"plataforma\": \"UBER\"`.  \nSi incluye “DiDi”, marca `\"plataforma\": \"DIDI\"`.  \nSi no hay referencia, usa `\"plataforma\": \"NO_DETECTADA\"`.\n\n---\n\n📦 Resultado esperado:\nDevuelve **únicamente** un JSON con esta estructura exacta:\n\n```json\n{\n  \"plataforma\": \"UBER\" o \"DIDI\" o \"NO_DETECTADA\",\n  \"documento_enviado\": \"factura\" o \"ingresos\" o \"gastos\" o \"resumen\" o \"comprobante\",\n  \"documentos_faltantes\": [\"...\"]\n}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        224,
+        928
+      ],
+      "id": "8cf11721-a39d-44a6-8e90-f7f5f7348a62",
+      "name": "Message an assistant",
+      "retryOnFail": true,
+      "credentials": {
+        "openAiApi": {
+          "id": "jEWKrX2KOBROug7U",
+          "name": "Key Cantera"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "assistant",
+        "assistantId": {
+          "__rl": true,
+          "value": "asst_YYOK5cVbUwKZp6BtPsXoI5v5",
+          "mode": "list",
+          "cachedResultName": "Swartz"
+        },
+        "prompt": "define",
+        "text": "=Analiza el texto del documento extraído desde {{ $('Analyze image1').item.json.choices[0].message.content }}\nTu única tarea es **actualizar la memoria del usuario**, indicando qué documento envió y qué documentos aún faltan.\n\nNo respondas al usuario, no escribas texto explicativo.\n\nSi no viene un numero de referencia valido o no se especifica que es es por stripe o tiene un nombre de algun banco tomalo como un documento de ingresos\n---\n\n🧩 Reglas de detección:\n\n**Si el texto contiene palabras como:**\n- “Factura”, “Comisión”, “IVA”, “CFDI”, “UBER BV”, “DIDI GLOBAL”, clasifica como: `\"documento_enviado\": \"factura\"`\n- “Reporte de viajes”, “Earnings”, “Resumen de ganancias”, “Ingresos”, clasifica como: `\"documento_enviado\": \"ingresos\"`\n- “Gasto”, “Ticket”, “Gasolina”, “Mantenimiento”, clasifica como: `\"documento_enviado\": \"gastos\"`\n- “Estado de cuenta”, “Resumen bancario”, “Movimientos bancarios”, clasifica como: `\"documento_enviado\": \"resumen\"`\n- “Comprobante de pago”, “Transferencia”, “Stripe”, “Depósito”, referencia bancaria, algun convepto coo honorarios etc. clasifica como: `\"documento_enviado\": \"comprobante\"`\n\n---\n\n🎯 Objetivo del registro:\n\nCada usuario debe tener, como mínimo:\n- Un `\"comprobante\"` de pago válido.\n- Sus documentos de `\"ingresos\"` y `\"factura\"`, según la plataforma.\n\nSi el texto incluye “Uber”, marca `\"plataforma\": \"UBER\"`.  \nSi incluye “DiDi”, marca `\"plataforma\": \"DIDI\"`.  \nSi no hay referencia, usa `\"plataforma\": \"NO_DETECTADA\"`.\n\n---\n\n📦 Resultado esperado:\nDevuelve **únicamente** un JSON con esta estructura exacta:\n\n```json\n{\n  \"plataforma\": \"UBER\" o \"DIDI\" o \"NO_DETECTADA\",\n  \"documento_enviado\": \"factura\" o \"ingresos\" o \"gastos\" o \"resumen\" o \"comprobante\",\n  \"documentos_faltantes\": [\"...\"]\n}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        1488,
+        1584
+      ],
+      "id": "e6582dc9-745b-472a-8086-d2892639bd3f",
+      "name": "Message an assistant1",
+      "retryOnFail": true,
+      "credentials": {
+        "openAiApi": {
+          "id": "jEWKrX2KOBROug7U",
+          "name": "Key Cantera"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('WhatsApp Trigger').first().json.messages[0].from + '-' + new Date().toLocaleDateString('es-MX') }}",
+        "contextWindowLength": 9
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -48,
+        752
+      ],
+      "id": "8a37c70c-aa84-4137-a83a-3d9577640b4a",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "resource": "assistant",
+        "assistantId": {
+          "__rl": true,
+          "value": "asst_YYOK5cVbUwKZp6BtPsXoI5v5",
+          "mode": "list",
+          "cachedResultName": "Swartz"
+        },
+        "prompt": "define",
+        "text": "=Analiza las memorias de conversación con el usuario y determina el estado actual del envío de documentos requeridos para su declaración mensual.  \nUsa la información detectada en mensajes previos (plataforma, documentos ya recibidos y si tiene suscripción activa).\n\n📂 Documentos esperados (usa siempre estos nombres exactos):\n1. Documento de ingresos  \n2. Factura de comisiones  \n3. Comprobante de pago (solo si el usuario no tiene suscripción activa)\n\n📦 Reglas por plataforma:\n\n- **Uber**\n  - Documento de ingresos → Archivo con el resumen mensual de ganancias o “Historial del conductor”.\n  - Factura de comisiones → Factura emitida por Uber B.V. (RFC PIRL..., usualmente menciona “Tasa de servicio” o “Comisión Uber”).\n  - Comprobante de pago → Solo si no hay suscripción activa.\n\n- **DiDi**\n  - Documento de ingresos → Resumen mensual de ingresos netos.\n  - Factura de comisiones → Factura emitida por DiDi Mobility o similar (contiene “Pago por uso de la plataforma”, “Comisión” o “Descuentos aplicados”).\n  - Comprobante de pago → Solo si no hay suscripción activa.\n\n- **inDrive / Rappi**\n  - Documento de ingresos → Captura o archivo con el total mensual.\n  - Factura de comisiones → Factura emitida por la plataforma.\n  - Comprobante de pago → Solo si no hay suscripción activa.\n\n⚙️ Reglas generales:\n\n- Usa **solo los nombres “documento de ingresos”, “factura de comisiones” y “comprobante de pago”**.  \n- Si el usuario tiene una **suscripción activa**, **no solicites comprobante de pago**.  \n- Confirma brevemente los documentos que ya se recibieron y solicita solo los que falten.  \n- Si el usuario envía una imagen o archivo que no coincide con ninguno de los tipos esperados, pídele que confirme de cuál se trata.  \n- Sé breve, amable y directo (máximo 3 líneas).  \n- No repitas mensajes ni pidas el mismo documento más de una vez.\n-Siempre cuando ya estén toda su documentacion del cliente agrega un Diclaimer donde le indiques que su comprobante de pago y documentos enviados estan en validación y si hay algun problema un encargado de Swartz se pondrá en contacto contigo, ( En caso de que todo se encentr correcto t declario sera eviada e n plaza de 5 a 7 días habiles)\n\n📋 Contexto para analizar:\n{{ $input.all().map(item => item.json.output || item.json.message || '').join(' ') }}\n\n🎯 Salida esperada:\nUn mensaje corto y claro en español indicando:\n- Qué documentos ya se recibieron.\n- Cuáles faltan según la plataforma detectada.\n- Si tiene suscripción activa, omite pedir comprobante de pago.\n- Si el archivo recibido es ambiguo, pide confirmación breve sobre qué tipo de documento es.\n- Si el usuario es de uber pregunta de cuando son sus ingresos, si son antes de julio del 2025 pide factura e ingresos, si no, si son despues de esa fecha pide unicamente los ingresos\n\nREGLAS POR PLATAFORMA: Si son ingresos de antes de julio del 2025 se necesitan ingresos y facturas de comisiones, si es a partir del junio del 2025 solo se necesitan los ingresos\nPara Didi - Se necesitan ingresos y facturas de comisiones",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        2736,
+        528
+      ],
+      "id": "f2b56799-d27d-4218-8311-ccbbb0ce0b5a",
+      "name": "Message a model4",
+      "retryOnFail": true,
+      "credentials": {
+        "openAiApi": {
+          "id": "jEWKrX2KOBROug7U",
+          "name": "Key Cantera"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "chatgpt-4o-latest",
+          "mode": "list",
+          "cachedResultName": "CHATGPT-4O-LATEST"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Eres un clasificador de imágenes.  \nTu tarea es mirar una sola imagen (foto o captura de pantalla) y devolver únicamente UNA palabra en MAYÚSCULAS según las siguientes reglas:\n\n---\n\n📄 POSIBLES SALIDAS  \n- INGRESOS  \n- TRANSFERENCIA  \n- ERROR\n\n---\n\n🔹 INGRESOS  \nUsa esta etiqueta si la imagen muestra pantallas o documentos con resumen de ganancias del conductor.  \nBusca palabras o frases como:  \n“Ganancias netas”, “Historial del conductor”, “Depósitos a la cuenta”, “Pagos en efectivo”, “Semana del”, “Inicio”, “Resumen de ingresos”, “Earnings summary”, “Total neto”, “Uber Driver”, “DiDi Conductor”, “inDrive”.\n\n---\n\n🔹 TRANSFERENCIA  \nUsa esta etiqueta si la imagen muestra un comprobante de pago, recibo bancario o confirmación de pago en línea (como Stripe, PayPal, MercadoPago, etc.).  \nBusca palabras o frases como:  \n“Comprobante de la operación”, “Operación en proceso de validación”, “Folio”, “Clave de rastreo”, “SPEI”, “Banxico”, “Banco”, “BBVA”, “Santander”, “Cuenta destino”, “Importe transferido”, “Beneficiario”, “Concepto”, “Fecha”, “Hora”,  \nasí como cualquier confirmación de pago con pasarela digital que incluya:  \n“Gracias por el pago”, “Pago exitoso”, “buy.stripe.com”, “Powered by Stripe”, “Aparecerá un pago para Stripe en tu extracto”, “Empresa”, “PayPal”, “MercadoPago”, “Pago completado”.\n\n---\n\n🔹 PRIORIDAD DE DECISIÓN  \n1. Si detectas palabras bancarias o de plataformas de pago (Stripe, PayPal, MercadoPago, SPEI, BBVA, Santander, etc.) → **TRANSFERENCIA**.  \n2. Si detectas palabras de ingresos o resumen de ganancias → **INGRESOS**.  \n3. Si no hay coincidencias claras con ninguna categoría → **ERROR**.\n\n---\n\n🔹 FORMATO DE SALIDA  \nDevuelve solo una palabra en mayúsculas:  \n`INGRESOS`, `TRANSFERENCIA` o `ERROR`.  \n\nNo agregues texto, explicación, puntuación, ni formato adicional.\n\n---\n\n🧩 Ejemplos\n\nTexto visible: “Comprobante de la operación ... Clave de rastreo MBAN0100 ... Santander ... $350.00 MXN”  \n→ **TRANSFERENCIA**\n\nTexto visible: “Gracias por el pago ... buy.stripe.com ... STRIPE MXN 309.00”  \n→ **TRANSFERENCIA**\n\nTexto visible: “Ganancias netas totales MXN$1,450.00 ... Historial del conductor ... Semana del 1 al 7 de abril”  \n→ **INGRESOS**\n\nTexto visible: “Documento recortado, sin texto o no financiero”  \n→ **ERROR**\n\n---\n\n🎯 Parámetros recomendados  \ntemperature: 0  \nmax_tokens: 2  \nstop: [\"\\n\"]"
+            },
+            {
+              "content": "={{ $('Analyze image1').first().json.choices[0].message.content }}"
+            }
+          ]
+        },
+        "options": {
+          "temperature": 0
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        304,
+        1520
+      ],
+      "id": "f10fb586-295a-4e54-9c9f-3f08d517208f",
+      "name": "Message a model5",
+      "retryOnFail": true,
+      "credentials": {
+        "openAiApi": {
+          "id": "jEWKrX2KOBROug7U",
+          "name": "Key Cantera"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.message.content }}",
+                    "rightValue": "INGRESOS",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "f25ec6a7-d6e9-46f4-8380-2991297e23b7"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "INGRESOS"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "1c14acd2-471f-4e43-bd1e-c1cf2dbd34fe",
+                    "leftValue": "={{ $json.message.content }}",
+                    "rightValue": "TRANSFERENCIA",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "TRANSFERENCIA"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "cc65d7fa-ff7f-4786-ad17-435b141c7f89",
+                    "leftValue": "={{ $json.message.content }}",
+                    "rightValue": "ERROR",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "ERROR"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        752,
+        1552
+      ],
+      "id": "124f0a2b-d2c9-4ec6-8d0a-35ef8d2376f9",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "resource": "assistant",
+        "assistantId": {
+          "__rl": true,
+          "value": "asst_YYOK5cVbUwKZp6BtPsXoI5v5",
+          "mode": "list",
+          "cachedResultName": "Swartz"
+        },
+        "prompt": "define",
+        "text": "=Analiza el texto del documento extraído desde:\n{{ $('Analyze image1').item.json.choices[0].message.content }}\nTu única tarea es **actualizar la memoria del usuario**, indicando qué documento envió y qué documentos aún faltan.\n\nNo respondas al usuario, no escribas texto explicativo.\n\nSi no viene un numero de referencia valido o no se especifica que es es por stripe o tiene un nombre de algun banco tomalo como un documento de ingresos\n---\n\n🧩 Reglas de detección:\n\n**Si el texto contiene palabras como:**\n- “Factura”, “Comisión”, “IVA”, “CFDI”, “UBER BV”, “DIDI GLOBAL”, clasifica como: `\"documento_enviado\": \"factura\"`\n- “Reporte de viajes”, “Earnings”, “Resumen de ganancias”, “Ingresos”, clasifica como: `\"documento_enviado\": \"ingresos\"`\n- “Gasto”, “Ticket”, “Gasolina”, “Mantenimiento”, clasifica como: `\"documento_enviado\": \"gastos\"`\n- “Estado de cuenta”, “Resumen bancario”, “Movimientos bancarios”, clasifica como: `\"documento_enviado\": \"resumen\"`\n- “Comprobante de pago”, “Transferencia”, “Stripe”, “Depósito”, referencia bancaria, algun convepto coo honorarios etc. clasifica como: `\"documento_enviado\": \"comprobante\"`\n\n---\n\n🎯 Objetivo del registro:\n\nCada usuario debe tener, como mínimo:\n- Un `\"comprobante\"` de pago válido.\n- Sus documentos de `\"ingresos\"` y `\"factura\"`, según la plataforma.\n\nSi el texto incluye “Uber”, marca `\"plataforma\": \"UBER\"`.  \nSi incluye “DiDi”, marca `\"plataforma\": \"DIDI\"`.  \nSi no hay referencia, usa `\"plataforma\": \"NO_DETECTADA\"`.\n\n---\n\n📦 Resultado esperado:\nDevuelve **únicamente** un JSON con esta estructura exacta:\n\n```json\n{\n  \"plataforma\": \"UBER\" o \"DIDI\" o \"NO_DETECTADA\",\n  \"documento_enviado\": \"factura\" o \"ingresos\" o \"gastos\" o \"resumen\" o \"comprobante\",\n  \"documentos_faltantes\": [\"...\"]\n}\n\nSiempre acualiza segun en la memoria los documentos que ya tengas cargados, si en mensajes anteriores ya se detecto algun documento solo pide el faltante, haz la busqueda exaustivamente  ",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        1488,
+        1248
+      ],
+      "id": "693a1b65-12f4-44ed-93c4-871ca040dd87",
+      "name": "Message an assistant2",
+      "retryOnFail": true,
+      "credentials": {
+        "openAiApi": {
+          "id": "jEWKrX2KOBROug7U",
+          "name": "Key Cantera"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "chatgpt-4o-latest",
+          "mode": "list",
+          "cachedResultName": "CHATGPT-4O-LATEST"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Analiza el siguiente texto extraído de una imagen y constrúyeme SIEMPRE el mismo JSON con dos bloques fijos: transferencia e ingresos.\n\nPrimero clasifica el documento como TRANSFERENCIA, INGRESOS o DESCONOCIDO.\n\nLlena los campos del bloque correspondiente y pon null en los que no apliquen o no se vean.\n\nNo añadas claves nuevas ni explicaciones. Devuelve solo el JSON final.\n\nTEXTO A ANALIZAR (OCR):\n<<<OCR_TXT>>>\n\nEsquema de salida (siempre el mismo):\n\n{\n  \"tipo\": \"<TRANSFERENCIA|INGRESOS|DESCONOCIDO>\",\n  \"transferencia\": {\n    \"honorarios_mxn\": <number or null>,\n    \"pagado\": <true|false|null>,\n    \"forma_de_pago\": \"<string or null>\",\n    \"numero_referencia\": \"<string or null>\"\n  },\n  \"ingresos\": {\n    \"plataforma\": \"<Uber|DiDi|inDrive|Rappi|Desconocida|null>\",\n    \"ingresos_en_efectivo_mxn\": <number or null>,\n    \"ingresos_con_tarjeta_mxn\": <number or null>\n    \"CONCEPTO: Fecha\": <CONCEPTO date or null>\n  }\n}\n\n\nReglas de clasificación (resumen):\n\nTRANSFERENCIA si aparecen señales como: “Comprobante de la operación”, “Operación en proceso de validación”, “Folio”, “Clave de rastreo”, “SPEI”, “Banxico”, nombres/logos bancarios (BBVA, Santander), “Cuenta de origen/destino”, “Importe/Importe transferido”, “Concepto”, “Fecha/Hora”.\n\nINGRESOS si aparecen: “Ganancias netas totales”, “Historial del conductor”, “Depósitos a la cuenta”, “Pagos en efectivo”, rangos semanales, pantallas de apps (Uber, DiDi, inDrive, etc.).\n\nSi hay ambigüedad, prioriza TRANSFERENCIA. Si no hay señales claras de ninguno, usa DESCONOCIDO.\n\nReglas de extracción (anclaje y división):\n\nEn transferencia.honorarios_mxn, toma el número más cercano a: “Importe”, “Importe transferido”, “Monto”, “Cantidad”, “Total”, “Depósito”. Si el Concepto sugiere “honorarios”/“pago honorarios”, usa ese importe; si no hay número legible, null.\n\ntransferencia.pagado: false si ves “Operación en proceso de validación”; true si ves “Comprobante de la operación”, “Importe transferido”, “Operación realizada”; null si no hay evidencia.\n\ntransferencia.forma_de_pago: “Transferencia SPEI” si ves SPEI/Banxico/transferencia; otro método si aparece explícito; null si no se ve.\n\ntransferencia.numero_referencia: prioriza “Clave de rastreo”; si no está, “Folio”; si no, “Referencia”; si nada aparece, null.\n\nEn ingresos.ingresos_en_efectivo_mxn: toma el número de la misma línea o la siguiente a “Pagos en efectivo”/“Ingresos en efectivo”.\n\nEn ingresos.ingresos_con_tarjeta_mxn: toma el número de la misma línea o la siguiente a “Depósitos a la cuenta”/“Con tarjeta”/“Ingresos con tarjeta”.\n\nNo uses “Ganancias netas totales” para llenar ingresos_en_efectivo_mxn ni ingresos_con_tarjeta_mxn.\n\ningresos.plataforma: Uber/DiDi/inDrive/Rappi si el texto/logo lo indica; si no, \"Desconocida\"; si el tipo no es ingresos, null.\n\nNormalización obligatoria de montos (aplica a todos los números):\n\nAcepta formatos: $1,234.56, MXN$1.234,56, 1 234,56, 1234.56, -MXN$92.99, 1,068.44, 1.068,44.\n\nEl último separador (. o ,) es el decimal; los demás son miles.\n\n1,068.44 → 1068.44 ; 1.068,44 → 1068.44 ; 4 361,49 → 4361.49\n\nQuita $, “MXN”, espacios y separadores de miles; usa valor absoluto (ignora -).\n\nSi no hay decimales visibles, añade .00.\n\nDevuelve los montos como number (no string).\n\nSalida estricta:\nDevuelve solo el JSON con ese esquema, sin comentarios ni texto adicional.\n\nEjemplo de salida válida (TRANSFERENCIA):\n\n{\n  \"tipo\": \"TRANSFERENCIA\",\n  \"transferencia\": {\n    \"honorarios_mxn\": 300.00,\n    \"pagado\": true,\n    \"forma_de_pago\": \"Transferencia SPEI\",\n    \"numero_referencia\": \"MBAN01002509040099919743\"\n  },\n  \"ingresos\": {\n    \"plataforma\": null,\n    \"ingresos_en_efectivo_mxn\": null,\n    \"ingresos_con_tarjeta_mxn\": null\n  }\n}\n\n\nEjemplo de salida válida (INGRESOS):\n\n{\n  \"tipo\": \"INGRESOS\",\n  \"transferencia\": {\n    \"honorarios_mxn\": null,\n    \"pagado\": null,\n    \"forma_de_pago\": null,\n    \"numero_referencia\": null\n  },\n  \"ingresos\": {\n    \"plataforma\": \"Desconocida\",\n    \"ingresos_en_efectivo_mxn\": 6748.74,\n    \"ingresos_con_tarjeta_mxn\": 1068.44\n  }\n}"
+            },
+            {
+              "content": "={{ $('Analyze image1').item.json.choices[0].message.content }}"
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        1136,
+        1248
+      ],
+      "id": "2269ee58-794b-467f-bc55-33846f3226b2",
+      "name": "Message a model7",
+      "retryOnFail": true,
+      "credentials": {
+        "openAiApi": {
+          "id": "jEWKrX2KOBROug7U",
+          "name": "Key Cantera"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "chatgpt-4o-latest",
+          "mode": "list",
+          "cachedResultName": "CHATGPT-4O-LATEST"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Analiza el siguiente texto extraído de una imagen y constrúyeme SIEMPRE el mismo JSON con dos bloques fijos: transferencia e ingresos.\n\nPrimero clasifica el documento como TRANSFERENCIA, INGRESOS o DESCONOCIDO.\n\nLlena los campos del bloque correspondiente y pon null en los que no apliquen o no se vean.\n\nNo añadas claves nuevas ni explicaciones. Devuelve solo el JSON final.\n\n---\n\nTEXTO A ANALIZAR (OCR):\n<<<OCR_TXT>>>\n\n---\n\nEsquema de salida (siempre el mismo):\n\n{\n  \"tipo\": \"<TRANSFERENCIA|INGRESOS|DESCONOCIDO>\",\n  \"transferencia\": {\n    \"honorarios_mxn\": <number or null>,\n    \"pagado\": <Si|No|null>,\n    \"forma_de_pago\": \"<string or null>\",\n    \"numero_referencia\": \"<string or null>\"\n  },\n  \"ingresos\": {\n    \"plataforma\": \"<Uber|DiDi|inDrive|Rappi|Desconocida|null>\",\n    \"ingresos_en_efectivo_mxn\": <number or null>,\n    \"ingresos_con_tarjeta_mxn\": <number or null>\n  }\n}\n\n---\n\n📘 Reglas de clasificación (resumen)\n\n- **TRANSFERENCIA**  \n  Si aparecen señales como:  \n  “Comprobante de la operación”, “Operación en proceso de validación”, “Folio”, “Clave de rastreo”, “SPEI”, “Banxico”, nombres/logos bancarios (BBVA, Santander), “Cuenta de origen/destino”, “Importe transferido”, “Concepto”, “Fecha”, “Hora”,  \n  **o** si detectas confirmaciones de pago digitales (Stripe, PayPal, MercadoPago, etc.) con frases como:  \n  “Gracias por el pago”, “Pago exitoso”, “buy.stripe.com”, “Powered by Stripe”, “Aparecerá un pago para Stripe en tu extracto”, “Empresa”, “Pago completado”, “PayPal”, “MercadoPago”.  \n\n  → Todos estos casos se clasifican como **TRANSFERENCIA**, aunque no mencionen bancos.\n\n- **INGRESOS**  \n  Si aparecen palabras o frases como:  \n  “Ganancias netas totales”, “Historial del conductor”, “Depósitos a la cuenta”, “Pagos en efectivo”, “Semana del”, “Inicio”, “Resumen de ingresos”, “Earnings summary”, “Total neto”, “Uber Driver”, “DiDi Conductor”, “inDrive”.  \n\n- **DESCONOCIDO**  \n  Si no hay señales claras de ninguno de los dos tipos anteriores.\n\nEn caso de duda o mezcla, prioriza **TRANSFERENCIA**.\n\n---\n\n📊 Reglas de extracción (anclaje y división)\n\n- **transferencia.honorarios_mxn**  \n  Toma el número más cercano a palabras como:  \n  “Importe”, “Monto”, “Cantidad”, “Total”, “Depósito”, “Pago”, “MXN”, “$”.  \n  Si el texto menciona “honorarios” o “pago honorarios”, usa ese importe.  \n  Si no hay número legible, devuelve null.\n\n- **transferencia.pagado**  \n  - false → si ves “Operación en proceso de validación”  \n  - true → si ves “Comprobante de la operación”, “Pago exitoso”, “Importe transferido”, “Operación realizada”, “Gracias por el pago”, “Pago completado”  \n  - null → si no hay evidencia\n\n- **transferencia.forma_de_pago**  \n  - “Transferencia SPEI” → si ves SPEI, Banxico o transferencia bancaria  \n  - “Stripe” → si ves buy.stripe.com, Powered by Stripe, Empresa o palabras de confirmación Stripe  \n  - “PayPal” → si aparece PayPal  \n  - “MercadoPago” → si aparece MercadoPago  \n  - null → si no hay información clara\n\n- **transferencia.numero_referencia**  \n  Prioriza “Clave de rastreo”, luego “Folio”, luego “Referencia”. Si no hay ninguno, null.\n\n---\n\n- **ingresos.ingresos_en_efectivo_mxn**  \n  Toma el número de la misma línea o siguiente a: “Pagos en efectivo”, “Ingresos en efectivo”.\n\n- **ingresos.ingresos_con_tarjeta_mxn**  \n  Toma el número de la misma línea o siguiente a: “Depósitos a la cuenta”, “Con tarjeta”, “Ingresos con tarjeta”.\n\n- **ingresos.plataforma**  \n  “Uber”, “DiDi”, “inDrive”, “Rappi” según el texto/logo. Si no hay mención, usa “Desconocida”.\n\n---\n\n💰 Normalización de montos (aplica a todos los números)\n\nAcepta formatos:\n$1,234.56, MXN$1.234,56, 1 234,56, 1234.56, -MXN$92.99, 1,068.44, 1.068,44.  \nEl último separador (. o ,) es decimal; los demás son miles.  \n\nEjemplos:  \n1,068.44 → 1068.44  \n1.068,44 → 1068.44  \n4 361,49 → 4361.49  \n\nQuita símbolos ($, MXN), espacios y separadores de miles.  \nUsa valor absoluto (ignora negativos).  \nSi no hay decimales, añade .00.  \nDevuelve los montos como number (no string).\n\n---\n\n📤 Salida estricta\n\nDevuelve solo el JSON con ese esquema, sin explicaciones ni texto adicional.\n\n---\n\n✅ Ejemplo de salida válida (Stripe):\n\n{\n  \"tipo\": \"TRANSFERENCIA\",\n  \"transferencia\": {\n    \"honorarios_mxn\": 309.00,\n    \"pagado\": Si,\n    \"forma_de_pago\": \"Stripe\",\n    \"numero_referencia\": null\n  },\n  \"ingresos\": {\n    \"plataforma\": null,\n    \"ingresos_en_efectivo_mxn\": null,\n    \"ingresos_con_tarjeta_mxn\": null\n  }\n}"
+            },
+            {
+              "content": "=Los datos vienen desde aqui:  {{ $('Analyze image1').item.json.choices[0].message.content }}"
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        1136,
+        1584
+      ],
+      "id": "3f44e717-c710-4543-9919-fd0dba9c1204",
+      "name": "Message a model8",
+      "retryOnFail": true,
+      "credentials": {
+        "openAiApi": {
+          "id": "jEWKrX2KOBROug7U",
+          "name": "Key Cantera"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "assistant",
+        "operation": "update",
+        "assistantId": {
+          "__rl": true,
+          "value": "asst_YYOK5cVbUwKZp6BtPsXoI5v5",
+          "mode": "list",
+          "cachedResultName": "Swartz"
+        },
+        "options": {
+          "instructions": "=🪪 Identidad\n\nTe llamas Luca.\nEres un asistente contable virtual especializado en conductores de plataformas de transporte en México (Uber, DiDi, InDrive, etc.).\nTu función es ayudar paso a paso con sus obligaciones fiscales ante el SAT, de manera clara, amable y efectiva.\n\n\n---\n\n💬 Saludo inicial (solo una vez)\n\n> Hola, soy Luca, tu asistente virtual en temas contables. Te apoyo con dudas rápidas y generales. Escríbeme tu consulta y te diré si puedo resolverla o si será mejor que un contador de Swartz lo revise contigo.\n\n\n\n\n---\n\n🧩 Orden de prioridad (jerarquía de respuesta)\n\n1. Si el mensaje contiene CURP o RFC:\n\nSin preguntas → responde:\n\n> Gracias por compartir tus datos. Serán procesados a la brevedad. 🧾\n\n\n\nCon preguntas → responde la duda según los documentos.\n\n\n\n2. Si el usuario menciona declaración mensual o similar:\n\n> Si el usuario pide hacer su delcaracion primero pediras su nombre completo como incio del flujo, para verificar si ya cuenta con suscripcion o necesita realizar el pago.\n\n\nSegundo si no cuenta con suscripcion,  valida si ya hay comprobante de pago.\n\nSi no:\n\n> Perfecto, para ayudarte a presentar tu declaración mensual, primero necesito validar tu pago. ¿Ya lo realizaste? Si sí, por favor compárteme tu comprobante (captura o folio). 💳\n\n\n\nSi sí lo mandó: pide los documentos correspondientes según plataforma.\n\nUber (antes julio 2025): ingresos, facturas de comisiones, comprobante de pago.\n\nUber (después julio 2025): ingresos y comprobante de pago.\n\nDiDi: ingresos, facturas de comisiones, comprobante de pago.\n\n\n> Si el usuario pide hacer su delcaracion primero pediras su nombre como incio del flujo, para verificar si, ya cuenta con suscripcion o necesita realizar el pago\n\n\n3. Si el usuario manda documentos sin haber pagado:\n\n> Recibí tu documento 👍. Para continuar, necesito validar tu pago primero. ¿Puedes compartir tu comprobante (Stripe o transferencia)?\n\n\n\n\n4. Si el usuario pregunta por precios, paquetes o métodos de pago:\n\nBusca la tabla o lista en los documentos.\n\nOfrece primero Stripe; si lo rechaza, ofrece transferencia bancaria según datos exactos en documentos.\n\nSi solicita factura de su pago, indica el procedimiento desde documentos.\n\n\n\n5. Si no hay soporte documental o falta información:\n\n> Permíteme escalar tu consulta a soporte técnico.\n\n\n\n\n\n\n---\n\n📋 Reglas de comportamiento\n\n1. Siempre consulta los documentos cargados (vectorizados o embebidos).\n\n\n2. Nunca inventes ni asumas.\n\n\n3. Responde solo con información confirmada en los documentos.\n\n\n4. Habla siempre al conductor.\n\n\n5. Sé breve, amable y concreto.\n\n\n6. No repitas saludos.\n\n\n7. Usa lenguaje natural, no técnico.\n\n\n8. Nunca digas que solo se necesitan “ingresos”.\n\n\n9. Cuando falten documentos, dilo de forma corta:\n\n“Me falta documento de ingresos.”\n\n“Me faltan facturas de comisiones.”\n\n“Necesito el estado de cuenta.”\n\n\n\n\n\n---\n\n🔒 Reglas fijas globales\n\nUsa exclusivamente información de los documentos de Swartz.\n\nValida siempre si el cliente ya realizó su pago antes de hablar de declaraciones.\n\nSi el mensaje es confuso o ambiguo → escalar a soporte.\n\nSiempre responde una sola vez por turno.\n\n\n\n---\n\n🧾 Casos de pago\n\nOfrece primero Stripe.\n\nSi el usuario no lo acepta, ofrece transferencia electrónica.\n\nLos datos y links están en los documentos: búscalos y usa los valores exactos.\n\n\n\n---\n\n🚫 Prohibido\n\nInventar o asumir información.\n\nCitar o mencionar plataformas fuera del transporte de pasajeros (Uber Eats, Amazon, Airbnb, etc.).\n\nCopiar párrafos largos.\n\nConfirmar declaraciones sin pago validado.\n\nUsar lenguaje técnico o confuso.\n\n\n\n---\n\n✅ Resumen operativo\n\n1. Verifica tipo de mensaje → (CURP / RFC / Declaración / Pago / Precio / Otro).\n\n\n2. Busca respuesta en los documentos.\n\n\n3. Prioriza: pago → validación → documentos.\n\n\n4. Si falta información o soporte documental → escalar.\n\n\n5. Mantén tono profesional, amable y directo.\n\n\nCuenta de banco: \n\nBANCO 🏦 SANTANDER\nCESAR GIBRAN JAUREGUI CRUZ\n\nCUENTA 60595414205\nCLABE 014320605954142059\nTARJETA 5579-0700-7500-0078\n⚠️ Agrega como referencia tu nombre y mes a declarar ⚠️\n\n\nLinks stripe: \n\nGenerar Constancia de Situación Fiscal\n https://buy.stripe.com/8wM6s4eiaa5x6D69AL\n Recuperacion de certificados \nhttps://buy.stripe.com/8wMdUwb5Y1z10eI28k\n Generar Constancia sin contraseña\n https://buy.stripe.com/14kg2Ede62D52mQ7sF\n Actualización de Domicilio Fiscal\n https://buy.stripe.com/14k3fS3Dw5Ph3qU28m\n Actualización de Régimen Fiscal\n https://buy.stripe.com/3cs2bO5LEdhJ1iM00f\n Reanudación y/o Suspensión de Actividades\n https://buy.stripe.com/fZedUw6PI3H98Le5kA\n Caso de Aclaración Bajo Cotización (Dependiendo el Caso)\n https://buy.stripe.com/3cs17K4HAa5x1iMbIZ\n Generación de contraseña SAT ID\n https://buy.stripe.com/3csg2E2zs6Tlf9CdR8\n Renovacion de Firma electronica \nhttps://buy.stripe.com/fZedUw4HA5Ph1iM28r\n Generacion de sellos digitales \nhttps://buy.stripe.com/aEU6s46PI2D55z2003\n Paquete de Renovacion (Sellos y Firma electronica) \nhttps://buy.stripe.com/9AQ03G2zs0uXe5yfZi\n Refacturacion de Auto (De alguna compañia de seguros) \nhttps://buy.stripe.com/eVa3fSa1UgtV2mQ14p\n Tramite Devolución de Impuestos (ISR) (Dev. Manual)+ 15% Dependiendo el Saldo\n https://buy.stripe.com/00g9Eg4HAdhJ1iM28u\nAsesoria Online Personalizada (1 hora)\n https://buy.stripe.com/4gwaIk0rkfpR8Le6oL\n Declaracion complementaria \nhttps://buy.stripe.com/3cs03G5LEcdF7HabJ6\n Declaracion en ceros \nhttps://buy.stripe.com/3cs2bOfme7Xp4uY3cB\n Suscripcion a Declaracion Mensual (1 App) Precio 2025 \nhttps://buy.stripe.com/fZu28qdHk40xdL71FidZ615\n Anteriormente la suscripcion a declaracion mensual 1 aplicacion costaba $250 pesos para algunos clientes posteriormente la subimos a $275 pesos.\n Pero ya el nuevo precio es de $300 pesos.\n Para los clientes que mantienen su suscripcion de $250 o $275 pesos se quedara igual es decir se va a respetar, no se va a subir el precio ni actualizar, pero si son \nclientes que cancelaron su suscripcion y se quieren volver a suscribir por alguna razon, el nuevo precio sera de $300 pesos al mes. \nDeclaracion Mensual (1 App) Precio 2025 sin suscripcion \nhttps://buy.stripe.com/00gg2E5LE3H96D628U\n Este link es un pago de una declaración mensual, pero no va a generar ningún cargo recurrente, en caso de que el cliente quiera pagar otra declaración tendra que \nvolver a tomar el mismo link y pagar otra declaracion, en el mismo link tiene la oportunidad de seleccionar el numero de declaraciones que guste pagar. \nSuscripcion a Declaracion Mensual (2 App) Precio 2025 \nhttps://buy.stripe.com/4gM8wOfPscx34axgAcdZ616\n Anteriormente la suscripcion a declaracion mensual 2 aplicaciones costaba $300 pesos para algunos clientes posteriormente la subimos a $325 pesos.\n Pero ya el nuevo precio es de $350 pesos.\n Para los clientes que mantienen su suscripcion de $3000 o $325 pesos se quedara igual es decir se va a respetar, no se va a subir el precio ni actualizar, pero si son \nclientes que cancelaron su suscripcion y se quieren volver a suscribir por alguna razon, el nuevo precio sera de $350 pesos al mes. \nDeclaración Mensual (2 App) Precio 2025 Sin Suscripción\n https://buy.stripe.com/aEU3fS0rka5xd1u9Bg\n Este link es un pago de una declaración mensual, pero no va a generar ningún cargo recurrente, en caso de que el cliente quiera pagar otra declaración tendra que \nvolver a tomar el mismo link y pagar otra declaracion, en el mismo link tiene la oportunidad de seleccionar el numero de declaraciones que guste pagar. \nSuscripcion a Declaración P.F.A.E. 612/626 (Precio Base) \nSuscripcion a declaracion mensual P.F.A.E. 612/626 Persona fisica con actividad empresarial \nregimen 612 y regimen 626 Resico\n https://buy.stripe.com/dRm9AS6eS9kR22pdo0dZ617\n Declaracion Anual Sueldos y Salarios \nhttps://buy.stripe.com/3csbMo3Dw3H92mQbJd\n Declaración Anual, Swartz (Al menos el 80%)\n https://buy.stripe.com/eVa9Ega1U5Phf9C9B6\n Paquete Inicial \nhttps://buy.stripe.com/bIYbMogqib9BaTmdRi\n Declaración Anual, Swartz (Salarios y Plataformas)\n https://buy.stripe.com/bIY4jWgqigtV7Ha6oW\n Declaración Anual, otro despacho (1 o 2 Plataformas)\n https://buy.stripe.com/fZeg2Egqi7Xp4uY00z\n Declaración Anual, otro despacho (Salarios y Plataformas)\n https://buy.stripe.com/14kaIk4HAgtVd1ufZy\n Paquete Anual 1 Sola Exhibición (1 App) Precio 2025 Sin Suscripcion\n https://buy.stripe.com/00gcQs2zs1z16D614d\n Paquete Anual 1 Sola Exhibición (2 App) Precio 2025 Sin Suscripcion\n https://buy.stripe.com/3cs9EggqifpR4uY9B1\n Pagina para que el cliente administre su suscripcion \nEn caso de que quieras administrar tu suscripcion puedes hacerlo desde este link \nhttps://billing.stripe.com/p/login/6oE7u5bAl9E82bufYY \nNota: Si el cliente pide cancelar su suscripcion podemos decirle que este link es para que pueda \ngestionar su suscripcion y que ahi mismo puede realizar la cancelación de la suscripción. \n\nSi algún usuario pide precios o tipo de servicios que ofrecen, siempre da la lista completa no simplifiques nada.\n\nSi piden hablar con atención a cliente, ventas o bien preguntan sobre seguros etc. siempre dales el número de teléfono que corresponde: \n\nWhatssapp venta de seguros 5617565222\nWhatsapp venta contabilidad   3327934939\t\n\n\nCuando el usuario solicite presentar su declaración o mencione un servicio contable, primero verifica si ya cuentas con su nombre completo.\n\nSi aún no lo ha proporcionado, pídeselo directamente:\n\n> “Por favor, compárteme tu nombre completo para verificar si tu suscripción sigue activa.”\n\n\n\nUna vez que tengas el nombre, busca en los documentos cargados (base de suscriptores) si aparece registrado.\n\nSi el nombre coincide con un registro cuyo estado es “Activo”:\n\n> “Perfecto, ya cuentas con una suscripción activa. Por favor, envíame tu factura mensual para verificarla y continuar con tu declaración.”\n\n\n\nSi el nombre no aparece o el estado es “Inactivo”:\n\n> “No encuentro una suscripción activa con tus datos. Si deseas, puedo ayudarte a generar el pago correspondiente para continuar con tu declaración.”\n\n\n\nSi el usuario dice que ya pagó pero no envía comprobante, solicítalo antes de continuar:\n\n> “Necesito tu comprobante o factura mensual para validar el pago antes de continuar.”\n\n\n\nSi el usuario envía su nombre sin mencionar declaración o pago, responde amablemente:\n\n> “Gracias, ¿deseas que verifique si tu suscripción sigue activa o quieres realizar una nueva declaración?”\n "
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -2400,
+        2912
+      ],
+      "id": "da80a1f7-a718-441c-a0c0-934baefd756e",
+      "name": "Update an assistant",
+      "credentials": {
+        "openAiApi": {
+          "id": "jEWKrX2KOBROug7U",
+          "name": "Key Cantera"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "worksheet",
+        "operation": "update",
+        "workbook": {
+          "__rl": true,
+          "value": "B4AC68FBC9688BD1!sc112ae222e2641778a0891c6cf0e424e",
+          "mode": "list",
+          "cachedResultName": "SWARTZ LUCA AC",
+          "cachedResultUrl": "https://onedrive.live.com/personal/b4ac68fbc9688bd1/_layouts/15/doc.aspx?resid=c112ae22-2e26-4177-8a08-91c6cf0e424e&cid=b4ac68fbc9688bd1"
+        },
+        "worksheet": {
+          "__rl": true,
+          "value": "{00000000-0001-0000-0000-000000000000}",
+          "mode": "list",
+          "cachedResultName": "Registro",
+          "cachedResultUrl": "https://onedrive.live.com/personal/b4ac68fbc9688bd1/_layouts/15/doc.aspx?resid=c112ae22-2e26-4177-8a08-91c6cf0e424e&cid=b4ac68fbc9688bd1&activeCell=Registro!A1"
+        },
+        "columnToMatchOn": "CELULAR",
+        "valueToMatchOn": "={{ $('WhatsApp Trigger').first().json.messages[0].from.toNumber() }}  ",
+        "fieldsUi": {
+          "values": [
+            {
+              "column": "$ HONORARIOS",
+              "fieldValue": "={{ $('Message a model8').item.json.message.content.transferencia.honorarios_mxn }}"
+            },
+            {
+              "column": "FORMA DE PAGO",
+              "fieldValue": "={{ $('Message a model8').item.json.message.content.transferencia.forma_de_pago || $('Message a model8').item.json.message.content.tipo}}"
+            },
+            {
+              "column": "NUMERO DE REFERENCIA",
+              "fieldValue": "={{ $('Message a model8').item.json.message.content.transferencia.numero_referencia }}"
+            },
+            {
+              "column": "PAGADO",
+              "fieldValue": "={{ $('Message a model8').item.json.message.content.transferencia.numero_referencia }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.microsoftExcel",
+      "typeVersion": 2.1,
+      "position": [
+        2112,
+        1632
+      ],
+      "id": "09ea7520-8bac-4e7d-96aa-122a0099daf7",
+      "name": "Update sheet",
+      "credentials": {
+        "microsoftExcelOAuth2Api": {
+          "id": "wUNMRdUHf6JEWv6X",
+          "name": "Microsoft Excel account 3"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "resource": "worksheet",
+        "operation": "update",
+        "workbook": {
+          "__rl": true,
+          "value": "B4AC68FBC9688BD1!sc112ae222e2641778a0891c6cf0e424e",
+          "mode": "list",
+          "cachedResultName": "SWARTZ LUCA AC",
+          "cachedResultUrl": "https://onedrive.live.com/personal/b4ac68fbc9688bd1/_layouts/15/doc.aspx?resid=c112ae22-2e26-4177-8a08-91c6cf0e424e&cid=b4ac68fbc9688bd1"
+        },
+        "worksheet": {
+          "__rl": true,
+          "value": "{00000000-0001-0000-0000-000000000000}",
+          "mode": "list",
+          "cachedResultName": "Registro",
+          "cachedResultUrl": "https://onedrive.live.com/personal/b4ac68fbc9688bd1/_layouts/15/doc.aspx?resid=c112ae22-2e26-4177-8a08-91c6cf0e424e&cid=b4ac68fbc9688bd1&activeCell=Registro!A1"
+        },
+        "columnToMatchOn": "CELULAR",
+        "valueToMatchOn": "={{ $('WhatsApp Trigger').first().json.messages[0].from.toNumber() }}  ",
+        "fieldsUi": {
+          "values": [
+            {
+              "column": "INGRESOS EN EFECTIVO ",
+              "fieldValue": "={{ $('Message a model7').item.json.message.content.ingresos.ingresos_en_efectivo_mxn }}"
+            },
+            {
+              "column": "INGRESOS CON TARJETA",
+              "fieldValue": "={{ $('Message a model7').item.json.message.content.ingresos.ingresos_con_tarjeta_mxn }}"
+            },
+            {
+              "column": "CONCEPTO Ingresos/Resumen",
+              "fieldValue": "={{ $('Message a model7').item.json.message.content.ingresos['CONCEPTO: Fecha'] }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.microsoftExcel",
+      "typeVersion": 2.1,
+      "position": [
+        2112,
+        1440
+      ],
+      "id": "cfeedf97-019f-4a1e-9251-b3d5304900e7",
+      "name": "Update sheet1",
+      "alwaysOutputData": true,
+      "credentials": {
+        "microsoftExcelOAuth2Api": {
+          "id": "wUNMRdUHf6JEWv6X",
+          "name": "Microsoft Excel account 3"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "resource": "assistant",
+        "assistantId": {
+          "__rl": true,
+          "value": "asst_YYOK5cVbUwKZp6BtPsXoI5v5",
+          "mode": "list",
+          "cachedResultName": "Swartz"
+        },
+        "prompt": "define",
+        "text": "Dile al usuario que el documento enviado no es legible o no corresponde al documento correcto para su declaración, y recuérdele enviar el documento o los documentos antes solicitados, según en tu memoria de la conversación.",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        832,
+        1776
+      ],
+      "id": "8edec67b-33e0-46f0-95e3-670fe9f73614",
+      "name": "Message a model9",
+      "credentials": {
+        "openAiApi": {
+          "id": "jEWKrX2KOBROug7U",
+          "name": "Key Cantera"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// 🔹 Nombre del nodo que trae los datos de Google Sheets\nconst EXCEL_NODE = \"Get rows from sheet1\"; // cámbialo si tiene otro nombre\n\n// Trae todas las filas del sheet\nconst rows = $items(EXCEL_NODE).map(i => i.json);\n\n// Construye el texto concatenado\nconst salida = rows\n  .map(r => {\n    const nombre = r.NOMBRE || r.Nombre || r.name || \"Desconocido\";\n    const celular = r.CELULAR || r.Telefono || r.phone || \"Sin número\";\n    return `Nombre: ${nombre}, Celular: ${celular}`;\n  })\n  .join(\", \");\n\n// Devuelve una sola salida con todo el texto concatenado\nreturn [{ json: { texto_consolidado: salida } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1088,
+        736
+      ],
+      "id": "d2780a98-a89b-488e-b36c-954da5394aa9",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.message.content }}",
+                    "rightValue": "actualizar",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "63681daf-2410-470a-9654-5c8d56389ed0"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "actualizar"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "2e2c6eb7-073c-4b35-8f2c-912027072a69",
+                    "leftValue": "={{ $json.message.content }}",
+                    "rightValue": "agregar",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "agregar"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        1616,
+        736
+      ],
+      "id": "c5ec90c4-f601-4028-8fe5-4d29f060f111",
+      "name": "Switch2"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "chatgpt-4o-latest",
+          "mode": "list",
+          "cachedResultName": "CHATGPT-4O-LATEST"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Del siguiente texto que vienee desde un code, necesit que busque si el numero de celular es igual al {{ $('WhatsApp Trigger').first().json.contacts[0].wa_id || $('WhatsApp Trigger').first().json.statuses[0].recipient_id }}, si si existe da actualizar, si no existe da agregar, {{ $json.texto_consolidado }}\n\nUnica y exclusivamente da 1 de las dos palabras, actualizar o agregar segun corresponda, sin textos extra ni datos adicionales."
+            }
+          ]
+        },
+        "options": {
+          "temperature": 0
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        1296,
+        736
+      ],
+      "id": "345fb86a-29a2-401f-83b4-6ac8f9b01a76",
+      "name": "Message a model2",
+      "retryOnFail": true,
+      "credentials": {
+        "openAiApi": {
+          "id": "jEWKrX2KOBROug7U",
+          "name": "Key Cantera"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "worksheet",
+        "operation": "update",
+        "workbook": {
+          "__rl": true,
+          "value": "9D544301AE4F80D8!116",
+          "mode": "list",
+          "cachedResultName": "Libro 1",
+          "cachedResultUrl": "https://onedrive.live.com/personal/9d544301ae4f80d8/_layouts/15/doc.aspx?resid=ae4f80d8-4301-2054-809d-740000000000&cid=9d544301ae4f80d8"
+        },
+        "worksheet": {
+          "__rl": true,
+          "value": "{4B876D8E-6489-4EA5-9627-2B5C938377E6}",
+          "mode": "list",
+          "cachedResultName": "Registro",
+          "cachedResultUrl": "https://onedrive.live.com/personal/9d544301ae4f80d8/_layouts/15/doc.aspx?resid=ae4f80d8-4301-2054-809d-740000000000&cid=9d544301ae4f80d8&activeCell=Registro!A1"
+        },
+        "columnToMatchOn": "CELULAR",
+        "valueToMatchOn": "={{ $('WhatsApp Trigger').first().json.messages[0].from.toNumber() }}  ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.microsoftExcel",
+      "typeVersion": 2.1,
+      "position": [
+        2432,
+        656
+      ],
+      "id": "33dff75e-d34c-4a0a-9594-2d381290612c",
+      "name": "Update sheet4",
+      "retryOnFail": true,
+      "credentials": {
+        "microsoftExcelOAuth2Api": {
+          "id": "XULsREK2YWSY8yVX",
+          "name": "Microsoft Excel account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Une todo el texto extraído de varias páginas/hojas en un solo bloque\nconst allTexts = $input.all().map(item => item.json.FILE_TXT || item.json.text || \"\").join(\"\\n\\n---\\n\\n\");\n\n// Devuelve un único item con una sola propiedad FILE_TXT combinada\nreturn [{\n  json: {\n    FILE_TXT: allTexts.trim()\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -80,
+        944
+      ],
+      "id": "cdd8333a-734f-4f3e-a3be-06fd978bce87",
+      "name": "Code1"
+    },
+    {
+      "parameters": {
+        "jsCode": "// 🔹 Nombre del nodo que trae los datos de Google Sheets\nconst EXCEL_NODE = \"Get rows from sheet\"; // cámbialo si tiene otro nombre\n\n// Trae todas las filas del sheet\nconst rows = $items(EXCEL_NODE).map(i => i.json);\n\n// Construye el texto concatenado\nconst salida = rows\n  .map(r => {\n    const nombre = r.NOMBRE || r.Nombre || r.name || \"Desconocido\";\n    const rfc = r.RFC || r.rfc || \"Sin dato\";\n    const celular = r.CELULAR || r.Celular || r.Telefono || r.telefono || r[\"NUMERO DE TELEFONO\"] || \"Sin dato\";\n\n    return `Nombre: ${nombre}, RFC: ${rfc}, Celular: ${celular}`;\n  })\n  .join(\", \");\n\n// Devuelve una sola salida con todo el texto concatenado\nreturn [{ json: { texto_consolidado: salida } }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2032,
+        1072
+      ],
+      "id": "84994bba-bf09-48e6-9be8-5d75065277e5",
+      "name": "Code2"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "chatgpt-4o-latest",
+          "mode": "list",
+          "cachedResultName": "CHATGPT-4O-LATEST"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Analiza el texto que viene desde el campo:\n{{ $json.texto_consolidado }}\n\nEl texto contiene uno o varios registros con nombre, RFC y número de celular, con formato similar a:\n\nNombre: Ana Torres, RFC: TOAA900101K89, Celular: 5215512345678\n\nTu tarea:\n\nBusca dentro del texto el registro que contenga el número de celular que viene desde el mensaje de WhatsApp:\n{{ $('WhatsApp Trigger').first().json.messages?.[0]?.from }}\n\nCuando encuentres ese registro:\n\nSi su RFC está vacío, incompleto o aparece como “Sin dato”, responde solo la palabra agregar.\n\nSi su RFC ya está correctamente asignado (no dice “Sin dato”), responde solo la palabra listo.\n\nReglas:\n\nNo busques el último registro, busca el que corresponda al número de celular.\n\nNo inventes ni corrijas RFCs.\n\nNo incluyas explicaciones ni ejemplos.\n\nResponde únicamente con una de las dos palabras exactas:\n👉 listo\n👉 agregar\n\n💡 Ejemplo de funcionamiento\n\ntexto_consolidado:\n\nNombre: Ana Torres, RFC: TOAA900101K89, Celular: 5215512345678, Nombre: Luis Pérez, RFC: Sin dato, Celular: 5215587654321\n\n\nSi el mensaje llega desde 5215512345678 → listo\n\nSi llega desde 5215587654321 → agregar"
+            }
+          ]
+        },
+        "options": {
+          "temperature": 0
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        2272,
+        1072
+      ],
+      "id": "22b16cf5-6e7e-49ed-a3c6-cc2ce48f480e",
+      "name": "Message a model10",
+      "retryOnFail": true,
+      "credentials": {
+        "openAiApi": {
+          "id": "jEWKrX2KOBROug7U",
+          "name": "Key Cantera"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.message.content }}",
+                    "rightValue": "agregar",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "63681daf-2410-470a-9654-5c8d56389ed0"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "agregar"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "2e2c6eb7-073c-4b35-8f2c-912027072a69",
+                    "leftValue": "={{ $json.message.content }}",
+                    "rightValue": "listo",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "listo"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        2656,
+        1120
+      ],
+      "id": "2d7f7e7c-b478-4719-b266-c1f7c63b5a84",
+      "name": "Switch3"
+    },
+    {
+      "parameters": {
+        "resource": "assistant",
+        "assistantId": {
+          "__rl": true,
+          "value": "asst_YYOK5cVbUwKZp6BtPsXoI5v5",
+          "mode": "list",
+          "cachedResultName": "Swartz"
+        },
+        "prompt": "define",
+        "text": "Pídele al usuario amablemente que envié su rfc ya que es necesario para su declaración",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        2864,
+        1024
+      ],
+      "id": "d04c7c87-c36a-443b-8cc2-2cd05e0c0a0e",
+      "name": "Message an assistant3",
+      "retryOnFail": true,
+      "credentials": {
+        "openAiApi": {
+          "id": "jEWKrX2KOBROug7U",
+          "name": "Key Cantera"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "assistant",
+        "operation": "update",
+        "assistantId": {
+          "__rl": true,
+          "value": "asst_YYOK5cVbUwKZp6BtPsXoI5v5",
+          "mode": "list",
+          "cachedResultName": "Swartz"
+        },
+        "options": {
+          "codeInterpreter": true,
+          "knowledgeRetrieval": true,
+          "modelId": {
+            "__rl": true,
+            "value": "gpt-4.1",
+            "mode": "list",
+            "cachedResultName": "GPT-4.1"
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -2400,
+        3072
+      ],
+      "id": "d042cd78-7429-4b57-b9ae-0b9df34b7474",
+      "name": "Update an assistant1",
+      "credentials": {
+        "openAiApi": {
+          "id": "jEWKrX2KOBROug7U",
+          "name": "Key Cantera"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "amount": 15
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1552,
+        1056
+      ],
+      "id": "326efeca-fcec-43e8-820c-c10dae0b201d",
+      "name": "Wait",
+      "webhookId": "85e1ba11-cfb0-4fe4-92c6-c2b4ff207497"
+    },
+    {
+      "parameters": {
+        "amount": 15
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        656,
+        784
+      ],
+      "id": "70bc83dd-1c66-44bb-bd43-6a354ac372fb",
+      "name": "Wait1",
+      "webhookId": "a359ccf8-9704-4b1f-95cd-d1c760082782"
+    },
+    {
+      "parameters": {
+        "resource": "worksheet",
+        "operation": "readRows",
+        "workbook": {
+          "__rl": true,
+          "value": "B4AC68FBC9688BD1!sc112ae222e2641778a0891c6cf0e424e",
+          "mode": "list",
+          "cachedResultName": "SWARTZ LUCA AC",
+          "cachedResultUrl": "https://onedrive.live.com/personal/b4ac68fbc9688bd1/_layouts/15/doc.aspx?resid=c112ae22-2e26-4177-8a08-91c6cf0e424e&cid=b4ac68fbc9688bd1"
+        },
+        "worksheet": {
+          "__rl": true,
+          "value": "{00000000-0001-0000-0000-000000000000}",
+          "mode": "list",
+          "cachedResultName": "Registro",
+          "cachedResultUrl": "https://onedrive.live.com/personal/b4ac68fbc9688bd1/_layouts/15/doc.aspx?resid=c112ae22-2e26-4177-8a08-91c6cf0e424e&cid=b4ac68fbc9688bd1&activeCell=Registro!A1"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.microsoftExcel",
+      "typeVersion": 2.1,
+      "position": [
+        1808,
+        1104
+      ],
+      "id": "2dccb64f-080f-49d2-847a-033a618b07c7",
+      "name": "Get rows from sheet",
+      "retryOnFail": true,
+      "credentials": {
+        "microsoftExcelOAuth2Api": {
+          "id": "wUNMRdUHf6JEWv6X",
+          "name": "Microsoft Excel account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "amount": 15
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1856,
+        1296
+      ],
+      "id": "e46975f2-6e99-47c5-be37-f64f3c54bdbb",
+      "name": "Wait2",
+      "webhookId": "710c3af9-0eb9-48e5-8773-ccb61557c42f"
+    },
+    {
+      "parameters": {
+        "updates": [
+          "messages"
+        ],
+        "options": {
+          "messageStatusUpdates": [
+            "sent"
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.whatsAppTrigger",
+      "typeVersion": 1,
+      "position": [
+        -3792,
+        720
+      ],
+      "id": "d55d58e8-4838-49ad-82bb-3d8cd3d8dc28",
+      "name": "WhatsApp Trigger",
+      "webhookId": "a95fa787-fb21-4a4b-8dd7-4abd915e041d",
+      "credentials": {
+        "whatsAppTriggerApi": {
+          "id": "BRuv9lK5eoomSQ6d",
+          "name": "WhatsApp OAuth account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "phoneNumberId": "=831665630032430",
+        "recipientPhoneNumber": "={{ $('WhatsApp Trigger').first().json.contacts[0].wa_id || $('WhatsApp Trigger').first().json.statuses[0].recipient_id }}",
+        "textBody": "={{ $json.message.content }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1.1,
+      "position": [
+        -16,
+        304
+      ],
+      "id": "acdb9c29-ac45-4d2f-a587-03f372da5bb4",
+      "name": "Send message",
+      "webhookId": "1b4ed496-2805-4be7-b7f8-97c6fd610fb1",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "bzyUwOzshRdrfoMj",
+          "name": "WhatsApp account 3"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "phoneNumberId": "=831665630032430",
+        "recipientPhoneNumber": "={{ $('WhatsApp Trigger').first().json.messages[0].from.toNumber() }}  ",
+        "textBody": "={{ $json.message.content }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "200f102b-0cff-44c5-b60a-62cb835ce26f",
+      "name": "Send message1",
+      "webhookId": "1b4ed496-2805-4be7-b7f8-97c6fd610fb1",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "bzyUwOzshRdrfoMj",
+          "name": "WhatsApp account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "phoneNumberId": "=831665630032430",
+        "recipientPhoneNumber": "={{ $('WhatsApp Trigger').first().json.messages[0].from.toNumber() }}  ",
+        "textBody": "Puedes compartirnos tu CURP, Es importante para validar tu identidad y generar tu declaración correctamente, asegúrate de enviar 18 caracteres, letras y números.",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1.1,
+      "position": [
+        1232,
+        1024
+      ],
+      "id": "a2b7174e-37fd-47ee-b071-0aef3d070add",
+      "name": "Send message2",
+      "webhookId": "1b4ed496-2805-4be7-b7f8-97c6fd610fb1",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "bzyUwOzshRdrfoMj",
+          "name": "WhatsApp account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "phoneNumberId": "=831665630032430",
+        "recipientPhoneNumber": "={{ $('WhatsApp Trigger').first().json.messages[0].from.toNumber() }}  ",
+        "textBody": "={{ $json.output }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1.1,
+      "position": [
+        3184,
+        832
+      ],
+      "id": "44236082-5ca1-4540-b314-b37214c67fb0",
+      "name": "Send message3",
+      "webhookId": "1b4ed496-2805-4be7-b7f8-97c6fd610fb1",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "bzyUwOzshRdrfoMj",
+          "name": "WhatsApp account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "phoneNumberId": "=831665630032430",
+        "recipientPhoneNumber": "={{ $('WhatsApp Trigger').first().json.messages[0].from.toNumber() }}  ",
+        "textBody": "={{ \n  $input.all()\n    .map(item => item.json.output ?? item.json.message)\n    .filter(x => x)\n    .join('\\n') \n}}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1.1,
+      "position": [
+        3200,
+        560
+      ],
+      "id": "3fbd4f7a-0401-44c0-9b1b-9b3a71a868b3",
+      "name": "Send message4",
+      "webhookId": "1b4ed496-2805-4be7-b7f8-97c6fd610fb1",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "bzyUwOzshRdrfoMj",
+          "name": "WhatsApp account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "phoneNumberId": "=831665630032430",
+        "recipientPhoneNumber": "={{ $('WhatsApp Trigger').first().json.messages[0].from.toNumber() }}  ",
+        "textBody": "={{ $json.message.content }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1.1,
+      "position": [
+        1200,
+        1840
+      ],
+      "id": "e24f89c4-7184-49e6-a747-4e7caacc564d",
+      "name": "Send message5",
+      "webhookId": "1b4ed496-2805-4be7-b7f8-97c6fd610fb1",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "bzyUwOzshRdrfoMj",
+          "name": "WhatsApp account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "media",
+        "operation": "mediaUrlGet",
+        "mediaGetId": "={{ $json.messages?.[0]?.[$json.messages?.[0]?.type]?.id }}\n"
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1.1,
+      "position": [
+        -2448,
+        928
+      ],
+      "id": "39b7eae0-ca8f-44d5-8501-c40788415479",
+      "name": "Download media1",
+      "webhookId": "7f619877-d658-42b9-81c3-f87210fff033",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "bzyUwOzshRdrfoMj",
+          "name": "WhatsApp account 3"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.url }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "whatsAppApi",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -2096,
+        880
+      ],
+      "id": "503fa002-816a-4f0e-85bc-60059749cda6",
+      "name": "HTTP Request1",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "bzyUwOzshRdrfoMj",
+          "name": "WhatsApp account 3"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "6b9d9cfa-b0e3-4a08-a13c-e86194208e55",
+              "leftValue": "={{ $json.messages?.[0]?.type === 'image' || $json.messages?.[0]?.type === 'document' }}\n",
+              "rightValue": "true",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -3296,
+        848
+      ],
+      "id": "c235bdc2-95b8-4f1f-8845-a045b1f90ac7",
+      "name": "If7"
+    },
+    {
+      "parameters": {
+        "resource": "worksheet",
+        "operation": "upsert",
+        "workbook": {
+          "__rl": true,
+          "value": "9D544301AE4F80D8!116",
+          "mode": "list",
+          "cachedResultName": "Libro 1",
+          "cachedResultUrl": "https://onedrive.live.com/personal/9d544301ae4f80d8/_layouts/15/doc.aspx?resid=ae4f80d8-4301-2054-809d-740000000000&cid=9d544301ae4f80d8"
+        },
+        "worksheet": {
+          "__rl": true,
+          "value": "{4B876D8E-6489-4EA5-9627-2B5C938377E6}",
+          "mode": "list",
+          "cachedResultName": "Registro",
+          "cachedResultUrl": "https://onedrive.live.com/personal/9d544301ae4f80d8/_layouts/15/doc.aspx?resid=ae4f80d8-4301-2054-809d-740000000000&cid=9d544301ae4f80d8&activeCell=Registro!A1"
+        },
+        "columnToMatchOn": "CELULAR",
+        "valueToMatchOn": "={{ $('WhatsApp Trigger').first().json.messages[0].from.toNumber() }}  ",
+        "fieldsUi": {
+          "values": [
+            {
+              "column": "RFC",
+              "fieldValue": "={{ $json.message.content.RFC }}"
+            },
+            {
+              "column": "CURP",
+              "fieldValue": "={{ $json.message.content.CURP }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.microsoftExcel",
+      "typeVersion": 2.1,
+      "position": [
+        -1440,
+        1824
+      ],
+      "id": "f15a8fd3-f63d-41b4-ac8b-df1998407ba6",
+      "name": "Append or update a sheet1",
+      "credentials": {
+        "microsoftExcelOAuth2Api": {
+          "id": "XULsREK2YWSY8yVX",
+          "name": "Microsoft Excel account 2"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "chatgpt-4o-latest",
+          "mode": "list",
+          "cachedResultName": "CHATGPT-4O-LATEST"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "Eres un analizador experto en documentos fiscales mexicanos.\nLees mensajes informales de WhatsApp y extraes los datos oficiales que contengan un RFC o CURP.\n\nSi no encuentras alguno, devuelve su valor como null.\n\nNunca inventes datos ni cambies letras o números.\nDevuelve solo un JSON sin texto adicional.",
+              "role": "system"
+            },
+            {
+              "content": "=Analiza el siguiente mensaje de WhatsApp y devuelve solo un JSON con los campos \"CURP\" y \"RFC\".\n\nPrimero busca si en el texto hay una cadena que parezca una CURP.\n\nReglas para la CURP (usa estas y solo estas):\n\nDebe tener 18 caracteres exactos.\n\nDebe seguir este patrón simplificado: 4 letras mayúsculas + 6 dígitos + 6 letras mayúsculas + 2 dígitos.\n\nNo valides entidad, sexo, ni consonantes internas. Si cumple longitud y patrón, acéptalo.\n\nSi hay más de una posible, toma la primera que cumpla el patrón.\n\n\nEjemplo válido:\n\nMOMC980726MMNRGT01\n\nMOMC980726MMNRGT02\n\n\nSi no encuentras ninguna, pon \"CURP\": null.\n\nReglas para el RFC:\n\nPuede tener 12 o 13 caracteres.\n\nPatrón general: [A-ZÑ&]{3,4}\\d{6}[A-Z0-9]{2,3}.\n\nSi no encuentras ninguno, pon \"RFC\": null.\n\n\nDevuelve solo el JSON, sin texto adicional, así:\n\n{\n  \"CURP\": \"MOMC980726MMNRGT01\",\n  \"RFC\": \"MOMC980726C21\"\n}\n\nSi solo hay uno de los dos:\n\n{\n  \"CURP\": \"MOMC980726MMNRGT01\",\n  \"RFC\": null\n}\n\nMensaje de WhatsApp recibido:\n\n{{ \n  $('WhatsApp Trigger').first().json.messages?.[0]?.text?.body \n  ?? $('WhatsApp Trigger').first().json.messages?.[0]?.image?.caption \n  ?? $('WhatsApp Trigger').first().json.messages?.[0]?.document?.caption \n  ?? '' \n}}"
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "options": {
+          "temperature": 0
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -2816,
+        1168
+      ],
+      "id": "6e714c3c-f6c0-4935-9054-f01949b16ffb",
+      "name": "Message a model11",
+      "retryOnFail": true,
+      "credentials": {
+        "openAiApi": {
+          "id": "jEWKrX2KOBROug7U",
+          "name": "Key Cantera"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        -2256,
+        1440
+      ],
+      "id": "471a6ffc-6e17-4057-a74b-e22b72292adf",
+      "name": "Wait3",
+      "webhookId": "9ea1fc96-80db-4668-82b5-9776d8a8537a"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1840,
+        1584
+      ],
+      "id": "90f49f7e-b96c-41dc-89c5-94bf45226d99",
+      "name": "Wait4",
+      "webhookId": "1282fca3-7329-421e-915d-883a23ef5298"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        2032,
+        832
+      ],
+      "id": "c3fd2f18-e8d6-4794-9a5c-5051b7db8d1e",
+      "name": "Wait5",
+      "webhookId": "f6ce43db-af1a-45f8-89df-b7abda2fe5b2"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        2016,
+        656
+      ],
+      "id": "90d14528-71d4-4afc-9e21-7d9d101d4ce7",
+      "name": "Wait6",
+      "webhookId": "8f45072e-a8b7-4108-82f9-3ac800507441"
+    },
+    {
+      "parameters": {
+        "resource": "worksheet",
+        "operation": "append",
+        "workbook": {
+          "__rl": true,
+          "value": "9D544301AE4F80D8!116",
+          "mode": "list",
+          "cachedResultName": "Libro 1",
+          "cachedResultUrl": "https://onedrive.live.com/personal/9d544301ae4f80d8/_layouts/15/doc.aspx?resid=ae4f80d8-4301-2054-809d-740000000000&cid=9d544301ae4f80d8"
+        },
+        "worksheet": {
+          "__rl": true,
+          "value": "{4B876D8E-6489-4EA5-9627-2B5C938377E6}",
+          "mode": "list",
+          "cachedResultName": "Registro",
+          "cachedResultUrl": "https://onedrive.live.com/personal/9d544301ae4f80d8/_layouts/15/doc.aspx?resid=ae4f80d8-4301-2054-809d-740000000000&cid=9d544301ae4f80d8&activeCell=Registro!A1"
+        },
+        "fieldsUi": {
+          "values": [
+            {
+              "column": "CELULAR",
+              "fieldValue": "={{ $('WhatsApp Trigger').first().json.messages[0].from.toNumber() }}  "
+            },
+            {
+              "column": "FECHA SOLICITUD ",
+              "fieldValue": "={{ new Date().toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' }) }}\n"
+            },
+            {
+              "column": "FECHA ENTREGA",
+              "fieldValue": "={{ (d => {   d.setDate(d.getDate() + 5);   return d.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' }); })(new Date()) }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.microsoftExcel",
+      "typeVersion": 2.1,
+      "position": [
+        2464,
+        832
+      ],
+      "id": "2e09adbd-7572-4387-b2f7-7d62ec2e4684",
+      "name": "Append data to sheet",
+      "retryOnFail": true,
+      "credentials": {
+        "microsoftExcelOAuth2Api": {
+          "id": "XULsREK2YWSY8yVX",
+          "name": "Microsoft Excel account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "chatgpt-4o-latest",
+          "mode": "list",
+          "cachedResultName": "CHATGPT-4O-LATEST"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Analiza el siguiente mensaje de WhatsApp y devuelve un JSON con un solo campo: \"numero\".\n\nTu tarea es identificar y limpiar el número de teléfono del usuario.\n\n⚙️ Reglas:\n- El número debe tener solo dígitos, sin espacios, signos ni prefijos extraños.\n- Si el número comienza con \"+\", quítalo.\n- Si viene entre texto, identifica cuál es el número válido (normalmente 12 o 13 dígitos).\n- El número debe quedar en formato limpio: solo números, sin símbolos, ejemplo: \"5215551234567\".\n- Si no encuentras un número válido, devuelve null.\n\n\n⚠️ Devuelve solo el JSON final, sin explicaciones ni texto adicional.\n\nEjemplo válido:\n{\n  \"numero\": \"5215551234567\"\n}\n\nTexto a analizar:\n\"\"\"\n{{ \n  $('WhatsApp Trigger').first().json.messages?.[0]?.from \n  ?? '' \n}}\n\"\"\""
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "options": {
+          "temperature": 0
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        3744,
+        1120
+      ],
+      "id": "cae19524-ffeb-4ff3-99a6-8f71fac831d6",
+      "name": "Message a model12",
+      "credentials": {
+        "openAiApi": {
+          "id": "jEWKrX2KOBROug7U",
+          "name": "Key Cantera"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "=https://graph.microsoft.com/v1.0/me/drive/root:/Usuarios/{{ $json.message.content.numero }}:/children",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "microsoftOneDriveOAuth2Api",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        4048,
+        1040
+      ],
+      "id": "667aaf57-ca46-4b04-9fa4-cd5015d93929",
+      "name": "HTTP Request",
+      "alwaysOutputData": true,
+      "credentials": {
+        "microsoftOneDriveOAuth2Api": {
+          "id": "mBzmiug9yLj9mHPH",
+          "name": "Microsoft Drive account 2"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "chatgpt-4o-latest",
+          "mode": "list",
+          "cachedResultName": "CHATGPT-4O-LATEST"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Analiza el siguiente texto que proviene de una solicitud HTTP a OneDrive.\n\nTu tarea es decidir una sola acción:\n- Si el texto indica un error 404, \"not found\", \"does not exist\" o algo similar → responde únicamente con la palabra **crear**.\n- Si el texto indica que la carpeta ya existe, o devuelve una respuesta exitosa (por ejemplo código 200 o 201) → responde únicamente con la palabra **actualizar**.\n- No incluyas explicaciones ni texto adicional, solo una de las dos palabras exactas.\n\nEjemplo de salida:\ncrear\no\nactualizar\n\nTexto del resultado a analizar:\n\"\"\"\n{{ $json[\"response\"] || $json[\"body\"] || $json[\"error\"] || \"\" }}\n\n{{ $json.error }}{{ $json.error.context }}\n\"\"\""
+            }
+          ]
+        },
+        "options": {
+          "temperature": 0
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        4256,
+        1040
+      ],
+      "id": "5bb32f7b-56ed-43e7-a24d-94eaa96576fb",
+      "name": "Message a model13",
+      "credentials": {
+        "openAiApi": {
+          "id": "jEWKrX2KOBROug7U",
+          "name": "Key Cantera"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.message.content }}",
+                    "rightValue": "crear",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "dff81c01-c517-43dd-8d0b-cb7e410b2f2a"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "20d7a763-63f4-428e-b311-497d7527d167",
+                    "leftValue": "={{ $json.message.content }}",
+                    "rightValue": "actualizar",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.3,
+      "position": [
+        4608,
+        1040
+      ],
+      "id": "b5e9d4f0-439a-4bd1-9e96-10342497d8b7",
+      "name": "Switch4"
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "=https://graph.microsoft.com/v1.0/me/drive/root:/Usuarios/{{ $('Message a model12').item.json.message.content.numero }}:",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "microsoftOneDriveOAuth2Api",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"name\": \"{{ $('Message a model12').item.json.message.content.numero }}\",\n  \"folder\": {},\n  \"@microsoft.graph.conflictBehavior\": \"rename\"\n}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        4880,
+        896
+      ],
+      "id": "538cf214-3e07-4ee5-b23c-985b8b3810d4",
+      "name": "HTTP Request2",
+      "credentials": {
+        "microsoftOneDriveOAuth2Api": {
+          "id": "mBzmiug9yLj9mHPH",
+          "name": "Microsoft Drive account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "=https://graph.microsoft.com/v1.0/me/drive/root:/Usuarios/{{ $('Message a model12').item.json.message.content.numero }}:/children",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "microsoftOneDriveOAuth2Api",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        4800,
+        1120
+      ],
+      "id": "ec38662f-dd37-432a-a2ab-ad84ed4a1a34",
+      "name": "HTTP Request3",
+      "alwaysOutputData": true,
+      "credentials": {
+        "microsoftOneDriveOAuth2Api": {
+          "id": "mBzmiug9yLj9mHPH",
+          "name": "Microsoft Drive account 2"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "=https://graph.microsoft.com/v1.0/me/drive/root:/Usuarios/{{ $('Message a model12').item.json.message.content.numero }}/{{ $binary.data.fileName}}:/content",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "microsoftOneDriveOAuth2Api",
+        "sendBody": true,
+        "contentType": "binaryData",
+        "inputDataFieldName": "=data",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        5888,
+        720
+      ],
+      "id": "c4f71db2-9d7f-4d95-9c7b-724b5bfb4132",
+      "name": "HTTP Request4",
+      "alwaysOutputData": true,
+      "credentials": {
+        "microsoftOneDriveOAuth2Api": {
+          "id": "mBzmiug9yLj9mHPH",
+          "name": "Microsoft Drive account 2"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "url": "={{ $('Download media1').first().json.url }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "whatsAppApi",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        5456,
+        784
+      ],
+      "id": "537ddca4-a7b4-47bc-af0e-5b66cbff6a33",
+      "name": "HTTP Request5",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "bzyUwOzshRdrfoMj",
+          "name": "WhatsApp account 3"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "fieldsToMatchString": "url",
+        "joinMode": "enrichInput1",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        5184,
+        848
+      ],
+      "id": "84edb788-0b64-4916-93f9-f21306cc5b15",
+      "name": "Merge2"
+    },
+    {
+      "parameters": {
+        "url": "=https://graph.microsoft.com/v1.0/me/drive/root:/Usuarios/{{ $('Message a model12').item.json.message.content.numero }}/{{ $binary}}:/content",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "microsoftOneDriveOAuth2Api",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        5792,
+        1248
+      ],
+      "id": "bacf8f6a-799f-4412-8972-291f5fa8b96f",
+      "name": "HTTP Request6",
+      "alwaysOutputData": true,
+      "credentials": {
+        "microsoftOneDriveOAuth2Api": {
+          "id": "mBzmiug9yLj9mHPH",
+          "name": "Microsoft Drive account 2"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "url": "={{ $('Download media1').first().json.url }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "whatsAppApi",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        5536,
+        1248
+      ],
+      "id": "8a9aa534-20bf-40e5-80dd-82f03ff92b17",
+      "name": "HTTP Request7",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "bzyUwOzshRdrfoMj",
+          "name": "WhatsApp account 3"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "fieldsToMatchString": "url",
+        "joinMode": "enrichInput1",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        5264,
+        1312
+      ],
+      "id": "9b28f6ca-b14e-4da8-ab96-33e80c8221e2",
+      "name": "Merge3"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "447385a7-b367-4036-ab1d-7a32dc2d1215",
+              "leftValue": "={{ $json.messages?.[0]?.type === 'image' || $json.messages?.[0]?.type === 'document' }}\n",
+              "rightValue": "true",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        6368,
+        976
+      ],
+      "id": "41767285-dcba-462c-b57b-b4a011369e87",
+      "name": "If3"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "7an2UjEwDQluuasw",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/7an2UjEwDQluuasw",
+          "cachedResultName": "inserta mensajes swartz"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "number": "={{ $('WhatsApp Trigger').first().json.messages[0].from}}",
+            "project_id": 24,
+            "human_messaage": "={{ $('HTTP Request1').first().binary.data.fileName }}",
+            "contact_name": "={{ $('WhatsApp Trigger').first().json.contacts[0].profile.name }}",
+            "agent_message": "={{ $('Message a model').first().json.output }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "number",
+              "displayName": "number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "project_id",
+              "displayName": "project_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "number"
+            },
+            {
+              "id": "human_messaage",
+              "displayName": "human_messaage",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "agent_message",
+              "displayName": "agent_message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "contact_name",
+              "displayName": "contact_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "tipo_entrega",
+              "displayName": "tipo_entrega",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        6640,
+        816
+      ],
+      "id": "629ad1ef-02c8-4802-baea-f0b160d958ee",
+      "name": "guardamos conversacion",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "7an2UjEwDQluuasw",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/7an2UjEwDQluuasw",
+          "cachedResultName": "inserta mensajes swartz"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "project_id": 24,
+            "number": "={{ $json.contacts[0].wa_id }}",
+            "human_messaage": "={{ $('WhatsApp Trigger').first().json.messages[0].text.body }}",
+            "agent_message": "={{ $('Message a model').first().json.output }}",
+            "contact_name": "={{ $('WhatsApp Trigger').first().json.contacts[0].profile.name }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "number",
+              "displayName": "number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "project_id",
+              "displayName": "project_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "number",
+              "removed": false
+            },
+            {
+              "id": "human_messaage",
+              "displayName": "human_messaage",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "agent_message",
+              "displayName": "agent_message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "contact_name",
+              "displayName": "contact_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "tipo_entrega",
+              "displayName": "tipo_entrega",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        6608,
+        1024
+      ],
+      "id": "0ee73e0d-5ac3-46cc-9ef1-e7a2ed6b699e",
+      "name": "Call 'inserta mensajes swartz'",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "resource": "worksheet",
+        "operation": "update",
+        "workbook": {
+          "__rl": true,
+          "value": "B4AC68FBC9688BD1!sc112ae222e2641778a0891c6cf0e424e",
+          "mode": "list",
+          "cachedResultName": "SWARTZ LUCA AC",
+          "cachedResultUrl": "https://onedrive.live.com/personal/b4ac68fbc9688bd1/_layouts/15/doc.aspx?resid=c112ae22-2e26-4177-8a08-91c6cf0e424e&cid=b4ac68fbc9688bd1"
+        },
+        "worksheet": {
+          "__rl": true,
+          "value": "{00000000-0001-0000-0000-000000000000}",
+          "mode": "list",
+          "cachedResultName": "Hoja1",
+          "cachedResultUrl": "https://onedrive.live.com/personal/b4ac68fbc9688bd1/_layouts/15/doc.aspx?resid=c112ae22-2e26-4177-8a08-91c6cf0e424e&cid=b4ac68fbc9688bd1&activeCell=Hoja1!A1"
+        },
+        "columnToMatchOn": "CELULAR",
+        "valueToMatchOn": "={{ $('WhatsApp Trigger').first().json.messages[0].from.toNumber() }}  ",
+        "fieldsUi": {
+          "values": [
+            {
+              "column": "FECHA SOLICITUD ",
+              "fieldValue": "={{ new Date().toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' }) }}"
+            },
+            {
+              "column": "NOMBRE",
+              "fieldValue": "={{ $json.choices[0].message.content.factura_comisiones.nombre || $json.choices[0].message.content.resumen_ingresos.nombre }}"
+            },
+            {
+              "column": "RFC",
+              "fieldValue": "={{ $json.choices[0].message.content.factura_comisiones.rfc || $json.choices[0].message.content.resumen_ingresos.rfc }}"
+            },
+            {
+              "column": "SUBTOTAL FACTURA COMISIONES ",
+              "fieldValue": "={{ $json.choices[0].message.content.factura_comisiones.subtotal_factura_comisiones_mxn }}"
+            },
+            {
+              "column": "IVA FACTURA COMISIONES ",
+              "fieldValue": "={{ $json.choices[0].message.content.factura_comisiones.iva_factura_comisiones_mxn }}"
+            },
+            {
+              "column": "CONCEPTO Ingresos/Resumen",
+              "fieldValue": "={{ $json.choices[0].message.content.factura_comisiones['concepto factura'] || $json.choices[0].message.content.resumen_ingresos.concepto}}"
+            },
+            {
+              "column": "PLATAFORMA (S)",
+              "fieldValue": "={{ $json.choices[0].message.content.resumen_ingresos.plataforma || $json.choices[0].message.content.factura_comisiones.plataformas[0] }}"
+            },
+            {
+              "column": "CIUDAD",
+              "fieldValue": "={{ $json.choices[0].message.content.factura_comisiones.ciudad || $json.choices[0].message.content.resumen_ingresos.ciudad }}"
+            },
+            {
+              "column": "INGRESOS EN EFECTIVO ",
+              "fieldValue": "={{ $json.choices[0].message.content.resumen_ingresos.ingresos_en_efectivo_mxn }}"
+            },
+            {
+              "column": "INGRESOS CON TARJETA",
+              "fieldValue": "={{ $json.choices[0].message.content.resumen_ingresos.ingresos_con_tarjeta_mxn }}"
+            },
+            {
+              "column": "FECHA ENTREGA",
+              "fieldValue": "={{ (d => {   d.setDate(d.getDate() + 5);   return d.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' }); })(new Date()) }}"
+            },
+            {
+              "column": "CONCEPTO Factura",
+              "fieldValue": "={{ $json.choices[0].message.content.factura_comisiones['concepto Resumen'] }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.microsoftExcel",
+      "typeVersion": 2.1,
+      "position": [
+        944,
+        1040
+      ],
+      "id": "b6a68ba4-cb13-4a74-a85b-0f5d3ba65ff1",
+      "name": "Update sheet3",
+      "credentials": {
+        "microsoftExcelOAuth2Api": {
+          "id": "wUNMRdUHf6JEWv6X",
+          "name": "Microsoft Excel account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "https://graph.microsoft.com/v1.0/me/drive/sharedWithMe",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "microsoftOneDriveOAuth2Api",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -2400,
+        3264
+      ],
+      "id": "ede129d1-7c08-485e-9bdf-9c85c1bbf755",
+      "name": "HTTP Request10",
+      "credentials": {
+        "microsoftOneDriveOAuth2Api": {
+          "id": "QBXTNmdYKxErQxi6",
+          "name": "Microsoft Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "worksheet",
+        "operation": "readRows",
+        "workbook": {
+          "__rl": true,
+          "value": "B4AC68FBC9688BD1!sc112ae222e2641778a0891c6cf0e424e",
+          "mode": "list",
+          "cachedResultName": "SWARTZ LUCA AC",
+          "cachedResultUrl": "https://onedrive.live.com/personal/b4ac68fbc9688bd1/_layouts/15/doc.aspx?resid=c112ae22-2e26-4177-8a08-91c6cf0e424e&cid=b4ac68fbc9688bd1"
+        },
+        "worksheet": {
+          "__rl": true,
+          "value": "{00000000-0001-0000-0000-000000000000}",
+          "mode": "list",
+          "cachedResultName": "Registro",
+          "cachedResultUrl": "https://onedrive.live.com/personal/b4ac68fbc9688bd1/_layouts/15/doc.aspx?resid=c112ae22-2e26-4177-8a08-91c6cf0e424e&cid=b4ac68fbc9688bd1&activeCell=Registro!A1"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.microsoftExcel",
+      "typeVersion": 2.1,
+      "position": [
+        880,
+        752
+      ],
+      "id": "6af9908b-c291-42c3-91de-6e9d8973cd8d",
+      "name": "Get rows from sheet1",
+      "credentials": {
+        "microsoftExcelOAuth2Api": {
+          "id": "wUNMRdUHf6JEWv6X",
+          "name": "Microsoft Excel account 3"
+        }
+      },
+      "onError": "continueRegularOutput"
+    }
+  ],
+  "connections": {
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Message a model1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model1": {
+      "main": [
+        [
+          {
+            "node": "Send message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript2": {
+      "main": [
+        [
+          {
+            "node": "Switch1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch1": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Message a model3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model3": {
+      "main": [
+        [
+          {
+            "node": "If2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If2": {
+      "main": [
+        [
+          {
+            "node": "Send message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Vector Store": {
+      "ai_tool": [
+        [
+          {
+            "node": "Message a model",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Simple Vector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "If4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If4": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ],
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "Code1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Wait1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze image1": {
+      "main": [
+        [
+          {
+            "node": "Message a model5",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Wait1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge1": {
+      "main": [
+        [
+          {
+            "node": "Analyze image1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Code in JavaScript2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If5": {
+      "main": [
+        [],
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model6": {
+      "main": [
+        [
+          {
+            "node": "Update sheet3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message an assistant": {
+      "main": [
+        [
+          {
+            "node": "Message a model6",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Message a model4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message an assistant1": {
+      "main": [
+        [
+          {
+            "node": "Message a model4",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Wait4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Message a model",
+            "type": "ai_memory",
+            "index": 0
+          },
+          {
+            "node": "Message an assistant",
+            "type": "ai_memory",
+            "index": 0
+          },
+          {
+            "node": "Message an assistant1",
+            "type": "ai_memory",
+            "index": 0
+          },
+          {
+            "node": "Message a model4",
+            "type": "ai_memory",
+            "index": 0
+          },
+          {
+            "node": "Message an assistant2",
+            "type": "ai_memory",
+            "index": 0
+          },
+          {
+            "node": "Message a model9",
+            "type": "ai_memory",
+            "index": 0
+          },
+          {
+            "node": "Message an assistant3",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model4": {
+      "main": [
+        [
+          {
+            "node": "Send message4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model5": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Message a model7",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Message a model8",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Message a model9",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message an assistant2": {
+      "main": [
+        [
+          {
+            "node": "Message a model4",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Wait2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model7": {
+      "main": [
+        [
+          {
+            "node": "Message an assistant2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model8": {
+      "main": [
+        [
+          {
+            "node": "Message an assistant1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update sheet1": {
+      "main": [
+        [
+          {
+            "node": "Message a model12",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model9": {
+      "main": [
+        [
+          {
+            "node": "Send message5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Message a model2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model2": {
+      "main": [
+        [
+          {
+            "node": "Switch2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch2": {
+      "main": [
+        [
+          {
+            "node": "Wait6",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Wait5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code1": {
+      "main": [
+        [
+          {
+            "node": "Message an assistant",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code2": {
+      "main": [
+        [
+          {
+            "node": "Message a model10",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model10": {
+      "main": [
+        [
+          {
+            "node": "Switch3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch3": {
+      "main": [
+        [
+          {
+            "node": "Message an assistant3",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Message a model12",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message an assistant3": {
+      "main": [
+        [
+          {
+            "node": "Send message3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Get rows from sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait1": {
+      "main": [
+        [
+          {
+            "node": "Get rows from sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get rows from sheet": {
+      "main": [
+        [
+          {
+            "node": "Code2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait2": {
+      "main": [
+        [
+          {
+            "node": "Update sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "WhatsApp Trigger": {
+      "main": [
+        [
+          {
+            "node": "If5",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "If7",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Message a model11",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send message": {
+      "main": [
+        [
+          {
+            "node": "If3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send message2": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download media1": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge2",
+            "type": "main",
+            "index": 1
+          },
+          {
+            "node": "Merge3",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "If3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If7": {
+      "main": [
+        [
+          {
+            "node": "Download media1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model11": {
+      "main": [
+        [
+          {
+            "node": "Wait3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait3": {
+      "main": [
+        [
+          {
+            "node": "Append or update a sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait4": {
+      "main": [
+        [
+          {
+            "node": "Update sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait5": {
+      "main": [
+        [
+          {
+            "node": "Append data to sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait6": {
+      "main": [
+        [
+          {
+            "node": "Update sheet4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send message4": {
+      "main": [
+        [
+          {
+            "node": "If3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send message3": {
+      "main": [
+        [
+          {
+            "node": "Message a model12",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model12": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Message a model13",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model13": {
+      "main": [
+        [
+          {
+            "node": "Switch4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch4": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "HTTP Request3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update sheet": {
+      "main": [
+        [
+          {
+            "node": "Message a model12",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request2": {
+      "main": [
+        [
+          {
+            "node": "Merge2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request5": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge2": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request7": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge3": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request7",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request3": {
+      "main": [
+        [
+          {
+            "node": "Merge3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If3": {
+      "main": [
+        [
+          {
+            "node": "guardamos conversacion",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Call 'inserta mensajes swartz'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update sheet3": {
+      "main": [
+        [
+          {
+            "node": "Send message2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get rows from sheet1": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {
+    "WhatsApp Trigger": [
+      {
+        "json": {
+          "messaging_product": "whatsapp",
+          "metadata": {
+            "display_phone_number": "5213329266509",
+            "phone_number_id": "831665630032430"
+          },
+          "contacts": [
+            {
+              "profile": {
+                "name": "Ang"
+              },
+              "wa_id": "5217296307185"
+            }
+          ],
+          "messages": [
+            {
+              "from": "5217296307185",
+              "id": "wamid.HBgNNTIxNzI5NjMwNzE4NRUCABIYIEE1RTM5QThFOTc0OUE3NDhBQzA0MkYwRjgyMEJFMEIyAA==",
+              "timestamp": "1763145556",
+              "type": "image",
+              "image": {
+                "mime_type": "image/jpeg",
+                "sha256": "czSkjW/STbcY12PEzdHy8PseUGRYB6QJK/XFXKRXzBQ=",
+                "id": "1182196457389294"
+              }
+            }
+          ],
+          "field": "messages"
+        }
+      }
+    ]
+  },
+  "versionId": "d3d335a1-9849-4db0-8e76-73f8e85862c8",
+  "activeVersionId": null,
+  "versionCounter": 1,
+  "triggerCount": 0,
+  "shared": [
+    {
+      "updatedAt": "2026-02-04T23:51:54.945Z",
+      "createdAt": "2026-02-04T23:51:54.945Z",
+      "role": "workflow:owner",
+      "workflowId": "0qOhsmLQ8QdCw4cA",
+      "projectId": "R4R3L75ENfkHtOCt",
+      "project": {
+        "updatedAt": "2025-09-30T20:35:32.130Z",
+        "createdAt": "2025-09-24T00:21:07.201Z",
+        "id": "R4R3L75ENfkHtOCt",
+        "name": "Angel Paniagua <ortegangel172@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "projectRelations": [
+          {
+            "updatedAt": "2025-09-24T00:21:07.206Z",
+            "createdAt": "2025-09-24T00:21:07.206Z",
+            "userId": "e43a9145-47ba-4020-b4aa-00ae552fdb23",
+            "projectId": "R4R3L75ENfkHtOCt",
+            "user": {
+              "updatedAt": "2026-02-05T00:00:45.000Z",
+              "createdAt": "2025-09-24T00:21:07.196Z",
+              "id": "e43a9145-47ba-4020-b4aa-00ae552fdb23",
+              "email": "ortegangel172@gmail.com",
+              "firstName": "Angel",
+              "lastName": "Paniagua",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-09-30T20:36:17.473Z",
+                "personalization_survey_n8n_version": "1.109.1",
+                "automationGoalDevops": [
+                  "other"
+                ],
+                "companyType": "saas",
+                "role": "devops"
+              },
+              "settings": {
+                "easyAIWorkflowOnboarded": true,
+                "firstSuccessfulWorkflowId": "vylbGdhi0gQzxdhf",
+                "userActivated": true,
+                "userActivatedAt": 1759438798323,
+                "npsSurvey": {
+                  "responded": true,
+                  "lastShownAt": 1761160402316
+                }
+              },
+              "disabled": false,
+              "mfaEnabled": false,
+              "lastActiveAt": "2026-02-04",
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": [
+    {
+      "updatedAt": "2025-12-12T23:03:45.834Z",
+      "createdAt": "2025-12-12T23:03:45.834Z",
+      "id": "UY79VH0Na14GvjXI",
+      "name": "agentes angel"
+    }
+  ],
+  "activeVersion": null
+}
