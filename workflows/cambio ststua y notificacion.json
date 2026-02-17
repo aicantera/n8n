@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2025-11-06T22:41:48.000Z",
+  "updatedAt": "2026-02-16T23:55:41.000Z",
   "createdAt": "2025-11-06T22:32:36.707Z",
   "id": "5TA7GPdM66ClKALh",
   "name": "cambio ststua y notificacion",
@@ -228,6 +228,101 @@
           "name": "Supabase account - CANTERA"
         }
       }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://fcm.googleapis.com/v1/projects/adminagents-8a1bf/messages:send",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleApi",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        1488,
+        224
+      ],
+      "id": "8db2a9ac-0702-44d6-8a19-8cffefff42d8",
+      "name": "HTTP Request",
+      "credentials": {
+        "googleApi": {
+          "id": "OW7LE0iqQCZtCFbe",
+          "name": "Google Service Account account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "tableId": "clientes_projectos",
+        "returnAll": true,
+        "matchType": "allFilters",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "id_proyecto",
+              "condition": "eq",
+              "keyValue": "={{ $json.project_id }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        880,
+        128
+      ],
+      "id": "fa277327-34b1-4d79-ba0a-f52f7f245753",
+      "name": "Get many rows",
+      "credentials": {
+        "supabaseApi": {
+          "id": "ty0KiXsEYP1uJ8t9",
+          "name": "Supabase account - CANTERA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        1088,
+        128
+      ],
+      "id": "5028e9e6-ba75-4127-843c-e1f562952a65",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "tableId": "clientes_usuario",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "id",
+              "keyValue": "={{ $json.id_cliente }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        1296,
+        224
+      ],
+      "id": "8257c3b6-36f1-4795-9b97-ce5bcf5c72e1",
+      "name": "Get a row",
+      "credentials": {
+        "supabaseApi": {
+          "id": "ty0KiXsEYP1uJ8t9",
+          "name": "Supabase account - CANTERA"
+        }
+      }
     }
   ],
   "connections": {
@@ -286,6 +381,51 @@
       "main": [
         []
       ]
+    },
+    "Create a row": {
+      "main": [
+        [
+          {
+            "node": "Get many rows",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get many rows": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Get a row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get a row": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -305,9 +445,9 @@
       }
     ]
   },
-  "versionId": "b8078de3-c0e9-4276-915f-609a72af9aa1",
+  "versionId": "db000385-e89f-4aba-90a4-1c06a5fe1658",
   "activeVersionId": null,
-  "versionCounter": 1,
+  "versionCounter": 2,
   "triggerCount": 0,
   "shared": [
     {
@@ -331,7 +471,7 @@
             "userId": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
             "projectId": "BZ9Ta5yhe4RhzY78",
             "user": {
-              "updatedAt": "2026-02-16T06:00:59.000Z",
+              "updatedAt": "2026-02-17T00:00:14.000Z",
               "createdAt": "2025-05-13T15:56:27.880Z",
               "id": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
               "email": "canteradigital7@gmail.com",
