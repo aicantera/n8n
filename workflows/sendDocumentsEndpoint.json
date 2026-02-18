@@ -1,35 +1,12 @@
 {
-  "updatedAt": "2026-02-18T16:09:10.000Z",
+  "updatedAt": "2026-02-18T17:44:26.000Z",
   "createdAt": "2026-02-18T15:58:00.775Z",
   "id": "15YOalVfuSAHFbag",
   "name": "sendDocumentsEndpoint",
   "description": null,
-  "active": false,
+  "active": true,
   "isArchived": false,
   "nodes": [
-    {
-      "parameters": {
-        "assignments": {
-          "assignments": [
-            {
-              "id": "af3069b1-03b0-4eeb-a79b-7e81c7ecad81",
-              "name": "body",
-              "value": "={{ $json.body }}",
-              "type": "object"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
-      "position": [
-        -1360,
-        736
-      ],
-      "id": "73667cab-16ab-4425-902b-79b9b8576bdd",
-      "name": "Edit Fields"
-    },
     {
       "parameters": {
         "workflowId": {
@@ -42,10 +19,10 @@
         "workflowInputs": {
           "mappingMode": "defineBelow",
           "value": {
-            "number": "={{ $json.body.number }}",
-            "project_id": "={{ $json.body.project_id }}",
-            "agent_message": "={{ $json.body.mensaje }}",
-            "tipo_entrega": "agente"
+            "project_id": "={{ $('Webhook').item.json.body.project_id.toNumber() }}",
+            "agent_message": "={{ $json.webViewLink }}",
+            "tipo_entrega": "agente",
+            "number": "={{ $('Webhook').item.json.body.number }}"
           },
           "matchingColumns": [],
           "schema": [
@@ -114,8 +91,8 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        -1136,
-        736
+        -800,
+        864
       ],
       "id": "9548a740-97f1-486f-8709-1bf54e3b68e3",
       "name": "Execute Workflow",
@@ -130,7 +107,7 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.4,
       "position": [
-        -1136,
+        -1248,
         224
       ],
       "id": "3464d2c2-496e-4218-85c9-36f131fb38bc",
@@ -144,7 +121,7 @@
           "conditions": [
             {
               "keyName": "id",
-              "keyValue": "={{ $('Edit Fields').item.json.body.project_id }}"
+              "keyValue": "={{ $('Webhook').item.json.body.project_id }}"
             }
           ]
         }
@@ -152,8 +129,8 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        -912,
-        736
+        -576,
+        864
       ],
       "id": "ef138ab6-e943-437f-aa04-32252ea99c62",
       "name": "obtenemos datos del poryecto",
@@ -192,8 +169,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        -688,
-        736
+        -352,
+        864
       ],
       "id": "23f6f936-cf5f-4a68-84fb-a565009887e7",
       "name": "validamos si esta en telegram"
@@ -305,7 +282,7 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.2,
       "position": [
-        -1584,
+        -1696,
         192
       ],
       "id": "374f83a7-5da5-4c00-ab6a-f3f1233ad963",
@@ -322,7 +299,7 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        -1360,
+        -1472,
         128
       ],
       "id": "16a9a8b6-31d5-419a-8c8e-059e78dec730",
@@ -346,7 +323,7 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        -1360,
+        -1472,
         -64
       ],
       "id": "6c1be023-70a3-4c55-bf6b-db3f35fdcc03",
@@ -368,8 +345,8 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.4,
       "position": [
-        -176,
-        848
+        544,
+        928
       ],
       "id": "435a1dca-a66e-414d-9d3f-41df7cb8a835",
       "name": "Respond to Webhook1"
@@ -385,7 +362,7 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        -1360,
+        -1472,
         320
       ],
       "id": "2c1ee0b7-d449-4f58-a746-92b127551fbc",
@@ -409,7 +386,7 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        -1360,
+        -1472,
         512
       ],
       "id": "5ef8101b-4de4-4870-869d-2cc4836413fb",
@@ -421,6 +398,201 @@
           "name": "Demo_Canon"
         }
       }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "send/documents",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -1696,
+        928
+      ],
+      "id": "cb45d6cb-6ac2-41ec-a7bc-3b14d5d42e77",
+      "name": "Webhook",
+      "webhookId": "819fc186-b3f3-456c-9672-87939c244bef"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "tableId": "project",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "id",
+              "keyValue": "={{ $json.body.project_id }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        -1472,
+        784
+      ],
+      "id": "072574a0-263e-4d5b-9625-2079bca3d09f",
+      "name": "Get a row",
+      "credentials": {
+        "supabaseApi": {
+          "id": "ty0KiXsEYP1uJ8t9",
+          "name": "Supabase account - CANTERA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        -1248,
+        864
+      ],
+      "id": "e2299160-9267-4451-9001-63a1700b7c9f",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "inputDataFieldName": "document",
+        "name": "={{ $('Webhook').item.json.body.contact_id }}-{{ $('Webhook').item.json.body.project_id }}-{{ $('Webhook').item.json.body.number }}-{{ $now }}-{{ $binary.document.fileName }}",
+        "driveId": {
+          "__rl": true,
+          "value": "={{ $('Get a row').item.json.google_drive_folder_id }}",
+          "mode": "id"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $('Get a row').item.json.google_drive_folder_id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -1024,
+        864
+      ],
+      "id": "c1270d8c-22f8-4edb-9018-35162ecd37cd",
+      "name": "Upload file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "PKQpxniTUryv7dE9",
+          "name": "Google Drive account - DRIVE CANTERA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $binary.document.fileExtension.toLowerCase() }}",
+                    "rightValue": "^(pdf|doc|docx|xls|xlsx|ppt|pptx|txt|csv)$",
+                    "operator": {
+                      "type": "string",
+                      "operation": "regex"
+                    },
+                    "id": "4eff407c-7cd6-4af8-ac7e-2dd2bf0c8124"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "documento"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "9f28ccd4-b0a6-4fec-8972-817fd11d0b13",
+                    "leftValue": "={{ $binary.document.fileExtension.toLowerCase() }}",
+                    "rightValue": "^(jpg|jpeg|png|webp|gif|bmp|tiff)$",
+                    "operator": {
+                      "type": "string",
+                      "operation": "regex"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "imagen"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "a8081c6a-7d1c-4998-8875-a77994367ac7",
+                    "leftValue": "={{ $binary.document.fileExtension.toLowerCase() }}",
+                    "rightValue": "^(mp4|3gp|mov|avi|mkv|webm)$",
+                    "operator": {
+                      "type": "string",
+                      "operation": "regex"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "video"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.3,
+      "position": [
+        96,
+        912
+      ],
+      "id": "b910858b-cec0-47db-b99b-b5c4f7505241",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        -128,
+        928
+      ],
+      "id": "924a629c-58ff-4a38-a364-facd3309a71d",
+      "name": "Merge1"
     },
     {
       "parameters": {
@@ -441,47 +613,82 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n       \"messaging_product\": \"whatsapp\",\n       \"to\": \"{{ $('Edit Fields').first().json.body.number }}\",\n       \"type\": \"template\",\n       \"template\": {\n         \"name\": \"{{ $('obtenemos datos del poryecto').first().json.message_teplate }}\",\n         \"language\": {\n           \"code\": \"es_MX\"\n         },\n         \"components\": [\n           {\n             \"type\": \"body\",\n             \"parameters\": [\n               { \"type\": \"text\", \"text\": \"{{ $('Webhook').first().json.body.mensaje }}\" }\n             ]\n           }\n         ]\n       }\n     }\n\n",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('Webhook').item.json.body.number }}\",\n  \"type\": \"document\",\n  \"document\": {\n    \"link\": \"{{ $('Upload file').item.json.webContentLink }}\",\n    \"filename\": \"{{ $binary.document.fileName }}\"\n  }\n}",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -400,
-        848
+        320,
+        736
       ],
       "id": "516c4a06-a4e0-49a8-affa-8d48e6a484a9",
-      "name": "error video1"
+      "name": "enviar documento"
     },
     {
       "parameters": {
-        "httpMethod": "POST",
-        "path": "send/documents",
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v22.0/{{ $('obtenemos datos del poryecto').first().json.phone_number_id }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('obtenemos datos del poryecto').first().json.token}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('Webhook').item.json.body.number }}\",\n  \"type\": \"image\",\n  \"image\": {\n    \"link\": \"{{ $('Upload file').item.json.webContentLink }}\"\n  }\n}",
         "options": {}
       },
-      "type": "n8n-nodes-base.webhook",
-      "typeVersion": 2.1,
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
       "position": [
-        -1600,
-        736
+        320,
+        928
       ],
-      "id": "cb45d6cb-6ac2-41ec-a7bc-3b14d5d42e77",
-      "name": "Webhook",
-      "webhookId": "819fc186-b3f3-456c-9672-87939c244bef"
+      "id": "0b134314-32c4-49e6-a8be-e9663a736a89",
+      "name": "enviar imagen"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v22.0/{{ $('obtenemos datos del poryecto').first().json.phone_number_id }}/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('obtenemos datos del poryecto').first().json.token}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('Webhook').item.json.body.number }}\",\n  \"type\": \"video\",\n  \"video\": {\n    \"link\": \"{{ $('Upload file').item.json.webContentLink }}\"\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        320,
+        1120
+      ],
+      "id": "ec47399c-bb5a-42ad-86c7-476159a41a2a",
+      "name": "enviar video"
     }
   ],
   "connections": {
-    "Edit Fields": {
-      "main": [
-        [
-          {
-            "node": "Execute Workflow",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Execute Workflow": {
       "main": [
         [
@@ -509,7 +716,7 @@
         [],
         [
           {
-            "node": "error video1",
+            "node": "Merge1",
             "type": "main",
             "index": 0
           }
@@ -592,7 +799,97 @@
         ]
       ]
     },
-    "error video1": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Get a row",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          },
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Get a row": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Upload file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload file": {
+      "main": [
+        [
+          {
+            "node": "Execute Workflow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "enviar documento",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "enviar imagen",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "enviar video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge1": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "enviar documento": {
       "main": [
         [
           {
@@ -603,11 +900,22 @@
         ]
       ]
     },
-    "Webhook": {
+    "enviar imagen": {
       "main": [
         [
           {
-            "node": "Edit Fields",
+            "node": "Respond to Webhook1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "enviar video": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook1",
             "type": "main",
             "index": 0
           }
@@ -616,15 +924,19 @@
     }
   },
   "settings": {
-    "executionOrder": "v1"
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
   },
   "staticData": null,
-  "meta": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
   "pinData": {},
-  "versionId": "f483699e-bd49-426d-a56b-294ed91d86d5",
-  "activeVersionId": null,
-  "versionCounter": 3,
-  "triggerCount": 0,
+  "versionId": "51f086a0-6e57-4e20-b5a6-dea46970b257",
+  "activeVersionId": "51f086a0-6e57-4e20-b5a6-dea46970b257",
+  "versionCounter": 14,
+  "triggerCount": 1,
   "shared": [
     {
       "updatedAt": "2026-02-18T15:58:00.784Z",
@@ -687,5 +999,930 @@
     }
   ],
   "tags": [],
-  "activeVersion": null
+  "activeVersion": {
+    "updatedAt": "2026-02-18T17:44:26.036Z",
+    "createdAt": "2026-02-18T17:44:26.036Z",
+    "versionId": "51f086a0-6e57-4e20-b5a6-dea46970b257",
+    "workflowId": "15YOalVfuSAHFbag",
+    "nodes": [
+      {
+        "parameters": {
+          "workflowId": {
+            "__rl": true,
+            "value": "3TRmy5xQe7htpSEH",
+            "mode": "list",
+            "cachedResultUrl": "/workflow/3TRmy5xQe7htpSEH",
+            "cachedResultName": "asistente inserta mensajes refactored"
+          },
+          "workflowInputs": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "project_id": "={{ $('Webhook').item.json.body.project_id.toNumber() }}",
+              "agent_message": "={{ $json.webViewLink }}",
+              "tipo_entrega": "agente",
+              "number": "={{ $('Webhook').item.json.body.number }}"
+            },
+            "matchingColumns": [],
+            "schema": [
+              {
+                "id": "number",
+                "displayName": "number",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string"
+              },
+              {
+                "id": "project_id",
+                "displayName": "project_id",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "number"
+              },
+              {
+                "id": "human_messaage",
+                "displayName": "human_messaage",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string",
+                "removed": true
+              },
+              {
+                "id": "agent_message",
+                "displayName": "agent_message",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string"
+              },
+              {
+                "id": "contact_name",
+                "displayName": "contact_name",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string",
+                "removed": true
+              },
+              {
+                "id": "tipo_entrega",
+                "displayName": "tipo_entrega",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string"
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": true
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.executeWorkflow",
+        "typeVersion": 1.2,
+        "position": [
+          -800,
+          864
+        ],
+        "id": "9548a740-97f1-486f-8709-1bf54e3b68e3",
+        "name": "Execute Workflow",
+        "alwaysOutputData": true
+      },
+      {
+        "parameters": {
+          "respondWith": "json",
+          "responseBody": "={\n  \"status\":\"success\",\n  \"code\":200,\n  \"message\": \"mensaje enviado correctamente\"\n}",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.respondToWebhook",
+        "typeVersion": 1.4,
+        "position": [
+          -1248,
+          224
+        ],
+        "id": "3464d2c2-496e-4218-85c9-36f131fb38bc",
+        "name": "Respond to Webhook"
+      },
+      {
+        "parameters": {
+          "operation": "get",
+          "tableId": "project",
+          "filters": {
+            "conditions": [
+              {
+                "keyName": "id",
+                "keyValue": "={{ $('Webhook').item.json.body.project_id }}"
+              }
+            ]
+          }
+        },
+        "type": "n8n-nodes-base.supabase",
+        "typeVersion": 1,
+        "position": [
+          -576,
+          864
+        ],
+        "id": "ef138ab6-e943-437f-aa04-32252ea99c62",
+        "name": "obtenemos datos del poryecto",
+        "credentials": {
+          "supabaseApi": {
+            "id": "ty0KiXsEYP1uJ8t9",
+            "name": "Supabase account - CANTERA"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "conditions": {
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 2
+            },
+            "conditions": [
+              {
+                "id": "2b9d08c2-c5be-4bfa-8e78-fad865c9353e",
+                "leftValue": "={{ $json.platform }}",
+                "rightValue": "telegram",
+                "operator": {
+                  "type": "string",
+                  "operation": "equals",
+                  "name": "filter.operator.equals"
+                }
+              }
+            ],
+            "combinator": "and"
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2.2,
+        "position": [
+          -352,
+          864
+        ],
+        "id": "23f6f936-cf5f-4a68-84fb-a565009887e7",
+        "name": "validamos si esta en telegram"
+      },
+      {
+        "parameters": {
+          "rules": {
+            "values": [
+              {
+                "conditions": {
+                  "options": {
+                    "caseSensitive": true,
+                    "leftValue": "",
+                    "typeValidation": "strict",
+                    "version": 2
+                  },
+                  "conditions": [
+                    {
+                      "leftValue": "={{ $json.id }}",
+                      "rightValue": 14,
+                      "operator": {
+                        "type": "number",
+                        "operation": "equals"
+                      },
+                      "id": "107b3698-e4e6-494e-979b-34477b8b23ce"
+                    }
+                  ],
+                  "combinator": "and"
+                },
+                "renameOutput": true,
+                "outputKey": "marIA"
+              },
+              {
+                "conditions": {
+                  "options": {
+                    "caseSensitive": true,
+                    "leftValue": "",
+                    "typeValidation": "strict",
+                    "version": 2
+                  },
+                  "conditions": [
+                    {
+                      "id": "b4a2ab97-f35a-4a5d-bd5f-16cb5509339f",
+                      "leftValue": "={{ $json.id }}",
+                      "rightValue": 2,
+                      "operator": {
+                        "type": "number",
+                        "operation": "equals"
+                      }
+                    }
+                  ],
+                  "combinator": "and"
+                },
+                "renameOutput": true,
+                "outputKey": "Cantera RH"
+              },
+              {
+                "conditions": {
+                  "options": {
+                    "caseSensitive": true,
+                    "leftValue": "",
+                    "typeValidation": "strict",
+                    "version": 2
+                  },
+                  "conditions": [
+                    {
+                      "id": "900cc810-8bb8-4509-926b-85f910eab0ec",
+                      "leftValue": "={{ $json.id }}",
+                      "rightValue": 15,
+                      "operator": {
+                        "type": "number",
+                        "operation": "equals"
+                      }
+                    }
+                  ],
+                  "combinator": "and"
+                },
+                "renameOutput": true,
+                "outputKey": "Añex"
+              },
+              {
+                "conditions": {
+                  "options": {
+                    "caseSensitive": true,
+                    "leftValue": "",
+                    "typeValidation": "strict",
+                    "version": 2
+                  },
+                  "conditions": [
+                    {
+                      "id": "7d5e44a9-e610-417a-b220-409c8c82f873",
+                      "leftValue": "={{ $json.id }}",
+                      "rightValue": 27,
+                      "operator": {
+                        "type": "number",
+                        "operation": "equals"
+                      }
+                    }
+                  ],
+                  "combinator": "and"
+                },
+                "renameOutput": true,
+                "outputKey": "canon"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.switch",
+        "typeVersion": 3.2,
+        "position": [
+          -1696,
+          192
+        ],
+        "id": "374f83a7-5da5-4c00-ab6a-f3f1233ad963",
+        "name": "que agente es"
+      },
+      {
+        "parameters": {
+          "chatId": "={{ $('Edit Fields').item.json.body.number }}",
+          "text": "={{ $('Edit Fields').item.json.body.mensaje }}",
+          "additionalFields": {
+            "appendAttribution": false
+          }
+        },
+        "type": "n8n-nodes-base.telegram",
+        "typeVersion": 1.2,
+        "position": [
+          -1472,
+          128
+        ],
+        "id": "16a9a8b6-31d5-419a-8c8e-059e78dec730",
+        "name": "cantera rh",
+        "webhookId": "c27c202d-f74c-414a-b350-eda0dd015e1a",
+        "credentials": {
+          "telegramApi": {
+            "id": "rcqJFeNHCdILlLRP",
+            "name": "Telegram RRHH cantera"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "chatId": "={{ $('Edit Fields').item.json.body.number }}",
+          "text": "={{ $('Edit Fields').item.json.body.mensaje }}",
+          "additionalFields": {
+            "appendAttribution": false
+          }
+        },
+        "type": "n8n-nodes-base.telegram",
+        "typeVersion": 1.2,
+        "position": [
+          -1472,
+          -64
+        ],
+        "id": "6c1be023-70a3-4c55-bf6b-db3f35fdcc03",
+        "name": "marIA agente",
+        "webhookId": "c27c202d-f74c-414a-b350-eda0dd015e1a",
+        "credentials": {
+          "telegramApi": {
+            "id": "egXhGupjdcAJBR5F",
+            "name": "Telegram marIA asistente"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "respondWith": "json",
+          "responseBody": "={\n  \"status\":\"success\",\n  \"code\":200,\n  \"message\": \"mensaje enviado correctamente\"\n}",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.respondToWebhook",
+        "typeVersion": 1.4,
+        "position": [
+          544,
+          928
+        ],
+        "id": "435a1dca-a66e-414d-9d3f-41df7cb8a835",
+        "name": "Respond to Webhook1"
+      },
+      {
+        "parameters": {
+          "chatId": "={{ $('Edit Fields').item.json.body.number }}",
+          "text": "={{ $('Edit Fields').item.json.body.mensaje }}",
+          "additionalFields": {
+            "appendAttribution": false
+          }
+        },
+        "type": "n8n-nodes-base.telegram",
+        "typeVersion": 1.2,
+        "position": [
+          -1472,
+          320
+        ],
+        "id": "2c1ee0b7-d449-4f58-a746-92b127551fbc",
+        "name": "cantera rh1",
+        "webhookId": "c27c202d-f74c-414a-b350-eda0dd015e1a",
+        "credentials": {
+          "telegramApi": {
+            "id": "Q6LlLbjeWbLhcdok",
+            "name": "Telegram account - Agente conversacional cantera"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "chatId": "={{ $('Edit Fields').item.json.body.number }}",
+          "text": "={{ $('Edit Fields').item.json.body.mensaje }}",
+          "additionalFields": {
+            "appendAttribution": false
+          }
+        },
+        "type": "n8n-nodes-base.telegram",
+        "typeVersion": 1.2,
+        "position": [
+          -1472,
+          512
+        ],
+        "id": "5ef8101b-4de4-4870-869d-2cc4836413fb",
+        "name": "canon",
+        "webhookId": "c27c202d-f74c-414a-b350-eda0dd015e1a",
+        "credentials": {
+          "telegramApi": {
+            "id": "M4yT4PHnQvsP26j3",
+            "name": "Demo_Canon"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "httpMethod": "POST",
+          "path": "send/documents",
+          "responseMode": "responseNode",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.webhook",
+        "typeVersion": 2.1,
+        "position": [
+          -1696,
+          928
+        ],
+        "id": "cb45d6cb-6ac2-41ec-a7bc-3b14d5d42e77",
+        "name": "Webhook",
+        "webhookId": "819fc186-b3f3-456c-9672-87939c244bef"
+      },
+      {
+        "parameters": {
+          "operation": "get",
+          "tableId": "project",
+          "filters": {
+            "conditions": [
+              {
+                "keyName": "id",
+                "keyValue": "={{ $json.body.project_id }}"
+              }
+            ]
+          }
+        },
+        "type": "n8n-nodes-base.supabase",
+        "typeVersion": 1,
+        "position": [
+          -1472,
+          784
+        ],
+        "id": "072574a0-263e-4d5b-9625-2079bca3d09f",
+        "name": "Get a row",
+        "credentials": {
+          "supabaseApi": {
+            "id": "ty0KiXsEYP1uJ8t9",
+            "name": "Supabase account - CANTERA"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "mode": "combine",
+          "combineBy": "combineByPosition",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.merge",
+        "typeVersion": 3.2,
+        "position": [
+          -1248,
+          864
+        ],
+        "id": "e2299160-9267-4451-9001-63a1700b7c9f",
+        "name": "Merge"
+      },
+      {
+        "parameters": {
+          "inputDataFieldName": "document",
+          "name": "={{ $('Webhook').item.json.body.contact_id }}-{{ $('Webhook').item.json.body.project_id }}-{{ $('Webhook').item.json.body.number }}-{{ $now }}-{{ $binary.document.fileName }}",
+          "driveId": {
+            "__rl": true,
+            "value": "={{ $('Get a row').item.json.google_drive_folder_id }}",
+            "mode": "id"
+          },
+          "folderId": {
+            "__rl": true,
+            "value": "={{ $('Get a row').item.json.google_drive_folder_id }}",
+            "mode": "id"
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleDrive",
+        "typeVersion": 3,
+        "position": [
+          -1024,
+          864
+        ],
+        "id": "c1270d8c-22f8-4edb-9018-35162ecd37cd",
+        "name": "Upload file",
+        "credentials": {
+          "googleDriveOAuth2Api": {
+            "id": "PKQpxniTUryv7dE9",
+            "name": "Google Drive account - DRIVE CANTERA"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "rules": {
+            "values": [
+              {
+                "conditions": {
+                  "options": {
+                    "caseSensitive": true,
+                    "leftValue": "",
+                    "typeValidation": "strict",
+                    "version": 2
+                  },
+                  "conditions": [
+                    {
+                      "leftValue": "={{ $binary.document.fileExtension.toLowerCase() }}",
+                      "rightValue": "^(pdf|doc|docx|xls|xlsx|ppt|pptx|txt|csv)$",
+                      "operator": {
+                        "type": "string",
+                        "operation": "regex"
+                      },
+                      "id": "4eff407c-7cd6-4af8-ac7e-2dd2bf0c8124"
+                    }
+                  ],
+                  "combinator": "and"
+                },
+                "renameOutput": true,
+                "outputKey": "documento"
+              },
+              {
+                "conditions": {
+                  "options": {
+                    "caseSensitive": true,
+                    "leftValue": "",
+                    "typeValidation": "strict",
+                    "version": 2
+                  },
+                  "conditions": [
+                    {
+                      "id": "9f28ccd4-b0a6-4fec-8972-817fd11d0b13",
+                      "leftValue": "={{ $binary.document.fileExtension.toLowerCase() }}",
+                      "rightValue": "^(jpg|jpeg|png|webp|gif|bmp|tiff)$",
+                      "operator": {
+                        "type": "string",
+                        "operation": "regex"
+                      }
+                    }
+                  ],
+                  "combinator": "and"
+                },
+                "renameOutput": true,
+                "outputKey": "imagen"
+              },
+              {
+                "conditions": {
+                  "options": {
+                    "caseSensitive": true,
+                    "leftValue": "",
+                    "typeValidation": "strict",
+                    "version": 2
+                  },
+                  "conditions": [
+                    {
+                      "id": "a8081c6a-7d1c-4998-8875-a77994367ac7",
+                      "leftValue": "={{ $binary.document.fileExtension.toLowerCase() }}",
+                      "rightValue": "^(mp4|3gp|mov|avi|mkv|webm)$",
+                      "operator": {
+                        "type": "string",
+                        "operation": "regex"
+                      }
+                    }
+                  ],
+                  "combinator": "and"
+                },
+                "renameOutput": true,
+                "outputKey": "video"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.switch",
+        "typeVersion": 3.3,
+        "position": [
+          96,
+          912
+        ],
+        "id": "b910858b-cec0-47db-b99b-b5c4f7505241",
+        "name": "Switch"
+      },
+      {
+        "parameters": {
+          "mode": "combine",
+          "combineBy": "combineByPosition",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.merge",
+        "typeVersion": 3.2,
+        "position": [
+          -128,
+          928
+        ],
+        "id": "924a629c-58ff-4a38-a364-facd3309a71d",
+        "name": "Merge1"
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "=https://graph.facebook.com/v22.0/{{ $('obtenemos datos del poryecto').first().json.phone_number_id }}/messages",
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "Authorization",
+                "value": "=Bearer {{ $('obtenemos datos del poryecto').first().json.token}}"
+              },
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              }
+            ]
+          },
+          "sendBody": true,
+          "specifyBody": "json",
+          "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('Webhook').item.json.body.number }}\",\n  \"type\": \"document\",\n  \"document\": {\n    \"link\": \"{{ $('Upload file').item.json.webContentLink }}\",\n    \"filename\": \"{{ $binary.document.fileName }}\"\n  }\n}",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          320,
+          736
+        ],
+        "id": "516c4a06-a4e0-49a8-affa-8d48e6a484a9",
+        "name": "enviar documento"
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "=https://graph.facebook.com/v22.0/{{ $('obtenemos datos del poryecto').first().json.phone_number_id }}/messages",
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "Authorization",
+                "value": "=Bearer {{ $('obtenemos datos del poryecto').first().json.token}}"
+              },
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              }
+            ]
+          },
+          "sendBody": true,
+          "specifyBody": "json",
+          "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('Webhook').item.json.body.number }}\",\n  \"type\": \"image\",\n  \"image\": {\n    \"link\": \"{{ $('Upload file').item.json.webContentLink }}\"\n  }\n}",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          320,
+          928
+        ],
+        "id": "0b134314-32c4-49e6-a8be-e9663a736a89",
+        "name": "enviar imagen"
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "=https://graph.facebook.com/v22.0/{{ $('obtenemos datos del poryecto').first().json.phone_number_id }}/messages",
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "Authorization",
+                "value": "=Bearer {{ $('obtenemos datos del poryecto').first().json.token}}"
+              },
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              }
+            ]
+          },
+          "sendBody": true,
+          "specifyBody": "json",
+          "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('Webhook').item.json.body.number }}\",\n  \"type\": \"video\",\n  \"video\": {\n    \"link\": \"{{ $('Upload file').item.json.webContentLink }}\"\n  }\n}",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          320,
+          1120
+        ],
+        "id": "ec47399c-bb5a-42ad-86c7-476159a41a2a",
+        "name": "enviar video"
+      }
+    ],
+    "connections": {
+      "Execute Workflow": {
+        "main": [
+          [
+            {
+              "node": "obtenemos datos del poryecto",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "obtenemos datos del poryecto": {
+        "main": [
+          [
+            {
+              "node": "validamos si esta en telegram",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "validamos si esta en telegram": {
+        "main": [
+          [],
+          [
+            {
+              "node": "Merge1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "que agente es": {
+        "main": [
+          [
+            {
+              "node": "marIA agente",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "cantera rh",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "cantera rh1",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "canon",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "cantera rh": {
+        "main": [
+          [
+            {
+              "node": "Respond to Webhook",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "marIA agente": {
+        "main": [
+          [
+            {
+              "node": "Respond to Webhook",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "cantera rh1": {
+        "main": [
+          [
+            {
+              "node": "Respond to Webhook",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "canon": {
+        "main": [
+          [
+            {
+              "node": "Respond to Webhook",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Webhook": {
+        "main": [
+          [
+            {
+              "node": "Get a row",
+              "type": "main",
+              "index": 0
+            },
+            {
+              "node": "Merge",
+              "type": "main",
+              "index": 1
+            },
+            {
+              "node": "Merge1",
+              "type": "main",
+              "index": 1
+            }
+          ]
+        ]
+      },
+      "Get a row": {
+        "main": [
+          [
+            {
+              "node": "Merge",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Merge": {
+        "main": [
+          [
+            {
+              "node": "Upload file",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Upload file": {
+        "main": [
+          [
+            {
+              "node": "Execute Workflow",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Switch": {
+        "main": [
+          [
+            {
+              "node": "enviar documento",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "enviar imagen",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "enviar video",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Merge1": {
+        "main": [
+          [
+            {
+              "node": "Switch",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "enviar documento": {
+        "main": [
+          [
+            {
+              "node": "Respond to Webhook1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "enviar imagen": {
+        "main": [
+          [
+            {
+              "node": "Respond to Webhook1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "enviar video": {
+        "main": [
+          [
+            {
+              "node": "Respond to Webhook1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "authors": "CANTERA ADMIN",
+    "name": null,
+    "description": null
+  }
 }
