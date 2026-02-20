@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-02-20T05:10:01.000Z",
+  "updatedAt": "2026-02-20T06:07:07.000Z",
   "createdAt": "2025-11-06T22:32:36.707Z",
   "id": "5TA7GPdM66ClKALh",
   "name": "cambio ststua y notificacion",
@@ -26,7 +26,7 @@
       "typeVersion": 1.1,
       "position": [
         0,
-        -72
+        8
       ],
       "id": "de9164ce-fb5f-4ece-bc0d-ba214572e6db",
       "name": "When Executed by Another Workflow"
@@ -60,7 +60,7 @@
       "typeVersion": 2.2,
       "position": [
         224,
-        -72
+        8
       ],
       "id": "fef9b009-bc14-4af4-b266-3ceccee72f1e",
       "name": "If"
@@ -95,7 +95,7 @@
       "typeVersion": 1,
       "position": [
         448,
-        120
+        200
       ],
       "id": "7f329073-467e-458f-85c6-42a13672a233",
       "name": "Update a row",
@@ -130,6 +130,10 @@
             {
               "fieldId": "accion",
               "fieldValue": "chats"
+            },
+            {
+              "fieldId": "contact_id",
+              "fieldValue": "={{ $('When Executed by Another Workflow').item.json.contact_id }}"
             }
           ]
         }
@@ -138,7 +142,7 @@
       "typeVersion": 1,
       "position": [
         672,
-        120
+        200
       ],
       "id": "ee9ad87e-1759-4eed-afc1-3d14fa550a65",
       "name": "Create a row",
@@ -175,7 +179,7 @@
       "typeVersion": 1,
       "position": [
         448,
-        -288
+        -208
       ],
       "id": "e3037e87-fa4b-4943-92bd-06878953eb07",
       "name": "Update a row1",
@@ -210,6 +214,10 @@
             {
               "fieldId": "accion",
               "fieldValue": "chats"
+            },
+            {
+              "fieldId": "contact_id",
+              "fieldValue": "={{ $('When Executed by Another Workflow').item.json.contact_id }}"
             }
           ]
         }
@@ -218,7 +226,7 @@
       "typeVersion": 1,
       "position": [
         672,
-        -288
+        -208
       ],
       "id": "42f76057-0cc0-425c-96f5-e2646ef416b7",
       "name": "Create a row1",
@@ -231,9 +239,37 @@
     },
     {
       "parameters": {
+        "method": "POST",
+        "url": "=https://fcm.googleapis.com/v1/projects/adminagents-8a1bf/messages:send",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleApi",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"message\": {\n    \"token\": \"{{ $json.fcm_token }}\",\n    \"notification\": {\n      \"title\": \"Nueva conversación\",\n      \"body\": \"{{ $('Create a row').item.json.description }}\"\n    },\n    \"data\": {\n      \"contact_id\": \"{{ $('When Executed by Another Workflow').item.json.contact_id }}\",\n      \"prioridad\": \"alta\"\n    }\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        1792,
+        200
+      ],
+      "id": "8db2a9ac-0702-44d6-8a19-8cffefff42d8",
+      "name": "HTTP Request",
+      "credentials": {
+        "googleApi": {
+          "id": "TmgMNLKdzo0i1vv3",
+          "name": "firebase autentication"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
         "operation": "getAll",
         "tableId": "clientes_projectos",
         "returnAll": true,
+        "matchType": "allFilters",
         "filters": {
           "conditions": [
             {
@@ -248,9 +284,9 @@
       "typeVersion": 1,
       "position": [
         896,
-        120
+        200
       ],
-      "id": "6ff79114-3001-4a8d-98cc-1497b9d69fd9",
+      "id": "fa277327-34b1-4d79-ba0a-f52f7f245753",
       "name": "Get many rows",
       "credentials": {
         "supabaseApi": {
@@ -267,9 +303,9 @@
       "typeVersion": 3,
       "position": [
         1120,
-        120
+        200
       ],
-      "id": "9d34519b-eb79-4492-866c-8bf70949f3f0",
+      "id": "5028e9e6-ba75-4127-843c-e1f562952a65",
       "name": "Loop Over Items"
     },
     {
@@ -289,9 +325,9 @@
       "typeVersion": 1,
       "position": [
         1344,
-        -24
+        56
       ],
-      "id": "689fa659-baa4-40d8-a7bf-c27a4247c7be",
+      "id": "8257c3b6-36f1-4795-9b97-ce5bcf5c72e1",
       "name": "Get a row",
       "credentials": {
         "supabaseApi": {
@@ -302,69 +338,37 @@
     },
     {
       "parameters": {
-        "conditions": {
-          "options": {
-            "caseSensitive": true,
-            "leftValue": "",
-            "typeValidation": "strict",
-            "version": 2
-          },
-          "conditions": [
-            {
-              "id": "4b1802ec-7124-485e-861d-2516d0e415db",
-              "leftValue": "={{ $json.fcm_token }}",
-              "rightValue": "",
-              "operator": {
-                "type": "string",
-                "operation": "notEmpty",
-                "singleValue": true
-              }
-            }
-          ],
-          "combinator": "and"
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 2.2,
-      "position": [
-        1568,
-        48
-      ],
-      "id": "c4ea27bc-0246-4233-b412-6ce116dd4bc9",
-      "name": "If1"
-    },
-    {
-      "parameters": {
         "method": "POST",
-        "url": "https://fcm.googleapis.com/v1/projects/adminagents-8a1bf/messages:send",
+        "url": "=https://fcm.googleapis.com/v1/projects/adminagents-8a1bf/messages:send",
         "authentication": "predefinedCredentialType",
         "nodeCredentialType": "googleApi",
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"message\": {\n    \"token\": \"{{ $json.fcm_token }}\",\n    \"notification\": {\n      \"title\": \"{{ $('Create a row').item.json.title }}\",\n      \"body\": \"{{ $('Create a row').item.json.description }}\"\n    },\n    \"data\": {\n      \"contact_id\": \"{{ $('Update a row').item.json.id }}\",\n      \"prioridad\": \"alta\"\n    }\n  }\n}",
+        "jsonBody": "={\n  \"message\": {\n    \"token\": \"{{ $json.fcm_token }}\",\n    \"notification\": {\n      \"title\": \"Nueva conversación\",\n      \"body\": \"{{ $('Create a row1').item.json.description }}\"\n    },\n    \"data\": {\n      \"contact_id\": \"{{ $('When Executed by Another Workflow').item.json.contact_id }}\",\n      \"prioridad\": \"alta\"\n    }\n  }\n}",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.3,
       "position": [
         1792,
-        120
+        -208
       ],
-      "id": "74eaf3e5-d76e-4a52-9a2a-0ddb12556f2e",
-      "name": "HTTP Request",
+      "id": "96d4ddb7-a6df-45c9-9a1a-366481142f3b",
+      "name": "HTTP Request1",
       "credentials": {
         "googleApi": {
-          "id": "zC8nukqLPEoQJUzK",
-          "name": "Google Service Account firebase dashboard agentes"
+          "id": "TmgMNLKdzo0i1vv3",
+          "name": "firebase autentication"
         }
-      }
+      },
+      "onError": "continueRegularOutput"
     },
     {
       "parameters": {
         "operation": "getAll",
         "tableId": "clientes_projectos",
         "returnAll": true,
+        "matchType": "allFilters",
         "filters": {
           "conditions": [
             {
@@ -379,9 +383,9 @@
       "typeVersion": 1,
       "position": [
         896,
-        -288
+        -208
       ],
-      "id": "60599da7-8b9f-4cdd-93ab-cecc6eff0e84",
+      "id": "e9c7560f-2664-455e-bee0-7c90094df3e5",
       "name": "Get many rows1",
       "credentials": {
         "supabaseApi": {
@@ -398,9 +402,9 @@
       "typeVersion": 3,
       "position": [
         1120,
-        -288
+        -208
       ],
-      "id": "15c5331f-6f67-4c9e-9ee0-f1d7744ae6e0",
+      "id": "b33de6bc-0afa-4e3e-9a86-3effbd8ea386",
       "name": "Loop Over Items1"
     },
     {
@@ -420,9 +424,9 @@
       "typeVersion": 1,
       "position": [
         1344,
-        -432
+        -352
       ],
-      "id": "ec528ed4-e8a7-4ad0-8f79-3eac984d28eb",
+      "id": "3a87ec6c-83f0-4be2-a610-a6a9c7a3e31a",
       "name": "Get a row1",
       "credentials": {
         "supabaseApi": {
@@ -442,7 +446,7 @@
           },
           "conditions": [
             {
-              "id": "4b1802ec-7124-485e-861d-2516d0e415db",
+              "id": "506c5025-47ef-476c-958d-3014218fa158",
               "leftValue": "={{ $json.fcm_token }}",
               "rightValue": "",
               "operator": {
@@ -460,36 +464,44 @@
       "typeVersion": 2.2,
       "position": [
         1568,
-        -360
+        128
       ],
-      "id": "9920c673-9668-4b5d-b772-7bb184b6d375",
-      "name": "If2"
+      "id": "211c82aa-4043-4b10-aafa-98134974c980",
+      "name": "If1"
     },
     {
       "parameters": {
-        "method": "POST",
-        "url": "https://fcm.googleapis.com/v1/projects/adminagents-8a1bf/messages:send",
-        "authentication": "predefinedCredentialType",
-        "nodeCredentialType": "googleApi",
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={\n  \"message\": {\n    \"token\": \"{{ $json.fcm_token }}\",\n    \"notification\": {\n      \"title\": \"{{ $('Create a row1').item.json.title }}\",\n      \"body\": \"{{ $('Create a row1').item.json.description }}\"\n    },\n    \"data\": {\n      \"contact_id\": \"{{ $('Update a row1').item.json.id }}\",\n      \"prioridad\": \"alta\"\n    }\n  }\n}",
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "506c5025-47ef-476c-958d-3014218fa158",
+              "leftValue": "={{ $json.fcm_token }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
         "options": {}
       },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.3,
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
       "position": [
-        1792,
-        -288
+        1568,
+        -280
       ],
-      "id": "0b6fd5ac-bf04-42ca-8815-11167b911def",
-      "name": "HTTP Request1",
-      "credentials": {
-        "googleApi": {
-          "id": "zC8nukqLPEoQJUzK",
-          "name": "Google Service Account firebase dashboard agentes"
-        }
-      }
+      "id": "1c5d41a5-4ae7-426a-8d87-992e525df96c",
+      "name": "If2"
     }
   ],
   "connections": {
@@ -600,18 +612,22 @@
         ]
       ]
     },
-    "If1": {
+    "HTTP Request": {
       "main": [
         [
           {
-            "node": "HTTP Request",
+            "node": "Loop Over Items",
             "type": "main",
             "index": 0
           }
-        ],
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
         [
           {
-            "node": "Loop Over Items",
+            "node": "Loop Over Items1",
             "type": "main",
             "index": 0
           }
@@ -652,6 +668,24 @@
         ]
       ]
     },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
     "If2": {
       "main": [
         [
@@ -664,28 +698,6 @@
         [
           {
             "node": "Loop Over Items1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "HTTP Request1": {
-      "main": [
-        [
-          {
-            "node": "Loop Over Items1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "HTTP Request": {
-      "main": [
-        [
-          {
-            "node": "Loop Over Items",
             "type": "main",
             "index": 0
           }
@@ -710,9 +722,9 @@
       }
     ]
   },
-  "versionId": "b01bc9e8-6426-45a2-b410-20d2db116d16",
+  "versionId": "be9bfce8-5995-43a1-9eed-72d624bb8bed",
   "activeVersionId": null,
-  "versionCounter": 4,
+  "versionCounter": 6,
   "triggerCount": 0,
   "shared": [
     {
