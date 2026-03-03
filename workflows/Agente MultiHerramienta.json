@@ -1,0 +1,1318 @@
+{
+  "updatedAt": "2026-03-03T01:25:28.000Z",
+  "createdAt": "2026-03-03T01:20:00.866Z",
+  "id": "7e8BytkZezISdom2",
+  "name": "Agente MultiHerramienta",
+  "description": null,
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1_GBfXKFC_0YS9rJBIvt1rGnBl7LI_HbkRHHt1YJLT4s",
+          "mode": "list",
+          "cachedResultName": "Estado Glassy",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1_GBfXKFC_0YS9rJBIvt1rGnBl7LI_HbkRHHt1YJLT4s/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "estados",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1_GBfXKFC_0YS9rJBIvt1rGnBl7LI_HbkRHHt1YJLT4s/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "user_id",
+              "lookupValue": "={{ $json.message.chat.id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -1200,
+        288
+      ],
+      "id": "049efab4-5109-4b23-ba9b-1600818ef3bb",
+      "name": "Get row(s) in sheet",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Vg1ihuXHaIOWrqDt",
+          "name": "Google Sheets Aaron Permanentes"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "object",
+                      "operation": "empty",
+                      "singleValue": true
+                    },
+                    "id": "80accf27-7449-4d22-b011-fb43e9d81344"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Sin estado"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "e1bf906f-3435-4a68-8dfd-09e3745da04a",
+                    "leftValue": "={{ $json.current_state }}",
+                    "rightValue": "COTIZACION",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "cotización"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.3,
+      "position": [
+        -992,
+        288
+      ],
+      "id": "804e1523-f257-403b-9d10-0c411988468e",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "inputText": "={{ $('Telegram Trigger').item.json.message.text }}",
+        "categories": {
+          "categories": [
+            {
+              "category": "Saludo",
+              "description": "El usuario solo esta saludando"
+            },
+            {
+              "category": "Cotización",
+              "description": "El usuario quiere una cotización de algun producto"
+            }
+          ]
+        },
+        "options": {
+          "fallback": "other"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.textClassifier",
+      "typeVersion": 1.1,
+      "position": [
+        -576,
+        192
+      ],
+      "id": "5a99d279-2447-4009-9d5b-dff3b10ef1c4",
+      "name": "Text Classifier"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "responsesApiEnabled": false,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        -432,
+        352
+      ],
+      "id": "aa7b2e9a-3687-4dbe-8293-aeee8f1fcf7c",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "zZlJrTGKq8KER7gD",
+          "name": "OpenAi account - GLASSY"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('Telegram Trigger').first().json.message.text }}",
+        "options": {
+          "systemMessage": "=# Misión y Perfil del Agente\n\n- **Nombre del Agente:** Glassy\n- **Personalidad:** Eres un asistente virtual amable, amigable, servicial y muy profesional. Tu objetivo es ayudar a los usuarios de Glasbil.\n- **Nombre del Usuario:** {{ $('Telegram Trigger').item.json.message.from.first_name }}\n- **Fecha y Hora:** Hoy es `{{ $now.setZone('America/Mexico_City').setLocale('es').toFormat(\"dd 'de' LLLL 'de' yyyy HH:mm:ss\") }}`.\n\n---\n\n# Directivas de Comportamiento\n\n**REGLA FUNDAMENTAL - PROHIBIDO INVENTAR INFORMACIÓN:**\nToda la información que proporciones al usuario DEBE provenir exclusivamente de tus herramientas (`kb_glasbil`, `codigos_postales`, `agente_registro`, `agente_cotizzacion`, `agente_filtrador`, `agente_correo`, `tool_detalle_producto`, `tool_info_aditamento`). Tu base de conocimiento se accede a través de la herramienta `kb_glasbil`. **ESTÁ ABSOLUTAMENTE PROHIBIDO inventar, suponer, asumir o generar información que no provenga directamente de estas herramientas**. Si no tienes información disponible en tus herramientas, debes informar al usuario que no cuentas con esa información y ofrecer los canales de contacto (Fallback). Nunca completes respuestas con información que no hayas obtenido de tus herramientas oficiales.\n\n1.  **Inicio de Conversación:** Al comenzar una nueva interacción, tu **primer** mensaje debe ser siempre saludar al usuario por su nombre usando la variable `{{ $('Telegram Trigger').item.json.message.from.first_name }}`. Si el usuario no ha solicitado un servicio específico, pregunta en qué puedes ayudar y muestra la siguiente lista de servicios disponibles:\n    * **Proporcionar Información acerca de Glasbil:** Puedo ayudarte con información sobre nuestros productos, horarios de atención, ubicación de sucursales, política de devolución, historia de la empresa, preguntas frecuentes, entre otros.\n    * **Realizar una cotización:** Te guío paso a paso para obtener el precio de un cristal para tu vehículo.\n    \n    **Ejemplo de mensaje inicial:** \"¡Hola {{ $('Telegram Trigger').item.json.message.from.first_name }}! Soy Glassy, tu asistente virtual de Glasbil. ¿En qué puedo ayudarte hoy?\n\n📋 Puedo ayudarte con:\n• **Información sobre Glasbil** (Descripción de aditamentos, horarios, ubicación, políticas, etc.)\n• **Cotización de cristales** para tu vehículo\"\n\n2. **Registro de interacción inicial:** Una vez que el usuario solicite un servicio específico (información o cotización), tu proceso interno **OBLIGATORIO** es el siguiente:\n        1.  **Llamada a Herramienta:** Antes de procesar la solicitud del usuario, tu primera acción debe ser llamar a la herramienta `agente_registro`.\n            * **Acción:** Llama a `agente_registro` con la consulta: `Registrar contacto. ChatId: {{ $('Telegram Trigger').item.json.message.from.id }}. Nombre: {{ $('Telegram Trigger').item.json.message.from.first_name }}. Solicitud: [la solicitud completa del usuario]`.\n\n3.  **Herramientas Disponibles:** Tienes acceso a las siguientes herramientas: `kb_glasbil`, `codigos_postales`, `agente_registro`, `agente_cotizzacion`, `agente_filtrador`, `agente_correo`, `tool_detalle_producto`, `tool_info_aditamento`, `tool_filtro_aditamentos`.\n\n4.  **Ámbito de Conocimiento:** Tu conocimiento se limita estrictamente a los siguientes temas. Utiliza la herramienta `kb_glasbil` para responder:\n    * Descripción de aditamentos\n    * Proceso de compra\n    * Horarios de atención\n    * Artículo para medios\n    * Historia de Glasbil\n    * Política de devolución\n    * Glosario\n    * Preguntas frecuentes\n\n5.  **Consulta Automática del Glosario:** Cuando el usuario pregunte por el significado, definición o explicación de términos técnicos relacionados con cristales automotrices, debes consultar automáticamente el glosario usando la herramienta `kb_glasbil`. Esto incluye preguntas como:\n    * \"¿Qué es...?\" seguido de un término técnico\n    * \"¿Qué significa...?\"\n    * \"Define...\" o \"Explícame...\"\n    * \"¿Para qué sirve...?\" referido a componentes o aditamentos\n    * **Acción:** Antes de responder, usa `kb_glasbil` con la consulta: `Consultar glosario para el término: [término mencionado por el usuario]`\n    * Si el término no se encuentra en el glosario, responde amablemente que no tienes información sobre ese tema y proporciona inmediatamente las opciones de contacto.\n\n6.  **Manejo de Información de Herramientas:** Cuando uses una herramienta (`kb_glasbil`, `codigos_postales`), indica al usuario que estás consultando la información. No leas la información textualmente; procesa y preséntala de forma clara y reformulada.\n\n7.  **Regla de Sustitución:** Siempre que encuentres la frase \"Recoger en Butik Morelia\" en la información de tus herramientas, debes cambiarla por \"Recoger en sucursal Butik Morelia\" en tu respuesta al usuario.\n\n8.  **Servicio a Domicilio y Códigos Postales:**\n    * Si el usuario pregunta genéricamente por tus servicios, describe los servicios principales (instalación, reparación) basándote en `kb_glasbil` **sin** mencionar los códigos postales.\n    * **ÚNICAMENTE** si el usuario pregunta explícitamente por \"instalación a domicilio\", \"cobertura\", \"zonas de servicio\" o un código postal específico, debes usar la herramienta `codigos_postales`.\n    * Al usar `codigos_postales`, presenta la lista completa de zonas y códigos postales cubiertos. No uses frases como \"entre otros\".\n\n9.  **Instalaciones y Reparaciones:**\n    * **Instalaciones:** Aclara que se realizan en la sucursal de Morelia y a domicilio, pero esto último solo dentro de la zona de cobertura que puedes consultar con tu herramienta `codigos_postales`.\n    * **Reparaciones (Daños, Grietas, Rayones):** Informa al usuario que para una reparación se requiere la valoración de un experto. Anímale a agendar una cita o solicitar más información a través de los canales de contacto. Ofrécele iniciar un proceso de cotización para su vehículo.\n\n10. **Productos y Servicios NO Disponibles:** Si el usuario pregunta por alguno de los siguientes productos o servicios, responde amablemente que Glasbil no los ofrece y proporciona inmediatamente las opciones de contacto:\n    * Pulido de parabrisas\n    * Líquidos o jabones para protección de parabrisas\n    * Retrovisores\n    * Limpia parabrisas\n    * Plásticos de las puertas\n    * Polarizados\n    * Elevadores\n    * **Respuesta sugerida:** \"Te agradezco tu consulta, pero lamentablemente ese producto/servicio no lo ofrecemos en Glasbil.\"\n\n11. **Manejo de Preguntas Fuera de Alcance:** Si el usuario pregunta por algo fuera de tu ámbito de conocimiento (ej. llantas, temas no relacionados con Glasbil), responde con amabilidad que no tienes información sobre ese tema y proporciona inmediatamente las opciones de contacto.\n\n12. **Escalación y Canales de Contacto (Fallback):** Cuando no tengas la información, necesites una valoración experta, o el usuario lo solicite, ofrece de forma clara y ordenada los siguientes medios de contacto:\n    * **Visítanos en sucursal:** Luis de León Romano 70, Nueva Valladolid, 58190 Morelia, Mich., México.\n    * **Llámanos:** 33 2592 1314\n    * **Escríbenos un correo:** hola@glasbil.com\n    * **Visita nuestro sitio web:** glasbil.com\n    * **Obtén una cotización detallada en línea:** butik-vidrio-v2.canteradigital.mx\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -80,
+        -32
+      ],
+      "id": "045076ec-9f7a-4e3b-b065-0677b45ea6ef",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('Telegram Trigger').first().json.message.text }}",
+        "options": {
+          "systemMessage": "=# Misión y Perfil\n- **Nombre:** Glassy (Orquestador de Cotizaciones)\n- **Personalidad:** Amable, metódico y directo. Tu objetivo es recolectar datos básicos y servir de puente con el especialista en inventario.\n- **Usuario:** {{ $('Telegram Trigger').item.json.message.from.first_name }}\n\n# Regla de Oro: El Puente de Comunicación\nA partir del Paso 4, tú DELEGAS la inteligencia al `agente_filtrador`. \n1. Si el `agente_filtrador` devuelve una PREGUNTA: Transmítela tal cual al usuario y detente.\n2. Si el `agente_filtrador` devuelve una LISTA DE PRODUCTOS: Muéstralos al usuario para que elija.\n3. NO intentes adivinar filtros (ADAS, Sensores, etc.). Esa lógica solo la conoce el filtrador.\n\n# Flujo de Trabajo Obligatorio\n\n### Paso 1: Datos Base\nSolicita Año, Marca y Modelo del vehículo si no los tienes.\n\n### Paso 2: Tipo de Auto\n- Llama a `agente_cotizzacion` para obtener tipos de auto disponibles.\n- Muestra la lista y pide al usuario que elija uno.\n\n### Paso 3: Tipo de Cristal\n- Llama a `agente_cotizzacion` para obtener tipos de cristales.\n- Traduce los resultados (Windshield -> Parabrisas, etc.) para el usuario, pero **guarda el nombre en INGLÉS** internamente.\n\n### Paso 4: Delegación al Especialista (agente_filtrador)\n- Llama a `agente_filtrador` enviando: `año`, `marca`, `modelo`, `tipo_auto` y `tipo_cristal` (en inglés).\n- **SI EL AGENTE RESPONDE CON PREGUNTA:** Repítela al usuario. Cuando responda, llama de nuevo al `agente_filtrador` incluyendo la respuesta del usuario.\n- **SI EL AGENTE RESPONDE CON PRODUCTOS:** Presenta la lista con Nombre, NAG, Color, Características e Imagen.\n\n### Paso 5: Cierre de Venta\nUna vez elegido el producto:\n1. Pide Nombre, Teléfono, Correo y CP.\n2. Ejecuta `tool_detalle_producto` para obtener los IDs finales.\n3. Ejecuta `Consulta_Cotización` para generar el PDF.\n\n# Fallback\nSi en cualquier punto no hay resultados o hay un error, ofrece:\n- Sucursal: Luis de León Romano 70, Morelia.\n- Teléfono: 33 2592 1314."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        48,
+        576
+      ],
+      "id": "6ef48201-aec8-41b8-9406-7e42162eaf47",
+      "name": "AI Agent1"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        -160,
+        176
+      ],
+      "id": "2b6892ab-7f45-4435-bed0-9ff60a8ddfb8",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "zZlJrTGKq8KER7gD",
+          "name": "OpenAi account - GLASSY"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        -32,
+        752
+      ],
+      "id": "552b5680-64ef-4ff8-a0de-d6caf2a18731",
+      "name": "OpenAI Chat Model2",
+      "credentials": {
+        "openAiApi": {
+          "id": "zZlJrTGKq8KER7gD",
+          "name": "OpenAi account - GLASSY"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1_GBfXKFC_0YS9rJBIvt1rGnBl7LI_HbkRHHt1YJLT4s",
+          "mode": "list",
+          "cachedResultName": "Estado Glassy",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1_GBfXKFC_0YS9rJBIvt1rGnBl7LI_HbkRHHt1YJLT4s/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "estados",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1_GBfXKFC_0YS9rJBIvt1rGnBl7LI_HbkRHHt1YJLT4s/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "user_id": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+            "current_state": "COTIZACION",
+            "updated_at": "={{ $now.setZone('America/Mexico_City').setLocale('es').toFormat(\"dd 'de' LLLL 'de' yyyy HH:mm:ss\") }}"
+          },
+          "matchingColumns": [
+            "user_id"
+          ],
+          "schema": [
+            {
+              "id": "user_id",
+              "displayName": "user_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "current_state",
+              "displayName": "current_state",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "updated_at",
+              "displayName": "updated_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -224,
+        368
+      ],
+      "id": "013cf890-9135-441a-b7a4-4d05bae3edda",
+      "name": "Append or update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Vg1ihuXHaIOWrqDt",
+          "name": "Google Sheets Aaron Permanentes"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "description": "Tu eres el agente_cotizzacion y te encargas de consultar información a las APIs de Glasbil",
+        "workflowId": {
+          "__rl": true,
+          "value": "4QLd4KoP0XGafQmk",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/4QLd4KoP0XGafQmk",
+          "cachedResultName": "Agente cotizados glasbil dev"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        464,
+        848
+      ],
+      "id": "c619a223-e7a5-4e9b-8813-c7ac4f16d022",
+      "name": "agente_cotizzacion"
+    },
+    {
+      "parameters": {
+        "description": "Te llamas `agente_filtrador` te activas cuando se soliciten los productos para la cotización",
+        "workflowId": {
+          "__rl": true,
+          "value": "hqoczQMD5PHVvfTp",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/hqoczQMD5PHVvfTp",
+          "cachedResultName": "Agente Glassy Filtrador"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "query": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('query', ``, 'string') }}",
+            "chat_id": "={{ $('Telegram Trigger').first().json.message.chat.id }}"
+          },
+          "matchingColumns": [
+            "listado_productos"
+          ],
+          "schema": [
+            {
+              "id": "query",
+              "displayName": "query",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "chat_id",
+              "displayName": "chat_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        624,
+        848
+      ],
+      "id": "69ff3c50-2d24-47bb-b610-7c7b8d17dd01",
+      "name": "agente_filtrador"
+    },
+    {
+      "parameters": {
+        "description": "Tu eres el agente_registro y te encargas de registrar la interacción inicial del usuario",
+        "workflowId": {
+          "__rl": true,
+          "value": "tGwY3sT6JSe2WZWY",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/tGwY3sT6JSe2WZWY",
+          "cachedResultName": "Agente Glassy Registro Interacción"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        304,
+        848
+      ],
+      "id": "6ae380cb-3197-4e1f-8f11-db682a9a7bf1",
+      "name": "agente_registro"
+    },
+    {
+      "parameters": {
+        "description": "Eres la herramienta 'tool_aditamento'",
+        "workflowId": {
+          "__rl": true,
+          "value": "ir104SnH4pO2CQfF",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/ir104SnH4pO2CQfF",
+          "cachedResultName": "Información Aditamento"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "nombre_aditamento": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('nombre_aditamento', ``, 'string') }}",
+            "chat_id": "={{ $('Telegram Trigger').first().json.message.chat.id }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "chat_id",
+              "displayName": "chat_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "nombre_aditamento",
+              "displayName": "nombre_aditamento",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        976,
+        848
+      ],
+      "id": "3c1f5905-275f-49b1-a138-51490975cfa8",
+      "name": "tool_info_aditamento"
+    },
+    {
+      "parameters": {
+        "description": "Eres la herramienta 'tool_filtro_aditamentos'",
+        "workflowId": {
+          "__rl": true,
+          "value": "T1Ynurrox3CFhqVb",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/T1Ynurrox3CFhqVb",
+          "cachedResultName": "glassy filtro aditamentos"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "existe": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('existe', ``, 'boolean') }}",
+            "chat_id": "={{ $('Telegram Trigger').first().json.message.chat.id }}",
+            "aditamento": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('aditamento', ``, 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "chat_id",
+              "displayName": "chat_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "aditamento",
+              "displayName": "aditamento",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "existe",
+              "displayName": "existe",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "boolean",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        1168,
+        848
+      ],
+      "id": "be42ce7e-5e70-464d-a2a1-d2696c823e93",
+      "name": "tool_filtro_aditamentos"
+    },
+    {
+      "parameters": {
+        "description": "esta herramienta se usa para enviar una cotiación al usuario por pdf ",
+        "workflowId": {
+          "__rl": true,
+          "value": "uGyWVDjiEI6EAJUR",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/uGyWVDjiEI6EAJUR",
+          "cachedResultName": "Consulta Cotización"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "product_price": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('product_price', ``, 'number') }}",
+            "chat_id": "={{ $('Telegram Trigger').first().json.message.chat.id }}",
+            "client_name": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('client_name', ``, 'string') }}",
+            "client_email": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('client_email', ``, 'string') }}",
+            "postal_code": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('postal_code', ``, 'string') }}",
+            "brand": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('brand', ``, 'string') }}",
+            "model": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('model', ``, 'string') }}",
+            "year": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('year', ``, 'string') }}",
+            "car_type": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('car_type', ``, 'string') }}",
+            "glass_type": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('glass_type', ``, 'string') }}",
+            "product_external_id": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('product_external_id', ``, 'string') }}",
+            "product_name": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('product_name', ``, 'string') }}",
+            "product_origin": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('product_origin', ``, 'string') }}",
+            "product_nag": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('product_nag', ``, 'string') }}",
+            "client_phone": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('client_phone', ``, 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "chat_id",
+              "displayName": "chat_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "client_name",
+              "displayName": "client_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "client_phone",
+              "displayName": "client_phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "client_email",
+              "displayName": "client_email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "postal_code",
+              "displayName": "postal_code",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "brand",
+              "displayName": "brand",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "model",
+              "displayName": "model",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "year",
+              "displayName": "year",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "car_type",
+              "displayName": "car_type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "glass_type",
+              "displayName": "glass_type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "product_external_id",
+              "displayName": "product_external_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "product_name",
+              "displayName": "product_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "product_origin",
+              "displayName": "product_origin",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "product_nag",
+              "displayName": "product_nag",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "product_price",
+              "displayName": "product_price",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "number",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        1360,
+        848
+      ],
+      "id": "50b3c694-d0f4-4373-893d-12731ebc520f",
+      "name": "Consulta_Cotización"
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "tableId": "glassy_filtered_products",
+        "returnAll": true,
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "chat_id",
+              "condition": "eq",
+              "keyValue": "={{ $('Telegram Trigger').first().json.message.chat.id }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabaseTool",
+      "typeVersion": 1,
+      "position": [
+        784,
+        848
+      ],
+      "id": "b6067103-9677-4f06-830a-a213b20a20ac",
+      "name": "tool_detalle_producto",
+      "credentials": {
+        "supabaseApi": {
+          "id": "ty0KiXsEYP1uJ8t9",
+          "name": "Supabase account - CANTERA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Telegram Trigger').first().json.message.chat.id }}",
+        "tableName": "n8n_chat_histories_glassy_dev",
+        "contextWindowLength": 50
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "typeVersion": 1.3,
+      "position": [
+        128,
+        848
+      ],
+      "id": "6801a52e-369f-4e1b-a5ce-8e0157c56506",
+      "name": "Postgres Chat Memory",
+      "credentials": {
+        "postgres": {
+          "id": "CFNWnFQx8hqQIegZ",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1MdybkUkgnwvXUuGsbB2oNIUvkpGcyBw6RBvo199ZqK0",
+          "mode": "list",
+          "cachedResultName": "codigos postales atencion a clientes",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1MdybkUkgnwvXUuGsbB2oNIUvkpGcyBw6RBvo199ZqK0/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1MdybkUkgnwvXUuGsbB2oNIUvkpGcyBw6RBvo199ZqK0/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.5,
+      "position": [
+        160,
+        176
+      ],
+      "id": "10badc82-df3f-436a-a1c0-c193a9ee0a79",
+      "name": "codigos_postales",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "VrznAZQXjQh9WpvY",
+          "name": "Google Sheets - Cantera"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        368,
+        352
+      ],
+      "id": "e4402e69-17cf-4497-8a81-0a8b6a505369",
+      "name": "Embeddings OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "zZlJrTGKq8KER7gD",
+          "name": "OpenAi account - GLASSY"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "retrieve-as-tool",
+        "toolName": "kb_glasbil",
+        "toolDescription": "aqui tienes toda la información de glasbil como:\npolitica de devolucion\ninformacion de aditamentos\npreguntas frecuentes\ndatos de contacto\ndirecciones\nglosario de terminos\nentre mas información disponible",
+        "tableName": {
+          "__rl": true,
+          "value": "documents_glassy",
+          "mode": "list",
+          "cachedResultName": "documents_glassy"
+        },
+        "topK": 20,
+        "options": {
+          "queryName": "match_documents_glassy"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1.1,
+      "position": [
+        304,
+        176
+      ],
+      "id": "9691447f-0e49-42f0-bd2a-d9e13294984c",
+      "name": "kb_glasbil",
+      "credentials": {
+        "supabaseApi": {
+          "id": "ty0KiXsEYP1uJ8t9",
+          "name": "Supabase account - CANTERA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Telegram Trigger').first().json.message.chat.id }}",
+        "tableName": "n8n_chat_histories_glassy_dev",
+        "contextWindowLength": 50
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "typeVersion": 1.3,
+      "position": [
+        0,
+        176
+      ],
+      "id": "ab995658-110a-45a9-8d9f-30be28750e80",
+      "name": "Postgres Chat Memory1",
+      "credentials": {
+        "postgres": {
+          "id": "CFNWnFQx8hqQIegZ",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -1424,
+        288
+      ],
+      "id": "103e9aef-fa6b-40a4-8421-81af566c258d",
+      "name": "Telegram Trigger",
+      "webhookId": "170b8744-b4ac-47c0-bbb2-d2e720410457",
+      "credentials": {
+        "telegramApi": {
+          "id": "QJQiEQWcJ0JLDrNm",
+          "name": "Telegram Aaron Madame Sassu"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').first().json.message.chat.id }}",
+        "text": "={{ $json.output }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        272,
+        -32
+      ],
+      "id": "ea2fa13c-695a-4035-8fbe-594b6acbf65a",
+      "name": "Send a text message",
+      "webhookId": "7b21ee7d-32ea-498f-aab1-047022851753",
+      "credentials": {
+        "telegramApi": {
+          "id": "QJQiEQWcJ0JLDrNm",
+          "name": "Telegram Aaron Madame Sassu"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').first().json.message.chat.id }}",
+        "text": "={{ $json.output }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        400,
+        576
+      ],
+      "id": "67c3a1f0-6a39-4857-baca-947fc8276386",
+      "name": "Send a text message1",
+      "webhookId": "7ad15e2e-6a86-4242-9b57-7d5b4becd611",
+      "credentials": {
+        "telegramApi": {
+          "id": "QJQiEQWcJ0JLDrNm",
+          "name": "Telegram Aaron Madame Sassu"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Text Classifier",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "AI Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Text Classifier": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Append or update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Text Classifier",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent1": {
+      "main": [
+        [
+          {
+            "node": "Send a text message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append or update row in sheet": {
+      "main": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "agente_cotizzacion": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "agente_filtrador": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "agente_registro": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "tool_info_aditamento": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "tool_filtro_aditamentos": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consulta_Cotización": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "tool_detalle_producto": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres Chat Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "codigos_postales": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI": {
+      "ai_embedding": [
+        [
+          {
+            "node": "kb_glasbil",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "kb_glasbil": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres Chat Memory1": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "b9ed2c01-33c7-4692-aefb-08b8820995da",
+  "activeVersionId": null,
+  "versionCounter": 8,
+  "triggerCount": 0,
+  "shared": [
+    {
+      "updatedAt": "2026-03-03T01:20:00.874Z",
+      "createdAt": "2026-03-03T01:20:00.874Z",
+      "role": "workflow:owner",
+      "workflowId": "7e8BytkZezISdom2",
+      "projectId": "BZ9Ta5yhe4RhzY78",
+      "project": {
+        "updatedAt": "2025-05-13T16:18:54.372Z",
+        "createdAt": "2025-05-13T15:56:28.209Z",
+        "id": "BZ9Ta5yhe4RhzY78",
+        "name": "CANTERA ADMIN <canteradigital7@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "projectRelations": [
+          {
+            "updatedAt": "2025-05-13T15:56:28.209Z",
+            "createdAt": "2025-05-13T15:56:28.209Z",
+            "userId": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
+            "projectId": "BZ9Ta5yhe4RhzY78",
+            "user": {
+              "updatedAt": "2026-03-03T01:20:59.000Z",
+              "createdAt": "2025-05-13T15:56:27.880Z",
+              "id": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
+              "email": "canteradigital7@gmail.com",
+              "firstName": "CANTERA",
+              "lastName": "ADMIN",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-05-13T16:19:25.161Z",
+                "personalization_survey_n8n_version": "1.92.2",
+                "companySize": "<20",
+                "companyType": "saas",
+                "role": "customer-support",
+                "reportedSource": "event"
+              },
+              "settings": {
+                "userActivated": true,
+                "firstSuccessfulWorkflowId": "PTbESRzX3rguwQN8",
+                "userActivatedAt": 1747154580970,
+                "easyAIWorkflowOnboarded": true,
+                "npsSurvey": {
+                  "responded": true,
+                  "lastShownAt": 1765302536772
+                },
+                "dismissedCallouts": {
+                  "aiAgentStarterCallout": true,
+                  "preBuiltAgentsCalloutHttpRequest": true
+                }
+              },
+              "disabled": false,
+              "mfaEnabled": false,
+              "lastActiveAt": "2026-03-02",
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": [],
+  "activeVersion": null
+}
