@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-03-03T00:09:08.000Z",
+  "updatedAt": "2026-03-05T16:25:53.000Z",
   "createdAt": "2026-03-02T19:51:09.388Z",
   "id": "1OpFXW0eU4nGYbXi",
   "name": "Recordatorios Automáticos - Sesiones Grupales",
@@ -28,7 +28,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// Procesar y clasificar registros\nconst now = new Date();\nconst results = [];\n\nfor (const item of $input.all()) {\n  const data = item.json;\n  \n  try {\n    // Convertir fecha dd-mm-yyyy\n    const [day, month, year] = data.dia.split('-').map(Number);\n    const [hours, minutes] = data.hora.split(':').map(Number);\n    \n    // Crear fecha del evento\n    const eventDate = new Date(year, month - 1, day, hours, minutes);\n    \n    // Calcular diferencia\n    const diffMs = eventDate - now;\n    const diffHours = diffMs / (1000 * 60 * 60);\n    \n    // Clasificar\n    let category = 'skip';\n    \n    if (diffMs < 0) {\n      category = 'delete';\n    } else if (diffHours <= 1 && diffHours > 0) {\n      category = '1hour';\n    } else if (diffHours <= 12 && diffHours > 1) {\n      category = '12hours';\n    } else if (diffHours <= 24 && diffHours > 12) {\n      category = '24hours';\n    }\n    \n    results.push({\n      json: {\n        ...data,\n        category,\n        diffHours: Math.round(diffHours * 100) / 100\n      }\n    });\n  } catch (error) {\n    console.error('Error procesando registro:', data, error);\n  }\n}\n\nreturn results;"
+        "jsCode": "const TIME_ZONE = 'America/Mexico_City';\n\n// Obtiene el offset (en minutos) entre \"date\" (instante real UTC) y cómo se representaría en timeZone.\n// Técnica estándar con Intl.DateTimeFormat + formatToParts.\nfunction getTimeZoneOffsetMinutes(date, timeZone) {\n  const dtf = new Intl.DateTimeFormat('en-US', {\n    timeZone,\n    hour12: false,\n    year: 'numeric',\n    month: '2-digit',\n    day: '2-digit',\n    hour: '2-digit',\n    minute: '2-digit',\n    second: '2-digit',\n  });\n\n  const parts = dtf.formatToParts(date);\n  const vals = {};\n  for (const p of parts) {\n    if (p.type !== 'literal') vals[p.type] = p.value;\n  }\n\n  // Esta fecha/hora es \"lo que marca el reloj\" en esa zona, pero lo interpretamos como UTC para comparar.\n  const asUTC = Date.UTC(\n    Number(vals.year),\n    Number(vals.month) - 1,\n    Number(vals.day),\n    Number(vals.hour),\n    Number(vals.minute),\n    Number(vals.second)\n  );\n\n  // Diferencia entre el \"reloj\" de la zona y el instante real => offset en minutos\n  return (asUTC - date.getTime()) / 60000;\n}\n\n// Convierte componentes (YYYY,MM,DD,HH,mm) entendidos como timeZone a timestamp UTC (ms)\nfunction zonedDateTimeToUtcMillis({ year, month, day, hour, minute }, timeZone) {\n  // 1) Hacemos un guess: interpretamos esos componentes como si fueran UTC\n  let utcGuess = Date.UTC(year, month - 1, day, hour, minute, 0);\n\n  // 2) Calculamos offset de la zona para ese instante aproximado\n  let guessDate = new Date(utcGuess);\n  let offsetMin = getTimeZoneOffsetMinutes(guessDate, timeZone);\n\n  // 3) Ajustamos: si en esa zona eran \"hora local\", restamos el offset para obtener UTC real\n  let utcMillis = utcGuess - offsetMin * 60_000;\n\n  // 4) Recalcular una vez más por si el offset cambia (DST / transiciones)\n  // (CDMX normalmente no cambia hoy, pero esto lo hace robusto)\n  guessDate = new Date(utcMillis);\n  offsetMin = getTimeZoneOffsetMinutes(guessDate, timeZone);\n  utcMillis = utcGuess - offsetMin * 60_000;\n\n  return utcMillis;\n}\n\n// Para debug: formatea un Date en CDMX sin librerías\nfunction formatInZone(date, timeZone) {\n  return new Intl.DateTimeFormat('es-MX', {\n    timeZone,\n    hour12: false,\n    year: 'numeric',\n    month: '2-digit',\n    day: '2-digit',\n    hour: '2-digit',\n    minute: '2-digit',\n    second: '2-digit',\n    timeZoneName: 'short',\n  }).format(date);\n}\n\n// ==== Tu lógica ====\nconst nowMillis = Date.now();\nconst results = [];\n\nfor (const item of $input.all()) {\n  const data = item.json;\n\n  try {\n    const [day, month, year] = data.dia.split('-').map(Number);\n    const [hours, minutes] = data.hora.split(':').map(Number);\n\n    // Evento interpretado como America/Mexico_City -> convertido a UTC ms\n    const eventMillis = zonedDateTimeToUtcMillis(\n      { year, month, day, hour: hours, minute: minutes },\n      TIME_ZONE\n    );\n\n    const diffMs = eventMillis - nowMillis;\n    const diffHours = diffMs / (1000 * 60 * 60);\n\n    let category = 'skip';\n    if (diffMs < 0) {\n      category = 'delete';\n    } else if (diffHours <= 1 && diffHours > 0) {\n      category = '1hour';\n    } else if (diffHours <= 12 && diffHours > 1) {\n      category = '12hours';\n    } else if (diffHours <= 24 && diffHours > 12) {\n      category = '24hours';\n    }\n\n    results.push({\n      json: {\n        ...data,\n        category,\n        diffHours: Math.round(diffHours * 100) / 100,\n\n        // Debug para que veas exactamente qué está pasando:\n        now_cdmx: formatInZone(new Date(nowMillis), TIME_ZONE),\n        event_cdmx: formatInZone(new Date(eventMillis), TIME_ZONE),\n        now_utc: new Date(nowMillis).toISOString(),\n        event_utc: new Date(eventMillis).toISOString(),\n      },\n    });\n  } catch (error) {\n    results.push({ json: { ...data, category: 'skip', error: error.message } });\n  }\n}\n\nreturn results;"
       },
       "name": "Clasificar",
       "type": "n8n-nodes-base.code",
@@ -830,10 +830,28 @@
   "meta": {
     "templateCredsSetupCompleted": true
   },
-  "pinData": {},
-  "versionId": "bcbae111-359a-4ab1-8121-9b31fbce0f08",
-  "activeVersionId": "bcbae111-359a-4ab1-8121-9b31fbce0f08",
-  "versionCounter": 27,
+  "pinData": {
+    "Cada Hora": [
+      {
+        "json": {
+          "timestamp": "2026-03-05T10:00:30.005-06:00",
+          "Readable date": "March 5th 2026, 10:00:30 am",
+          "Readable time": "10:00:30 am",
+          "Day of week": "Thursday",
+          "Year": "2026",
+          "Month": "March",
+          "Day of month": "05",
+          "Hour": "10",
+          "Minute": "00",
+          "Second": "30",
+          "Timezone": "America/Mexico_City (UTC-06:00)"
+        }
+      }
+    ]
+  },
+  "versionId": "70b1683e-3e8a-43f9-9ba6-19d9f2944218",
+  "activeVersionId": "70b1683e-3e8a-43f9-9ba6-19d9f2944218",
+  "versionCounter": 31,
   "triggerCount": 1,
   "shared": [
     {
@@ -898,9 +916,9 @@
   ],
   "tags": [],
   "activeVersion": {
-    "updatedAt": "2026-03-03T00:09:08.423Z",
-    "createdAt": "2026-03-03T00:09:08.423Z",
-    "versionId": "bcbae111-359a-4ab1-8121-9b31fbce0f08",
+    "updatedAt": "2026-03-05T16:25:53.186Z",
+    "createdAt": "2026-03-05T16:25:53.186Z",
+    "versionId": "70b1683e-3e8a-43f9-9ba6-19d9f2944218",
     "workflowId": "1OpFXW0eU4nGYbXi",
     "nodes": [
       {
@@ -924,7 +942,7 @@
       },
       {
         "parameters": {
-          "jsCode": "// Procesar y clasificar registros\nconst now = new Date();\nconst results = [];\n\nfor (const item of $input.all()) {\n  const data = item.json;\n  \n  try {\n    // Convertir fecha dd-mm-yyyy\n    const [day, month, year] = data.dia.split('-').map(Number);\n    const [hours, minutes] = data.hora.split(':').map(Number);\n    \n    // Crear fecha del evento\n    const eventDate = new Date(year, month - 1, day, hours, minutes);\n    \n    // Calcular diferencia\n    const diffMs = eventDate - now;\n    const diffHours = diffMs / (1000 * 60 * 60);\n    \n    // Clasificar\n    let category = 'skip';\n    \n    if (diffMs < 0) {\n      category = 'delete';\n    } else if (diffHours <= 1 && diffHours > 0) {\n      category = '1hour';\n    } else if (diffHours <= 12 && diffHours > 1) {\n      category = '12hours';\n    } else if (diffHours <= 24 && diffHours > 12) {\n      category = '24hours';\n    }\n    \n    results.push({\n      json: {\n        ...data,\n        category,\n        diffHours: Math.round(diffHours * 100) / 100\n      }\n    });\n  } catch (error) {\n    console.error('Error procesando registro:', data, error);\n  }\n}\n\nreturn results;"
+          "jsCode": "const TIME_ZONE = 'America/Mexico_City';\n\n// Obtiene el offset (en minutos) entre \"date\" (instante real UTC) y cómo se representaría en timeZone.\n// Técnica estándar con Intl.DateTimeFormat + formatToParts.\nfunction getTimeZoneOffsetMinutes(date, timeZone) {\n  const dtf = new Intl.DateTimeFormat('en-US', {\n    timeZone,\n    hour12: false,\n    year: 'numeric',\n    month: '2-digit',\n    day: '2-digit',\n    hour: '2-digit',\n    minute: '2-digit',\n    second: '2-digit',\n  });\n\n  const parts = dtf.formatToParts(date);\n  const vals = {};\n  for (const p of parts) {\n    if (p.type !== 'literal') vals[p.type] = p.value;\n  }\n\n  // Esta fecha/hora es \"lo que marca el reloj\" en esa zona, pero lo interpretamos como UTC para comparar.\n  const asUTC = Date.UTC(\n    Number(vals.year),\n    Number(vals.month) - 1,\n    Number(vals.day),\n    Number(vals.hour),\n    Number(vals.minute),\n    Number(vals.second)\n  );\n\n  // Diferencia entre el \"reloj\" de la zona y el instante real => offset en minutos\n  return (asUTC - date.getTime()) / 60000;\n}\n\n// Convierte componentes (YYYY,MM,DD,HH,mm) entendidos como timeZone a timestamp UTC (ms)\nfunction zonedDateTimeToUtcMillis({ year, month, day, hour, minute }, timeZone) {\n  // 1) Hacemos un guess: interpretamos esos componentes como si fueran UTC\n  let utcGuess = Date.UTC(year, month - 1, day, hour, minute, 0);\n\n  // 2) Calculamos offset de la zona para ese instante aproximado\n  let guessDate = new Date(utcGuess);\n  let offsetMin = getTimeZoneOffsetMinutes(guessDate, timeZone);\n\n  // 3) Ajustamos: si en esa zona eran \"hora local\", restamos el offset para obtener UTC real\n  let utcMillis = utcGuess - offsetMin * 60_000;\n\n  // 4) Recalcular una vez más por si el offset cambia (DST / transiciones)\n  // (CDMX normalmente no cambia hoy, pero esto lo hace robusto)\n  guessDate = new Date(utcMillis);\n  offsetMin = getTimeZoneOffsetMinutes(guessDate, timeZone);\n  utcMillis = utcGuess - offsetMin * 60_000;\n\n  return utcMillis;\n}\n\n// Para debug: formatea un Date en CDMX sin librerías\nfunction formatInZone(date, timeZone) {\n  return new Intl.DateTimeFormat('es-MX', {\n    timeZone,\n    hour12: false,\n    year: 'numeric',\n    month: '2-digit',\n    day: '2-digit',\n    hour: '2-digit',\n    minute: '2-digit',\n    second: '2-digit',\n    timeZoneName: 'short',\n  }).format(date);\n}\n\n// ==== Tu lógica ====\nconst nowMillis = Date.now();\nconst results = [];\n\nfor (const item of $input.all()) {\n  const data = item.json;\n\n  try {\n    const [day, month, year] = data.dia.split('-').map(Number);\n    const [hours, minutes] = data.hora.split(':').map(Number);\n\n    // Evento interpretado como America/Mexico_City -> convertido a UTC ms\n    const eventMillis = zonedDateTimeToUtcMillis(\n      { year, month, day, hour: hours, minute: minutes },\n      TIME_ZONE\n    );\n\n    const diffMs = eventMillis - nowMillis;\n    const diffHours = diffMs / (1000 * 60 * 60);\n\n    let category = 'skip';\n    if (diffMs < 0) {\n      category = 'delete';\n    } else if (diffHours <= 1 && diffHours > 0) {\n      category = '1hour';\n    } else if (diffHours <= 12 && diffHours > 1) {\n      category = '12hours';\n    } else if (diffHours <= 24 && diffHours > 12) {\n      category = '24hours';\n    }\n\n    results.push({\n      json: {\n        ...data,\n        category,\n        diffHours: Math.round(diffHours * 100) / 100,\n\n        // Debug para que veas exactamente qué está pasando:\n        now_cdmx: formatInZone(new Date(nowMillis), TIME_ZONE),\n        event_cdmx: formatInZone(new Date(eventMillis), TIME_ZONE),\n        now_utc: new Date(nowMillis).toISOString(),\n        event_utc: new Date(eventMillis).toISOString(),\n      },\n    });\n  } catch (error) {\n    results.push({ json: { ...data, category: 'skip', error: error.message } });\n  }\n}\n\nreturn results;"
         },
         "name": "Clasificar",
         "type": "n8n-nodes-base.code",
