@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-03-06T05:29:38.000Z",
+  "updatedAt": "2026-03-06T14:45:14.000Z",
   "createdAt": "2026-03-03T01:20:00.866Z",
   "id": "7e8BytkZezISdom2",
   "name": "Agente MultiHerramienta",
@@ -27,7 +27,7 @@
           "values": [
             {
               "lookupColumn": "user_id",
-              "lookupValue": "={{ $json.message.chat.id }}"
+              "lookupValue": "={{ $('Telegram Trigger').first().json.message.chat.id }}"
             }
           ]
         },
@@ -222,8 +222,8 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 3,
       "position": [
-        48,
-        576
+        32,
+        672
       ],
       "id": "6ef48201-aec8-41b8-9406-7e42162eaf47",
       "name": "AI Agent1"
@@ -267,8 +267,8 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.3,
       "position": [
-        -32,
-        752
+        -48,
+        848
       ],
       "id": "552b5680-64ef-4ff8-a0de-d6caf2a18731",
       "name": "OpenAI Chat Model2",
@@ -378,8 +378,8 @@
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 2.2,
       "position": [
-        464,
-        848
+        448,
+        944
       ],
       "id": "c619a223-e7a5-4e9b-8813-c7ac4f16d022",
       "name": "agente_cotizzacion"
@@ -487,8 +487,8 @@
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 2.2,
       "position": [
-        624,
-        848
+        608,
+        944
       ],
       "id": "69ff3c50-2d24-47bb-b610-7c7b8d17dd01",
       "name": "agente_filtrador"
@@ -515,8 +515,8 @@
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 2.2,
       "position": [
-        304,
-        848
+        288,
+        944
       ],
       "id": "6ae380cb-3197-4e1f-8f11-db682a9a7bf1",
       "name": "agente_registro"
@@ -565,8 +565,8 @@
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 2.2,
       "position": [
-        976,
-        848
+        960,
+        944
       ],
       "id": "3c1f5905-275f-49b1-a138-51490975cfa8",
       "name": "tool_info_aditamento"
@@ -628,8 +628,8 @@
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 2.2,
       "position": [
-        1168,
-        848
+        1152,
+        944
       ],
       "id": "be42ce7e-5e70-464d-a2a1-d2696c823e93",
       "name": "tool_filtro_aditamentos"
@@ -823,8 +823,8 @@
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 2.2,
       "position": [
-        1360,
-        848
+        1344,
+        944
       ],
       "id": "50b3c694-d0f4-4373-893d-12731ebc520f",
       "name": "Consulta_Cotización"
@@ -847,8 +847,8 @@
       "type": "n8n-nodes-base.supabaseTool",
       "typeVersion": 1,
       "position": [
-        784,
-        848
+        768,
+        944
       ],
       "id": "b6067103-9677-4f06-830a-a213b20a20ac",
       "name": "tool_detalle_producto",
@@ -869,8 +869,8 @@
       "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
       "typeVersion": 1.3,
       "position": [
-        128,
-        848
+        112,
+        944
       ],
       "id": "6801a52e-369f-4e1b-a5ce-8e0157c56506",
       "name": "Postgres Chat Memory",
@@ -996,7 +996,7 @@
       "type": "n8n-nodes-base.telegramTrigger",
       "typeVersion": 1.2,
       "position": [
-        -1424,
+        -1616,
         288
       ],
       "id": "103e9aef-fa6b-40a4-8421-81af566c258d",
@@ -1044,8 +1044,8 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        400,
-        576
+        384,
+        672
       ],
       "id": "67c3a1f0-6a39-4857-baca-947fc8276386",
       "name": "Send a text message1",
@@ -1172,6 +1172,264 @@
         }
       },
       "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "12dLSTUHkRAhlmJfF8hcx08M0BAWfnjRTZlgGebt_FJY",
+          "mode": "list",
+          "cachedResultName": "Prueba Glassy",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/12dLSTUHkRAhlmJfF8hcx08M0BAWfnjRTZlgGebt_FJY/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/12dLSTUHkRAhlmJfF8hcx08M0BAWfnjRTZlgGebt_FJY/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "MENSAJE": "={{ $json.message.text }}",
+            "FECHA": "={{ $now.minus({ hours: 0 }).setLocale('es').toFormat(\"dd 'de' LLLL 'de' yyyy HH:mm\") }}",
+            "CHAT_ID": "={{ $json.message.from.id }}",
+            "TIPO": "Usuario"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "FECHA",
+              "displayName": "FECHA",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "CHAT_ID",
+              "displayName": "CHAT_ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "TIPO",
+              "displayName": "TIPO",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "MENSAJE",
+              "displayName": "MENSAJE",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        -1408,
+        288
+      ],
+      "id": "f835c155-5153-4054-b70e-859d65d3c797",
+      "name": "Registro mensaje entrada",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Vg1ihuXHaIOWrqDt",
+          "name": "Google Sheets Aaron Permanentes"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "12dLSTUHkRAhlmJfF8hcx08M0BAWfnjRTZlgGebt_FJY",
+          "mode": "list",
+          "cachedResultName": "Prueba Glassy",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/12dLSTUHkRAhlmJfF8hcx08M0BAWfnjRTZlgGebt_FJY/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/12dLSTUHkRAhlmJfF8hcx08M0BAWfnjRTZlgGebt_FJY/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "MENSAJE": "={{ $json.output }}",
+            "FECHA": "={{ $now.minus({ hours: 0 }).setLocale('es').toFormat(\"dd 'de' LLLL 'de' yyyy HH:mm\") }}",
+            "CHAT_ID": "={{ $('Telegram Trigger').first().json.message.chat.id }}",
+            "TIPO": "Agente"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "FECHA",
+              "displayName": "FECHA",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "CHAT_ID",
+              "displayName": "CHAT_ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "TIPO",
+              "displayName": "TIPO",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "MENSAJE",
+              "displayName": "MENSAJE",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        384,
+        528
+      ],
+      "id": "a6716806-15a0-41a9-a0a2-7b11c33733ab",
+      "name": "Registro mensaje salida",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Vg1ihuXHaIOWrqDt",
+          "name": "Google Sheets Aaron Permanentes"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "12dLSTUHkRAhlmJfF8hcx08M0BAWfnjRTZlgGebt_FJY",
+          "mode": "list",
+          "cachedResultName": "Prueba Glassy",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/12dLSTUHkRAhlmJfF8hcx08M0BAWfnjRTZlgGebt_FJY/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/12dLSTUHkRAhlmJfF8hcx08M0BAWfnjRTZlgGebt_FJY/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "MENSAJE": "={{ $json.output }}",
+            "FECHA": "={{ $now.minus({ hours: 0 }).setLocale('es').toFormat(\"dd 'de' LLLL 'de' yyyy HH:mm\") }}",
+            "CHAT_ID": "={{ $('Telegram Trigger').first().json.message.chat.id }}",
+            "TIPO": "Agente"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "FECHA",
+              "displayName": "FECHA",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "CHAT_ID",
+              "displayName": "CHAT_ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "TIPO",
+              "displayName": "TIPO",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "MENSAJE",
+              "displayName": "MENSAJE",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        272,
+        -192
+      ],
+      "id": "22b1b43a-894d-4bf3-82ee-2f99e88045e8",
+      "name": "Registro mensaje salida info",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Vg1ihuXHaIOWrqDt",
+          "name": "Google Sheets Aaron Permanentes"
+        }
+      }
     }
   ],
   "connections": {
@@ -1254,6 +1512,11 @@
             "node": "Send a text message",
             "type": "main",
             "index": 0
+          },
+          {
+            "node": "Registro mensaje salida info",
+            "type": "main",
+            "index": 0
           }
         ]
       ]
@@ -1263,6 +1526,11 @@
         [
           {
             "node": "Send a text message1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Registro mensaje salida",
             "type": "main",
             "index": 0
           }
@@ -1438,7 +1706,7 @@
       "main": [
         [
           {
-            "node": "Get row(s) in sheet",
+            "node": "Registro mensaje entrada",
             "type": "main",
             "index": 0
           }
@@ -1483,6 +1751,17 @@
       "main": [
         []
       ]
+    },
+    "Registro mensaje entrada": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -1517,9 +1796,9 @@
       }
     ]
   },
-  "versionId": "8af673ce-addd-485b-a982-e759a79ee509",
-  "activeVersionId": "8af673ce-addd-485b-a982-e759a79ee509",
-  "versionCounter": 314,
+  "versionId": "1aeb3040-2836-4871-a6a7-6a80f061ebe9",
+  "activeVersionId": "1aeb3040-2836-4871-a6a7-6a80f061ebe9",
+  "versionCounter": 320,
   "triggerCount": 1,
   "shared": [
     {
@@ -1584,9 +1863,9 @@
   ],
   "tags": [],
   "activeVersion": {
-    "updatedAt": "2026-03-06T05:15:43.324Z",
-    "createdAt": "2026-03-06T05:15:43.324Z",
-    "versionId": "8af673ce-addd-485b-a982-e759a79ee509",
+    "updatedAt": "2026-03-06T14:45:13.997Z",
+    "createdAt": "2026-03-06T14:45:13.997Z",
+    "versionId": "1aeb3040-2836-4871-a6a7-6a80f061ebe9",
     "workflowId": "7e8BytkZezISdom2",
     "nodes": [
       {
@@ -1609,7 +1888,7 @@
             "values": [
               {
                 "lookupColumn": "user_id",
-                "lookupValue": "={{ $json.message.chat.id }}"
+                "lookupValue": "={{ $('Telegram Trigger').first().json.message.chat.id }}"
               }
             ]
           },
@@ -1804,8 +2083,8 @@
         "type": "@n8n/n8n-nodes-langchain.agent",
         "typeVersion": 3,
         "position": [
-          48,
-          576
+          32,
+          672
         ],
         "id": "6ef48201-aec8-41b8-9406-7e42162eaf47",
         "name": "AI Agent1"
@@ -1849,8 +2128,8 @@
         "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
         "typeVersion": 1.3,
         "position": [
-          -32,
-          752
+          -48,
+          848
         ],
         "id": "552b5680-64ef-4ff8-a0de-d6caf2a18731",
         "name": "OpenAI Chat Model2",
@@ -1960,8 +2239,8 @@
         "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
         "typeVersion": 2.2,
         "position": [
-          464,
-          848
+          448,
+          944
         ],
         "id": "c619a223-e7a5-4e9b-8813-c7ac4f16d022",
         "name": "agente_cotizzacion"
@@ -2069,8 +2348,8 @@
         "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
         "typeVersion": 2.2,
         "position": [
-          624,
-          848
+          608,
+          944
         ],
         "id": "69ff3c50-2d24-47bb-b610-7c7b8d17dd01",
         "name": "agente_filtrador"
@@ -2097,8 +2376,8 @@
         "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
         "typeVersion": 2.2,
         "position": [
-          304,
-          848
+          288,
+          944
         ],
         "id": "6ae380cb-3197-4e1f-8f11-db682a9a7bf1",
         "name": "agente_registro"
@@ -2147,8 +2426,8 @@
         "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
         "typeVersion": 2.2,
         "position": [
-          976,
-          848
+          960,
+          944
         ],
         "id": "3c1f5905-275f-49b1-a138-51490975cfa8",
         "name": "tool_info_aditamento"
@@ -2210,8 +2489,8 @@
         "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
         "typeVersion": 2.2,
         "position": [
-          1168,
-          848
+          1152,
+          944
         ],
         "id": "be42ce7e-5e70-464d-a2a1-d2696c823e93",
         "name": "tool_filtro_aditamentos"
@@ -2405,8 +2684,8 @@
         "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
         "typeVersion": 2.2,
         "position": [
-          1360,
-          848
+          1344,
+          944
         ],
         "id": "50b3c694-d0f4-4373-893d-12731ebc520f",
         "name": "Consulta_Cotización"
@@ -2429,8 +2708,8 @@
         "type": "n8n-nodes-base.supabaseTool",
         "typeVersion": 1,
         "position": [
-          784,
-          848
+          768,
+          944
         ],
         "id": "b6067103-9677-4f06-830a-a213b20a20ac",
         "name": "tool_detalle_producto",
@@ -2451,8 +2730,8 @@
         "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
         "typeVersion": 1.3,
         "position": [
-          128,
-          848
+          112,
+          944
         ],
         "id": "6801a52e-369f-4e1b-a5ce-8e0157c56506",
         "name": "Postgres Chat Memory",
@@ -2578,7 +2857,7 @@
         "type": "n8n-nodes-base.telegramTrigger",
         "typeVersion": 1.2,
         "position": [
-          -1424,
+          -1616,
           288
         ],
         "id": "103e9aef-fa6b-40a4-8421-81af566c258d",
@@ -2626,8 +2905,8 @@
         "type": "n8n-nodes-base.telegram",
         "typeVersion": 1.2,
         "position": [
-          400,
-          576
+          384,
+          672
         ],
         "id": "67c3a1f0-6a39-4857-baca-947fc8276386",
         "name": "Send a text message1",
@@ -2754,6 +3033,264 @@
           }
         },
         "onError": "continueRegularOutput"
+      },
+      {
+        "parameters": {
+          "operation": "append",
+          "documentId": {
+            "__rl": true,
+            "value": "12dLSTUHkRAhlmJfF8hcx08M0BAWfnjRTZlgGebt_FJY",
+            "mode": "list",
+            "cachedResultName": "Prueba Glassy",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/12dLSTUHkRAhlmJfF8hcx08M0BAWfnjRTZlgGebt_FJY/edit?usp=drivesdk"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": "gid=0",
+            "mode": "list",
+            "cachedResultName": "Hoja 1",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/12dLSTUHkRAhlmJfF8hcx08M0BAWfnjRTZlgGebt_FJY/edit#gid=0"
+          },
+          "columns": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "MENSAJE": "={{ $json.message.text }}",
+              "FECHA": "={{ $now.minus({ hours: 0 }).setLocale('es').toFormat(\"dd 'de' LLLL 'de' yyyy HH:mm\") }}",
+              "CHAT_ID": "={{ $json.message.from.id }}",
+              "TIPO": "Usuario"
+            },
+            "matchingColumns": [],
+            "schema": [
+              {
+                "id": "FECHA",
+                "displayName": "FECHA",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "CHAT_ID",
+                "displayName": "CHAT_ID",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "TIPO",
+                "displayName": "TIPO",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "MENSAJE",
+                "displayName": "MENSAJE",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleSheets",
+        "typeVersion": 4.6,
+        "position": [
+          -1408,
+          288
+        ],
+        "id": "f835c155-5153-4054-b70e-859d65d3c797",
+        "name": "Registro mensaje entrada",
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "Vg1ihuXHaIOWrqDt",
+            "name": "Google Sheets Aaron Permanentes"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "append",
+          "documentId": {
+            "__rl": true,
+            "value": "12dLSTUHkRAhlmJfF8hcx08M0BAWfnjRTZlgGebt_FJY",
+            "mode": "list",
+            "cachedResultName": "Prueba Glassy",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/12dLSTUHkRAhlmJfF8hcx08M0BAWfnjRTZlgGebt_FJY/edit?usp=drivesdk"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": "gid=0",
+            "mode": "list",
+            "cachedResultName": "Hoja 1",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/12dLSTUHkRAhlmJfF8hcx08M0BAWfnjRTZlgGebt_FJY/edit#gid=0"
+          },
+          "columns": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "MENSAJE": "={{ $json.output }}",
+              "FECHA": "={{ $now.minus({ hours: 0 }).setLocale('es').toFormat(\"dd 'de' LLLL 'de' yyyy HH:mm\") }}",
+              "CHAT_ID": "={{ $('Telegram Trigger').first().json.message.chat.id }}",
+              "TIPO": "Agente"
+            },
+            "matchingColumns": [],
+            "schema": [
+              {
+                "id": "FECHA",
+                "displayName": "FECHA",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "CHAT_ID",
+                "displayName": "CHAT_ID",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "TIPO",
+                "displayName": "TIPO",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "MENSAJE",
+                "displayName": "MENSAJE",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleSheets",
+        "typeVersion": 4.6,
+        "position": [
+          384,
+          528
+        ],
+        "id": "a6716806-15a0-41a9-a0a2-7b11c33733ab",
+        "name": "Registro mensaje salida",
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "Vg1ihuXHaIOWrqDt",
+            "name": "Google Sheets Aaron Permanentes"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "append",
+          "documentId": {
+            "__rl": true,
+            "value": "12dLSTUHkRAhlmJfF8hcx08M0BAWfnjRTZlgGebt_FJY",
+            "mode": "list",
+            "cachedResultName": "Prueba Glassy",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/12dLSTUHkRAhlmJfF8hcx08M0BAWfnjRTZlgGebt_FJY/edit?usp=drivesdk"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": "gid=0",
+            "mode": "list",
+            "cachedResultName": "Hoja 1",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/12dLSTUHkRAhlmJfF8hcx08M0BAWfnjRTZlgGebt_FJY/edit#gid=0"
+          },
+          "columns": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "MENSAJE": "={{ $json.output }}",
+              "FECHA": "={{ $now.minus({ hours: 0 }).setLocale('es').toFormat(\"dd 'de' LLLL 'de' yyyy HH:mm\") }}",
+              "CHAT_ID": "={{ $('Telegram Trigger').first().json.message.chat.id }}",
+              "TIPO": "Agente"
+            },
+            "matchingColumns": [],
+            "schema": [
+              {
+                "id": "FECHA",
+                "displayName": "FECHA",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "CHAT_ID",
+                "displayName": "CHAT_ID",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "TIPO",
+                "displayName": "TIPO",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "MENSAJE",
+                "displayName": "MENSAJE",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleSheets",
+        "typeVersion": 4.6,
+        "position": [
+          272,
+          -192
+        ],
+        "id": "22b1b43a-894d-4bf3-82ee-2f99e88045e8",
+        "name": "Registro mensaje salida info",
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "Vg1ihuXHaIOWrqDt",
+            "name": "Google Sheets Aaron Permanentes"
+          }
+        }
       }
     ],
     "connections": {
@@ -2836,6 +3373,11 @@
               "node": "Send a text message",
               "type": "main",
               "index": 0
+            },
+            {
+              "node": "Registro mensaje salida info",
+              "type": "main",
+              "index": 0
             }
           ]
         ]
@@ -2845,6 +3387,11 @@
           [
             {
               "node": "Send a text message1",
+              "type": "main",
+              "index": 0
+            },
+            {
+              "node": "Registro mensaje salida",
               "type": "main",
               "index": 0
             }
@@ -3020,7 +3567,7 @@
         "main": [
           [
             {
-              "node": "Get row(s) in sheet",
+              "node": "Registro mensaje entrada",
               "type": "main",
               "index": 0
             }
@@ -3064,6 +3611,17 @@
       "Execute a SQL query": {
         "main": [
           []
+        ]
+      },
+      "Registro mensaje entrada": {
+        "main": [
+          [
+            {
+              "node": "Get row(s) in sheet",
+              "type": "main",
+              "index": 0
+            }
+          ]
         ]
       }
     },
