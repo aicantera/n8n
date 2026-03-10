@@ -1,0 +1,634 @@
+{
+  "updatedAt": "2026-03-10T04:29:35.000Z",
+  "createdAt": "2026-03-10T04:29:33.135Z",
+  "id": "9IK697fQe0gdDTVG",
+  "name": "Webhook: Send Confirmacion Email",
+  "description": null,
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "hoteleria/send-confirmacion",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1.1,
+      "position": [
+        -800,
+        160
+      ],
+      "id": "1967a0ab-e001-4752-b299-f64df15a96e3",
+      "name": "Webhook",
+      "webhookId": "send-confirmacion-webhook-id"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Validar datos requeridos\nconst body = $input.item.json.body;\nconst errors = [];\n\nif (!body.guest_email) {\n  errors.push('guest_email es requerido');\n} else if (!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(body.guest_email)) {\n  errors.push('guest_email no es un email válido');\n}\n\nif (!body.reservation_id) errors.push('reservation_id es requerido');\nif (!body.guest_name) errors.push('guest_name es requerido');\nif (!body.check_in_date) errors.push('check_in_date es requerido');\nif (!body.room_type) errors.push('room_type es requerido');\nif (!body.group_size) errors.push('group_size es requerido');\n\n// Validar formato de reservation_id (DDMMYYYYHHMMSS)\nif (body.reservation_id && !/^\\d{14}$/.test(body.reservation_id)) {\n  errors.push('reservation_id debe tener formato DDMMYYYYHHMMSS (14 dígitos)');\n}\n\nif (errors.length > 0) {\n  return {\n    json: {\n      success: false,\n      error: {\n        code: 'VALIDATION_ERROR',\n        message: 'Datos inválidos',\n        details: errors\n      },\n      _continue: false\n    }\n  };\n}\n\nreturn {\n  json: {\n    ...body,\n    _continue: true\n  }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -576,
+        160
+      ],
+      "id": "a0f9b386-6ef4-4f73-89c5-9617b58bae3b",
+      "name": "Validar Entrada"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "continue-validation",
+              "leftValue": "={{ $json._continue }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        -352,
+        160
+      ],
+      "id": "6da8297a-5dea-4fff-9c7e-ab79adf9f7d4",
+      "name": "¿Validación OK?"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Construir HTML del email de confirmación\nconst data = $input.item.json;\n\n// Formatear folio para mostrar con guiones para legibilidad\nconst folio = data.reservation_id;\nconst folioFormateado = `${folio.substring(0,2)}-${folio.substring(2,4)}-${folio.substring(4,8)}-${folio.substring(8,10)}-${folio.substring(10,12)}-${folio.substring(12,14)}`;\n\nconst htmlContent = `\n<!DOCTYPE html>\n<html>\n<head>\n  <meta charset=\"UTF-8\">\n  <style>\n    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }\n    .container { max-width: 600px; margin: 0 auto; padding: 20px; }\n    .header { background: #27ae60; color: white; padding: 30px; text-align: center; }\n    .content { padding: 30px; background: #f9f9f9; }\n    .folio-box { background: #fff; border: 3px solid #27ae60; padding: 20px; margin: 20px 0; text-align: center; border-radius: 5px; }\n    .folio-label { font-size: 14px; color: #7f8c8d; text-transform: uppercase; margin-bottom: 10px; }\n    .folio-number { font-size: 28px; font-weight: bold; color: #27ae60; letter-spacing: 2px; }\n    .detail { margin: 15px 0; padding: 10px; background: white; border-left: 4px solid #3498db; }\n    .label { font-weight: bold; color: #2c3e50; }\n    .value { color: #34495e; }\n    .important { background: #fff3cd; border-left-color: #ffc107; padding: 15px; margin: 20px 0; }\n    .footer { text-align: center; padding: 20px; color: #7f8c8d; font-size: 12px; }\n    .checkmark { color: #27ae60; font-size: 48px; }\n  </style>\n</head>\n<body>\n  <div class=\"container\">\n    <div class=\"header\">\n      <div class=\"checkmark\">✓</div>\n      <h1>¡Reservación Confirmada!</h1>\n    </div>\n    <div class=\"content\">\n      <p>Estimado/a <strong>${data.guest_name}</strong>,</p>\n      <p>Tu reservación ha sido confirmada exitosamente. A continuación encontrarás los detalles:</p>\n      \n      <div class=\"folio-box\">\n        <div class=\"folio-label\">Tu Folio de Reservación</div>\n        <div class=\"folio-number\">${folioFormateado}</div>\n        <p style=\"font-size: 12px; color: #7f8c8d; margin-top: 10px;\">Guarda este número, lo necesitarás para tu check-in</p>\n      </div>\n      \n      <div class=\"detail\">\n        <span class=\"label\">Fecha de entrada:</span> <span class=\"value\">${data.check_in_date}</span>\n      </div>\n      <div class=\"detail\">\n        <span class=\"label\">Tipo de habitación:</span> <span class=\"value\">${data.room_type}</span>\n      </div>\n      <div class=\"detail\">\n        <span class=\"label\">Número de personas:</span> <span class=\"value\">${data.group_size}</span>\n      </div>\n      \n      <div class=\"important\">\n        <strong>⚠️ Importante para tu check-in:</strong>\n        <ul>\n          <li>Llega con tu folio: <strong>${folioFormateado}</strong></li>\n          <li>Presenta una identificación oficial</li>\n          <li>El check-in es a partir de las 15:00 hrs</li>\n          <li>El check-out es hasta las 12:00 hrs</li>\n        </ul>\n      </div>\n      \n      <p>Estamos emocionados de recibirte. Si tienes alguna pregunta o necesitas hacer cambios a tu reservación, no dudes en contactarnos.</p>\n      \n      <p style=\"margin-top: 30px;\"><strong>¡Nos vemos pronto!</strong></p>\n    </div>\n    <div class=\"footer\">\n      <p>¿Necesitas ayuda? Contáctanos al teléfono del hotel</p>\n      <p>&copy; ${new Date().getFullYear()} Hotel. Todos los derechos reservados.</p>\n    </div>\n  </div>\n</body>\n</html>\n`;\n\nreturn {\n  json: {\n    ...data,\n    html: htmlContent,\n    folio_formateado: folioFormateado\n  }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -128,
+        64
+      ],
+      "id": "72ce88fd-5d30-4d7c-b359-26b5dfd37f22",
+      "name": "Construir HTML"
+    },
+    {
+      "parameters": {
+        "toRecipients": "={{ $json.guest_email }}",
+        "subject": "=Confirmación de Reservación - Folio {{ $json.folio_formateado }}",
+        "bodyContent": "={{ $json.html }}",
+        "additionalFields": {
+          "bodyContentType": "html"
+        }
+      },
+      "type": "n8n-nodes-base.microsoftOutlook",
+      "typeVersion": 2,
+      "position": [
+        96,
+        64
+      ],
+      "id": "b7b9c97e-c305-45cc-94fb-9e0286d7ac54",
+      "name": "Enviar Email (Outlook)",
+      "webhookId": "f01d3f07-0b6f-44a8-b0f3-1faec163ea06",
+      "credentials": {
+        "microsoftOutlookOAuth2Api": {
+          "id": "hV3xyOpWUpR6z3K6",
+          "name": "Microsoft Outlook Asesor Comercial"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Formatear respuesta exitosa\nconst data = $('Construir HTML').item.json;\n\nconst response = {\n  success: true,\n  email_sent: true,\n  recipient: data.guest_email,\n  reservation_id: data.reservation_id,\n  sent_at: new Date().toISOString()\n};\n\nreturn { json: response };"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        320,
+        -32
+      ],
+      "id": "8070f8af-7a56-4019-86b1-4489947ae577",
+      "name": "Formatear Success"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        544,
+        -32
+      ],
+      "id": "ad31cda4-eab4-45f7-805d-e016cffd61fb",
+      "name": "Response Success"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {
+          "responseCode": 400
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        -128,
+        256
+      ],
+      "id": "4857a02e-ab43-45f0-8cfb-8f0dee208a15",
+      "name": "Response Error Validation"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Error al enviar email\nconst response = {\n  success: false,\n  error: {\n    code: 'EMAIL_SEND_FAILED',\n    message: 'Error al enviar email de confirmación'\n  }\n};\n\nreturn { json: response };"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        320,
+        160
+      ],
+      "id": "ac84cb66-5f51-4f26-b42e-d59e7f55928b",
+      "name": "Error Email"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {
+          "responseCode": 500
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        544,
+        160
+      ],
+      "id": "e3b3a235-a7a3-43ee-aaf9-8175b0211abd",
+      "name": "Response Error 500"
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Validar Entrada",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validar Entrada": {
+      "main": [
+        [
+          {
+            "node": "¿Validación OK?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Validación OK?": {
+      "main": [
+        [
+          {
+            "node": "Construir HTML",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Response Error Validation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Construir HTML": {
+      "main": [
+        [
+          {
+            "node": "Enviar Email (Outlook)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enviar Email (Outlook)": {
+      "main": [
+        [
+          {
+            "node": "Formatear Success",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Error Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Formatear Success": {
+      "main": [
+        [
+          {
+            "node": "Response Success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Error Email": {
+      "main": [
+        [
+          {
+            "node": "Response Error 500",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "37a1dcdb-d0bc-4215-bc50-efacf0d8f7ab",
+  "activeVersionId": "37a1dcdb-d0bc-4215-bc50-efacf0d8f7ab",
+  "versionCounter": 4,
+  "triggerCount": 1,
+  "shared": [
+    {
+      "updatedAt": "2026-03-10T04:29:33.139Z",
+      "createdAt": "2026-03-10T04:29:33.139Z",
+      "role": "workflow:owner",
+      "workflowId": "9IK697fQe0gdDTVG",
+      "projectId": "BZ9Ta5yhe4RhzY78",
+      "project": {
+        "updatedAt": "2025-05-13T16:18:54.372Z",
+        "createdAt": "2025-05-13T15:56:28.209Z",
+        "id": "BZ9Ta5yhe4RhzY78",
+        "name": "CANTERA ADMIN <canteradigital7@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "projectRelations": [
+          {
+            "updatedAt": "2025-05-13T15:56:28.209Z",
+            "createdAt": "2025-05-13T15:56:28.209Z",
+            "userId": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
+            "projectId": "BZ9Ta5yhe4RhzY78",
+            "user": {
+              "updatedAt": "2026-03-10T05:00:37.000Z",
+              "createdAt": "2025-05-13T15:56:27.880Z",
+              "id": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
+              "email": "canteradigital7@gmail.com",
+              "firstName": "CANTERA",
+              "lastName": "ADMIN",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-05-13T16:19:25.161Z",
+                "personalization_survey_n8n_version": "1.92.2",
+                "companySize": "<20",
+                "companyType": "saas",
+                "role": "customer-support",
+                "reportedSource": "event"
+              },
+              "settings": {
+                "userActivated": true,
+                "firstSuccessfulWorkflowId": "PTbESRzX3rguwQN8",
+                "userActivatedAt": 1747154580970,
+                "easyAIWorkflowOnboarded": true,
+                "npsSurvey": {
+                  "responded": true,
+                  "lastShownAt": 1765302536772
+                },
+                "dismissedCallouts": {
+                  "aiAgentStarterCallout": true,
+                  "preBuiltAgentsCalloutHttpRequest": true
+                }
+              },
+              "disabled": false,
+              "mfaEnabled": false,
+              "lastActiveAt": "2026-03-09",
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": [],
+  "activeVersion": {
+    "updatedAt": "2026-03-10T04:29:33.141Z",
+    "createdAt": "2026-03-10T04:29:33.141Z",
+    "versionId": "37a1dcdb-d0bc-4215-bc50-efacf0d8f7ab",
+    "workflowId": "9IK697fQe0gdDTVG",
+    "nodes": [
+      {
+        "parameters": {
+          "httpMethod": "POST",
+          "path": "hoteleria/send-confirmacion",
+          "responseMode": "responseNode",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.webhook",
+        "typeVersion": 1.1,
+        "position": [
+          -800,
+          160
+        ],
+        "id": "1967a0ab-e001-4752-b299-f64df15a96e3",
+        "name": "Webhook",
+        "webhookId": "send-confirmacion-webhook-id"
+      },
+      {
+        "parameters": {
+          "jsCode": "// Validar datos requeridos\nconst body = $input.item.json.body;\nconst errors = [];\n\nif (!body.guest_email) {\n  errors.push('guest_email es requerido');\n} else if (!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(body.guest_email)) {\n  errors.push('guest_email no es un email válido');\n}\n\nif (!body.reservation_id) errors.push('reservation_id es requerido');\nif (!body.guest_name) errors.push('guest_name es requerido');\nif (!body.check_in_date) errors.push('check_in_date es requerido');\nif (!body.room_type) errors.push('room_type es requerido');\nif (!body.group_size) errors.push('group_size es requerido');\n\n// Validar formato de reservation_id (DDMMYYYYHHMMSS)\nif (body.reservation_id && !/^\\d{14}$/.test(body.reservation_id)) {\n  errors.push('reservation_id debe tener formato DDMMYYYYHHMMSS (14 dígitos)');\n}\n\nif (errors.length > 0) {\n  return {\n    json: {\n      success: false,\n      error: {\n        code: 'VALIDATION_ERROR',\n        message: 'Datos inválidos',\n        details: errors\n      },\n      _continue: false\n    }\n  };\n}\n\nreturn {\n  json: {\n    ...body,\n    _continue: true\n  }\n};"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          -576,
+          160
+        ],
+        "id": "a0f9b386-6ef4-4f73-89c5-9617b58bae3b",
+        "name": "Validar Entrada"
+      },
+      {
+        "parameters": {
+          "conditions": {
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict"
+            },
+            "conditions": [
+              {
+                "id": "continue-validation",
+                "leftValue": "={{ $json._continue }}",
+                "rightValue": true,
+                "operator": {
+                  "type": "boolean",
+                  "operation": "true"
+                }
+              }
+            ],
+            "combinator": "and"
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2,
+        "position": [
+          -352,
+          160
+        ],
+        "id": "6da8297a-5dea-4fff-9c7e-ab79adf9f7d4",
+        "name": "¿Validación OK?"
+      },
+      {
+        "parameters": {
+          "jsCode": "// Construir HTML del email de confirmación\nconst data = $input.item.json;\n\n// Formatear folio para mostrar con guiones para legibilidad\nconst folio = data.reservation_id;\nconst folioFormateado = `${folio.substring(0,2)}-${folio.substring(2,4)}-${folio.substring(4,8)}-${folio.substring(8,10)}-${folio.substring(10,12)}-${folio.substring(12,14)}`;\n\nconst htmlContent = `\n<!DOCTYPE html>\n<html>\n<head>\n  <meta charset=\"UTF-8\">\n  <style>\n    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }\n    .container { max-width: 600px; margin: 0 auto; padding: 20px; }\n    .header { background: #27ae60; color: white; padding: 30px; text-align: center; }\n    .content { padding: 30px; background: #f9f9f9; }\n    .folio-box { background: #fff; border: 3px solid #27ae60; padding: 20px; margin: 20px 0; text-align: center; border-radius: 5px; }\n    .folio-label { font-size: 14px; color: #7f8c8d; text-transform: uppercase; margin-bottom: 10px; }\n    .folio-number { font-size: 28px; font-weight: bold; color: #27ae60; letter-spacing: 2px; }\n    .detail { margin: 15px 0; padding: 10px; background: white; border-left: 4px solid #3498db; }\n    .label { font-weight: bold; color: #2c3e50; }\n    .value { color: #34495e; }\n    .important { background: #fff3cd; border-left-color: #ffc107; padding: 15px; margin: 20px 0; }\n    .footer { text-align: center; padding: 20px; color: #7f8c8d; font-size: 12px; }\n    .checkmark { color: #27ae60; font-size: 48px; }\n  </style>\n</head>\n<body>\n  <div class=\"container\">\n    <div class=\"header\">\n      <div class=\"checkmark\">✓</div>\n      <h1>¡Reservación Confirmada!</h1>\n    </div>\n    <div class=\"content\">\n      <p>Estimado/a <strong>${data.guest_name}</strong>,</p>\n      <p>Tu reservación ha sido confirmada exitosamente. A continuación encontrarás los detalles:</p>\n      \n      <div class=\"folio-box\">\n        <div class=\"folio-label\">Tu Folio de Reservación</div>\n        <div class=\"folio-number\">${folioFormateado}</div>\n        <p style=\"font-size: 12px; color: #7f8c8d; margin-top: 10px;\">Guarda este número, lo necesitarás para tu check-in</p>\n      </div>\n      \n      <div class=\"detail\">\n        <span class=\"label\">Fecha de entrada:</span> <span class=\"value\">${data.check_in_date}</span>\n      </div>\n      <div class=\"detail\">\n        <span class=\"label\">Tipo de habitación:</span> <span class=\"value\">${data.room_type}</span>\n      </div>\n      <div class=\"detail\">\n        <span class=\"label\">Número de personas:</span> <span class=\"value\">${data.group_size}</span>\n      </div>\n      \n      <div class=\"important\">\n        <strong>⚠️ Importante para tu check-in:</strong>\n        <ul>\n          <li>Llega con tu folio: <strong>${folioFormateado}</strong></li>\n          <li>Presenta una identificación oficial</li>\n          <li>El check-in es a partir de las 15:00 hrs</li>\n          <li>El check-out es hasta las 12:00 hrs</li>\n        </ul>\n      </div>\n      \n      <p>Estamos emocionados de recibirte. Si tienes alguna pregunta o necesitas hacer cambios a tu reservación, no dudes en contactarnos.</p>\n      \n      <p style=\"margin-top: 30px;\"><strong>¡Nos vemos pronto!</strong></p>\n    </div>\n    <div class=\"footer\">\n      <p>¿Necesitas ayuda? Contáctanos al teléfono del hotel</p>\n      <p>&copy; ${new Date().getFullYear()} Hotel. Todos los derechos reservados.</p>\n    </div>\n  </div>\n</body>\n</html>\n`;\n\nreturn {\n  json: {\n    ...data,\n    html: htmlContent,\n    folio_formateado: folioFormateado\n  }\n};"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          -128,
+          64
+        ],
+        "id": "72ce88fd-5d30-4d7c-b359-26b5dfd37f22",
+        "name": "Construir HTML"
+      },
+      {
+        "parameters": {
+          "toRecipients": "={{ $json.guest_email }}",
+          "subject": "=Confirmación de Reservación - Folio {{ $json.folio_formateado }}",
+          "bodyContent": "={{ $json.html }}",
+          "additionalFields": {
+            "bodyContentType": "html"
+          }
+        },
+        "type": "n8n-nodes-base.microsoftOutlook",
+        "typeVersion": 2,
+        "position": [
+          96,
+          64
+        ],
+        "id": "b7b9c97e-c305-45cc-94fb-9e0286d7ac54",
+        "name": "Enviar Email (Outlook)",
+        "webhookId": "f01d3f07-0b6f-44a8-b0f3-1faec163ea06",
+        "credentials": {
+          "microsoftOutlookOAuth2Api": {
+            "id": "hV3xyOpWUpR6z3K6",
+            "name": "Microsoft Outlook Asesor Comercial"
+          }
+        },
+        "onError": "continueErrorOutput"
+      },
+      {
+        "parameters": {
+          "jsCode": "// Formatear respuesta exitosa\nconst data = $('Construir HTML').item.json;\n\nconst response = {\n  success: true,\n  email_sent: true,\n  recipient: data.guest_email,\n  reservation_id: data.reservation_id,\n  sent_at: new Date().toISOString()\n};\n\nreturn { json: response };"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          320,
+          -32
+        ],
+        "id": "8070f8af-7a56-4019-86b1-4489947ae577",
+        "name": "Formatear Success"
+      },
+      {
+        "parameters": {
+          "respondWith": "json",
+          "responseBody": "={{ $json }}",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.respondToWebhook",
+        "typeVersion": 1.1,
+        "position": [
+          544,
+          -32
+        ],
+        "id": "ad31cda4-eab4-45f7-805d-e016cffd61fb",
+        "name": "Response Success"
+      },
+      {
+        "parameters": {
+          "respondWith": "json",
+          "responseBody": "={{ $json }}",
+          "options": {
+            "responseCode": 400
+          }
+        },
+        "type": "n8n-nodes-base.respondToWebhook",
+        "typeVersion": 1.1,
+        "position": [
+          -128,
+          256
+        ],
+        "id": "4857a02e-ab43-45f0-8cfb-8f0dee208a15",
+        "name": "Response Error Validation"
+      },
+      {
+        "parameters": {
+          "jsCode": "// Error al enviar email\nconst response = {\n  success: false,\n  error: {\n    code: 'EMAIL_SEND_FAILED',\n    message: 'Error al enviar email de confirmación'\n  }\n};\n\nreturn { json: response };"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          320,
+          160
+        ],
+        "id": "ac84cb66-5f51-4f26-b42e-d59e7f55928b",
+        "name": "Error Email"
+      },
+      {
+        "parameters": {
+          "respondWith": "json",
+          "responseBody": "={{ $json }}",
+          "options": {
+            "responseCode": 500
+          }
+        },
+        "type": "n8n-nodes-base.respondToWebhook",
+        "typeVersion": 1.1,
+        "position": [
+          544,
+          160
+        ],
+        "id": "e3b3a235-a7a3-43ee-aaf9-8175b0211abd",
+        "name": "Response Error 500"
+      }
+    ],
+    "connections": {
+      "Webhook": {
+        "main": [
+          [
+            {
+              "node": "Validar Entrada",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Validar Entrada": {
+        "main": [
+          [
+            {
+              "node": "¿Validación OK?",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "¿Validación OK?": {
+        "main": [
+          [
+            {
+              "node": "Construir HTML",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Response Error Validation",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Construir HTML": {
+        "main": [
+          [
+            {
+              "node": "Enviar Email (Outlook)",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Enviar Email (Outlook)": {
+        "main": [
+          [
+            {
+              "node": "Formatear Success",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Error Email",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Formatear Success": {
+        "main": [
+          [
+            {
+              "node": "Response Success",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Error Email": {
+        "main": [
+          [
+            {
+              "node": "Response Error 500",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "authors": "CANTERA ADMIN",
+    "name": null,
+    "description": null
+  }
+}
