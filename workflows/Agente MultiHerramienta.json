@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-03-17T17:59:06.000Z",
+  "updatedAt": "2026-03-17T18:40:51.000Z",
   "createdAt": "2026-03-03T01:20:00.866Z",
   "id": "7e8BytkZezISdom2",
   "name": "Agente MultiHerramienta",
@@ -222,7 +222,7 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 3,
       "position": [
-        32,
+        240,
         672
       ],
       "id": "6ef48201-aec8-41b8-9406-7e42162eaf47",
@@ -267,7 +267,7 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.3,
       "position": [
-        -48,
+        160,
         848
       ],
       "id": "552b5680-64ef-4ff8-a0de-d6caf2a18731",
@@ -276,83 +276,6 @@
         "openAiApi": {
           "id": "zZlJrTGKq8KER7gD",
           "name": "OpenAi account - GLASSY"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "operation": "appendOrUpdate",
-        "documentId": {
-          "__rl": true,
-          "value": "1_GBfXKFC_0YS9rJBIvt1rGnBl7LI_HbkRHHt1YJLT4s",
-          "mode": "list",
-          "cachedResultName": "Estado Glassy",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1_GBfXKFC_0YS9rJBIvt1rGnBl7LI_HbkRHHt1YJLT4s/edit?usp=drivesdk"
-        },
-        "sheetName": {
-          "__rl": true,
-          "value": "gid=0",
-          "mode": "list",
-          "cachedResultName": "estados",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1_GBfXKFC_0YS9rJBIvt1rGnBl7LI_HbkRHHt1YJLT4s/edit#gid=0"
-        },
-        "columns": {
-          "mappingMode": "defineBelow",
-          "value": {
-            "user_id": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
-            "current_state": "COTIZACION",
-            "updated_at": "={{ $now.setZone('America/Mexico_City').setLocale('es').toFormat(\"dd 'de' LLLL 'de' yyyy HH:mm:ss\") }}"
-          },
-          "matchingColumns": [
-            "user_id"
-          ],
-          "schema": [
-            {
-              "id": "user_id",
-              "displayName": "user_id",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": false
-            },
-            {
-              "id": "current_state",
-              "displayName": "current_state",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "updated_at",
-              "displayName": "updated_at",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            }
-          ],
-          "attemptToConvertTypes": false,
-          "convertFieldsToString": false
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.googleSheets",
-      "typeVersion": 4.7,
-      "position": [
-        -224,
-        368
-      ],
-      "id": "013cf890-9135-441a-b7a4-4d05bae3edda",
-      "name": "Append or update row in sheet",
-      "credentials": {
-        "googleSheetsOAuth2Api": {
-          "id": "Vg1ihuXHaIOWrqDt",
-          "name": "Google Sheets Aaron Permanentes"
         }
       }
     },
@@ -378,8 +301,8 @@
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 2.2,
       "position": [
-        480,
-        944
+        496,
+        928
       ],
       "id": "c619a223-e7a5-4e9b-8813-c7ac4f16d022",
       "name": "agente_cotizzacion"
@@ -403,7 +326,8 @@
             "modelo": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('modelo', ``, 'string') }}",
             "tipo_de_auto": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('tipo_de_auto', ``, 'string') }}",
             "cristal": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('cristal', ``, 'string') }}",
-            "respuesta_usuario": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('respuesta_usuario', ``, 'string') }}"
+            "respuesta_usuario": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('respuesta_usuario', ``, 'string') }}",
+            "user_name": "={{ $('Telegram Trigger').item.json.message.from.first_name }}"
           },
           "matchingColumns": [
             "listado_productos"
@@ -412,6 +336,16 @@
             {
               "id": "chat_id",
               "displayName": "chat_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "user_name",
+              "displayName": "user_name",
               "required": false,
               "defaultMatch": false,
               "display": true,
@@ -487,8 +421,8 @@
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 2.2,
       "position": [
-        640,
-        944
+        656,
+        928
       ],
       "id": "69ff3c50-2d24-47bb-b610-7c7b8d17dd01",
       "name": "agente_filtrador"
@@ -565,8 +499,8 @@
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 2.2,
       "position": [
-        992,
-        944
+        1008,
+        928
       ],
       "id": "3c1f5905-275f-49b1-a138-51490975cfa8",
       "name": "tool_info_aditamento"
@@ -628,8 +562,8 @@
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 2.2,
       "position": [
-        1184,
-        944
+        1200,
+        928
       ],
       "id": "be42ce7e-5e70-464d-a2a1-d2696c823e93",
       "name": "tool_filtro_aditamentos"
@@ -823,8 +757,8 @@
       "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
       "typeVersion": 2.2,
       "position": [
-        1376,
-        944
+        1392,
+        928
       ],
       "id": "50b3c694-d0f4-4373-893d-12731ebc520f",
       "name": "Consulta_Cotización"
@@ -847,8 +781,8 @@
       "type": "n8n-nodes-base.supabaseTool",
       "typeVersion": 1,
       "position": [
-        800,
-        944
+        816,
+        928
       ],
       "id": "b6067103-9677-4f06-830a-a213b20a20ac",
       "name": "tool_detalle_producto",
@@ -869,7 +803,7 @@
       "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
       "typeVersion": 1.3,
       "position": [
-        112,
+        320,
         944
       ],
       "id": "6801a52e-369f-4e1b-a5ce-8e0157c56506",
@@ -1044,7 +978,7 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        384,
+        592,
         672
       ],
       "id": "67c3a1f0-6a39-4857-baca-947fc8276386",
@@ -1333,7 +1267,7 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.6,
       "position": [
-        384,
+        592,
         528
       ],
       "id": "a6716806-15a0-41a9-a0a2-7b11c33733ab",
@@ -1433,31 +1367,184 @@
     },
     {
       "parameters": {
-        "description": "Tu eres el agente_registro y te encargas de registrar la interacción inicial del usuario",
-        "workflowId": {
+        "operation": "appendOrUpdate",
+        "documentId": {
           "__rl": true,
-          "value": "tGwY3sT6JSe2WZWY",
+          "value": "1_GBfXKFC_0YS9rJBIvt1rGnBl7LI_HbkRHHt1YJLT4s",
           "mode": "list",
-          "cachedResultUrl": "/workflow/tGwY3sT6JSe2WZWY",
-          "cachedResultName": "Agente Glassy Registro Interacción"
+          "cachedResultName": "Estado Glassy",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1_GBfXKFC_0YS9rJBIvt1rGnBl7LI_HbkRHHt1YJLT4s/edit?usp=drivesdk"
         },
-        "workflowInputs": {
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "estados",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1_GBfXKFC_0YS9rJBIvt1rGnBl7LI_HbkRHHt1YJLT4s/edit#gid=0"
+        },
+        "columns": {
           "mappingMode": "defineBelow",
-          "value": {},
-          "matchingColumns": [],
-          "schema": [],
+          "value": {
+            "user_id": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+            "current_state": "COTIZACION",
+            "updated_at": "={{ $now.setZone('America/Mexico_City').setLocale('es').toFormat(\"dd 'de' LLLL 'de' yyyy HH:mm:ss\") }}"
+          },
+          "matchingColumns": [
+            "user_id"
+          ],
+          "schema": [
+            {
+              "id": "user_id",
+              "displayName": "user_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "current_state",
+              "displayName": "current_state",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "updated_at",
+              "displayName": "updated_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "filter",
+              "displayName": "filter",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
           "attemptToConvertTypes": false,
           "convertFieldsToString": false
-        }
+        },
+        "options": {}
       },
-      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
-      "typeVersion": 2.2,
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
       "position": [
-        288,
-        944
+        -224,
+        368
       ],
-      "id": "8789213e-65c4-4478-978d-5c7055e0cac7",
-      "name": "agente_registro_2"
+      "id": "013cf890-9135-441a-b7a4-4d05bae3edda",
+      "name": "Cambio de estado",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Vg1ihuXHaIOWrqDt",
+          "name": "Google Sheets Aaron Permanentes"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1L0yBRQss7tAWz9GFaVJkjsV1QP89hq0uBXwyHFGz1Dg",
+          "mode": "list",
+          "cachedResultName": "Registro de Interacción Glassy",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1L0yBRQss7tAWz9GFaVJkjsV1QP89hq0uBXwyHFGz1Dg/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1L0yBRQss7tAWz9GFaVJkjsV1QP89hq0uBXwyHFGz1Dg/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Fecha": "={{ $now.minus({ hours: 0 }).setLocale('es').toFormat(\"dd 'de' LLLL 'de' yyyy\") }}",
+            "Hora": "={{ $now.minus({ hours: 0 }).setLocale('es').toFormat(\"HH:mm\") }}",
+            "ChatID": "={{ $('Telegram Trigger').first().json.message.chat.id }}",
+            "Nombre": "={{ $('Telegram Trigger').item.json.message.from.first_name }}",
+            "Solicitud": "={{ $('Telegram Trigger').first().json.message.text }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Fecha",
+              "displayName": "Fecha",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Hora",
+              "displayName": "Hora",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "ChatID",
+              "displayName": "ChatID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Nombre",
+              "displayName": "Nombre",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Solicitud",
+              "displayName": "Solicitud",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -16,
+        368
+      ],
+      "id": "b9befec3-77fd-406e-860e-7a3ba5a7bcca",
+      "name": "Registro interacción",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Vg1ihuXHaIOWrqDt",
+          "name": "Google Sheets Aaron Permanentes"
+        }
+      }
     }
   ],
   "connections": {
@@ -1508,7 +1595,7 @@
         ],
         [
           {
-            "node": "Append or update row in sheet",
+            "node": "Cambio de estado",
             "type": "main",
             "index": 0
           }
@@ -1582,17 +1669,6 @@
           {
             "node": "AI Agent1",
             "type": "ai_languageModel",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Append or update row in sheet": {
-      "main": [
-        [
-          {
-            "node": "AI Agent1",
-            "type": "main",
             "index": 0
           }
         ]
@@ -1791,12 +1867,23 @@
         ]
       ]
     },
-    "agente_registro_2": {
-      "ai_tool": [
+    "Cambio de estado": {
+      "main": [
+        [
+          {
+            "node": "Registro interacción",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Registro interacción": {
+      "main": [
         [
           {
             "node": "AI Agent1",
-            "type": "ai_tool",
+            "type": "main",
             "index": 0
           }
         ]
@@ -1835,9 +1922,9 @@
       }
     ]
   },
-  "versionId": "5322507e-8bed-4311-9529-a1906d1d61c5",
-  "activeVersionId": "5322507e-8bed-4311-9529-a1906d1d61c5",
-  "versionCounter": 339,
+  "versionId": "64df267b-46be-45c8-b964-53a50b406969",
+  "activeVersionId": "64df267b-46be-45c8-b964-53a50b406969",
+  "versionCounter": 367,
   "triggerCount": 1,
   "shared": [
     {
@@ -1902,9 +1989,9 @@
   ],
   "tags": [],
   "activeVersion": {
-    "updatedAt": "2026-03-17T17:58:57.956Z",
-    "createdAt": "2026-03-17T17:58:57.956Z",
-    "versionId": "5322507e-8bed-4311-9529-a1906d1d61c5",
+    "updatedAt": "2026-03-17T18:34:13.083Z",
+    "createdAt": "2026-03-17T18:34:13.083Z",
+    "versionId": "64df267b-46be-45c8-b964-53a50b406969",
     "workflowId": "7e8BytkZezISdom2",
     "nodes": [
       {
@@ -2122,7 +2209,7 @@
         "type": "@n8n/n8n-nodes-langchain.agent",
         "typeVersion": 3,
         "position": [
-          32,
+          240,
           672
         ],
         "id": "6ef48201-aec8-41b8-9406-7e42162eaf47",
@@ -2167,7 +2254,7 @@
         "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
         "typeVersion": 1.3,
         "position": [
-          -48,
+          160,
           848
         ],
         "id": "552b5680-64ef-4ff8-a0de-d6caf2a18731",
@@ -2176,83 +2263,6 @@
           "openAiApi": {
             "id": "zZlJrTGKq8KER7gD",
             "name": "OpenAi account - GLASSY"
-          }
-        }
-      },
-      {
-        "parameters": {
-          "operation": "appendOrUpdate",
-          "documentId": {
-            "__rl": true,
-            "value": "1_GBfXKFC_0YS9rJBIvt1rGnBl7LI_HbkRHHt1YJLT4s",
-            "mode": "list",
-            "cachedResultName": "Estado Glassy",
-            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1_GBfXKFC_0YS9rJBIvt1rGnBl7LI_HbkRHHt1YJLT4s/edit?usp=drivesdk"
-          },
-          "sheetName": {
-            "__rl": true,
-            "value": "gid=0",
-            "mode": "list",
-            "cachedResultName": "estados",
-            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1_GBfXKFC_0YS9rJBIvt1rGnBl7LI_HbkRHHt1YJLT4s/edit#gid=0"
-          },
-          "columns": {
-            "mappingMode": "defineBelow",
-            "value": {
-              "user_id": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
-              "current_state": "COTIZACION",
-              "updated_at": "={{ $now.setZone('America/Mexico_City').setLocale('es').toFormat(\"dd 'de' LLLL 'de' yyyy HH:mm:ss\") }}"
-            },
-            "matchingColumns": [
-              "user_id"
-            ],
-            "schema": [
-              {
-                "id": "user_id",
-                "displayName": "user_id",
-                "required": false,
-                "defaultMatch": false,
-                "display": true,
-                "type": "string",
-                "canBeUsedToMatch": true,
-                "removed": false
-              },
-              {
-                "id": "current_state",
-                "displayName": "current_state",
-                "required": false,
-                "defaultMatch": false,
-                "display": true,
-                "type": "string",
-                "canBeUsedToMatch": true
-              },
-              {
-                "id": "updated_at",
-                "displayName": "updated_at",
-                "required": false,
-                "defaultMatch": false,
-                "display": true,
-                "type": "string",
-                "canBeUsedToMatch": true
-              }
-            ],
-            "attemptToConvertTypes": false,
-            "convertFieldsToString": false
-          },
-          "options": {}
-        },
-        "type": "n8n-nodes-base.googleSheets",
-        "typeVersion": 4.7,
-        "position": [
-          -224,
-          368
-        ],
-        "id": "013cf890-9135-441a-b7a4-4d05bae3edda",
-        "name": "Append or update row in sheet",
-        "credentials": {
-          "googleSheetsOAuth2Api": {
-            "id": "Vg1ihuXHaIOWrqDt",
-            "name": "Google Sheets Aaron Permanentes"
           }
         }
       },
@@ -2278,8 +2288,8 @@
         "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
         "typeVersion": 2.2,
         "position": [
-          480,
-          944
+          496,
+          928
         ],
         "id": "c619a223-e7a5-4e9b-8813-c7ac4f16d022",
         "name": "agente_cotizzacion"
@@ -2303,7 +2313,8 @@
               "modelo": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('modelo', ``, 'string') }}",
               "tipo_de_auto": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('tipo_de_auto', ``, 'string') }}",
               "cristal": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('cristal', ``, 'string') }}",
-              "respuesta_usuario": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('respuesta_usuario', ``, 'string') }}"
+              "respuesta_usuario": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('respuesta_usuario', ``, 'string') }}",
+              "user_name": "={{ $('Telegram Trigger').item.json.message.from.first_name }}"
             },
             "matchingColumns": [
               "listado_productos"
@@ -2312,6 +2323,16 @@
               {
                 "id": "chat_id",
                 "displayName": "chat_id",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string",
+                "removed": false
+              },
+              {
+                "id": "user_name",
+                "displayName": "user_name",
                 "required": false,
                 "defaultMatch": false,
                 "display": true,
@@ -2387,8 +2408,8 @@
         "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
         "typeVersion": 2.2,
         "position": [
-          640,
-          944
+          656,
+          928
         ],
         "id": "69ff3c50-2d24-47bb-b610-7c7b8d17dd01",
         "name": "agente_filtrador"
@@ -2465,8 +2486,8 @@
         "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
         "typeVersion": 2.2,
         "position": [
-          992,
-          944
+          1008,
+          928
         ],
         "id": "3c1f5905-275f-49b1-a138-51490975cfa8",
         "name": "tool_info_aditamento"
@@ -2528,8 +2549,8 @@
         "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
         "typeVersion": 2.2,
         "position": [
-          1184,
-          944
+          1200,
+          928
         ],
         "id": "be42ce7e-5e70-464d-a2a1-d2696c823e93",
         "name": "tool_filtro_aditamentos"
@@ -2723,8 +2744,8 @@
         "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
         "typeVersion": 2.2,
         "position": [
-          1376,
-          944
+          1392,
+          928
         ],
         "id": "50b3c694-d0f4-4373-893d-12731ebc520f",
         "name": "Consulta_Cotización"
@@ -2747,8 +2768,8 @@
         "type": "n8n-nodes-base.supabaseTool",
         "typeVersion": 1,
         "position": [
-          800,
-          944
+          816,
+          928
         ],
         "id": "b6067103-9677-4f06-830a-a213b20a20ac",
         "name": "tool_detalle_producto",
@@ -2769,7 +2790,7 @@
         "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
         "typeVersion": 1.3,
         "position": [
-          112,
+          320,
           944
         ],
         "id": "6801a52e-369f-4e1b-a5ce-8e0157c56506",
@@ -2944,7 +2965,7 @@
         "type": "n8n-nodes-base.telegram",
         "typeVersion": 1.2,
         "position": [
-          384,
+          592,
           672
         ],
         "id": "67c3a1f0-6a39-4857-baca-947fc8276386",
@@ -3233,7 +3254,7 @@
         "type": "n8n-nodes-base.googleSheets",
         "typeVersion": 4.6,
         "position": [
-          384,
+          592,
           528
         ],
         "id": "a6716806-15a0-41a9-a0a2-7b11c33733ab",
@@ -3333,31 +3354,184 @@
       },
       {
         "parameters": {
-          "description": "Tu eres el agente_registro y te encargas de registrar la interacción inicial del usuario",
-          "workflowId": {
+          "operation": "appendOrUpdate",
+          "documentId": {
             "__rl": true,
-            "value": "tGwY3sT6JSe2WZWY",
+            "value": "1_GBfXKFC_0YS9rJBIvt1rGnBl7LI_HbkRHHt1YJLT4s",
             "mode": "list",
-            "cachedResultUrl": "/workflow/tGwY3sT6JSe2WZWY",
-            "cachedResultName": "Agente Glassy Registro Interacción"
+            "cachedResultName": "Estado Glassy",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1_GBfXKFC_0YS9rJBIvt1rGnBl7LI_HbkRHHt1YJLT4s/edit?usp=drivesdk"
           },
-          "workflowInputs": {
+          "sheetName": {
+            "__rl": true,
+            "value": "gid=0",
+            "mode": "list",
+            "cachedResultName": "estados",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1_GBfXKFC_0YS9rJBIvt1rGnBl7LI_HbkRHHt1YJLT4s/edit#gid=0"
+          },
+          "columns": {
             "mappingMode": "defineBelow",
-            "value": {},
-            "matchingColumns": [],
-            "schema": [],
+            "value": {
+              "user_id": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+              "current_state": "COTIZACION",
+              "updated_at": "={{ $now.setZone('America/Mexico_City').setLocale('es').toFormat(\"dd 'de' LLLL 'de' yyyy HH:mm:ss\") }}"
+            },
+            "matchingColumns": [
+              "user_id"
+            ],
+            "schema": [
+              {
+                "id": "user_id",
+                "displayName": "user_id",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "current_state",
+                "displayName": "current_state",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "updated_at",
+                "displayName": "updated_at",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "filter",
+                "displayName": "filter",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              }
+            ],
             "attemptToConvertTypes": false,
             "convertFieldsToString": false
-          }
+          },
+          "options": {}
         },
-        "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
-        "typeVersion": 2.2,
+        "type": "n8n-nodes-base.googleSheets",
+        "typeVersion": 4.7,
         "position": [
-          288,
-          944
+          -224,
+          368
         ],
-        "id": "8789213e-65c4-4478-978d-5c7055e0cac7",
-        "name": "agente_registro_2"
+        "id": "013cf890-9135-441a-b7a4-4d05bae3edda",
+        "name": "Cambio de estado",
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "Vg1ihuXHaIOWrqDt",
+            "name": "Google Sheets Aaron Permanentes"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "append",
+          "documentId": {
+            "__rl": true,
+            "value": "1L0yBRQss7tAWz9GFaVJkjsV1QP89hq0uBXwyHFGz1Dg",
+            "mode": "list",
+            "cachedResultName": "Registro de Interacción Glassy",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1L0yBRQss7tAWz9GFaVJkjsV1QP89hq0uBXwyHFGz1Dg/edit?usp=drivesdk"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": "gid=0",
+            "mode": "list",
+            "cachedResultName": "Hoja 1",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1L0yBRQss7tAWz9GFaVJkjsV1QP89hq0uBXwyHFGz1Dg/edit#gid=0"
+          },
+          "columns": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "Fecha": "={{ $now.minus({ hours: 0 }).setLocale('es').toFormat(\"dd 'de' LLLL 'de' yyyy\") }}",
+              "Hora": "={{ $now.minus({ hours: 0 }).setLocale('es').toFormat(\"HH:mm\") }}",
+              "ChatID": "={{ $('Telegram Trigger').first().json.message.chat.id }}",
+              "Nombre": "={{ $('Telegram Trigger').item.json.message.from.first_name }}",
+              "Solicitud": "={{ $('Telegram Trigger').first().json.message.text }}"
+            },
+            "matchingColumns": [],
+            "schema": [
+              {
+                "id": "Fecha",
+                "displayName": "Fecha",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "Hora",
+                "displayName": "Hora",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "ChatID",
+                "displayName": "ChatID",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "Nombre",
+                "displayName": "Nombre",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "Solicitud",
+                "displayName": "Solicitud",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleSheets",
+        "typeVersion": 4.7,
+        "position": [
+          -16,
+          368
+        ],
+        "id": "b9befec3-77fd-406e-860e-7a3ba5a7bcca",
+        "name": "Registro interacción",
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "Vg1ihuXHaIOWrqDt",
+            "name": "Google Sheets Aaron Permanentes"
+          }
+        }
       }
     ],
     "connections": {
@@ -3408,7 +3582,7 @@
           ],
           [
             {
-              "node": "Append or update row in sheet",
+              "node": "Cambio de estado",
               "type": "main",
               "index": 0
             }
@@ -3482,17 +3656,6 @@
             {
               "node": "AI Agent1",
               "type": "ai_languageModel",
-              "index": 0
-            }
-          ]
-        ]
-      },
-      "Append or update row in sheet": {
-        "main": [
-          [
-            {
-              "node": "AI Agent1",
-              "type": "main",
               "index": 0
             }
           ]
@@ -3691,12 +3854,23 @@
           ]
         ]
       },
-      "agente_registro_2": {
-        "ai_tool": [
+      "Cambio de estado": {
+        "main": [
+          [
+            {
+              "node": "Registro interacción",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Registro interacción": {
+        "main": [
           [
             {
               "node": "AI Agent1",
-              "type": "ai_tool",
+              "type": "main",
               "index": 0
             }
           ]
