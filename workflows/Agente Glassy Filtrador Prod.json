@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2025-09-29T20:43:53.000Z",
+  "updatedAt": "2026-03-18T00:36:10.000Z",
   "createdAt": "2025-09-29T19:02:12.427Z",
   "id": "5xylK7XDAkPDlQ99",
   "name": "Agente Glassy Filtrador Prod",
@@ -105,7 +105,7 @@
     },
     {
       "parameters": {
-        "url": "=https://butik-vidrio.canteradigital.mx/api/finder/searchProducts/filtered?year={{ $json.output.year }}&brand={{ $json.output.brand }}&model={{ $json.output.model }}&car_type={{ $json.output.car_type }}&type_glass={{ $json.output.type_glass }}&antenna=false&encapsulated=false&hud=false&heated=false&attachment=false&request_origin=chatbot",
+        "url": "=https://glasbil.com/api/finder/searchProducts/filtered?year={{ $json.output.year }}&brand={{ $json.output.brand }}&model={{ $json.output.model }}&car_type={{ $json.output.car_type }}&type_glass={{ $json.output.type_glass }}&antenna=false&encapsulated=false&hud=false&heated=false&attachment=false&request_origin=chatbot",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
@@ -122,7 +122,7 @@
         "promptType": "define",
         "text": "={{ $json.data }}",
         "options": {
-          "systemMessage": "=Tu única función es actuar como un procesador de datos JSON eficiente. Recibirás una lista de productos en el input `{{ $json.data }}`.\n\nTu tarea es filtrar y transformar esta lista. **Si varios productos comparten el mismo valor en el campo `nag`, solo debes procesar el primer producto que encuentres y descartar los duplicados posteriores.**\n\nPara cada producto único (según el criterio del 'nag'), crea un nuevo objeto JSON que contenga exclusivamente los siguientes campos:\n1.  `nombre`: extraído del campo `name`.\n2.  `imagenURL`: extraído del campo `nag_graphic`.\n3.  `identificadores`: un objeto que contenga `external_id`, `origin` y `nag`.\n4.  `caracteristicas`: un objeto que contenga `color` y `ad_info_a` del objeto anidado `nag_info`.\n\nEl resultado final debe ser un array JSON que contenga solo los objetos de los productos únicos y procesados. Si el input está vacío, devuelve un array vacío `[]`.\n\nTu respuesta DEBE ser únicamente el array JSON válido y nada más. No incluyas texto explicativo, comentarios, ni la palabra \"json\" antes del código."
+          "systemMessage": "=Tu única función es actuar como un procesador de datos JSON eficiente. Recibirás una lista de productos en el input `{{ $json.data }}`.\n\nTu tarea es filtrar y transformar esta lista. **Si varios productos comparten el mismo valor en el campo `nag`, solo debes procesar el primer producto que encuentres y descartar los duplicados posteriores.**\n\nPara cada producto único (según el criterio del 'nag'), crea un nuevo objeto JSON que contenga exclusivamente los siguientes campos:\n1.  `nombre`: extraído del campo `name`.\n2.  `imagenURL`: extraído del campo `nag_graphic`.\n3.  `identificadores`: un objeto que contenga `external_id`, `origin` y `nag`.\n4.  `caracteristicas`: un objeto que contenga `color` y `ad_info_a` del objeto anidado `nag_info`.\n5.  `product_price`: el dato del precio del producto\n\nEl resultado final debe ser un array JSON que contenga solo los objetos de los productos únicos y procesados. Si el input está vacío, devuelve un array vacío `[]`.\n\nTu respuesta DEBE ser únicamente el array JSON válido y nada más. No incluyas texto explicativo, comentarios, ni la palabra \"json\" antes del código."
         }
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
@@ -152,8 +152,8 @@
       "type": "@n8n/n8n-nodes-langchain.informationExtractor",
       "typeVersion": 1.2,
       "position": [
-        -784,
-        -16
+        -816,
+        -384
       ],
       "id": "e53b2b50-d300-4ab0-98aa-1718dcc09ee0",
       "name": "Information Extractor"
@@ -185,8 +185,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        -400,
-        -16
+        -432,
+        -384
       ],
       "id": "84c327a7-bbdd-4039-a68d-3a9830e64eba",
       "name": "If"
@@ -234,8 +234,8 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        352,
-        -112
+        320,
+        -480
       ],
       "id": "c7c0bd81-e841-4ea7-8d55-b3730875a89f",
       "name": "Create a row",
@@ -283,8 +283,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        128,
-        -112
+        96,
+        -480
       ],
       "id": "3464a2f7-6832-4eac-a94a-6ebd13fe0f5f",
       "name": "Limpia JSON"
@@ -305,11 +305,83 @@
       "type": "@n8n/n8n-nodes-langchain.chainLlm",
       "typeVersion": 1.7,
       "position": [
-        -192,
-        -112
+        -224,
+        -480
       ],
       "id": "cf5ab6a5-28cb-4e85-a7b8-bf706f02d4e7",
       "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "jsCode": "// 1. Obtener el contenido del mensaje del modelo de IA.\n// Esta es la cadena de texto que puede venir con \"```json\" al inicio.\nlet content = $('AI Agent').first().json.output;\n\n// 2. Limpiar la cadena de texto.\n// Este comando elimina el bloque de código Markdown \"```json\" del inicio \n// y \"```\" del final. Si no los encuentra, no hace nada. \n// Por eso funciona para ambos casos (cuando la salida es correcta y cuando no).\nconst cleanedString = content.replace(/^```json\\s*/, '').replace(/\\s*```$/, '');\n\n// 3. Convertir (parsear) la cadena limpia a un objeto JSON real.\n// Esto transforma el texto en datos que los siguientes nodos pueden entender.\nconst finalJson = JSON.parse(cleanedString);\n\n// 4. Devolver el objeto JSON limpio como salida de este nodo.\nreturn finalJson;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -784,
+        -16
+      ],
+      "id": "c117b6dc-053f-4acb-b084-c8ec1e41977f",
+      "name": "Limpia JSON1"
+    },
+    {
+      "parameters": {
+        "tableId": "glassy_filtered_products_prod",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "chat_id",
+              "fieldValue": "={{ $('When Executed by Another Workflow').item.json.chat_id }}"
+            },
+            {
+              "fieldId": "product_name",
+              "fieldValue": "={{ $json.nombre }}"
+            },
+            {
+              "fieldId": "imagenURL",
+              "fieldValue": "={{ $json.imagenURL }}"
+            },
+            {
+              "fieldId": "external_id",
+              "fieldValue": "={{ $json.identificadores.external_id }}"
+            },
+            {
+              "fieldId": "origin",
+              "fieldValue": "={{ $json.identificadores.origin }}"
+            },
+            {
+              "fieldId": "nag",
+              "fieldValue": "={{ $json.identificadores.nag }}"
+            },
+            {
+              "fieldId": "color",
+              "fieldValue": "={{ $json.caracteristicas.color }}"
+            },
+            {
+              "fieldId": "ad_info_a",
+              "fieldValue": "={{ $json.caracteristicas.ad_info_a }}"
+            },
+            {
+              "fieldId": "product_price",
+              "fieldValue": "={{ $json.product_price }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        -576,
+        -16
+      ],
+      "id": "7e299b97-d911-4414-a811-218e68f44d66",
+      "name": "Create a row1",
+      "credentials": {
+        "supabaseApi": {
+          "id": "ty0KiXsEYP1uJ8t9",
+          "name": "Supabase account - CANTERA"
+        }
+      }
     }
   ],
   "connections": {
@@ -334,16 +406,6 @@
           },
           {
             "node": "AI Agent",
-            "type": "ai_languageModel",
-            "index": 0
-          },
-          {
-            "node": "Information Extractor",
-            "type": "ai_languageModel",
-            "index": 0
-          },
-          {
-            "node": "Basic LLM Chain",
             "type": "ai_languageModel",
             "index": 0
           }
@@ -376,7 +438,7 @@
       "main": [
         [
           {
-            "node": "Information Extractor",
+            "node": "Limpia JSON1",
             "type": "main",
             "index": 0
           }
@@ -437,6 +499,17 @@
           }
         ]
       ]
+    },
+    "Limpia JSON1": {
+      "main": [
+        [
+          {
+            "node": "Create a row1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -454,9 +527,9 @@
       }
     ]
   },
-  "versionId": "72c701e2-f293-41ae-98a7-8521fc4d692c",
+  "versionId": "dc2119c0-da02-4d7f-9bdb-c02803a35682",
   "activeVersionId": null,
-  "versionCounter": 1,
+  "versionCounter": 3,
   "triggerCount": 0,
   "shared": [
     {
@@ -480,7 +553,7 @@
             "userId": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
             "projectId": "BZ9Ta5yhe4RhzY78",
             "user": {
-              "updatedAt": "2026-03-18T00:00:37.000Z",
+              "updatedAt": "2026-03-18T01:00:37.000Z",
               "createdAt": "2025-05-13T15:56:27.880Z",
               "id": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
               "email": "canteradigital7@gmail.com",
