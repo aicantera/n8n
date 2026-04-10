@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-03-18T00:36:10.000Z",
+  "updatedAt": "2026-04-10T17:52:41.000Z",
   "createdAt": "2025-09-29T19:02:12.427Z",
   "id": "5xylK7XDAkPDlQ99",
   "name": "Agente Glassy Filtrador Prod",
@@ -136,118 +136,6 @@
     },
     {
       "parameters": {
-        "text": "={{ $json.output }}",
-        "attributes": {
-          "attributes": [
-            {
-              "name": "cantidad_productos",
-              "type": "number",
-              "description": "Cuenta la cantidad de productos",
-              "required": true
-            }
-          ]
-        },
-        "options": {}
-      },
-      "type": "@n8n/n8n-nodes-langchain.informationExtractor",
-      "typeVersion": 1.2,
-      "position": [
-        -816,
-        -384
-      ],
-      "id": "e53b2b50-d300-4ab0-98aa-1718dcc09ee0",
-      "name": "Information Extractor"
-    },
-    {
-      "parameters": {
-        "conditions": {
-          "options": {
-            "caseSensitive": true,
-            "leftValue": "",
-            "typeValidation": "strict",
-            "version": 2
-          },
-          "conditions": [
-            {
-              "id": "dbc67929-5076-4086-9cf7-a0ce31903029",
-              "leftValue": "={{ $json.output.cantidad_productos }}",
-              "rightValue": 1,
-              "operator": {
-                "type": "number",
-                "operation": "gt"
-              }
-            }
-          ],
-          "combinator": "and"
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 2.2,
-      "position": [
-        -432,
-        -384
-      ],
-      "id": "84c327a7-bbdd-4039-a68d-3a9830e64eba",
-      "name": "If"
-    },
-    {
-      "parameters": {
-        "tableId": "glassy_filtered_products_prod",
-        "fieldsUi": {
-          "fieldValues": [
-            {
-              "fieldId": "chat_id",
-              "fieldValue": "={{ $('When Executed by Another Workflow').item.json.chat_id }}"
-            },
-            {
-              "fieldId": "product_name",
-              "fieldValue": "={{ $json.nombre }}"
-            },
-            {
-              "fieldId": "imagenURL",
-              "fieldValue": "={{ $json.imagenURL }}"
-            },
-            {
-              "fieldId": "external_id",
-              "fieldValue": "={{ $json.identificadores.external_id }}"
-            },
-            {
-              "fieldId": "origin",
-              "fieldValue": "={{ $json.identificadores.origin }}"
-            },
-            {
-              "fieldId": "nag",
-              "fieldValue": "={{ $json.identificadores.nag }}"
-            },
-            {
-              "fieldId": "color",
-              "fieldValue": "={{ $json.caracteristicas.color }}"
-            },
-            {
-              "fieldId": "ad_info_a",
-              "fieldValue": "={{ $json.caracteristicas.ad_info_a }}"
-            }
-          ]
-        }
-      },
-      "type": "n8n-nodes-base.supabase",
-      "typeVersion": 1,
-      "position": [
-        320,
-        -480
-      ],
-      "id": "c7c0bd81-e841-4ea7-8d55-b3730875a89f",
-      "name": "Create a row",
-      "credentials": {
-        "supabaseApi": {
-          "id": "ty0KiXsEYP1uJ8t9",
-          "name": "Supabase account - CANTERA"
-        }
-      }
-    },
-    {
-      "parameters": {
         "operation": "delete",
         "tableId": "glassy_filtered_products_prod",
         "filters": {
@@ -275,41 +163,6 @@
           "name": "Supabase account - CANTERA"
         }
       }
-    },
-    {
-      "parameters": {
-        "jsCode": "// 1. Obtener el contenido del mensaje del modelo de IA.\n// Esta es la cadena de texto que puede venir con \"```json\" al inicio.\nlet content = $input.item.json.text;\n\n// 2. Limpiar la cadena de texto.\n// Este comando elimina el bloque de código Markdown \"```json\" del inicio \n// y \"```\" del final. Si no los encuentra, no hace nada. \n// Por eso funciona para ambos casos (cuando la salida es correcta y cuando no).\nconst cleanedString = content.replace(/^```json\\s*/, '').replace(/\\s*```$/, '');\n\n// 3. Convertir (parsear) la cadena limpia a un objeto JSON real.\n// Esto transforma el texto en datos que los siguientes nodos pueden entender.\nconst finalJson = JSON.parse(cleanedString);\n\n// 4. Devolver el objeto JSON limpio como salida de este nodo.\nreturn finalJson;"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        96,
-        -480
-      ],
-      "id": "3464a2f7-6832-4eac-a94a-6ebd13fe0f5f",
-      "name": "Limpia JSON"
-    },
-    {
-      "parameters": {
-        "promptType": "define",
-        "text": "={{ $('AI Agent').item.json.output }}",
-        "messages": {
-          "messageValues": [
-            {
-              "message": "=### **Rol y Objetivo:**\nEres un asistente de automatización especializado en filtrar datos JSON. Tu única función es procesar una lista de productos y devolver una sub-lista basada en un criterio, o la lista completa si no se especifica ningún criterio.\n\n### **Entradas:**\n1.  **Lista de Productos:** Una lista de objetos JSON que recibes en el flujo de n8n.\n2.  **Criterio de Filtrado:** Las características deseadas, contenidas en la variable `{{ $('Information Extractor1').item.json.output.caracteristicas }}`.\n\n### **Lógica de Ejecución (Reglas Estrictas):**\n\n1.  **Verifica el Criterio de Filtrado:** Primero, inspecciona el valor de `{{ $('Information Extractor1').item.json.output.caracteristicas }}`.\n\n2.  **Ejecuta una de las siguientes dos acciones:**\n    * **CASO A: Si el valor es `ninguna`**\n        * Tu única acción es devolver la **lista de productos de entrada original**, completa y sin ninguna modificación.\n\n    * **CASO B: Si el valor es cualquier otro**\n        * Compara estas características con las de cada producto en la lista.\n        * Genera y devuelve una **nueva lista** que contenga únicamente los productos que coincidan con **todos** los criterios especificados.\n\n### **Formato de Salida Obligatorio:**\n* Tu respuesta debe ser **exclusivamente el arreglo JSON** de productos resultante.\n* **No incluyas texto introductorio, explicaciones, resúmenes o cualquier otra palabra.** La salida debe ser un JSON limpio y válido que pueda ser procesado por los siguientes nodos del flujo de trabajo."
-            }
-          ]
-        },
-        "batching": {}
-      },
-      "type": "@n8n/n8n-nodes-langchain.chainLlm",
-      "typeVersion": 1.7,
-      "position": [
-        -224,
-        -480
-      ],
-      "id": "cf5ab6a5-28cb-4e85-a7b8-bf706f02d4e7",
-      "name": "Basic LLM Chain"
     },
     {
       "parameters": {
@@ -445,55 +298,11 @@
         ]
       ]
     },
-    "Information Extractor": {
-      "main": [
-        [
-          {
-            "node": "If",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "If": {
-      "main": [
-        [
-          {
-            "node": "Basic LLM Chain",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Delete a row": {
       "main": [
         [
           {
             "node": "Information Extractor1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Limpia JSON": {
-      "main": [
-        [
-          {
-            "node": "Create a row",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Basic LLM Chain": {
-      "main": [
-        [
-          {
-            "node": "Limpia JSON",
             "type": "main",
             "index": 0
           }
@@ -527,9 +336,9 @@
       }
     ]
   },
-  "versionId": "dc2119c0-da02-4d7f-9bdb-c02803a35682",
+  "versionId": "e9657bdb-5254-4b32-8692-a43b5ca43d4c",
   "activeVersionId": null,
-  "versionCounter": 3,
+  "versionCounter": 4,
   "triggerCount": 0,
   "shared": [
     {
