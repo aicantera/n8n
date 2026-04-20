@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-04-17T20:52:23.000Z",
+  "updatedAt": "2026-04-20T19:56:39.000Z",
   "createdAt": "2026-03-03T01:20:00.866Z",
   "id": "7e8BytkZezISdom2",
   "name": "Agente MultiHerramienta",
@@ -1413,6 +1413,162 @@
       ],
       "id": "68653c88-cbfc-46ef-861c-9b13bdace51e",
       "name": "tool_consulta_usuario"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "propertyName": "mensaje",
+        "key": "=glassyDev-{{ $('Telegram Trigger').first().json.message.chat.id }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        -1344,
+        1296
+      ],
+      "id": "502c6cda-5d44-4952-84ce-8c7bedbe86ad",
+      "name": "obtenemos los datos del buffer",
+      "credentials": {
+        "redis": {
+          "id": "D8enpdVeoS0YaHLV",
+          "name": "Redis cantera"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "push",
+        "list": "=glassyDev-{{ $('Telegram Trigger').first().json.message.chat.id }}",
+        "messageData": "={{ JSON.stringify({\n'message': $json.message.text,\n'sessionId': $('Telegram Trigger').first().json.message.chat.id,\n'date_time': $now.toLocal() \n}) }}"
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        -1536,
+        1296
+      ],
+      "id": "74138e34-2483-4376-a970-742c375c7ac9",
+      "name": "añadimos al buffer",
+      "credentials": {
+        "redis": {
+          "id": "D8enpdVeoS0YaHLV",
+          "name": "Redis cantera"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "key": "=glassyDev-{{ $('Telegram Trigger').first().json.message.chat.id }}"
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        -912,
+        1296
+      ],
+      "id": "9f3f3ad0-f8b7-4059-912b-efad634dd1a1",
+      "name": "delete_buffer_data",
+      "credentials": {
+        "redis": {
+          "id": "D8enpdVeoS0YaHLV",
+          "name": "Redis cantera"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ JSON.parse($json.mensaje.last()).sessionId }}",
+                    "rightValue": "={{ $('Telegram Trigger').first().json.message.chat.id }}",
+                    "operator": {
+                      "type": "number",
+                      "operation": "notEquals"
+                    },
+                    "id": "9fa3f169-ac9c-4968-bad6-5a42ff3cf3af"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "ignorar"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "3ed56750-601a-4d08-9b59-c0e90f55bc1d",
+                    "leftValue": "={{ JSON.parse($json.mensaje.last()).date_time }}",
+                    "rightValue": "={{ $now.minus(1,'seconds').toLocal() }}",
+                    "operator": {
+                      "type": "dateTime",
+                      "operation": "before"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "continuamos"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra",
+          "renameFallbackOutput": "espera"
+        }
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -1120,
+        1296
+      ],
+      "id": "2d65e9cb-6043-49fd-8af0-e8fa8f670f9b",
+      "name": "Switch2"
+    },
+    {
+      "parameters": {
+        "amount": 2
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        -1216,
+        1520
+      ],
+      "id": "6d1da3a8-41eb-41aa-a332-634d3d61c888",
+      "name": "Wait",
+      "webhookId": "ea5a36ff-83da-4e96-b2fb-1537a68263a1"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        -912,
+        1136
+      ],
+      "id": "eebc4625-dcea-44a3-9ade-41e605af05d5",
+      "name": "No Operation, do nothing"
     }
   ],
   "connections": {
@@ -1645,7 +1801,7 @@
       "main": [
         [
           {
-            "node": "Registro mensaje entrada",
+            "node": "añadimos al buffer",
             "type": "main",
             "index": 0
           }
@@ -1722,6 +1878,64 @@
           }
         ]
       ]
+    },
+    "obtenemos los datos del buffer": {
+      "main": [
+        [
+          {
+            "node": "Switch2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "añadimos al buffer": {
+      "main": [
+        [
+          {
+            "node": "obtenemos los datos del buffer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch2": {
+      "main": [
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "delete_buffer_data",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "obtenemos los datos del buffer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -1756,9 +1970,9 @@
       }
     ]
   },
-  "versionId": "aa2c4d5c-40d2-47d4-aae4-8c97fbbd2950",
-  "activeVersionId": "aa2c4d5c-40d2-47d4-aae4-8c97fbbd2950",
-  "versionCounter": 628,
+  "versionId": "f6077ee6-359f-40d0-bbaf-d930458c2b13",
+  "activeVersionId": "f6077ee6-359f-40d0-bbaf-d930458c2b13",
+  "versionCounter": 641,
   "triggerCount": 1,
   "shared": [
     {
@@ -1823,9 +2037,9 @@
   ],
   "tags": [],
   "activeVersion": {
-    "updatedAt": "2026-04-17T20:52:04.511Z",
-    "createdAt": "2026-04-17T20:52:04.511Z",
-    "versionId": "aa2c4d5c-40d2-47d4-aae4-8c97fbbd2950",
+    "updatedAt": "2026-04-20T19:56:39.159Z",
+    "createdAt": "2026-04-20T19:56:39.159Z",
+    "versionId": "f6077ee6-359f-40d0-bbaf-d930458c2b13",
     "workflowId": "7e8BytkZezISdom2",
     "nodes": [
       {
@@ -3234,6 +3448,162 @@
         ],
         "id": "68653c88-cbfc-46ef-861c-9b13bdace51e",
         "name": "tool_consulta_usuario"
+      },
+      {
+        "parameters": {
+          "operation": "get",
+          "propertyName": "mensaje",
+          "key": "=glassyDev-{{ $('Telegram Trigger').first().json.message.chat.id }}",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.redis",
+        "typeVersion": 1,
+        "position": [
+          -1344,
+          1296
+        ],
+        "id": "502c6cda-5d44-4952-84ce-8c7bedbe86ad",
+        "name": "obtenemos los datos del buffer",
+        "credentials": {
+          "redis": {
+            "id": "D8enpdVeoS0YaHLV",
+            "name": "Redis cantera"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "push",
+          "list": "=glassyDev-{{ $('Telegram Trigger').first().json.message.chat.id }}",
+          "messageData": "={{ JSON.stringify({\n'message': $json.message.text,\n'sessionId': $('Telegram Trigger').first().json.message.chat.id,\n'date_time': $now.toLocal() \n}) }}"
+        },
+        "type": "n8n-nodes-base.redis",
+        "typeVersion": 1,
+        "position": [
+          -1536,
+          1296
+        ],
+        "id": "74138e34-2483-4376-a970-742c375c7ac9",
+        "name": "añadimos al buffer",
+        "credentials": {
+          "redis": {
+            "id": "D8enpdVeoS0YaHLV",
+            "name": "Redis cantera"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "delete",
+          "key": "=glassyDev-{{ $('Telegram Trigger').first().json.message.chat.id }}"
+        },
+        "type": "n8n-nodes-base.redis",
+        "typeVersion": 1,
+        "position": [
+          -912,
+          1296
+        ],
+        "id": "9f3f3ad0-f8b7-4059-912b-efad634dd1a1",
+        "name": "delete_buffer_data",
+        "credentials": {
+          "redis": {
+            "id": "D8enpdVeoS0YaHLV",
+            "name": "Redis cantera"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "rules": {
+            "values": [
+              {
+                "conditions": {
+                  "options": {
+                    "caseSensitive": true,
+                    "leftValue": "",
+                    "typeValidation": "strict",
+                    "version": 2
+                  },
+                  "conditions": [
+                    {
+                      "leftValue": "={{ JSON.parse($json.mensaje.last()).sessionId }}",
+                      "rightValue": "={{ $('Telegram Trigger').first().json.message.chat.id }}",
+                      "operator": {
+                        "type": "number",
+                        "operation": "notEquals"
+                      },
+                      "id": "9fa3f169-ac9c-4968-bad6-5a42ff3cf3af"
+                    }
+                  ],
+                  "combinator": "and"
+                },
+                "renameOutput": true,
+                "outputKey": "ignorar"
+              },
+              {
+                "conditions": {
+                  "options": {
+                    "caseSensitive": true,
+                    "leftValue": "",
+                    "typeValidation": "strict",
+                    "version": 2
+                  },
+                  "conditions": [
+                    {
+                      "id": "3ed56750-601a-4d08-9b59-c0e90f55bc1d",
+                      "leftValue": "={{ JSON.parse($json.mensaje.last()).date_time }}",
+                      "rightValue": "={{ $now.minus(1,'seconds').toLocal() }}",
+                      "operator": {
+                        "type": "dateTime",
+                        "operation": "before"
+                      }
+                    }
+                  ],
+                  "combinator": "and"
+                },
+                "renameOutput": true,
+                "outputKey": "continuamos"
+              }
+            ]
+          },
+          "options": {
+            "fallbackOutput": "extra",
+            "renameFallbackOutput": "espera"
+          }
+        },
+        "type": "n8n-nodes-base.switch",
+        "typeVersion": 3.2,
+        "position": [
+          -1120,
+          1296
+        ],
+        "id": "2d65e9cb-6043-49fd-8af0-e8fa8f670f9b",
+        "name": "Switch2"
+      },
+      {
+        "parameters": {
+          "amount": 2
+        },
+        "type": "n8n-nodes-base.wait",
+        "typeVersion": 1.1,
+        "position": [
+          -1216,
+          1520
+        ],
+        "id": "6d1da3a8-41eb-41aa-a332-634d3d61c888",
+        "name": "Wait",
+        "webhookId": "ea5a36ff-83da-4e96-b2fb-1537a68263a1"
+      },
+      {
+        "parameters": {},
+        "type": "n8n-nodes-base.noOp",
+        "typeVersion": 1,
+        "position": [
+          -912,
+          1136
+        ],
+        "id": "eebc4625-dcea-44a3-9ade-41e605af05d5",
+        "name": "No Operation, do nothing"
       }
     ],
     "connections": {
@@ -3466,7 +3836,7 @@
         "main": [
           [
             {
-              "node": "Registro mensaje entrada",
+              "node": "añadimos al buffer",
               "type": "main",
               "index": 0
             }
@@ -3539,6 +3909,64 @@
             {
               "node": "AI Agent1",
               "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "obtenemos los datos del buffer": {
+        "main": [
+          [
+            {
+              "node": "Switch2",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "añadimos al buffer": {
+        "main": [
+          [
+            {
+              "node": "obtenemos los datos del buffer",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Switch2": {
+        "main": [
+          [
+            {
+              "node": "No Operation, do nothing",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "delete_buffer_data",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Wait",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Wait": {
+        "main": [
+          [
+            {
+              "node": "obtenemos los datos del buffer",
+              "type": "main",
               "index": 0
             }
           ]
