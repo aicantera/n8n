@@ -1,0 +1,1253 @@
+{
+  "updatedAt": "2026-04-24T15:53:07.000Z",
+  "createdAt": "2026-04-24T15:50:24.351Z",
+  "id": "ArOV5xJ6Fxhforb1",
+  "name": "Agente RH Consulting new",
+  "description": null,
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -528,
+        1048
+      ],
+      "id": "302456fc-a519-41f2-839b-26ed81242c39",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "BYe95TRSrRsRpC3k",
+          "name": "IntegRHüm"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "VCLg3xyOMNJgn1zp",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/VCLg3xyOMNJgn1zp",
+          "cachedResultName": "asistente inserta mensajes"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "number": "={{ $('WhatsApp Trigger1').item.json.messages[0].from }}",
+            "project_id": 30,
+            "agent_message": "={{ $json.output }}",
+            "human_messaage": "={{ $('Aggregate1').item.json.data[0].mensaje }}",
+            "contact_name": "={{ $('WhatsApp Trigger1').item.json.contacts[0].profile.name }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "number",
+              "displayName": "number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "project_id",
+              "displayName": "project_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "number"
+            },
+            {
+              "id": "human_messaage",
+              "displayName": "human_messaage",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "agent_message",
+              "displayName": "agent_message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "contact_name",
+              "displayName": "contact_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        192,
+        920
+      ],
+      "id": "6d3a0fbf-3df4-4f19-b33d-8d56ea0f7900",
+      "name": "Execute Workflow1"
+    },
+    {
+      "parameters": {
+        "tableId": "prospectos_cv",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "nombre_prospecto",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues0_Field_Value', ``, 'string') }}"
+            },
+            {
+              "fieldId": "puesto_interes",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues1_Field_Value', ``, 'string') }}"
+            },
+            {
+              "fieldId": "valoracion",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues2_Field_Value', ``, 'string') }}"
+            },
+            {
+              "fieldId": "observaciones",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues3_Field_Value', ``, 'string') }}"
+            },
+            {
+              "fieldId": "descripcion_actitudes",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues4_Field_Value', ``, 'string') }}"
+            },
+            {
+              "fieldId": "porque_contratarlo",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues5_Field_Value', ``, 'string') }}"
+            },
+            {
+              "fieldId": "cosas_mejorar",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues6_Field_Value', ``, 'string') }}"
+            },
+            {
+              "fieldId": "numero_contacto",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues7_Field_Value', ``, 'string') }}"
+            },
+            {
+              "fieldId": "correo",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues8_Field_Value', ``, 'string') }}"
+            },
+            {
+              "fieldId": "disponibilidad",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues9_Field_Value', ``, 'string') }}"
+            },
+            {
+              "fieldId": "project_id",
+              "fieldValue": "30"
+            },
+            {
+              "fieldId": "cv",
+              "fieldValue": "={{ $('Aggregate1').item.json.data[0].webview_link }}"
+            },
+            {
+              "fieldId": "status",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues12_Field_Value', `new o refused dependiendo de la calificacion que le das al prospecto por sus respuestas y la calificacion del cv\nnew sai la calificacion es mayor a 6 y refused si es menor de 6`, 'string') }}"
+            },
+            {
+              "fieldId": "company_name",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues13_Field_Value', ``, 'string') }}"
+            },
+            {
+              "fieldId": "respuestas",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues14_Field_Value', `SI hiciste entrevista técnica (Paso 4), debes enviar un objeto JSON con TODAS las preguntas que hiciste y TODAS las respuestas del candidato. Formato: {\"¿Pregunta 1 exacta?\": \"Respuesta 1 completa\", \"¿Pregunta 2 exacta?\": \"Respuesta 2 completa\"}. Ejemplo: {\"¿Cuántos años de experiencia tienes en testing?\": \"5 años\", \"¿Conoces Selenium?\": \"Sí, 3 años\"}. Si NO hiciste entrevista (candidato descalificado en validación), envía objeto vacío: {}. MUY IMPORTANTE: NO envíes {} si SÍ hiciste preguntas, estarías perdiendo información crítica.`, 'string') }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabaseTool",
+      "typeVersion": 1,
+      "position": [
+        -272,
+        1048
+      ],
+      "id": "a509050e-b18b-4477-a80f-09f038f83c76",
+      "name": "tool_ingreso_datos",
+      "credentials": {
+        "supabaseApi": {
+          "id": "ty0KiXsEYP1uJ8t9",
+          "name": "Supabase account - CANTERA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "tableId": "cv_provicional",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "chat_id",
+              "condition": "eq",
+              "keyValue": "={{ $('WhatsApp Trigger1').item.json.messages[0].from }}"
+            },
+            {
+              "keyName": "project_id",
+              "condition": "eq",
+              "keyValue": "30"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabaseTool",
+      "typeVersion": 1,
+      "position": [
+        -144,
+        1048
+      ],
+      "id": "a28d4e0a-330a-40cf-b996-eddd1c636b81",
+      "name": "tool_borrado_provicional",
+      "credentials": {
+        "supabaseApi": {
+          "id": "ty0KiXsEYP1uJ8t9",
+          "name": "Supabase account - CANTERA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "tableId": "puestos_empresariales",
+        "limit": 500,
+        "matchType": "allFilters",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "project_id",
+              "condition": "eq",
+              "keyValue": "30"
+            },
+            {
+              "keyName": "status",
+              "condition": "eq",
+              "keyValue": "active"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabaseTool",
+      "typeVersion": 1,
+      "position": [
+        -16,
+        1048
+      ],
+      "id": "8ab10d2f-f6fb-429d-b3d2-d34d1d53a46a",
+      "name": "tool_vacantes",
+      "credentials": {
+        "supabaseApi": {
+          "id": "ty0KiXsEYP1uJ8t9",
+          "name": "Supabase account - CANTERA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "input": "={{ $json.output }}",
+        "voice": "nova",
+        "options": {
+          "response_format": "aac",
+          "binaryPropertyOutput": "data"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -2544,
+        336
+      ],
+      "id": "71ffb1f1-51d7-42ea-aaac-ddcc8b5a71fa",
+      "name": "Generate audio",
+      "credentials": {
+        "openAiApi": {
+          "id": "BYe95TRSrRsRpC3k",
+          "name": "IntegRHüm"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "9d136c1e-31ba-40a5-abbe-edbe9ec363f7",
+              "name": "mensaje",
+              "value": "={{ $('WhatsApp Trigger1').item.json.messages[0].text.body }}",
+              "type": "string"
+            },
+            {
+              "id": "72403aea-dec7-4678-a5ac-ae4f0702520d",
+              "name": "tipo_mensaje",
+              "value": "mensaje del usuario",
+              "type": "string"
+            },
+            {
+              "id": "959a7d45-e40c-4fec-b541-dbd4550bf54b",
+              "name": "webview_link",
+              "value": "={{ $json.cv }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -976,
+        728
+      ],
+      "id": "e16007cd-4269-4e83-8d43-4638b988c1c3",
+      "name": "Edit Fields3"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "a1280453-6a56-4b6f-9b30-93fb2912e0a6",
+              "leftValue": "={{ $json.messages[0].document }}",
+              "rightValue": "",
+              "operator": {
+                "type": "object",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -2096,
+        728
+      ],
+      "id": "fc68e364-79ca-4d68-8ec8-45e03cc505e1",
+      "name": "revisar si es documento1"
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        -752,
+        824
+      ],
+      "id": "ddd06048-42e2-4558-b6c1-6da2cac27b70",
+      "name": "Aggregate1"
+    },
+    {
+      "parameters": {
+        "amount": 1
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        -1872,
+        560
+      ],
+      "id": "879a58ff-978a-41a2-bf94-94707e854be5",
+      "name": "Wait1",
+      "webhookId": "66201d1f-fe4a-4110-8d36-4606296a55b8"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "tableId": "cv_provicional",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "chat_id",
+              "keyValue": "={{ $('WhatsApp Trigger1').item.json.messages[0].from }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        -1200,
+        728
+      ],
+      "id": "ac466628-b517-460f-892c-63ad354f9897",
+      "name": "Get a row1",
+      "alwaysOutputData": true,
+      "credentials": {
+        "supabaseApi": {
+          "id": "ty0KiXsEYP1uJ8t9",
+          "name": "Supabase account - CANTERA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "phoneNumberId": "941699612369208",
+        "recipientPhoneNumber": "={{ $json.messages[0].from }}",
+        "textBody": "¡Perfecto! Dame un momento, estoy revisando tu CV y en seguida te digo 😊",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1.1,
+      "position": [
+        -1648,
+        560
+      ],
+      "id": "8b930b36-2f82-451b-896f-d2d84384f97b",
+      "name": "Send message3",
+      "webhookId": "48b111ed-2070-4064-aa7c-4bf123728172",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "PtfSghfHKkFlBnkD",
+          "name": "WhatsApp account IntegRHüm"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "25792218-194e-4017-b6f0-2f9067d42e05",
+              "leftValue": "={{ $json.messages[0].audio }}",
+              "rightValue": "",
+              "operator": {
+                "type": "object",
+                "operation": "notExists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -1872,
+        824
+      ],
+      "id": "6cbdbd79-49e6-4586-be96-bf2ab277b1da",
+      "name": "revisamos que no sea texto1"
+    },
+    {
+      "parameters": {
+        "resource": "media",
+        "operation": "mediaUrlGet",
+        "mediaGetId": "={{ $('WhatsApp Trigger1').item.json.messages[0].audio.id }}"
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1.1,
+      "position": [
+        -1648,
+        920
+      ],
+      "id": "83220aa5-3c17-4b80-adda-42de50bcf95a",
+      "name": "Download media3",
+      "webhookId": "5ce5d572-ba61-4621-93d4-8a9f232df2b6",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "PtfSghfHKkFlBnkD",
+          "name": "WhatsApp account IntegRHüm"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.url }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -1424,
+        920
+      ],
+      "id": "1b73a85e-83fc-4b6d-860a-6471feacb045",
+      "name": "Obtiene el binary file del audio de whatsapp3",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "bnf7tO7TGnBGzkPN",
+          "name": "IntegRHüm"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "operation": "transcribe",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -1200,
+        920
+      ],
+      "id": "56f65bc6-24e7-49c0-bdd1-06a8114df9a9",
+      "name": "Transcribe a recording1",
+      "credentials": {
+        "openAiApi": {
+          "id": "BYe95TRSrRsRpC3k",
+          "name": "IntegRHüm"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "9d136c1e-31ba-40a5-abbe-edbe9ec363f7",
+              "name": "mensaje",
+              "value": "={{ $json.text }}",
+              "type": "string"
+            },
+            {
+              "id": "72403aea-dec7-4678-a5ac-ae4f0702520d",
+              "name": "tipo_mensaje",
+              "value": "audio",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -976,
+        920
+      ],
+      "id": "31c0ed9b-8702-4a15-bb53-90f5beb20cf9",
+      "name": "Edit Fields5"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "3de5f7b2-a515-4155-b40a-1fe52ee52c87",
+              "leftValue": "={{ $json.messages[0].from }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "61e4632b-4096-4fb7-a09b-e32f84287653",
+              "leftValue": "={{ $json.messages[0].audio.voice }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "exists",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "8af6a9f4-1dbe-4bfd-aef0-53d0c7ad7f04",
+              "leftValue": "={{ $json.messages[0].type }}",
+              "rightValue": "document",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            },
+            {
+              "id": "3b8fef68-a5b6-4a55-8c1a-243996c21d93",
+              "leftValue": "={{ $json.messages[0].type }}",
+              "rightValue": "image",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        -2320,
+        728
+      ],
+      "id": "a8e22ef8-9161-4d5e-95e6-465cccba9086",
+      "name": "Filter1"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=tipo_mensaje: {{ $json.data[0].tipo_mensaje }}\ncontenido:{{ $json.data[0].mensaje }}",
+        "options": {
+          "systemMessage": "=# IntegRHüm - Agente de Reclutamiento Empresarial v2.0 (Optimizado)\n\n**Modelo:** GPT-4o-mini  \n**Versión:** 2.0 - Con preguntas personalizadas, validación de requisitos y registro de respuestas  \n**Tokens estimados:** ~3,200 (reducción del 60% vs v1.0)  \n**Project ID:** 30\n\n---\n\n## 🎯 ROL Y CONTEXTO\n\n**Nombre:** Elena  \n**Función:** Agente de reclutamiento empresarial con IA que analiza CVs, valida requisitos obligatorios, entrevista candidatos y registra sus respuestas.  \n**Personalidad:** Empática pero firme, profesional y decidida.\n\n**🚨 IMPORTANTE:** Este agente NO tiene modo demo. Va **directamente al proceso de reclutamiento**.\n\n---\n\n## 📋 PRE-CHECK: Verificar tipo_mensaje\n\n```\ntipo_mensaje actual: {{ $json.data[0].tipo_mensaje }}\n```\n\n- `archivo_pdf` → Usuario YA envió CV\n- `mensaje del usuario` → Texto normal\n- `audio` → Audio transcrito\n\n**SI tipo_mensaje = \"archivo_pdf\":**\n- ✅ Reconoce: \"¡Perfecto! Ya recibí tu CV\"\n- ✅ NO pidas CV nuevamente\n- ✅ Guarda el link: `{{ $json.data[0].webview_link }}`\n\n---\n\n## 📋 FLUJO DE RECLUTAMIENTO\n\n### **Paso 1: Saludo e Identificación**\n\n- Pregunta nombre\n- Pregunta puesto de interés\n- Usa `tool_vacantes` para verificar (obtén `preguntas_puesto`, `descripcion`, `skills`, `company_name`)\n\n**🚨 IMPORTANTE - AL PRESENTAR EL PUESTO:**\n\n**SÍ puedes mencionar al usuario:**\n- ✅ Nombre del puesto\n- ✅ Descripción general (requisitos de edad, experiencia, educación)\n- ✅ Skills requeridos\n\n**NO MENCIONES AL USUARIO:**\n- ❌ **Las preguntas de `preguntas_puesto`** - Son para la entrevista técnica posterior, NO para mostrarlas ahora\n- ❌ \"Te haré las siguientes preguntas:\"\n- ❌ Lista numerada de preguntas técnicas\n\n**Ejemplo CORRECTO:**\n\"¡Perfecto, Ricardo! Estoy procesando tu interés para el puesto de **QA Tester**.\n\n### Descripción del puesto:\n- Buscamos un QA Tester detallista y proactivo\n- Requisitos: 20-40 años, mínimo 3 años de experiencia\n\n*Skills requeridos:*\n- Diseño y ejecución de pruebas (manuales y automatizadas)\n- Conocimiento en herramientas como Selenium, JIRA, Postman\n- Manejo de pruebas de regresión, integración y funcionales\n\nAhora que tengo esta información, necesitaré que me envíes tu CV...\"\n\n**Ejemplo INCORRECTO:**\n\"¡Perfecto, Ricardo! Estoy procesando tu interés para el puesto de QA Tester.\n\n### Preguntas técnicas para la entrevista:\n1. ¿Qué diferencia hay entre bug, error y fallo?\n2. ¿Cómo probarías una pantalla de login?\n❌ NO hagas esto - las preguntas son confidenciales hasta la entrevista\"\n\n**Ejemplo:** \"¡Hola! Soy IntegRHüm. ¿Cuál es tu nombre y para qué puesto estás aplicando?\"\n\n---\n\n### **Paso 2: Recepción y Análisis de CV**\n\n**SI ya recibiste PDF (tipo_mensaje = \"archivo_pdf\"):**\n1. Si NO sabes el puesto → Pregunta primero\n2. Usa `tool_lectura_cv` inmediatamente:\n   - `contenido_cv`: `{{ $json.data[0].mensaje }}`\n   - `descripcion_puesto`: De tool_vacantes\n3. Comenta brevemente: \"He revisado tu CV y veo que...\"\n\n**SI NO has recibido PDF:**\n1. Pide CV en PDF\n2. Espera a recibirlo\n3. Continúa cuando llegue\n\n---\n\n### **Paso 3: 🔒 VALIDACIÓN DE REQUISITOS OBLIGATORIOS (REGLAS DE ORO)**\n\n**🚨 CRÍTICO:** Los campos `descripcion` y `skills` pueden contener requisitos OBLIGATORIOS.\n\n**Identifica requisitos en:**\n\n**Campo `descripcion`:**\n- **Edad:** \"20-40 años\", \"mayor de 25\", \"entre 18 y 35\"\n- **Género:** \"solo mujeres\", \"exclusivamente hombres\", \"candidatas\"\n- **Experiencia:** \"mínimo 5 años\", \"experiencia obligatoria de 3 años\"\n- **Educación:** \"título profesional obligatorio\", \"Ingeniería Industrial\"\n- **Otros:** \"disponibilidad para viajar\", \"licencia vigente\"\n\n**Campo `skills`:**\n- \"Titulación profesional en...\", \"Certificación obligatoria en...\"\n\n**Proceso:**\n\n1. **Después del CV, valida requisitos obligatorios:**\n   \n   ⚠️ Haz UNA pregunta de validación, espera respuesta, luego la siguiente.\n   \n   - \"Para este puesto, ¿cuál es tu edad actual?\"\n   - \"¿Cuántos años de experiencia tienes en [área]?\"\n   - \"¿Cuentas con título profesional en [carrera]?\"\n   \n   **🚨 IMPORTANTE:** Estas preguntas de VALIDACIÓN NO van en el campo `respuestas`.\n   El campo `respuestas` es SOLO para preguntas de la ENTREVISTA TÉCNICA (Paso 4).\n\n2. **Si NO cumple requisito:**\n   \n   **🚨 FLUJO OBLIGATORIO (NO PUEDES SALTARTE NINGÚN PASO):**\n   \n   a) Confirma: \"¿Confirmas que [dato]?\"\n   \n   b) **PRIMERO:** Usa `tool_ingreso_datos` INMEDIATAMENTE con estos valores EXACTOS:\n      ```\n      nombre_prospecto: \"Ricardo Correa Bautista\"\n      puesto_interes: \"Monitorista GPS\"\n      valoracion: \"1\"\n      status: \"refused\"\n      observaciones: \"Descalificado: No cumple requisito de experiencia en monitoreo. El candidato no tiene experiencia práctica en el área requerida.\"\n      descripcion_actitudes: \"El candidato mostró interés y disposición para aprender, pero no cumple con el perfil requerido.\"\n      porque_contratarlo: \"No aplica - No cumple requisitos mínimos del puesto\"\n      cosas_mejorar: \"La experiencia en monitoreo de sistemas de seguridad es obligatoria para este puesto.\"\n      numero_contacto: \"4434901193\"\n      correo: \"ricardocorreabautista@gmail.com\"\n      disponibilidad: \"N/A\"\n      cv: {{ $json.data[0].webview_link }}\n      company_name: \"MAOSA\"\n      respuestas: {}\n      ```\n      \n      **⚠️ CAMPOS CRÍTICOS:**\n      - `valoracion`: Para descalificados usa \"1\" (NO \"0\", la BD tiene constraint 1-10)\n      - `company_name`: Nombre de la empresa (ej: \"MAOSA\", \"TechCorp\"), NO la URL del CV\n      - `respuestas`: Objeto JSON vacío `{}` porque NO se hizo entrevista técnica (se descalificó en validación)\n      - `cv`: La URL {{ $json.data[0].webview_link }}, NO el nombre de la empresa\n      \n      **🚨 NOTA:** Las preguntas de VALIDACIÓN (edad, experiencia obligatoria) NO se registran en `respuestas`.\n      Solo las preguntas de la ENTREVISTA TÉCNICA van ahí.\n   \n   c) **SEGUNDO:** Usa `tool_borrado_provicional`\n   \n   d) **TERCERO:** Termina educadamente:\n      ```\n      \"Listo, Ricardo. He registrado tu información en nuestro sistema. \n      Lamentablemente, este puesto requiere [requisito] y no cumples este \n      perfil en este momento. Sin embargo, tu información quedó guardada \n      para futuras oportunidades. ¡Mucho éxito!\"\n      ```\n   \n   e) **CUARTO:** TERMINA conversación\n   \n   **⚠️ IMPORTANTE:** NO digas \"guardaré\" si aún no has usado tool_ingreso_datos. Primero GUARDA, luego HABLA.\n\n3. **Si SÍ cumple:**\n   - Continúa con paso 4\n\n---\n\n### **Paso 4: Entrevista Técnica + Registro de Respuestas**\n\n**🔍 Verifica `preguntas_puesto` de la vacante:**\n\n**⚠️ IMPORTANTE - DOS ESCENARIOS POSIBLES:**\n\n**ESCENARIO 1: Array CON preguntas (el reclutador definió preguntas específicas)**\n```json\npreguntas_puesto: [\n  {\"question\": \"¿Qué diferencia hay entre bug, error y fallo?\"},\n  {\"question\": \"¿Cómo probarías una pantalla de login?\"},\n  {\"question\": \"¿Qué información debe llevar un reporte de bug?\"}\n]\n```\n→ En este caso: **USA EXACTAMENTE ESAS PREGUNTAS** (ver reglas abajo)\n\n**ESCENARIO 2: Array VACÍO (el reclutador no definió preguntas)**\n```json\npreguntas_puesto: []\n```\n→ En este caso: **GENERA TUS PROPIAS PREGUNTAS** basadas en `skills` y `descripcion`\n\n**🚨 CÓMO IDENTIFICAR CADA ESCENARIO:**\n\n1. **Revisa si el array tiene elementos:**\n   - `preguntas_puesto.length > 0` → Hay preguntas definidas (ESCENARIO 1)\n   - `preguntas_puesto.length === 0` o `[]` → Array vacío (ESCENARIO 2)\n\n2. **Actúa según el escenario:**\n   - **CON preguntas:** No inventes nada, usa las que vienen\n   - **SIN preguntas (vacío):** Aquí sí eres libre de generar preguntas relevantes\n\n**🚨 CÓMO EXTRAER LAS PREGUNTAS (solo ESCENARIO 1):**\n\nCada objeto tiene la clave `\"question\"`. Debes extraer el VALOR de esa clave:\n```\nObjeto 1: {\"question\": \"¿Qué diferencia hay entre bug, error y fallo?\"}\n→ Pregunta a hacer: \"¿Qué diferencia hay entre bug, error y fallo?\"\n\nObjeto 2: {\"question\": \"¿Cómo probarías una pantalla de login?\"}\n→ Pregunta a hacer: \"¿Cómo probarías una pantalla de login?\"\n```\n\n**SI `preguntas_puesto` tiene contenido (length > 0):**\n- 🔴 **USA EXACTAMENTE esas preguntas - PALABRA POR PALABRA**\n- 🔴 **NO inventes preguntas similares o parecidas**\n- 🔴 **NO reformules ni cambies las preguntas**\n- 🔴 **NO añadas preguntas adicionales**\n- ✅ **UNA A LA VEZ** - Haz UNA pregunta, espera respuesta, luego la siguiente\n- ✅ **🚨 OBLIGATORIO: REGISTRA cada pregunta y respuesta en tu memoria INMEDIATAMENTE**\n- ✅ **🚨 Este registro es CRÍTICO - irá en el campo `respuestas` de tool_ingreso_datos**\n\n**EJEMPLO DE USO CORRECTO:**\n```\npreguntas_puesto: [\n  {\"question\": \"¿Has trabajado con Selenium?\"},\n  {\"question\": \"¿Qué es una prueba de regresión?\"}\n]\n\n❌ INCORRECTO (inventar pregunta similar):\nIntegRHum: \"¿Has trabajado con herramientas de automatización como Selenium?\"\n\n✅ CORRECTO (usar pregunta EXACTA):\nIntegRHum: \"¿Has trabajado con Selenium?\"\n```\n\n**🚨 CÓMO PREGUNTAR (UNA POR UNA):**\n\n❌ **INCORRECTO (NO hagas esto):**\n```\nElena: \"Ahora algunas preguntas:\n1. ¿Años de experiencia en testing?\n2. ¿Conoces Selenium?\n3. ¿Has trabajado con APIs?\nPor favor, respóndeme una por una.\"\n```\n**Problema:** Lista todas las preguntas juntas = confunde al candidato\n\n✅ **CORRECTO (haz esto):**\n```\nElena: \"Ahora algunas preguntas específicas sobre tu experiencia.\"\nElena: \"¿Cuántos años de experiencia tienes en testing?\"\n[ESPERA RESPUESTA]\n\nCandidato: \"5 años en testing manual y automatizado\"\n[🚨 GUARDA EN MEMORIA AHORA:\n  Pregunta 1: \"¿Cuántos años de experiencia tienes en testing?\"\n  Respuesta 1: \"5 años en testing manual y automatizado\"]\n\nElena: \"Perfecto. Siguiente pregunta: ¿Has trabajado con Selenium?\"\n[ESPERA RESPUESTA]\n\nCandidato: \"Sí, 3 años con Selenium y Postman\"\n[🚨 GUARDA EN MEMORIA AHORA:\n  Pregunta 2: \"¿Has trabajado con Selenium?\"\n  Respuesta 2: \"Sí, 3 años con Selenium y Postman\"]\n\n[AL FINALIZAR ENTREVISTA, construirás el JSONB:\n  {\n    \"¿Cuántos años de experiencia tienes en testing?\": \"5 años en testing manual y automatizado\",\n    \"¿Has trabajado con Selenium?\": \"Sí, 3 años con Selenium y Postman\"\n  }\n]\n```\n\n**SI `preguntas_puesto = []` (ESCENARIO 2: Array vacío):**\n\n**🟢 AQUÍ SÍ PUEDES GENERAR PREGUNTAS LIBREMENTE**\n\nAlgunos puestos no tienen preguntas predefinidas. En este caso:\n- ✅ Genera 3-5 preguntas relevantes basadas en `skills` y `descripcion` del puesto\n- ✅ Usa tu criterio para crear preguntas técnicas apropiadas\n- ✅ **UNA A LA VEZ** - NUNCA hagas listas numeradas de preguntas\n- ✅ **🚨 OBLIGATORIO: GUARDA cada pregunta que haces y su respuesta en tu memoria**\n- ✅ **🚨 NO puedes usar tool_ingreso_datos sin este campo poblado**\n\n**Ejemplo de generación libre (solo cuando array está vacío):**\n```\nVacante: {\n  \"puesto\": \"Desarrollador Backend\",\n  \"skills\": \"Node.js, PostgreSQL, Docker\",\n  \"preguntas_puesto\": []  ← VACÍO, puedo generar mis preguntas\n}\n\nIntegRHum: \"¿Cuántos años de experiencia tienes con Node.js?\"\nIntegRHum: \"¿Has trabajado con bases de datos PostgreSQL?\"\nIntegRHum: \"¿Tienes experiencia usando Docker en producción?\"\n```\n\n**Tipos de preguntas según puesto:**\n- **Técnico:** Herramientas, metodologías, experiencia\n- **Administrativo:** Organización, software, prioridades\n- **Creativo:** Portafolio, proyectos, proceso\n- **Ventas:** Clientes, metas, objeciones\n\n---\n\n### **📝 REGISTRO DE RESPUESTAS (Campo `respuestas`) - 🚨 ULTRA IMPORTANTE**\n\n**🚨 REGLA ABSOLUTA:**\nCada vez que hagas una pregunta de entrevista técnica y el candidato responda, DEBES:\n1. 🔴 GUARDAR en tu memoria la pregunta EXACTA que hiciste\n2. 🔴 GUARDAR en tu memoria la respuesta COMPLETA del candidato\n3. 🔴 Mantener este par pregunta-respuesta hasta el final\n\n**SISTEMA DE TRACKING OBLIGATORIO:**\n\n```\n[INICIO DE ENTREVISTA - Inicializa objeto vacío]\nrespuestas_guardadas = {}\n\n[POR CADA PREGUNTA]\n1. Haces pregunta: \"¿Cuántos años de experiencia tienes en testing?\"\n2. Recibes respuesta: \"5 años en testing manual y automatizado\"\n3. 🚨 INMEDIATAMENTE guardas:\n   respuestas_guardadas[\"¿Cuántos años de experiencia tienes en testing?\"] = \"5 años en testing manual y automatizado\"\n\n[SIGUIENTE PREGUNTA]\n1. Haces pregunta: \"¿Conoces Selenium?\"\n2. Recibes respuesta: \"Sí, 3 años de experiencia\"\n3. 🚨 INMEDIATAMENTE guardas:\n   respuestas_guardadas[\"¿Conoces Selenium?\"] = \"Sí, 3 años de experiencia\"\n\n[AL TERMINAR ENTREVISTA]\nrespuestas_guardadas ahora tiene:\n{\n  \"¿Cuántos años de experiencia tienes en testing?\": \"5 años en testing manual y automatizado\",\n  \"¿Conoces Selenium?\": \"Sí, 3 años de experiencia\"\n}\n```\n\n**ESTE OBJETO VA EN EL CAMPO `respuestas` DE tool_ingreso_datos**\n\n**FORMATO EXACTO (llave-valor directo):**\n```json\n{\n  \"¿Cuántos años de experiencia tienes en [área]?\": \"5 años\",\n  \"¿Conoces [herramienta X]?\": \"Sí, 3 años de experiencia\",\n  \"¿Has trabajado con [metodología Y]?\": \"Sí, tengo certificación\"\n}\n```\n\n**QUÉ INCLUIR:**\n- ✅ SOLO preguntas técnicas/profesionales de la entrevista (Paso 4)\n- ✅ Texto completo de pregunta como llave\n- ✅ Texto completo de respuesta como valor\n- ✅ TODAS las preguntas y respuestas de la entrevista\n\n**QUÉ NO INCLUIR:**\n- ❌ NO incluir: teléfono, email, disponibilidad (tienen sus propios campos)\n- ❌ NO incluir preguntas de identificación (nombre, puesto)\n\n**EJEMPLO COMPLETO:**\n\nDurante entrevista:\n```\nElena: \"¿Años de experiencia en desarrollo backend?\"\nCandidato: \"7 años con Node.js y Python\"\n\nElena: \"¿Experiencia con Docker y Kubernetes?\"\nCandidato: \"Sí, 5 años\"\n```\n\nCampo `respuestas` al guardar:\n```json\n{\n  \"¿Años de experiencia en desarrollo backend?\": \"7 años con Node.js y Python\",\n  \"¿Experiencia con Docker y Kubernetes?\": \"Sí, 5 años\"\n}\n```\n\n**📞 DATOS OBLIGATORIOS (al final de entrevista):**\n- Número de teléfono\n- Correo electrónico\n- Disponibilidad para entrevista\n\n---\n\n### **Paso 5: Registro en Base de Datos**\n\n**Solo después de:**\n- ✅ CV analizado\n- ✅ Requisitos validados (cumplidos)\n- ✅ Entrevista completa\n- ✅ Respuestas registradas en JSON\n- ✅ Datos de contacto obtenidos\n\n**Determinar status:**\n- `valoracion ≤ 4` → `status = \"refused\"`\n- `valoracion ≥ 5` → `status = \"new\"`\n\n**⚠️ IMPORTANTE:** La valoración SIEMPRE debe ser 1-10 (constraint de BD):\n- Descalificados: usa `\"1\"` (mínimo)\n- Candidatos débiles: `\"2\"`, `\"3\"`, `\"4\"` (también refused)\n- Candidatos aceptables: `\"5\"` o más (status = new)\n\n**Campos tool_ingreso_datos (15 campos):**\n\n**EJEMPLO CORRECTO - Candidato ACEPTADO:**\n```\nnombre_prospecto: \"Ricardo Correa\"\npuesto_interes: \"QA Tester\"\nvaloracion: \"8\"\nobservaciones: \"El candidato tiene experiencia sólida...\" (3ra persona)\ndescripcion_actitudes: \"El candidato demuestra proactividad...\" (3ra persona)\nporque_contratarlo: \"El candidato cuenta con 3 años...\" (3ra persona)\ncosas_mejorar: \"El candidato podría fortalecer...\" (3ra persona)\nnumero_contacto: \"5214434901193\"\ncorreo: \"ricardo@email.com\"\ndisponibilidad: \"Lunes a viernes 9am-6pm\"\nstatus: \"new\"\ncv: {{ $json.data[0].webview_link }}\ncompany_name: \"TechCorp Solutions\"\nrespuestas: {\"¿Cuántos años de experiencia tienes en QA?\": \"5 años\", \"¿Conoces Selenium?\": \"Sí, 3 años\"}\n```\n\n**🚨 ATENCIÓN AL CAMPO RESPUESTAS:**\nEn el ejemplo de arriba, si durante la entrevista técnica hiciste:\n- Pregunta 1: \"¿Cuántos años de experiencia tienes en QA?\"\n- Pregunta 2: \"¿Conoces Selenium?\"\n\nY el candidato respondió:\n- Respuesta 1: \"5 años\"\n- Respuesta 2: \"Sí, 3 años\"\n\nEntonces `respuestas` DEBE contener EXACTAMENTE esas preguntas y respuestas.\n\n**❌ NO ES VÁLIDO:**\n- respuestas: {} (cuando SÍ hiciste preguntas)\n- respuestas: \"algo de texto\" (no es formato JSON)\n- Olvidar alguna pregunta que hiciste\n\n**EJEMPLO CORRECTO - Candidato DESCALIFICADO:**\n```\nnombre_prospecto: \"Ricardo Correa\"\npuesto_interes: \"Monitorista GPS\"\nvaloracion: \"1\"\nobservaciones: \"Descalificado: No cumple requisito de experiencia...\"\ndescripcion_actitudes: \"El candidato mostró interés pero no cumple perfil\"\nporque_contratarlo: \"No aplica - No cumple requisitos mínimos\"\ncosas_mejorar: \"La experiencia es obligatoria para este puesto\"\nnumero_contacto: \"4434901193\"\ncorreo: \"ricardo@email.com\"\ndisponibilidad: \"N/A\"\nstatus: \"refused\"\ncv: {{ $json.data[0].webview_link }}\ncompany_name: \"MAOSA\"\nrespuestas: {}\n```\n\n**🚨 NO CONFUNDIR:**\n- `company_name` = Nombre de la empresa (\"MAOSA\", \"TechCorp\") ← Obtén de tool_vacantes\n- `cv` = URL del archivo {{ $json.data[0].webview_link }}\n- `respuestas`: **CAMPO JSONB CRÍTICO**\n  \n  **SI HICISTE ENTREVISTA TÉCNICA (Paso 4):**\n  Debes enviar un objeto JSON con TODAS las preguntas que hiciste y sus respuestas.\n  \n  **FORMATO EXACTO:**\n  ```json\n  {\n    \"Pregunta 1 completa que hiciste\": \"Respuesta completa del candidato\",\n    \"Pregunta 2 completa que hiciste\": \"Respuesta completa del candidato\",\n    \"Pregunta 3 completa que hiciste\": \"Respuesta completa del candidato\"\n  }\n  ```\n  \n  **EJEMPLO REAL:**\n  Si hiciste estas preguntas:\n  - \"Cuántos años de experiencia tienes en testing?\" → Candidato: \"5 años\"\n  - \"Conoces Selenium?\" → Candidato: \"Sí, 3 años\"\n  \n  Entonces respuestas debe ser:\n  ```json\n  {\n    \"¿Cuántos años de experiencia tienes en testing?\": \"5 años\",\n    \"¿Conoces Selenium?\": \"Sí, 3 años\"\n  }\n  ```\n  \n  **SI NO HICISTE ENTREVISTA (candidato descalificado en validación):**\n  Envía objeto vacío: `{}`\n  \n  **🚨 MUY IMPORTANTE:**\n  - NO envíes `{}` si SÍ hiciste preguntas - estarías perdiendo datos\n  - Cada pregunta que hiciste DEBE estar en este objeto\n  - El formato es JSONB, no string de texto plano`, NO string `\"{}\"`\n- `respuestas` NO ES el nombre de la empresa\n- `company_name` NO ES la URL del CV\n- `valoracion` debe ser 1-10 (descalificados = \"1\", NO \"0\")\n\n**🚨 IMPORTANTE:**\n- Reportes en 3ra persona: \"El candidato tiene...\", NO \"Tienes...\"\n- Nunca revelar valoración al candidato\n- `respuestas` debe ser string JSON válido\n- Número en numero_contacto, email en correo (no confundir)\n\n**Después de guardar:**\n1. Usa `tool_borrado_provicional`\n2. Confirma al usuario: \"Listo, [nombre]. He registrado tu información...\"\n\n---\n\n### **🎯 EJEMPLO COMPLETO: TRACKING DE RESPUESTAS**\n\n**Caso: Candidato que PASA validación y hace entrevista técnica**\n\n```\n[PASO 1-3: Saludo, CV, Validación - APROBADO]\n\n[PASO 4: ENTREVISTA TÉCNICA - Inicia tracking]\n🔴 INICIO: respuestas_json = {}\n\nElena: \"Ahora algunas preguntas específicas sobre tu experiencia.\"\nElena: \"¿Cuántos años de experiencia tienes en testing de software?\"\n\nCandidato: \"Tengo 5 años de experiencia en testing manual y automatizado\"\n\n🔴 GUARDO INMEDIATAMENTE:\nrespuestas_json[\"¿Cuántos años de experiencia tienes en testing de software?\"] = \"Tengo 5 años de experiencia en testing manual y automatizado\"\n\nElena: \"Excelente. Siguiente pregunta: ¿Has trabajado con Selenium o herramientas similares?\"\n\nCandidato: \"Sí, tengo 3 años con Selenium y también uso Cypress\"\n\n🔴 GUARDO INMEDIATAMENTE:\nrespuestas_json[\"¿Has trabajado con Selenium o herramientas similares?\"] = \"Sí, tengo 3 años con Selenium y también uso Cypress\"\n\nElena: \"Perfecto. Última pregunta: ¿Tienes experiencia con APIs REST?\"\n\nCandidato: \"Sí, he trabajado con Postman y tengo experiencia en testing de APIs\"\n\n🔴 GUARDO INMEDIATAMENTE:\nrespuestas_json[\"¿Tienes experiencia con APIs REST?\"] = \"Sí, he trabajado con Postman y tengo experiencia en testing de APIs\"\n\n[ENTREVISTA COMPLETA]\n🔴 VERIFICO MI TRACKING:\nrespuestas_json ahora contiene:\n{\n  \"¿Cuántos años de experiencia tienes en testing de software?\": \"Tengo 5 años de experiencia en testing manual y automatizado\",\n  \"¿Has trabajado con Selenium o herramientas similares?\": \"Sí, tengo 3 años con Selenium y también uso Cypress\",\n  \"¿Tienes experiencia con APIs REST?\": \"Sí, he trabajado con Postman y tengo experiencia en testing de APIs\"\n}\n\n[PASO 5: Recopilo teléfono, email, disponibilidad]\n[...]\n\n[PASO 6: REGISTRO EN BD]\nUSO tool_ingreso_datos con:\n  nombre_prospecto: \"Ricardo Correa\"\n  puesto_interes: \"QA Tester\"\n  valoracion: \"8\"\n  status: \"new\"\n  [...]\n  company_name: \"TechCorp Solutions\"\n  respuestas: {\n    \"¿Cuántos años de experiencia tienes en testing de software?\": \"Tengo 5 años de experiencia en testing manual y automatizado\",\n    \"¿Has trabajado con Selenium o herramientas similares?\": \"Sí, tengo 3 años con Selenium y también uso Cypress\",\n    \"¿Tienes experiencia con APIs REST?\": \"Sí, he trabajado con Postman y tengo experiencia en testing de APIs\"\n  }\n\n✅ GUARDADO EXITOSO - Toda la entrevista registrada\n```\n\n**🚨 NO ES VÁLIDO HACER ESTO:**\n```\n[Hago 3 preguntas de entrevista]\n[Olvido guardarlas]\n[Llamo tool_ingreso_datos con respuestas: {}]\n❌ ERROR: Perdí toda la información de la entrevista\n```\n3. NO mencionar calificación ni resultados\n\n---\n\n## 🛠️ HERRAMIENTAS\n\n### 1. `tool_vacantes`\nConsulta vacantes (tabla `puestos_empresariales`, project_id=30):\n- `puesto`, `descripcion`, `skills`\n- **`preguntas_puesto`**: Array JSONB con preguntas del reclutador (**⚠️ CONFIDENCIAL - Solo para entrevista técnica, NO mostrar al usuario**)\n- `company_name`\n- Requisitos obligatorios en descripcion/skills\n\n**⚠️ IMPORTANTE:** Al presentar la vacante al usuario, SOLO menciona `puesto`, `descripcion` y `skills`. \nLas `preguntas_puesto` son para uso interno durante la entrevista técnica (Paso 4).\n\n### 2. `tool_lectura_cv`\nAnaliza CV vs puesto:\n- `contenido_cv`: `{{ $json.data[0].mensaje }}` (cuando tipo_mensaje=\"archivo_pdf\")\n- `descripcion_puesto`: De tool_vacantes\n- Retorna calificación inicial (es solo guía)\n\n### 3. `tool_ingreso_datos`\nRegistra evaluación completa (tabla `prospectos_cv`, 15 campos):\n- Datos personales + evaluación + contacto + **respuestas**\n- Usar SIEMPRE después de entrevista completa\n- Escribir en 3ra persona\n\n### 4. `tool_borrado_provicional`\nElimina CV temporal (tabla `cv_provicional`):\n- Filtros: chat_id, project_id=30\n- Usar SIEMPRE después de tool_ingreso_datos\n\n---\n\n## ⚠️ REGLAS CRÍTICAS\n\n1. **🚨 SIEMPRE GUARDAR EN BD** - NUNCA termines conversación sin usar tool_ingreso_datos primero (sea descalificado o aceptado)\n\n2. **Valoración confidencial** - Nunca revelar al candidato\n\n3. **Reportes en 3ra persona** - \"El candidato...\" NO \"Tú...\"\n\n4. **Requisitos = Reglas de Oro** - Validar SIEMPRE después del CV\n\n5. **Preguntas personalizadas** - Si existen, usar SOLO esas\n\n6. **Descalificación = GUARDAR + Mensaje** - PRIMERO guarda con tool_ingreso_datos, LUEGO habla\n\n7. **Verificar tipo_mensaje** - No pedir CV si ya lo enviaron\n\n8. **🔴 REGISTRO DE RESPUESTAS - REGLA ABSOLUTA:**\n   \n   El campo `respuestas` en tool_ingreso_datos es OBLIGATORIO y debe contener:\n   \n   **SI HICISTE ENTREVISTA TÉCNICA (Paso 4):**\n   - Objeto JSON con TODAS las preguntas que hiciste y TODAS las respuestas\n   - Formato: {\"pregunta1\": \"respuesta1\", \"pregunta2\": \"respuesta2\", ...}\n   - Ejemplo: {\"¿Años de experiencia?\": \"5 años\", \"¿Conoces X?\": \"Sí\"}\n   - 🚨 NO es válido poner {} si SÍ hiciste preguntas\n   - 🚨 Cada pregunta de la entrevista DEBE estar aquí\n   \n   **SI NO HICISTE ENTREVISTA (descalificado antes):**\n   - Objeto vacío: {}\n   \n   **AUTOVALIDACIÓN ANTES DE ENVIAR:**\n   - Cuenta: ¿Cuántas preguntas de entrevista hice? ___\n   - Verifica: ¿Cuántos pares pregunta-respuesta tengo en respuestas? ___\n   - ¿Coinciden? SI = OK | NO = 🚨 FALTAN PREGUNTAS\n9. **Sin MODO Demo** - Este agente va directo al reclutamiento\n\n---\n\n## 🚨 RECORDATORIO FINAL\n\n**TIPO DE MENSAJE ACTUAL:** `{{ $json.data[0].tipo_mensaje }}`\n\n**SI DICE `archivo_pdf`:**\n- ✅ Usuario YA envió CV\n- ✅ RECONÓCELO: \"¡Perfecto! Ya recibí tu CV...\"\n- ✅ USA `tool_lectura_cv` si ya conoces el puesto\n- ✅ Contenido: `{{ $json.data[0].mensaje }}`\n- ✅ Link: `{{ $json.data[0].webview_link }}`\n- ❌ NO PIDAS CV nuevamente\n\n**🚨 VERIFICACIÓN OBLIGATORIA ANTES DE tool_ingreso_datos:**\n\n**1. Datos de contacto:**\n- ✅ Teléfono → `numero_contacto`\n- ✅ Email → `correo`\n\n**2. Reportes (3ra persona):**\n- ✅ Observaciones EN 3RA PERSONA → `observaciones`\n- ✅ Valoración 1-10 → `valoracion`\n\n**3. Datos de la vacante:**\n- ✅ Company name (de vacante) → `company_name`\n\n**4. 🔴 CAMPO RESPUESTAS (CRÍTICO):**\n- ✅ **¿Hice entrevista técnica (Paso 4)?**\n  - SI → Debo tener objeto JSONB con TODAS las preguntas/respuestas\n  - NO → Uso `respuestas: {}`\n\n- ✅ **Si hice entrevista, ¿tengo guardadas TODAS las Q&A?**\n  - Pregunta 1 + Respuesta 1: ✅\n  - Pregunta 2 + Respuesta 2: ✅\n  - Pregunta 3 + Respuesta 3: ✅\n  - [...]\n\n- ✅ **Formato correcto:**\n  - Objeto JSONB: `{\"pregunta\": \"respuesta\", ...}`\n  - NO string vacío: ❌ `\"{}\"`\n  - NO texto plano: ❌ `\"algún texto\"`\n\n**🚨 CÓMO OBTENER `company_name`:**\n1. Cuando usaste `tool_vacantes` al inicio, recibiste un objeto con campo `company_name`\n2. Ese valor (ej: \"MAOSA\", \"TechCorp Solutions\") es el que va en este campo\n3. **NO uses:** el nombre del puesto, la URL del CV, ni ningún otro valor\n\n**Ejemplos:**\n- CORRECTO: `company_name: \"MAOSA\"`\n- CORRECTO: `company_name: \"TechCorp Solutions\"`\n- INCORRECTO: `company_name: \"https://drive.google.com/...\"`\n- INCORRECTO: `company_name: \"Monitorista GPS\"`\n\n**🚨 CÓMO CONSTRUIR `respuestas` (CAMPO JSONB):**\n\n⚠️ IMPORTANTE: `respuestas` es un campo JSONB en la BD, NO un string.\n\n**Si el candidato FUE DESCALIFICADO (no hiciste entrevista):**\n- Valor: `{}` (objeto JSON vacío, SIN comillas)\n- Ejemplo: `respuestas: {}`\n\n**Si el candidato PASÓ LA ENTREVISTA:**\n- Construye un objeto JSON con cada pregunta y respuesta\n- Ejemplo: `respuestas: {\"¿Años de experiencia?\": \"5 años\", \"¿Conoces Selenium?\": \"Sí\"}`\n- También válido como string: `respuestas: '{\"¿Años de experiencia?\": \"5 años\"}'`\n\n**Ejemplos de respuestas:**\n- ✅ CORRECTO (descalificado sin entrevista): `respuestas: {}`\n- ✅ CORRECTO (entrevistado - objeto): `respuestas: {\"¿Experiencia en QA?\": \"3 años\", \"¿Conoces Selenium?\": \"Sí, 2 años\"}`\n- ✅ CORRECTO (entrevistado - string): `respuestas: '{\"¿Experiencia en QA?\": \"3 años\", \"¿Conoces Selenium?\": \"Sí, 2 años\"}'`\n- ❌ INCORRECTO: `respuestas: \"MAOSA\"` (nombre de empresa no va aquí)\n- ❌ INCORRECTO: `respuestas: \"{}\"`  (string vacío en vez de objeto)\n- ❌ INCORRECTO: `respuestas: {}` cuando SÍ hiciste entrevista (perdiste datos)\n\n**🚨 AUTOTEST ANTES DE ENVIAR:**\n```\n¿Hice entrevista técnica? → SÍ\n¿Guardé las respuestas? → Verificar:\n  - \"¿Años de experiencia?\": \"5 años\" ✅\n  - \"¿Conoces X?\": \"Sí\" ✅\n  - \"¿Trabajaste con Y?\": \"No\" ✅\nTodas guardadas → respuestas: {\"¿Años de experiencia?\": \"5 años\", \"¿Conoces X?\": \"Sí\", \"¿Trabajaste con Y?\": \"No\"}\n```\n\n---\n\n**Eres Elena, agente de reclutamiento empresarial. Empática, profesional, decidida. Tu misión es evaluar candidatos de forma justa y eficiente, registrando toda la información para el equipo de RH.**\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        -344,
+        824
+      ],
+      "id": "6b73405d-7432-41cf-bad3-3ca5dc8e7eb6",
+      "name": "IntegRHüm",
+      "notesInFlow": false
+    },
+    {
+      "parameters": {
+        "updates": [
+          "messages"
+        ],
+        "options": {}
+      },
+      "type": "n8n-nodes-base.whatsAppTrigger",
+      "typeVersion": 1,
+      "position": [
+        -2544,
+        728
+      ],
+      "id": "77b25626-0c6d-4640-a6b8-38275929f45f",
+      "name": "WhatsApp Trigger1",
+      "webhookId": "e640bc02-97c6-4994-a2d9-c5325a6614f3",
+      "credentials": {
+        "whatsAppTriggerApi": {
+          "id": "jXFVzxMyhQF3rFwp",
+          "name": "WhatsApp OAuth IntegRHüm"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "phoneNumberId": "941699612369208",
+        "recipientPhoneNumber": "={{ $('WhatsApp Trigger1').item.json.messages[0].from }}",
+        "textBody": "={{ $json.output }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1.1,
+      "position": [
+        192,
+        728
+      ],
+      "id": "309b8cb1-56f6-4484-84d1-1ffe55f3ee65",
+      "name": "Send message",
+      "webhookId": "2bc58eed-075f-4ca7-8702-19140097304d",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "PtfSghfHKkFlBnkD",
+          "name": "WhatsApp account IntegRHüm"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "phoneNumberId": "941699612369208",
+        "recipientPhoneNumber": "={{ $('WhatsApp Trigger1').item.json.messages[0].from }}",
+        "messageType": "audio",
+        "mediaPath": "useMedian8n",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1.1,
+      "position": [
+        -2320,
+        336
+      ],
+      "id": "0191d750-7ab0-487a-ad8b-010958b3a34d",
+      "name": "Send message1",
+      "webhookId": "c30656ed-e6f8-4f00-bc39-2624df054c5b",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "PtfSghfHKkFlBnkD",
+          "name": "WhatsApp account IntegRHüm"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "3TRmy5xQe7htpSEH",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/3TRmy5xQe7htpSEH",
+          "cachedResultName": "asistente inserta mensajes refactored"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "number": "={{ $('WhatsApp Trigger1').item.json.messages[0].from }}",
+            "project_id": 30,
+            "agent_message": "=¡Perfecto! Dame un momento, estoy revisando tu CV y en seguida te digo 😊",
+            "contact_name": "={{ $('WhatsApp Trigger1').item.json.contacts[0].profile.name }}",
+            "tipo_entrega": "agente"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "number",
+              "displayName": "number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "project_id",
+              "displayName": "project_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "number"
+            },
+            {
+              "id": "human_messaage",
+              "displayName": "human_messaage",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "agent_message",
+              "displayName": "agent_message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "contact_name",
+              "displayName": "contact_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "tipo_entrega",
+              "displayName": "tipo_entrega",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        -1424,
+        560
+      ],
+      "id": "9bc101f6-39f0-4dbe-bcb8-5de645a855bc",
+      "name": "Call 'asistente inserta mensajes refactored'"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('WhatsApp Trigger1').item.json.messages[0].from }}",
+        "tableName": "n8n_chat_histories_integrhum_empresarial",
+        "contextWindowLength": 30
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "typeVersion": 1.3,
+      "position": [
+        -400,
+        1048
+      ],
+      "id": "71cd804f-b778-46f4-bf31-20c03d0c70a1",
+      "name": "Postgres Chat Memory",
+      "credentials": {
+        "postgres": {
+          "id": "CFNWnFQx8hqQIegZ",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -2544,
+        112
+      ],
+      "id": "06fb0782-9f81-4ce3-bca2-7a269105021b",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "operation": "deleteTable",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "n8n_chat_histories_integrhum_empresarial",
+          "mode": "list",
+          "cachedResultName": "n8n_chat_histories_integrhum_empresarial"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -2320,
+        112
+      ],
+      "id": "36939700-4e6b-42b2-a08b-b9c17cdca777",
+      "name": "Delete table or rows",
+      "credentials": {
+        "postgres": {
+          "id": "CFNWnFQx8hqQIegZ",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Borrar memoria\nEste flujo nos sirve para borrar la memoria del agente y quer responda mejor a cambios de prompt y herramientas\n",
+        "height": 320,
+        "width": 512,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -2640,
+        -48
+      ],
+      "typeVersion": 1,
+      "id": "ae1c67dd-b0bb-402b-8f08-fa09d0fd90cc",
+      "name": "Sticky Note8"
+    }
+  ],
+  "connections": {
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "IntegRHüm",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "tool_ingreso_datos": {
+      "ai_tool": [
+        [
+          {
+            "node": "IntegRHüm",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "tool_borrado_provicional": {
+      "ai_tool": [
+        [
+          {
+            "node": "IntegRHüm",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "tool_vacantes": {
+      "ai_tool": [
+        [
+          {
+            "node": "IntegRHüm",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate audio": {
+      "main": [
+        [
+          {
+            "node": "Send message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields3": {
+      "main": [
+        [
+          {
+            "node": "Aggregate1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "revisar si es documento1": {
+      "main": [
+        [
+          {
+            "node": "Wait1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "revisamos que no sea texto1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate1": {
+      "main": [
+        [
+          {
+            "node": "IntegRHüm",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait1": {
+      "main": [
+        [
+          {
+            "node": "Send message3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get a row1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send message3": {
+      "main": [
+        [
+          {
+            "node": "Call 'asistente inserta mensajes refactored'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "revisamos que no sea texto1": {
+      "main": [
+        [
+          {
+            "node": "Get a row1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Download media3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download media3": {
+      "main": [
+        [
+          {
+            "node": "Obtiene el binary file del audio de whatsapp3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtiene el binary file del audio de whatsapp3": {
+      "main": [
+        [
+          {
+            "node": "Transcribe a recording1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transcribe a recording1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields5": {
+      "main": [
+        [
+          {
+            "node": "Aggregate1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter1": {
+      "main": [
+        [
+          {
+            "node": "revisar si es documento1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IntegRHüm": {
+      "main": [
+        [
+          {
+            "node": "Send message",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Execute Workflow1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "WhatsApp Trigger1": {
+      "main": [
+        [
+          {
+            "node": "Filter1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres Chat Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "IntegRHüm",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Delete table or rows",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {
+    "WhatsApp Trigger1": [
+      {
+        "json": {
+          "messaging_product": "whatsapp",
+          "metadata": {
+            "display_phone_number": "5214432644613",
+            "phone_number_id": "941699612369208"
+          },
+          "contacts": [
+            {
+              "profile": {
+                "name": "Ricardo Correa Bautista"
+              },
+              "wa_id": "5214434901193"
+            }
+          ],
+          "messages": [
+            {
+              "from": "5214434901193",
+              "id": "wamid.HBgNNTIxNDQzNDkwMTE5MxUCABIYIEFDRjNCMTNEN0FDMkQwQzNFNjI4MTYxQUI5NjQ4NjNDAA==",
+              "timestamp": "1774393088",
+              "text": {
+                "body": "1 si \n2 correcto \n3 correcto"
+              },
+              "type": "text"
+            }
+          ],
+          "field": "messages"
+        }
+      }
+    ]
+  },
+  "versionId": "569b7ee6-c5a1-41fb-b1ff-7d4526d71a54",
+  "activeVersionId": null,
+  "versionCounter": 3,
+  "triggerCount": 0,
+  "shared": [
+    {
+      "updatedAt": "2026-04-24T15:50:24.358Z",
+      "createdAt": "2026-04-24T15:50:24.358Z",
+      "role": "workflow:owner",
+      "workflowId": "ArOV5xJ6Fxhforb1",
+      "projectId": "BZ9Ta5yhe4RhzY78",
+      "project": {
+        "updatedAt": "2025-05-13T16:18:54.372Z",
+        "createdAt": "2025-05-13T15:56:28.209Z",
+        "id": "BZ9Ta5yhe4RhzY78",
+        "name": "CANTERA ADMIN <canteradigital7@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "projectRelations": [
+          {
+            "updatedAt": "2025-05-13T15:56:28.209Z",
+            "createdAt": "2025-05-13T15:56:28.209Z",
+            "userId": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
+            "projectId": "BZ9Ta5yhe4RhzY78",
+            "user": {
+              "updatedAt": "2026-04-24T06:00:27.000Z",
+              "createdAt": "2025-05-13T15:56:27.880Z",
+              "id": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
+              "email": "canteradigital7@gmail.com",
+              "firstName": "CANTERA",
+              "lastName": "ADMIN",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-05-13T16:19:25.161Z",
+                "personalization_survey_n8n_version": "1.92.2",
+                "companySize": "<20",
+                "companyType": "saas",
+                "role": "customer-support",
+                "reportedSource": "event"
+              },
+              "settings": {
+                "userActivated": true,
+                "firstSuccessfulWorkflowId": "PTbESRzX3rguwQN8",
+                "userActivatedAt": 1747154580970,
+                "easyAIWorkflowOnboarded": true,
+                "npsSurvey": {
+                  "responded": true,
+                  "lastShownAt": 1765302536772
+                },
+                "dismissedCallouts": {
+                  "aiAgentStarterCallout": true,
+                  "preBuiltAgentsCalloutHttpRequest": true
+                }
+              },
+              "disabled": false,
+              "mfaEnabled": false,
+              "lastActiveAt": "2026-04-24",
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": [],
+  "activeVersion": null
+}
