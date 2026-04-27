@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-04-27T21:52:00.000Z",
+  "updatedAt": "2026-04-27T22:41:39.000Z",
   "createdAt": "2026-04-27T18:34:29.036Z",
   "id": "98Nd7IH9d5PbVLwF",
   "name": "My workflow 60",
@@ -121,11 +121,140 @@
       "type": "n8n-nodes-base.supabaseTool",
       "typeVersion": 1,
       "position": [
-        1280,
-        208
+        1136,
+        176
       ],
       "id": "6c6f4496-72ef-4be2-aa5e-1c9c114827e2",
       "name": "buscar_cliente",
+      "credentials": {
+        "supabaseApi": {
+          "id": "CdywA9ymdozKVNFl",
+          "name": "Supabase Gio TEST"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "=Consulta historial de compras y entregas de un cliente. Usar en quejas y verificación de horarios.\n",
+        "operation": "getAll",
+        "tableId": "historial_compras"
+      },
+      "type": "n8n-nodes-base.supabaseTool",
+      "typeVersion": 1,
+      "position": [
+        1280,
+        176
+      ],
+      "id": "a18071ea-7b88-49a3-a001-1d9abaadc93a",
+      "name": "consultar_historial",
+      "credentials": {
+        "supabaseApi": {
+          "id": "CdywA9ymdozKVNFl",
+          "name": "Supabase Gio TEST"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Registra una queja en sistema. Genera folio de seguimiento. Incluir: cliente_id, tipo (servicio/garrafon/calidad/atencion), descripcion, urgente (true/false).\n",
+        "tableId": "quejas"
+      },
+      "type": "n8n-nodes-base.supabaseTool",
+      "typeVersion": 1,
+      "position": [
+        1552,
+        176
+      ],
+      "id": "699d522c-bda8-4f40-b889-fb81d907bad0",
+      "name": "registro_quejas",
+      "credentials": {
+        "supabaseApi": {
+          "id": "CdywA9ymdozKVNFl",
+          "name": "Supabase Gio TEST"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Verifica estatus de ruta, zona y horario. Usar para programar entregas y verificar cobertura.",
+        "operation": "getAll",
+        "tableId": "rutas"
+      },
+      "type": "n8n-nodes-base.supabaseTool",
+      "typeVersion": 1,
+      "position": [
+        1424,
+        176
+      ],
+      "id": "38116406-8366-4fec-b491-f4c9b82bdea1",
+      "name": "Verficiar_rutas",
+      "credentials": {
+        "supabaseApi": {
+          "id": "CdywA9ymdozKVNFl",
+          "name": "Supabase Gio TEST"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Registra servicios: extras, segundas vueltas, urgentes, programados. Incluir: cliente_id, tipo, detalles, fecha_programada, cargo_extra, metodo_pago, especificaciones, ruta.",
+        "tableId": "servicios"
+      },
+      "type": "n8n-nodes-base.supabaseTool",
+      "typeVersion": 1,
+      "position": [
+        1680,
+        176
+      ],
+      "id": "01348daa-7dfa-4cc8-a66d-63996b20a393",
+      "name": "registrar_servicio",
+      "credentials": {
+        "supabaseApi": {
+          "id": "CdywA9ymdozKVNFl",
+          "name": "Supabase Gio TEST"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Consulta saldo del monedero electrónico del cliente. Usar en Proceso 9.",
+        "operation": "getAll",
+        "tableId": "monedero"
+      },
+      "type": "n8n-nodes-base.supabaseTool",
+      "typeVersion": 1,
+      "position": [
+        1840,
+        176
+      ],
+      "id": "076ecffb-1e53-4a05-8eea-0fcc4a9c936b",
+      "name": "consultar_monedero",
+      "credentials": {
+        "supabaseApi": {
+          "id": "CdywA9ymdozKVNFl",
+          "name": "Supabase Gio TEST"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Da de alta un nuevo prospecto. Incluir: nombre, telefono, telefono2, direccion, entre_calles, colonia, cp, referencias, fecha_nacimiento, consumo_cantidad, frecuencia, ruta.",
+        "tableId": "clientes"
+      },
+      "type": "n8n-nodes-base.supabaseTool",
+      "typeVersion": 1,
+      "position": [
+        2000,
+        176
+      ],
+      "id": "07271267-e5cd-4a4a-9431-08c5831ee423",
+      "name": "crear_cliente",
       "credentials": {
         "supabaseApi": {
           "id": "CdywA9ymdozKVNFl",
@@ -189,6 +318,72 @@
           }
         ]
       ]
+    },
+    "consultar_historial": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "registro_quejas": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verficiar_rutas": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "registrar_servicio": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "consultar_monedero": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "crear_cliente": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -199,9 +394,9 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "af67bab1-7828-48e7-b702-adc73643c536",
+  "versionId": "f7296bd8-54d3-4486-b3c1-63154cf73285",
   "activeVersionId": null,
-  "versionCounter": 17,
+  "versionCounter": 18,
   "triggerCount": 1,
   "shared": [
     {
