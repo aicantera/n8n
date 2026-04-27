@@ -1,0 +1,742 @@
+{
+  "updatedAt": "2026-04-27T18:34:40.000Z",
+  "createdAt": "2026-04-27T18:34:29.036Z",
+  "id": "98Nd7IH9d5PbVLwF",
+  "name": "My workflow 60",
+  "description": null,
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "6c0527b4-daa0-4b29-8f4b-c18a81f6917d",
+      "name": "Telegram Trigger",
+      "webhookId": "39b8d190-dcf6-4511-9fd6-14d05db9dfe5",
+      "credentials": {
+        "telegramApi": {
+          "id": "I501w0YmqC5bGXq5",
+          "name": "gio bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.message.text }}",
+        "options": {
+          "systemMessage": "Eres el asistente virtual del call center de Junghanns, empresa de distribución de agua purificada en garrafón. Guías al operador paso a paso en cada proceso de atención al cliente. Nunca saltes pasos.\n\nREGLA GENERAL: En TODOS los procesos, primero solicita nombre, dirección y teléfono del cliente. Luego USA la herramienta buscar_cliente para verificar en sistema. Muestra resultados al operador para confirmar.\n\n=== PROCESO 1: QUEJAS ===\nTras identificar al cliente, pregunta motivo y clasifica:\n\nOPCIÓN 1 - QUEJA POR SERVICIO:\n1. Usa consultar_historial para revisar compras y visitas.\n2. Informa horario estimado (lapso 1hr entre entregas).\n3. Pregunta si hay retraso → SI: usa verificar_ruta. NO: continúa.\n4. ¿Entrega mismo día? → SI: registrar_en_sistema tipo segunda_visita con c11. NO: registrar_en_sistema tipo programar_entrega.\n5. Solicita observaciones → registrar_en_sistema tipo observacion.\n6. registrar_en_sistema tipo queja para folio.\n\nOPCIÓN 2 - GARRAFÓN PICADO:\n1. consultar_historial para validar consumo.\n2. Pregunta: fecha compra, fisura, detalles.\n3. Mismo día → segunda_visita. Otro día antes 2PM → visita_mismodia. Después 2PM → programar siguiente día.\n4. registrar_en_sistema tipo queja.\n\nOPCIÓN 3 - CALIDAD DEL PRODUCTO:\n1. consultar_historial para última compra.\n2. Pregunta: cantidad agua, sabor, líquido, envase.\n3. Antes 2PM → servicio_urgente mismo día. Después 2PM → siguiente día.\n4. registrar_en_sistema tipo queja urgente. Seguimiento con producción.\n\nOPCIÓN 4 - ATENCIÓN AL CLIENTE:\n1. Confirma dirección.\n2. Escucha activa, ingresa comentarios.\n3. Brinda solución factible.\n4. ¿Seguimiento inmediato? → SI: contacta reparto/ventas. NO: continúa.\n5. registrar_en_sistema tipo queja.\n6. Genera seguimiento con supervisor.\n\n=== PROCESO 2: SERVICIOS EXTRAS ===\n1. Identifica cliente con buscar_cliente.\n2. Valida status: del día → sin cargo. Fuera de frecuencia → cargo $26.\n3. Horario: L-V 7am-2pm, Sáb 7am-12pm.\n4. Usa verificar_ruta: saturada → agenda día cercano. Cerca → mismo día.\n5. Solicita especificaciones (horario, pago, indicaciones). registrar_en_sistema.\n\n=== PROCESO 3: SEGUNDAS VUELTAS ===\n1. Identifica cliente con buscar_cliente.\n2. Valida frecuencia: del día → verificar_ruta si activa → segunda_visita. Fuera de día → servicio especial con cargo.\n3. verificar_ruta: activa → 2da vuelta. Inactiva → servicio especial siguiente día.\n4. Solicita especificaciones. registrar_en_sistema.\n\n=== PROCESO 4: ALTA DE CLIENTE ===\n1. Saludo y nombre de asesor.\n2. Solicita dirección, usa verificar_ruta para cobertura.\n3. Con cobertura: informa costo envase ($120), líquido ($59), modelo negocio, promociones.\n4. Si confirma interés, solicita: nombre completo, 2 teléfonos, dirección+CP, entre calles, referencias, fecha nacimiento, personas consumiendo, consumo semanal/quincenal.\n5. Informa sobre llamada de calidad 6 semanas. Número: (222) 419 4790.\n6. ¿Factura? → solicita CFDI (<3 meses) y correo.\n7. ¿Cambios envase? → cantidad y marca.\n8. Confirma: ruta, día, monto.\n9. Info monedero: banco, CLABE, monto, WhatsApp comprobante.\n10. registrar_alta_cliente.\n11. registrar_en_sistema con historial y detalles.\n\n=== PROCESO 5: BIENVENIDA ===\n1. ¿Factura? → CFDI y correo.\n2. ¿Cambios envase? → cantidad y marca.\n3. Confirma ruta, día, monto.\n4. Info monedero: BBVA, CLABE, depósitos desde $59, WhatsApp.\n5. registrar_en_sistema con seguimiento.\n\n=== PROCESO 6: FACTURACIÓN ===\nPrimera vez:\n1. ¿Requiere factura? SI → solicita CFDI (<3 meses) y correo. NO → fin.\n2. Verifica CFDI vigente.\n3. Datos: Razón Social, RFC, dirección, correo, ID Esencial, régimen, uso CFDI, CIF PDF, fecha.\n4. registrar_en_sistema tipo facturacion.\n\nActualización por operaciones:\n1. Usa verificar_facturacion para ver último CFDI.\n2. Contacta cliente para CFDI actualizado.\n3. Actualiza datos en sistema. registrar_en_sistema.\n\nActualización por cliente:\n1. buscar_cliente para identificar.\n2. Solicita CFDI y correo nuevos.\n3. Da de baja datos anteriores e ingresa nuevos. registrar_en_sistema.\n\n=== PROCESO 7: REENVÍO FACTURA ===\n1. buscar_cliente.\n2. Usa verificar_facturacion para ver ventas y correos.\n3. ¿Hay registro correos? SI → verifica correo con cliente → correcto: reenvía. Incorrecto: actualiza y reenvía. NO → solicita apoyo contabilidad.\n4. registrar_en_sistema.\n\n=== PROCESO 8: HORARIO REPARTIDOR ===\n1. buscar_cliente.\n2. Valida frecuencia del cliente.\n3. ¿Coincide con hoy? SI → consultar_historial para horario estimado → informa con variaciones. NO → informa día correcto.\n\n=== PROCESO 9: SALDO MONEDERO ===\n1. buscar_cliente.\n2. Valida datos.\n3. Usa consultar_saldo_monedero → informa saldo, cuenta depósito, WhatsApp comprobante.\n\n=== HERRAMIENTAS DISPONIBLES ===\nTienes 7 herramientas que simulan Jusoft. DEBES usarlas:\n- buscar_cliente: OBLIGATORIO al inicio de TODO proceso.\n- consultar_historial: Historial compras/visitas. Quejas y verificaciones.\n- verificar_ruta: Estatus ruta, zona, horario. Programar entregas.\n- registrar_en_sistema: Registra quejas, servicios, visitas, observaciones. Genera folio.\n- consultar_saldo_monedero: Saldo monedero. Proceso 9.\n- verificar_facturacion: Datos fiscales y facturas. Procesos 6 y 7.\n- registrar_alta_cliente: Alta prospecto. Proceso 4.\n\nREGLAS:\n- Siempre usa buscar_cliente PRIMERO.\n- Muestra resultados al operador para confirmar con cliente.\n- En cada decisión (SI/NO), PREGUNTA al operador la situación real.\n- Nunca asumas información. Solicita datos faltantes.\n- Sé amable, profesional y empático.\n- Horarios: L-V 7am-2pm, Sáb 7am-12pm.\n- Teléfono: (222) 419 4790. Cargo extra: $26. Monedero mín: $59.\n- CFDI nunca mayor a 3 meses. Sistema: Jusoft.\n- Al inicio pregunta: ¿En qué puedo ayudarte? y clasifica en los 9 procesos."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        432,
+        0
+      ],
+      "id": "a448cdf8-b09e-444c-bfeb-b4f331943029",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        0,
+        192
+      ],
+      "id": "b644dd6a-3589-4f59-8c6f-f7d67505556d",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "ZmWqQ5PGylh4Y05s",
+          "name": "OpenAi account - CANTERA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.message.chat.id }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        160,
+        192
+      ],
+      "id": "2bbc54ea-5eec-482f-bbc5-8e7d68f396f9",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "name": "buscar_cliente",
+        "description": "Busca un cliente en Jusoft por nombre, teléfono o dirección. OBLIGATORIO al inicio de todos los procesos para identificar al cliente."
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolCode",
+      "typeVersion": 1,
+      "position": [
+        128,
+        432
+      ],
+      "id": "8471724d-05c1-447b-aa33-6ed17bd8bd65",
+      "name": "Buscar Cliente"
+    },
+    {
+      "parameters": {
+        "name": "consultar_historial",
+        "description": "Consulta historial de compras, visitas y entregas del cliente en Jusoft. Usar en quejas, verificaciones de servicio y horario de repartidor."
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolCode",
+      "typeVersion": 1,
+      "position": [
+        416,
+        432
+      ],
+      "id": "c036a10b-248d-43ff-9425-4b050fcb7450",
+      "name": "Consultar Historial"
+    },
+    {
+      "parameters": {
+        "name": "verificar_ruta",
+        "description": "Verifica estatus de ruta en Jusoft: disponibilidad, zona actual, horario estimado, cobertura. Usar para programar entregas, segundas vueltas y verificar cobertura en altas."
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolCode",
+      "typeVersion": 1,
+      "position": [
+        720,
+        432
+      ],
+      "id": "1a248c7f-f7f6-4c43-b8b9-0dd59d5b1ea9",
+      "name": "Verificar Ruta"
+    },
+    {
+      "parameters": {
+        "name": "registrar_en_sistema",
+        "description": "Registra acciones en Jusoft: quejas, servicios, segundas visitas, servicios urgentes, observaciones, programar entregas. Genera folio de seguimiento. Indicar el tipo de registro y detalles."
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolCode",
+      "typeVersion": 1,
+      "position": [
+        1072,
+        432
+      ],
+      "id": "e5af0065-a939-4ff6-83b3-8c93517fd3b9",
+      "name": "Registrar en Sistema"
+    },
+    {
+      "parameters": {
+        "name": "consultar_saldo_monedero",
+        "description": "Consulta saldo del monedero electrónico del cliente, últimos movimientos y datos bancarios para depósitos. Usar en Proceso 9."
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolCode",
+      "typeVersion": 1,
+      "position": [
+        256,
+        432
+      ],
+      "id": "ddc08c29-cc4a-4db2-9aed-671d90640470",
+      "name": "Consultar Saldo Monedero"
+    },
+    {
+      "parameters": {
+        "name": "verificar_facturacion",
+        "description": "Consulta datos fiscales del cliente, estado de CFDI, facturas pendientes y correos enviados. Usar en Procesos 6 (Facturación) y 7 (Reenvío de factura)."
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolCode",
+      "typeVersion": 1,
+      "position": [
+        576,
+        432
+      ],
+      "id": "4fb0497d-0cb0-4b02-951d-85b75680817b",
+      "name": "Verificar Facturación"
+    },
+    {
+      "parameters": {
+        "name": "registrar_alta_cliente",
+        "description": "Da de alta un nuevo prospecto/cliente en Jusoft. Asigna ruta, frecuencia, programa primer servicio y genera datos de monedero. Usar en Proceso 4."
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolCode",
+      "typeVersion": 1,
+      "position": [
+        880,
+        432
+      ],
+      "id": "e15d39b7-2afe-4a91-be29-8473a8b18f98",
+      "name": "Registrar Alta Cliente"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "={{ $json.output }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        784,
+        0
+      ],
+      "id": "2ae3e5f1-9991-4140-ad3e-7b7653705f10",
+      "name": "Enviar Respuesta",
+      "webhookId": "7dc1e816-7a19-4916-8eaf-fee4ca7e3270",
+      "credentials": {
+        "telegramApi": {
+          "id": "I501w0YmqC5bGXq5",
+          "name": "gio bot"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Enviar Respuesta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscar Cliente": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consultar Historial": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verificar Ruta": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Registrar en Sistema": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consultar Saldo Monedero": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verificar Facturación": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Registrar Alta Cliente": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {},
+  "versionId": "c4d6a70a-47d3-4b48-b1a4-aeb4821b8e65",
+  "activeVersionId": "c4d6a70a-47d3-4b48-b1a4-aeb4821b8e65",
+  "versionCounter": 4,
+  "triggerCount": 1,
+  "shared": [
+    {
+      "updatedAt": "2026-04-27T18:34:29.045Z",
+      "createdAt": "2026-04-27T18:34:29.045Z",
+      "role": "workflow:owner",
+      "workflowId": "98Nd7IH9d5PbVLwF",
+      "projectId": "BZ9Ta5yhe4RhzY78",
+      "project": {
+        "updatedAt": "2025-05-13T16:18:54.372Z",
+        "createdAt": "2025-05-13T15:56:28.209Z",
+        "id": "BZ9Ta5yhe4RhzY78",
+        "name": "CANTERA ADMIN <canteradigital7@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "projectRelations": [
+          {
+            "updatedAt": "2025-05-13T15:56:28.209Z",
+            "createdAt": "2025-05-13T15:56:28.209Z",
+            "userId": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
+            "projectId": "BZ9Ta5yhe4RhzY78",
+            "user": {
+              "updatedAt": "2026-04-27T06:00:27.000Z",
+              "createdAt": "2025-05-13T15:56:27.880Z",
+              "id": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
+              "email": "canteradigital7@gmail.com",
+              "firstName": "CANTERA",
+              "lastName": "ADMIN",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-05-13T16:19:25.161Z",
+                "personalization_survey_n8n_version": "1.92.2",
+                "companySize": "<20",
+                "companyType": "saas",
+                "role": "customer-support",
+                "reportedSource": "event"
+              },
+              "settings": {
+                "userActivated": true,
+                "firstSuccessfulWorkflowId": "PTbESRzX3rguwQN8",
+                "userActivatedAt": 1747154580970,
+                "easyAIWorkflowOnboarded": true,
+                "npsSurvey": {
+                  "responded": true,
+                  "lastShownAt": 1765302536772
+                },
+                "dismissedCallouts": {
+                  "aiAgentStarterCallout": true,
+                  "preBuiltAgentsCalloutHttpRequest": true
+                }
+              },
+              "disabled": false,
+              "mfaEnabled": false,
+              "lastActiveAt": "2026-04-27",
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": [],
+  "activeVersion": {
+    "updatedAt": "2026-04-27T18:34:29.048Z",
+    "createdAt": "2026-04-27T18:34:29.048Z",
+    "versionId": "c4d6a70a-47d3-4b48-b1a4-aeb4821b8e65",
+    "workflowId": "98Nd7IH9d5PbVLwF",
+    "nodes": [
+      {
+        "parameters": {
+          "updates": [
+            "message"
+          ],
+          "additionalFields": {}
+        },
+        "type": "n8n-nodes-base.telegramTrigger",
+        "typeVersion": 1.2,
+        "position": [
+          0,
+          0
+        ],
+        "id": "6c0527b4-daa0-4b29-8f4b-c18a81f6917d",
+        "name": "Telegram Trigger",
+        "webhookId": "39b8d190-dcf6-4511-9fd6-14d05db9dfe5",
+        "credentials": {
+          "telegramApi": {
+            "id": "I501w0YmqC5bGXq5",
+            "name": "gio bot"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "promptType": "define",
+          "text": "={{ $json.message.text }}",
+          "options": {
+            "systemMessage": "Eres el asistente virtual del call center de Junghanns, empresa de distribución de agua purificada en garrafón. Guías al operador paso a paso en cada proceso de atención al cliente. Nunca saltes pasos.\n\nREGLA GENERAL: En TODOS los procesos, primero solicita nombre, dirección y teléfono del cliente. Luego USA la herramienta buscar_cliente para verificar en sistema. Muestra resultados al operador para confirmar.\n\n=== PROCESO 1: QUEJAS ===\nTras identificar al cliente, pregunta motivo y clasifica:\n\nOPCIÓN 1 - QUEJA POR SERVICIO:\n1. Usa consultar_historial para revisar compras y visitas.\n2. Informa horario estimado (lapso 1hr entre entregas).\n3. Pregunta si hay retraso → SI: usa verificar_ruta. NO: continúa.\n4. ¿Entrega mismo día? → SI: registrar_en_sistema tipo segunda_visita con c11. NO: registrar_en_sistema tipo programar_entrega.\n5. Solicita observaciones → registrar_en_sistema tipo observacion.\n6. registrar_en_sistema tipo queja para folio.\n\nOPCIÓN 2 - GARRAFÓN PICADO:\n1. consultar_historial para validar consumo.\n2. Pregunta: fecha compra, fisura, detalles.\n3. Mismo día → segunda_visita. Otro día antes 2PM → visita_mismodia. Después 2PM → programar siguiente día.\n4. registrar_en_sistema tipo queja.\n\nOPCIÓN 3 - CALIDAD DEL PRODUCTO:\n1. consultar_historial para última compra.\n2. Pregunta: cantidad agua, sabor, líquido, envase.\n3. Antes 2PM → servicio_urgente mismo día. Después 2PM → siguiente día.\n4. registrar_en_sistema tipo queja urgente. Seguimiento con producción.\n\nOPCIÓN 4 - ATENCIÓN AL CLIENTE:\n1. Confirma dirección.\n2. Escucha activa, ingresa comentarios.\n3. Brinda solución factible.\n4. ¿Seguimiento inmediato? → SI: contacta reparto/ventas. NO: continúa.\n5. registrar_en_sistema tipo queja.\n6. Genera seguimiento con supervisor.\n\n=== PROCESO 2: SERVICIOS EXTRAS ===\n1. Identifica cliente con buscar_cliente.\n2. Valida status: del día → sin cargo. Fuera de frecuencia → cargo $26.\n3. Horario: L-V 7am-2pm, Sáb 7am-12pm.\n4. Usa verificar_ruta: saturada → agenda día cercano. Cerca → mismo día.\n5. Solicita especificaciones (horario, pago, indicaciones). registrar_en_sistema.\n\n=== PROCESO 3: SEGUNDAS VUELTAS ===\n1. Identifica cliente con buscar_cliente.\n2. Valida frecuencia: del día → verificar_ruta si activa → segunda_visita. Fuera de día → servicio especial con cargo.\n3. verificar_ruta: activa → 2da vuelta. Inactiva → servicio especial siguiente día.\n4. Solicita especificaciones. registrar_en_sistema.\n\n=== PROCESO 4: ALTA DE CLIENTE ===\n1. Saludo y nombre de asesor.\n2. Solicita dirección, usa verificar_ruta para cobertura.\n3. Con cobertura: informa costo envase ($120), líquido ($59), modelo negocio, promociones.\n4. Si confirma interés, solicita: nombre completo, 2 teléfonos, dirección+CP, entre calles, referencias, fecha nacimiento, personas consumiendo, consumo semanal/quincenal.\n5. Informa sobre llamada de calidad 6 semanas. Número: (222) 419 4790.\n6. ¿Factura? → solicita CFDI (<3 meses) y correo.\n7. ¿Cambios envase? → cantidad y marca.\n8. Confirma: ruta, día, monto.\n9. Info monedero: banco, CLABE, monto, WhatsApp comprobante.\n10. registrar_alta_cliente.\n11. registrar_en_sistema con historial y detalles.\n\n=== PROCESO 5: BIENVENIDA ===\n1. ¿Factura? → CFDI y correo.\n2. ¿Cambios envase? → cantidad y marca.\n3. Confirma ruta, día, monto.\n4. Info monedero: BBVA, CLABE, depósitos desde $59, WhatsApp.\n5. registrar_en_sistema con seguimiento.\n\n=== PROCESO 6: FACTURACIÓN ===\nPrimera vez:\n1. ¿Requiere factura? SI → solicita CFDI (<3 meses) y correo. NO → fin.\n2. Verifica CFDI vigente.\n3. Datos: Razón Social, RFC, dirección, correo, ID Esencial, régimen, uso CFDI, CIF PDF, fecha.\n4. registrar_en_sistema tipo facturacion.\n\nActualización por operaciones:\n1. Usa verificar_facturacion para ver último CFDI.\n2. Contacta cliente para CFDI actualizado.\n3. Actualiza datos en sistema. registrar_en_sistema.\n\nActualización por cliente:\n1. buscar_cliente para identificar.\n2. Solicita CFDI y correo nuevos.\n3. Da de baja datos anteriores e ingresa nuevos. registrar_en_sistema.\n\n=== PROCESO 7: REENVÍO FACTURA ===\n1. buscar_cliente.\n2. Usa verificar_facturacion para ver ventas y correos.\n3. ¿Hay registro correos? SI → verifica correo con cliente → correcto: reenvía. Incorrecto: actualiza y reenvía. NO → solicita apoyo contabilidad.\n4. registrar_en_sistema.\n\n=== PROCESO 8: HORARIO REPARTIDOR ===\n1. buscar_cliente.\n2. Valida frecuencia del cliente.\n3. ¿Coincide con hoy? SI → consultar_historial para horario estimado → informa con variaciones. NO → informa día correcto.\n\n=== PROCESO 9: SALDO MONEDERO ===\n1. buscar_cliente.\n2. Valida datos.\n3. Usa consultar_saldo_monedero → informa saldo, cuenta depósito, WhatsApp comprobante.\n\n=== HERRAMIENTAS DISPONIBLES ===\nTienes 7 herramientas que simulan Jusoft. DEBES usarlas:\n- buscar_cliente: OBLIGATORIO al inicio de TODO proceso.\n- consultar_historial: Historial compras/visitas. Quejas y verificaciones.\n- verificar_ruta: Estatus ruta, zona, horario. Programar entregas.\n- registrar_en_sistema: Registra quejas, servicios, visitas, observaciones. Genera folio.\n- consultar_saldo_monedero: Saldo monedero. Proceso 9.\n- verificar_facturacion: Datos fiscales y facturas. Procesos 6 y 7.\n- registrar_alta_cliente: Alta prospecto. Proceso 4.\n\nREGLAS:\n- Siempre usa buscar_cliente PRIMERO.\n- Muestra resultados al operador para confirmar con cliente.\n- En cada decisión (SI/NO), PREGUNTA al operador la situación real.\n- Nunca asumas información. Solicita datos faltantes.\n- Sé amable, profesional y empático.\n- Horarios: L-V 7am-2pm, Sáb 7am-12pm.\n- Teléfono: (222) 419 4790. Cargo extra: $26. Monedero mín: $59.\n- CFDI nunca mayor a 3 meses. Sistema: Jusoft.\n- Al inicio pregunta: ¿En qué puedo ayudarte? y clasifica en los 9 procesos."
+          }
+        },
+        "type": "@n8n/n8n-nodes-langchain.agent",
+        "typeVersion": 3,
+        "position": [
+          432,
+          0
+        ],
+        "id": "a448cdf8-b09e-444c-bfeb-b4f331943029",
+        "name": "AI Agent"
+      },
+      {
+        "parameters": {
+          "model": {
+            "__rl": true,
+            "mode": "list",
+            "value": "gpt-4.1-mini"
+          },
+          "builtInTools": {},
+          "options": {}
+        },
+        "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "typeVersion": 1.3,
+        "position": [
+          0,
+          192
+        ],
+        "id": "b644dd6a-3589-4f59-8c6f-f7d67505556d",
+        "name": "OpenAI Chat Model",
+        "credentials": {
+          "openAiApi": {
+            "id": "ZmWqQ5PGylh4Y05s",
+            "name": "OpenAi account - CANTERA"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "sessionIdType": "customKey",
+          "sessionKey": "={{ $json.message.chat.id }}"
+        },
+        "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+        "typeVersion": 1.3,
+        "position": [
+          160,
+          192
+        ],
+        "id": "2bbc54ea-5eec-482f-bbc5-8e7d68f396f9",
+        "name": "Simple Memory"
+      },
+      {
+        "parameters": {
+          "name": "buscar_cliente",
+          "description": "Busca un cliente en Jusoft por nombre, teléfono o dirección. OBLIGATORIO al inicio de todos los procesos para identificar al cliente."
+        },
+        "type": "@n8n/n8n-nodes-langchain.toolCode",
+        "typeVersion": 1,
+        "position": [
+          128,
+          432
+        ],
+        "id": "8471724d-05c1-447b-aa33-6ed17bd8bd65",
+        "name": "Buscar Cliente"
+      },
+      {
+        "parameters": {
+          "name": "consultar_historial",
+          "description": "Consulta historial de compras, visitas y entregas del cliente en Jusoft. Usar en quejas, verificaciones de servicio y horario de repartidor."
+        },
+        "type": "@n8n/n8n-nodes-langchain.toolCode",
+        "typeVersion": 1,
+        "position": [
+          416,
+          432
+        ],
+        "id": "c036a10b-248d-43ff-9425-4b050fcb7450",
+        "name": "Consultar Historial"
+      },
+      {
+        "parameters": {
+          "name": "verificar_ruta",
+          "description": "Verifica estatus de ruta en Jusoft: disponibilidad, zona actual, horario estimado, cobertura. Usar para programar entregas, segundas vueltas y verificar cobertura en altas."
+        },
+        "type": "@n8n/n8n-nodes-langchain.toolCode",
+        "typeVersion": 1,
+        "position": [
+          720,
+          432
+        ],
+        "id": "1a248c7f-f7f6-4c43-b8b9-0dd59d5b1ea9",
+        "name": "Verificar Ruta"
+      },
+      {
+        "parameters": {
+          "name": "registrar_en_sistema",
+          "description": "Registra acciones en Jusoft: quejas, servicios, segundas visitas, servicios urgentes, observaciones, programar entregas. Genera folio de seguimiento. Indicar el tipo de registro y detalles."
+        },
+        "type": "@n8n/n8n-nodes-langchain.toolCode",
+        "typeVersion": 1,
+        "position": [
+          1072,
+          432
+        ],
+        "id": "e5af0065-a939-4ff6-83b3-8c93517fd3b9",
+        "name": "Registrar en Sistema"
+      },
+      {
+        "parameters": {
+          "name": "consultar_saldo_monedero",
+          "description": "Consulta saldo del monedero electrónico del cliente, últimos movimientos y datos bancarios para depósitos. Usar en Proceso 9."
+        },
+        "type": "@n8n/n8n-nodes-langchain.toolCode",
+        "typeVersion": 1,
+        "position": [
+          256,
+          432
+        ],
+        "id": "ddc08c29-cc4a-4db2-9aed-671d90640470",
+        "name": "Consultar Saldo Monedero"
+      },
+      {
+        "parameters": {
+          "name": "verificar_facturacion",
+          "description": "Consulta datos fiscales del cliente, estado de CFDI, facturas pendientes y correos enviados. Usar en Procesos 6 (Facturación) y 7 (Reenvío de factura)."
+        },
+        "type": "@n8n/n8n-nodes-langchain.toolCode",
+        "typeVersion": 1,
+        "position": [
+          576,
+          432
+        ],
+        "id": "4fb0497d-0cb0-4b02-951d-85b75680817b",
+        "name": "Verificar Facturación"
+      },
+      {
+        "parameters": {
+          "name": "registrar_alta_cliente",
+          "description": "Da de alta un nuevo prospecto/cliente en Jusoft. Asigna ruta, frecuencia, programa primer servicio y genera datos de monedero. Usar en Proceso 4."
+        },
+        "type": "@n8n/n8n-nodes-langchain.toolCode",
+        "typeVersion": 1,
+        "position": [
+          880,
+          432
+        ],
+        "id": "e15d39b7-2afe-4a91-be29-8473a8b18f98",
+        "name": "Registrar Alta Cliente"
+      },
+      {
+        "parameters": {
+          "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+          "text": "={{ $json.output }}",
+          "additionalFields": {
+            "appendAttribution": false
+          }
+        },
+        "type": "n8n-nodes-base.telegram",
+        "typeVersion": 1.2,
+        "position": [
+          784,
+          0
+        ],
+        "id": "2ae3e5f1-9991-4140-ad3e-7b7653705f10",
+        "name": "Enviar Respuesta",
+        "webhookId": "7dc1e816-7a19-4916-8eaf-fee4ca7e3270",
+        "credentials": {
+          "telegramApi": {
+            "id": "I501w0YmqC5bGXq5",
+            "name": "gio bot"
+          }
+        }
+      }
+    ],
+    "connections": {
+      "Telegram Trigger": {
+        "main": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "AI Agent": {
+        "main": [
+          [
+            {
+              "node": "Enviar Respuesta",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "OpenAI Chat Model": {
+        "ai_languageModel": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "ai_languageModel",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Simple Memory": {
+        "ai_memory": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "ai_memory",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Buscar Cliente": {
+        "ai_tool": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Consultar Historial": {
+        "ai_tool": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Verificar Ruta": {
+        "ai_tool": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Registrar en Sistema": {
+        "ai_tool": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Consultar Saldo Monedero": {
+        "ai_tool": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Verificar Facturación": {
+        "ai_tool": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Registrar Alta Cliente": {
+        "ai_tool": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "authors": "CANTERA ADMIN",
+    "name": null,
+    "description": null
+  }
+}
