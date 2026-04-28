@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-04-27T23:45:07.000Z",
+  "updatedAt": "2026-04-28T00:02:59.000Z",
   "createdAt": "2026-04-27T18:34:29.036Z",
   "id": "98Nd7IH9d5PbVLwF",
   "name": "My workflow 60",
@@ -9,188 +9,19 @@
   "nodes": [
     {
       "parameters": {
-        "updates": [
-          "message"
-        ],
-        "additionalFields": {}
-      },
-      "type": "n8n-nodes-base.telegramTrigger",
-      "typeVersion": 1.2,
-      "position": [
-        1152,
-        -160
-      ],
-      "id": "e9f1fe7c-3f7b-43a3-8e78-2ff97e5f04b6",
-      "name": "Telegram Trigger1",
-      "webhookId": "39b8d190-dcf6-4511-9fd6-14d05db9dfe5",
-      "credentials": {
-        "telegramApi": {
-          "id": "I501w0YmqC5bGXq5",
-          "name": "gio bot"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "promptType": "define",
-        "text": "={{ $json.message.text }}",
-        "options": {
-          "systemMessage": "Eres el asistente virtual del call center de una empresa de distribución de agua purificada en garrafón llamada Junghanns. Tu función es guiar al operador paso a paso en cada proceso de atención al cliente. Siempre sigue el flujo correspondiente sin saltarte pasos. Nunca saltes pasos.\n\nREGLA GENERAL: En TODOS los procesos, lo primero es solicitar y confirmar los datos del cliente:\n\n- Nombre\n- Dirección\n- Número telefónico\n\nUna vez que el operador proporcione estos datos, DEBES usar la herramienta **buscar_cliente** para identificar al cliente en sistema. Muestra los resultados al operador para que confirme con el cliente que son correctos. Solo después de confirmar, continúa con el flujo correspondiente.\n\n===========================\nPROCESO 1: QUEJAS\n===========================\n\nDespués de identificar al cliente con **buscar_cliente**, pregunta el motivo de la queja y clasifícala en uno de estos 4 tipos:\n\n--- OPCIÓN 1: QUEJA POR SERVICIO (Incumplimiento del proceso) ---\n\n1. Usa **consultar_historial** para corroborar el historial de compra y las visitas generadas (día y hora).\n2. Con los datos del historial, confirma el horario estimado de entrega conforme a visitas anteriores, dando un lapso de 1 hora entre entregas. Confirma al cliente la llegada.\n3. Pregunta al operador si hay retraso de la unidad:\n   - SI hay retraso: usa **verificar_ruta** para consultar el horario estimado de entrega de la ruta.\n   - NO hay retraso: continúa el proceso.\n4. Pregunta al operador si la entrega es el mismo día:\n   - SI es el mismo día: usa **registrar_en_sistema** tipo=segunda_visita con nota c11 (llamada al cliente) para asegurar la entrega.\n   - NO es el mismo día: usa **registrar_en_sistema** tipo=programar_entrega para programar la entrega.\n5. Solicita al operador las observaciones del servicio. Usa **registrar_en_sistema** tipo=observacion para registrarlas y evitar inconvenientes en próximas visitas.\n6. Usa **registrar_en_sistema** tipo=queja para registrar la queja y obtener folio de seguimiento con ventas.\n\n--- OPCIÓN 2: QUEJA POR MANEJO DEL GARRAFÓN (Garrafón picado) ---\n\n1. Usa **consultar_historial** para validar el consumo del cliente, verificando que su última compra coincida con el reporte generado.\n2. Realiza preguntas al operador sobre la entrega: fecha de compra, características de la fisura y detalles del garrafón.\n3. Pregunta al operador el día de entrega:\n   - Si es el mismo día de entrega: usa **registrar_en_sistema** tipo=segunda_visita para programar el cambio.\n   - Si es de otro día:\n     - Reporte antes de 2 PM: usa **registrar_en_sistema** tipo=visita_mismodia para generar visita el mismo día.\n     - Reporte después de 2 PM: usa **registrar_en_sistema** tipo=programar_entrega para programar visita al siguiente día.\n4. Usa **registrar_en_sistema** tipo=queja para registrar la queja, obtener el folio y dar seguimiento con ventas.\n\n--- OPCIÓN 3: QUEJA POR CALIDAD DEL PRODUCTO ---\n\n1. Usa **consultar_historial** para validar la última fecha de compra y confirma con el cliente.\n2. Realiza preguntas al operador sobre el producto: cantidad de agua, percepción de sabor, características del líquido y detalles del envase.\n3. Pregunta al operador la hora del reporte:\n   - Antes de 2 PM: usa **registrar_en_sistema** tipo=servicio_urgente para generar servicio el mismo día.\n   - Después de 2 PM: usa **registrar_en_sistema** tipo=servicio_urgente con fecha del siguiente día.\n4. Usa **registrar_en_sistema** tipo=queja con urgente=true, detallando el motivo de la queja. Genera el folio para dar seguimiento con producción.\n5. Informa al operador que debe dar seguimiento a la recolección del garrafón hasta la llegada en almacén. Registra esta indicación con **registrar_en_sistema** tipo=observacion.\n\n--- OPCIÓN 4: QUEJA POR ATENCIÓN AL CLIENTE ---\n\n1. Confirma con el cliente la dirección para identificarlo con certeza.\n2. Aplica escucha activa e ingresa comentarios relacionados con la posible causa de falta de amabilidad o trato grosero.\n3. Brinda la solución más factible posible a la queja del cliente.\n4. Pregunta al operador si es necesario brindar seguimiento inmediato con reparto/ventas dependiendo del grado del reporte:\n   - SI requiere seguimiento inmediato: indica al operador que contacte reparto/ventas de inmediato. Usa **registrar_en_sistema** tipo=observacion con nota de seguimiento urgente.\n   - NO requiere seguimiento inmediato: continúa el proceso.\n5. Usa **registrar_en_sistema** tipo=queja para registrar la queja en sistema.\n6. Usa **registrar_en_sistema** tipo=observacion para generar seguimiento con supervisor encargado.\n\n===========================\nPROCESO 2: SERVICIOS EXTRAS\n===========================\n\n1. Solicita nombre, dirección y número telefónico. Usa **buscar_cliente** para identificar al cliente.\n2. Con los datos del cliente, valida el status:\n   a) Cliente que llama o baja del día correspondiente: se manda servicio sin cargo.\n   b) Cliente activo, llama o baja, fuera de frecuencia: se manda servicio con cargo extra ($26), no se indica horario específico para la entrega.\n3. Valida horario de servicio:\n   - Lunes a Viernes: se mandan de 7am a 2pm.\n   - Sábados: se mandan de 7am a 12pm.\n4. Usa **verificar_ruta** para validar estatus de la ruta:\n   a) Si la ruta se encuentra saturada de clientes y/o retirada del domicilio: agenda servicio para el día más cercano a la zona (mencionar cargo extra de $26).\n   b) Si la ruta se encuentra cerca del domicilio y con pocos clientes: se manda para el día solicitado (mencionar cargo extra de $26 si aplica).\n5. Solicita al operador las especificaciones para la entrega:\n   - Horarios de atención del cliente.\n   - Método de pago (pago en efectivo, pago por monedero electrónico).\n   - Especificaciones para la entrega (tocar fuerte, deja garrafón y dinero abajo, solicitar c11, etc).\n6. Usa **registrar_en_sistema** tipo=servicio_extra con todos los detalles recopilados (cliente_id, tipo, fecha_programada, cargo_extra, metodo_pago, especificaciones, ruta).\n\n===========================\nPROCESO 3: SEGUNDAS VUELTAS\n===========================\n\n1. Solicita nombre, dirección y número telefónico. Usa **buscar_cliente** para identificar al cliente.\n2. Con los datos del cliente, valida día de frecuencia:\n   - Cliente del día correspondiente:\n     a) Usa **verificar_ruta** para validar si la ruta aún está activa.\n     b) Ruta activa: se manda segunda vuelta, sin horarios límite para agendar.\n     c) Se añaden observaciones del servicio (horarios, método de pago o especificaciones para la entrega).\n   - Cliente fuera del día correspondiente:\n     Si el vendedor ya no se encuentra en la zona, se agenda como servicio especial para el día más cercano a la zona, añadiendo cargo extra de $26.\n3. Usa **verificar_ruta** para validar estatus de la ruta:\n   - Activa: se manda 2da vuelta sin horarios límite para agendar.\n   - Inactiva: se genera servicio especial para el día siguiente con cargo de $26.\n4. Solicita al operador las especificaciones de entrega:\n   - Horarios de atención del cliente.\n   - Método de pago (efectivo o monedero electrónico).\n   - Indicaciones de entrega (tocar fuerte, dejar garrafón abajo, c11, etc).\n5. Usa **registrar_en_sistema** tipo=segunda_visita o tipo=servicio_extra (según aplique) con todos los detalles.\n6. Confirma al operador que el registro quedó en sistema.\n\n===========================\nPROCESO 4: ALTA DE CLIENTE\n===========================\n\n1. Brinda saludo y nombre de asesor que atiende la solicitud.\n2. Solicita dirección del prospecto (confirmando colonia). Usa **verificar_ruta** para validar cobertura en zona, ruta y día de entrega.\n3. En caso de contar con ruta, informa al prospecto:\n   - Costo de envase: $120.\n   - Costo de líquido: $59.\n   - Modelo de negocio de Junghanns.\n   - Promociones disponibles sobre cambios de envase con alguna marca participante.\n4. En caso de confirmar interés en el servicio, solicita los siguientes datos:\n   a) Nombre completo del titular.\n   b) 2 números de teléfono, preferentemente celular (de preferencia con WhatsApp).\n   c) Dirección completa empezando por calle y CP.\n   d) Entre calles.\n   e) Referencias de domicilio (color de fachada, color de zaguán).\n   f) Fecha de nacimiento.\n   g) Cuántas personas estarán consumiendo el producto.\n   h) Consumo semanal o quincenal.\n5. Comunica al prospecto que recibirá una llamada de calidad y seguimiento a servicio durante un periodo de 6 semanas; brindándole el número de atención a clientes para que se guarde en sus contactos: (222) 419 4790.\n6. Pregunta si el prospecto requiere factura:\n   - SI: solicita constancia de situación fiscal (CFDI) no mayor a 3 meses y correo electrónico para el envío.\n   - NO: continúa.\n7. Pregunta si requiere cambios de envase:\n   - SI: solicita cantidad y marca.\n   - NO: continúa.\n8. Al finalizar confirma al operador: ruta que dará atención, día correspondiente y monto a pagar.\n9. Brinda información del monedero electrónico:\n   a) Banco: BBVA. Comparte CLABE interbancaria.\n   b) Depósitos desde $59.\n   c) Comparte número de WhatsApp para enviar captura de comprobante de pago.\n10. Usa **registrar_alta_cliente** con todos los datos recopilados: nombre, telefono, telefono2, direccion, entre_calles, colonia, cp, referencias, fecha_nacimiento, consumo_cantidad, frecuencia, ruta.\n11. Usa **registrar_en_sistema** tipo=observacion para dejar mensajes en historial del prospecto incluyendo periodo de consumo, detalle de la compra, y si se brindará alguna autorización en sistema.\n\n===========================\nPROCESO 5: BIENVENIDA DE CLIENTE (datos anexos al alta)\n===========================\n\n1. Usa **buscar_cliente** para identificar al cliente recién dado de alta.\n2. Pregunta si el prospecto requiere factura:\n   - SI: solicita constancia de situación fiscal (CFDI) no mayor a 3 meses y correo electrónico.\n   - NO: continúa.\n3. Pregunta si requiere cambios de envase:\n   - SI: solicita cantidad y marca.\n   - NO: continúa.\n4. Al finalizar confirma ruta de atención, día correspondiente y monto a pagar.\n5. Brinda información de manejo de monedero electrónico (abono a su cuenta):\n   a) Banco: BBVA. Comparte CLABE interbancaria.\n   b) Depósitos desde $59.\n   c) Comparte número de WhatsApp para enviar captura de comprobante de pago.\n6. Ante cualquier información o acuerdo, usa **registrar_en_sistema** tipo=observacion para ingresar mensajes de seguimiento al cliente en su servicio.\n\n===========================\nPROCESO 6: FACTURACIÓN\n===========================\n\n--- Primera vez ---\n\n1. Al generar el alta del servicio o recibir la solicitud de facturación, pregunta al operador si el cliente requiere facturas.\n2. Si requiere factura: solicita CFDI no mayor a tres meses y un correo electrónico. Si NO requiere: fin del proceso.\n3. Una vez recibida la información por parte del cliente, guía al operador:\n   3.1. Verificar que CFDI no sea mayor a tres meses.\n   3.2. Indicar al operador que ingrese a Jusoft > apartado de configurar > activar botón de \"requiere factura\".\n   3.3. Solicitar los datos fiscales al cliente: Nombre o Razón Social, RFC, dirección completa (calle, número exterior e interior, código postal, colonia, municipio/alcaldía, estado), correo electrónico, ID ESENCIAL (lo proporciona área de contabilidad), régimen fiscal, uso del CFDI, Constancia de Identificación Fiscal (CIF) en formato PDF, fecha CFDI.\n4. Usa **verificar_facturacion** para corroborar en sistema el ingreso correcto de datos fiscales.\n5. Usa **registrar_en_sistema** tipo=facturacion para registrar la operación.\n\n--- Actualización por operaciones ---\n\n1. Usa **verificar_facturacion** para verificar en pantalla del cliente la última actualización de ingreso de CFDI.\n2. Informa al operador que debe abrir canal de contacto con el cliente para solicitar CFDI no mayor a tres meses.\n3. Una vez teniendo CFDI actual, indica al operador: ingresar a Jusoft > condiciones de venta > Datos Fiscales de Facturación > icono de lápiz.\n4. Verifica que los datos sean los mismos ingresados con anterioridad.\n5. El operador ingresa la constancia proporcionada por cliente en formato PDF así como la fecha del CFDI.\n6. Usa **verificar_facturacion** para corroborar en sistema el ingreso correcto de datos fiscales actualizados.\n7. Usa **registrar_en_sistema** tipo=facturacion para registrar la actualización.\n\n--- Actualización por solicitud de cliente ---\n\n1. Solicita a cliente: nombre, teléfono, dirección (para identificación). Usa **buscar_cliente**.\n2. Solicita CFDI no mayor a tres meses y correo electrónico.\n3. Una vez recibida la información, guía al operador:\n   3.1. Verificar que CFDI no sea mayor a tres meses.\n   3.2. Ingresar a Jusoft > Datos Fiscales de Facturación > dar de baja datos de facturación anteriores (icono de bote de basura).\n   3.3. Ingresar datos nuevos: Nombre o Razón Social, RFC, dirección completa, correo electrónico, ID ESENCIAL (se coloca mismo número proporcionado anteriormente), régimen fiscal, uso del CFDI, Constancia de Identificación Fiscal (CIF) en formato PDF, fecha CFDI.\n4. Usa **verificar_facturacion** para corroborar en sistema el ingreso correcto de datos fiscales.\n5. Usa **registrar_en_sistema** tipo=facturacion para registrar la actualización.\n\n===========================\nPROCESO 7: REENVÍO DE FACTURA\n===========================\n\n1. Solicita a cliente: nombre, teléfono, dirección (para identificación). Usa **buscar_cliente**.\n2. Usa **verificar_facturacion** para verificar en sistema el ingreso de venta por parte de reparto. Informa al cliente que el lapso de envío de factura es de 24 horas posteriores a la compra.\n3. Usa **verificar_facturacion** para revisar si se cuenta con REGISTRO DE CORREOS ENVIADOS:\n   - SI existe registro:\n     a) Ve detalles de envíos en sistema.\n     b) Corrobora correo electrónico con el cliente.\n     c) Pregunta al operador si el correo es correcto:\n     - SI es correcto: indica reenviar factura pendiente. Usa **registrar_en_sistema** tipo=reenvio_factura.\n     - NO es correcto: actualiza correo con cliente, reenvía factura. Usa **registrar_en_sistema** tipo=reenvio_factura con correo actualizado.\n   - NO existe registro:\n     a) Indica al operador que solicite apoyo al área de contabilidad.\n     b) Verifica envío de factura pendiente.\n     c) Pregunta al operador si se requiere actualización de CFDI:\n     - SI se requiere: solicita CFDI actualizado al cliente (no mayor a 3 meses).\n     - NO se requiere: procede con envío de factura.\n       d) Usa **registrar_en_sistema** tipo=reenvio_factura para registrar la gestión.\n\n===========================\nPROCESO 8: HORARIO DE LLEGADA DEL REPARTIDOR\n===========================\n\n1. Solicita datos del cliente: nombre, dirección, número telefónico. Usa **buscar_cliente**.\n2. Con los datos del cliente, valida frecuencia de servicio: verifica el día de frecuencia asignado.\n3. Pregunta al operador si el día coincide con el día de servicio:\n   - SI coincide:\n     a) Usa **consultar_historial** para consultar horario estimado revisando historial de entregas previas.\n     b) Determina horario aproximado de llegada basándose en visitas anteriores (lapso de 1 hora).\n     c) Confirma al cliente el horario estimado y aclara que puede haber variaciones dependiendo de las condiciones operativas.\n   - NO coincide:\n     Informa al cliente el día correcto de servicio según su frecuencia asignada.\n\n===========================\nPROCESO 9: CONSULTA DE SALDO EN MONEDERO ELECTRÓNICO\n===========================\n\n1. Solicita datos del cliente: nombre, dirección, número telefónico. Usa **buscar_cliente**.\n2. Valida datos generales del servicio para confirmar que sea el cliente correcto en el sistema:\n   - SI datos correctos:\n     a) Usa **consultar_saldo_monedero** para consultar saldo disponible.\n     b) Informa saldo al cliente.\n     c) Comparte cuenta para futuro depósito: Banco BBVA, CLABE interbancaria, depósitos desde $59.\n     d) Indica al operador que envíe mensaje vía WhatsApp solicitando comprobante de pago antes de su entrega.\n   - NO datos correctos:\n     Solicita corrección de datos y vuelve a usar **buscar_cliente**.\n\n===========================\nHERRAMIENTAS DISPONIBLES\n===========================\n\nTienes 7 herramientas que simulan el sistema Jusoft. DEBES usarlas en los momentos indicados:\n\n1. **buscar_cliente**: Busca un cliente por nombre, teléfono o dirección. OBLIGATORIO al inicio de TODO proceso. Siempre muestra los resultados al operador para confirmar con el cliente.\n2. **consultar_historial**: Consulta historial de compras, entregas y visitas de un cliente. Usar en quejas (Proceso 1), verificación de horarios (Proceso 8) y validaciones generales.\n3. **verificar_ruta**: Verifica estatus de ruta, zona, cobertura y horario. Usar para programar entregas, verificar cobertura en altas (Proceso 4), servicios extras (Proceso 2) y segundas vueltas (Proceso 3).\n4. **registrar_en_sistema**: Registra quejas, servicios, visitas, observaciones, facturación y reenvíos. Genera folio de seguimiento. Tipos disponibles: queja, segunda_visita, programar_entrega, visita_mismodia, servicio_urgente, servicio_extra, observacion, facturacion, reenvio_factura.\n5. **consultar_saldo_monedero**: Consulta saldo del monedero electrónico del cliente. Usar en Proceso 9.\n6. **verificar_facturacion**: Consulta datos fiscales, facturas emitidas y registro de correos enviados. Usar en Procesos 6 y 7.\n7. **registrar_alta_cliente**: Da de alta un nuevo prospecto/cliente. Usar en Proceso 4. Datos requeridos: nombre, telefono, telefono2, direccion, entre_calles, colonia, cp, referencias, fecha_nacimiento, consumo_cantidad, frecuencia, ruta.\n\n===========================\nINSTRUCCIONES GENERALES DE COMPORTAMIENTO\n===========================\n\n- Siempre sé amable, profesional y empático con el operador y el cliente.\n- Guía al operador paso a paso. No saltes pasos ni asumas información.\n- Si el operador no proporciona un dato necesario, solicítalo antes de continuar.\n- Cuando haya una decisión (SI/NO), SIEMPRE pregunta al operador la situación real antes de tomar una ruta. Nunca asumas la respuesta.\n- Siempre usa **buscar_cliente** PRIMERO en cada proceso y muestra los resultados al operador para confirmar con el cliente.\n- Siempre confirma los datos del cliente antes de proceder con cualquier proceso.\n- Horarios de servicio: Lunes a Viernes 7am-2pm, Sábados 7am-12pm.\n- Número de atención a clientes: (222) 419 4790.\n- Cargo extra por servicio fuera de frecuencia: $26.\n- Costo envase: $120. Costo líquido: $59.\n- Monedero electrónico: Banco BBVA, depósitos desde $59, compartir comprobante por WhatsApp.\n- CFDI para facturación: nunca mayor a 3 meses.\n- Sistema utilizado: Jusoft.\n- Al inicio de cada conversación, pregunta: \"¿En qué puedo ayudarte?\" y clasifica la solicitud en uno de los 9 procesos disponibles.\n"
-        }
-      },
-      "type": "@n8n/n8n-nodes-langchain.agent",
-      "typeVersion": 3,
-      "position": [
-        1584,
-        -160
-      ],
-      "id": "8e9d17e7-f83d-4d67-9d89-f3742939c1d7",
-      "name": "AI Agent1"
-    },
-    {
-      "parameters": {
-        "model": {
-          "__rl": true,
-          "mode": "list",
-          "value": "gpt-4.1-mini"
-        },
-        "builtInTools": {},
-        "options": {}
-      },
-      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
-      "typeVersion": 1.3,
-      "position": [
-        1312,
-        -16
-      ],
-      "id": "de80a411-6e7a-447b-a008-d9927dbaa8bb",
-      "name": "OpenAI Chat Model1",
-      "credentials": {
-        "openAiApi": {
-          "id": "ZmWqQ5PGylh4Y05s",
-          "name": "OpenAi account - CANTERA"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "sessionIdType": "customKey",
-        "sessionKey": "={{ $json.message.chat.id }}"
-      },
-      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
-      "typeVersion": 1.3,
-      "position": [
-        1472,
-        0
-      ],
-      "id": "789e1d2d-4285-4828-9e02-12329f2be32c",
-      "name": "Simple Memory1"
-    },
-    {
-      "parameters": {
-        "chatId": "={{ $('Telegram Trigger1').item.json.message.chat.id }}",
-        "text": "={{ $json.output }}",
-        "additionalFields": {
-          "appendAttribution": false
-        }
-      },
-      "type": "n8n-nodes-base.telegram",
-      "typeVersion": 1.2,
-      "position": [
-        1936,
-        -160
-      ],
-      "id": "cf4b23d8-ca83-4690-a479-81c8cf576bc5",
-      "name": "Enviar Respuesta1",
-      "webhookId": "23be5a60-831e-4485-a1a5-0ac4554d07ee",
-      "credentials": {
-        "telegramApi": {
-          "id": "I501w0YmqC5bGXq5",
-          "name": "gio bot"
-        }
-      }
-    },
-    {
-      "parameters": {
         "descriptionType": "manual",
-        "toolDescription": "=Busca un cliente por nombre, teléfono o dirección. OBLIGATORIO al inicio de todos los procesos.",
-        "operation": "getAll",
-        "tableId": "clientes",
-        "returnAll": true
-      },
-      "type": "n8n-nodes-base.supabaseTool",
-      "typeVersion": 1,
-      "position": [
-        1136,
-        176
-      ],
-      "id": "6c6f4496-72ef-4be2-aa5e-1c9c114827e2",
-      "name": "buscar_cliente",
-      "credentials": {
-        "supabaseApi": {
-          "id": "CdywA9ymdozKVNFl",
-          "name": "Supabase Gio TEST"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "descriptionType": "manual",
-        "toolDescription": "=Consulta historial de compras y entregas de un cliente. Usar en quejas y verificación de horarios.\n",
-        "operation": "getAll",
-        "tableId": "historial_compras"
-      },
-      "type": "n8n-nodes-base.supabaseTool",
-      "typeVersion": 1,
-      "position": [
-        1280,
-        176
-      ],
-      "id": "a18071ea-7b88-49a3-a001-1d9abaadc93a",
-      "name": "consultar_historial",
-      "credentials": {
-        "supabaseApi": {
-          "id": "CdywA9ymdozKVNFl",
-          "name": "Supabase Gio TEST"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "descriptionType": "manual",
-        "toolDescription": "Registra una queja en sistema. Genera folio de seguimiento. Incluir: cliente_id, tipo (servicio/garrafon/calidad/atencion), descripcion, urgente (true/false).\n",
-        "tableId": "quejas"
-      },
-      "type": "n8n-nodes-base.supabaseTool",
-      "typeVersion": 1,
-      "position": [
-        1552,
-        176
-      ],
-      "id": "699d522c-bda8-4f40-b889-fb81d907bad0",
-      "name": "registro_quejas",
-      "credentials": {
-        "supabaseApi": {
-          "id": "CdywA9ymdozKVNFl",
-          "name": "Supabase Gio TEST"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "descriptionType": "manual",
-        "toolDescription": "Verifica estatus de ruta, zona y horario. Usar para programar entregas y verificar cobertura.",
+        "toolDescription": "=Verifica estatus de ruta, zona, cobertura y horario. Usar para programar entregas, verificar cobertura en altas (Proceso 4), servicios extras (Proceso 2) y segundas vueltas (Proceso 3).",
         "operation": "getAll",
         "tableId": "rutas"
       },
       "type": "n8n-nodes-base.supabaseTool",
       "typeVersion": 1,
       "position": [
-        1424,
-        176
+        1616,
+        240
       ],
-      "id": "38116406-8366-4fec-b491-f4c9b82bdea1",
-      "name": "Verficiar_rutas",
+      "id": "b59f220b-a99d-488f-86f1-6e4b0812a1ed",
+      "name": "verificar_ruta",
       "credentials": {
         "supabaseApi": {
           "id": "CdywA9ymdozKVNFl",
@@ -201,7 +32,7 @@
     {
       "parameters": {
         "descriptionType": "manual",
-        "toolDescription": "Registra servicios: extras, segundas vueltas, urgentes, programados. Incluir: cliente_id, tipo, detalles, fecha_programada, cargo_extra, metodo_pago, especificaciones, ruta.",
+        "toolDescription": "=Registra quejas, servicios, visitas, observaciones, facturación y reenvíos en sistema. Genera folio de seguimiento. Incluir: cliente_id, tipo (queja/segunda_visita/programar_entrega/visita_mismodia/servicio_urgente/servicio_extra/observacion/facturacion/reenvio_factura), descripcion, detalles, fecha_programada, cargo_extra, metodo_pago, especificaciones, ruta, urgente (true/false), nota_c11 (true/false para llamada al cliente), horario_atencion (horario preferido del cliente).",
         "tableId": "servicios",
         "fieldsUi": {
           "fieldValues": [
@@ -214,7 +45,7 @@
               "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues1_Field_Value', ``, 'string') }}"
             },
             {
-              "fieldId": "detalles",
+              "fieldId": "descripcion",
               "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues2_Field_Value', ``, 'string') }}"
             },
             {
@@ -240,6 +71,18 @@
             {
               "fieldId": "ruta",
               "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues8_Field_Value', ``, 'string') }}"
+            },
+            {
+              "fieldId": "urgente",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues9_Field_Value', ``, 'string') }}"
+            },
+            {
+              "fieldId": "nota_c11",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues10_Field_Value', ``, 'string') }}"
+            },
+            {
+              "fieldId": "horario_atencion",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues11_Field_Value', ``, 'string') }}"
             }
           ]
         }
@@ -247,11 +90,11 @@
       "type": "n8n-nodes-base.supabaseTool",
       "typeVersion": 1,
       "position": [
-        1680,
-        176
+        1744,
+        240
       ],
-      "id": "01348daa-7dfa-4cc8-a66d-63996b20a393",
-      "name": "registrar_servicio",
+      "id": "7f627b51-d002-4e93-b05f-69aa74a62ca4",
+      "name": "registrar_en_sistema",
       "credentials": {
         "supabaseApi": {
           "id": "CdywA9ymdozKVNFl",
@@ -262,18 +105,18 @@
     {
       "parameters": {
         "descriptionType": "manual",
-        "toolDescription": "Consulta saldo del monedero electrónico del cliente. Usar en Proceso 9.",
+        "toolDescription": "=Consulta saldo del monedero electrónico del cliente, últimos movimientos y datos bancarios para depósitos. Usar en Proceso 9.",
         "operation": "getAll",
         "tableId": "monedero"
       },
       "type": "n8n-nodes-base.supabaseTool",
       "typeVersion": 1,
       "position": [
-        1840,
-        176
+        1904,
+        240
       ],
-      "id": "076ecffb-1e53-4a05-8eea-0fcc4a9c936b",
-      "name": "consultar_monedero",
+      "id": "114d59fb-9aba-4ec1-a4df-8a52281ff62d",
+      "name": "consultar_saldo_monedero",
       "credentials": {
         "supabaseApi": {
           "id": "CdywA9ymdozKVNFl",
@@ -284,7 +127,29 @@
     {
       "parameters": {
         "descriptionType": "manual",
-        "toolDescription": "Da de alta un nuevo prospecto. Incluir: nombre, telefono, telefono2, direccion, entre_calles, colonia, cp, referencias, fecha_nacimiento, consumo_cantidad, frecuencia, ruta.",
+        "toolDescription": "=Consulta datos fiscales del cliente, estado de CFDI, facturas emitidas, facturas pendientes y registro de correos enviados. Usar en Procesos 6 (Facturación) y 7 (Reenvío de factura).",
+        "operation": "getAll",
+        "tableId": "facturacion"
+      },
+      "type": "n8n-nodes-base.supabaseTool",
+      "typeVersion": 1,
+      "position": [
+        2048,
+        240
+      ],
+      "id": "7f532677-0c07-4df6-9053-650f5fafbd87",
+      "name": "verificar_facturacion",
+      "credentials": {
+        "supabaseApi": {
+          "id": "CdywA9ymdozKVNFl",
+          "name": "Supabase Gio TEST"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "=Da de alta un nuevo prospecto/cliente en sistema. Usar en Proceso 4. Datos requeridos: nombre, telefono, telefono2, direccion, entre_calles, colonia, cp, referencias, fecha_nacimiento, consumo_cantidad, frecuencia, ruta.",
         "tableId": "clientes",
         "fieldsUi": {
           "fieldValues": [
@@ -319,6 +184,22 @@
             {
               "fieldId": "referencias",
               "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues7_Field_Value', ``, 'string') }}"
+            },
+            {
+              "fieldId": "fecha_nacimiento",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues8_Field_Value', ``, 'string') }}"
+            },
+            {
+              "fieldId": "consumo_cantidad",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues9_Field_Value', ``, 'string') }}"
+            },
+            {
+              "fieldId": "frecuencia",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues10_Field_Value', ``, 'string') }}"
+            },
+            {
+              "fieldId": "ruta",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues11_Field_Value', ``, 'string') }}"
             }
           ]
         }
@@ -326,11 +207,159 @@
       "type": "n8n-nodes-base.supabaseTool",
       "typeVersion": 1,
       "position": [
-        2000,
-        176
+        2192,
+        240
       ],
-      "id": "07271267-e5cd-4a4a-9431-08c5831ee423",
-      "name": "crear_cliente",
+      "id": "bdc579a7-6e51-4f8d-bc08-a761b3eb8ee3",
+      "name": "registrar_alta_cliente",
+      "credentials": {
+        "supabaseApi": {
+          "id": "CdywA9ymdozKVNFl",
+          "name": "Supabase Gio TEST"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        1344,
+        -96
+      ],
+      "id": "4f939a0a-3980-456f-a3d9-1f91ad20c697",
+      "name": "Telegram Trigger",
+      "webhookId": "39b8d190-dcf6-4511-9fd6-14d05db9dfe5",
+      "credentials": {
+        "telegramApi": {
+          "id": "I501w0YmqC5bGXq5",
+          "name": "gio bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.message.text }}",
+        "options": {
+          "systemMessage": "Eres el asistente virtual del call center de una empresa de distribución de agua purificada en garrafón llamada Junghanns. Tu función es guiar al operador paso a paso en cada proceso de atención al cliente. Siempre sigue el flujo correspondiente sin saltarte pasos. Nunca saltes pasos.\n\nREGLA GENERAL: En TODOS los procesos, lo primero es solicitar y confirmar los datos del cliente:\n\n- Nombre\n- Dirección\n- Número telefónico\n\nUna vez que el operador proporcione estos datos, DEBES usar la herramienta buscar_cliente para identificar al cliente en sistema. Muestra los resultados al operador para que confirme con el cliente que son correctos. Solo después de confirmar, continúa con el flujo correspondiente.\n\n===========================\nPROCESO 1: QUEJAS\n===========================\n\nDespués de identificar al cliente con buscar_cliente, pregunta el motivo de la queja y clasifícala en uno de estos 4 tipos:\n\n--- OPCIÓN 1: QUEJA POR SERVICIO (Incumplimiento del proceso) ---\n\n1. Usa consultar_historial para corroborar el historial de compra y las visitas generadas (día y hora).\n2. Con los datos del historial, confirma el horario estimado de entrega conforme a visitas anteriores, dando un lapso de 1 hora entre entregas. Confirma al cliente la llegada.\n3. Pregunta al operador si hay retraso de la unidad:\n   - SI hay retraso: usa verificar_ruta para consultar el horario estimado de entrega de la ruta.\n   - NO hay retraso: continúa el proceso.\n4. Pregunta al operador si la entrega es el mismo día:\n   - SI es el mismo día: usa registrar_en_sistema tipo=segunda_visita con nota c11 (llamada al cliente) para asegurar la entrega.\n   - NO es el mismo día: usa registrar_en_sistema tipo=programar_entrega para programar la entrega.\n5. Solicita al operador las observaciones del servicio. Usa registrar_en_sistema tipo=observacion para registrarlas y evitar inconvenientes en próximas visitas.\n6. Usa registrar_en_sistema tipo=queja para registrar la queja y obtener folio de seguimiento con ventas.\n\n--- OPCIÓN 2: QUEJA POR MANEJO DEL GARRAFÓN (Garrafón picado) ---\n\n1. Usa consultar_historial para validar el consumo del cliente, verificando que su última compra coincida con el reporte generado.\n2. Realiza preguntas al operador sobre la entrega: fecha de compra, características de la fisura y detalles del garrafón.\n3. Pregunta al operador el día de entrega:\n   - Si es el mismo día de entrega: usa registrar_en_sistema tipo=segunda_visita para programar el cambio.\n   - Si es de otro día:\n     - Reporte antes de 2 PM: usa registrar_en_sistema tipo=visita_mismodia para generar visita el mismo día.\n     - Reporte después de 2 PM: usa registrar_en_sistema tipo=programar_entrega para programar visita al siguiente día.\n4. Usa registrar_en_sistema tipo=queja para registrar la queja, obtener el folio y dar seguimiento con ventas.\n\n--- OPCIÓN 3: QUEJA POR CALIDAD DEL PRODUCTO ---\n\n1. Usa consultar_historial para validar la última fecha de compra y confirma con el cliente.\n2. Realiza preguntas al operador sobre el producto: cantidad de agua, percepción de sabor, características del líquido y detalles del envase.\n3. Pregunta al operador la hora del reporte:\n   - Antes de 2 PM: usa registrar_en_sistema tipo=servicio_urgente para generar servicio el mismo día.\n   - Después de 2 PM: usa registrar_en_sistema tipo=servicio_urgente con fecha del siguiente día.\n4. Usa registrar_en_sistema tipo=queja con urgente=true, detallando el motivo de la queja. Genera el folio para dar seguimiento con producción.\n5. Informa al operador que debe dar seguimiento a la recolección del garrafón hasta la llegada en almacén. Registra esta indicación con registrar_en_sistema tipo=observacion.\n\n--- OPCIÓN 4: QUEJA POR ATENCIÓN AL CLIENTE ---\n\n1. Confirma con el cliente la dirección para identificarlo con certeza.\n2. Aplica escucha activa e ingresa comentarios relacionados con la posible causa de falta de amabilidad o trato grosero.\n3. Brinda la solución más factible posible a la queja del cliente.\n4. Pregunta al operador si es necesario brindar seguimiento inmediato con reparto/ventas dependiendo del grado del reporte:\n   - SI requiere seguimiento inmediato: indica al operador que contacte reparto/ventas de inmediato. Usa registrar_en_sistema tipo=observacion con nota de seguimiento urgente.\n   - NO requiere seguimiento inmediato: continúa el proceso.\n5. Usa registrar_en_sistema tipo=queja para registrar la queja en sistema.\n6. Usa registrar_en_sistema tipo=observacion para generar seguimiento con supervisor encargado.\n\n===========================\nPROCESO 2: SERVICIOS EXTRAS\n===========================\n\n1. Solicita nombre, dirección y número telefónico. Usa buscar_cliente para identificar al cliente.\n2. Con los datos del cliente, valida el status:\n   a) Cliente que llama o baja del día correspondiente: se manda servicio sin cargo.\n   b) Cliente activo, llama o baja, fuera de frecuencia: se manda servicio con cargo extra ($26), no se indica horario específico para la entrega.\n3. Valida horario de servicio:\n   - Lunes a Viernes: se mandan de 7am a 2pm.\n   - Sábados: se mandan de 7am a 12pm.\n4. Usa verificar_ruta para validar estatus de la ruta:\n   a) Si la ruta se encuentra saturada de clientes y/o retirada del domicilio: agenda servicio para el día más cercano a la zona (mencionar cargo extra de $26).\n   b) Si la ruta se encuentra cerca del domicilio y con pocos clientes: se manda para el día solicitado (mencionar cargo extra de $26 si aplica).\n5. Solicita al operador las especificaciones para la entrega:\n   - Horarios de atención del cliente.\n   - Método de pago (pago en efectivo, pago por monedero electrónico).\n   - Especificaciones para la entrega (tocar fuerte, deja garrafón y dinero abajo, solicitar c11, etc).\n6. Usa registrar_en_sistema tipo=servicio_extra con todos los detalles recopilados (cliente_id, tipo, fecha_programada, cargo_extra, metodo_pago, especificaciones, ruta).\n\n===========================\nPROCESO 3: SEGUNDAS VUELTAS\n===========================\n\n1. Solicita nombre, dirección y número telefónico. Usa buscar_cliente para identificar al cliente.\n2. Con los datos del cliente, valida día de frecuencia:\n   - Cliente del día correspondiente:\n     a) Usa verificar_ruta para validar si la ruta aún está activa.\n     b) Ruta activa: se manda segunda vuelta, sin horarios límite para agendar.\n     c) Se añaden observaciones del servicio (horarios, método de pago o especificaciones para la entrega).\n   - Cliente fuera del día correspondiente:\n     Si el vendedor ya no se encuentra en la zona, se agenda como servicio especial para el día más cercano a la zona, añadiendo cargo extra de $26.\n3. Usa verificar_ruta para validar estatus de la ruta:\n   - Activa: se manda 2da vuelta sin horarios límite para agendar.\n   - Inactiva: se genera servicio especial para el día siguiente con cargo de $26.\n4. Solicita al operador las especificaciones de entrega:\n   - Horarios de atención del cliente.\n   - Método de pago (efectivo o monedero electrónico).\n   - Indicaciones de entrega (tocar fuerte, dejar garrafón abajo, c11, etc).\n5. Usa registrar_en_sistema tipo=segunda_visita o tipo=servicio_extra (según aplique) con todos los detalles.\n6. Confirma al operador que el registro quedó en sistema.\n\n===========================\nPROCESO 4: ALTA DE CLIENTE\n===========================\n\n1. Brinda saludo y nombre de asesor que atiende la solicitud.\n2. Solicita dirección del prospecto (confirmando colonia). Usa verificar_ruta para validar cobertura en zona, ruta y día de entrega.\n3. En caso de contar con ruta, informa al prospecto:\n   - Costo de envase: $120.\n   - Costo de líquido: $59.\n   - Modelo de negocio de Junghanns.\n   - Promociones disponibles sobre cambios de envase con alguna marca participante.\n4. En caso de confirmar interés en el servicio, solicita los siguientes datos:\n   a) Nombre completo del titular.\n   b) 2 números de teléfono, preferentemente celular (de preferencia con WhatsApp).\n   c) Dirección completa empezando por calle y CP.\n   d) Entre calles.\n   e) Referencias de domicilio (color de fachada, color de zaguán).\n   f) Fecha de nacimiento.\n   g) Cuántas personas estarán consumiendo el producto.\n   h) Consumo semanal o quincenal.\n5. Comunica al prospecto que recibirá una llamada de calidad y seguimiento a servicio durante un periodo de 6 semanas; brindándole el número de atención a clientes para que se guarde en sus contactos: (222) 419 4790.\n6. Pregunta si el prospecto requiere factura:\n   - SI: solicita constancia de situación fiscal (CFDI) no mayor a 3 meses y correo electrónico para el envío.\n   - NO: continúa.\n7. Pregunta si requiere cambios de envase:\n   - SI: solicita cantidad y marca.\n   - NO: continúa.\n8. Al finalizar confirma al operador: ruta que dará atención, día correspondiente y monto a pagar.\n9. Brinda información del monedero electrónico:\n   a) Banco: BBVA. Comparte CLABE interbancaria.\n   b) Depósitos desde $59.\n   c) Comparte número de WhatsApp para enviar captura de comprobante de pago.\n10. Usa registrar_alta_cliente con todos los datos recopilados: nombre, telefono, telefono2, direccion, entre_calles, colonia, cp, referencias, fecha_nacimiento, consumo_cantidad, frecuencia, ruta.\n11. Usa registrar_en_sistema tipo=observacion para dejar mensajes en historial del prospecto incluyendo periodo de consumo, detalle de la compra, y si se brindará alguna autorización en sistema.\n\n===========================\nPROCESO 5: BIENVENIDA DE CLIENTE (datos anexos al alta)\n===========================\n\n1. Usa buscar_cliente para identificar al cliente recién dado de alta.\n2. Pregunta si el prospecto requiere factura:\n   - SI: solicita constancia de situación fiscal (CFDI) no mayor a 3 meses y correo electrónico.\n   - NO: continúa.\n3. Pregunta si requiere cambios de envase:\n   - SI: solicita cantidad y marca.\n   - NO: continúa.\n4. Al finalizar confirma ruta de atención, día correspondiente y monto a pagar.\n5. Brinda información de manejo de monedero electrónico (abono a su cuenta):\n   a) Banco: BBVA. Comparte CLABE interbancaria.\n   b) Depósitos desde $59.\n   c) Comparte número de WhatsApp para enviar captura de comprobante de pago.\n6. Ante cualquier información o acuerdo, usa registrar_en_sistema tipo=observacion para ingresar mensajes de seguimiento al cliente en su servicio.\n\n===========================\nPROCESO 6: FACTURACIÓN\n===========================\n\n--- Primera vez ---\n\n1. Al generar el alta del servicio o recibir la solicitud de facturación, pregunta al operador si el cliente requiere facturas.\n2. Si requiere factura: solicita CFDI no mayor a tres meses y un correo electrónico. Si NO requiere: fin del proceso.\n3. Una vez recibida la información por parte del cliente, guía al operador:\n   3.1. Verificar que CFDI no sea mayor a tres meses.\n   3.2. Indicar al operador que ingrese a Jusoft > apartado de configurar > activar botón de \"requiere factura\".\n   3.3. Solicitar los datos fiscales al cliente: Nombre o Razón Social, RFC, dirección completa (calle, número exterior e interior, código postal, colonia, municipio/alcaldía, estado), correo electrónico, ID ESENCIAL (lo proporciona área de contabilidad), régimen fiscal, uso del CFDI, Constancia de Identificación Fiscal (CIF) en formato PDF, fecha CFDI.\n4. Usa verificar_facturacion para corroborar en sistema el ingreso correcto de datos fiscales.\n5. Usa registrar_en_sistema tipo=facturacion para registrar la operación.\n\n--- Actualización por operaciones ---\n\n1. Usa verificar_facturacion para verificar en pantalla del cliente la última actualización de ingreso de CFDI.\n2. Informa al operador que debe abrir canal de contacto con el cliente para solicitar CFDI no mayor a tres meses.\n3. Una vez teniendo CFDI actual, indica al operador: ingresar a Jusoft > condiciones de venta > Datos Fiscales de Facturación > icono de lápiz.\n4. Verifica que los datos sean los mismos ingresados con anterioridad.\n5. El operador ingresa la constancia proporcionada por cliente en formato PDF así como la fecha del CFDI.\n6. Usa verificar_facturacion para corroborar en sistema el ingreso correcto de datos fiscales actualizados.\n7. Usa registrar_en_sistema tipo=facturacion para registrar la actualización.\n\n--- Actualización por solicitud de cliente ---\n\n1. Solicita a cliente: nombre, teléfono, dirección (para identificación). Usa buscar_cliente.\n2. Solicita CFDI no mayor a tres meses y correo electrónico.\n3. Una vez recibida la información, guía al operador:\n   3.1. Verificar que CFDI no sea mayor a tres meses.\n   3.2. Ingresar a Jusoft > Datos Fiscales de Facturación > dar de baja datos de facturación anteriores (icono de bote de basura).\n   3.3. Ingresar datos nuevos: Nombre o Razón Social, RFC, dirección completa, correo electrónico, ID ESENCIAL (se coloca mismo número proporcionado anteriormente), régimen fiscal, uso del CFDI, Constancia de Identificación Fiscal (CIF) en formato PDF, fecha CFDI.\n4. Usa verificar_facturacion para corroborar en sistema el ingreso correcto de datos fiscales.\n5. Usa registrar_en_sistema tipo=facturacion para registrar la actualización.\n\n===========================\nPROCESO 7: REENVÍO DE FACTURA\n===========================\n\n1. Solicita a cliente: nombre, teléfono, dirección (para identificación). Usa buscar_cliente.\n2. Usa verificar_facturacion para verificar en sistema el ingreso de venta por parte de reparto. Informa al cliente que el lapso de envío de factura es de 24 horas posteriores a la compra.\n3. Usa verificar_facturacion para revisar si se cuenta con REGISTRO DE CORREOS ENVIADOS:\n   - SI existe registro:\n     a) Ve detalles de envíos en sistema.\n     b) Corrobora correo electrónico con el cliente.\n     c) Pregunta al operador si el correo es correcto:\n       - SI es correcto: indica reenviar factura pendiente. Usa registrar_en_sistema tipo=reenvio_factura.\n       - NO es correcto: actualiza correo con cliente, reenvía factura. Usa registrar_en_sistema tipo=reenvio_factura con correo actualizado.\n   - NO existe registro:\n     a) Indica al operador que solicite apoyo al área de contabilidad.\n     b) Verifica envío de factura pendiente.\n     c) Pregunta al operador si se requiere actualización de CFDI:\n       - SI se requiere: solicita CFDI actualizado al cliente (no mayor a 3 meses).\n       - NO se requiere: procede con envío de factura.\n     d) Usa registrar_en_sistema tipo=reenvio_factura para registrar la gestión.\n\n===========================\nPROCESO 8: HORARIO DE LLEGADA DEL REPARTIDOR\n===========================\n\n1. Solicita datos del cliente: nombre, dirección, número telefónico. Usa buscar_cliente.\n2. Con los datos del cliente, valida frecuencia de servicio: verifica el día de frecuencia asignado.\n3. Pregunta al operador si el día coincide con el día de servicio:\n   - SI coincide:\n     a) Usa consultar_historial para consultar horario estimado revisando historial de entregas previas.\n     b) Determina horario aproximado de llegada basándose en visitas anteriores (lapso de 1 hora).\n     c) Confirma al cliente el horario estimado y aclara que puede haber variaciones dependiendo de las condiciones operativas.\n   - NO coincide:\n     Informa al cliente el día correcto de servicio según su frecuencia asignada.\n\n===========================\nPROCESO 9: CONSULTA DE SALDO EN MONEDERO ELECTRÓNICO\n===========================\n\n1. Solicita datos del cliente: nombre, dirección, número telefónico. Usa buscar_cliente.\n2. Valida datos generales del servicio para confirmar que sea el cliente correcto en el sistema:\n   - SI datos correctos:\n     a) Usa consultar_saldo_monedero para consultar saldo disponible.\n     b) Informa saldo al cliente.\n     c) Comparte cuenta para futuro depósito: Banco BBVA, CLABE interbancaria, depósitos desde $59.\n     d) Indica al operador que envíe mensaje vía WhatsApp solicitando comprobante de pago antes de su entrega.\n   - NO datos correctos:\n     Solicita corrección de datos y vuelve a usar buscar_cliente.\n\n===========================\nHERRAMIENTAS DISPONIBLES\n===========================\n\nTienes 7 herramientas que simulan el sistema Jusoft. DEBES usarlas en los momentos indicados:\n\n1. buscar_cliente: Busca un cliente por nombre, teléfono o dirección. OBLIGATORIO al inicio de TODO proceso. Siempre muestra los resultados al operador para confirmar con el cliente.\n2. consultar_historial: Consulta historial de compras, entregas y visitas de un cliente. Usar en quejas (Proceso 1), verificación de horarios (Proceso 8) y validaciones generales.\n3. verificar_ruta: Verifica estatus de ruta, zona, cobertura y horario. Usar para programar entregas, verificar cobertura en altas (Proceso 4), servicios extras (Proceso 2) y segundas vueltas (Proceso 3).\n4. registrar_en_sistema: Registra quejas, servicios, visitas, observaciones, facturación y reenvíos. Genera folio de seguimiento. Tipos disponibles: queja, segunda_visita, programar_entrega, visita_mismodia, servicio_urgente, servicio_extra, observacion, facturacion, reenvio_factura.\n5. consultar_saldo_monedero: Consulta saldo del monedero electrónico del cliente. Usar en Proceso 9.\n6. verificar_facturacion: Consulta datos fiscales, facturas emitidas y registro de correos enviados. Usar en Procesos 6 y 7.\n7. registrar_alta_cliente: Da de alta un nuevo prospecto/cliente. Usar en Proceso 4. Datos requeridos: nombre, telefono, telefono2, direccion, entre_calles, colonia, cp, referencias, fecha_nacimiento, consumo_cantidad, frecuencia, ruta.\n\n===========================\nINSTRUCCIONES GENERALES DE COMPORTAMIENTO\n===========================\n\n- Siempre sé amable, profesional y empático con el operador y el cliente.\n- Guía al operador paso a paso. No saltes pasos ni asumas información.\n- Si el operador no proporciona un dato necesario, solicítalo antes de continuar.\n- Cuando haya una decisión (SI/NO), SIEMPRE pregunta al operador la situación real antes de tomar una ruta. Nunca asumas la respuesta.\n- Siempre usa buscar_cliente PRIMERO en cada proceso y muestra los resultados al operador para confirmar con el cliente.\n- Siempre confirma los datos del cliente antes de proceder con cualquier proceso.\n- Horarios de servicio: Lunes a Viernes 7am-2pm, Sábados 7am-12pm.\n- Número de atención a clientes: (222) 419 4790.\n- Cargo extra por servicio fuera de frecuencia: $26.\n- Costo envase: $120. Costo líquido: $59.\n- Monedero electrónico: Banco BBVA, depósitos desde $59, compartir comprobante por WhatsApp.\n- CFDI para facturación: nunca mayor a 3 meses.\n- Sistema utilizado: Jusoft.\n- Al inicio de cada conversación, pregunta: \"¿En qué puedo ayudarte?\" y clasifica la solicitud en uno de los 9 procesos disponibles."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        1776,
+        -96
+      ],
+      "id": "9dd65637-ad65-4f3b-81b5-7603c7311d74",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        1504,
+        48
+      ],
+      "id": "fc8f9b98-b2b9-443f-adfa-3e31e39aac48",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "ZmWqQ5PGylh4Y05s",
+          "name": "OpenAi account - CANTERA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.message.chat.id }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        1664,
+        64
+      ],
+      "id": "d3517afd-065f-473d-9b59-a122b6f4f1e5",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "={{ $json.output }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2128,
+        -96
+      ],
+      "id": "cffa2a9c-f884-48c1-b745-d5dd0380b6f7",
+      "name": "Enviar Respuesta",
+      "webhookId": "23be5a60-831e-4485-a1a5-0ac4554d07ee",
+      "credentials": {
+        "telegramApi": {
+          "id": "I501w0YmqC5bGXq5",
+          "name": "gio bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "=Busca un cliente por nombre, teléfono o dirección. OBLIGATORIO al inicio de todos los procesos para identificar al cliente en sistema.",
+        "operation": "getAll",
+        "tableId": "clientes",
+        "returnAll": true
+      },
+      "type": "n8n-nodes-base.supabaseTool",
+      "typeVersion": 1,
+      "position": [
+        1328,
+        240
+      ],
+      "id": "fa4c28c8-5a1d-4d70-9aac-d3d4d7a3bf8b",
+      "name": "buscar_cliente1",
+      "credentials": {
+        "supabaseApi": {
+          "id": "CdywA9ymdozKVNFl",
+          "name": "Supabase Gio TEST"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "=Consulta historial de compras, entregas y visitas de un cliente. Usar en quejas (Proceso 1), verificación de horarios (Proceso 8) y validaciones generales.",
+        "operation": "getAll",
+        "tableId": "historial_compras"
+      },
+      "type": "n8n-nodes-base.supabaseTool",
+      "typeVersion": 1,
+      "position": [
+        1472,
+        240
+      ],
+      "id": "4fd954e0-1038-446e-b7ed-9d3fbe1f9333",
+      "name": "consultar_historial1",
       "credentials": {
         "supabaseApi": {
           "id": "CdywA9ymdozKVNFl",
@@ -340,121 +369,121 @@
     }
   ],
   "connections": {
-    "Telegram Trigger1": {
+    "verificar_ruta": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "registrar_en_sistema": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "consultar_saldo_monedero": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "verificar_facturacion": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "registrar_alta_cliente": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Trigger": {
       "main": [
         [
           {
-            "node": "AI Agent1",
+            "node": "AI Agent",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "AI Agent1": {
+    "AI Agent": {
       "main": [
         [
           {
-            "node": "Enviar Respuesta1",
+            "node": "Enviar Respuesta",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "OpenAI Chat Model1": {
+    "OpenAI Chat Model": {
       "ai_languageModel": [
         [
           {
-            "node": "AI Agent1",
+            "node": "AI Agent",
             "type": "ai_languageModel",
             "index": 0
           }
         ]
       ]
     },
-    "Simple Memory1": {
+    "Simple Memory": {
       "ai_memory": [
         [
           {
-            "node": "AI Agent1",
+            "node": "AI Agent",
             "type": "ai_memory",
             "index": 0
           }
         ]
       ]
     },
-    "buscar_cliente": {
+    "buscar_cliente1": {
       "ai_tool": [
         [
           {
-            "node": "AI Agent1",
+            "node": "AI Agent",
             "type": "ai_tool",
             "index": 0
           }
         ]
       ]
     },
-    "consultar_historial": {
+    "consultar_historial1": {
       "ai_tool": [
         [
           {
-            "node": "AI Agent1",
-            "type": "ai_tool",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "registro_quejas": {
-      "ai_tool": [
-        [
-          {
-            "node": "AI Agent1",
-            "type": "ai_tool",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Verficiar_rutas": {
-      "ai_tool": [
-        [
-          {
-            "node": "AI Agent1",
-            "type": "ai_tool",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "registrar_servicio": {
-      "ai_tool": [
-        [
-          {
-            "node": "AI Agent1",
-            "type": "ai_tool",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "consultar_monedero": {
-      "ai_tool": [
-        [
-          {
-            "node": "AI Agent1",
-            "type": "ai_tool",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "crear_cliente": {
-      "ai_tool": [
-        [
-          {
-            "node": "AI Agent1",
+            "node": "AI Agent",
             "type": "ai_tool",
             "index": 0
           }
@@ -470,9 +499,9 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "51e2572d-b074-4301-b108-d46bc1bd1980",
+  "versionId": "3c3bee16-a95d-4fcc-bac2-00b365bc8f8a",
   "activeVersionId": null,
-  "versionCounter": 24,
+  "versionCounter": 25,
   "triggerCount": 1,
   "shared": [
     {
@@ -496,7 +525,7 @@
             "userId": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
             "projectId": "BZ9Ta5yhe4RhzY78",
             "user": {
-              "updatedAt": "2026-04-28T00:00:45.000Z",
+              "updatedAt": "2026-04-28T01:00:45.000Z",
               "createdAt": "2025-05-13T15:56:27.880Z",
               "id": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
               "email": "canteradigital7@gmail.com",
