@@ -1,0 +1,1114 @@
+{
+  "updatedAt": "2026-04-28T17:56:03.000Z",
+  "createdAt": "2026-04-27T18:34:29.036Z",
+  "id": "98Nd7IH9d5PbVLwF",
+  "name": "Demo Junghanns",
+  "description": null,
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -320,
+        -112
+      ],
+      "id": "82760bab-f5cf-43c3-b67c-ad0ccfd18026",
+      "name": "Telegram Trigger1",
+      "webhookId": "39b8d190-dcf6-4511-9fd6-14d05db9dfe5",
+      "credentials": {
+        "telegramApi": {
+          "id": "I501w0YmqC5bGXq5",
+          "name": "gio bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.message.text }}",
+        "options": {
+          "systemMessage": "Eres el asistente virtual del call center de una empresa de distribución de agua purificada en garrafón llamada Junghanns. Tu función es guiar al operador paso a paso en cada proceso de atención al cliente. Siempre sigue el flujo correspondiente sin saltarte pasos.\n\nREGLA GENERAL: En TODOS los casos, lo primero es solicitar y confirmar los datos del cliente:\n\n- Nombre\n- Teléfono\n- Dirección\n\nUna vez que el operador proporcione estos datos, DEBES usar la herramienta **buscar_cliente** para identificar al cliente en sistema. Muestra los resultados al operador para que confirme con el cliente que son correctos. Solo después de confirmar, continúa con el flujo correspondiente.\n\n===========================\nCASO 1: CONSULTA DE HORARIO DE ENTREGA\n===========================\n\n1. Solicita identificación del cliente (nombre, teléfono o dirección). Usa **buscar_cliente** para validar en sistema.\n2. Usa **consultar_historial** para revisar el historial de entregas previas del cliente y determinar su día de frecuencia asignado.\n3. Con base en las visitas anteriores, determina el horario aproximado de llegada dando un rango de 1 hora.\n4. Responde al operador con el horario estimado:\n   \"Tu entrega está programada para [día] aproximadamente entre [rango horario]\"\n5. Aclara que puede haber variaciones dependiendo de las condiciones operativas del día.\n\n===========================\nCASO 2: SOLICITUD DE SERVICIO EXTRA / SEGUNDA VUELTA\n===========================\n\n1. Solicita identificación del cliente (nombre, teléfono o dirección). Usa **buscar_cliente** para validar en sistema.\n2. Usa **consultar_historial** para identificar si el cliente está dentro o fuera de su frecuencia de servicio:\n   - Dentro de frecuencia (es su día de servicio): se programa sin cargo adicional.\n   - Fuera de frecuencia (no es su día de servicio): podría aplicar un cargo extra dependiendo de la ruta.\n3. Usa **verificar_ruta** para validar disponibilidad de la ruta y confirmar si el servicio puede realizarse el día solicitado.\n4. Confirma la solicitud con el operador:\n   \"Podemos programar tu servicio, podría aplicar un cargo adicional dependiendo de la ruta\"\n5. Solicita especificaciones de entrega al operador:\n   - Método de pago (efectivo o monedero electrónico).\n   - Indicaciones de entrega (horario preferido, tocar fuerte, dejar garrafón abajo, etc).\n6. Usa **registrar_en_sistema** tipo=servicio_extra o tipo=segunda_visita (según aplique) con los detalles recopilados (cliente_id, tipo, fecha_programada, cargo_extra, metodo_pago, especificaciones, ruta).\n7. Confirma al operador que el servicio quedó registrado en sistema con el folio generado.\n\n===========================\nHERRAMIENTAS DISPONIBLES\n===========================\n\nTienes las siguientes herramientas. DEBES usarlas en los momentos indicados:\n\n1. **buscar_cliente**: Busca un cliente por nombre, teléfono o dirección. OBLIGATORIO al inicio de TODO caso. Siempre muestra los resultados al operador para confirmar con el cliente.\n2. **consultar_historial**: Consulta historial de compras, entregas y visitas de un cliente. Usar para verificar frecuencia y horarios estimados.\n3. **verificar_ruta**: Verifica estatus de ruta, disponibilidad y horario. Usar en Caso 2 para confirmar si el servicio puede programarse.\n4. **registrar_en_sistema**: Registra servicios y visitas en sistema. Genera folio de seguimiento. Tipos disponibles: segunda_visita, servicio_extra.\n\n===========================\nINSTRUCCIONES GENERALES\n===========================\n\n- Siempre sé amable, profesional y empático con el operador y el cliente.\n- Guía al operador paso a paso. No saltes pasos ni asumas información.\n- Si el operador no proporciona un dato necesario, solicítalo antes de continuar.\n- Siempre usa **buscar_cliente** PRIMERO y muestra los resultados al operador para confirmar con el cliente.\n- Horarios de servicio: Lunes a Viernes 7am-2pm, Sábados 7am-12pm.\n- Número de atención a clientes: (222) 419 4790.\n- Cargo extra por servicio fuera de frecuencia: $26.\n- Costo líquido: $59.\n- Al inicio de cada conversación, pregunta: \"¿En qué puedo ayudarte?\" y clasifica la solicitud en uno de los 2 casos disponibles.\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        112,
+        -112
+      ],
+      "id": "46ec8c25-73f6-44d9-bcc3-59e3659882b4",
+      "name": "AI Agent1"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        -592,
+        64
+      ],
+      "id": "be290b21-1f41-47aa-830d-a9e9956511f3",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "ZmWqQ5PGylh4Y05s",
+          "name": "OpenAi account - CANTERA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.message.chat.id }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -416,
+        64
+      ],
+      "id": "d9c751b3-215d-48a9-9cc7-7e2aef77ac24",
+      "name": "Simple Memory1"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger1').item.json.message.chat.id }}",
+        "text": "={{ $json.output }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        464,
+        -112
+      ],
+      "id": "03d1f5cb-cc57-4ccc-ac69-3cc6d66c7532",
+      "name": "Enviar Respuesta1",
+      "webhookId": "23be5a60-831e-4485-a1a5-0ac4554d07ee",
+      "credentials": {
+        "telegramApi": {
+          "id": "I501w0YmqC5bGXq5",
+          "name": "gio bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "=Busca un cliente por nombre, teléfono o dirección. OBLIGATORIO al inicio de todos los procesos para identificar al cliente en sistema.",
+        "operation": "getAll",
+        "tableId": "clientes",
+        "returnAll": true
+      },
+      "type": "n8n-nodes-base.supabaseTool",
+      "typeVersion": 1,
+      "position": [
+        -336,
+        224
+      ],
+      "id": "66dbad5d-9031-44e7-ad37-cb4bafda6d20",
+      "name": "buscar_cliente",
+      "credentials": {
+        "supabaseApi": {
+          "id": "CdywA9ymdozKVNFl",
+          "name": "Supabase Gio TEST"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "=Consulta historial de compras, entregas y visitas de un cliente. Usar en quejas (Proceso 1), verificación de horarios (Proceso 8) y validaciones generales.",
+        "operation": "getAll",
+        "tableId": "historial_compras"
+      },
+      "type": "n8n-nodes-base.supabaseTool",
+      "typeVersion": 1,
+      "position": [
+        -192,
+        224
+      ],
+      "id": "be402854-e6c2-4215-abc7-9938e05e4639",
+      "name": "consultar_historial",
+      "credentials": {
+        "supabaseApi": {
+          "id": "CdywA9ymdozKVNFl",
+          "name": "Supabase Gio TEST"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "=Verifica estatus de ruta, zona, cobertura y horario. Usar para programar entregas, verificar cobertura en altas (Proceso 4), servicios extras (Proceso 2) y segundas vueltas (Proceso 3).",
+        "operation": "getAll",
+        "tableId": "rutas"
+      },
+      "type": "n8n-nodes-base.supabaseTool",
+      "typeVersion": 1,
+      "position": [
+        -48,
+        224
+      ],
+      "id": "3b710ede-a8f6-4bbb-84d1-0b6bdc79e97d",
+      "name": "verificar_ruta",
+      "credentials": {
+        "supabaseApi": {
+          "id": "CdywA9ymdozKVNFl",
+          "name": "Supabase Gio TEST"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "=Registra quejas, servicios, visitas, observaciones, facturación y reenvíos en sistema. Genera folio de seguimiento. Incluir: cliente_id, tipo (queja/segunda_visita/programar_entrega/visita_mismodia/servicio_urgente/servicio_extra/observacion/facturacion/reenvio_factura), descripcion, detalles, fecha_programada, cargo_extra, metodo_pago, especificaciones, ruta, urgente (true/false), nota_c11 (true/false para llamada al cliente), horario_atencion (horario preferido del cliente).",
+        "tableId": "servicios",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "tipo",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues0_Field_Value', ``, 'string') }}"
+            },
+            {
+              "fieldId": "cliente_id",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues1_Field_Value', ``, 'string') }}"
+            },
+            {
+              "fieldId": "descripcion",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues2_Field_Value', ``, 'string') }}"
+            },
+            {
+              "fieldId": "detalles",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues3_Field_Value', ``, 'string') }}"
+            },
+            {
+              "fieldId": "fecha_programada",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues4_Field_Value', ``, 'string') }}"
+            },
+            {
+              "fieldId": "cargo_extra",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues5_Field_Value', ``, 'string') }}"
+            },
+            {
+              "fieldId": "metodo_pago",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues6_Field_Value', ``, 'string') }}"
+            },
+            {
+              "fieldId": "especificaciones",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues7_Field_Value', ``, 'string') }}"
+            },
+            {
+              "fieldId": "ruta",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues8_Field_Value', ``, 'string') }}"
+            },
+            {
+              "fieldId": "urgente",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues9_Field_Value', ``, 'string') }}"
+            },
+            {
+              "fieldId": "nota_c11",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues10_Field_Value', ``, 'string') }}"
+            },
+            {
+              "fieldId": "horario_atencion",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues11_Field_Value', ``, 'string') }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabaseTool",
+      "typeVersion": 1,
+      "position": [
+        96,
+        224
+      ],
+      "id": "79e7b984-ce2d-4941-929f-65176d7e951b",
+      "name": "registrar_en_sistema",
+      "credentials": {
+        "supabaseApi": {
+          "id": "CdywA9ymdozKVNFl",
+          "name": "Supabase Gio TEST"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "=Consulta saldo del monedero electrónico del cliente, últimos movimientos y datos bancarios para depósitos. Usar en Proceso 9.",
+        "operation": "getAll",
+        "tableId": "monedero"
+      },
+      "type": "n8n-nodes-base.supabaseTool",
+      "typeVersion": 1,
+      "position": [
+        272,
+        224
+      ],
+      "id": "3ed14aed-4cbd-4b28-a5f4-0d820940e523",
+      "name": "consultar_saldo_monedero",
+      "credentials": {
+        "supabaseApi": {
+          "id": "CdywA9ymdozKVNFl",
+          "name": "Supabase Gio TEST"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "=Consulta datos fiscales del cliente, estado de CFDI, facturas emitidas, facturas pendientes y registro de correos enviados. Usar en Procesos 6 (Facturación) y 7 (Reenvío de factura).",
+        "operation": "getAll",
+        "tableId": "facturacion"
+      },
+      "type": "n8n-nodes-base.supabaseTool",
+      "typeVersion": 1,
+      "position": [
+        448,
+        224
+      ],
+      "id": "b1e4b4b5-45ad-4413-85fe-c8971a4ea287",
+      "name": "verificar_facturacion",
+      "credentials": {
+        "supabaseApi": {
+          "id": "CdywA9ymdozKVNFl",
+          "name": "Supabase Gio TEST"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "=Da de alta un nuevo prospecto/cliente en sistema. Usar en Proceso 4. Datos requeridos: nombre, telefono, telefono2, direccion, entre_calles, colonia, cp, referencias, fecha_nacimiento, consumo_cantidad, frecuencia, ruta.",
+        "tableId": "clientes",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "nombre",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues0_Field_Value', ``, 'string') }}"
+            },
+            {
+              "fieldId": "telefono",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues1_Field_Value', ``, 'string') }}"
+            },
+            {
+              "fieldId": "telefono2",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues2_Field_Value', ``, 'string') }}"
+            },
+            {
+              "fieldId": "direccion",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues3_Field_Value', ``, 'string') }}"
+            },
+            {
+              "fieldId": "entre_calles",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues4_Field_Value', ``, 'string') }}"
+            },
+            {
+              "fieldId": "colonia",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues5_Field_Value', ``, 'string') }}"
+            },
+            {
+              "fieldId": "cp",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues6_Field_Value', ``, 'string') }}"
+            },
+            {
+              "fieldId": "referencias",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues7_Field_Value', ``, 'string') }}"
+            },
+            {
+              "fieldId": "fecha_nacimiento",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues8_Field_Value', ``, 'string') }}"
+            },
+            {
+              "fieldId": "consumo_cantidad",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues9_Field_Value', ``, 'string') }}"
+            },
+            {
+              "fieldId": "frecuencia",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues10_Field_Value', ``, 'string') }}"
+            },
+            {
+              "fieldId": "ruta",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues11_Field_Value', ``, 'string') }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabaseTool",
+      "typeVersion": 1,
+      "position": [
+        656,
+        224
+      ],
+      "id": "de8712eb-8c71-4a41-8c84-6126da50c178",
+      "name": "registrar_alta_cliente",
+      "credentials": {
+        "supabaseApi": {
+          "id": "CdywA9ymdozKVNFl",
+          "name": "Supabase Gio TEST"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Procesar mensajes de Telegram: texto normal o documento PDF\nconst https = require('https');\nconst message = $input.item.json.message;\n\n// Caso 1: Mensaje de texto normal\nif (message.text) {\n  return { message };\n}\n\n// Funcion para hacer GET con https nativo\nfunction httpsGet(url) {\n  return new Promise((resolve, reject) => {\n    https.get(url, (res) => {\n      const chunks = [];\n      res.on('data', (chunk) => chunks.push(chunk));\n      res.on('end', () => resolve(Buffer.concat(chunks)));\n      res.on('error', reject);\n    }).on('error', reject);\n  });\n}\n\n// Caso 2: Mensaje con documento PDF (CFDI)\nif (message.document && message.document.mime_type === 'application/pdf') {\n  // IMPORTANTE: Reemplaza con tu Bot Token de Telegram\n  const BOT_TOKEN = '8703916390:AAFZSEQYhvyn0HMxP_UMlQU-0uZTR4VBkj0';\n\n  try {\n    // Obtener ruta del archivo en Telegram\n    const fileInfoBuf = await httpsGet(\n      `https://api.telegram.org/bot${BOT_TOKEN}/getFile?file_id=${message.document.file_id}`\n    );\n    const fileInfo = JSON.parse(fileInfoBuf.toString());\n    if (!fileInfo.ok) throw new Error('No se pudo obtener info del archivo');\n    const filePath = fileInfo.result.file_path;\n\n    // Descargar el archivo PDF\n    const pdfBuffer = await httpsGet(\n      `https://api.telegram.org/file/bot${BOT_TOKEN}/${filePath}`\n    );\n\n    // Extraer texto del PDF\n    let textoExtraido = '';\n    try {\n      const pdfParse = require('pdf-parse');\n      const pdfData = await pdfParse(pdfBuffer);\n      textoExtraido = pdfData.text;\n    } catch (e) {\n      // Fallback: extraccion basica de strings del PDF\n      const raw = pdfBuffer.toString('latin1');\n      const matches = raw.match(/\\(([^)]+)\\)/g);\n      if (matches && matches.length > 5) {\n        textoExtraido = matches.map(m => m.slice(1, -1)).join(' ');\n      }\n      if (!textoExtraido || textoExtraido.length < 30) {\n        textoExtraido = '[PDF recibido: ' + message.document.file_name + '. No se pudo extraer texto. Para habilitar lectura de PDF instala pdf-parse y configura NODE_FUNCTION_ALLOW_EXTERNAL=pdf-parse en n8n.]';\n      }\n    }\n\n    const caption = message.caption ? '\\nMensaje del operador: ' + message.caption : '';\n    return {\n      message: {\n        ...message,\n        text: '[DOCUMENTO PDF RECIBIDO: ' + message.document.file_name + ']' + caption + '\\n\\nContenido extraido del CFDI:\\n---\\n' + textoExtraido + '\\n---\\nProcesa esta informacion segun el proceso de facturacion correspondiente (Proceso 6 o 7).'\n      }\n    };\n  } catch (error) {\n    return {\n      message: {\n        ...message,\n        text: 'El operador envio un PDF (' + message.document.file_name + ') pero hubo error: ' + error.message + '. Solicita al operador que envie los datos del CFDI manualmente.'\n      }\n    };\n  }\n}\n\n// Caso 3: Otros tipos de mensaje\nconst texto = message.caption || '[Mensaje sin texto - solicita al operador que escriba su consulta]';\nreturn { message: { ...message, text: texto } };"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -128,
+        -112
+      ],
+      "id": "c1bffc97-1aa8-4027-88c3-c360c9d811a1",
+      "name": "Procesar Mensaje",
+      "disabled": true
+    }
+  ],
+  "connections": {
+    "Telegram Trigger1": {
+      "main": [
+        [
+          {
+            "node": "Procesar Mensaje",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Procesar Mensaje": {
+      "main": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent1": {
+      "main": [
+        [
+          {
+            "node": "Enviar Respuesta1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory1": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "buscar_cliente": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "consultar_historial": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "verificar_ruta": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "registrar_en_sistema": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "consultar_saldo_monedero": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "verificar_facturacion": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "registrar_alta_cliente": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "2b54b52c-c884-4149-ac91-8fc23b02fa09",
+  "activeVersionId": "2b54b52c-c884-4149-ac91-8fc23b02fa09",
+  "versionCounter": 32,
+  "triggerCount": 1,
+  "shared": [
+    {
+      "updatedAt": "2026-04-27T18:34:29.045Z",
+      "createdAt": "2026-04-27T18:34:29.045Z",
+      "role": "workflow:owner",
+      "workflowId": "98Nd7IH9d5PbVLwF",
+      "projectId": "BZ9Ta5yhe4RhzY78",
+      "project": {
+        "updatedAt": "2025-05-13T16:18:54.372Z",
+        "createdAt": "2025-05-13T15:56:28.209Z",
+        "id": "BZ9Ta5yhe4RhzY78",
+        "name": "CANTERA ADMIN <canteradigital7@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "projectRelations": [
+          {
+            "updatedAt": "2025-05-13T15:56:28.209Z",
+            "createdAt": "2025-05-13T15:56:28.209Z",
+            "userId": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
+            "projectId": "BZ9Ta5yhe4RhzY78",
+            "user": {
+              "updatedAt": "2026-04-28T06:00:27.000Z",
+              "createdAt": "2025-05-13T15:56:27.880Z",
+              "id": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
+              "email": "canteradigital7@gmail.com",
+              "firstName": "CANTERA",
+              "lastName": "ADMIN",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-05-13T16:19:25.161Z",
+                "personalization_survey_n8n_version": "1.92.2",
+                "companySize": "<20",
+                "companyType": "saas",
+                "role": "customer-support",
+                "reportedSource": "event"
+              },
+              "settings": {
+                "userActivated": true,
+                "firstSuccessfulWorkflowId": "PTbESRzX3rguwQN8",
+                "userActivatedAt": 1747154580970,
+                "easyAIWorkflowOnboarded": true,
+                "npsSurvey": {
+                  "responded": true,
+                  "lastShownAt": 1765302536772
+                },
+                "dismissedCallouts": {
+                  "aiAgentStarterCallout": true,
+                  "preBuiltAgentsCalloutHttpRequest": true
+                }
+              },
+              "disabled": false,
+              "mfaEnabled": false,
+              "lastActiveAt": "2026-04-28",
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": [],
+  "activeVersion": {
+    "updatedAt": "2026-04-28T17:53:04.449Z",
+    "createdAt": "2026-04-28T17:53:04.449Z",
+    "versionId": "2b54b52c-c884-4149-ac91-8fc23b02fa09",
+    "workflowId": "98Nd7IH9d5PbVLwF",
+    "nodes": [
+      {
+        "parameters": {
+          "updates": [
+            "message"
+          ],
+          "additionalFields": {}
+        },
+        "type": "n8n-nodes-base.telegramTrigger",
+        "typeVersion": 1.2,
+        "position": [
+          -320,
+          -112
+        ],
+        "id": "82760bab-f5cf-43c3-b67c-ad0ccfd18026",
+        "name": "Telegram Trigger1",
+        "webhookId": "39b8d190-dcf6-4511-9fd6-14d05db9dfe5",
+        "credentials": {
+          "telegramApi": {
+            "id": "I501w0YmqC5bGXq5",
+            "name": "gio bot"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "promptType": "define",
+          "text": "={{ $json.message.text }}",
+          "options": {
+            "systemMessage": "Eres el asistente virtual del call center de una empresa de distribución de agua purificada en garrafón llamada Junghanns. Tu función es guiar al operador paso a paso en cada proceso de atención al cliente. Siempre sigue el flujo correspondiente sin saltarte pasos.\n\nREGLA GENERAL: En TODOS los casos, lo primero es solicitar y confirmar los datos del cliente:\n\n- Nombre\n- Teléfono\n- Dirección\n\nUna vez que el operador proporcione estos datos, DEBES usar la herramienta **buscar_cliente** para identificar al cliente en sistema. Muestra los resultados al operador para que confirme con el cliente que son correctos. Solo después de confirmar, continúa con el flujo correspondiente.\n\n===========================\nCASO 1: CONSULTA DE HORARIO DE ENTREGA\n===========================\n\n1. Solicita identificación del cliente (nombre, teléfono o dirección). Usa **buscar_cliente** para validar en sistema.\n2. Usa **consultar_historial** para revisar el historial de entregas previas del cliente y determinar su día de frecuencia asignado.\n3. Con base en las visitas anteriores, determina el horario aproximado de llegada dando un rango de 1 hora.\n4. Responde al operador con el horario estimado:\n   \"Tu entrega está programada para [día] aproximadamente entre [rango horario]\"\n5. Aclara que puede haber variaciones dependiendo de las condiciones operativas del día.\n\n===========================\nCASO 2: SOLICITUD DE SERVICIO EXTRA / SEGUNDA VUELTA\n===========================\n\n1. Solicita identificación del cliente (nombre, teléfono o dirección). Usa **buscar_cliente** para validar en sistema.\n2. Usa **consultar_historial** para identificar si el cliente está dentro o fuera de su frecuencia de servicio:\n   - Dentro de frecuencia (es su día de servicio): se programa sin cargo adicional.\n   - Fuera de frecuencia (no es su día de servicio): podría aplicar un cargo extra dependiendo de la ruta.\n3. Usa **verificar_ruta** para validar disponibilidad de la ruta y confirmar si el servicio puede realizarse el día solicitado.\n4. Confirma la solicitud con el operador:\n   \"Podemos programar tu servicio, podría aplicar un cargo adicional dependiendo de la ruta\"\n5. Solicita especificaciones de entrega al operador:\n   - Método de pago (efectivo o monedero electrónico).\n   - Indicaciones de entrega (horario preferido, tocar fuerte, dejar garrafón abajo, etc).\n6. Usa **registrar_en_sistema** tipo=servicio_extra o tipo=segunda_visita (según aplique) con los detalles recopilados (cliente_id, tipo, fecha_programada, cargo_extra, metodo_pago, especificaciones, ruta).\n7. Confirma al operador que el servicio quedó registrado en sistema con el folio generado.\n\n===========================\nHERRAMIENTAS DISPONIBLES\n===========================\n\nTienes las siguientes herramientas. DEBES usarlas en los momentos indicados:\n\n1. **buscar_cliente**: Busca un cliente por nombre, teléfono o dirección. OBLIGATORIO al inicio de TODO caso. Siempre muestra los resultados al operador para confirmar con el cliente.\n2. **consultar_historial**: Consulta historial de compras, entregas y visitas de un cliente. Usar para verificar frecuencia y horarios estimados.\n3. **verificar_ruta**: Verifica estatus de ruta, disponibilidad y horario. Usar en Caso 2 para confirmar si el servicio puede programarse.\n4. **registrar_en_sistema**: Registra servicios y visitas en sistema. Genera folio de seguimiento. Tipos disponibles: segunda_visita, servicio_extra.\n\n===========================\nINSTRUCCIONES GENERALES\n===========================\n\n- Siempre sé amable, profesional y empático con el operador y el cliente.\n- Guía al operador paso a paso. No saltes pasos ni asumas información.\n- Si el operador no proporciona un dato necesario, solicítalo antes de continuar.\n- Siempre usa **buscar_cliente** PRIMERO y muestra los resultados al operador para confirmar con el cliente.\n- Horarios de servicio: Lunes a Viernes 7am-2pm, Sábados 7am-12pm.\n- Número de atención a clientes: (222) 419 4790.\n- Cargo extra por servicio fuera de frecuencia: $26.\n- Costo líquido: $59.\n- Al inicio de cada conversación, pregunta: \"¿En qué puedo ayudarte?\" y clasifica la solicitud en uno de los 2 casos disponibles.\n"
+          }
+        },
+        "type": "@n8n/n8n-nodes-langchain.agent",
+        "typeVersion": 3,
+        "position": [
+          112,
+          -112
+        ],
+        "id": "46ec8c25-73f6-44d9-bcc3-59e3659882b4",
+        "name": "AI Agent1"
+      },
+      {
+        "parameters": {
+          "model": {
+            "__rl": true,
+            "mode": "list",
+            "value": "gpt-4.1-mini"
+          },
+          "builtInTools": {},
+          "options": {}
+        },
+        "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "typeVersion": 1.3,
+        "position": [
+          -592,
+          64
+        ],
+        "id": "be290b21-1f41-47aa-830d-a9e9956511f3",
+        "name": "OpenAI Chat Model1",
+        "credentials": {
+          "openAiApi": {
+            "id": "ZmWqQ5PGylh4Y05s",
+            "name": "OpenAi account - CANTERA"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "sessionIdType": "customKey",
+          "sessionKey": "={{ $json.message.chat.id }}"
+        },
+        "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+        "typeVersion": 1.3,
+        "position": [
+          -416,
+          64
+        ],
+        "id": "d9c751b3-215d-48a9-9cc7-7e2aef77ac24",
+        "name": "Simple Memory1"
+      },
+      {
+        "parameters": {
+          "chatId": "={{ $('Telegram Trigger1').item.json.message.chat.id }}",
+          "text": "={{ $json.output }}",
+          "additionalFields": {
+            "appendAttribution": false
+          }
+        },
+        "type": "n8n-nodes-base.telegram",
+        "typeVersion": 1.2,
+        "position": [
+          464,
+          -112
+        ],
+        "id": "03d1f5cb-cc57-4ccc-ac69-3cc6d66c7532",
+        "name": "Enviar Respuesta1",
+        "webhookId": "23be5a60-831e-4485-a1a5-0ac4554d07ee",
+        "credentials": {
+          "telegramApi": {
+            "id": "I501w0YmqC5bGXq5",
+            "name": "gio bot"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "descriptionType": "manual",
+          "toolDescription": "=Busca un cliente por nombre, teléfono o dirección. OBLIGATORIO al inicio de todos los procesos para identificar al cliente en sistema.",
+          "operation": "getAll",
+          "tableId": "clientes",
+          "returnAll": true
+        },
+        "type": "n8n-nodes-base.supabaseTool",
+        "typeVersion": 1,
+        "position": [
+          -336,
+          224
+        ],
+        "id": "66dbad5d-9031-44e7-ad37-cb4bafda6d20",
+        "name": "buscar_cliente",
+        "credentials": {
+          "supabaseApi": {
+            "id": "CdywA9ymdozKVNFl",
+            "name": "Supabase Gio TEST"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "descriptionType": "manual",
+          "toolDescription": "=Consulta historial de compras, entregas y visitas de un cliente. Usar en quejas (Proceso 1), verificación de horarios (Proceso 8) y validaciones generales.",
+          "operation": "getAll",
+          "tableId": "historial_compras"
+        },
+        "type": "n8n-nodes-base.supabaseTool",
+        "typeVersion": 1,
+        "position": [
+          -192,
+          224
+        ],
+        "id": "be402854-e6c2-4215-abc7-9938e05e4639",
+        "name": "consultar_historial",
+        "credentials": {
+          "supabaseApi": {
+            "id": "CdywA9ymdozKVNFl",
+            "name": "Supabase Gio TEST"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "descriptionType": "manual",
+          "toolDescription": "=Verifica estatus de ruta, zona, cobertura y horario. Usar para programar entregas, verificar cobertura en altas (Proceso 4), servicios extras (Proceso 2) y segundas vueltas (Proceso 3).",
+          "operation": "getAll",
+          "tableId": "rutas"
+        },
+        "type": "n8n-nodes-base.supabaseTool",
+        "typeVersion": 1,
+        "position": [
+          -48,
+          224
+        ],
+        "id": "3b710ede-a8f6-4bbb-84d1-0b6bdc79e97d",
+        "name": "verificar_ruta",
+        "credentials": {
+          "supabaseApi": {
+            "id": "CdywA9ymdozKVNFl",
+            "name": "Supabase Gio TEST"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "descriptionType": "manual",
+          "toolDescription": "=Registra quejas, servicios, visitas, observaciones, facturación y reenvíos en sistema. Genera folio de seguimiento. Incluir: cliente_id, tipo (queja/segunda_visita/programar_entrega/visita_mismodia/servicio_urgente/servicio_extra/observacion/facturacion/reenvio_factura), descripcion, detalles, fecha_programada, cargo_extra, metodo_pago, especificaciones, ruta, urgente (true/false), nota_c11 (true/false para llamada al cliente), horario_atencion (horario preferido del cliente).",
+          "tableId": "servicios",
+          "fieldsUi": {
+            "fieldValues": [
+              {
+                "fieldId": "tipo",
+                "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues0_Field_Value', ``, 'string') }}"
+              },
+              {
+                "fieldId": "cliente_id",
+                "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues1_Field_Value', ``, 'string') }}"
+              },
+              {
+                "fieldId": "descripcion",
+                "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues2_Field_Value', ``, 'string') }}"
+              },
+              {
+                "fieldId": "detalles",
+                "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues3_Field_Value', ``, 'string') }}"
+              },
+              {
+                "fieldId": "fecha_programada",
+                "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues4_Field_Value', ``, 'string') }}"
+              },
+              {
+                "fieldId": "cargo_extra",
+                "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues5_Field_Value', ``, 'string') }}"
+              },
+              {
+                "fieldId": "metodo_pago",
+                "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues6_Field_Value', ``, 'string') }}"
+              },
+              {
+                "fieldId": "especificaciones",
+                "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues7_Field_Value', ``, 'string') }}"
+              },
+              {
+                "fieldId": "ruta",
+                "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues8_Field_Value', ``, 'string') }}"
+              },
+              {
+                "fieldId": "urgente",
+                "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues9_Field_Value', ``, 'string') }}"
+              },
+              {
+                "fieldId": "nota_c11",
+                "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues10_Field_Value', ``, 'string') }}"
+              },
+              {
+                "fieldId": "horario_atencion",
+                "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues11_Field_Value', ``, 'string') }}"
+              }
+            ]
+          }
+        },
+        "type": "n8n-nodes-base.supabaseTool",
+        "typeVersion": 1,
+        "position": [
+          96,
+          224
+        ],
+        "id": "79e7b984-ce2d-4941-929f-65176d7e951b",
+        "name": "registrar_en_sistema",
+        "credentials": {
+          "supabaseApi": {
+            "id": "CdywA9ymdozKVNFl",
+            "name": "Supabase Gio TEST"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "descriptionType": "manual",
+          "toolDescription": "=Consulta saldo del monedero electrónico del cliente, últimos movimientos y datos bancarios para depósitos. Usar en Proceso 9.",
+          "operation": "getAll",
+          "tableId": "monedero"
+        },
+        "type": "n8n-nodes-base.supabaseTool",
+        "typeVersion": 1,
+        "position": [
+          272,
+          224
+        ],
+        "id": "3ed14aed-4cbd-4b28-a5f4-0d820940e523",
+        "name": "consultar_saldo_monedero",
+        "credentials": {
+          "supabaseApi": {
+            "id": "CdywA9ymdozKVNFl",
+            "name": "Supabase Gio TEST"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "descriptionType": "manual",
+          "toolDescription": "=Consulta datos fiscales del cliente, estado de CFDI, facturas emitidas, facturas pendientes y registro de correos enviados. Usar en Procesos 6 (Facturación) y 7 (Reenvío de factura).",
+          "operation": "getAll",
+          "tableId": "facturacion"
+        },
+        "type": "n8n-nodes-base.supabaseTool",
+        "typeVersion": 1,
+        "position": [
+          448,
+          224
+        ],
+        "id": "b1e4b4b5-45ad-4413-85fe-c8971a4ea287",
+        "name": "verificar_facturacion",
+        "credentials": {
+          "supabaseApi": {
+            "id": "CdywA9ymdozKVNFl",
+            "name": "Supabase Gio TEST"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "descriptionType": "manual",
+          "toolDescription": "=Da de alta un nuevo prospecto/cliente en sistema. Usar en Proceso 4. Datos requeridos: nombre, telefono, telefono2, direccion, entre_calles, colonia, cp, referencias, fecha_nacimiento, consumo_cantidad, frecuencia, ruta.",
+          "tableId": "clientes",
+          "fieldsUi": {
+            "fieldValues": [
+              {
+                "fieldId": "nombre",
+                "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues0_Field_Value', ``, 'string') }}"
+              },
+              {
+                "fieldId": "telefono",
+                "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues1_Field_Value', ``, 'string') }}"
+              },
+              {
+                "fieldId": "telefono2",
+                "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues2_Field_Value', ``, 'string') }}"
+              },
+              {
+                "fieldId": "direccion",
+                "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues3_Field_Value', ``, 'string') }}"
+              },
+              {
+                "fieldId": "entre_calles",
+                "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues4_Field_Value', ``, 'string') }}"
+              },
+              {
+                "fieldId": "colonia",
+                "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues5_Field_Value', ``, 'string') }}"
+              },
+              {
+                "fieldId": "cp",
+                "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues6_Field_Value', ``, 'string') }}"
+              },
+              {
+                "fieldId": "referencias",
+                "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues7_Field_Value', ``, 'string') }}"
+              },
+              {
+                "fieldId": "fecha_nacimiento",
+                "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues8_Field_Value', ``, 'string') }}"
+              },
+              {
+                "fieldId": "consumo_cantidad",
+                "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues9_Field_Value', ``, 'string') }}"
+              },
+              {
+                "fieldId": "frecuencia",
+                "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues10_Field_Value', ``, 'string') }}"
+              },
+              {
+                "fieldId": "ruta",
+                "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues11_Field_Value', ``, 'string') }}"
+              }
+            ]
+          }
+        },
+        "type": "n8n-nodes-base.supabaseTool",
+        "typeVersion": 1,
+        "position": [
+          656,
+          224
+        ],
+        "id": "de8712eb-8c71-4a41-8c84-6126da50c178",
+        "name": "registrar_alta_cliente",
+        "credentials": {
+          "supabaseApi": {
+            "id": "CdywA9ymdozKVNFl",
+            "name": "Supabase Gio TEST"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "mode": "runOnceForEachItem",
+          "jsCode": "// Procesar mensajes de Telegram: texto normal o documento PDF\nconst https = require('https');\nconst message = $input.item.json.message;\n\n// Caso 1: Mensaje de texto normal\nif (message.text) {\n  return { message };\n}\n\n// Funcion para hacer GET con https nativo\nfunction httpsGet(url) {\n  return new Promise((resolve, reject) => {\n    https.get(url, (res) => {\n      const chunks = [];\n      res.on('data', (chunk) => chunks.push(chunk));\n      res.on('end', () => resolve(Buffer.concat(chunks)));\n      res.on('error', reject);\n    }).on('error', reject);\n  });\n}\n\n// Caso 2: Mensaje con documento PDF (CFDI)\nif (message.document && message.document.mime_type === 'application/pdf') {\n  // IMPORTANTE: Reemplaza con tu Bot Token de Telegram\n  const BOT_TOKEN = '8703916390:AAFZSEQYhvyn0HMxP_UMlQU-0uZTR4VBkj0';\n\n  try {\n    // Obtener ruta del archivo en Telegram\n    const fileInfoBuf = await httpsGet(\n      `https://api.telegram.org/bot${BOT_TOKEN}/getFile?file_id=${message.document.file_id}`\n    );\n    const fileInfo = JSON.parse(fileInfoBuf.toString());\n    if (!fileInfo.ok) throw new Error('No se pudo obtener info del archivo');\n    const filePath = fileInfo.result.file_path;\n\n    // Descargar el archivo PDF\n    const pdfBuffer = await httpsGet(\n      `https://api.telegram.org/file/bot${BOT_TOKEN}/${filePath}`\n    );\n\n    // Extraer texto del PDF\n    let textoExtraido = '';\n    try {\n      const pdfParse = require('pdf-parse');\n      const pdfData = await pdfParse(pdfBuffer);\n      textoExtraido = pdfData.text;\n    } catch (e) {\n      // Fallback: extraccion basica de strings del PDF\n      const raw = pdfBuffer.toString('latin1');\n      const matches = raw.match(/\\(([^)]+)\\)/g);\n      if (matches && matches.length > 5) {\n        textoExtraido = matches.map(m => m.slice(1, -1)).join(' ');\n      }\n      if (!textoExtraido || textoExtraido.length < 30) {\n        textoExtraido = '[PDF recibido: ' + message.document.file_name + '. No se pudo extraer texto. Para habilitar lectura de PDF instala pdf-parse y configura NODE_FUNCTION_ALLOW_EXTERNAL=pdf-parse en n8n.]';\n      }\n    }\n\n    const caption = message.caption ? '\\nMensaje del operador: ' + message.caption : '';\n    return {\n      message: {\n        ...message,\n        text: '[DOCUMENTO PDF RECIBIDO: ' + message.document.file_name + ']' + caption + '\\n\\nContenido extraido del CFDI:\\n---\\n' + textoExtraido + '\\n---\\nProcesa esta informacion segun el proceso de facturacion correspondiente (Proceso 6 o 7).'\n      }\n    };\n  } catch (error) {\n    return {\n      message: {\n        ...message,\n        text: 'El operador envio un PDF (' + message.document.file_name + ') pero hubo error: ' + error.message + '. Solicita al operador que envie los datos del CFDI manualmente.'\n      }\n    };\n  }\n}\n\n// Caso 3: Otros tipos de mensaje\nconst texto = message.caption || '[Mensaje sin texto - solicita al operador que escriba su consulta]';\nreturn { message: { ...message, text: texto } };"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          -128,
+          -112
+        ],
+        "id": "c1bffc97-1aa8-4027-88c3-c360c9d811a1",
+        "name": "Procesar Mensaje",
+        "disabled": true
+      }
+    ],
+    "connections": {
+      "Telegram Trigger1": {
+        "main": [
+          [
+            {
+              "node": "Procesar Mensaje",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Procesar Mensaje": {
+        "main": [
+          [
+            {
+              "node": "AI Agent1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "AI Agent1": {
+        "main": [
+          [
+            {
+              "node": "Enviar Respuesta1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "OpenAI Chat Model1": {
+        "ai_languageModel": [
+          [
+            {
+              "node": "AI Agent1",
+              "type": "ai_languageModel",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Simple Memory1": {
+        "ai_memory": [
+          [
+            {
+              "node": "AI Agent1",
+              "type": "ai_memory",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "buscar_cliente": {
+        "ai_tool": [
+          [
+            {
+              "node": "AI Agent1",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "consultar_historial": {
+        "ai_tool": [
+          [
+            {
+              "node": "AI Agent1",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "verificar_ruta": {
+        "ai_tool": [
+          [
+            {
+              "node": "AI Agent1",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "registrar_en_sistema": {
+        "ai_tool": [
+          [
+            {
+              "node": "AI Agent1",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "consultar_saldo_monedero": {
+        "ai_tool": [
+          [
+            {
+              "node": "AI Agent1",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "verificar_facturacion": {
+        "ai_tool": [
+          [
+            {
+              "node": "AI Agent1",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "registrar_alta_cliente": {
+        "ai_tool": [
+          [
+            {
+              "node": "AI Agent1",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "authors": "CANTERA ADMIN",
+    "name": null,
+    "description": null
+  }
+}
