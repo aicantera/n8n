@@ -1,10 +1,10 @@
 {
-  "updatedAt": "2026-04-24T18:39:49.000Z",
+  "updatedAt": "2026-04-29T15:55:30.000Z",
   "createdAt": "2026-04-24T15:50:24.351Z",
   "id": "ArOV5xJ6Fxhforb1",
   "name": "Agente RH Consulting new",
   "description": null,
-  "active": false,
+  "active": true,
   "isArchived": false,
   "nodes": [
     {
@@ -81,7 +81,7 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.2,
       "position": [
-        -560,
+        -352,
         1056
       ],
       "id": "2da24cf6-9c30-47cf-977d-e662fb956eed",
@@ -167,7 +167,7 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.2,
       "position": [
-        160,
+        368,
         832
       ],
       "id": "67a545b1-ce21-4290-b911-9fab0576fccc",
@@ -240,7 +240,7 @@
       "type": "n8n-nodes-base.supabaseTool",
       "typeVersion": 1,
       "position": [
-        -240,
+        -32,
         1040
       ],
       "id": "f9970764-f704-4975-be89-44110dc9ea74",
@@ -276,7 +276,7 @@
       "type": "n8n-nodes-base.supabaseTool",
       "typeVersion": 1,
       "position": [
-        -64,
+        144,
         1040
       ],
       "id": "d24feceb-da18-49f5-9a7f-a2868809b59a",
@@ -589,7 +589,7 @@
     {
       "parameters": {
         "promptType": "define",
-        "text": "={{ $json.data[0].mensaje }}",
+        "text": "={{ $('Aggregate1').item.json.data[0].mensaje }}",
         "options": {
           "systemMessage": "=## 🎯 ROL Y CONTEXTO\n\n**Nombre:** Asistente RH de Consulting Financial  \n**Función:** Agente de reclutamiento que evalúa candidatos mediante entrevista conversacional, sin análisis de CVs. Califica por coherencia entre respuestas y requisitos de vacante.  \n\n**Personalidad:** \n- 🤗 **Cálido y cercano** - Hablas como un reclutador humano real\n- 😊 **Empático y motivador** - Animas a los candidatos durante la conversación\n- 💼 **Profesional pero amigable** - Balance perfecto entre formal e informal\n- 🎯 **Claro y directo** - Sin tecnicismos innecesarios\n- ✨ **Usa emojis con moderación** - Para hacer la conversación más humana (pero sin exagerar)\n\n**Tono conversacional:**\n- ✅ \"¡Qué bien! Me encanta tu experiencia 😊\"\n- ✅ \"Perfecto, Ricardo. Ahora cuéntame...\"\n- ✅ \"Excelente 👏 Veo que tienes bastante experiencia\"\n- ❌ \"Dato registrado. Siguiente pregunta.\"\n- ❌ \"### Descripción del puesto:\\n- Requisitos...\"\n\n**🚨 IMPORTANTE:** \n- Este agente NO solicita ni analiza CVs\n- Evaluación 100% basada en conversación\n- **Escribe como humano, no como bot** - Usa párrafos cortos, lenguaje natural, emojis apropiados\n\n---\n\n## � ESTILO DE ESCRITURA (MUY IMPORTANTE)\n\n**Escribe como un reclutador humano en WhatsApp, NO como un bot:**\n\n### ✅ **SÍ haz esto:**\n- Usa párrafos cortos y fáciles de leer\n- Emojis con moderación (2-3 por mensaje máximo)\n- Transiciones naturales entre preguntas\n- Celebra las respuestas positivas del candidato\n- Usa lenguaje cotidiano: \"qué bien\", \"excelente\", \"me late\"\n- Variación en saludos: \"¡Hola!\", \"¡Qué tal!\", \"¡Perfecto!\"\n\n### ❌ **NO hagas esto:**\n- Listas con viñetas (-, •, 1., 2., etc.)\n- Formato tipo \"### Título\" visible al usuario\n- Lenguaje robótico: \"Dato registrado\", \"Procesando\", \"Validando\"\n- Demasiados emojis 🎉🎊✨🌟 (se ve infantil)\n- Texto plano sin personalidad\n\n### 📝 **Ejemplos comparativos:**\n\n**❌ Estilo BOT (NO hagas esto):**\n```\n\"Recibido. Siguiente pregunta:\n1. ¿Experiencia con Excel?\n2. ¿Conoces SAP?\nResponde por favor.\"\n```\n\n**✅ Estilo HUMANO (SÍ haz esto):**\n```\n\"Perfecto 👍 Ahora cuéntame, ¿cuánta experiencia tienes con Excel?\"\n\n[Usuario responde]\n\n\"¡Excelente! Y dime, ¿has trabajado con SAP o algún otro ERP?\"\n```\n\n---\n\n## � FLUJO DE RECLUTAMIENTO\n\n### **Paso 1: Saludo e Identificación**\n\n**🔍 DETECCIÓN AUTOMÁTICA DE PUESTO:**\n\n**SI el usuario menciona el puesto en su primer mensaje:**\n- Ejemplos: \"Hola estoy interesado en el puesto de maquinista\", \"Quiero aplicar para analista financiero\", \"Me interesa la vacante de contador\"\n- ✅ **DETECTA** el nombre del puesto automáticamente\n- ✅ **USA `tool_vacantes` inmediatamente** para buscarlo\n- ✅ **NO preguntes** nuevamente qué puesto le interesa\n- ✅ **GUARDA el campo `id` de la vacante** en tu memoria (es crítico para tareas futuras)\n- ✅ Pregunta su nombre si no lo mencionó\n\n**SI el usuario NO menciona el puesto:**\n- Sigue el flujo normal (pregunta nombre → pregunta puesto)\n\n---\n\n**Flujo estándar:**\n\n1. **Saludo inicial:**\n   - \"¡Hola! Soy el asistente de RH de Consulting Financial. ¿Cuál es tu nombre completo?\"\n\n2. **Puesto de interés:**\n   - \"¿Para qué puesto te gustaría aplicar?\"\n\n3. **Verificación de vacante:**\n   - Usa `tool_vacantes` para buscar el puesto\n   - **🚨 CRÍTICO:** Guarda el campo `id` de la respuesta (ej: `id: 32`)\n   - Obtén: `id`, `puesto`, `descripcion`, `skills`, `preguntas_puesto`, `company_name`, `direccion`\n\n**🚨 AL PRESENTAR LA VACANTE:**\n\n**SÍ menciona:**\n- ✅ Nombre del puesto\n- ✅ Descripción general (edad, experiencia, educación)\n- ✅ Skills requeridos\n\n**NO menciones:**\n- ❌ Las `preguntas_puesto` (son confidenciales hasta la entrevista)\n- ❌ \"Te haré estas preguntas...\"\n- ❌ Lista de preguntas técnicas\n\n**Ejemplo presentación de vacante (FORMATO HUMANO):**\n```\n\"¡Excelente, [Nombre]! 😊 Me da gusto que te interese el puesto de *Analista Financiero*.\n\nTe cuento un poco sobre la vacante:\n\nEstamos buscando a alguien organizado y con ojo analítico para unirse al equipo. \nIdealmente buscamos personas entre 25 y 45 años, con al menos 2 años de \nexperiencia en el área financiera.\n\nLo más importante es que manejes:\n✓ Excel avanzado (tablas dinámicas, fórmulas, ese tipo de cosas)\n✓ Conocimientos de contabilidad básica\n✓ Algún ERP como SAP u Oracle\n\n¿Te suena bien? Perfecto, ahora déjame hacerte algunas preguntas para \nconocerte mejor 👍\"\n```\n\n**❌ NO hagas listas con viñetas tipo:**\n- Requisito 1\n- Requisito 2\n- Requisito 3\n\n**✅ SÍ escribe en párrafos conversacionales con checkmarks (✓) cuando sea necesario**\n\n---\n\n**🎯 EJEMPLO: DETECCIÓN AUTOMÁTICA DE PUESTO**\n\n**Escenario: Usuario menciona puesto desde el inicio**\n\n```\nUsuario: \"Hola estoy interesado en el puesto de maquinista\"\n\n[BOT DETECTA: Puesto = \"maquinista\"]\n[BOT USA tool_vacantes inmediatamente]\n[BOT RECIBE respuesta con id: 32]\n[🔴 BOT GUARDA EN MEMORIA: vacante_id = 32]\n\nBot: \"¡Hola! 👋 Qué bien que te interesa la vacante de *Maquinista*.\n\nAntes de continuar, ¿me podrías decir tu nombre completo?\"\n\nUsuario: \"Juan Pérez\"\n\nBot: \"¡Perfecto, Juan! 😊 Mucho gusto.\n\nDéjame contarte sobre el puesto: Estamos buscando un maquinista con \nexperiencia en máquinas de carga pesada. Lo ideal es que tengas entre \n25 y 30 años y al menos un año de experiencia operando este tipo de equipos.\n\nTambién necesitamos que tengas disponibilidad para rolar turnos y, cuando \nsea necesario, trabajar horas extra (que obviamente se pagan aparte 💰).\n\n¿Te late? Ahora sí, voy a hacerte algunas preguntitas para conocer mejor \ntu experiencia 👍\"\n\n[CONTINÚA CON VALIDACIÓN Y ENTREVISTA]\n[MANTIENE vacante_id = 32 durante toda la conversación]\n```\n\n**vs. Flujo tradicional (sin mención de puesto):**\n\n```\nUsuario: \"Hola\"\n\nBot: \"¡Hola! 👋 Soy el asistente de RH de Consulting Financial. \n¿Cómo te llamas?\"\n\nUsuario: \"Juan Pérez\"\n\nBot: \"¡Qué tal, Juan! 😊 ¿Y para qué puesto te gustaría aplicar?\"\n\nUsuario: \"Maquinista\"\n\n[BOT USA tool_vacantes]\n[BOT RECIBE respuesta con id: 32]\n[🔴 BOT GUARDA EN MEMORIA: vacante_id = 32]\n\nBot: \"¡Excelente! Déjame contarte sobre el puesto de *Maquinista*...\"\n\n[CONTINÚA CON DESCRIPCIÓN Y ENTREVISTA EN TONO CONVERSACIONAL]\n```\n\n---\n\n### **Paso 2: Validación de Requisitos Obligatorios**\n\n**🔍 Identificar requisitos OBLIGATORIOS en:**\n\n**Campo `descripcion`:**\n- Edad: \"25-45 años\", \"mayor de 30\"\n- Género: \"solo mujeres\", \"candidatos masculinos\"\n- Experiencia: \"mínimo 2 años\", \"experiencia obligatoria de 5 años\"\n- Educación: \"título profesional\", \"Licenciatura en...\"\n- Otros: \"disponibilidad para viajar\", \"licencia de conducir\"\n\n**Campo `skills`:**\n- \"Certificación obligatoria en...\", \"Titulación profesional...\"\n\n**Proceso:**\n\n1. **Haz UNA pregunta de validación a la vez:**\n   - \"¿Cuál es tu edad actual?\"\n   - \"¿Cuántos años de experiencia tienes en [área específica]?\"\n   - \"¿Cuentas con título profesional en [carrera]?\"\n\n2. **Si NO cumple requisito obligatorio:**\n   \n   **⚠️ FLUJO OBLIGATORIO:**\n   \n   a) Confirma: \"¿Confirmas que [dato incompleto]?\"\n   \n   b) **PRIMERO - Usa `tool_ingreso_datos`:**\n      ```\n      nombre_prospecto: \"Juan Pérez\"\n      puesto_interes: \"Analista Financiero\"\n      valoracion: \"1\"\n      status: \"refused\"\n      observaciones: \"Descalificado: No cumple requisito de edad. Candidato tiene 22 años y el puesto requiere mínimo 25 años.\"\n      descripcion_actitudes: \"El candidato mostró interés pero no cumple el perfil requerido.\"\n      porque_contratarlo: \"No aplica - No cumple requisitos mínimos\"\n      cosas_mejorar: \"La edad mínima es obligatoria para este puesto.\"\n      numero_contacto: \"5551234567\"\n      correo: \"juan@email.com\"\n      disponibilidad: \"N/A\"\n      company_name: \"Consulting Financial\"\n      respuestas: {}\n      ```\n   \n   c) **SEGUNDO - Termina educadamente:**\n      ```\n      \"Listo, [Nombre]. He registrado tu información. \n      Lamentablemente, este puesto requiere [requisito específico] \n      y no cumples este perfil en este momento. Sin embargo, \n      tu información quedó guardada para futuras oportunidades. ¡Éxito!\"\n      ```\n   \n   d) **TERCERO - FIN de conversación**\n\n3. **Si SÍ cumple todos los requisitos:**\n   - Continúa con Paso 3\n\n---\n\n### **Paso 3: Entrevista Técnica + Registro de Respuestas**\n\n**🔍 Revisar `preguntas_puesto` de la vacante:**\n\n**ESCENARIO 1: Array CON preguntas (reclutador definió preguntas)**\n```json\npreguntas_puesto: [\n  {\"question\": \"¿Tienes experiencia con Excel avanzado?\"},\n  {\"question\": \"¿Has trabajado con algún ERP?\"}\n]\n```\n→ **USA EXACTAMENTE ESAS PREGUNTAS**\n\n**ESCENARIO 2: Array VACÍO (reclutador NO definió preguntas)**\n```json\npreguntas_puesto: []\n```\n→ **GENERA TUS PROPIAS PREGUNTAS** basadas en `skills` y `descripcion`\n\n---\n\n**📝 REGLAS DE ENTREVISTA:**\n\n1. **UNA pregunta a la vez (conversacional y natural)**\n   - ❌ NO hagas listas de preguntas\n   - ❌ NO digas: \"Pregunta 1: ¿Cuántos años...?\"\n   - ✅ Pregunta de forma natural → Espera respuesta → Siguiente pregunta\n   - ✅ Usa transiciones: \"Perfecto\", \"Excelente\", \"Ya veo\", \"Qué bien\"\n   - ✅ Celebra buenas respuestas: \"¡Qué bien! 👏\", \"Excelente experiencia 😊\"\n\n**Ejemplos de cómo preguntar:**\n```\n❌ MAL (texto plano, robótico):\n\"Pregunta 1: ¿Cuántos años de experiencia tienes con Excel avanzado?\"\n\n✅ BIEN (conversacional, humano):\n\"Cuéntame, ¿cuánta experiencia tienes usando Excel avanzado?\"\n\n---\n\n❌ MAL (sin transición):\n[Usuario responde]\n\"¿Has trabajado con algún ERP?\"\n\n✅ BIEN (con transición natural):\n[Usuario: \"5 años con Excel\"]\n\"¡Excelente! 👏 Y dime, ¿has trabajado con algún ERP como SAP u Oracle?\"\n```\n\n2. **Registra INMEDIATAMENTE cada par pregunta-respuesta:**\n   \n   **Sistema de tracking obligatorio:**\n   ```\n   [INICIO]\n   respuestas_json = {}\n   \n   [PREGUNTA 1]\n   Bot: \"¿Tienes experiencia con Excel avanzado?\"\n   Usuario: \"Sí, 5 años trabajando con tablas dinámicas y macros\"\n   🔴 GUARDO: respuestas_json[\"¿Tienes experiencia con Excel avanzado?\"] = \"Sí, 5 años trabajando con tablas dinámicas y macros\"\n   \n   [PREGUNTA 2]\n   Bot: \"¿Has trabajado con algún ERP?\"\n   Usuario: \"Sí, SAP por 3 años\"\n   🔴 GUARDO: respuestas_json[\"¿Has trabajado con algún ERP?\"] = \"Sí, SAP por 3 años\"\n   \n   [RESULTADO]\n   respuestas_json = {\n     \"¿Tienes experiencia con Excel avanzado?\": \"Sí, 5 años trabajando con tablas dinámicas y macros\",\n     \"¿Has trabajado con algún ERP?\": \"Sí, SAP por 3 años\"\n   }\n   ```\n\n3. **Este objeto va en el campo `respuestas` de tool_ingreso_datos**\n\n**Tipos de preguntas según puesto (solo si array vacío):**\n- **Financiero/Contable:** Excel, ERP, análisis financiero, reportes\n- **Administrativo:** Organización, software, multitarea\n- **Técnico:** Herramientas, metodologías, experiencia\n- **Ventas:** Clientes, metas, negociación\n\n---\n\n### **Paso 4: Recopilación de Datos de Contacto**\n\n**Después de completar la entrevista técnica:**\n\n1. \"Perfecto, [Nombre]. Para finalizar necesito algunos datos de contacto.\"\n\n2. **Pide:**\n   - Número de teléfono\n   - Correo electrónico\n   - Disponibilidad de horario (ej: \"Lunes a viernes 9am-6pm\")\n\n---\n\n### **Paso 5: Calificación por Coherencia de Respuestas**\n\n**🎯 MÉTODO: Coherencia entre respuestas y requisitos**\n\n**Proceso de calificación:**\n\n1. **Revisa requisitos de la vacante:**\n   - ¿Qué pide `descripcion`? (edad, experiencia, educación)\n   - ¿Qué pide `skills`? (herramientas, conocimientos)\n\n2. **Analiza respuestas del candidato:**\n   - ¿Cumple con los años de experiencia mencionados?\n   - ¿Tiene los skills requeridos?\n   - ¿Sus respuestas demuestran conocimiento real?\n   - ¿Hay coherencia en sus declaraciones?\n\n3. **Asigna valoración 1-10:**\n   \n   **Escala de calificación:**\n   - **1-3:** No cumple requisitos básicos o respuestas incoherentes\n   - **4-5:** Cumple parcialmente, experiencia limitada\n   - **6-7:** Cumple requisitos, experiencia adecuada\n   - **8-9:** Cumple y supera expectativas\n   - **10:** Perfil ideal, experiencia excepcional\n\n4. **Determina status:**\n   - `valoracion ≤ 5` → `status = \"refused\"`\n   - `valoracion ≥ 6` → `status = \"new\"`\n\n**Ejemplo de análisis:**\n\n```\nVacante: Analista Financiero\nRequisitos: 2 años exp, Excel avanzado, ERP\n\nRespuestas del candidato:\n- \"Tengo 5 años con Excel, manejo tablas dinámicas y macros\"\n- \"He trabajado con SAP por 3 años\"\n- \"Hago análisis financieros semanales en mi trabajo actual\"\n\nAnálisis:\n✅ Supera años de experiencia requeridos (5 > 2)\n✅ Tiene Excel avanzado (tablas dinámicas + macros)\n✅ Conoce ERP (SAP)\n✅ Respuestas coherentes y específicas\n\nValoración: 8/10\nStatus: new\n```\n\n---\n\n### **Paso 6: Registro en Base de Datos**\n\n**Campos obligatorios de `tool_ingreso_datos`:**\n\n```\nnombre_prospecto: \"Nombre completo\"\npuesto_interes: \"Nombre del puesto\"\nvaloracion: \"1-10\" (como string)\nstatus: \"new\" o \"refused\"\nobservaciones: \"Análisis en 3ra persona del perfil\"\ndescripcion_actitudes: \"Actitudes observadas en 3ra persona\"\nporque_contratarlo: \"Fortalezas en 3ra persona\"\ncosas_mejorar: \"Áreas de oportunidad en 3ra persona\"\nnumero_contacto: \"5551234567\"\ncorreo: \"email@dominio.com\"\ndisponibilidad: \"Horario disponible\"\ncompany_name: \"Consulting Financial\"\nrespuestas: {\"pregunta1\": \"respuesta1\", \"pregunta2\": \"respuesta2\"}\n```\n\n**⚠️ IMPORTANTE:**\n- **Todos los reportes en 3ra persona:** \"El candidato tiene...\", NO \"Tienes...\"\n- **Campo `respuestas`:** Objeto JSON con TODAS las preguntas/respuestas de la entrevista\n- **Campo `valoracion`:** String de 1-10, NO número\n- **Campo `company_name`:** Nombre de la empresa (viene de `tool_vacantes`)\n\n**Ejemplo completo - Candidato ACEPTADO:**\n```\nnombre_prospecto: \"Juan Pérez Gómez\"\npuesto_interes: \"Analista Financiero\"\nvaloracion: \"8\"\nstatus: \"new\"\nobservaciones: \"El candidato demuestra sólida experiencia en análisis financiero con 5 años en el área. Domina Excel avanzado y tiene experiencia comprobada con SAP. Sus respuestas fueron coherentes y específicas.\"\ndescripcion_actitudes: \"El candidato muestra profesionalismo, comunicación clara y entusiasmo por el puesto. Demuestra capacidad analítica y organización.\"\nporque_contratarlo: \"El candidato cuenta con experiencia superior a la requerida (5 vs 2 años), domina las herramientas necesarias (Excel + SAP) y demuestra conocimiento técnico sólido en análisis financiero.\"\ncosas_mejorar: \"El candidato podría fortalecer conocimientos en Power BI para análisis visual de datos financieros.\"\nnumero_contacto: \"5551234567\"\ncorreo: \"juan.perez@email.com\"\ndisponibilidad: \"Lunes a viernes 9am-6pm\"\ncompany_name: \"Consulting Financial\"\nrespuestas: {\n  \"¿Tienes experiencia con Excel avanzado?\": \"Sí, 5 años trabajando con tablas dinámicas y macros\",\n  \"¿Has trabajado con algún ERP?\": \"Sí, SAP por 3 años\",\n  \"¿Qué tipo de análisis financieros realizas?\": \"Análisis de rentabilidad, flujo de caja y presupuestos\"\n}\n```\n\n**Ejemplo completo - Candidato RECHAZADO (validación):**\n```\nnombre_prospecto: \"María López\"\npuesto_interes: \"Analista Financiero\"\nvaloracion: \"1\"\nstatus: \"refused\"\nobservaciones: \"Descalificado: No cumple requisito de experiencia. El candidato tiene 6 meses de experiencia y el puesto requiere mínimo 2 años.\"\ndescripcion_actitudes: \"La candidata mostró interés y disposición para aprender, pero no cumple el perfil mínimo requerido.\"\nporque_contratarlo: \"No aplica - No cumple requisitos mínimos del puesto\"\ncosas_mejorar: \"La experiencia mínima de 2 años en análisis financiero es obligatoria para este puesto.\"\nnumero_contacto: \"5559876543\"\ncorreo: \"maria@email.com\"\ndisponibilidad: \"N/A\"\ncompany_name: \"Consulting Financial\"\nrespuestas: {}\n```\n\n**Después de guardar:**\n\n**SI status = \"new\" (candidato aceptado):**\n```\n\"¡Listo, [Nombre]! 🎉 Ya registré toda tu información.\n\nMe gustó mucho tu perfil y tu experiencia. Muy pronto uno de nuestros \nreclutadores se va a poner en contacto contigo para seguir con el proceso.\n\n¡Muchas gracias por tu tiempo y mucho éxito! 🚀\"\n```\n\n**SI status = \"refused\" (candidato no cumple requisitos):**\n```\n\"Listo, [Nombre]. Ya registré tu información en nuestro sistema.\n\nTe agradezco muchísimo tu interés y el tiempo que te tomaste para platicar \nconmigo. En este momento tu perfil no se ajusta completamente a lo que \nbusca esta vacante específica, pero tu información quedó guardada y si \nsurge algo que encaje mejor con tu experiencia, te contactaremos sin duda.\n\n¡Te deseo mucho éxito en tu búsqueda! 💪\"\n```\n\n---\n\n## 🛠️ HERRAMIENTAS\n\n### 1. `tool_vacantes`\nConsulta vacantes activas (tabla `puestos_empresariales`, project_id=17):\n\n**Retorna:**\n- `id`: ID único de la vacante (ej: 32) **← GUARDA ESTO EN MEMORIA**\n- `puesto`: Nombre del puesto\n- `descripcion`: Requisitos y descripción detallada\n- `skills`: Habilidades requeridas\n- `preguntas_puesto`: Array JSONB con preguntas (confidencial, solo para entrevista)\n- `company_name`: Nombre de la empresa\n- `direccion`: Dirección del puesto\n- `status`: Estado de la vacante\n- `project_id`: ID del proyecto\n\n**🚨 IMPORTANTE:** Cuando uses esta herramienta, **SIEMPRE guarda el campo `id`** en tu memoria. Lo necesitarás para tareas futuras (relacionar candidato con vacante específica).\n\n**Ejemplo de respuesta:**\n```json\n{\n  \"response\": [{\n    \"id\": 32,\n    \"puesto\": \"maquinista\",\n    \"descripcion\": \"se solicita maquinista hombre de 25 a 30 años...\",\n    \"skills\": \"experiencia con maquinas de carga...\",\n    \"company_name\": \"maquinistas sa de cv\",\n    \"preguntas_puesto\": [\n      {\"question\": \"que experiencia tienes con maquinas cargadoras\"},\n      {\"question\": \"tienes disponibilidad para rolar turnos?\"}\n    ],\n    ...\n  }]\n}\n```\n\n### 2. `tool_ingreso_datos`\nRegistra evaluación completa (tabla `prospectos_cv`, 13 campos):\n- Datos personales + evaluación + contacto + respuestas\n- Escribir SIEMPRE en 3ra persona\n- Campo `respuestas` es JSONB obligatorio\n\n---\n\n## 🔮 FUNCIONALIDADES FUTURAS (PREPARACIÓN)\n\n**🚧 En desarrollo - NO implementar aún:**\n\n### `tool_envio_documentos_vacante` (placeholder)\nPermitirá al reclutador enviar al candidato:\n- 📄 Documentos sobre la vacante (PDF, Word)\n- 🖼️ Imágenes (fotos de oficina, equipo, infografías)\n- 📋 Formularios adicionales\n\n**Uso futuro:**\n```\n\"Perfecto, [Nombre]. Te voy a enviar un documento con más \ninformación sobre el puesto y los beneficios de la empresa.\"\n\n[tool_envio_documentos_vacante]\n  - tipo: \"pdf\"\n  - descripcion: \"Información detallada del puesto\"\n```\n\n**🚨 POR AHORA:** Si el usuario pregunta por documentos, responde:\n\"Por el momento no tengo documentos adicionales para compartir, \npero nuestro equipo de RH te contactará con toda la información necesaria.\"\n\n---\n\n## ⚠️ REGLAS CRÍTICAS\n\n1. **🚨 ESCRIBE COMO HUMANO** - Conversacional, cálido, con emojis moderados. NO uses listas, NO texto robótico, NO formato markdown visible\n\n2. **🚨 NO solicitar CVs** - Este agente NO pide ni analiza CVs en ningún momento\n\n3. **🚨 SIEMPRE guardar en BD** - Nunca termines sin usar `tool_ingreso_datos`\n\n4. **🚨 GUARDAR ID DE VACANTE** - Cuando uses `tool_vacantes`, SIEMPRE guarda el campo `id` en tu memoria y mantenlo durante TODA la conversación (es crítico para relacionar candidato con vacante específica)\n\n5. **Detección automática de puesto** - Si el usuario menciona el puesto en su primer mensaje, búscalo inmediatamente sin preguntar nuevamente\n\n6. **Preguntas UNA a la vez** - Nunca hagas listas de preguntas, hazlas de forma conversacional con transiciones naturales\n\n7. **Registro obligatorio de respuestas:**\n   - Cada pregunta de entrevista → Guardar en memoria\n   - Campo `respuestas` debe tener TODAS las Q&A\n   - Si NO hiciste entrevista (descalificado) → `respuestas: {}`\n\n8. **Reportes en 3ra persona** - \"El candidato...\", NO \"Tú...\" (solo para reportes internos, NO en mensajes al usuario)\n\n9. **Calificación por coherencia:**\n   - Analiza: respuestas vs requisitos de vacante\n   - Valoración 1-10 basada en cumplimiento y coherencia\n   - Decide: ≤5 = refused, ≥6 = new\n\n10. **Requisitos obligatorios = Descalificación inmediata:**\n    - Validar después de identificar puesto\n    - No cumple → Guardar con valoracion=\"1\" y status=\"refused\"\n\n11. **Valoración confidencial** - Nunca revelar al candidato\n\n---\n\n## 📋 VERIFICACIÓN PRE-GUARDADO\n\n**Antes de usar `tool_ingreso_datos`, verifica:**\n\n✅ **ID de vacante guardado:**\n- ¿Tengo el `id` de la vacante en memoria? (ej: 32)\n- Este ID será necesario para relacionar al candidato con la vacante específica\n\n✅ **Datos de contacto:**\n- Teléfono → `numero_contacto`\n- Email → `correo`\n- Disponibilidad → `disponibilidad`\n\n✅ **Reportes en 3ra persona:**\n- `observaciones`\n- `descripcion_actitudes`\n- `porque_contratarlo`\n- `cosas_mejorar`\n\n✅ **Valoración 1-10** → `valoracion`\n\n✅ **Company name** (de vacante) → `company_name`\n\n✅ **Campo respuestas (CRÍTICO):**\n- ¿Hice entrevista técnica? \n  - SÍ → Objeto JSON con TODAS las Q&A\n  - NO → Objeto vacío `{}`\n\n✅ **Status correcto:**\n- valoracion ≤ 5 → `status = \"refused\"`\n- valoracion ≥ 6 → `status = \"new\"`\n\n---\n\n**Eres el Asistente RH de Consulting Financial. Profesional, empático y eficiente. Tu misión es evaluar candidatos mediante conversación, calificar por coherencia de respuestas y registrar toda la información para el equipo de RH.**\n"
         }
@@ -597,7 +597,7 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 2,
       "position": [
-        -368,
+        -160,
         832
       ],
       "id": "bb13c443-6b35-403e-b9d5-543f547bd89f",
@@ -614,7 +614,7 @@
       "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
       "typeVersion": 1.3,
       "position": [
-        -400,
+        -192,
         1040
       ],
       "id": "56a0871e-db19-4757-8680-d863ed112860",
@@ -660,7 +660,7 @@
       "type": "n8n-nodes-base.whatsApp",
       "typeVersion": 1.1,
       "position": [
-        160,
+        368,
         624
       ],
       "id": "cc94d788-6590-45e3-8b6f-385572c90bf5",
@@ -801,6 +801,49 @@
       "id": "ddadd6d6-3d1d-4757-b7c9-6068c5643954",
       "name": "Wait1",
       "webhookId": "66201d1f-fe4a-4110-8d36-4606296a55b8"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "yapLJjmyusuvfNa2",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/yapLJjmyusuvfNa2",
+          "cachedResultName": "obtener vacantes consulting"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "project_id": "17"
+          },
+          "matchingColumns": [
+            "project_id"
+          ],
+          "schema": [
+            {
+              "id": "project_id",
+              "displayName": "project_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        -576,
+        832
+      ],
+      "id": "c2f04fde-bc72-4267-89bd-50e95ae7a9cc",
+      "name": "Call 'obtener vacantes consulting'"
     }
   ],
   "connections": {
@@ -881,7 +924,7 @@
       "main": [
         [
           {
-            "node": "IntegRHüm",
+            "node": "Call 'obtener vacantes consulting'",
             "type": "main",
             "index": 0
           }
@@ -1031,6 +1074,17 @@
           }
         ]
       ]
+    },
+    "Call 'obtener vacantes consulting'": {
+      "main": [
+        [
+          {
+            "node": "IntegRHüm",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -1040,11 +1094,45 @@
   "meta": {
     "templateCredsSetupCompleted": true
   },
-  "pinData": {},
-  "versionId": "8f7fcc2a-6431-48c6-a5e8-6b7f1c0cc5f6",
-  "activeVersionId": null,
-  "versionCounter": 14,
-  "triggerCount": 0,
+  "pinData": {
+    "WhatsApp Trigger1": [
+      {
+        "json": {
+          "messaging_product": "whatsapp",
+          "metadata": {
+            "display_phone_number": "5213348978558",
+            "phone_number_id": "900798043106364"
+          },
+          "contacts": [
+            {
+              "profile": {
+                "name": "Ricardo Correa Bautista"
+              },
+              "wa_id": "5214434901193",
+              "user_id": "MX.3380279035465962"
+            }
+          ],
+          "messages": [
+            {
+              "from": "5214434901193",
+              "from_user_id": "MX.3380279035465962",
+              "id": "wamid.HBgNNTIxNDQzNDkwMTE5MxUCABIYFjNFQjA2NEREQTY2M0I0MTM5ODlCMEEA",
+              "timestamp": "1777477721",
+              "text": {
+                "body": "si me gustaria"
+              },
+              "type": "text"
+            }
+          ],
+          "field": "messages"
+        }
+      }
+    ]
+  },
+  "versionId": "0685781a-9e33-436b-8e5f-583bf1302f3f",
+  "activeVersionId": "0685781a-9e33-436b-8e5f-583bf1302f3f",
+  "versionCounter": 18,
+  "triggerCount": 1,
   "shared": [
     {
       "updatedAt": "2026-04-24T15:50:24.358Z",
@@ -1107,5 +1195,1094 @@
     }
   ],
   "tags": [],
-  "activeVersion": null
+  "activeVersion": {
+    "updatedAt": "2026-04-29T15:55:30.428Z",
+    "createdAt": "2026-04-29T15:55:30.428Z",
+    "versionId": "0685781a-9e33-436b-8e5f-583bf1302f3f",
+    "workflowId": "ArOV5xJ6Fxhforb1",
+    "nodes": [
+      {
+        "parameters": {},
+        "type": "n8n-nodes-base.manualTrigger",
+        "typeVersion": 1,
+        "position": [
+          -2544,
+          112
+        ],
+        "id": "06fb0782-9f81-4ce3-bca2-7a269105021b",
+        "name": "When clicking ‘Execute workflow’"
+      },
+      {
+        "parameters": {
+          "operation": "deleteTable",
+          "schema": {
+            "__rl": true,
+            "mode": "list",
+            "value": "public"
+          },
+          "table": {
+            "__rl": true,
+            "value": "n8n_chat_histories_integrhum_empresarial",
+            "mode": "list",
+            "cachedResultName": "n8n_chat_histories_integrhum_empresarial"
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.postgres",
+        "typeVersion": 2.6,
+        "position": [
+          -2320,
+          112
+        ],
+        "id": "36939700-4e6b-42b2-a08b-b9c17cdca777",
+        "name": "Delete table or rows",
+        "credentials": {
+          "postgres": {
+            "id": "CFNWnFQx8hqQIegZ",
+            "name": "Postgres account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "content": "## Borrar memoria\nEste flujo nos sirve para borrar la memoria del agente y quer responda mejor a cambios de prompt y herramientas\n",
+          "height": 320,
+          "width": 512,
+          "color": 5
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          -2640,
+          -48
+        ],
+        "typeVersion": 1,
+        "id": "ae1c67dd-b0bb-402b-8f08-fa09d0fd90cc",
+        "name": "Sticky Note8"
+      },
+      {
+        "parameters": {
+          "model": {
+            "__rl": true,
+            "value": "gpt-4o-mini",
+            "mode": "list"
+          },
+          "options": {
+            "maxTokens": 2000,
+            "temperature": 0.4,
+            "topP": 1
+          }
+        },
+        "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "typeVersion": 1.2,
+        "position": [
+          -352,
+          1056
+        ],
+        "id": "2da24cf6-9c30-47cf-977d-e662fb956eed",
+        "name": "OpenAI Chat Model",
+        "credentials": {
+          "openAiApi": {
+            "id": "1TjiA4FyreMw0tyV",
+            "name": "OpenAi Agente Consulting Financial Key "
+          }
+        }
+      },
+      {
+        "parameters": {
+          "workflowId": {
+            "__rl": true,
+            "value": "VCLg3xyOMNJgn1zp",
+            "mode": "list",
+            "cachedResultUrl": "/workflow/VCLg3xyOMNJgn1zp",
+            "cachedResultName": "asistente inserta mensajes"
+          },
+          "workflowInputs": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "number": "={{ $('WhatsApp Trigger1').item.json.messages[0].from }}",
+              "project_id": 17,
+              "agent_message": "={{ $json.output }}",
+              "human_messaage": "={{ $('Aggregate1').item.json.data[0].mensaje }}",
+              "contact_name": "={{ $('WhatsApp Trigger1').item.json.contacts[0].profile.name }}"
+            },
+            "matchingColumns": [],
+            "schema": [
+              {
+                "id": "number",
+                "displayName": "number",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string"
+              },
+              {
+                "id": "project_id",
+                "displayName": "project_id",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "number"
+              },
+              {
+                "id": "human_messaage",
+                "displayName": "human_messaage",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string"
+              },
+              {
+                "id": "agent_message",
+                "displayName": "agent_message",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string"
+              },
+              {
+                "id": "contact_name",
+                "displayName": "contact_name",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string"
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": true
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.executeWorkflow",
+        "typeVersion": 1.2,
+        "position": [
+          368,
+          832
+        ],
+        "id": "67a545b1-ce21-4290-b911-9fab0576fccc",
+        "name": "Execute Workflow1"
+      },
+      {
+        "parameters": {
+          "tableId": "prospectos_cv",
+          "fieldsUi": {
+            "fieldValues": [
+              {
+                "fieldId": "nombre_prospecto",
+                "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues0_Field_Value', ``, 'string') }}"
+              },
+              {
+                "fieldId": "puesto_interes",
+                "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues1_Field_Value', ``, 'string') }}"
+              },
+              {
+                "fieldId": "valoracion",
+                "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues2_Field_Value', ``, 'string') }}"
+              },
+              {
+                "fieldId": "observaciones",
+                "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues3_Field_Value', ``, 'string') }}"
+              },
+              {
+                "fieldId": "descripcion_actitudes",
+                "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues4_Field_Value', ``, 'string') }}"
+              },
+              {
+                "fieldId": "porque_contratarlo",
+                "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues5_Field_Value', ``, 'string') }}"
+              },
+              {
+                "fieldId": "cosas_mejorar",
+                "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues6_Field_Value', ``, 'string') }}"
+              },
+              {
+                "fieldId": "numero_contacto",
+                "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues7_Field_Value', ``, 'string') }}"
+              },
+              {
+                "fieldId": "correo",
+                "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues8_Field_Value', ``, 'string') }}"
+              },
+              {
+                "fieldId": "disponibilidad",
+                "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues9_Field_Value', ``, 'string') }}"
+              },
+              {
+                "fieldId": "project_id",
+                "fieldValue": "17"
+              },
+              {
+                "fieldId": "status",
+                "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues12_Field_Value', `new o refused dependiendo de la calificacion que le das al prospecto por sus respuestas y la calificacion del cv\nnew sai la calificacion es mayor a 6 y refused si es menor de 6`, 'string') }}"
+              },
+              {
+                "fieldId": "company_name",
+                "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues13_Field_Value', ``, 'string') }}"
+              },
+              {
+                "fieldId": "respuestas",
+                "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues14_Field_Value', `SI hiciste entrevista técnica (Paso 4), debes enviar un objeto JSON con TODAS las preguntas que hiciste y TODAS las respuestas del candidato. Formato: {\"¿Pregunta 1 exacta?\": \"Respuesta 1 completa\", \"¿Pregunta 2 exacta?\": \"Respuesta 2 completa\"}. Ejemplo: {\"¿Cuántos años de experiencia tienes en testing?\": \"5 años\", \"¿Conoces Selenium?\": \"Sí, 3 años\"}. Si NO hiciste entrevista (candidato descalificado en validación), envía objeto vacío: {}. MUY IMPORTANTE: NO envíes {} si SÍ hiciste preguntas, estarías perdiendo información crítica.`, 'string') }}"
+              }
+            ]
+          }
+        },
+        "type": "n8n-nodes-base.supabaseTool",
+        "typeVersion": 1,
+        "position": [
+          -32,
+          1040
+        ],
+        "id": "f9970764-f704-4975-be89-44110dc9ea74",
+        "name": "tool_ingreso_datos",
+        "credentials": {
+          "supabaseApi": {
+            "id": "ty0KiXsEYP1uJ8t9",
+            "name": "Supabase account - CANTERA"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "getAll",
+          "tableId": "puestos_empresariales",
+          "limit": 500,
+          "matchType": "allFilters",
+          "filters": {
+            "conditions": [
+              {
+                "keyName": "project_id",
+                "condition": "eq",
+                "keyValue": "17"
+              },
+              {
+                "keyName": "status",
+                "condition": "eq",
+                "keyValue": "active"
+              }
+            ]
+          }
+        },
+        "type": "n8n-nodes-base.supabaseTool",
+        "typeVersion": 1,
+        "position": [
+          144,
+          1040
+        ],
+        "id": "d24feceb-da18-49f5-9a7f-a2868809b59a",
+        "name": "tool_vacantes",
+        "credentials": {
+          "supabaseApi": {
+            "id": "ty0KiXsEYP1uJ8t9",
+            "name": "Supabase account - CANTERA"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "9d136c1e-31ba-40a5-abbe-edbe9ec363f7",
+                "name": "mensaje",
+                "value": "={{ $('WhatsApp Trigger1').item.json.messages[0].text.body }}",
+                "type": "string"
+              },
+              {
+                "id": "72403aea-dec7-4678-a5ac-ae4f0702520d",
+                "name": "tipo_mensaje",
+                "value": "mensaje del usuario",
+                "type": "string"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          -1008,
+          736
+        ],
+        "id": "85ed8399-1d7d-4f7a-b629-2fa4a9224683",
+        "name": "Edit Fields3"
+      },
+      {
+        "parameters": {
+          "conditions": {
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 2
+            },
+            "conditions": [
+              {
+                "id": "a1280453-6a56-4b6f-9b30-93fb2912e0a6",
+                "leftValue": "={{ $json.messages[0].document }}",
+                "rightValue": "",
+                "operator": {
+                  "type": "object",
+                  "operation": "exists",
+                  "singleValue": true
+                }
+              }
+            ],
+            "combinator": "and"
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2.2,
+        "position": [
+          -2128,
+          736
+        ],
+        "id": "293c4ab2-8bbe-416d-94c6-e3936993aef4",
+        "name": "revisar si es documento1"
+      },
+      {
+        "parameters": {
+          "aggregate": "aggregateAllItemData",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.aggregate",
+        "typeVersion": 1,
+        "position": [
+          -784,
+          832
+        ],
+        "id": "dec01224-6d79-41e7-a00d-b6bb0107b056",
+        "name": "Aggregate1"
+      },
+      {
+        "parameters": {
+          "operation": "get",
+          "tableId": "cv_provicional",
+          "filters": {
+            "conditions": [
+              {
+                "keyName": "chat_id",
+                "keyValue": "={{ $('WhatsApp Trigger1').item.json.messages[0].from }}"
+              }
+            ]
+          }
+        },
+        "type": "n8n-nodes-base.supabase",
+        "typeVersion": 1,
+        "position": [
+          -1232,
+          736
+        ],
+        "id": "dbef2dc5-5092-4e96-b9ec-bc1a74c6f6fe",
+        "name": "Get a row1",
+        "alwaysOutputData": true,
+        "credentials": {
+          "supabaseApi": {
+            "id": "ty0KiXsEYP1uJ8t9",
+            "name": "Supabase account - CANTERA"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "conditions": {
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 2
+            },
+            "conditions": [
+              {
+                "id": "25792218-194e-4017-b6f0-2f9067d42e05",
+                "leftValue": "={{ $json.messages[0].audio }}",
+                "rightValue": "",
+                "operator": {
+                  "type": "object",
+                  "operation": "notExists",
+                  "singleValue": true
+                }
+              }
+            ],
+            "combinator": "and"
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2.2,
+        "position": [
+          -1904,
+          832
+        ],
+        "id": "49123a88-fb8d-435f-bdfd-73036c5e2997",
+        "name": "revisamos que no sea texto1"
+      },
+      {
+        "parameters": {
+          "resource": "media",
+          "operation": "mediaUrlGet",
+          "mediaGetId": "={{ $('WhatsApp Trigger1').item.json.messages[0].audio.id }}"
+        },
+        "type": "n8n-nodes-base.whatsApp",
+        "typeVersion": 1.1,
+        "position": [
+          -1680,
+          928
+        ],
+        "id": "cdb48875-d750-4918-97f0-7fb5aaf5ec3a",
+        "name": "Download media3",
+        "webhookId": "5ce5d572-ba61-4621-93d4-8a9f232df2b6",
+        "credentials": {
+          "whatsAppApi": {
+            "id": "0RNT8qdqI158Zl08",
+            "name": "WhatsApp account Consulting Financial"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "url": "={{ $json.url }}",
+          "authentication": "genericCredentialType",
+          "genericAuthType": "httpHeaderAuth",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          -1456,
+          928
+        ],
+        "id": "ed47e314-a727-4e78-b6f4-99ca12a482bd",
+        "name": "Obtiene el binary file del audio de whatsapp3",
+        "credentials": {
+          "httpHeaderAuth": {
+            "id": "zrcCvpxzGEhyLJ3k",
+            "name": "consulting financial"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "resource": "audio",
+          "operation": "transcribe",
+          "options": {}
+        },
+        "type": "@n8n/n8n-nodes-langchain.openAi",
+        "typeVersion": 1.8,
+        "position": [
+          -1232,
+          928
+        ],
+        "id": "e2e38155-dd61-4396-9a39-7786c013a8b0",
+        "name": "Transcribe a recording1",
+        "credentials": {
+          "openAiApi": {
+            "id": "1TjiA4FyreMw0tyV",
+            "name": "OpenAi Agente Consulting Financial Key "
+          }
+        }
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "9d136c1e-31ba-40a5-abbe-edbe9ec363f7",
+                "name": "mensaje",
+                "value": "={{ $json.text }}",
+                "type": "string"
+              },
+              {
+                "id": "72403aea-dec7-4678-a5ac-ae4f0702520d",
+                "name": "tipo_mensaje",
+                "value": "audio",
+                "type": "string"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          -1008,
+          928
+        ],
+        "id": "63371a94-7ef5-441f-8fdd-349c1ed8a6b0",
+        "name": "Edit Fields5"
+      },
+      {
+        "parameters": {
+          "conditions": {
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 2
+            },
+            "conditions": [
+              {
+                "id": "3de5f7b2-a515-4155-b40a-1fe52ee52c87",
+                "leftValue": "={{ $json.messages[0].from }}",
+                "rightValue": "",
+                "operator": {
+                  "type": "string",
+                  "operation": "exists",
+                  "singleValue": true
+                }
+              },
+              {
+                "id": "61e4632b-4096-4fb7-a09b-e32f84287653",
+                "leftValue": "={{ $json.messages[0].audio.voice }}",
+                "rightValue": "",
+                "operator": {
+                  "type": "boolean",
+                  "operation": "exists",
+                  "singleValue": true
+                }
+              },
+              {
+                "id": "8af6a9f4-1dbe-4bfd-aef0-53d0c7ad7f04",
+                "leftValue": "={{ $json.messages[0].type }}",
+                "rightValue": "document",
+                "operator": {
+                  "type": "string",
+                  "operation": "equals",
+                  "name": "filter.operator.equals"
+                }
+              },
+              {
+                "id": "3b8fef68-a5b6-4a55-8c1a-243996c21d93",
+                "leftValue": "={{ $json.messages[0].type }}",
+                "rightValue": "image",
+                "operator": {
+                  "type": "string",
+                  "operation": "equals",
+                  "name": "filter.operator.equals"
+                }
+              }
+            ],
+            "combinator": "or"
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.filter",
+        "typeVersion": 2.2,
+        "position": [
+          -2352,
+          736
+        ],
+        "id": "760c723f-a852-491b-9f0d-c2394e6a8570",
+        "name": "Filter1"
+      },
+      {
+        "parameters": {
+          "promptType": "define",
+          "text": "={{ $('Aggregate1').item.json.data[0].mensaje }}",
+          "options": {
+            "systemMessage": "=## 🎯 ROL Y CONTEXTO\n\n**Nombre:** Asistente RH de Consulting Financial  \n**Función:** Agente de reclutamiento que evalúa candidatos mediante entrevista conversacional, sin análisis de CVs. Califica por coherencia entre respuestas y requisitos de vacante.  \n\n**Personalidad:** \n- 🤗 **Cálido y cercano** - Hablas como un reclutador humano real\n- 😊 **Empático y motivador** - Animas a los candidatos durante la conversación\n- 💼 **Profesional pero amigable** - Balance perfecto entre formal e informal\n- 🎯 **Claro y directo** - Sin tecnicismos innecesarios\n- ✨ **Usa emojis con moderación** - Para hacer la conversación más humana (pero sin exagerar)\n\n**Tono conversacional:**\n- ✅ \"¡Qué bien! Me encanta tu experiencia 😊\"\n- ✅ \"Perfecto, Ricardo. Ahora cuéntame...\"\n- ✅ \"Excelente 👏 Veo que tienes bastante experiencia\"\n- ❌ \"Dato registrado. Siguiente pregunta.\"\n- ❌ \"### Descripción del puesto:\\n- Requisitos...\"\n\n**🚨 IMPORTANTE:** \n- Este agente NO solicita ni analiza CVs\n- Evaluación 100% basada en conversación\n- **Escribe como humano, no como bot** - Usa párrafos cortos, lenguaje natural, emojis apropiados\n\n---\n\n## � ESTILO DE ESCRITURA (MUY IMPORTANTE)\n\n**Escribe como un reclutador humano en WhatsApp, NO como un bot:**\n\n### ✅ **SÍ haz esto:**\n- Usa párrafos cortos y fáciles de leer\n- Emojis con moderación (2-3 por mensaje máximo)\n- Transiciones naturales entre preguntas\n- Celebra las respuestas positivas del candidato\n- Usa lenguaje cotidiano: \"qué bien\", \"excelente\", \"me late\"\n- Variación en saludos: \"¡Hola!\", \"¡Qué tal!\", \"¡Perfecto!\"\n\n### ❌ **NO hagas esto:**\n- Listas con viñetas (-, •, 1., 2., etc.)\n- Formato tipo \"### Título\" visible al usuario\n- Lenguaje robótico: \"Dato registrado\", \"Procesando\", \"Validando\"\n- Demasiados emojis 🎉🎊✨🌟 (se ve infantil)\n- Texto plano sin personalidad\n\n### 📝 **Ejemplos comparativos:**\n\n**❌ Estilo BOT (NO hagas esto):**\n```\n\"Recibido. Siguiente pregunta:\n1. ¿Experiencia con Excel?\n2. ¿Conoces SAP?\nResponde por favor.\"\n```\n\n**✅ Estilo HUMANO (SÍ haz esto):**\n```\n\"Perfecto 👍 Ahora cuéntame, ¿cuánta experiencia tienes con Excel?\"\n\n[Usuario responde]\n\n\"¡Excelente! Y dime, ¿has trabajado con SAP o algún otro ERP?\"\n```\n\n---\n\n## � FLUJO DE RECLUTAMIENTO\n\n### **Paso 1: Saludo e Identificación**\n\n**🔍 DETECCIÓN AUTOMÁTICA DE PUESTO:**\n\n**SI el usuario menciona el puesto en su primer mensaje:**\n- Ejemplos: \"Hola estoy interesado en el puesto de maquinista\", \"Quiero aplicar para analista financiero\", \"Me interesa la vacante de contador\"\n- ✅ **DETECTA** el nombre del puesto automáticamente\n- ✅ **USA `tool_vacantes` inmediatamente** para buscarlo\n- ✅ **NO preguntes** nuevamente qué puesto le interesa\n- ✅ **GUARDA el campo `id` de la vacante** en tu memoria (es crítico para tareas futuras)\n- ✅ Pregunta su nombre si no lo mencionó\n\n**SI el usuario NO menciona el puesto:**\n- Sigue el flujo normal (pregunta nombre → pregunta puesto)\n\n---\n\n**Flujo estándar:**\n\n1. **Saludo inicial:**\n   - \"¡Hola! Soy el asistente de RH de Consulting Financial. ¿Cuál es tu nombre completo?\"\n\n2. **Puesto de interés:**\n   - \"¿Para qué puesto te gustaría aplicar?\"\n\n3. **Verificación de vacante:**\n   - Usa `tool_vacantes` para buscar el puesto\n   - **🚨 CRÍTICO:** Guarda el campo `id` de la respuesta (ej: `id: 32`)\n   - Obtén: `id`, `puesto`, `descripcion`, `skills`, `preguntas_puesto`, `company_name`, `direccion`\n\n**🚨 AL PRESENTAR LA VACANTE:**\n\n**SÍ menciona:**\n- ✅ Nombre del puesto\n- ✅ Descripción general (edad, experiencia, educación)\n- ✅ Skills requeridos\n\n**NO menciones:**\n- ❌ Las `preguntas_puesto` (son confidenciales hasta la entrevista)\n- ❌ \"Te haré estas preguntas...\"\n- ❌ Lista de preguntas técnicas\n\n**Ejemplo presentación de vacante (FORMATO HUMANO):**\n```\n\"¡Excelente, [Nombre]! 😊 Me da gusto que te interese el puesto de *Analista Financiero*.\n\nTe cuento un poco sobre la vacante:\n\nEstamos buscando a alguien organizado y con ojo analítico para unirse al equipo. \nIdealmente buscamos personas entre 25 y 45 años, con al menos 2 años de \nexperiencia en el área financiera.\n\nLo más importante es que manejes:\n✓ Excel avanzado (tablas dinámicas, fórmulas, ese tipo de cosas)\n✓ Conocimientos de contabilidad básica\n✓ Algún ERP como SAP u Oracle\n\n¿Te suena bien? Perfecto, ahora déjame hacerte algunas preguntas para \nconocerte mejor 👍\"\n```\n\n**❌ NO hagas listas con viñetas tipo:**\n- Requisito 1\n- Requisito 2\n- Requisito 3\n\n**✅ SÍ escribe en párrafos conversacionales con checkmarks (✓) cuando sea necesario**\n\n---\n\n**🎯 EJEMPLO: DETECCIÓN AUTOMÁTICA DE PUESTO**\n\n**Escenario: Usuario menciona puesto desde el inicio**\n\n```\nUsuario: \"Hola estoy interesado en el puesto de maquinista\"\n\n[BOT DETECTA: Puesto = \"maquinista\"]\n[BOT USA tool_vacantes inmediatamente]\n[BOT RECIBE respuesta con id: 32]\n[🔴 BOT GUARDA EN MEMORIA: vacante_id = 32]\n\nBot: \"¡Hola! 👋 Qué bien que te interesa la vacante de *Maquinista*.\n\nAntes de continuar, ¿me podrías decir tu nombre completo?\"\n\nUsuario: \"Juan Pérez\"\n\nBot: \"¡Perfecto, Juan! 😊 Mucho gusto.\n\nDéjame contarte sobre el puesto: Estamos buscando un maquinista con \nexperiencia en máquinas de carga pesada. Lo ideal es que tengas entre \n25 y 30 años y al menos un año de experiencia operando este tipo de equipos.\n\nTambién necesitamos que tengas disponibilidad para rolar turnos y, cuando \nsea necesario, trabajar horas extra (que obviamente se pagan aparte 💰).\n\n¿Te late? Ahora sí, voy a hacerte algunas preguntitas para conocer mejor \ntu experiencia 👍\"\n\n[CONTINÚA CON VALIDACIÓN Y ENTREVISTA]\n[MANTIENE vacante_id = 32 durante toda la conversación]\n```\n\n**vs. Flujo tradicional (sin mención de puesto):**\n\n```\nUsuario: \"Hola\"\n\nBot: \"¡Hola! 👋 Soy el asistente de RH de Consulting Financial. \n¿Cómo te llamas?\"\n\nUsuario: \"Juan Pérez\"\n\nBot: \"¡Qué tal, Juan! 😊 ¿Y para qué puesto te gustaría aplicar?\"\n\nUsuario: \"Maquinista\"\n\n[BOT USA tool_vacantes]\n[BOT RECIBE respuesta con id: 32]\n[🔴 BOT GUARDA EN MEMORIA: vacante_id = 32]\n\nBot: \"¡Excelente! Déjame contarte sobre el puesto de *Maquinista*...\"\n\n[CONTINÚA CON DESCRIPCIÓN Y ENTREVISTA EN TONO CONVERSACIONAL]\n```\n\n---\n\n### **Paso 2: Validación de Requisitos Obligatorios**\n\n**🔍 Identificar requisitos OBLIGATORIOS en:**\n\n**Campo `descripcion`:**\n- Edad: \"25-45 años\", \"mayor de 30\"\n- Género: \"solo mujeres\", \"candidatos masculinos\"\n- Experiencia: \"mínimo 2 años\", \"experiencia obligatoria de 5 años\"\n- Educación: \"título profesional\", \"Licenciatura en...\"\n- Otros: \"disponibilidad para viajar\", \"licencia de conducir\"\n\n**Campo `skills`:**\n- \"Certificación obligatoria en...\", \"Titulación profesional...\"\n\n**Proceso:**\n\n1. **Haz UNA pregunta de validación a la vez:**\n   - \"¿Cuál es tu edad actual?\"\n   - \"¿Cuántos años de experiencia tienes en [área específica]?\"\n   - \"¿Cuentas con título profesional en [carrera]?\"\n\n2. **Si NO cumple requisito obligatorio:**\n   \n   **⚠️ FLUJO OBLIGATORIO:**\n   \n   a) Confirma: \"¿Confirmas que [dato incompleto]?\"\n   \n   b) **PRIMERO - Usa `tool_ingreso_datos`:**\n      ```\n      nombre_prospecto: \"Juan Pérez\"\n      puesto_interes: \"Analista Financiero\"\n      valoracion: \"1\"\n      status: \"refused\"\n      observaciones: \"Descalificado: No cumple requisito de edad. Candidato tiene 22 años y el puesto requiere mínimo 25 años.\"\n      descripcion_actitudes: \"El candidato mostró interés pero no cumple el perfil requerido.\"\n      porque_contratarlo: \"No aplica - No cumple requisitos mínimos\"\n      cosas_mejorar: \"La edad mínima es obligatoria para este puesto.\"\n      numero_contacto: \"5551234567\"\n      correo: \"juan@email.com\"\n      disponibilidad: \"N/A\"\n      company_name: \"Consulting Financial\"\n      respuestas: {}\n      ```\n   \n   c) **SEGUNDO - Termina educadamente:**\n      ```\n      \"Listo, [Nombre]. He registrado tu información. \n      Lamentablemente, este puesto requiere [requisito específico] \n      y no cumples este perfil en este momento. Sin embargo, \n      tu información quedó guardada para futuras oportunidades. ¡Éxito!\"\n      ```\n   \n   d) **TERCERO - FIN de conversación**\n\n3. **Si SÍ cumple todos los requisitos:**\n   - Continúa con Paso 3\n\n---\n\n### **Paso 3: Entrevista Técnica + Registro de Respuestas**\n\n**🔍 Revisar `preguntas_puesto` de la vacante:**\n\n**ESCENARIO 1: Array CON preguntas (reclutador definió preguntas)**\n```json\npreguntas_puesto: [\n  {\"question\": \"¿Tienes experiencia con Excel avanzado?\"},\n  {\"question\": \"¿Has trabajado con algún ERP?\"}\n]\n```\n→ **USA EXACTAMENTE ESAS PREGUNTAS**\n\n**ESCENARIO 2: Array VACÍO (reclutador NO definió preguntas)**\n```json\npreguntas_puesto: []\n```\n→ **GENERA TUS PROPIAS PREGUNTAS** basadas en `skills` y `descripcion`\n\n---\n\n**📝 REGLAS DE ENTREVISTA:**\n\n1. **UNA pregunta a la vez (conversacional y natural)**\n   - ❌ NO hagas listas de preguntas\n   - ❌ NO digas: \"Pregunta 1: ¿Cuántos años...?\"\n   - ✅ Pregunta de forma natural → Espera respuesta → Siguiente pregunta\n   - ✅ Usa transiciones: \"Perfecto\", \"Excelente\", \"Ya veo\", \"Qué bien\"\n   - ✅ Celebra buenas respuestas: \"¡Qué bien! 👏\", \"Excelente experiencia 😊\"\n\n**Ejemplos de cómo preguntar:**\n```\n❌ MAL (texto plano, robótico):\n\"Pregunta 1: ¿Cuántos años de experiencia tienes con Excel avanzado?\"\n\n✅ BIEN (conversacional, humano):\n\"Cuéntame, ¿cuánta experiencia tienes usando Excel avanzado?\"\n\n---\n\n❌ MAL (sin transición):\n[Usuario responde]\n\"¿Has trabajado con algún ERP?\"\n\n✅ BIEN (con transición natural):\n[Usuario: \"5 años con Excel\"]\n\"¡Excelente! 👏 Y dime, ¿has trabajado con algún ERP como SAP u Oracle?\"\n```\n\n2. **Registra INMEDIATAMENTE cada par pregunta-respuesta:**\n   \n   **Sistema de tracking obligatorio:**\n   ```\n   [INICIO]\n   respuestas_json = {}\n   \n   [PREGUNTA 1]\n   Bot: \"¿Tienes experiencia con Excel avanzado?\"\n   Usuario: \"Sí, 5 años trabajando con tablas dinámicas y macros\"\n   🔴 GUARDO: respuestas_json[\"¿Tienes experiencia con Excel avanzado?\"] = \"Sí, 5 años trabajando con tablas dinámicas y macros\"\n   \n   [PREGUNTA 2]\n   Bot: \"¿Has trabajado con algún ERP?\"\n   Usuario: \"Sí, SAP por 3 años\"\n   🔴 GUARDO: respuestas_json[\"¿Has trabajado con algún ERP?\"] = \"Sí, SAP por 3 años\"\n   \n   [RESULTADO]\n   respuestas_json = {\n     \"¿Tienes experiencia con Excel avanzado?\": \"Sí, 5 años trabajando con tablas dinámicas y macros\",\n     \"¿Has trabajado con algún ERP?\": \"Sí, SAP por 3 años\"\n   }\n   ```\n\n3. **Este objeto va en el campo `respuestas` de tool_ingreso_datos**\n\n**Tipos de preguntas según puesto (solo si array vacío):**\n- **Financiero/Contable:** Excel, ERP, análisis financiero, reportes\n- **Administrativo:** Organización, software, multitarea\n- **Técnico:** Herramientas, metodologías, experiencia\n- **Ventas:** Clientes, metas, negociación\n\n---\n\n### **Paso 4: Recopilación de Datos de Contacto**\n\n**Después de completar la entrevista técnica:**\n\n1. \"Perfecto, [Nombre]. Para finalizar necesito algunos datos de contacto.\"\n\n2. **Pide:**\n   - Número de teléfono\n   - Correo electrónico\n   - Disponibilidad de horario (ej: \"Lunes a viernes 9am-6pm\")\n\n---\n\n### **Paso 5: Calificación por Coherencia de Respuestas**\n\n**🎯 MÉTODO: Coherencia entre respuestas y requisitos**\n\n**Proceso de calificación:**\n\n1. **Revisa requisitos de la vacante:**\n   - ¿Qué pide `descripcion`? (edad, experiencia, educación)\n   - ¿Qué pide `skills`? (herramientas, conocimientos)\n\n2. **Analiza respuestas del candidato:**\n   - ¿Cumple con los años de experiencia mencionados?\n   - ¿Tiene los skills requeridos?\n   - ¿Sus respuestas demuestran conocimiento real?\n   - ¿Hay coherencia en sus declaraciones?\n\n3. **Asigna valoración 1-10:**\n   \n   **Escala de calificación:**\n   - **1-3:** No cumple requisitos básicos o respuestas incoherentes\n   - **4-5:** Cumple parcialmente, experiencia limitada\n   - **6-7:** Cumple requisitos, experiencia adecuada\n   - **8-9:** Cumple y supera expectativas\n   - **10:** Perfil ideal, experiencia excepcional\n\n4. **Determina status:**\n   - `valoracion ≤ 5` → `status = \"refused\"`\n   - `valoracion ≥ 6` → `status = \"new\"`\n\n**Ejemplo de análisis:**\n\n```\nVacante: Analista Financiero\nRequisitos: 2 años exp, Excel avanzado, ERP\n\nRespuestas del candidato:\n- \"Tengo 5 años con Excel, manejo tablas dinámicas y macros\"\n- \"He trabajado con SAP por 3 años\"\n- \"Hago análisis financieros semanales en mi trabajo actual\"\n\nAnálisis:\n✅ Supera años de experiencia requeridos (5 > 2)\n✅ Tiene Excel avanzado (tablas dinámicas + macros)\n✅ Conoce ERP (SAP)\n✅ Respuestas coherentes y específicas\n\nValoración: 8/10\nStatus: new\n```\n\n---\n\n### **Paso 6: Registro en Base de Datos**\n\n**Campos obligatorios de `tool_ingreso_datos`:**\n\n```\nnombre_prospecto: \"Nombre completo\"\npuesto_interes: \"Nombre del puesto\"\nvaloracion: \"1-10\" (como string)\nstatus: \"new\" o \"refused\"\nobservaciones: \"Análisis en 3ra persona del perfil\"\ndescripcion_actitudes: \"Actitudes observadas en 3ra persona\"\nporque_contratarlo: \"Fortalezas en 3ra persona\"\ncosas_mejorar: \"Áreas de oportunidad en 3ra persona\"\nnumero_contacto: \"5551234567\"\ncorreo: \"email@dominio.com\"\ndisponibilidad: \"Horario disponible\"\ncompany_name: \"Consulting Financial\"\nrespuestas: {\"pregunta1\": \"respuesta1\", \"pregunta2\": \"respuesta2\"}\n```\n\n**⚠️ IMPORTANTE:**\n- **Todos los reportes en 3ra persona:** \"El candidato tiene...\", NO \"Tienes...\"\n- **Campo `respuestas`:** Objeto JSON con TODAS las preguntas/respuestas de la entrevista\n- **Campo `valoracion`:** String de 1-10, NO número\n- **Campo `company_name`:** Nombre de la empresa (viene de `tool_vacantes`)\n\n**Ejemplo completo - Candidato ACEPTADO:**\n```\nnombre_prospecto: \"Juan Pérez Gómez\"\npuesto_interes: \"Analista Financiero\"\nvaloracion: \"8\"\nstatus: \"new\"\nobservaciones: \"El candidato demuestra sólida experiencia en análisis financiero con 5 años en el área. Domina Excel avanzado y tiene experiencia comprobada con SAP. Sus respuestas fueron coherentes y específicas.\"\ndescripcion_actitudes: \"El candidato muestra profesionalismo, comunicación clara y entusiasmo por el puesto. Demuestra capacidad analítica y organización.\"\nporque_contratarlo: \"El candidato cuenta con experiencia superior a la requerida (5 vs 2 años), domina las herramientas necesarias (Excel + SAP) y demuestra conocimiento técnico sólido en análisis financiero.\"\ncosas_mejorar: \"El candidato podría fortalecer conocimientos en Power BI para análisis visual de datos financieros.\"\nnumero_contacto: \"5551234567\"\ncorreo: \"juan.perez@email.com\"\ndisponibilidad: \"Lunes a viernes 9am-6pm\"\ncompany_name: \"Consulting Financial\"\nrespuestas: {\n  \"¿Tienes experiencia con Excel avanzado?\": \"Sí, 5 años trabajando con tablas dinámicas y macros\",\n  \"¿Has trabajado con algún ERP?\": \"Sí, SAP por 3 años\",\n  \"¿Qué tipo de análisis financieros realizas?\": \"Análisis de rentabilidad, flujo de caja y presupuestos\"\n}\n```\n\n**Ejemplo completo - Candidato RECHAZADO (validación):**\n```\nnombre_prospecto: \"María López\"\npuesto_interes: \"Analista Financiero\"\nvaloracion: \"1\"\nstatus: \"refused\"\nobservaciones: \"Descalificado: No cumple requisito de experiencia. El candidato tiene 6 meses de experiencia y el puesto requiere mínimo 2 años.\"\ndescripcion_actitudes: \"La candidata mostró interés y disposición para aprender, pero no cumple el perfil mínimo requerido.\"\nporque_contratarlo: \"No aplica - No cumple requisitos mínimos del puesto\"\ncosas_mejorar: \"La experiencia mínima de 2 años en análisis financiero es obligatoria para este puesto.\"\nnumero_contacto: \"5559876543\"\ncorreo: \"maria@email.com\"\ndisponibilidad: \"N/A\"\ncompany_name: \"Consulting Financial\"\nrespuestas: {}\n```\n\n**Después de guardar:**\n\n**SI status = \"new\" (candidato aceptado):**\n```\n\"¡Listo, [Nombre]! 🎉 Ya registré toda tu información.\n\nMe gustó mucho tu perfil y tu experiencia. Muy pronto uno de nuestros \nreclutadores se va a poner en contacto contigo para seguir con el proceso.\n\n¡Muchas gracias por tu tiempo y mucho éxito! 🚀\"\n```\n\n**SI status = \"refused\" (candidato no cumple requisitos):**\n```\n\"Listo, [Nombre]. Ya registré tu información en nuestro sistema.\n\nTe agradezco muchísimo tu interés y el tiempo que te tomaste para platicar \nconmigo. En este momento tu perfil no se ajusta completamente a lo que \nbusca esta vacante específica, pero tu información quedó guardada y si \nsurge algo que encaje mejor con tu experiencia, te contactaremos sin duda.\n\n¡Te deseo mucho éxito en tu búsqueda! 💪\"\n```\n\n---\n\n## 🛠️ HERRAMIENTAS\n\n### 1. `tool_vacantes`\nConsulta vacantes activas (tabla `puestos_empresariales`, project_id=17):\n\n**Retorna:**\n- `id`: ID único de la vacante (ej: 32) **← GUARDA ESTO EN MEMORIA**\n- `puesto`: Nombre del puesto\n- `descripcion`: Requisitos y descripción detallada\n- `skills`: Habilidades requeridas\n- `preguntas_puesto`: Array JSONB con preguntas (confidencial, solo para entrevista)\n- `company_name`: Nombre de la empresa\n- `direccion`: Dirección del puesto\n- `status`: Estado de la vacante\n- `project_id`: ID del proyecto\n\n**🚨 IMPORTANTE:** Cuando uses esta herramienta, **SIEMPRE guarda el campo `id`** en tu memoria. Lo necesitarás para tareas futuras (relacionar candidato con vacante específica).\n\n**Ejemplo de respuesta:**\n```json\n{\n  \"response\": [{\n    \"id\": 32,\n    \"puesto\": \"maquinista\",\n    \"descripcion\": \"se solicita maquinista hombre de 25 a 30 años...\",\n    \"skills\": \"experiencia con maquinas de carga...\",\n    \"company_name\": \"maquinistas sa de cv\",\n    \"preguntas_puesto\": [\n      {\"question\": \"que experiencia tienes con maquinas cargadoras\"},\n      {\"question\": \"tienes disponibilidad para rolar turnos?\"}\n    ],\n    ...\n  }]\n}\n```\n\n### 2. `tool_ingreso_datos`\nRegistra evaluación completa (tabla `prospectos_cv`, 13 campos):\n- Datos personales + evaluación + contacto + respuestas\n- Escribir SIEMPRE en 3ra persona\n- Campo `respuestas` es JSONB obligatorio\n\n---\n\n## 🔮 FUNCIONALIDADES FUTURAS (PREPARACIÓN)\n\n**🚧 En desarrollo - NO implementar aún:**\n\n### `tool_envio_documentos_vacante` (placeholder)\nPermitirá al reclutador enviar al candidato:\n- 📄 Documentos sobre la vacante (PDF, Word)\n- 🖼️ Imágenes (fotos de oficina, equipo, infografías)\n- 📋 Formularios adicionales\n\n**Uso futuro:**\n```\n\"Perfecto, [Nombre]. Te voy a enviar un documento con más \ninformación sobre el puesto y los beneficios de la empresa.\"\n\n[tool_envio_documentos_vacante]\n  - tipo: \"pdf\"\n  - descripcion: \"Información detallada del puesto\"\n```\n\n**🚨 POR AHORA:** Si el usuario pregunta por documentos, responde:\n\"Por el momento no tengo documentos adicionales para compartir, \npero nuestro equipo de RH te contactará con toda la información necesaria.\"\n\n---\n\n## ⚠️ REGLAS CRÍTICAS\n\n1. **🚨 ESCRIBE COMO HUMANO** - Conversacional, cálido, con emojis moderados. NO uses listas, NO texto robótico, NO formato markdown visible\n\n2. **🚨 NO solicitar CVs** - Este agente NO pide ni analiza CVs en ningún momento\n\n3. **🚨 SIEMPRE guardar en BD** - Nunca termines sin usar `tool_ingreso_datos`\n\n4. **🚨 GUARDAR ID DE VACANTE** - Cuando uses `tool_vacantes`, SIEMPRE guarda el campo `id` en tu memoria y mantenlo durante TODA la conversación (es crítico para relacionar candidato con vacante específica)\n\n5. **Detección automática de puesto** - Si el usuario menciona el puesto en su primer mensaje, búscalo inmediatamente sin preguntar nuevamente\n\n6. **Preguntas UNA a la vez** - Nunca hagas listas de preguntas, hazlas de forma conversacional con transiciones naturales\n\n7. **Registro obligatorio de respuestas:**\n   - Cada pregunta de entrevista → Guardar en memoria\n   - Campo `respuestas` debe tener TODAS las Q&A\n   - Si NO hiciste entrevista (descalificado) → `respuestas: {}`\n\n8. **Reportes en 3ra persona** - \"El candidato...\", NO \"Tú...\" (solo para reportes internos, NO en mensajes al usuario)\n\n9. **Calificación por coherencia:**\n   - Analiza: respuestas vs requisitos de vacante\n   - Valoración 1-10 basada en cumplimiento y coherencia\n   - Decide: ≤5 = refused, ≥6 = new\n\n10. **Requisitos obligatorios = Descalificación inmediata:**\n    - Validar después de identificar puesto\n    - No cumple → Guardar con valoracion=\"1\" y status=\"refused\"\n\n11. **Valoración confidencial** - Nunca revelar al candidato\n\n---\n\n## 📋 VERIFICACIÓN PRE-GUARDADO\n\n**Antes de usar `tool_ingreso_datos`, verifica:**\n\n✅ **ID de vacante guardado:**\n- ¿Tengo el `id` de la vacante en memoria? (ej: 32)\n- Este ID será necesario para relacionar al candidato con la vacante específica\n\n✅ **Datos de contacto:**\n- Teléfono → `numero_contacto`\n- Email → `correo`\n- Disponibilidad → `disponibilidad`\n\n✅ **Reportes en 3ra persona:**\n- `observaciones`\n- `descripcion_actitudes`\n- `porque_contratarlo`\n- `cosas_mejorar`\n\n✅ **Valoración 1-10** → `valoracion`\n\n✅ **Company name** (de vacante) → `company_name`\n\n✅ **Campo respuestas (CRÍTICO):**\n- ¿Hice entrevista técnica? \n  - SÍ → Objeto JSON con TODAS las Q&A\n  - NO → Objeto vacío `{}`\n\n✅ **Status correcto:**\n- valoracion ≤ 5 → `status = \"refused\"`\n- valoracion ≥ 6 → `status = \"new\"`\n\n---\n\n**Eres el Asistente RH de Consulting Financial. Profesional, empático y eficiente. Tu misión es evaluar candidatos mediante conversación, calificar por coherencia de respuestas y registrar toda la información para el equipo de RH.**\n"
+          }
+        },
+        "type": "@n8n/n8n-nodes-langchain.agent",
+        "typeVersion": 2,
+        "position": [
+          -160,
+          832
+        ],
+        "id": "bb13c443-6b35-403e-b9d5-543f547bd89f",
+        "name": "IntegRHüm",
+        "notesInFlow": false
+      },
+      {
+        "parameters": {
+          "sessionIdType": "customKey",
+          "sessionKey": "={{ $('WhatsApp Trigger1').item.json.messages[0].from }}",
+          "tableName": "n8n_chat_histories_consulting_financial",
+          "contextWindowLength": 30
+        },
+        "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+        "typeVersion": 1.3,
+        "position": [
+          -192,
+          1040
+        ],
+        "id": "56a0871e-db19-4757-8680-d863ed112860",
+        "name": "Postgres Chat Memory",
+        "credentials": {
+          "postgres": {
+            "id": "CFNWnFQx8hqQIegZ",
+            "name": "Postgres account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "updates": [
+            "messages"
+          ],
+          "options": {}
+        },
+        "type": "n8n-nodes-base.whatsAppTrigger",
+        "typeVersion": 1,
+        "position": [
+          -2576,
+          736
+        ],
+        "id": "27b0ef8a-b8aa-4bf8-84cf-3ac1f7ac14ee",
+        "name": "WhatsApp Trigger1",
+        "webhookId": "05a98ba0-96da-4a77-b63a-eac6826871dd",
+        "credentials": {
+          "whatsAppTriggerApi": {
+            "id": "8RnGJ2rxunPzorFD",
+            "name": "WhatsApp OAuth Consulting Financial"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "send",
+          "phoneNumberId": "900798043106364",
+          "recipientPhoneNumber": "={{ $('WhatsApp Trigger1').item.json.messages[0].from }}",
+          "textBody": "={{ $json.output }}",
+          "additionalFields": {}
+        },
+        "type": "n8n-nodes-base.whatsApp",
+        "typeVersion": 1.1,
+        "position": [
+          368,
+          624
+        ],
+        "id": "cc94d788-6590-45e3-8b6f-385572c90bf5",
+        "name": "Send message",
+        "webhookId": "df56fa78-6f0e-4a82-a413-3e296fb12ccb",
+        "credentials": {
+          "whatsAppApi": {
+            "id": "0RNT8qdqI158Zl08",
+            "name": "WhatsApp account Consulting Financial"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "workflowId": {
+            "__rl": true,
+            "value": "3TRmy5xQe7htpSEH",
+            "mode": "list",
+            "cachedResultUrl": "/workflow/3TRmy5xQe7htpSEH",
+            "cachedResultName": "asistente inserta mensajes refactored"
+          },
+          "workflowInputs": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "number": "={{ $('WhatsApp Trigger1').item.json.messages[0].from }}",
+              "project_id": 17,
+              "agent_message": "=No puedo recibir documentos",
+              "contact_name": "={{ $('WhatsApp Trigger1').item.json.contacts[0].profile.name }}",
+              "tipo_entrega": "agente"
+            },
+            "matchingColumns": [],
+            "schema": [
+              {
+                "id": "number",
+                "displayName": "number",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string"
+              },
+              {
+                "id": "project_id",
+                "displayName": "project_id",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "number"
+              },
+              {
+                "id": "human_messaage",
+                "displayName": "human_messaage",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string",
+                "removed": true
+              },
+              {
+                "id": "agent_message",
+                "displayName": "agent_message",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string"
+              },
+              {
+                "id": "contact_name",
+                "displayName": "contact_name",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string"
+              },
+              {
+                "id": "tipo_entrega",
+                "displayName": "tipo_entrega",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string",
+                "removed": false
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": true
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.executeWorkflow",
+        "typeVersion": 1.2,
+        "position": [
+          -1456,
+          560
+        ],
+        "id": "376801d9-537a-47c2-8007-a1b1efd31398",
+        "name": "Call 'asistente inserta mensajes refactored'"
+      },
+      {
+        "parameters": {
+          "operation": "send",
+          "phoneNumberId": "900798043106364",
+          "recipientPhoneNumber": "={{ $json.messages[0].from }}",
+          "textBody": "No puedo recibir documentos",
+          "additionalFields": {}
+        },
+        "type": "n8n-nodes-base.whatsApp",
+        "typeVersion": 1.1,
+        "position": [
+          -1680,
+          560
+        ],
+        "id": "d2888748-5f9c-4a53-b71c-f1c9493b14f2",
+        "name": "Send message3",
+        "webhookId": "48b111ed-2070-4064-aa7c-4bf123728172",
+        "credentials": {
+          "whatsAppApi": {
+            "id": "0RNT8qdqI158Zl08",
+            "name": "WhatsApp account Consulting Financial"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "amount": 1
+        },
+        "type": "n8n-nodes-base.wait",
+        "typeVersion": 1.1,
+        "position": [
+          -1904,
+          560
+        ],
+        "id": "ddadd6d6-3d1d-4757-b7c9-6068c5643954",
+        "name": "Wait1",
+        "webhookId": "66201d1f-fe4a-4110-8d36-4606296a55b8"
+      },
+      {
+        "parameters": {
+          "workflowId": {
+            "__rl": true,
+            "value": "yapLJjmyusuvfNa2",
+            "mode": "list",
+            "cachedResultUrl": "/workflow/yapLJjmyusuvfNa2",
+            "cachedResultName": "obtener vacantes consulting"
+          },
+          "workflowInputs": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "project_id": "17"
+            },
+            "matchingColumns": [
+              "project_id"
+            ],
+            "schema": [
+              {
+                "id": "project_id",
+                "displayName": "project_id",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string",
+                "removed": false
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": true
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.executeWorkflow",
+        "typeVersion": 1.3,
+        "position": [
+          -576,
+          832
+        ],
+        "id": "c2f04fde-bc72-4267-89bd-50e95ae7a9cc",
+        "name": "Call 'obtener vacantes consulting'"
+      }
+    ],
+    "connections": {
+      "When clicking ‘Execute workflow’": {
+        "main": [
+          [
+            {
+              "node": "Delete table or rows",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "OpenAI Chat Model": {
+        "ai_languageModel": [
+          [
+            {
+              "node": "IntegRHüm",
+              "type": "ai_languageModel",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "tool_ingreso_datos": {
+        "ai_tool": [
+          [
+            {
+              "node": "IntegRHüm",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "tool_vacantes": {
+        "ai_tool": [
+          [
+            {
+              "node": "IntegRHüm",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Edit Fields3": {
+        "main": [
+          [
+            {
+              "node": "Aggregate1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "revisar si es documento1": {
+        "main": [
+          [
+            {
+              "node": "Wait1",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "revisamos que no sea texto1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Aggregate1": {
+        "main": [
+          [
+            {
+              "node": "Call 'obtener vacantes consulting'",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Get a row1": {
+        "main": [
+          [
+            {
+              "node": "Edit Fields3",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "revisamos que no sea texto1": {
+        "main": [
+          [
+            {
+              "node": "Get a row1",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Download media3",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Download media3": {
+        "main": [
+          [
+            {
+              "node": "Obtiene el binary file del audio de whatsapp3",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Obtiene el binary file del audio de whatsapp3": {
+        "main": [
+          [
+            {
+              "node": "Transcribe a recording1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Transcribe a recording1": {
+        "main": [
+          [
+            {
+              "node": "Edit Fields5",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Edit Fields5": {
+        "main": [
+          [
+            {
+              "node": "Aggregate1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Filter1": {
+        "main": [
+          [
+            {
+              "node": "revisar si es documento1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "IntegRHüm": {
+        "main": [
+          [
+            {
+              "node": "Execute Workflow1",
+              "type": "main",
+              "index": 0
+            },
+            {
+              "node": "Send message",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Postgres Chat Memory": {
+        "ai_memory": [
+          [
+            {
+              "node": "IntegRHüm",
+              "type": "ai_memory",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "WhatsApp Trigger1": {
+        "main": [
+          [
+            {
+              "node": "Filter1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Send message3": {
+        "main": [
+          [
+            {
+              "node": "Call 'asistente inserta mensajes refactored'",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Wait1": {
+        "main": [
+          [
+            {
+              "node": "Send message3",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Call 'obtener vacantes consulting'": {
+        "main": [
+          [
+            {
+              "node": "IntegRHüm",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "authors": "CANTERA ADMIN",
+    "name": null,
+    "description": null
+  }
 }
