@@ -1,10 +1,10 @@
 {
-  "updatedAt": "2026-04-07T19:46:39.000Z",
+  "updatedAt": "2026-04-30T20:49:57.000Z",
   "createdAt": "2026-04-07T19:09:47.505Z",
   "id": "7PAaQy6CIeAOF3SB",
   "name": "WebHook: Notificación Pago",
   "description": null,
-  "active": false,
+  "active": true,
   "isArchived": false,
   "nodes": [
     {
@@ -27,8 +27,8 @@
     },
     {
       "parameters": {
-        "chatId": "={{ $json.body.user_phone }}",
-        "text": "=Hola, {{ $json.body.user_name }}:\n\nTe confirmamos que hemos recibido tu pago correctamente. ¡Muchas gracias por tu compra!\n\nTu pedido con el ID {{ $json.body.quote_id }} ya se encuentra en proceso de preparación. \n\nGlasbil agradece tu preferencia.",
+        "chatId": "={{ $json.body.chat_id }}",
+        "text": "=¡Hola, {{ $json.body.user_name }}! \n\nTu pago fue recibido exitosamente. \n\nTu pedido con número: {{ $json.body.quote_id }} ya se encuentra en preparación\n\nEn breve un ascensor se pondrá en contacto contigo para confirmar la cita de instalación. Si tienes alguna pregunta o necesitas hacer algún cambio, sólo responde este mensaje y con gusto te ayudamos.\n\n¡Gracias por confiar en Glasbil!",
         "additionalFields": {
           "appendAttribution": false
         }
@@ -70,11 +70,48 @@
   "meta": {
     "templateCredsSetupCompleted": true
   },
-  "pinData": {},
-  "versionId": "67f208d1-1639-432c-8e71-31be4976f35b",
-  "activeVersionId": null,
-  "versionCounter": 8,
-  "triggerCount": 0,
+  "pinData": {
+    "Webhook": [
+      {
+        "json": {
+          "headers": {
+            "host": "ia.canteradigital.mx",
+            "user-agent": "PostmanRuntime/7.53.0",
+            "content-length": "109",
+            "accept": "*/*",
+            "accept-encoding": "gzip, deflate, br",
+            "content-type": "application/json",
+            "postman-token": "2cfffab7-c971-490f-9b0d-5540bc5c2bc8",
+            "x-forwarded-for": "189.141.241.7",
+            "x-forwarded-host": "ia.canteradigital.mx",
+            "x-forwarded-port": "443",
+            "x-forwarded-proto": "https",
+            "x-forwarded-server": "3f31bf1f623a",
+            "x-real-ip": "189.141.241.7"
+          },
+          "params": {},
+          "query": {},
+          "body": {
+            "user_name": "Roberto Aaron Avila Valdes",
+            "chat_id": "1526474745",
+            "quote_id": "G-00698"
+          },
+          "webhookUrl": "https://ia.canteradigital.mx/webhook-test/agentNotification",
+          "executionMode": "test"
+        },
+        "binary": {
+          "data": {
+            "data": "ew0KICAgICJ1c2VyX25hbWUiOiAiUm9iZXJ0byBBYXJvbiBBdmlsYSBWYWxkZXMiLA0KICAgICJjaGF0X2lkIjogIjE1MjY0NzQ3NDUiLA0KICAgICJxdW90ZV9pZCI6ICJHLTAwNjk4Ig0KfQ==",
+            "mimeType": "application/json"
+          }
+        }
+      }
+    ]
+  },
+  "versionId": "b75c43d1-c113-4d51-864a-daf48ef12fcb",
+  "activeVersionId": "b75c43d1-c113-4d51-864a-daf48ef12fcb",
+  "versionCounter": 13,
+  "triggerCount": 1,
   "shared": [
     {
       "updatedAt": "2026-04-07T19:09:47.512Z",
@@ -137,5 +174,70 @@
     }
   ],
   "tags": [],
-  "activeVersion": null
+  "activeVersion": {
+    "updatedAt": "2026-04-30T20:49:42.988Z",
+    "createdAt": "2026-04-30T20:49:42.988Z",
+    "versionId": "b75c43d1-c113-4d51-864a-daf48ef12fcb",
+    "workflowId": "7PAaQy6CIeAOF3SB",
+    "nodes": [
+      {
+        "parameters": {
+          "httpMethod": "POST",
+          "path": "agentNotification",
+          "options": {
+            "rawBody": true
+          }
+        },
+        "type": "n8n-nodes-base.webhook",
+        "typeVersion": 2.1,
+        "position": [
+          0,
+          0
+        ],
+        "id": "f85bb813-2546-4507-bdb1-bb4ac411a7ad",
+        "name": "Webhook",
+        "webhookId": "f4fba3f0-1d6a-4cf9-b229-62e0dd189738"
+      },
+      {
+        "parameters": {
+          "chatId": "={{ $json.body.chat_id }}",
+          "text": "=¡Hola, {{ $json.body.user_name }}! \n\nTu pago fue recibido exitosamente. \n\nTu pedido con número: {{ $json.body.quote_id }} ya se encuentra en preparación\n\nEn breve un ascensor se pondrá en contacto contigo para confirmar la cita de instalación. Si tienes alguna pregunta o necesitas hacer algún cambio, sólo responde este mensaje y con gusto te ayudamos.\n\n¡Gracias por confiar en Glasbil!",
+          "additionalFields": {
+            "appendAttribution": false
+          }
+        },
+        "type": "n8n-nodes-base.telegram",
+        "typeVersion": 1.2,
+        "position": [
+          208,
+          0
+        ],
+        "id": "19c5cfac-f364-494f-9be1-d876687337e3",
+        "name": "Send a text message",
+        "webhookId": "88065a78-c8d5-4a8f-8044-c59c18b908ab",
+        "credentials": {
+          "telegramApi": {
+            "id": "vcUHDLkV2ZD6YfU8",
+            "name": "Telegram account - GLASSY"
+          }
+        }
+      }
+    ],
+    "connections": {
+      "Webhook": {
+        "main": [
+          [
+            {
+              "node": "Send a text message",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "authors": "CANTERA ADMIN",
+    "name": null,
+    "description": null
+  }
 }
