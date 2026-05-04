@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-04-30T21:36:03.000Z",
+  "updatedAt": "2026-05-04T16:57:34.000Z",
   "createdAt": "2026-04-30T21:35:21.354Z",
   "id": "28z14cDPX6ZPRTxS",
   "name": "send info documentos",
@@ -268,7 +268,9 @@
                   }
                 ],
                 "combinator": "and"
-              }
+              },
+              "renameOutput": true,
+              "outputKey": "video"
             }
           ]
         },
@@ -325,7 +327,7 @@
                   {
                     "id": "667ea02c-840f-4a5d-a496-13726f3e65ec",
                     "leftValue": "={{ $('inicio').item.json.type }}",
-                    "rightValue": "ubicación",
+                    "rightValue": "rutas",
                     "operator": {
                       "type": "string",
                       "operation": "equals",
@@ -336,7 +338,7 @@
                 "combinator": "and"
               },
               "renameOutput": true,
-              "outputKey": "ubicación"
+              "outputKey": "rutas"
             },
             {
               "conditions": {
@@ -442,7 +444,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// Code node en n8n\n\n// 🔧 Nombre de carpeta que quieres buscar.\n// Puedes cambiarlo o traerlo de otro nodo: p.ej. const targetName = $json.folderName;\nconst targetName = 'General'; // 'principal' | 'ubicación' | 'extra'\n\n// --- Funciones auxiliares ---\n\nfunction normalizeName(name) {\n  return String(name)\n    .toLowerCase()\n    .normalize('NFD')                  // separa acentos\n    .replace(/[\\u0300-\\u036f]/g, '')   // elimina acentos\n    .trim();\n}\n\nfunction getFilesArray(fromJson) {\n  // Caso 1: JSON es un array: [ { files: [...] } ]\n  if (Array.isArray(fromJson)) {\n    if (!fromJson[0] || !Array.isArray(fromJson[0].files)) {\n      throw new Error('No se encontró la propiedad \"files\" en el primer elemento del array.');\n    }\n    return fromJson[0].files;\n  }\n\n  // Caso 2: JSON es un objeto: { files: [...] }\n  if (Array.isArray(fromJson.files)) {\n    return fromJson.files;\n  }\n\n  throw new Error('No se encontró un arreglo \"files\" en el JSON recibido.');\n}\n\nfunction findFolderByName(files, name) {\n  const normalizedTarget = normalizeName(name);\n\n  return files.find(f => \n    f.mimeType === 'application/vnd.google-apps.folder' &&\n    normalizeName(f.name) === normalizedTarget\n  ) || null;\n}\n\n// --- Lógica principal ---\n\n// Tomamos el JSON del primer item (ajusta si lo necesitas por item)\nconst sourceJson = items[0].json;\n\nconst files = getFilesArray(sourceJson);\nconst folder = findFolderByName(files, targetName);\n\nif (!folder) {\n  throw new Error(`No se encontró ninguna carpeta con el nombre \"${targetName}\".`);\n}\n\n// Devolvemos solo la carpeta encontrada como resultado del nodo\nreturn [\n  {\n    json: folder,\n  },\n];\n"
+        "jsCode": "// Code node en n8n\n\n// 🔧 Nombre de carpeta que quieres buscar.\n// Puedes cambiarlo o traerlo de otro nodo: p.ej. const targetName = $json.folderName;\nconst targetName = 'General';\n\n// --- Funciones auxiliares ---\n\nfunction normalizeName(name) {\n  return String(name)\n    .toLowerCase()\n    .normalize('NFD')                  // separa acentos\n    .replace(/[\\u0300-\\u036f]/g, '')   // elimina acentos\n    .trim();\n}\n\nfunction getFilesArray(fromJson) {\n  // Caso 1: JSON es un array: [ { files: [...] } ]\n  if (Array.isArray(fromJson)) {\n    if (!fromJson[0] || !Array.isArray(fromJson[0].files)) {\n      throw new Error('No se encontró la propiedad \"files\" en el primer elemento del array.');\n    }\n    return fromJson[0].files;\n  }\n\n  // Caso 2: JSON es un objeto: { files: [...] }\n  if (Array.isArray(fromJson.files)) {\n    return fromJson.files;\n  }\n\n  throw new Error('No se encontró un arreglo \"files\" en el JSON recibido.');\n}\n\nfunction findFolderByName(files, name) {\n  const normalizedTarget = normalizeName(name);\n\n  return files.find(f => \n    f.mimeType === 'application/vnd.google-apps.folder' &&\n    normalizeName(f.name) === normalizedTarget\n  ) || null;\n}\n\n// --- Lógica principal ---\n\n// Tomamos el JSON del primer item (ajusta si lo necesitas por item)\nconst sourceJson = items[0].json;\n\nconst files = getFilesArray(sourceJson);\nconst folder = findFolderByName(files, targetName);\n\nif (!folder) {\n  throw new Error(`No se encontró ninguna carpeta con el nombre \"${targetName}\".`);\n}\n\n// Devolvemos solo la carpeta encontrada como resultado del nodo\nreturn [\n  {\n    json: folder,\n  },\n];\n"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -1721,14 +1723,14 @@
         "json": {
           "vacante_id": "32",
           "chat_id": "5214434901193",
-          "type": "principal"
+          "type": "general"
         }
       }
     ]
   },
-  "versionId": "f6240e0b-2692-4dba-a892-cdd2689f0ee7",
+  "versionId": "76c6d6d5-e5f3-43d1-a52d-67249eda46ff",
   "activeVersionId": null,
-  "versionCounter": 3,
+  "versionCounter": 6,
   "triggerCount": 0,
   "shared": [
     {
