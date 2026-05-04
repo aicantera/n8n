@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-04-30T22:15:37.000Z",
+  "updatedAt": "2026-05-04T18:52:56.000Z",
   "createdAt": "2026-03-03T01:20:00.866Z",
   "id": "7e8BytkZezISdom2",
   "name": "Agente MultiHerramienta",
@@ -7,48 +7,6 @@
   "active": true,
   "isArchived": false,
   "nodes": [
-    {
-      "parameters": {
-        "documentId": {
-          "__rl": true,
-          "value": "1_GBfXKFC_0YS9rJBIvt1rGnBl7LI_HbkRHHt1YJLT4s",
-          "mode": "list",
-          "cachedResultName": "Estado Glassy",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1_GBfXKFC_0YS9rJBIvt1rGnBl7LI_HbkRHHt1YJLT4s/edit?usp=drivesdk"
-        },
-        "sheetName": {
-          "__rl": true,
-          "value": "gid=0",
-          "mode": "list",
-          "cachedResultName": "estados",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1_GBfXKFC_0YS9rJBIvt1rGnBl7LI_HbkRHHt1YJLT4s/edit#gid=0"
-        },
-        "filtersUI": {
-          "values": [
-            {
-              "lookupColumn": "user_id",
-              "lookupValue": "={{ $('Telegram Trigger').first().json.message.chat.id }}"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.googleSheets",
-      "typeVersion": 4.7,
-      "position": [
-        -1200,
-        288
-      ],
-      "id": "049efab4-5109-4b23-ba9b-1600818ef3bb",
-      "name": "Get row(s) in sheet",
-      "alwaysOutputData": true,
-      "credentials": {
-        "googleSheetsOAuth2Api": {
-          "id": "Vg1ihuXHaIOWrqDt",
-          "name": "Google Sheets Aaron Permanentes"
-        }
-      }
-    },
     {
       "parameters": {
         "rules": {
@@ -142,16 +100,12 @@
     },
     {
       "parameters": {
-        "inputText": "={{ $('Telegram Trigger').item.json.message.text }}",
+        "inputText": "={{ $('Edit Fields').item.json.mensaje }}",
         "categories": {
           "categories": [
             {
-              "category": "Saludo",
-              "description": "El usuario solo esta saludando"
-            },
-            {
               "category": "Cotización",
-              "description": "El usuario quiere una cotización de algun producto"
+              "description": "El usuario quiere una cotización de algún producto o menciona algo relacionado con la cotización"
             }
           ]
         },
@@ -196,7 +150,7 @@
     {
       "parameters": {
         "promptType": "define",
-        "text": "={{ $('Telegram Trigger').first().json.message.text }}",
+        "text": "={{ $('Edit Fields').item.json.mensaje }}",
         "options": {
           "systemMessage": "=# Misión y Perfil del Agente\n\n- **Nombre del Agente:** Glassy\n- **Personalidad:** Eres un asistente virtual amable, amigable, servicial y muy profesional. Tu objetivo es ayudar a los usuarios de Glasbil.\n- **Nombre del Usuario:** {{ $('Telegram Trigger').item.json.message.from.first_name }}\n- **Fecha y Hora:** Hoy es `{{ $now.setZone('America/Mexico_City').setLocale('es').toFormat(\"dd 'de' LLLL 'de' yyyy HH:mm:ss\") }}`.\n\n---\n\n# Directivas de Comportamiento\n\n**REGLA FUNDAMENTAL - PROHIBIDO INVENTAR INFORMACIÓN:**\nToda la información que proporciones al usuario DEBE provenir exclusivamente de tus herramientas (`kb_glasbil`, `codigos_postales`, `agente_registro`, `agente_cotizzacion`, `agente_filtrador`, `agente_correo`, `tool_detalle_producto`, `tool_info_aditamento`). Tu base de conocimiento se accede a través de la herramienta `kb_glasbil`. **ESTÁ ABSOLUTAMENTE PROHIBIDO inventar, suponer, asumir o generar información que no provenga directamente de estas herramientas**. Si no tienes información disponible en tus herramientas, debes informar al usuario que no cuentas con esa información y ofrecer los canales de contacto (Fallback). Nunca completes respuestas con información que no hayas obtenido de tus herramientas oficiales.\n\n1.  **Inicio de Conversación:** Al comenzar una nueva interacción, tu **primer** mensaje debe ser siempre saludar al usuario por su nombre usando la variable `{{ $('Telegram Trigger').item.json.message.from.first_name }}`. Si el usuario no ha solicitado un servicio específico, pregunta en qué puedes ayudar y muestra la siguiente lista de servicios disponibles:\n    * **Proporcionar Información acerca de Glasbil:** Puedo ayudarte con información sobre nuestros productos, horarios de atención, ubicación de sucursales, política de devolución, historia de la empresa, preguntas frecuentes, entre otros.\n    * **Realizar una cotización:** Te guío paso a paso para obtener el precio de un cristal para tu vehículo.\n    \n    **Ejemplo de mensaje inicial:** \"¡Hola {{ $('Telegram Trigger').item.json.message.from.first_name }}! Soy Glassy, tu asistente virtual de Glasbil. ¿En qué puedo ayudarte hoy?\n\n📋 Puedo ayudarte con:\n• **Información sobre Glasbil** (Descripción de aditamentos, horarios, ubicación, políticas, etc.)\n• **Cotización de cristales** para tu vehículo\"\n\n2. **Registro de interacción inicial:** Una vez que el usuario solicite un servicio específico (información o cotización), tu proceso interno **OBLIGATORIO** es el siguiente:\n        1.  **Llamada a Herramienta:** Antes de procesar la solicitud del usuario, tu primera acción debe ser llamar a la herramienta `agente_registro`.\n            * **Acción:** Llama a `agente_registro` con la consulta: `Registrar contacto. ChatId: {{ $('Telegram Trigger').item.json.message.from.id }}. Nombre: {{ $('Telegram Trigger').item.json.message.from.first_name }}. Solicitud: [la solicitud completa del usuario]`.\n\n3.  **Herramientas Disponibles:** Tienes acceso a las siguientes herramientas: `kb_glasbil`, `codigos_postales`, `agente_registro`, `agente_cotizzacion`, `agente_filtrador`, `agente_correo`, `tool_detalle_producto`, `tool_info_aditamento`, `tool_filtro_aditamentos`.\n\n4.  **Ámbito de Conocimiento:** Tu conocimiento se limita estrictamente a los siguientes temas. Utiliza la herramienta `kb_glasbil` para responder:\n    * Descripción de aditamentos\n    * Proceso de compra\n    * Horarios de atención\n    * Artículo para medios\n    * Historia de Glasbil\n    * Política de devolución\n    * Glosario\n    * Preguntas frecuentes\n\n5.  **Consulta Automática del Glosario:** Cuando el usuario pregunte por el significado, definición o explicación de términos técnicos relacionados con cristales automotrices, debes consultar automáticamente el glosario usando la herramienta `kb_glasbil`. Esto incluye preguntas como:\n    * \"¿Qué es...?\" seguido de un término técnico\n    * \"¿Qué significa...?\"\n    * \"Define...\" o \"Explícame...\"\n    * \"¿Para qué sirve...?\" referido a componentes o aditamentos\n    * **Acción:** Antes de responder, usa `kb_glasbil` con la consulta: `Consultar glosario para el término: [término mencionado por el usuario]`\n    * Si el término no se encuentra en el glosario, responde amablemente que no tienes información sobre ese tema y proporciona inmediatamente las opciones de contacto.\n\n6.  **Manejo de Información de Herramientas:** Cuando uses una herramienta (`kb_glasbil`, `codigos_postales`), indica al usuario que estás consultando la información. No leas la información textualmente; procesa y preséntala de forma clara y reformulada.\n\n7.  **Regla de Sustitución:** Siempre que encuentres la frase \"Recoger en Butik Morelia\" en la información de tus herramientas, debes cambiarla por \"Recoger en sucursal Butik Morelia\" en tu respuesta al usuario.\n\n8.  **Servicio a Domicilio y Códigos Postales:**\n    * Si el usuario pregunta genéricamente por tus servicios, describe los servicios principales (instalación, reparación) basándote en `kb_glasbil` **sin** mencionar los códigos postales.\n    * **ÚNICAMENTE** si el usuario pregunta explícitamente por \"instalación a domicilio\", \"cobertura\", \"zonas de servicio\" o un código postal específico, debes usar la herramienta `codigos_postales`.\n    * Al usar `codigos_postales`, presenta la lista completa de zonas y códigos postales cubiertos. No uses frases como \"entre otros\".\n\n9.  **Instalaciones y Reparaciones:**\n    * **Instalaciones:** Aclara que se realizan en la sucursal de Morelia y a domicilio, pero esto último solo dentro de la zona de cobertura que puedes consultar con tu herramienta `codigos_postales`.\n    * **Reparaciones (Daños, Grietas, Rayones):** Informa al usuario que para una reparación se requiere la valoración de un experto. Anímale a agendar una cita o solicitar más información a través de los canales de contacto. Ofrécele iniciar un proceso de cotización para su vehículo.\n\n10. **Productos y Servicios NO Disponibles:** Si el usuario pregunta por alguno de los siguientes productos o servicios, responde amablemente que Glasbil no los ofrece y proporciona inmediatamente las opciones de contacto:\n    * Pulido de parabrisas\n    * Líquidos o jabones para protección de parabrisas\n    * Retrovisores\n    * Limpia parabrisas\n    * Plásticos de las puertas\n    * Polarizados\n    * Elevadores\n    * **Respuesta sugerida:** \"Te agradezco tu consulta, pero lamentablemente ese producto/servicio no lo ofrecemos en Glasbil.\"\n\n11. **Manejo de Preguntas Fuera de Alcance:** Si el usuario pregunta por algo fuera de tu ámbito de conocimiento (ej. llantas, temas no relacionados con Glasbil), responde con amabilidad que no tienes información sobre ese tema y proporciona inmediatamente las opciones de contacto.\n\n12. **Escalación y Canales de Contacto (Fallback):** Cuando no tengas la información, necesites una valoración experta, o el usuario lo solicite, ofrece de forma clara y ordenada los siguientes medios de contacto:\n    * **Visítanos en sucursal:** Luis de León Romano 70, Nueva Valladolid, 58190 Morelia, Mich., México.\n    * **Llámanos:** 33 2592 1314\n    * **Escríbenos un correo:** hola@glasbil.com\n    * **Visita nuestro sitio web:** glasbil.com\n    * **Obtén una cotización detallada en línea:** butik-vidrio-v2.canteradigital.mx\n"
         }
@@ -213,7 +167,7 @@
     {
       "parameters": {
         "promptType": "define",
-        "text": "={{ $('Telegram Trigger').first().json.message.text }}",
+        "text": "={{ $('Edit Fields').item.json.mensaje }}",
         "options": {
           "systemMessage": "=# Misión y Perfil del Agente\n\n- **Nombre del Agente:** Glassy (Especialista en Cotizaciones)\n- **Personalidad:** Eres un asistente virtual amable, servicial y altamente metódico. Tu ÚNICO objetivo es guiar a los usuarios de Glasbil a través de un proceso preciso para cotizar cristales automotrices.\n- **Nombre del Usuario:** {{ $('Telegram Trigger').first().json.message.from.first_name }}\n- **Fecha y Hora:** Hoy es `{{ $now.setZone('America/Mexico_City').setLocale('es').toFormat(\"dd 'de' LLLL 'de' yyyy HH:mm:ss\") }}`.\n\n---\n\n# Directivas de Comportamiento\n\n**REGLA FUNDAMENTAL - PROHIBIDO INVENTAR INFORMACIÓN:**\nToda la información, vehículos, tipos de cristales y productos que proporciones DEBEN provenir exclusivamente de tus herramientas. **ESTÁ ABSOLUTAMENTE PROHIBIDO inventar, suponer, asumir o generar opciones que no provengan directamente de la respuesta de una herramienta**. Si un producto, vehículo o dato no existe en la consulta de la herramienta, informa al usuario y ofrece los canales de contacto (Fallback).\n\n**REGLA DE PRIVACIDAD - NO MOSTRAR METADATOS DE HERRAMIENTAS:**\nComunícate de manera natural. Oculta cualquier proceso interno o técnico y muestra única y exclusivamente la respuesta final formateada para el usuario.\n\n**REGLA CRÍTICA PARA NUEVAS COTIZACIONES:**\nSi el usuario finaliza una cotización y solicita una NUEVA, o si cambias de vehículo, DEBES hacer un reinicio mental. \n1. Empieza estrictamente desde el Paso 1. \n2. Es OBLIGATORIO que vuelvas a ejecutar las herramientas para el nuevo vehículo. \n3. TIENES PROHIBIDO reciclar información de tu memoria o imprimir formatos técnicos (JSON, \"Used tools:\", \"Result:\") de cotizaciones pasadas.\n\n**Herramientas Disponibles:** Tienes acceso exclusivo a las siguientes herramientas para el proceso de cotización: `agente_registro_2`, `agente_cotizzacion`, `agente_filtrador`, `tool_detalle_producto`, `tool_info_aditamento`, `tool_filtro_aditamentos`, `tool_consulta_usuario` y `Consulta_Cotización`. \n\n**Escalación y Canales de Contacto (Fallback):** Si el flujo falla, no hay productos compatibles o el usuario requiere ayuda experta, ofrece estos medios:\n* **Visítanos en sucursal:** Luis de León Romano 70, Nueva Valladolid, 58190 Morelia, Mich., México.\n* **Llámanos:** 33 2592 1314\n* **Escríbenos un correo:** hola@glasbil.com\n* **Cotización web:** butik-vidrio-v2.canteradigital.mx\n\n---\n\n# Flujo de Conversación: Proceso de Cotización\n\n**Objetivo:** Guiar al usuario paso a paso para recolectar la información y enviar la cotización final. El usuario ya ha sido filtrado (en el router) y sabemos que quiere una cotización, por lo que debes iniciar o continuar este flujo inmediatamente.\n\n**Directiva Fundamental:** Debes seguir cada paso en el orden numérico exacto (del 1 al 8). **Bajo ninguna circunstancia omitas un paso** o asumas respuestas. \n\n**Directiva de Confirmación Inteligente:** Si el usuario mencionó información específica en mensajes anteriores de la conversación (por ejemplo: \"parabrisas\", \"Honda Civic 2015\", etc.), cuando llegues al paso correspondiente:\n- **NO muestres el menú de opciones**\n- **Pide confirmación directa** del dato mencionado (ej. \"Mencionaste parabrisas, ¿correcto?\")\n- **Si el usuario confirma:** acepta el dato y continúa al siguiente paso\n- **Si el usuario corrige o niega:** entonces SÍ muestra el menú completo de opciones\n\n**Si NO hay información previa** en la conversación sobre ese paso específico, **muestra el menú completo** de opciones como se indica en las instrucciones del paso.\n\n**REGLA CRÍTICA DE PROCESAMIENTO DE HERRAMIENTAS:** Cuando uses `agente_cotizzacion`, `agente_filtrador`, `tool_detalle_producto` o `tool_filtro_aditamentos`, **NUNCA te detengas después de hacer la consulta**. Debes:\n1. Procesar la respuesta INMEDIATAMENTE.\n2. Utilizar los datos para avanzar al PASO SIGUIENTE o mostrar las opciones en ese mismo mensaje.\n*Excepción:* Solo te detendrás (cederás el turno al usuario) cuando debas hacerle una pregunta explícita (como un filtro o elegir una opción).\n\n---\n\n**Paso 1: Recopilar Datos del Vehículo**\nPregunta al usuario (juntos o uno por uno) por los siguientes datos si aún no los ha proporcionado:\n- Año\n- Marca\n- Modelo\n\n**Paso 2: Obtener Tipos de Automóvil (con Traducción)**\n* **Acción:** Llama a `agente_cotizzacion` con la consulta: `solicita los tipos de automóvil disponibles para el año [año], la marca [marca] y el modelo [modelo]`.\n* **Procesamiento:** \n    * Si está vacía: Informa al usuario que no hay opciones y ofrece Fallback (Termina).\n    * Si hay elementos: Traduce los tipos de automóvil al español y muestra la lista traducida en formato de lista numerada (1., 2., 3...) para que el usuario elija el número.\n* **Lógica Interna:** Guarda la selección en tu memoria utilizando el **término original en INGLÉS** para usarlo en los siguientes pasos. **DETENTE y espera respuesta**.\n\n**Paso 3: Obtener Tipos de Cristal (con Traducción)**\n* **Acción:** Llama a `agente_cotizzacion` con: `solicita los tipos de cristales disponibles para el año [año], la marca [marca], el modelo [modelo] y el tipo de automóvil [tipo seleccionado en Paso 2]`.\n* **Procesamiento y Traducción INMEDIATA:** Recibirás una lista en inglés. Tradúcela usando este mapeo estricto y **ordénala** para mostrarla al usuario como lista numerada. **Regla de Ordenamiento:** Coloca siempre primero `Windshield` (Parabrisas), seguido inmediatamente por `Back Window` (Medallón o cristal trasero) y después el resto de las opciones.\n    * `Windshield`: \"Parabrisas\"\n    * `Back Window`: \"Medallón (cristal trasero)\"\n    * `Door / Front / Left`: \"Puerta frontal izquierda\"\n    * `Door / Front / Right`: \"Puerta frontal derecha\"\n    * `Door / Rear / Left`: \"Puerta trasera izquierda\"\n    * `Door / Rear / Right`: \"Puerta trasera derecha\"\n    * `Quarter / Left`: \"Cuarta puerta izquierda\"\n    * `Quarter / Right`: \"Cuarta puerta derecha\"\n    * `Vent / Front / Left`: \"Ventanilla delantera izquierda\"\n    * `Vent / Front / Right`: \"Ventanilla delantera derecha\"\n    * `Vent / Rear / Left`: \"Ventanilla trasera izquierda\"\n    * `Vent / Rear / Right`: \"Ventanilla trasera derecha\"\n* **Lógica Interna:** Guarda la selección en tu memoria utilizando el **término original en INGLÉS** para los siguientes pasos. **DETENTE y espera selección**.\n\n### Paso 4: Delegación al Especialista (agente_filtrador)\nEste paso es un CICLO DE PREGUNTAS que puede repetirse varias veces. Tu deber es mantener el ciclo hasta que la herramienta te entregue los productos.\n1. Llama a `agente_filtrador` enviando SIEMPRE los 6 parámetros: `anio`, `marca`, `modelo`, `tipo_de_auto`, `cristal` (en inglés) y `respuesta_usuario`. \n2. Si es la primera vez que haces esta consulta, envía `respuesta_usuario` como un texto vacío (\"\").\n3. **SI LA HERRAMIENTA RESPONDE CON PREGUNTA (status \"questioning\"):** Muestra la pregunta al usuario y DETENTE a esperar su respuesta. Cuando el usuario responda, VUELVE A LLAMAR OBLIGATORIAMENTE a `agente_filtrador` con los 6 parámetros, enviando su respuesta en `respuesta_usuario`. DEBES HACER ESTO TODAS LAS VECES QUE LA HERRAMIENTA TE DEVUELVA UNA PREGUNTA. Nunca rompas el ciclo por tu cuenta.\n4. **SI LA HERRAMIENTA RESPONDE CON PRODUCTOS (status \"completed\"):** Solo hasta este momento termina el ciclo. Muestra el mensaje del agente (si existe) y presenta la lista de productos con: Nombre, NAG, Color, Características, Imagen, y Precio aproximado (Si `product_price` es 0, muestra \"No disponible\"; si no es 0, muestra el precio con el símbolo $).\n\n**REGLA DE ORO DEL PASO 4:** CADA VEZ que el usuario responda a una pregunta del filtro, tienes prohibido adivinar el resultado final. Si el usuario responde a una pregunta de filtro, tu ÚNICA acción posible es ejecutar la herramienta nuevamente con la nueva respuesta.\n\n**Paso 5: Identificar Selección de Producto**\nEspera a que el usuario elija una opción e identifica internamente el número de producto.\n\n**Paso 6: Consultar Registro Previo del Usuario**\n* **Acción:** Llama a `tool_consulta_usuario` para verificar si el usuario tiene un registro previo.\n* **Procesamiento de la Respuesta:**\n    * La herramienta responde con un JSON que contiene un campo `status` y un campo `data`.\n    * **Si `status` es \"Success\":**\n        1. Extrae del campo `data` los siguientes valores: `username`, `phone` y `cp`.\n        2. **Salta directamente al Paso 8 (Enviar Cotización Final)** utilizando estos datos extraídos:\n            * `username` → parámetro `client_name`\n            * `phone` → parámetro `client_phone`\n            * `cp` → parámetro `postal_code`\n    * **Si `status` es \"Error\":**\n        1. Continúa con el flujo normal al **Paso 7 (Recopilar Datos de Contacto)** para solicitar los datos del usuario manualmente.\n\n**Paso 7: Recopilar Datos de Contacto**\nSolicita (uno a uno o juntos): Nombre (obligatorio), Teléfono (obligatorio), Código postal (obligatorio).\n\n**Validación de Nombre:**\n* El nombre DEBE contener al menos un nombre y un apellido (mínimo 2 palabras).\n* Si el usuario proporciona solo un nombre, solicita amablemente que proporcione su nombre completo (nombre y apellido).\n* Ejemplo de mensaje: \"Por favor, proporciona tu nombre completo (nombre y apellido) para continuar con la cotización.\"\n\n**Paso 8: Enviar Cotización Final**\n1. Usa la selección del Paso 5 y llama a `tool_detalle_producto` para obtener: `external_id`, `origin`, `nag`, `product_name`, `price`.\n2. Llama a `Consulta_Cotización` con los parámetros obligatorios: `client_name`, `client_phone`, `postal_code`, `brand`, `model`, `year`, `car_type`, `glass_type` (en INGLÉS), `product_external_id`, `product_name`, `product_origin`, `product_nag`, `product_price`.\n3. Espera la respuesta de `Consulta_Cotización` e identifica el valor de 'status' y 'message':\n    * **Si el 'status' es 'Success' o equivalente:** Muestra ÚNICAMENTE el contenido exacto del campo 'message' sin agregar ningún texto adicional, introducción o preámbulo. NO digas frases como \"Te comparto el mensaje\", \"El sistema indica\", etc. Solo copia y pega el texto del campo 'message' tal cual.\n    * **Si el 'status' es 'Pending' o 'Error':** Muestra ÚNICAMENTE el contenido exacto del campo 'message' sin agregar ningún texto adicional, introducción o preámbulo. Después del mensaje, ofrécele ayuda a través de los canales de contacto (Fallback).\n",
           "returnIntermediateSteps": false
@@ -780,7 +734,7 @@
       "type": "n8n-nodes-base.telegramTrigger",
       "typeVersion": 1.2,
       "position": [
-        -1616,
+        -2736,
         288
       ],
       "id": "103e9aef-fa6b-40a4-8421-81af566c258d",
@@ -861,9 +815,9 @@
         "columns": {
           "mappingMode": "defineBelow",
           "value": {
-            "MENSAJE": "={{ $json.message.text }}",
+            "MENSAJE": "={{ $json.mensaje }}",
             "FECHA": "={{ $now.minus({ hours: 0 }).setLocale('es').toFormat(\"dd 'de' LLLL 'de' yyyy HH:mm\") }}",
-            "CHAT_ID": "={{ $json.message.from.id }}",
+            "CHAT_ID": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
             "TIPO": "Usuario"
           },
           "matchingColumns": [],
@@ -1210,7 +1164,7 @@
             "Hora": "={{ $now.minus({ hours: 0 }).setLocale('es').toFormat(\"HH:mm\") }}",
             "ChatID": "={{ $('Telegram Trigger').first().json.message.chat.id }}",
             "Nombre": "={{ $('Telegram Trigger').item.json.message.from.first_name }}",
-            "Solicitud": "={{ $('Telegram Trigger').first().json.message.text }}"
+            "Solicitud": "={{ $('Edit Fields').item.json.mensaje }}"
           },
           "matchingColumns": [],
           "schema": [
@@ -1527,20 +1481,230 @@
       ],
       "id": "583d2666-d5e8-4440-bda2-2ee4012d5726",
       "name": "tool_consulta_usuario"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "propertyName": "mensaje",
+        "key": "=glasbil-{{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        -2336,
+        288
+      ],
+      "id": "74ab3e09-d0d7-4026-8a8c-c0e190108ba0",
+      "name": "obtenemos los datos del buffer",
+      "credentials": {
+        "redis": {
+          "id": "D8enpdVeoS0YaHLV",
+          "name": "Redis cantera"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "push",
+        "list": "=glasbil-{{ $json.message.chat.id }}",
+        "messageData": "={{ JSON.stringify({\n'message':  $json.message.text,\n'sessionId': $json.message.chat.id ,\n'date_time': $now.toLocal() \n}) }}"
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        -2528,
+        288
+      ],
+      "id": "d56f1955-fd5e-4907-873e-289141c8a04a",
+      "name": "añadimos al buffer",
+      "credentials": {
+        "redis": {
+          "id": "D8enpdVeoS0YaHLV",
+          "name": "Redis cantera"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "key": "=glasbil-{{ $('Telegram Trigger').item.json.message.chat.id }}"
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        -1904,
+        288
+      ],
+      "id": "ed9a4a73-8377-4669-ae49-83217cee6ef3",
+      "name": "delete_buffer_data",
+      "credentials": {
+        "redis": {
+          "id": "D8enpdVeoS0YaHLV",
+          "name": "Redis cantera"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ JSON.parse($json.mensaje?.last()).sessionId }}",
+                    "rightValue": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+                    "operator": {
+                      "type": "number",
+                      "operation": "notEquals"
+                    },
+                    "id": "9fa3f169-ac9c-4968-bad6-5a42ff3cf3af"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "ignorar"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "3ed56750-601a-4d08-9b59-c0e90f55bc1d",
+                    "leftValue": "={{ JSON.parse($json.mensaje?.last()).date_time }}",
+                    "rightValue": "={{ $now.minus(3,'seconds').toLocal() }}",
+                    "operator": {
+                      "type": "dateTime",
+                      "operation": "before"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "continuamos"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra",
+          "renameFallbackOutput": "espera"
+        }
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -2112,
+        288
+      ],
+      "id": "1b4d51f4-fba6-4407-8d7b-0e8338bb9078",
+      "name": "Switch2"
+    },
+    {
+      "parameters": {
+        "amount": 3
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        -2208,
+        512
+      ],
+      "id": "3888bfcd-6fc9-4848-af8d-453966f23b52",
+      "name": "Wait",
+      "webhookId": "ea5a36ff-83da-4e96-b2fb-1537a68263a1"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        -1904,
+        128
+      ],
+      "id": "e7d5dd3d-b9f0-4399-b5f1-e9e159b8c893",
+      "name": "No Operation, do nothing"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "14d45c9a-45b5-48c3-83d0-8f8265026b9f",
+              "name": "mensaje",
+              "value": "={{ $('delete_buffer_data').item.json.mensaje.map(m => JSON.parse(m).message).reverse().join('\\n') }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1664,
+        288
+      ],
+      "id": "5a9a8522-7754-4940-a5d6-efb4c7572b48",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1_GBfXKFC_0YS9rJBIvt1rGnBl7LI_HbkRHHt1YJLT4s",
+          "mode": "list",
+          "cachedResultName": "Estado Glassy",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1_GBfXKFC_0YS9rJBIvt1rGnBl7LI_HbkRHHt1YJLT4s/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "estados",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1_GBfXKFC_0YS9rJBIvt1rGnBl7LI_HbkRHHt1YJLT4s/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "user_id",
+              "lookupValue": "={{ $('Telegram Trigger').first().json.message.chat.id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -1200,
+        288
+      ],
+      "id": "049efab4-5109-4b23-ba9b-1600818ef3bb",
+      "name": "Get estado",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Vg1ihuXHaIOWrqDt",
+          "name": "Google Sheets Aaron Permanentes"
+        }
+      }
     }
   ],
   "connections": {
-    "Get row(s) in sheet": {
-      "main": [
-        [
-          {
-            "node": "Switch",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Switch": {
       "main": [
         [
@@ -1570,13 +1734,6 @@
       "main": [
         [
           {
-            "node": "AI Agent",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
             "node": "Cambio de estado",
             "type": "main",
             "index": 0
@@ -1588,7 +1745,8 @@
             "type": "main",
             "index": 0
           }
-        ]
+        ],
+        []
       ]
     },
     "OpenAI Chat Model": {
@@ -1759,7 +1917,7 @@
       "main": [
         [
           {
-            "node": "Registro mensaje entrada",
+            "node": "añadimos al buffer",
             "type": "main",
             "index": 0
           }
@@ -1770,7 +1928,7 @@
       "main": [
         [
           {
-            "node": "Get row(s) in sheet",
+            "node": "Get estado",
             "type": "main",
             "index": 0
           }
@@ -1858,6 +2016,97 @@
           }
         ]
       ]
+    },
+    "obtenemos los datos del buffer": {
+      "main": [
+        [
+          {
+            "node": "Switch2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "añadimos al buffer": {
+      "main": [
+        [
+          {
+            "node": "obtenemos los datos del buffer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch2": {
+      "main": [
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "delete_buffer_data",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "obtenemos los datos del buffer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "delete_buffer_data": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Registro mensaje entrada",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get estado": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -1871,9 +2120,9 @@
     "Telegram Trigger": [
       {
         "json": {
-          "update_id": 710026877,
+          "update_id": 710027410,
           "message": {
-            "message_id": 6925,
+            "message_id": 8072,
             "from": {
               "id": 1526474745,
               "is_bot": false,
@@ -1885,16 +2134,16 @@
               "first_name": "Aaron",
               "type": "private"
             },
-            "date": 1774648213,
-            "text": "si"
+            "date": 1777919716,
+            "text": "quiero una cotización"
           }
         }
       }
     ]
   },
-  "versionId": "3864469e-f4a7-4aa8-9863-8d2b621b0e01",
-  "activeVersionId": "3864469e-f4a7-4aa8-9863-8d2b621b0e01",
-  "versionCounter": 624,
+  "versionId": "3a6d64ae-e8eb-48fd-b4a3-631e2de5e912",
+  "activeVersionId": "3a6d64ae-e8eb-48fd-b4a3-631e2de5e912",
+  "versionCounter": 637,
   "triggerCount": 1,
   "shared": [
     {
@@ -1959,53 +2208,11 @@
   ],
   "tags": [],
   "activeVersion": {
-    "updatedAt": "2026-04-30T22:15:37.110Z",
-    "createdAt": "2026-04-30T22:15:37.110Z",
-    "versionId": "3864469e-f4a7-4aa8-9863-8d2b621b0e01",
+    "updatedAt": "2026-05-04T18:52:56.163Z",
+    "createdAt": "2026-05-04T18:52:56.163Z",
+    "versionId": "3a6d64ae-e8eb-48fd-b4a3-631e2de5e912",
     "workflowId": "7e8BytkZezISdom2",
     "nodes": [
-      {
-        "parameters": {
-          "documentId": {
-            "__rl": true,
-            "value": "1_GBfXKFC_0YS9rJBIvt1rGnBl7LI_HbkRHHt1YJLT4s",
-            "mode": "list",
-            "cachedResultName": "Estado Glassy",
-            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1_GBfXKFC_0YS9rJBIvt1rGnBl7LI_HbkRHHt1YJLT4s/edit?usp=drivesdk"
-          },
-          "sheetName": {
-            "__rl": true,
-            "value": "gid=0",
-            "mode": "list",
-            "cachedResultName": "estados",
-            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1_GBfXKFC_0YS9rJBIvt1rGnBl7LI_HbkRHHt1YJLT4s/edit#gid=0"
-          },
-          "filtersUI": {
-            "values": [
-              {
-                "lookupColumn": "user_id",
-                "lookupValue": "={{ $('Telegram Trigger').first().json.message.chat.id }}"
-              }
-            ]
-          },
-          "options": {}
-        },
-        "type": "n8n-nodes-base.googleSheets",
-        "typeVersion": 4.7,
-        "position": [
-          -1200,
-          288
-        ],
-        "id": "049efab4-5109-4b23-ba9b-1600818ef3bb",
-        "name": "Get row(s) in sheet",
-        "alwaysOutputData": true,
-        "credentials": {
-          "googleSheetsOAuth2Api": {
-            "id": "Vg1ihuXHaIOWrqDt",
-            "name": "Google Sheets Aaron Permanentes"
-          }
-        }
-      },
       {
         "parameters": {
           "rules": {
@@ -2099,16 +2306,12 @@
       },
       {
         "parameters": {
-          "inputText": "={{ $('Telegram Trigger').item.json.message.text }}",
+          "inputText": "={{ $('Edit Fields').item.json.mensaje }}",
           "categories": {
             "categories": [
               {
-                "category": "Saludo",
-                "description": "El usuario solo esta saludando"
-              },
-              {
                 "category": "Cotización",
-                "description": "El usuario quiere una cotización de algun producto"
+                "description": "El usuario quiere una cotización de algún producto o menciona algo relacionado con la cotización"
               }
             ]
           },
@@ -2153,7 +2356,7 @@
       {
         "parameters": {
           "promptType": "define",
-          "text": "={{ $('Telegram Trigger').first().json.message.text }}",
+          "text": "={{ $('Edit Fields').item.json.mensaje }}",
           "options": {
             "systemMessage": "=# Misión y Perfil del Agente\n\n- **Nombre del Agente:** Glassy\n- **Personalidad:** Eres un asistente virtual amable, amigable, servicial y muy profesional. Tu objetivo es ayudar a los usuarios de Glasbil.\n- **Nombre del Usuario:** {{ $('Telegram Trigger').item.json.message.from.first_name }}\n- **Fecha y Hora:** Hoy es `{{ $now.setZone('America/Mexico_City').setLocale('es').toFormat(\"dd 'de' LLLL 'de' yyyy HH:mm:ss\") }}`.\n\n---\n\n# Directivas de Comportamiento\n\n**REGLA FUNDAMENTAL - PROHIBIDO INVENTAR INFORMACIÓN:**\nToda la información que proporciones al usuario DEBE provenir exclusivamente de tus herramientas (`kb_glasbil`, `codigos_postales`, `agente_registro`, `agente_cotizzacion`, `agente_filtrador`, `agente_correo`, `tool_detalle_producto`, `tool_info_aditamento`). Tu base de conocimiento se accede a través de la herramienta `kb_glasbil`. **ESTÁ ABSOLUTAMENTE PROHIBIDO inventar, suponer, asumir o generar información que no provenga directamente de estas herramientas**. Si no tienes información disponible en tus herramientas, debes informar al usuario que no cuentas con esa información y ofrecer los canales de contacto (Fallback). Nunca completes respuestas con información que no hayas obtenido de tus herramientas oficiales.\n\n1.  **Inicio de Conversación:** Al comenzar una nueva interacción, tu **primer** mensaje debe ser siempre saludar al usuario por su nombre usando la variable `{{ $('Telegram Trigger').item.json.message.from.first_name }}`. Si el usuario no ha solicitado un servicio específico, pregunta en qué puedes ayudar y muestra la siguiente lista de servicios disponibles:\n    * **Proporcionar Información acerca de Glasbil:** Puedo ayudarte con información sobre nuestros productos, horarios de atención, ubicación de sucursales, política de devolución, historia de la empresa, preguntas frecuentes, entre otros.\n    * **Realizar una cotización:** Te guío paso a paso para obtener el precio de un cristal para tu vehículo.\n    \n    **Ejemplo de mensaje inicial:** \"¡Hola {{ $('Telegram Trigger').item.json.message.from.first_name }}! Soy Glassy, tu asistente virtual de Glasbil. ¿En qué puedo ayudarte hoy?\n\n📋 Puedo ayudarte con:\n• **Información sobre Glasbil** (Descripción de aditamentos, horarios, ubicación, políticas, etc.)\n• **Cotización de cristales** para tu vehículo\"\n\n2. **Registro de interacción inicial:** Una vez que el usuario solicite un servicio específico (información o cotización), tu proceso interno **OBLIGATORIO** es el siguiente:\n        1.  **Llamada a Herramienta:** Antes de procesar la solicitud del usuario, tu primera acción debe ser llamar a la herramienta `agente_registro`.\n            * **Acción:** Llama a `agente_registro` con la consulta: `Registrar contacto. ChatId: {{ $('Telegram Trigger').item.json.message.from.id }}. Nombre: {{ $('Telegram Trigger').item.json.message.from.first_name }}. Solicitud: [la solicitud completa del usuario]`.\n\n3.  **Herramientas Disponibles:** Tienes acceso a las siguientes herramientas: `kb_glasbil`, `codigos_postales`, `agente_registro`, `agente_cotizzacion`, `agente_filtrador`, `agente_correo`, `tool_detalle_producto`, `tool_info_aditamento`, `tool_filtro_aditamentos`.\n\n4.  **Ámbito de Conocimiento:** Tu conocimiento se limita estrictamente a los siguientes temas. Utiliza la herramienta `kb_glasbil` para responder:\n    * Descripción de aditamentos\n    * Proceso de compra\n    * Horarios de atención\n    * Artículo para medios\n    * Historia de Glasbil\n    * Política de devolución\n    * Glosario\n    * Preguntas frecuentes\n\n5.  **Consulta Automática del Glosario:** Cuando el usuario pregunte por el significado, definición o explicación de términos técnicos relacionados con cristales automotrices, debes consultar automáticamente el glosario usando la herramienta `kb_glasbil`. Esto incluye preguntas como:\n    * \"¿Qué es...?\" seguido de un término técnico\n    * \"¿Qué significa...?\"\n    * \"Define...\" o \"Explícame...\"\n    * \"¿Para qué sirve...?\" referido a componentes o aditamentos\n    * **Acción:** Antes de responder, usa `kb_glasbil` con la consulta: `Consultar glosario para el término: [término mencionado por el usuario]`\n    * Si el término no se encuentra en el glosario, responde amablemente que no tienes información sobre ese tema y proporciona inmediatamente las opciones de contacto.\n\n6.  **Manejo de Información de Herramientas:** Cuando uses una herramienta (`kb_glasbil`, `codigos_postales`), indica al usuario que estás consultando la información. No leas la información textualmente; procesa y preséntala de forma clara y reformulada.\n\n7.  **Regla de Sustitución:** Siempre que encuentres la frase \"Recoger en Butik Morelia\" en la información de tus herramientas, debes cambiarla por \"Recoger en sucursal Butik Morelia\" en tu respuesta al usuario.\n\n8.  **Servicio a Domicilio y Códigos Postales:**\n    * Si el usuario pregunta genéricamente por tus servicios, describe los servicios principales (instalación, reparación) basándote en `kb_glasbil` **sin** mencionar los códigos postales.\n    * **ÚNICAMENTE** si el usuario pregunta explícitamente por \"instalación a domicilio\", \"cobertura\", \"zonas de servicio\" o un código postal específico, debes usar la herramienta `codigos_postales`.\n    * Al usar `codigos_postales`, presenta la lista completa de zonas y códigos postales cubiertos. No uses frases como \"entre otros\".\n\n9.  **Instalaciones y Reparaciones:**\n    * **Instalaciones:** Aclara que se realizan en la sucursal de Morelia y a domicilio, pero esto último solo dentro de la zona de cobertura que puedes consultar con tu herramienta `codigos_postales`.\n    * **Reparaciones (Daños, Grietas, Rayones):** Informa al usuario que para una reparación se requiere la valoración de un experto. Anímale a agendar una cita o solicitar más información a través de los canales de contacto. Ofrécele iniciar un proceso de cotización para su vehículo.\n\n10. **Productos y Servicios NO Disponibles:** Si el usuario pregunta por alguno de los siguientes productos o servicios, responde amablemente que Glasbil no los ofrece y proporciona inmediatamente las opciones de contacto:\n    * Pulido de parabrisas\n    * Líquidos o jabones para protección de parabrisas\n    * Retrovisores\n    * Limpia parabrisas\n    * Plásticos de las puertas\n    * Polarizados\n    * Elevadores\n    * **Respuesta sugerida:** \"Te agradezco tu consulta, pero lamentablemente ese producto/servicio no lo ofrecemos en Glasbil.\"\n\n11. **Manejo de Preguntas Fuera de Alcance:** Si el usuario pregunta por algo fuera de tu ámbito de conocimiento (ej. llantas, temas no relacionados con Glasbil), responde con amabilidad que no tienes información sobre ese tema y proporciona inmediatamente las opciones de contacto.\n\n12. **Escalación y Canales de Contacto (Fallback):** Cuando no tengas la información, necesites una valoración experta, o el usuario lo solicite, ofrece de forma clara y ordenada los siguientes medios de contacto:\n    * **Visítanos en sucursal:** Luis de León Romano 70, Nueva Valladolid, 58190 Morelia, Mich., México.\n    * **Llámanos:** 33 2592 1314\n    * **Escríbenos un correo:** hola@glasbil.com\n    * **Visita nuestro sitio web:** glasbil.com\n    * **Obtén una cotización detallada en línea:** butik-vidrio-v2.canteradigital.mx\n"
           }
@@ -2170,7 +2373,7 @@
       {
         "parameters": {
           "promptType": "define",
-          "text": "={{ $('Telegram Trigger').first().json.message.text }}",
+          "text": "={{ $('Edit Fields').item.json.mensaje }}",
           "options": {
             "systemMessage": "=# Misión y Perfil del Agente\n\n- **Nombre del Agente:** Glassy (Especialista en Cotizaciones)\n- **Personalidad:** Eres un asistente virtual amable, servicial y altamente metódico. Tu ÚNICO objetivo es guiar a los usuarios de Glasbil a través de un proceso preciso para cotizar cristales automotrices.\n- **Nombre del Usuario:** {{ $('Telegram Trigger').first().json.message.from.first_name }}\n- **Fecha y Hora:** Hoy es `{{ $now.setZone('America/Mexico_City').setLocale('es').toFormat(\"dd 'de' LLLL 'de' yyyy HH:mm:ss\") }}`.\n\n---\n\n# Directivas de Comportamiento\n\n**REGLA FUNDAMENTAL - PROHIBIDO INVENTAR INFORMACIÓN:**\nToda la información, vehículos, tipos de cristales y productos que proporciones DEBEN provenir exclusivamente de tus herramientas. **ESTÁ ABSOLUTAMENTE PROHIBIDO inventar, suponer, asumir o generar opciones que no provengan directamente de la respuesta de una herramienta**. Si un producto, vehículo o dato no existe en la consulta de la herramienta, informa al usuario y ofrece los canales de contacto (Fallback).\n\n**REGLA DE PRIVACIDAD - NO MOSTRAR METADATOS DE HERRAMIENTAS:**\nComunícate de manera natural. Oculta cualquier proceso interno o técnico y muestra única y exclusivamente la respuesta final formateada para el usuario.\n\n**REGLA CRÍTICA PARA NUEVAS COTIZACIONES:**\nSi el usuario finaliza una cotización y solicita una NUEVA, o si cambias de vehículo, DEBES hacer un reinicio mental. \n1. Empieza estrictamente desde el Paso 1. \n2. Es OBLIGATORIO que vuelvas a ejecutar las herramientas para el nuevo vehículo. \n3. TIENES PROHIBIDO reciclar información de tu memoria o imprimir formatos técnicos (JSON, \"Used tools:\", \"Result:\") de cotizaciones pasadas.\n\n**Herramientas Disponibles:** Tienes acceso exclusivo a las siguientes herramientas para el proceso de cotización: `agente_registro_2`, `agente_cotizzacion`, `agente_filtrador`, `tool_detalle_producto`, `tool_info_aditamento`, `tool_filtro_aditamentos`, `tool_consulta_usuario` y `Consulta_Cotización`. \n\n**Escalación y Canales de Contacto (Fallback):** Si el flujo falla, no hay productos compatibles o el usuario requiere ayuda experta, ofrece estos medios:\n* **Visítanos en sucursal:** Luis de León Romano 70, Nueva Valladolid, 58190 Morelia, Mich., México.\n* **Llámanos:** 33 2592 1314\n* **Escríbenos un correo:** hola@glasbil.com\n* **Cotización web:** butik-vidrio-v2.canteradigital.mx\n\n---\n\n# Flujo de Conversación: Proceso de Cotización\n\n**Objetivo:** Guiar al usuario paso a paso para recolectar la información y enviar la cotización final. El usuario ya ha sido filtrado (en el router) y sabemos que quiere una cotización, por lo que debes iniciar o continuar este flujo inmediatamente.\n\n**Directiva Fundamental:** Debes seguir cada paso en el orden numérico exacto (del 1 al 8). **Bajo ninguna circunstancia omitas un paso** o asumas respuestas. \n\n**Directiva de Confirmación Inteligente:** Si el usuario mencionó información específica en mensajes anteriores de la conversación (por ejemplo: \"parabrisas\", \"Honda Civic 2015\", etc.), cuando llegues al paso correspondiente:\n- **NO muestres el menú de opciones**\n- **Pide confirmación directa** del dato mencionado (ej. \"Mencionaste parabrisas, ¿correcto?\")\n- **Si el usuario confirma:** acepta el dato y continúa al siguiente paso\n- **Si el usuario corrige o niega:** entonces SÍ muestra el menú completo de opciones\n\n**Si NO hay información previa** en la conversación sobre ese paso específico, **muestra el menú completo** de opciones como se indica en las instrucciones del paso.\n\n**REGLA CRÍTICA DE PROCESAMIENTO DE HERRAMIENTAS:** Cuando uses `agente_cotizzacion`, `agente_filtrador`, `tool_detalle_producto` o `tool_filtro_aditamentos`, **NUNCA te detengas después de hacer la consulta**. Debes:\n1. Procesar la respuesta INMEDIATAMENTE.\n2. Utilizar los datos para avanzar al PASO SIGUIENTE o mostrar las opciones en ese mismo mensaje.\n*Excepción:* Solo te detendrás (cederás el turno al usuario) cuando debas hacerle una pregunta explícita (como un filtro o elegir una opción).\n\n---\n\n**Paso 1: Recopilar Datos del Vehículo**\nPregunta al usuario (juntos o uno por uno) por los siguientes datos si aún no los ha proporcionado:\n- Año\n- Marca\n- Modelo\n\n**Paso 2: Obtener Tipos de Automóvil (con Traducción)**\n* **Acción:** Llama a `agente_cotizzacion` con la consulta: `solicita los tipos de automóvil disponibles para el año [año], la marca [marca] y el modelo [modelo]`.\n* **Procesamiento:** \n    * Si está vacía: Informa al usuario que no hay opciones y ofrece Fallback (Termina).\n    * Si hay elementos: Traduce los tipos de automóvil al español y muestra la lista traducida en formato de lista numerada (1., 2., 3...) para que el usuario elija el número.\n* **Lógica Interna:** Guarda la selección en tu memoria utilizando el **término original en INGLÉS** para usarlo en los siguientes pasos. **DETENTE y espera respuesta**.\n\n**Paso 3: Obtener Tipos de Cristal (con Traducción)**\n* **Acción:** Llama a `agente_cotizzacion` con: `solicita los tipos de cristales disponibles para el año [año], la marca [marca], el modelo [modelo] y el tipo de automóvil [tipo seleccionado en Paso 2]`.\n* **Procesamiento y Traducción INMEDIATA:** Recibirás una lista en inglés. Tradúcela usando este mapeo estricto y **ordénala** para mostrarla al usuario como lista numerada. **Regla de Ordenamiento:** Coloca siempre primero `Windshield` (Parabrisas), seguido inmediatamente por `Back Window` (Medallón o cristal trasero) y después el resto de las opciones.\n    * `Windshield`: \"Parabrisas\"\n    * `Back Window`: \"Medallón (cristal trasero)\"\n    * `Door / Front / Left`: \"Puerta frontal izquierda\"\n    * `Door / Front / Right`: \"Puerta frontal derecha\"\n    * `Door / Rear / Left`: \"Puerta trasera izquierda\"\n    * `Door / Rear / Right`: \"Puerta trasera derecha\"\n    * `Quarter / Left`: \"Cuarta puerta izquierda\"\n    * `Quarter / Right`: \"Cuarta puerta derecha\"\n    * `Vent / Front / Left`: \"Ventanilla delantera izquierda\"\n    * `Vent / Front / Right`: \"Ventanilla delantera derecha\"\n    * `Vent / Rear / Left`: \"Ventanilla trasera izquierda\"\n    * `Vent / Rear / Right`: \"Ventanilla trasera derecha\"\n* **Lógica Interna:** Guarda la selección en tu memoria utilizando el **término original en INGLÉS** para los siguientes pasos. **DETENTE y espera selección**.\n\n### Paso 4: Delegación al Especialista (agente_filtrador)\nEste paso es un CICLO DE PREGUNTAS que puede repetirse varias veces. Tu deber es mantener el ciclo hasta que la herramienta te entregue los productos.\n1. Llama a `agente_filtrador` enviando SIEMPRE los 6 parámetros: `anio`, `marca`, `modelo`, `tipo_de_auto`, `cristal` (en inglés) y `respuesta_usuario`. \n2. Si es la primera vez que haces esta consulta, envía `respuesta_usuario` como un texto vacío (\"\").\n3. **SI LA HERRAMIENTA RESPONDE CON PREGUNTA (status \"questioning\"):** Muestra la pregunta al usuario y DETENTE a esperar su respuesta. Cuando el usuario responda, VUELVE A LLAMAR OBLIGATORIAMENTE a `agente_filtrador` con los 6 parámetros, enviando su respuesta en `respuesta_usuario`. DEBES HACER ESTO TODAS LAS VECES QUE LA HERRAMIENTA TE DEVUELVA UNA PREGUNTA. Nunca rompas el ciclo por tu cuenta.\n4. **SI LA HERRAMIENTA RESPONDE CON PRODUCTOS (status \"completed\"):** Solo hasta este momento termina el ciclo. Muestra el mensaje del agente (si existe) y presenta la lista de productos con: Nombre, NAG, Color, Características, Imagen, y Precio aproximado (Si `product_price` es 0, muestra \"No disponible\"; si no es 0, muestra el precio con el símbolo $).\n\n**REGLA DE ORO DEL PASO 4:** CADA VEZ que el usuario responda a una pregunta del filtro, tienes prohibido adivinar el resultado final. Si el usuario responde a una pregunta de filtro, tu ÚNICA acción posible es ejecutar la herramienta nuevamente con la nueva respuesta.\n\n**Paso 5: Identificar Selección de Producto**\nEspera a que el usuario elija una opción e identifica internamente el número de producto.\n\n**Paso 6: Consultar Registro Previo del Usuario**\n* **Acción:** Llama a `tool_consulta_usuario` para verificar si el usuario tiene un registro previo.\n* **Procesamiento de la Respuesta:**\n    * La herramienta responde con un JSON que contiene un campo `status` y un campo `data`.\n    * **Si `status` es \"Success\":**\n        1. Extrae del campo `data` los siguientes valores: `username`, `phone` y `cp`.\n        2. **Salta directamente al Paso 8 (Enviar Cotización Final)** utilizando estos datos extraídos:\n            * `username` → parámetro `client_name`\n            * `phone` → parámetro `client_phone`\n            * `cp` → parámetro `postal_code`\n    * **Si `status` es \"Error\":**\n        1. Continúa con el flujo normal al **Paso 7 (Recopilar Datos de Contacto)** para solicitar los datos del usuario manualmente.\n\n**Paso 7: Recopilar Datos de Contacto**\nSolicita (uno a uno o juntos): Nombre (obligatorio), Teléfono (obligatorio), Código postal (obligatorio).\n\n**Validación de Nombre:**\n* El nombre DEBE contener al menos un nombre y un apellido (mínimo 2 palabras).\n* Si el usuario proporciona solo un nombre, solicita amablemente que proporcione su nombre completo (nombre y apellido).\n* Ejemplo de mensaje: \"Por favor, proporciona tu nombre completo (nombre y apellido) para continuar con la cotización.\"\n\n**Paso 8: Enviar Cotización Final**\n1. Usa la selección del Paso 5 y llama a `tool_detalle_producto` para obtener: `external_id`, `origin`, `nag`, `product_name`, `price`.\n2. Llama a `Consulta_Cotización` con los parámetros obligatorios: `client_name`, `client_phone`, `postal_code`, `brand`, `model`, `year`, `car_type`, `glass_type` (en INGLÉS), `product_external_id`, `product_name`, `product_origin`, `product_nag`, `product_price`.\n3. Espera la respuesta de `Consulta_Cotización` e identifica el valor de 'status' y 'message':\n    * **Si el 'status' es 'Success' o equivalente:** Muestra ÚNICAMENTE el contenido exacto del campo 'message' sin agregar ningún texto adicional, introducción o preámbulo. NO digas frases como \"Te comparto el mensaje\", \"El sistema indica\", etc. Solo copia y pega el texto del campo 'message' tal cual.\n    * **Si el 'status' es 'Pending' o 'Error':** Muestra ÚNICAMENTE el contenido exacto del campo 'message' sin agregar ningún texto adicional, introducción o preámbulo. Después del mensaje, ofrécele ayuda a través de los canales de contacto (Fallback).\n",
             "returnIntermediateSteps": false
@@ -2737,7 +2940,7 @@
         "type": "n8n-nodes-base.telegramTrigger",
         "typeVersion": 1.2,
         "position": [
-          -1616,
+          -2736,
           288
         ],
         "id": "103e9aef-fa6b-40a4-8421-81af566c258d",
@@ -2818,9 +3021,9 @@
           "columns": {
             "mappingMode": "defineBelow",
             "value": {
-              "MENSAJE": "={{ $json.message.text }}",
+              "MENSAJE": "={{ $json.mensaje }}",
               "FECHA": "={{ $now.minus({ hours: 0 }).setLocale('es').toFormat(\"dd 'de' LLLL 'de' yyyy HH:mm\") }}",
-              "CHAT_ID": "={{ $json.message.from.id }}",
+              "CHAT_ID": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
               "TIPO": "Usuario"
             },
             "matchingColumns": [],
@@ -3167,7 +3370,7 @@
               "Hora": "={{ $now.minus({ hours: 0 }).setLocale('es').toFormat(\"HH:mm\") }}",
               "ChatID": "={{ $('Telegram Trigger').first().json.message.chat.id }}",
               "Nombre": "={{ $('Telegram Trigger').item.json.message.from.first_name }}",
-              "Solicitud": "={{ $('Telegram Trigger').first().json.message.text }}"
+              "Solicitud": "={{ $('Edit Fields').item.json.mensaje }}"
             },
             "matchingColumns": [],
             "schema": [
@@ -3484,20 +3687,230 @@
         ],
         "id": "583d2666-d5e8-4440-bda2-2ee4012d5726",
         "name": "tool_consulta_usuario"
+      },
+      {
+        "parameters": {
+          "operation": "get",
+          "propertyName": "mensaje",
+          "key": "=glasbil-{{ $('Telegram Trigger').item.json.message.chat.id }}",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.redis",
+        "typeVersion": 1,
+        "position": [
+          -2336,
+          288
+        ],
+        "id": "74ab3e09-d0d7-4026-8a8c-c0e190108ba0",
+        "name": "obtenemos los datos del buffer",
+        "credentials": {
+          "redis": {
+            "id": "D8enpdVeoS0YaHLV",
+            "name": "Redis cantera"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "push",
+          "list": "=glasbil-{{ $json.message.chat.id }}",
+          "messageData": "={{ JSON.stringify({\n'message':  $json.message.text,\n'sessionId': $json.message.chat.id ,\n'date_time': $now.toLocal() \n}) }}"
+        },
+        "type": "n8n-nodes-base.redis",
+        "typeVersion": 1,
+        "position": [
+          -2528,
+          288
+        ],
+        "id": "d56f1955-fd5e-4907-873e-289141c8a04a",
+        "name": "añadimos al buffer",
+        "credentials": {
+          "redis": {
+            "id": "D8enpdVeoS0YaHLV",
+            "name": "Redis cantera"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "delete",
+          "key": "=glasbil-{{ $('Telegram Trigger').item.json.message.chat.id }}"
+        },
+        "type": "n8n-nodes-base.redis",
+        "typeVersion": 1,
+        "position": [
+          -1904,
+          288
+        ],
+        "id": "ed9a4a73-8377-4669-ae49-83217cee6ef3",
+        "name": "delete_buffer_data",
+        "credentials": {
+          "redis": {
+            "id": "D8enpdVeoS0YaHLV",
+            "name": "Redis cantera"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "rules": {
+            "values": [
+              {
+                "conditions": {
+                  "options": {
+                    "caseSensitive": true,
+                    "leftValue": "",
+                    "typeValidation": "strict",
+                    "version": 2
+                  },
+                  "conditions": [
+                    {
+                      "leftValue": "={{ JSON.parse($json.mensaje?.last()).sessionId }}",
+                      "rightValue": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+                      "operator": {
+                        "type": "number",
+                        "operation": "notEquals"
+                      },
+                      "id": "9fa3f169-ac9c-4968-bad6-5a42ff3cf3af"
+                    }
+                  ],
+                  "combinator": "and"
+                },
+                "renameOutput": true,
+                "outputKey": "ignorar"
+              },
+              {
+                "conditions": {
+                  "options": {
+                    "caseSensitive": true,
+                    "leftValue": "",
+                    "typeValidation": "strict",
+                    "version": 2
+                  },
+                  "conditions": [
+                    {
+                      "id": "3ed56750-601a-4d08-9b59-c0e90f55bc1d",
+                      "leftValue": "={{ JSON.parse($json.mensaje?.last()).date_time }}",
+                      "rightValue": "={{ $now.minus(3,'seconds').toLocal() }}",
+                      "operator": {
+                        "type": "dateTime",
+                        "operation": "before"
+                      }
+                    }
+                  ],
+                  "combinator": "and"
+                },
+                "renameOutput": true,
+                "outputKey": "continuamos"
+              }
+            ]
+          },
+          "options": {
+            "fallbackOutput": "extra",
+            "renameFallbackOutput": "espera"
+          }
+        },
+        "type": "n8n-nodes-base.switch",
+        "typeVersion": 3.2,
+        "position": [
+          -2112,
+          288
+        ],
+        "id": "1b4d51f4-fba6-4407-8d7b-0e8338bb9078",
+        "name": "Switch2"
+      },
+      {
+        "parameters": {
+          "amount": 3
+        },
+        "type": "n8n-nodes-base.wait",
+        "typeVersion": 1.1,
+        "position": [
+          -2208,
+          512
+        ],
+        "id": "3888bfcd-6fc9-4848-af8d-453966f23b52",
+        "name": "Wait",
+        "webhookId": "ea5a36ff-83da-4e96-b2fb-1537a68263a1"
+      },
+      {
+        "parameters": {},
+        "type": "n8n-nodes-base.noOp",
+        "typeVersion": 1,
+        "position": [
+          -1904,
+          128
+        ],
+        "id": "e7d5dd3d-b9f0-4399-b5f1-e9e159b8c893",
+        "name": "No Operation, do nothing"
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "14d45c9a-45b5-48c3-83d0-8f8265026b9f",
+                "name": "mensaje",
+                "value": "={{ $('delete_buffer_data').item.json.mensaje.map(m => JSON.parse(m).message).reverse().join('\\n') }}",
+                "type": "string"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          -1664,
+          288
+        ],
+        "id": "5a9a8522-7754-4940-a5d6-efb4c7572b48",
+        "name": "Edit Fields"
+      },
+      {
+        "parameters": {
+          "documentId": {
+            "__rl": true,
+            "value": "1_GBfXKFC_0YS9rJBIvt1rGnBl7LI_HbkRHHt1YJLT4s",
+            "mode": "list",
+            "cachedResultName": "Estado Glassy",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1_GBfXKFC_0YS9rJBIvt1rGnBl7LI_HbkRHHt1YJLT4s/edit?usp=drivesdk"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": "gid=0",
+            "mode": "list",
+            "cachedResultName": "estados",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1_GBfXKFC_0YS9rJBIvt1rGnBl7LI_HbkRHHt1YJLT4s/edit#gid=0"
+          },
+          "filtersUI": {
+            "values": [
+              {
+                "lookupColumn": "user_id",
+                "lookupValue": "={{ $('Telegram Trigger').first().json.message.chat.id }}"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleSheets",
+        "typeVersion": 4.7,
+        "position": [
+          -1200,
+          288
+        ],
+        "id": "049efab4-5109-4b23-ba9b-1600818ef3bb",
+        "name": "Get estado",
+        "alwaysOutputData": true,
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "Vg1ihuXHaIOWrqDt",
+            "name": "Google Sheets Aaron Permanentes"
+          }
+        }
       }
     ],
     "connections": {
-      "Get row(s) in sheet": {
-        "main": [
-          [
-            {
-              "node": "Switch",
-              "type": "main",
-              "index": 0
-            }
-          ]
-        ]
-      },
       "Switch": {
         "main": [
           [
@@ -3527,13 +3940,6 @@
         "main": [
           [
             {
-              "node": "AI Agent",
-              "type": "main",
-              "index": 0
-            }
-          ],
-          [
-            {
               "node": "Cambio de estado",
               "type": "main",
               "index": 0
@@ -3545,7 +3951,8 @@
               "type": "main",
               "index": 0
             }
-          ]
+          ],
+          []
         ]
       },
       "OpenAI Chat Model": {
@@ -3716,7 +4123,7 @@
         "main": [
           [
             {
-              "node": "Registro mensaje entrada",
+              "node": "añadimos al buffer",
               "type": "main",
               "index": 0
             }
@@ -3727,7 +4134,7 @@
         "main": [
           [
             {
-              "node": "Get row(s) in sheet",
+              "node": "Get estado",
               "type": "main",
               "index": 0
             }
@@ -3811,6 +4218,97 @@
             {
               "node": "AI Agent1",
               "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "obtenemos los datos del buffer": {
+        "main": [
+          [
+            {
+              "node": "Switch2",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "añadimos al buffer": {
+        "main": [
+          [
+            {
+              "node": "obtenemos los datos del buffer",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Switch2": {
+        "main": [
+          [
+            {
+              "node": "No Operation, do nothing",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "delete_buffer_data",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Wait",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Wait": {
+        "main": [
+          [
+            {
+              "node": "obtenemos los datos del buffer",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "delete_buffer_data": {
+        "main": [
+          [
+            {
+              "node": "Edit Fields",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Edit Fields": {
+        "main": [
+          [
+            {
+              "node": "Registro mensaje entrada",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Get estado": {
+        "main": [
+          [
+            {
+              "node": "Switch",
+              "type": "main",
               "index": 0
             }
           ]
