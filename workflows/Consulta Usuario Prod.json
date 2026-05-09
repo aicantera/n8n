@@ -1,22 +1,139 @@
 {
-  "updatedAt": "2026-05-09T00:00:27.000Z",
+  "updatedAt": "2026-05-09T00:02:11.000Z",
   "createdAt": "2026-05-08T23:59:42.696Z",
   "id": "44VTtFYi7Q5IOGpY",
   "name": "Consulta Usuario Prod",
   "description": null,
   "active": false,
   "isArchived": false,
-  "nodes": [],
-  "connections": {},
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "chat_id"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "1866b0ac-3401-44b0-8096-57ed3e44cbd1",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "url": "=https://glasbil.com/api/ai-agent/user/{{ $json.chat_id }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        176,
+        0
+      ],
+      "id": "942e0ec4-cda9-44fc-b83b-1142dcf19a1b",
+      "name": "HTTP Request",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "05fa1d0a-ba14-4864-bd41-9070d7a0937b",
+              "name": "status",
+              "value": "Error",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        400,
+        96
+      ],
+      "id": "f3c7b2f6-6a9d-4eb5-9b9b-c3169e503d0c",
+      "name": "Usuario No encontrado"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "05fa1d0a-ba14-4864-bd41-9070d7a0937b",
+              "name": "status",
+              "value": "Success",
+              "type": "string"
+            },
+            {
+              "id": "e89b9cc1-0b4c-4de3-a078-ffb046fb3fb9",
+              "name": "data",
+              "value": "={{ $json.data }}",
+              "type": "object"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        400,
+        -96
+      ],
+      "id": "75b89754-6f9c-4a92-a2ae-d5939731fcab",
+      "name": "Usuario Encontrado"
+    }
+  ],
+  "connections": {
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Usuario Encontrado",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Usuario No encontrado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
   "settings": {
     "executionOrder": "v1"
   },
   "staticData": null,
   "meta": null,
   "pinData": {},
-  "versionId": "fe209411-5387-4baa-8ba9-b18c08c64abe",
+  "versionId": "1fae5df7-19be-463e-9756-0efdfb579ef8",
   "activeVersionId": null,
-  "versionCounter": 3,
+  "versionCounter": 6,
   "triggerCount": 0,
   "shared": [
     {
