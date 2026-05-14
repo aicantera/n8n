@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-05-14T19:57:53.000Z",
+  "updatedAt": "2026-05-14T22:55:03.000Z",
   "createdAt": "2026-05-14T19:04:21.833Z",
   "id": "044xtBIPUsarnCZS",
   "name": "buscar_productos_lauka",
@@ -42,9 +42,9 @@
       "typeVersion": 1.1,
       "position": [
         -48,
-        96
+        128
       ],
-      "id": "6d2057fe-03dd-465f-9c67-0fb2a6cff02b",
+      "id": "81ed5795-def0-47c9-a635-3cab82377c8e",
       "name": "Execute Workflow Trigger"
     },
     {
@@ -55,9 +55,9 @@
       "typeVersion": 2,
       "position": [
         192,
-        96
+        128
       ],
-      "id": "9fad9b81-1cc1-4c6f-9553-3788be608105",
+      "id": "6e41a531-abbe-4b00-bd0b-1d4dec2ec1be",
       "name": "Construir URL"
     },
     {
@@ -78,22 +78,28 @@
       "typeVersion": 4.2,
       "position": [
         432,
-        96
+        128
       ],
-      "id": "9aade633-86a4-4824-8c3a-c0cb34463ff6",
-      "name": "Llamar API Productos"
+      "id": "f8166b01-9845-400a-8397-51eb5e1eae0b",
+      "name": "Llamar API Productos",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "KytkW46HC2wPvhFf",
+          "name": "lauka bearer"
+        }
+      }
     },
     {
       "parameters": {
-        "jsCode": "// Formatea la respuesta del API para el agente\nconst data = $input.first().json;\nconst items = data.items || [];\nconst totalCount = data.total_count || 0;\nconst sc = data.search_criteria || {};\n\nif (items.length === 0) {\n  return [{ json: { resultado: 'No se encontraron productos con los criterios indicados.', total: 0, productos: [] } }];\n}\n\nconst productos = items.map(p => ({\n  product_id: p.product_id,\n  sku: p.sku,\n  nombre: p.name,\n  marca: p.brand || '',\n  precio_regular: p.regular_price || '',\n  precio_venta: p.sale_price || '',\n  stock: p.stock,\n  subcategoria: p.subcategoria || '',\n  descripcion_corta: p.short_description || '',\n  imagen: p.imagen_principal || '',\n  url_producto: p.sku ? `https://www.lauka.mx/products/${p.sku}` : ''\n}));\n\nreturn [{ json: {\n  total: totalCount,\n  pagina_actual: sc.current_page || 1,\n  resultados_en_pagina: items.length,\n  productos\n} }];\n"
+        "jsCode": "// Formatea la respuesta del API para el agente\nconst data = $input.first().json;\nconst items = data.items || [];\nconst totalCount = data.total_count || 0;\nconst sc = data.search_criteria || {};\n\nif (items.length === 0) {\n  return [{ json: { resultado: 'No se encontraron productos con los criterios indicados.', total: 0, productos: [] } }];\n}\n\nconst productos = items.map(p => ({\n  product_id: p.product_id,\n  sku: p.sku,\n  nombre: p.name,\n  marca: p.brand || '',\n  precio_regular: p.regular_price || '',\n  precio_venta: p.sale_price || '',\n  stock: p.stock,\n  subcategoria: p.subcategoria || '',\n  descripcion_corta: p.short_description || '',\n  imagen: p.imagen_principal || '',\n  url_producto: p.sku ? `https://www.lauka.mx/products/${p.sku}` : (p.product_id ? `https://www.lauka.mx/products?id=${p.product_id}` : '')\n}));\n\nreturn [{ json: {\n  total: totalCount,\n  pagina_actual: sc.current_page || 1,\n  resultados_en_pagina: items.length,\n  productos\n} }];\n"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
         672,
-        96
+        128
       ],
-      "id": "0e926a04-3394-4829-a3d1-c5fc00c62f55",
+      "id": "c22358d7-1e64-4364-bd97-983dd5ecfa36",
       "name": "Formatear Respuesta"
     },
     {
@@ -105,9 +111,9 @@
       "typeVersion": 1.1,
       "position": [
         912,
-        96
+        128
       ],
-      "id": "5c3e24f2-33f8-406c-b366-4dd4e198383e",
+      "id": "6cc47a59-44a7-41c3-80ae-03fcbedd3f3b",
       "name": "Respond to Workflow"
     }
   ],
@@ -163,9 +169,9 @@
   "staticData": null,
   "meta": null,
   "pinData": {},
-  "versionId": "bc5dfdd4-8691-484d-8e99-b5c1cd19ff75",
+  "versionId": "bcfa1659-3ee5-4e76-a838-389df21b4b1c",
   "activeVersionId": null,
-  "versionCounter": 6,
+  "versionCounter": 8,
   "triggerCount": 0,
   "shared": [
     {
