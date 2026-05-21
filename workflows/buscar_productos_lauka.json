@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-05-14T23:25:26.000Z",
+  "updatedAt": "2026-05-21T01:33:34.000Z",
   "createdAt": "2026-05-14T19:04:21.833Z",
   "id": "044xtBIPUsarnCZS",
   "name": "buscar_productos_lauka",
@@ -91,7 +91,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// Formatea la respuesta del API para el agente\nconst data = $input.first().json;\nconst items = data.items || [];\nconst totalCount = data.total_count || 0;\nconst sc = data.search_criteria || {};\n\nif (items.length === 0) {\n  return [{ json: { resultado: 'No se encontraron productos con los criterios indicados.', total: 0, productos: [] } }];\n}\n\nconst productos = items.map(p => ({\n  product_id: p.product_id,\n  sku: p.sku,\n  nombre: p.name,\n  marca: p.brand || '',\n  precio_regular: p.regular_price || '',\n  precio_venta: p.sale_price || '',\n  stock: p.stock,\n  subcategoria: p.subcategoria || '',\n  descripcion_corta: p.short_description || '',\n  imagen: p.imagen_principal || '',\n  url_producto: p.sku ? `https://www.lauka.mx/products/${p.sku}` : (p.product_id ? `https://www.lauka.mx/products?id=${p.product_id}` : '')\n}));\n\nreturn [{ json: {\n  total: totalCount,\n  pagina_actual: sc.current_page || 1,\n  resultados_en_pagina: items.length,\n  productos\n} }];\n"
+        "jsCode": "// Formatea la respuesta del API para el agente\nconst data = $input.first().json;\nconst items = data.items || [];\nconst totalCount = data.total_count || 0;\nconst sc = data.search_criteria || {};\n\nif (items.length === 0) {\n  return [{ json: { resultado: 'No se encontraron productos con los criterios indicados.', total: 0, productos: [] } }];\n}\n\nconst productos = items.map(p => ({\n  product_id: p.product_id,\n  sku: p.sku,\n  nombre: p.name,\n  marca: p.brand || '',\n  precio_regular: p.regular_price || '',\n  precio_venta: p.sale_price || '',\n  stock: p.stock,\n  subcategoria: p.subcategoria || '',\n  descripcion_corta: p.short_description || '',\n  imagen: p.imagen_principal || '',\n  url_producto: p.product_id ? `https://194.195.92.107:444/productos/view/id/${p.product_id}` : (p.product_id ? `https://194.195.92.107:444/productos/view/id/${p.product_id}` : '')\n}));\n\nreturn [{ json: {\n  total: totalCount,\n  pagina_actual: sc.current_page || 1,\n  resultados_en_pagina: items.length,\n  productos\n} }];\n"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -143,10 +143,25 @@
   },
   "staticData": null,
   "meta": null,
-  "pinData": {},
-  "versionId": "6e317b53-1610-4a05-ab4e-ba9533bd2b37",
+  "pinData": {
+    "Execute Workflow Trigger": [
+      {
+        "json": {
+          "termino_busqueda": "alcohol desnaturalizado",
+          "marca": "",
+          "categoria": "",
+          "material": "",
+          "precio_minimo": "",
+          "precio_maximo": "",
+          "ordenar_por": "",
+          "pagina": "1"
+        }
+      }
+    ]
+  },
+  "versionId": "c36b4965-b188-4851-baeb-358523ea5150",
   "activeVersionId": null,
-  "versionCounter": 10,
+  "versionCounter": 12,
   "triggerCount": 0,
   "shared": [
     {
