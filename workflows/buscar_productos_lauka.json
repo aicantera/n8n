@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-05-21T01:33:34.000Z",
+  "updatedAt": "2026-05-21T15:57:31.000Z",
   "createdAt": "2026-05-14T19:04:21.833Z",
   "id": "044xtBIPUsarnCZS",
   "name": "buscar_productos_lauka",
@@ -91,7 +91,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// Formatea la respuesta del API para el agente\nconst data = $input.first().json;\nconst items = data.items || [];\nconst totalCount = data.total_count || 0;\nconst sc = data.search_criteria || {};\n\nif (items.length === 0) {\n  return [{ json: { resultado: 'No se encontraron productos con los criterios indicados.', total: 0, productos: [] } }];\n}\n\nconst productos = items.map(p => ({\n  product_id: p.product_id,\n  sku: p.sku,\n  nombre: p.name,\n  marca: p.brand || '',\n  precio_regular: p.regular_price || '',\n  precio_venta: p.sale_price || '',\n  stock: p.stock,\n  subcategoria: p.subcategoria || '',\n  descripcion_corta: p.short_description || '',\n  imagen: p.imagen_principal || '',\n  url_producto: p.product_id ? `https://194.195.92.107:444/productos/view/id/${p.product_id}` : (p.product_id ? `https://194.195.92.107:444/productos/view/id/${p.product_id}` : '')\n}));\n\nreturn [{ json: {\n  total: totalCount,\n  pagina_actual: sc.current_page || 1,\n  resultados_en_pagina: items.length,\n  productos\n} }];\n"
+        "jsCode": "// Formatea la respuesta del API para el agente\nconst data = $input.first().json;\nconst items = data.items || [];\nconst totalCount = data.total_count || 0;\nconst sc = data.search_criteria || {};\n\nif (items.length === 0) {\n  return [{ json: { resultado: 'No se encontraron productos con los criterios indicados.', total: 0, productos: [] } }];\n}\n\nconst productos = items.map(p => ({\n  product_id: p.product_id,\n  sku: p.sku,\n  nombre: p.name,\n  marca: p.brand || '',\n  precio_regular: p.regular_price || '',\n  precio_venta: p.sale_price || '',\n  stock: p.stock,\n  subcategoria: p.subcategoria || '',\n  descripcion_corta: p.short_description || '',\n  imagen: p.imagen_principal || '',\n  url_producto: p.product_id ? `https://194.195.92.107:444/productos/product/view/id/${p.product_id}` : (p.product_id ? `https://194.195.92.107:444/productos/product/view/id/${p.product_id}` : '')\n}));\n\nreturn [{ json: {\n  total: totalCount,\n  pagina_actual: sc.current_page || 1,\n  resultados_en_pagina: items.length,\n  productos\n} }];\n"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -159,9 +159,9 @@
       }
     ]
   },
-  "versionId": "c36b4965-b188-4851-baeb-358523ea5150",
+  "versionId": "4efcefb0-7428-4eef-95fc-290ea321bb11",
   "activeVersionId": null,
-  "versionCounter": 12,
+  "versionCounter": 13,
   "triggerCount": 0,
   "shared": [
     {
