@@ -4,7 +4,7 @@
   "id": "5NDkGEiGe5RMoUci",
   "name": "Agente Actualizador de Estado de Solicitud de Vacaciones",
   "description": null,
-  "active": false,
+  "active": true,
   "isArchived": false,
   "nodes": [
     {
@@ -501,8 +501,8 @@
     ]
   },
   "versionId": "7b454243-501e-427f-8f7a-e0b0a6d04e77",
-  "activeVersionId": null,
-  "versionCounter": 24,
+  "activeVersionId": "7b454243-501e-427f-8f7a-e0b0a6d04e77",
+  "versionCounter": 25,
   "triggerCount": 0,
   "shared": [
     {
@@ -519,49 +519,7 @@
         "type": "personal",
         "icon": null,
         "description": null,
-        "projectRelations": [
-          {
-            "updatedAt": "2025-05-13T15:56:28.209Z",
-            "createdAt": "2025-05-13T15:56:28.209Z",
-            "userId": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
-            "projectId": "BZ9Ta5yhe4RhzY78",
-            "user": {
-              "updatedAt": "2026-05-28T06:00:27.000Z",
-              "createdAt": "2025-05-13T15:56:27.880Z",
-              "id": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
-              "email": "canteradigital7@gmail.com",
-              "firstName": "CANTERA",
-              "lastName": "ADMIN",
-              "personalizationAnswers": {
-                "version": "v4",
-                "personalization_survey_submitted_at": "2025-05-13T16:19:25.161Z",
-                "personalization_survey_n8n_version": "1.92.2",
-                "companySize": "<20",
-                "companyType": "saas",
-                "role": "customer-support",
-                "reportedSource": "event"
-              },
-              "settings": {
-                "userActivated": true,
-                "firstSuccessfulWorkflowId": "PTbESRzX3rguwQN8",
-                "userActivatedAt": 1747154580970,
-                "easyAIWorkflowOnboarded": true,
-                "npsSurvey": {
-                  "responded": true,
-                  "lastShownAt": 1765302536772
-                },
-                "dismissedCallouts": {
-                  "aiAgentStarterCallout": true,
-                  "preBuiltAgentsCalloutHttpRequest": true
-                }
-              },
-              "disabled": false,
-              "mfaEnabled": false,
-              "lastActiveAt": "2026-05-28",
-              "isPending": false
-            }
-          }
-        ]
+        "creatorId": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3"
       }
     }
   ],
@@ -573,5 +531,502 @@
       "name": "CanteraConnect"
     }
   ],
-  "activeVersion": null
+  "activeVersion": {
+    "updatedAt": "2025-12-10T23:50:23.576Z",
+    "createdAt": "2025-12-10T23:50:23.576Z",
+    "versionId": "7b454243-501e-427f-8f7a-e0b0a6d04e77",
+    "workflowId": "5NDkGEiGe5RMoUci",
+    "nodes": [
+      {
+        "parameters": {
+          "workflowInputs": {
+            "values": [
+              {
+                "name": "solicitud_id",
+                "type": "number"
+              }
+            ]
+          }
+        },
+        "type": "n8n-nodes-base.executeWorkflowTrigger",
+        "typeVersion": 1.1,
+        "position": [
+          0,
+          0
+        ],
+        "id": "8307f8b1-8dac-43cc-bcf9-9126fed58524",
+        "name": "When Executed by Another Workflow"
+      },
+      {
+        "parameters": {
+          "rules": {
+            "values": [
+              {
+                "conditions": {
+                  "options": {
+                    "caseSensitive": true,
+                    "leftValue": "",
+                    "typeValidation": "strict",
+                    "version": 2
+                  },
+                  "conditions": [
+                    {
+                      "leftValue": "={{ $json.resolucion_final }}",
+                      "rightValue": "aprobada",
+                      "operator": {
+                        "type": "string",
+                        "operation": "equals"
+                      },
+                      "id": "b9703b2e-6495-4db3-8045-bc28b3c7c02b"
+                    }
+                  ],
+                  "combinator": "and"
+                },
+                "renameOutput": true,
+                "outputKey": "Aprobada"
+              },
+              {
+                "conditions": {
+                  "options": {
+                    "caseSensitive": true,
+                    "leftValue": "",
+                    "typeValidation": "strict",
+                    "version": 2
+                  },
+                  "conditions": [
+                    {
+                      "id": "e7daca8a-af80-494b-aba6-990ce79b88ae",
+                      "leftValue": "={{ $json.resolucion_final }}",
+                      "rightValue": "rechazada",
+                      "operator": {
+                        "type": "string",
+                        "operation": "equals"
+                      }
+                    }
+                  ],
+                  "combinator": "and"
+                },
+                "renameOutput": true,
+                "outputKey": "Rechazada"
+              },
+              {
+                "conditions": {
+                  "options": {
+                    "caseSensitive": true,
+                    "leftValue": "",
+                    "typeValidation": "strict",
+                    "version": 2
+                  },
+                  "conditions": [
+                    {
+                      "id": "4d6d3282-ffdc-4897-84c8-5f9af37bc287",
+                      "leftValue": "={{ $json.resolucion_final }}",
+                      "rightValue": "pendiente",
+                      "operator": {
+                        "type": "string",
+                        "operation": "equals"
+                      }
+                    }
+                  ],
+                  "combinator": "and"
+                },
+                "renameOutput": true,
+                "outputKey": "Pendiente"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.switch",
+        "typeVersion": 3.3,
+        "position": [
+          624,
+          -16
+        ],
+        "id": "7371110b-1af8-4bc4-8eba-d3f981c40a31",
+        "name": "Switch"
+      },
+      {
+        "parameters": {
+          "operation": "get",
+          "tableId": "cantera_connect_solicitud_vacaciones",
+          "filters": {
+            "conditions": [
+              {
+                "keyName": "id",
+                "keyValue": "={{ $json.solicitud_id }}"
+              }
+            ]
+          }
+        },
+        "type": "n8n-nodes-base.supabase",
+        "typeVersion": 1,
+        "position": [
+          208,
+          0
+        ],
+        "id": "274035c7-7d71-40b8-803b-4d4dda99be7e",
+        "name": "Get datos solicitud",
+        "credentials": {
+          "supabaseApi": {
+            "id": "ty0KiXsEYP1uJ8t9",
+            "name": "Supabase account - CANTERA"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "jsCode": "return items.map(item => {\n  const data = item.json;\n\n  // 1. Ponemos las 3 aprobaciones en una lista para facilitar el conteo\n  // Asegúrate que los nombres de los campos coincidan exactamente con tu salida anterior\n  const aprobaciones = [\n    data.aprobacion_rh,\n    data.aprobacion_lider,\n    data.aprobacion_pm\n  ];\n\n  // 2. Contamos cuántos True y cuántos False hay\n  // Nota: Filtramos estrictamente por valor booleano\n  const votosPositivos = aprobaciones.filter(v => v === true).length;\n  const votosNegativos = aprobaciones.filter(v => v === false).length;\n\n  // 3. Lógica de Mayoría (2 de 3)\n  let resolucion = 'pendiente'; // Estado por defecto (si hay nulls o empate 1-1)\n\n  if (votosPositivos >= 2) {\n    resolucion = 'aprobada';\n  } else if (votosNegativos >= 2) {\n    resolucion = 'rechazada';\n  }\n\n  // 4. Agregamos el nuevo campo al objeto JSON\n  item.json.resolucion_final = resolucion;\n  \n  // Opcional: Agregar detalles del conteo por si quieres depurar\n  item.json.conteo_votos = { afavor: votosPositivos, encontra: votosNegativos };\n\n  return item;\n});"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          416,
+          0
+        ],
+        "id": "bf5418de-88b3-483f-acce-d8afde81c951",
+        "name": "Code revisar aprobaciones"
+      },
+      {
+        "parameters": {
+          "operation": "update",
+          "tableId": "cantera_connect_solicitud_vacaciones",
+          "filters": {
+            "conditions": [
+              {
+                "keyName": "id",
+                "condition": "eq",
+                "keyValue": "={{ $('When Executed by Another Workflow').item.json.solicitud_id }}"
+              }
+            ]
+          },
+          "fieldsUi": {
+            "fieldValues": [
+              {
+                "fieldId": "estado",
+                "fieldValue": "aceptada"
+              }
+            ]
+          }
+        },
+        "type": "n8n-nodes-base.supabase",
+        "typeVersion": 1,
+        "position": [
+          848,
+          -192
+        ],
+        "id": "364e4a99-50a5-4f6d-99b1-2b6c9fa380cb",
+        "name": "Update estado aceptada",
+        "credentials": {
+          "supabaseApi": {
+            "id": "ty0KiXsEYP1uJ8t9",
+            "name": "Supabase account - CANTERA"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "update",
+          "tableId": "cantera_connect_solicitud_vacaciones",
+          "filters": {
+            "conditions": [
+              {
+                "keyName": "id",
+                "condition": "eq",
+                "keyValue": "={{ $('When Executed by Another Workflow').item.json.solicitud_id }}"
+              }
+            ]
+          },
+          "fieldsUi": {
+            "fieldValues": [
+              {
+                "fieldId": "estado",
+                "fieldValue": "rechazada"
+              }
+            ]
+          }
+        },
+        "type": "n8n-nodes-base.supabase",
+        "typeVersion": 1,
+        "position": [
+          848,
+          0
+        ],
+        "id": "e8b5f2d6-3e62-4db8-9e44-3edd6fea626e",
+        "name": "Update estado rechazada",
+        "credentials": {
+          "supabaseApi": {
+            "id": "ty0KiXsEYP1uJ8t9",
+            "name": "Supabase account - CANTERA"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "toRecipients": "={{ $('Get datos solicitud').item.json.correo }}",
+          "subject": "=Solicitud de vacaciones aceptada",
+          "bodyContent": "=Estimado {{ $('Get datos solicitud').item.json.nombre }}\nTe infomamos que tu solicitud de {{ $('Get datos solicitud').item.json.cantidad_dias }} dia(s) de vacaciones para las fechas {{ $('Get datos solicitud').item.json.fechas }} fue aceptada.\n\nCualquier duda o comentario favor de comunicarte con Andrea",
+          "additionalFields": {}
+        },
+        "type": "n8n-nodes-base.microsoftOutlook",
+        "typeVersion": 2,
+        "position": [
+          1072,
+          -192
+        ],
+        "id": "03d4a55f-ef91-4fe0-bb6b-a21a63ea6e99",
+        "name": "Send confirmación aceptada",
+        "webhookId": "0e70a859-049b-4da1-8b31-13facd314fb7",
+        "credentials": {
+          "microsoftOutlookOAuth2Api": {
+            "id": "1e9fbzjIiV9wNv2j",
+            "name": "Microsoft Outlook account - azure@canteradigital.mx"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "toRecipients": "={{ $('Get datos solicitud').item.json.correo }}",
+          "subject": "=Solicitud de vacaciones rechazada",
+          "bodyContent": "=Estimado {{ $('Get datos solicitud').item.json.nombre }}\nTe infomamos que tu solicitud de {{ $('Get datos solicitud').item.json.cantidad_dias }} dia(s) de vacaciones para las fechas {{ $('Get datos solicitud').item.json.fechas }} fue rechazada.\n\nCualquier duda o comentario favor de comunicarte con Andrea",
+          "additionalFields": {}
+        },
+        "type": "n8n-nodes-base.microsoftOutlook",
+        "typeVersion": 2,
+        "position": [
+          1072,
+          0
+        ],
+        "id": "e9c2ef8b-3374-4c20-ac88-02c3929aacb7",
+        "name": "Send confirmación rechazada",
+        "webhookId": "0e70a859-049b-4da1-8b31-13facd314fb7",
+        "credentials": {
+          "microsoftOutlookOAuth2Api": {
+            "id": "1e9fbzjIiV9wNv2j",
+            "name": "Microsoft Outlook account - azure@canteradigital.mx"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "get",
+          "tableId": "colaboradores",
+          "filters": {
+            "conditions": [
+              {
+                "keyName": "correo",
+                "keyValue": "={{ $('Get datos solicitud').item.json.correo }}"
+              }
+            ]
+          }
+        },
+        "type": "n8n-nodes-base.supabase",
+        "typeVersion": 1,
+        "position": [
+          1280,
+          -192
+        ],
+        "id": "5075f0c3-df30-4205-92cc-b93ff4e67859",
+        "name": "Get días actuales vacaciones",
+        "credentials": {
+          "supabaseApi": {
+            "id": "ty0KiXsEYP1uJ8t9",
+            "name": "Supabase account - CANTERA"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "update",
+          "tableId": "colaboradores",
+          "filters": {
+            "conditions": [
+              {
+                "keyName": "id",
+                "condition": "eq",
+                "keyValue": "={{ $json.id }}"
+              }
+            ]
+          },
+          "fieldsUi": {
+            "fieldValues": [
+              {
+                "fieldId": "dias_vacaciones_restantes",
+                "fieldValue": "={{ $json.dias_vacaciones_restantes - $('Get datos solicitud').item.json.cantidad_dias }}"
+              }
+            ]
+          }
+        },
+        "type": "n8n-nodes-base.supabase",
+        "typeVersion": 1,
+        "position": [
+          1488,
+          -192
+        ],
+        "id": "940097aa-91a2-43d0-8024-93b1c918980f",
+        "name": "Update días restantes de vaaciones",
+        "credentials": {
+          "supabaseApi": {
+            "id": "ty0KiXsEYP1uJ8t9",
+            "name": "Supabase account - CANTERA"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "update",
+          "tableId": "cantera_connect_solicitud_vacaciones",
+          "filters": {
+            "conditions": [
+              {
+                "keyName": "id",
+                "condition": "eq",
+                "keyValue": "={{ $('When Executed by Another Workflow').item.json.solicitud_id }}"
+              }
+            ]
+          },
+          "fieldsUi": {
+            "fieldValues": [
+              {
+                "fieldId": "estado",
+                "fieldValue": "pendiente"
+              }
+            ]
+          }
+        },
+        "type": "n8n-nodes-base.supabase",
+        "typeVersion": 1,
+        "position": [
+          848,
+          208
+        ],
+        "id": "9bc4c888-bc91-4e33-a18f-44da978301dc",
+        "name": "Update estado pendiente",
+        "credentials": {
+          "supabaseApi": {
+            "id": "ty0KiXsEYP1uJ8t9",
+            "name": "Supabase account - CANTERA"
+          }
+        }
+      }
+    ],
+    "connections": {
+      "When Executed by Another Workflow": {
+        "main": [
+          [
+            {
+              "node": "Get datos solicitud",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Switch": {
+        "main": [
+          [
+            {
+              "node": "Update estado aceptada",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Update estado rechazada",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Update estado pendiente",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Get datos solicitud": {
+        "main": [
+          [
+            {
+              "node": "Code revisar aprobaciones",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Code revisar aprobaciones": {
+        "main": [
+          [
+            {
+              "node": "Switch",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Update estado aceptada": {
+        "main": [
+          [
+            {
+              "node": "Send confirmación aceptada",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Update estado rechazada": {
+        "main": [
+          [
+            {
+              "node": "Send confirmación rechazada",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Send confirmación aceptada": {
+        "main": [
+          [
+            {
+              "node": "Get días actuales vacaciones",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Get días actuales vacaciones": {
+        "main": [
+          [
+            {
+              "node": "Update días restantes de vaaciones",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "authors": "CANTERA ADMIN",
+    "name": null,
+    "description": null,
+    "autosaved": false,
+    "workflowPublishHistory": [
+      {
+        "createdAt": "2025-12-10T23:50:23.000Z",
+        "id": 122,
+        "workflowId": "5NDkGEiGe5RMoUci",
+        "versionId": "7b454243-501e-427f-8f7a-e0b0a6d04e77",
+        "event": "activated",
+        "userId": null
+      }
+    ]
+  }
 }
