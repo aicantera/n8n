@@ -4,7 +4,7 @@
   "id": "28z14cDPX6ZPRTxS",
   "name": "send info documentos",
   "description": null,
-  "active": false,
+  "active": true,
   "isArchived": false,
   "nodes": [
     {
@@ -1723,8 +1723,8 @@
     ]
   },
   "versionId": "f4243f24-95ab-424e-a344-b6ba17437ab0",
-  "activeVersionId": null,
-  "versionCounter": 9,
+  "activeVersionId": "f4243f24-95ab-424e-a344-b6ba17437ab0",
+  "versionCounter": 10,
   "triggerCount": 0,
   "shared": [
     {
@@ -1741,52 +1741,1729 @@
         "type": "personal",
         "icon": null,
         "description": null,
-        "projectRelations": [
-          {
-            "updatedAt": "2025-05-13T15:56:28.209Z",
-            "createdAt": "2025-05-13T15:56:28.209Z",
-            "userId": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
-            "projectId": "BZ9Ta5yhe4RhzY78",
-            "user": {
-              "updatedAt": "2026-05-28T06:00:27.000Z",
-              "createdAt": "2025-05-13T15:56:27.880Z",
-              "id": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
-              "email": "canteradigital7@gmail.com",
-              "firstName": "CANTERA",
-              "lastName": "ADMIN",
-              "personalizationAnswers": {
-                "version": "v4",
-                "personalization_survey_submitted_at": "2025-05-13T16:19:25.161Z",
-                "personalization_survey_n8n_version": "1.92.2",
-                "companySize": "<20",
-                "companyType": "saas",
-                "role": "customer-support",
-                "reportedSource": "event"
-              },
-              "settings": {
-                "userActivated": true,
-                "firstSuccessfulWorkflowId": "PTbESRzX3rguwQN8",
-                "userActivatedAt": 1747154580970,
-                "easyAIWorkflowOnboarded": true,
-                "npsSurvey": {
-                  "responded": true,
-                  "lastShownAt": 1765302536772
-                },
-                "dismissedCallouts": {
-                  "aiAgentStarterCallout": true,
-                  "preBuiltAgentsCalloutHttpRequest": true
-                }
-              },
-              "disabled": false,
-              "mfaEnabled": false,
-              "lastActiveAt": "2026-05-28",
-              "isPending": false
-            }
-          }
-        ]
+        "creatorId": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3"
       }
     }
   ],
   "tags": [],
-  "activeVersion": null
+  "activeVersion": {
+    "updatedAt": "2026-05-18T22:41:22.970Z",
+    "createdAt": "2026-05-18T22:41:22.970Z",
+    "versionId": "f4243f24-95ab-424e-a344-b6ba17437ab0",
+    "workflowId": "28z14cDPX6ZPRTxS",
+    "nodes": [
+      {
+        "parameters": {
+          "workflowInputs": {
+            "values": [
+              {
+                "name": "vacante_id"
+              },
+              {
+                "name": "chat_id"
+              },
+              {
+                "name": "type"
+              }
+            ]
+          }
+        },
+        "type": "n8n-nodes-base.executeWorkflowTrigger",
+        "typeVersion": 1.1,
+        "position": [
+          -3936,
+          784
+        ],
+        "id": "921d6dc3-1e35-4256-997c-de3088f549c8",
+        "name": "inicio"
+      },
+      {
+        "parameters": {
+          "operation": "get",
+          "tableId": "puestos_empresariales",
+          "filters": {
+            "conditions": [
+              {
+                "keyName": "id",
+                "keyValue": "={{ $json.vacante_id }}"
+              }
+            ]
+          }
+        },
+        "type": "n8n-nodes-base.supabase",
+        "typeVersion": 1,
+        "position": [
+          -3712,
+          784
+        ],
+        "id": "b0f85da1-8930-46b3-8944-683dc780012a",
+        "name": "Get a row",
+        "alwaysOutputData": true,
+        "credentials": {
+          "supabaseApi": {
+            "id": "ty0KiXsEYP1uJ8t9",
+            "name": "Supabase account - CANTERA"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "conditions": {
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 2
+            },
+            "conditions": [
+              {
+                "id": "bf14022e-1095-46ab-98d6-93428142be75",
+                "leftValue": "={{ $json.image_link }}",
+                "rightValue": "",
+                "operator": {
+                  "type": "string",
+                  "operation": "notEmpty",
+                  "singleValue": true
+                }
+              }
+            ],
+            "combinator": "and"
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.filter",
+        "typeVersion": 2.2,
+        "position": [
+          -3488,
+          688
+        ],
+        "id": "6977ee3a-952a-4278-996d-db3ca0b44d14",
+        "name": "Filter"
+      },
+      {
+        "parameters": {
+          "fieldToSplitOut": "files",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.splitOut",
+        "typeVersion": 1,
+        "position": [
+          -576,
+          592
+        ],
+        "id": "9a3af7db-2bfb-463e-b3b4-9922963112bc",
+        "name": "Split Out",
+        "alwaysOutputData": true
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "a1f28952-4829-47cd-ac8c-6094df42964c",
+                "name": "files",
+                "value": "={{ $json.files }}",
+                "type": "array"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          -1024,
+          592
+        ],
+        "id": "d9bf1f6f-8b55-40c1-839b-4b041370b57e",
+        "name": "Edit Fields"
+      },
+      {
+        "parameters": {
+          "url": "={{ $json.webContentLink }}",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          320,
+          48
+        ],
+        "id": "04e608e6-0cef-433a-9749-868a5a2b7eec",
+        "name": "HTTP Request1"
+      },
+      {
+        "parameters": {
+          "conditions": {
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 2
+            },
+            "conditions": [
+              {
+                "id": "b8038863-071b-41d7-92b2-f1c78d4b7473",
+                "leftValue": "={{ $json.size <= 45 * 1024 * 1024 }}",
+                "rightValue": "",
+                "operator": {
+                  "type": "boolean",
+                  "operation": "true",
+                  "singleValue": true
+                }
+              }
+            ],
+            "combinator": "and"
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2.2,
+        "position": [
+          -128,
+          160
+        ],
+        "id": "a0a36631-3569-48e9-b9a7-c1351ab70267",
+        "name": "If1"
+      },
+      {
+        "parameters": {
+          "options": {}
+        },
+        "type": "n8n-nodes-base.splitInBatches",
+        "typeVersion": 3,
+        "position": [
+          -352,
+          592
+        ],
+        "id": "3aac53fe-8a46-4cbd-a44d-96d498e9220a",
+        "name": "Loop Over Items"
+      },
+      {
+        "parameters": {
+          "rules": {
+            "values": [
+              {
+                "conditions": {
+                  "options": {
+                    "caseSensitive": true,
+                    "leftValue": "",
+                    "typeValidation": "strict",
+                    "version": 2
+                  },
+                  "conditions": [
+                    {
+                      "leftValue": "={{ $json.mimeType }}",
+                      "rightValue": "image/jpeg",
+                      "operator": {
+                        "type": "string",
+                        "operation": "equals"
+                      },
+                      "id": "a1cf8d5b-5c75-4e76-b35c-a19d23e4c985"
+                    }
+                  ],
+                  "combinator": "and"
+                },
+                "renameOutput": true,
+                "outputKey": "imagen"
+              },
+              {
+                "conditions": {
+                  "options": {
+                    "caseSensitive": true,
+                    "leftValue": "",
+                    "typeValidation": "strict",
+                    "version": 2
+                  },
+                  "conditions": [
+                    {
+                      "id": "ad8ac6e5-5313-41a9-8f66-deb76e54b3cc",
+                      "leftValue": "={{ $json.mimeType }}",
+                      "rightValue": "image/png",
+                      "operator": {
+                        "type": "string",
+                        "operation": "equals",
+                        "name": "filter.operator.equals"
+                      }
+                    }
+                  ],
+                  "combinator": "and"
+                },
+                "renameOutput": true,
+                "outputKey": "imagen png"
+              },
+              {
+                "conditions": {
+                  "options": {
+                    "caseSensitive": true,
+                    "leftValue": "",
+                    "typeValidation": "strict",
+                    "version": 2
+                  },
+                  "conditions": [
+                    {
+                      "id": "a1626e80-5438-4179-a84a-6b30ee72e446",
+                      "leftValue": "={{ $json.mimeType }}",
+                      "rightValue": "video/mp4",
+                      "operator": {
+                        "type": "string",
+                        "operation": "equals",
+                        "name": "filter.operator.equals"
+                      }
+                    }
+                  ],
+                  "combinator": "and"
+                },
+                "renameOutput": true,
+                "outputKey": "video"
+              }
+            ]
+          },
+          "options": {
+            "fallbackOutput": "extra"
+          }
+        },
+        "type": "n8n-nodes-base.switch",
+        "typeVersion": 3.3,
+        "position": [
+          544,
+          16
+        ],
+        "id": "9fad0888-67e5-493e-836b-f440d5c5c9e2",
+        "name": "Switch"
+      },
+      {
+        "parameters": {
+          "rules": {
+            "values": [
+              {
+                "conditions": {
+                  "options": {
+                    "caseSensitive": true,
+                    "leftValue": "",
+                    "typeValidation": "strict",
+                    "version": 2
+                  },
+                  "conditions": [
+                    {
+                      "leftValue": "={{ $('inicio').item.json.type }}",
+                      "rightValue": "general",
+                      "operator": {
+                        "type": "string",
+                        "operation": "equals"
+                      },
+                      "id": "34126881-3e7e-4099-9c7d-716af882ed80"
+                    }
+                  ],
+                  "combinator": "and"
+                },
+                "renameOutput": true,
+                "outputKey": "general"
+              },
+              {
+                "conditions": {
+                  "options": {
+                    "caseSensitive": true,
+                    "leftValue": "",
+                    "typeValidation": "strict",
+                    "version": 2
+                  },
+                  "conditions": [
+                    {
+                      "id": "667ea02c-840f-4a5d-a496-13726f3e65ec",
+                      "leftValue": "={{ $('inicio').item.json.type }}",
+                      "rightValue": "rutas",
+                      "operator": {
+                        "type": "string",
+                        "operation": "equals",
+                        "name": "filter.operator.equals"
+                      }
+                    }
+                  ],
+                  "combinator": "and"
+                },
+                "renameOutput": true,
+                "outputKey": "rutas"
+              },
+              {
+                "conditions": {
+                  "options": {
+                    "caseSensitive": true,
+                    "leftValue": "",
+                    "typeValidation": "strict",
+                    "version": 2
+                  },
+                  "conditions": [
+                    {
+                      "id": "070532aa-01b6-4c39-a681-a374a339d61c",
+                      "leftValue": "={{ $('inicio').item.json.type }}",
+                      "rightValue": "extra",
+                      "operator": {
+                        "type": "string",
+                        "operation": "equals",
+                        "name": "filter.operator.equals"
+                      }
+                    }
+                  ],
+                  "combinator": "and"
+                },
+                "renameOutput": true,
+                "outputKey": "extra"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.switch",
+        "typeVersion": 3.3,
+        "position": [
+          -2816,
+          576
+        ],
+        "id": "6b1b3590-eceb-4c5f-bac4-e89c63b60493",
+        "name": "Switch1"
+      },
+      {
+        "parameters": {
+          "url": "=https://www.googleapis.com/drive/v3/files?q='{{ $json.documents_url.split(\"/\").last().split(\"?usp\").first() }}'%20in%20parents&fields=files(id,name,mimeType,webViewLink,webContentLink,size)&key=AIzaSyBIrN4G_V-HQauGEf8BrfysKDpU1BXMj28",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          -3040,
+          592
+        ],
+        "id": "1a48c8b3-c98e-4f36-a651-ee091debab26",
+        "name": "HTTP Request"
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "146012a1-23d2-4452-9760-9cfe90bc3cea",
+                "name": "folder_id",
+                "value": "={{ $json.webViewLink.split(\"/\").last() }}",
+                "type": "string"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          -1472,
+          592
+        ],
+        "id": "6ae624b0-3ab2-4c29-8c3c-2b30326b14f4",
+        "name": "Edit Fields1"
+      },
+      {
+        "parameters": {
+          "numberInputs": 3
+        },
+        "type": "n8n-nodes-base.merge",
+        "typeVersion": 3.2,
+        "position": [
+          -1696,
+          576
+        ],
+        "id": "d45c29ce-3663-4269-93f2-00f58b148ccb",
+        "name": "Merge"
+      },
+      {
+        "parameters": {
+          "url": "=https://www.googleapis.com/drive/v3/files?q='{{ $json.folder_id }}'%20in%20parents&fields=files(id,name,mimeType,webViewLink,webContentLink,size)&key=AIzaSyBIrN4G_V-HQauGEf8BrfysKDpU1BXMj28",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          -1248,
+          592
+        ],
+        "id": "e87b9275-64f8-46f3-a544-af4a0e624c4c",
+        "name": "HTTP Request2"
+      },
+      {
+        "parameters": {
+          "jsCode": "// Code node en n8n\n\n// 🔧 Nombre de carpeta que quieres buscar.\n// Puedes cambiarlo o traerlo de otro nodo: p.ej. const targetName = $json.folderName;\nconst targetName = 'General';\n\n// --- Funciones auxiliares ---\n\nfunction normalizeName(name) {\n  return String(name)\n    .toLowerCase()\n    .normalize('NFD')                  // separa acentos\n    .replace(/[\\u0300-\\u036f]/g, '')   // elimina acentos\n    .trim();\n}\n\nfunction getFilesArray(fromJson) {\n  // Caso 1: JSON es un array: [ { files: [...] } ]\n  if (Array.isArray(fromJson)) {\n    if (!fromJson[0] || !Array.isArray(fromJson[0].files)) {\n      throw new Error('No se encontró la propiedad \"files\" en el primer elemento del array.');\n    }\n    return fromJson[0].files;\n  }\n\n  // Caso 2: JSON es un objeto: { files: [...] }\n  if (Array.isArray(fromJson.files)) {\n    return fromJson.files;\n  }\n\n  throw new Error('No se encontró un arreglo \"files\" en el JSON recibido.');\n}\n\nfunction findFolderByName(files, name) {\n  const normalizedTarget = normalizeName(name);\n\n  return files.find(f => \n    f.mimeType === 'application/vnd.google-apps.folder' &&\n    normalizeName(f.name) === normalizedTarget\n  ) || null;\n}\n\n// --- Lógica principal ---\n\n// Tomamos el JSON del primer item (ajusta si lo necesitas por item)\nconst sourceJson = items[0].json;\n\nconst files = getFilesArray(sourceJson);\nconst folder = findFolderByName(files, targetName);\n\nif (!folder) {\n  throw new Error(`No se encontró ninguna carpeta con el nombre \"${targetName}\".`);\n}\n\n// Devolvemos solo la carpeta encontrada como resultado del nodo\nreturn [\n  {\n    json: folder,\n  },\n];\n"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          -1920,
+          400
+        ],
+        "id": "0aeffa08-fef0-4b8c-9f45-09501f267e38",
+        "name": "Code in JavaScript"
+      },
+      {
+        "parameters": {
+          "jsCode": "// Code node en n8n\n\n// 🔧 Nombre de carpeta que quieres buscar.\n// Puedes cambiarlo o traerlo de otro nodo: p.ej. const targetName = $json.folderName;\nconst targetName = 'Rutas'; // 'principal' | 'ubicación' | 'extra'\n\n// --- Funciones auxiliares ---\n\nfunction normalizeName(name) {\n  return String(name)\n    .toLowerCase()\n    .normalize('NFD')                  // separa acentos\n    .replace(/[\\u0300-\\u036f]/g, '')   // elimina acentos\n    .trim();\n}\n\nfunction getFilesArray(fromJson) {\n  // Caso 1: JSON es un array: [ { files: [...] } ]\n  if (Array.isArray(fromJson)) {\n    if (!fromJson[0] || !Array.isArray(fromJson[0].files)) {\n      throw new Error('No se encontró la propiedad \"files\" en el primer elemento del array.');\n    }\n    return fromJson[0].files;\n  }\n\n  // Caso 2: JSON es un objeto: { files: [...] }\n  if (Array.isArray(fromJson.files)) {\n    return fromJson.files;\n  }\n\n  throw new Error('No se encontró un arreglo \"files\" en el JSON recibido.');\n}\n\nfunction findFolderByName(files, name) {\n  const normalizedTarget = normalizeName(name);\n\n  return files.find(f => \n    f.mimeType === 'application/vnd.google-apps.folder' &&\n    normalizeName(f.name) === normalizedTarget\n  ) || null;\n}\n\n// --- Lógica principal ---\n\n// Tomamos el JSON del primer item (ajusta si lo necesitas por item)\nconst sourceJson = items[0].json;\n\nconst files = getFilesArray(sourceJson);\nconst folder = findFolderByName(files, targetName);\n\nif (!folder) {\n  throw new Error(`No se encontró ninguna carpeta con el nombre \"${targetName}\".`);\n}\n\n// Devolvemos solo la carpeta encontrada como resultado del nodo\nreturn [\n  {\n    json: folder,\n  },\n];\n"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          -1920,
+          592
+        ],
+        "id": "216a015d-ac7c-4b8e-802d-a66ec8fe7383",
+        "name": "Code in JavaScript1"
+      },
+      {
+        "parameters": {
+          "jsCode": "// Code node en n8n\n\n// ✅ Nombre base de carpeta a buscar\n// Puedes poner \"Extras\" o traerlo: const targetName = $json.folderName;\nconst targetName = 'Extra';\n\n// ----------------- Helpers -----------------\n\nfunction normalizeName(name) {\n  return String(name ?? '')\n    .toLowerCase()\n    .normalize('NFD')\n    .replace(/[\\u0300-\\u036f]/g, '')   // quita acentos\n    .replace(/\\s+/g, ' ')              // colapsa espacios\n    .trim();\n}\n\n// Variantes típicas: plural/singular, con/ sin espacios, guiones, etc.\nfunction buildVariants(name) {\n  const base = normalizeName(name);\n\n  const variants = new Set();\n  variants.add(base);\n\n  // si termina en \"s\", agrega singular; si no termina en \"s\", agrega plural\n  if (base.endsWith('s')) variants.add(base.slice(0, -1));\n  else variants.add(base + 's');\n\n  // variantes de formato\n  for (const v of Array.from(variants)) {\n    variants.add(v.replace(/\\s/g, ''));      // sin espacios\n    variants.add(v.replace(/\\s/g, '-'));     // con guiones\n    variants.add(v.replace(/\\s/g, '_'));     // con guión bajo\n  }\n\n  // si buscas \"extra\" / \"extras\", también acepta \"extra info\", \"extras (1)\", etc.\n  // (esto lo resolvemos con el modo \"contains\" más abajo)\n\n  return Array.from(variants);\n}\n\nfunction getFilesArray(fromJson) {\n  if (Array.isArray(fromJson)) {\n    if (!fromJson[0] || !Array.isArray(fromJson[0].files)) {\n      throw new Error('No se encontró la propiedad \"files\" en el primer elemento del array.');\n    }\n    return fromJson[0].files;\n  }\n  if (Array.isArray(fromJson.files)) return fromJson.files;\n\n  throw new Error('No se encontró un arreglo \"files\" en el JSON recibido.');\n}\n\nfunction isFolder(f) {\n  return f?.mimeType === 'application/vnd.google-apps.folder';\n}\n\n/**\n * Busca carpeta por variantes:\n * 1) match exacto (normalizado)\n * 2) match por \"contiene\" (normalizado)\n */\nfunction findFolderByVariants(files, baseName) {\n  const variants = buildVariants(baseName);\n\n  // Filtra solo folders\n  const folders = files.filter(isFolder).map(f => ({\n    raw: f,\n    norm: normalizeName(f.name),\n  }));\n\n  // 1) Exact match\n  for (const v of variants) {\n    const found = folders.find(x => x.norm === v);\n    if (found) return found.raw;\n  }\n\n  // 2) Contains match (por si se llama: \"Extras Canon\", \"extra (temario)\", etc.)\n  for (const v of variants) {\n    const found = folders.find(x => x.norm.includes(v));\n    if (found) return found.raw;\n  }\n\n  return null;\n}\n\n// ----------------- Main -----------------\n\nconst sourceJson = items[0].json;\nconst files = getFilesArray(sourceJson);\n\nconst folder = findFolderByVariants(files, targetName);\n\nif (!folder) {\n  // Para debugging, puedes listar los nombres disponibles:\n  const available = files\n    .filter(isFolder)\n    .map(f => f.name)\n    .slice(0, 50);\n\n  throw new Error(\n    `No se encontró carpeta para \"${targetName}\". Variantes probadas: ${buildVariants(targetName).join(', ')}. ` +\n    `Folders disponibles (primeros 50): ${available.join(' | ')}`\n  );\n}\n\nreturn [{ json: folder }];\n"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          -1920,
+          880
+        ],
+        "id": "df86ef85-377e-4232-b36a-b72a0b8b8feb",
+        "name": "Code in JavaScript2"
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "ab188395-0a5d-4f83-a694-f3bb4e01a1de",
+                "name": "files",
+                "value": "={{ $('Switch1').item.json.files }}",
+                "type": "array"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          -2240,
+          176
+        ],
+        "id": "a5146fab-abc4-4ff7-8420-1e53785f7e1b",
+        "name": "Edit Fields2"
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "8b5dca39-93f0-4cce-aeec-e1a89d19e244",
+                "name": "mensaje",
+                "value": "no se encontro una vacante con ese id revisa si el id es correctp ",
+                "type": "string"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          -3264,
+          976
+        ],
+        "id": "a3b56d25-9053-4238-b269-3505626e2397",
+        "name": "Edit Fields3"
+      },
+      {
+        "parameters": {
+          "conditions": {
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 2
+            },
+            "conditions": [
+              {
+                "id": "9d14ff19-65a4-4b02-91fe-3d9b842fc5cc",
+                "leftValue": "={{ $json.id }}",
+                "rightValue": "",
+                "operator": {
+                  "type": "number",
+                  "operation": "exists",
+                  "singleValue": true
+                }
+              }
+            ],
+            "combinator": "and"
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2.2,
+        "position": [
+          -3488,
+          880
+        ],
+        "id": "53161b1f-b686-4bd1-b007-9d8f95a4a066",
+        "name": "If"
+      },
+      {
+        "parameters": {
+          "conditions": {
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 2
+            },
+            "conditions": [
+              {
+                "id": "4964109f-e8cc-4ebd-86be-7caea928aa9e",
+                "leftValue": "={{ $json.documents_url }}",
+                "rightValue": "",
+                "operator": {
+                  "type": "string",
+                  "operation": "notEmpty",
+                  "singleValue": true
+                }
+              }
+            ],
+            "combinator": "and"
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2.2,
+        "position": [
+          -3264,
+          784
+        ],
+        "id": "d22a802c-63a8-43be-bcbe-986ea2c983e5",
+        "name": "If2"
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "8b5dca39-93f0-4cce-aeec-e1a89d19e244",
+                "name": "mensaje",
+                "value": "=el vacante de {{ $json.puesto }} no contiene documentos",
+                "type": "string"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          -3040,
+          784
+        ],
+        "id": "24ff99dd-6685-4de3-bd0c-24babc2dffad",
+        "name": "Edit Fields4"
+      },
+      {
+        "parameters": {
+          "conditions": {
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 2
+            },
+            "conditions": [
+              {
+                "id": "b92b0daf-ea67-4931-b029-8ec879a438d6",
+                "leftValue": "={{ $json.files }}",
+                "rightValue": "",
+                "operator": {
+                  "type": "array",
+                  "operation": "notEmpty",
+                  "singleValue": true
+                }
+              }
+            ],
+            "combinator": "and"
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2.2,
+        "position": [
+          -800,
+          592
+        ],
+        "id": "03f0c7da-5e68-4fb7-8788-5a7a81229adb",
+        "name": "If3"
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "92aa2173-83fb-492f-ab80-779259ef7cda",
+                "name": "message",
+                "value": "sin información por mostrar",
+                "type": "string"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          -576,
+          784
+        ],
+        "id": "b425048b-165c-4a45-9171-03b5b416daaa",
+        "name": "Edit Fields5"
+      },
+      {
+        "parameters": {
+          "operation": "send",
+          "phoneNumberId": "900798043106364",
+          "recipientPhoneNumber": "={{ $('inicio').item.json.chat_id.toString() }}",
+          "textBody": "={{ $json['copy generado'] }}",
+          "additionalFields": {}
+        },
+        "type": "n8n-nodes-base.whatsApp",
+        "typeVersion": 1.1,
+        "position": [
+          -2464,
+          176
+        ],
+        "id": "a20963e6-c6cf-4f6b-94e9-8605e5d4a651",
+        "name": "Send message",
+        "webhookId": "fc038805-4c31-4e38-a7c4-f10e6c992518",
+        "credentials": {
+          "whatsAppApi": {
+            "id": "0RNT8qdqI158Zl08",
+            "name": "WhatsApp account Consulting Financial"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "send",
+          "phoneNumberId": "900798043106364",
+          "recipientPhoneNumber": "={{ $('inicio').item.json.chat_id.toString() }}",
+          "textBody": "={{ $('Loop Over Items').item.json.webViewLink }}",
+          "additionalFields": {}
+        },
+        "type": "n8n-nodes-base.whatsApp",
+        "typeVersion": 1.1,
+        "position": [
+          320,
+          256
+        ],
+        "id": "1d3b0336-45d6-4eb4-81a5-54ae94d24824",
+        "name": "Send message1",
+        "webhookId": "b0d7feac-0128-484a-9040-fad4590059bf",
+        "credentials": {
+          "whatsAppApi": {
+            "id": "0RNT8qdqI158Zl08",
+            "name": "WhatsApp account Consulting Financial"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "conditions": {
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 2
+            },
+            "conditions": [
+              {
+                "id": "8ed9fb0b-5cf1-4b47-bb70-209d1b5d9fd7",
+                "leftValue": "={{ $json.mimeType }}",
+                "rightValue": "image",
+                "operator": {
+                  "type": "string",
+                  "operation": "contains"
+                }
+              }
+            ],
+            "combinator": "and"
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2.2,
+        "position": [
+          96,
+          96
+        ],
+        "id": "61ad88e4-5c73-46f8-8979-436c231ddd67",
+        "name": "If4"
+      },
+      {
+        "parameters": {
+          "operation": "send",
+          "phoneNumberId": "900798043106364",
+          "recipientPhoneNumber": "={{ $('inicio').item.json.chat_id }}",
+          "messageType": "image",
+          "mediaPath": "useMedian8n",
+          "additionalFields": {}
+        },
+        "type": "n8n-nodes-base.whatsApp",
+        "typeVersion": 1.1,
+        "position": [
+          768,
+          144
+        ],
+        "id": "71fa91a2-9ad2-4632-83f1-cafcaf2f0135",
+        "name": "Send message2",
+        "webhookId": "350b4817-16a6-4434-a313-d3a9b1b1216e",
+        "credentials": {
+          "whatsAppApi": {
+            "id": "0RNT8qdqI158Zl08",
+            "name": "WhatsApp account Consulting Financial"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "send",
+          "phoneNumberId": "900798043106364",
+          "recipientPhoneNumber": "={{ $('inicio').item.json.chat_id }}",
+          "messageType": "video",
+          "mediaPath": "useMedian8n",
+          "additionalFields": {}
+        },
+        "type": "n8n-nodes-base.whatsApp",
+        "typeVersion": 1.1,
+        "position": [
+          768,
+          576
+        ],
+        "id": "d1df5aca-7e92-4341-9f6b-566e510769bb",
+        "name": "Send message3",
+        "webhookId": "2bee42df-f004-49a7-a0e7-290f297f303d",
+        "credentials": {
+          "whatsAppApi": {
+            "id": "0RNT8qdqI158Zl08",
+            "name": "WhatsApp account Consulting Financial"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "send",
+          "phoneNumberId": "900798043106364",
+          "recipientPhoneNumber": "={{ $('inicio').item.json.chat_id.toString() }}",
+          "messageType": "document",
+          "mediaPath": "useMedian8n",
+          "additionalFields": {}
+        },
+        "type": "n8n-nodes-base.whatsApp",
+        "typeVersion": 1.1,
+        "position": [
+          992,
+          496
+        ],
+        "id": "f262d264-f61a-48a6-a7a9-ce1f8bc3ddde",
+        "name": "Send message4",
+        "webhookId": "2bee42df-f004-49a7-a0e7-290f297f303d",
+        "credentials": {
+          "whatsAppApi": {
+            "id": "0RNT8qdqI158Zl08",
+            "name": "WhatsApp account Consulting Financial"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "jsCode": "for (const item of items) {\n  if (!item.binary?.data) throw new Error('No encuentro binary.data');\n\n  item.binary.data.mimeType = 'application/pdf';\n  item.binary.data.fileExtension = 'pdf';\n\n  // Si el nombre no termina en .pdf, lo ajustamos\n  const name = item.binary.data.fileName || 'documento.pdf';\n  item.binary.data.fileName = name.toLowerCase().endsWith('.pdf') ? name : `${name}.pdf`;\n}\n\nreturn items;"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          768,
+          336
+        ],
+        "id": "4a1dd2b8-5aa2-4f33-9759-70a826ff2a21",
+        "name": "Code in JavaScript3"
+      },
+      {
+        "parameters": {
+          "workflowId": {
+            "__rl": true,
+            "value": "3TRmy5xQe7htpSEH",
+            "mode": "list",
+            "cachedResultUrl": "/workflow/3TRmy5xQe7htpSEH",
+            "cachedResultName": "asistente inserta mensajes refactored"
+          },
+          "workflowInputs": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "number": "={{ $('inicio').item.json.chat_id }}",
+              "agent_message": "={{ $json['copy generado'] }}",
+              "project_id": 27,
+              "tipo_entrega": "agente"
+            },
+            "matchingColumns": [],
+            "schema": [
+              {
+                "id": "number",
+                "displayName": "number",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string"
+              },
+              {
+                "id": "project_id",
+                "displayName": "project_id",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "number"
+              },
+              {
+                "id": "human_messaage",
+                "displayName": "human_messaage",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string",
+                "removed": true
+              },
+              {
+                "id": "agent_message",
+                "displayName": "agent_message",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string"
+              },
+              {
+                "id": "contact_name",
+                "displayName": "contact_name",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string",
+                "removed": true
+              },
+              {
+                "id": "tipo_entrega",
+                "displayName": "tipo_entrega",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string",
+                "removed": false
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": true
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.executeWorkflow",
+        "typeVersion": 1.2,
+        "position": [
+          -2464,
+          -16
+        ],
+        "id": "a94b78d1-9a87-455c-89da-e7cc09d2caa7",
+        "name": "guardamos el mensaje y la respuesta del agente"
+      },
+      {
+        "parameters": {
+          "workflowId": {
+            "__rl": true,
+            "value": "3TRmy5xQe7htpSEH",
+            "mode": "list",
+            "cachedResultUrl": "/workflow/3TRmy5xQe7htpSEH",
+            "cachedResultName": "asistente inserta mensajes refactored"
+          },
+          "workflowInputs": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "number": "={{ $('inicio').item.json.chat_id }}",
+              "agent_message": "={{ $json.webViewLink }}",
+              "tipo_entrega": "agente",
+              "project_id": 17
+            },
+            "matchingColumns": [],
+            "schema": [
+              {
+                "id": "number",
+                "displayName": "number",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string"
+              },
+              {
+                "id": "project_id",
+                "displayName": "project_id",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "number"
+              },
+              {
+                "id": "human_messaage",
+                "displayName": "human_messaage",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string",
+                "removed": true
+              },
+              {
+                "id": "agent_message",
+                "displayName": "agent_message",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string"
+              },
+              {
+                "id": "contact_name",
+                "displayName": "contact_name",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string",
+                "removed": true
+              },
+              {
+                "id": "tipo_entrega",
+                "displayName": "tipo_entrega",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string",
+                "removed": false
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": true
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.executeWorkflow",
+        "typeVersion": 1.2,
+        "position": [
+          -128,
+          -32
+        ],
+        "id": "d172170c-75c1-403e-b187-d63b9faecfe0",
+        "name": "guardamos el mensaje y la respuesta del agente1"
+      },
+      {
+        "parameters": {
+          "operation": "send",
+          "phoneNumberId": "900798043106364",
+          "recipientPhoneNumber": "={{ $('inicio').item.json.chat_id }}",
+          "textBody": "=👋🏻 ¡Hola, buen día! 😃 \nMuchas gracias por contactarnos \ncon gusto, comparto la información.",
+          "additionalFields": {}
+        },
+        "type": "n8n-nodes-base.whatsApp",
+        "typeVersion": 1.1,
+        "position": [
+          -4000,
+          1728
+        ],
+        "id": "37c72101-ab89-4be0-8ecc-38e722d8f6e2",
+        "name": "Send message5",
+        "webhookId": "0a30b383-6b65-41dd-a785-4dcb21897878",
+        "credentials": {
+          "whatsAppApi": {
+            "id": "0RNT8qdqI158Zl08",
+            "name": "WhatsApp account Consulting Financial"
+          }
+        },
+        "disabled": true
+      },
+      {
+        "parameters": {
+          "workflowId": {
+            "__rl": true,
+            "value": "3TRmy5xQe7htpSEH",
+            "mode": "list",
+            "cachedResultUrl": "/workflow/3TRmy5xQe7htpSEH",
+            "cachedResultName": "asistente inserta mensajes refactored"
+          },
+          "workflowInputs": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "number": "={{ $('inicio').item.json.chat_id }}",
+              "agent_message": "=👋🏻 ¡Hola, buen día! 😃 \nMuchas gracias por contactarnos \ncon gusto, comparto la información.",
+              "tipo_entrega": "agente",
+              "project_id": 17
+            },
+            "matchingColumns": [],
+            "schema": [
+              {
+                "id": "number",
+                "displayName": "number",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string"
+              },
+              {
+                "id": "project_id",
+                "displayName": "project_id",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "number"
+              },
+              {
+                "id": "human_messaage",
+                "displayName": "human_messaage",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string",
+                "removed": true
+              },
+              {
+                "id": "agent_message",
+                "displayName": "agent_message",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string"
+              },
+              {
+                "id": "contact_name",
+                "displayName": "contact_name",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string",
+                "removed": true
+              },
+              {
+                "id": "tipo_entrega",
+                "displayName": "tipo_entrega",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string",
+                "removed": false
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": true
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.executeWorkflow",
+        "typeVersion": 1.2,
+        "position": [
+          -3776,
+          1728
+        ],
+        "id": "acff9f57-374d-41e4-a87f-73876ed12caf",
+        "name": "guardamos el mensaje y la respuesta del agente2",
+        "disabled": true
+      },
+      {
+        "parameters": {
+          "operation": "get",
+          "tableId": "conversation",
+          "filters": {
+            "conditions": [
+              {
+                "keyName": "project_id",
+                "keyValue": "27"
+              },
+              {
+                "keyName": "chat_id",
+                "keyValue": "={{ $('inicio').item.json.chat_id }}"
+              }
+            ]
+          }
+        },
+        "type": "n8n-nodes-base.supabase",
+        "typeVersion": 1,
+        "position": [
+          -4000,
+          1504
+        ],
+        "id": "39f63bf7-1706-45e1-a862-209df66423b2",
+        "name": "Get a row1",
+        "credentials": {
+          "supabaseApi": {
+            "id": "ty0KiXsEYP1uJ8t9",
+            "name": "Supabase account - CANTERA"
+          }
+        },
+        "disabled": true
+      },
+      {
+        "parameters": {
+          "sortFieldsUi": {
+            "sortField": [
+              {
+                "fieldName": "id",
+                "order": "descending"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.sort",
+        "typeVersion": 1,
+        "position": [
+          -3776,
+          1504
+        ],
+        "id": "b3858067-a33a-4a57-8da7-5e3e8d1b8fac",
+        "name": "Sort",
+        "disabled": true
+      },
+      {
+        "parameters": {},
+        "type": "n8n-nodes-base.limit",
+        "typeVersion": 1,
+        "position": [
+          -3552,
+          1504
+        ],
+        "id": "a0373c5f-c359-4fa6-9160-01a75df15e17",
+        "name": "Limit",
+        "disabled": true
+      },
+      {
+        "parameters": {
+          "operation": "update",
+          "tableId": "conversation",
+          "filters": {
+            "conditions": [
+              {
+                "keyName": "id",
+                "condition": "eq",
+                "keyValue": "={{ $json.id }}"
+              }
+            ]
+          },
+          "fieldsUi": {
+            "fieldValues": [
+              {
+                "fieldId": "product_id",
+                "fieldValue": "={{ $('inicio').item.json.course_id }}"
+              }
+            ]
+          }
+        },
+        "type": "n8n-nodes-base.supabase",
+        "typeVersion": 1,
+        "position": [
+          -3328,
+          1504
+        ],
+        "id": "9fb331a6-2a93-401c-b1e9-be16b18cf265",
+        "name": "Update a row",
+        "credentials": {
+          "supabaseApi": {
+            "id": "ty0KiXsEYP1uJ8t9",
+            "name": "Supabase account - CANTERA"
+          }
+        },
+        "disabled": true
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "486a8b16-2e66-4b43-a6d2-6fb4d01cd737",
+                "name": "copy generado",
+                "value": "=🚀 **¡ESTAMOS CONTRATANDO!** 🚀\n\n📍 **Puesto:** {{ $json.puesto.toUpperCase() }}\n\n---\n\n📝 **DESCRIPCIÓN DEL PUESTO**\n{{ $json.descripcion }}\n\n🛠 **SKILLS Y REQUISITOS**\n{{ $json.skills.split('\\n').map(skill => '✅ ' + skill).join('\\n') }}",
+                "type": "string"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          -2688,
+          80
+        ],
+        "id": "4c102727-f859-4c85-b9c1-6f5d0185593a",
+        "name": "Edit Fields6"
+      }
+    ],
+    "connections": {
+      "inicio": {
+        "main": [
+          [
+            {
+              "node": "Get a row",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Get a row": {
+        "main": [
+          [
+            {
+              "node": "Filter",
+              "type": "main",
+              "index": 0
+            },
+            {
+              "node": "If",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Split Out": {
+        "main": [
+          [
+            {
+              "node": "Loop Over Items",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Edit Fields": {
+        "main": [
+          [
+            {
+              "node": "If3",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "HTTP Request1": {
+        "main": [
+          [
+            {
+              "node": "Switch",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "If1": {
+        "main": [
+          [
+            {
+              "node": "If4",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Send message1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Loop Over Items": {
+        "main": [
+          [],
+          [
+            {
+              "node": "If1",
+              "type": "main",
+              "index": 0
+            },
+            {
+              "node": "guardamos el mensaje y la respuesta del agente1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Switch": {
+        "main": [
+          [
+            {
+              "node": "Send message2",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Send message2",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Send message3",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Code in JavaScript3",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Switch1": {
+        "main": [
+          [
+            {
+              "node": "Code in JavaScript",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Code in JavaScript1",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Code in JavaScript2",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "HTTP Request": {
+        "main": [
+          [
+            {
+              "node": "Switch1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Edit Fields1": {
+        "main": [
+          [
+            {
+              "node": "HTTP Request2",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Merge": {
+        "main": [
+          [
+            {
+              "node": "Edit Fields1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "HTTP Request2": {
+        "main": [
+          [
+            {
+              "node": "Edit Fields",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Code in JavaScript": {
+        "main": [
+          [
+            {
+              "node": "Merge",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Code in JavaScript1": {
+        "main": [
+          [
+            {
+              "node": "Merge",
+              "type": "main",
+              "index": 1
+            }
+          ]
+        ]
+      },
+      "Code in JavaScript2": {
+        "main": [
+          [
+            {
+              "node": "Merge",
+              "type": "main",
+              "index": 2
+            }
+          ]
+        ]
+      },
+      "Edit Fields2": {
+        "main": [
+          []
+        ]
+      },
+      "If": {
+        "main": [
+          [
+            {
+              "node": "If2",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Edit Fields3",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "If2": {
+        "main": [
+          [
+            {
+              "node": "HTTP Request",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Edit Fields4",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "If3": {
+        "main": [
+          [
+            {
+              "node": "Split Out",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Edit Fields5",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Send message": {
+        "main": [
+          [
+            {
+              "node": "Edit Fields2",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Send message1": {
+        "main": [
+          [
+            {
+              "node": "Loop Over Items",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "If4": {
+        "main": [
+          [
+            {
+              "node": "HTTP Request1",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Send message1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Send message2": {
+        "main": [
+          [
+            {
+              "node": "Loop Over Items",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Send message3": {
+        "main": [
+          [
+            {
+              "node": "Loop Over Items",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Send message4": {
+        "main": [
+          [
+            {
+              "node": "Loop Over Items",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Code in JavaScript3": {
+        "main": [
+          [
+            {
+              "node": "Send message4",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Send message5": {
+        "main": [
+          [
+            {
+              "node": "guardamos el mensaje y la respuesta del agente2",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Get a row1": {
+        "main": [
+          [
+            {
+              "node": "Sort",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Sort": {
+        "main": [
+          [
+            {
+              "node": "Limit",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Limit": {
+        "main": [
+          [
+            {
+              "node": "Update a row",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Edit Fields6": {
+        "main": [
+          [
+            {
+              "node": "Send message",
+              "type": "main",
+              "index": 0
+            },
+            {
+              "node": "guardamos el mensaje y la respuesta del agente",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "authors": "CANTERA ADMIN",
+    "name": null,
+    "description": null,
+    "autosaved": false,
+    "workflowPublishHistory": [
+      {
+        "createdAt": "2026-05-18T22:41:22.000Z",
+        "id": 196,
+        "workflowId": "28z14cDPX6ZPRTxS",
+        "versionId": "f4243f24-95ab-424e-a344-b6ba17437ab0",
+        "event": "activated",
+        "userId": null
+      }
+    ]
+  }
 }
