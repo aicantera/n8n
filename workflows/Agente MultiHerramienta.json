@@ -4,7 +4,7 @@
   "id": "7e8BytkZezISdom2",
   "name": "Agente MultiHerramienta",
   "description": null,
-  "active": false,
+  "active": true,
   "isArchived": false,
   "nodes": [
     {
@@ -2454,7 +2454,7 @@
     ]
   },
   "versionId": "a4ae0068-742d-4027-8e36-0835b00b6476",
-  "activeVersionId": null,
+  "activeVersionId": "a4ae0068-742d-4027-8e36-0835b00b6476",
   "versionCounter": 677,
   "triggerCount": 1,
   "shared": [
@@ -2472,52 +2472,2444 @@
         "type": "personal",
         "icon": null,
         "description": null,
-        "projectRelations": [
-          {
-            "updatedAt": "2025-05-13T15:56:28.209Z",
-            "createdAt": "2025-05-13T15:56:28.209Z",
-            "userId": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
-            "projectId": "BZ9Ta5yhe4RhzY78",
-            "user": {
-              "updatedAt": "2026-05-28T06:00:27.000Z",
-              "createdAt": "2025-05-13T15:56:27.880Z",
-              "id": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
-              "email": "canteradigital7@gmail.com",
-              "firstName": "CANTERA",
-              "lastName": "ADMIN",
-              "personalizationAnswers": {
-                "version": "v4",
-                "personalization_survey_submitted_at": "2025-05-13T16:19:25.161Z",
-                "personalization_survey_n8n_version": "1.92.2",
-                "companySize": "<20",
-                "companyType": "saas",
-                "role": "customer-support",
-                "reportedSource": "event"
-              },
-              "settings": {
-                "userActivated": true,
-                "firstSuccessfulWorkflowId": "PTbESRzX3rguwQN8",
-                "userActivatedAt": 1747154580970,
-                "easyAIWorkflowOnboarded": true,
-                "npsSurvey": {
-                  "responded": true,
-                  "lastShownAt": 1765302536772
-                },
-                "dismissedCallouts": {
-                  "aiAgentStarterCallout": true,
-                  "preBuiltAgentsCalloutHttpRequest": true
-                }
-              },
-              "disabled": false,
-              "mfaEnabled": false,
-              "lastActiveAt": "2026-05-28",
-              "isPending": false
-            }
-          }
-        ]
+        "creatorId": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3"
       }
     }
   ],
   "tags": [],
-  "activeVersion": null
+  "activeVersion": {
+    "updatedAt": "2026-05-28T06:22:30.000Z",
+    "createdAt": "2026-05-27T18:39:58.986Z",
+    "versionId": "a4ae0068-742d-4027-8e36-0835b00b6476",
+    "workflowId": "7e8BytkZezISdom2",
+    "nodes": [
+      {
+        "parameters": {
+          "rules": {
+            "values": [
+              {
+                "conditions": {
+                  "options": {
+                    "caseSensitive": true,
+                    "leftValue": "",
+                    "typeValidation": "strict",
+                    "version": 2
+                  },
+                  "conditions": [
+                    {
+                      "leftValue": "={{ $json }}",
+                      "rightValue": "",
+                      "operator": {
+                        "type": "object",
+                        "operation": "empty",
+                        "singleValue": true
+                      },
+                      "id": "80accf27-7449-4d22-b011-fb43e9d81344"
+                    }
+                  ],
+                  "combinator": "and"
+                },
+                "renameOutput": true,
+                "outputKey": "Sin estado"
+              },
+              {
+                "conditions": {
+                  "options": {
+                    "caseSensitive": true,
+                    "leftValue": "",
+                    "typeValidation": "strict",
+                    "version": 2
+                  },
+                  "conditions": [
+                    {
+                      "id": "e1bf906f-3435-4a68-8dfd-09e3745da04a",
+                      "leftValue": "={{ $json.current_state }}",
+                      "rightValue": "COTIZACION",
+                      "operator": {
+                        "type": "string",
+                        "operation": "equals"
+                      }
+                    }
+                  ],
+                  "combinator": "and"
+                },
+                "renameOutput": true,
+                "outputKey": "cotización"
+              },
+              {
+                "conditions": {
+                  "options": {
+                    "caseSensitive": true,
+                    "leftValue": "",
+                    "typeValidation": "strict",
+                    "version": 2
+                  },
+                  "conditions": [
+                    {
+                      "id": "05ede5df-0070-421c-8561-87b3762eba87",
+                      "leftValue": "={{ $json.current_state }}",
+                      "rightValue": "",
+                      "operator": {
+                        "type": "string",
+                        "operation": "empty",
+                        "singleValue": true
+                      }
+                    }
+                  ],
+                  "combinator": "and"
+                },
+                "renameOutput": true,
+                "outputKey": "Estado vacío"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.switch",
+        "typeVersion": 3.3,
+        "position": [
+          -992,
+          288
+        ],
+        "id": "804e1523-f257-403b-9d10-0c411988468e",
+        "name": "Switch"
+      },
+      {
+        "parameters": {
+          "inputText": "={{ $('Edit Fields').item.json.mensaje }}",
+          "categories": {
+            "categories": [
+              {
+                "category": "Cotización",
+                "description": "El usuario quiere una cotización de algún producto o menciona algo relacionado con la cotización"
+              }
+            ]
+          },
+          "options": {
+            "fallback": "other"
+          }
+        },
+        "type": "@n8n/n8n-nodes-langchain.textClassifier",
+        "typeVersion": 1.1,
+        "position": [
+          -576,
+          192
+        ],
+        "id": "5a99d279-2447-4009-9d5b-dff3b10ef1c4",
+        "name": "Text Classifier"
+      },
+      {
+        "parameters": {
+          "model": {
+            "__rl": true,
+            "mode": "list",
+            "value": "gpt-4.1-mini"
+          },
+          "responsesApiEnabled": false,
+          "options": {}
+        },
+        "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "typeVersion": 1.3,
+        "position": [
+          -432,
+          352
+        ],
+        "id": "aa7b2e9a-3687-4dbe-8293-aeee8f1fcf7c",
+        "name": "OpenAI Chat Model",
+        "credentials": {
+          "openAiApi": {
+            "id": "zZlJrTGKq8KER7gD",
+            "name": "OpenAi account - GLASSY"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "promptType": "define",
+          "text": "={{ $('Edit Fields').first().json.mensaje }}",
+          "options": {
+            "systemMessage": "=# Misión y Perfil del Agente\n\n- **Nombre del Agente:** Glassy\n- **Personalidad:** Eres un asistente virtual amable, amigable, servicial y muy profesional. Tu objetivo es ayudar a los usuarios de Glasbil.\n- **Nombre del Usuario:** {{ $('Telegram Trigger').item.json.message.from.first_name }}\n- **Fecha y Hora:** Hoy es `{{ $now.setZone('America/Mexico_City').setLocale('es').toFormat(\"dd 'de' LLLL 'de' yyyy HH:mm:ss\") }}`.\n\n---\n\n# Directivas de Comportamiento\n\n**REGLA FUNDAMENTAL - PROHIBIDO INVENTAR INFORMACIÓN:**\nToda la información que proporciones al usuario DEBE provenir exclusivamente de tus herramientas (`kb_glasbil`, `codigos_postales`, `agente_registro`, `agente_cotizzacion`, `agente_filtrador`, `agente_correo`, `tool_detalle_producto`, `tool_info_aditamento`). Tu base de conocimiento se accede a través de la herramienta `kb_glasbil`. **ESTÁ ABSOLUTAMENTE PROHIBIDO inventar, suponer, asumir o generar información que no provenga directamente de estas herramientas**. Si no tienes información disponible en tus herramientas, debes informar al usuario que no cuentas con esa información y ofrecer los canales de contacto (Fallback). Nunca completes respuestas con información que no hayas obtenido de tus herramientas oficiales.\n\n1.  **Inicio de Conversación:** Al comenzar una nueva interacción, tu **primer** mensaje debe ser siempre saludar al usuario por su nombre usando la variable `{{ $('Telegram Trigger').item.json.message.from.first_name }}`. Si el usuario no ha solicitado un servicio específico, pregunta en qué puedes ayudar y muestra la siguiente lista de servicios disponibles:\n    * **Proporcionar Información acerca de Glasbil:** Puedo ayudarte con información sobre nuestros productos, horarios de atención, ubicación de sucursales, política de devolución, historia de la empresa, preguntas frecuentes, entre otros.\n    * **Realizar una cotización:** Te guío paso a paso para obtener el precio de un cristal para tu vehículo.\n    \n    **Ejemplo de mensaje inicial:** \"¡Hola {{ $('Telegram Trigger').item.json.message.from.first_name }}! Soy Glassy, tu asistente virtual de Glasbil. ¿En qué puedo ayudarte hoy?\n\n📋 Puedo ayudarte con:\n• **Cotización de cristales** para tu vehículo\n• **Información sobre Glasbil** (Descripción de aditamentos, horarios, ubicación, políticas, etc.)\"\n\n2. **Registro de interacción inicial:** Una vez que el usuario solicite un servicio específico (información o cotización), tu proceso interno **OBLIGATORIO** es el siguiente:\n        1.  **Llamada a Herramienta:** Antes de procesar la solicitud del usuario, tu primera acción debe ser llamar a la herramienta `agente_registro`.\n            * **Acción:** Llama a `agente_registro` con la consulta: `Registrar contacto. ChatId: {{ $('Telegram Trigger').item.json.message.from.id }}. Nombre: {{ $('Telegram Trigger').item.json.message.from.first_name }}. Solicitud: [la solicitud completa del usuario]`.\n\n3.  **Herramientas Disponibles:** Tienes acceso a las siguientes herramientas: `kb_glasbil`, `codigos_postales`, `agente_registro`, `agente_cotizzacion`, `agente_filtrador`, `agente_correo`, `tool_detalle_producto`, `tool_info_aditamento`, `tool_filtro_aditamentos`.\n\n4.  **Ámbito de Conocimiento:** Tu conocimiento se limita estrictamente a los siguientes temas. Utiliza la herramienta `kb_glasbil` para responder:\n    * Descripción de aditamentos\n    * Proceso de compra\n    * Horarios de atención\n    * Artículo para medios\n    * Historia de Glasbil\n    * Política de devolución\n    * Glosario\n    * Preguntas frecuentes\n\n5.  **Consulta Automática del Glosario:** Cuando el usuario pregunte por el significado, definición o explicación de términos técnicos relacionados con cristales automotrices, debes consultar automáticamente el glosario usando la herramienta `kb_glasbil`. Esto incluye preguntas como:\n    * \"¿Qué es...?\" seguido de un término técnico\n    * \"¿Qué significa...?\"\n    * \"Define...\" o \"Explícame...\"\n    * \"¿Para qué sirve...?\" referido a componentes o aditamentos\n    * **Acción:** Antes de responder, usa `kb_glasbil` con la consulta: `Consultar glosario para el término: [término mencionado por el usuario]`\n    * Si el término no se encuentra en el glosario, responde amablemente que no tienes información sobre ese tema y proporciona inmediatamente las opciones de contacto.\n\n6.  **Manejo de Información de Herramientas:** Cuando uses una herramienta (`kb_glasbil`, `codigos_postales`), indica al usuario que estás consultando la información. No leas la información textualmente; procesa y preséntala de forma clara y reformulada.\n\n7.  **Regla de Sustitución:** Siempre que encuentres la frase \"Recoger en Butik Morelia\" en la información de tus herramientas, debes cambiarla por \"Recoger en sucursal Butik Morelia\" en tu respuesta al usuario.\n\n8.  **Servicio a Domicilio y Códigos Postales:**\n    * Si el usuario pregunta genéricamente por tus servicios, describe los servicios principales (instalación, reparación) basándote en `kb_glasbil` **sin** mencionar los códigos postales.\n    * **ÚNICAMENTE** si el usuario pregunta explícitamente por \"instalación a domicilio\", \"cobertura\", \"zonas de servicio\" o un código postal específico, debes usar la herramienta `codigos_postales`.\n    * Al usar `codigos_postales`, presenta la lista completa de zonas y códigos postales cubiertos. No uses frases como \"entre otros\".\n\n9.  **Instalaciones y Reparaciones:**\n    * **Instalaciones:** Aclara que se realizan en la sucursal de Morelia y a domicilio, pero esto último solo dentro de la zona de cobertura que puedes consultar con tu herramienta `codigos_postales`.\n    * **Reparaciones (Daños, Grietas, Rayones):** Informa al usuario que para una reparación se requiere la valoración de un experto. Anímale a agendar una cita o solicitar más información a través de los canales de contacto. Ofrécele iniciar un proceso de cotización para su vehículo.\n\n10. **Productos y Servicios NO Disponibles:** Si el usuario pregunta por alguno de los siguientes productos o servicios, responde amablemente que Glasbil no los ofrece y proporciona inmediatamente las opciones de contacto:\n    * Pulido de parabrisas\n    * Líquidos o jabones para protección de parabrisas\n    * Retrovisores\n    * Limpia parabrisas\n    * Plásticos de las puertas\n    * Polarizados\n    * Elevadores\n    * **Respuesta sugerida:** \"Te agradezco tu consulta, pero lamentablemente ese producto/servicio no lo ofrecemos en Glasbil.\"\n\n11. **Manejo de Preguntas Fuera de Alcance:** Si el usuario pregunta por algo fuera de tu ámbito de conocimiento (ej. llantas, temas no relacionados con Glasbil), responde con amabilidad que no tienes información sobre ese tema y proporciona inmediatamente las opciones de contacto.\n\n12. **Escalación y Canales de Contacto (Fallback):** Cuando no tengas la información, necesites una valoración experta, o el usuario lo solicite, ofrece de forma clara y ordenada los siguientes medios de contacto:\n    * **Visítanos en sucursal:** Luis de León Romano 70, Nueva Valladolid, 58190 Morelia, Mich., México.\n    * **Llámanos:** 33 2592 1314\n    * **Escríbenos un correo:** hola@glasbil.com\n    * **Visita nuestro sitio web:** glasbil.com\n    * **Obtén una cotización detallada en línea:** butik-vidrio-v2.canteradigital.mx\n\n"
+          }
+        },
+        "type": "@n8n/n8n-nodes-langchain.agent",
+        "typeVersion": 3,
+        "position": [
+          -80,
+          -32
+        ],
+        "id": "045076ec-9f7a-4e3b-b065-0677b45ea6ef",
+        "name": "AI Agent"
+      },
+      {
+        "parameters": {
+          "promptType": "define",
+          "text": "={{ $('Edit Fields').first().json.mensaje }}",
+          "options": {
+            "systemMessage": "=# Misión y Perfil del Agente\n\n- **Nombre del Agente:** Glassy (Especialista en Cotizaciones)\n- **Personalidad:** Eres un asistente virtual amable, servicial y altamente metódico. Tu ÚNICO objetivo es guiar a los usuarios de Glasbil a través de un proceso preciso para cotizar cristales automotrices.\n- **Nombre del Usuario:** {{ $('Telegram Trigger').first().json.message.from.first_name }}\n- **Fecha y Hora:** Hoy es `{{ $now.setZone('America/Mexico_City').setLocale('es').toFormat(\"dd 'de' LLLL 'de' yyyy HH:mm:ss\") }}`.\n\n---\n\n# Directivas de Comportamiento\n\n**REGLA FUNDAMENTAL - PROHIBIDO INVENTAR INFORMACIÓN:**\nToda la información, vehículos, tipos de cristales y productos que proporciones DEBEN provenir exclusivamente de tus herramientas. **ESTÁ ABSOLUTAMENTE PROHIBIDO inventar, suponer, asumir o generar opciones que no provengan directamente de la respuesta de una herramienta**. Si un producto, vehículo o dato no existe en la consulta de la herramienta, informa al usuario y ofrece los canales de contacto (Fallback).\n\n**REGLA DE PRIVACIDAD - NO MOSTRAR METADATOS DE HERRAMIENTAS:**\nComunícate de manera natural. Oculta cualquier proceso interno o técnico y muestra única y exclusivamente la respuesta final formateada para el usuario.\n\n**REGLA CRÍTICA PARA NUEVAS COTIZACIONES:**\nSi el usuario finaliza una cotización y solicita una NUEVA, o si cambias de vehículo, DEBES hacer un reinicio mental. \n1. Empieza estrictamente desde el Paso 1. \n2. Es OBLIGATORIO que vuelvas a ejecutar las herramientas para el nuevo vehículo. \n3. TIENES PROHIBIDO reciclar información de tu memoria o imprimir formatos técnicos (JSON, \"Used tools:\", \"Result:\") de cotizaciones pasadas.\n\n**Herramientas Disponibles:** Tienes acceso exclusivo a las siguientes herramientas para el proceso de cotización: `agente_registro_2`, `agente_cotizzacion`, `agente_filtrador`, `tool_detalle_producto`, `tool_info_aditamento`, `tool_filtro_aditamentos`, `tool_consulta_usuario` y `Consulta_Cotización`. \n\n**Escalación y Canales de Contacto (Fallback):** Si el flujo falla, no hay productos compatibles o el usuario requiere ayuda experta, ofrece estos medios:\n* **Visítanos en sucursal:** Luis de León Romano 70, Nueva Valladolid, 58190 Morelia, Mich., México.\n* **Llámanos:** 33 2592 1314\n* **Escríbenos un correo:** hola@glasbil.com\n* **Cotización web:** butik-vidrio-v2.canteradigital.mx\n\n---\n\n# Flujo de Conversación: Proceso de Cotización\n\n**Objetivo:** Guiar al usuario paso a paso para recolectar la información y enviar la cotización final. El usuario ya ha sido filtrado (en el router) y sabemos que quiere una cotización, por lo que debes iniciar o continuar este flujo inmediatamente.\n\n**Directiva Fundamental:** Debes seguir cada paso en el orden numérico exacto (del 1 al 8). **Bajo ninguna circunstancia omitas un paso** o asumas respuestas. \n\n**Directiva de Confirmación Inteligente:** Si el usuario mencionó información específica en mensajes anteriores de la conversación (por ejemplo: \"parabrisas\", \"Honda Civic 2015\", etc.), cuando llegues al paso correspondiente:\n- **NO muestres el menú de opciones**\n- **Pide confirmación directa** del dato mencionado (ej. \"Mencionaste parabrisas, ¿correcto?\")\n- **Si el usuario confirma:** acepta el dato y continúa al siguiente paso\n- **Si el usuario corrige o niega:** entonces SÍ muestra el menú completo de opciones\n\n**Si NO hay información previa** en la conversación sobre ese paso específico, **muestra el menú completo** de opciones como se indica en las instrucciones del paso.\n\n**REGLA CRÍTICA DE PROCESAMIENTO DE HERRAMIENTAS:** Cuando uses `agente_cotizzacion`, `agente_filtrador`, `tool_detalle_producto` o `tool_filtro_aditamentos`, **NUNCA te detengas después de hacer la consulta**. Debes:\n1. Procesar la respuesta INMEDIATAMENTE.\n2. Utilizar los datos para avanzar al PASO SIGUIENTE o mostrar las opciones en ese mismo mensaje.\n*Excepción:* Solo te detendrás (cederás el turno al usuario) cuando debas hacerle una pregunta explícita (como un filtro o elegir una opción).\n\n---\n\n**Paso 1: Recopilar Datos del Vehículo**\nPregunta al usuario (juntos o uno por uno) por los siguientes datos si aún no los ha proporcionado:\n- Año\n- Marca\n- Modelo\n\n**IMPORTANTE:** Siempre incluye un ejemplo al final de tu mensaje para guiar al usuario. Ejemplo: \"Ejemplo: 2018, Nissan, Versa.\"\n\n**Paso 2: Obtener Tipos de Automóvil (con Traducción)**\n* **Acción:** Llama a `agente_cotizzacion` con la consulta: `solicita los tipos de automóvil disponibles para el año [año], la marca [marca] y el modelo [modelo]`.\n* **Procesamiento:** \n    * Si está vacía: Informa al usuario que no hay opciones y ofrece Fallback (Termina).\n    * Si hay elementos: Traduce los tipos de automóvil al español y muestra la lista traducida en formato de lista numerada (1., 2., 3...) para que el usuario elija el número.\n* **Lógica Interna:** Guarda la selección en tu memoria utilizando el **término original en INGLÉS** para usarlo en los siguientes pasos. **DETENTE y espera respuesta**.\n\n**Paso 3: Obtener Tipos de Cristal (con Traducción)**\n* **Acción:** Llama a `agente_cotizzacion` con: `solicita los tipos de cristales disponibles para el año [año], la marca [marca], el modelo [modelo] y el tipo de automóvil [tipo seleccionado en Paso 2]`.\n* **Procesamiento y Traducción INMEDIATA:** Recibirás una lista en inglés. Tradúcela usando este mapeo estricto y **ordénala** para mostrarla al usuario como lista numerada. **Regla de Ordenamiento:** Coloca siempre primero `Windshield` (Parabrisas), seguido inmediatamente por `Back Window` (Medallón o cristal trasero) y después el resto de las opciones.\n    * `Windshield`: \"Parabrisas\"\n    * `Back Window`: \"Medallón (cristal trasero)\"\n    * `Door / Front / Left`: \"Puerta frontal izquierda\"\n    * `Door / Front / Right`: \"Puerta frontal derecha\"\n    * `Door / Rear / Left`: \"Puerta trasera izquierda\"\n    * `Door / Rear / Right`: \"Puerta trasera derecha\"\n    * `Quarter / Left`: \"Cuarta puerta izquierda\"\n    * `Quarter / Right`: \"Cuarta puerta derecha\"\n    * `Vent / Front / Left`: \"Ventanilla delantera izquierda\"\n    * `Vent / Front / Right`: \"Ventanilla delantera derecha\"\n    * `Vent / Rear / Left`: \"Ventanilla trasera izquierda\"\n    * `Vent / Rear / Right`: \"Ventanilla trasera derecha\"\n* **Lógica Interna:** Guarda la selección en tu memoria utilizando el **término original en INGLÉS** para los siguientes pasos. **DETENTE y espera selección**.\n\n### Paso 4: Delegación al Especialista (agente_filtrador)\nEste paso es un CICLO DE PREGUNTAS que puede repetirse varias veces. Tu deber es mantener el ciclo hasta que la herramienta te entregue los productos.\n1. Llama a `agente_filtrador` enviando SIEMPRE los 6 parámetros: `anio`, `marca`, `modelo`, `tipo_de_auto`, `cristal` (en inglés) y `respuesta_usuario`. \n2. Si es la primera vez que haces esta consulta, envía `respuesta_usuario` como un texto vacío (\"\").\n3. **SI LA HERRAMIENTA RESPONDE CON PREGUNTA (status \"questioning\"):** Muestra la pregunta al usuario y DETENTE a esperar su respuesta. Cuando el usuario responda, VUELVE A LLAMAR OBLIGATORIAMENTE a `agente_filtrador` con los 6 parámetros, enviando su respuesta en `respuesta_usuario`. DEBES HACER ESTO TODAS LAS VECES QUE LA HERRAMIENTA TE DEVUELVA UNA PREGUNTA. Nunca rompas el ciclo por tu cuenta.\n4. **SI LA HERRAMIENTA RESPONDE CON PRODUCTOS (status \"completed\"):** Solo hasta este momento termina el ciclo. Muestra el mensaje del agente (si existe) y presenta la lista de productos con: Nombre, NAG, Color, Características, Imagen, y Precio aproximado (Si `product_price` es 0, muestra \"No disponible\"; si no es 0, muestra el precio con el símbolo $).\n\n**REGLA DE ORO DEL PASO 4:** CADA VEZ que el usuario responda a una pregunta del filtro, tienes prohibido adivinar el resultado final. Si el usuario responde a una pregunta de filtro, tu ÚNICA acción posible es ejecutar la herramienta nuevamente con la nueva respuesta.\n\n**Paso 5: Identificar Selección de Producto**\nEspera a que el usuario elija una opción e identifica internamente el número de producto.\n\n**Paso 6: Consultar Registro Previo del Usuario**\n* **Acción:** Llama a `tool_consulta_usuario` para verificar si el usuario tiene un registro previo.\n* **Procesamiento de la Respuesta:**\n    * La herramienta responde con un JSON que contiene un campo `status` y un campo `data`.\n    * **Si `status` es \"Success\":**\n        1. Extrae del campo `data` los siguientes valores: `username`, `phone` y `cp`.\n        2. **Salta directamente al Paso 8 (Enviar Cotización Final)** utilizando estos datos extraídos:\n            * `username` → parámetro `client_name`\n            * `phone` → parámetro `client_phone`\n            * `cp` → parámetro `postal_code`\n    * **Si `status` es \"Error\":**\n        1. Continúa con el flujo normal al **Paso 7 (Recopilar Datos de Contacto)** para solicitar los datos del usuario manualmente.\n\n**Paso 7: Recopilar Datos de Contacto**\nSolicita (uno a uno o juntos): Nombre (obligatorio), Teléfono (obligatorio), Código postal (obligatorio).\n\n**Validación de Nombre:**\n* El nombre DEBE contener al menos un nombre y un apellido (mínimo 2 palabras).\n* Si el usuario proporciona solo un nombre, solicita amablemente que proporcione su nombre completo (nombre y apellido).\n* Ejemplo de mensaje: \"Por favor, proporciona tu nombre completo (nombre y apellido) para continuar con la cotización.\"\n\n**Paso 8: Enviar Cotización Final**\n1. Usa la selección del Paso 5 y llama a `tool_detalle_producto` para obtener: `external_id`, `origin`, `nag`, `product_name`, `price`.\n2. Llama a `Consulta_Cotización` con los parámetros obligatorios: `client_name`, `client_phone`, `postal_code`, `brand`, `model`, `year`, `car_type`, `glass_type` (en INGLÉS), `product_external_id`, `product_name`, `product_origin`, `product_nag`, `product_price`.\n3. Espera la respuesta de `Consulta_Cotización` e identifica el valor de 'status' y 'message':\n    * **Si el 'status' es 'Success' o equivalente:** Muestra ÚNICAMENTE el contenido exacto del campo 'message' sin agregar ningún texto adicional, introducción o preámbulo. NO digas frases como \"Te comparto el mensaje\", \"El sistema indica\", etc. Solo copia y pega el texto del campo 'message' tal cual.\n    * **Si el 'status' es 'Pending' o 'Error':** Muestra ÚNICAMENTE el contenido exacto del campo 'message' sin agregar ningún texto adicional, introducción o preámbulo. Después del mensaje, ofrécele ayuda a través de los canales de contacto (Fallback).\n",
+            "returnIntermediateSteps": false
+          }
+        },
+        "type": "@n8n/n8n-nodes-langchain.agent",
+        "typeVersion": 3,
+        "position": [
+          240,
+          672
+        ],
+        "id": "6ef48201-aec8-41b8-9406-7e42162eaf47",
+        "name": "AI Agent1"
+      },
+      {
+        "parameters": {
+          "model": {
+            "__rl": true,
+            "mode": "list",
+            "value": "gpt-4.1-mini"
+          },
+          "builtInTools": {},
+          "options": {}
+        },
+        "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "typeVersion": 1.3,
+        "position": [
+          -160,
+          176
+        ],
+        "id": "2b6892ab-7f45-4435-bed0-9ff60a8ddfb8",
+        "name": "OpenAI Chat Model1",
+        "credentials": {
+          "openAiApi": {
+            "id": "zZlJrTGKq8KER7gD",
+            "name": "OpenAi account - GLASSY"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "description": "Tu eres el agente_cotizzacion y te encargas de consultar información a las APIs de Glasbil",
+          "workflowId": {
+            "__rl": true,
+            "value": "4QLd4KoP0XGafQmk",
+            "mode": "list",
+            "cachedResultUrl": "/workflow/4QLd4KoP0XGafQmk",
+            "cachedResultName": "Agente cotizados glasbil dev"
+          },
+          "workflowInputs": {
+            "mappingMode": "defineBelow",
+            "value": {},
+            "matchingColumns": [],
+            "schema": [],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          }
+        },
+        "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+        "typeVersion": 2.2,
+        "position": [
+          496,
+          928
+        ],
+        "id": "c619a223-e7a5-4e9b-8813-c7ac4f16d022",
+        "name": "agente_cotizzacion"
+      },
+      {
+        "parameters": {
+          "description": "Herramienta OBLIGATORIA para el Paso 4. Úsala para buscar cristales y hacer preguntas de filtrado al usuario. Recibe los datos del auto y la respuesta del usuario, y devuelve la siguiente pregunta técnica a realizar o la lista final de productos.",
+          "workflowId": {
+            "__rl": true,
+            "value": "EfD3CI4F9gnWlDpC",
+            "mode": "list",
+            "cachedResultUrl": "/workflow/EfD3CI4F9gnWlDpC",
+            "cachedResultName": "Nuevo filtro Glassy"
+          },
+          "workflowInputs": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "chat_id": "={{ $('Telegram Trigger').first().json.message.chat.id }}",
+              "marca": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('marca', ``, 'string') }}",
+              "modelo": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('modelo', ``, 'string') }}",
+              "tipo_de_auto": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('tipo_de_auto', ``, 'string') }}",
+              "cristal": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('cristal', ``, 'string') }}",
+              "respuesta_usuario": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('respuesta_usuario', ``, 'string') }}",
+              "user_name": "={{ $('Telegram Trigger').item.json.message.from.first_name }}",
+              "anio": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('anio', ``, 'string') }}"
+            },
+            "matchingColumns": [
+              "listado_productos"
+            ],
+            "schema": [
+              {
+                "id": "chat_id",
+                "displayName": "chat_id",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string",
+                "removed": false
+              },
+              {
+                "id": "user_name",
+                "displayName": "user_name",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string",
+                "removed": false
+              },
+              {
+                "id": "anio",
+                "displayName": "anio",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string",
+                "removed": false
+              },
+              {
+                "id": "marca",
+                "displayName": "marca",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string",
+                "removed": false
+              },
+              {
+                "id": "modelo",
+                "displayName": "modelo",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string",
+                "removed": false
+              },
+              {
+                "id": "tipo_de_auto",
+                "displayName": "tipo_de_auto",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string",
+                "removed": false
+              },
+              {
+                "id": "cristal",
+                "displayName": "cristal",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string",
+                "removed": false
+              },
+              {
+                "id": "respuesta_usuario",
+                "displayName": "respuesta_usuario",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string",
+                "removed": false
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          }
+        },
+        "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+        "typeVersion": 2.2,
+        "position": [
+          656,
+          928
+        ],
+        "id": "69ff3c50-2d24-47bb-b610-7c7b8d17dd01",
+        "name": "agente_filtrador"
+      },
+      {
+        "parameters": {
+          "description": "Tu eres el agente_registro y te encargas de registrar la interacción inicial del usuario",
+          "workflowId": {
+            "__rl": true,
+            "value": "tGwY3sT6JSe2WZWY",
+            "mode": "list",
+            "cachedResultUrl": "/workflow/tGwY3sT6JSe2WZWY",
+            "cachedResultName": "Agente Glassy Registro Interacción"
+          },
+          "workflowInputs": {
+            "mappingMode": "defineBelow",
+            "value": {},
+            "matchingColumns": [],
+            "schema": [],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          }
+        },
+        "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+        "typeVersion": 2.2,
+        "position": [
+          176,
+          192
+        ],
+        "id": "6ae380cb-3197-4e1f-8f11-db682a9a7bf1",
+        "name": "agente_registro"
+      },
+      {
+        "parameters": {
+          "description": "esta herramienta se usa para enviar una cotiación al usuario por pdf ",
+          "workflowId": {
+            "__rl": true,
+            "value": "uGyWVDjiEI6EAJUR",
+            "mode": "list",
+            "cachedResultUrl": "/workflow/uGyWVDjiEI6EAJUR",
+            "cachedResultName": "Consulta Cotización"
+          },
+          "workflowInputs": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "product_price": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('product_price', ``, 'number') }}",
+              "chat_id": "={{ $('Telegram Trigger').first().json.message.chat.id }}",
+              "client_name": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('client_name', ``, 'string') }}",
+              "postal_code": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('postal_code', ``, 'string') }}",
+              "brand": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('brand', ``, 'string') }}",
+              "model": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('model', ``, 'string') }}",
+              "year": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('year', ``, 'string') }}",
+              "car_type": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('car_type', ``, 'string') }}",
+              "glass_type": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('glass_type', ``, 'string') }}",
+              "product_external_id": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('product_external_id', ``, 'string') }}",
+              "product_name": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('product_name', ``, 'string') }}",
+              "product_origin": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('product_origin', ``, 'string') }}",
+              "product_nag": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('product_nag', ``, 'string') }}",
+              "client_phone": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('client_phone', ``, 'string') }}"
+            },
+            "matchingColumns": [],
+            "schema": [
+              {
+                "id": "chat_id",
+                "displayName": "chat_id",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string",
+                "removed": false
+              },
+              {
+                "id": "client_name",
+                "displayName": "client_name",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string",
+                "removed": false
+              },
+              {
+                "id": "client_phone",
+                "displayName": "client_phone",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string",
+                "removed": false
+              },
+              {
+                "id": "postal_code",
+                "displayName": "postal_code",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string",
+                "removed": false
+              },
+              {
+                "id": "brand",
+                "displayName": "brand",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string",
+                "removed": false
+              },
+              {
+                "id": "model",
+                "displayName": "model",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string",
+                "removed": false
+              },
+              {
+                "id": "year",
+                "displayName": "year",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string",
+                "removed": false
+              },
+              {
+                "id": "car_type",
+                "displayName": "car_type",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string",
+                "removed": false
+              },
+              {
+                "id": "glass_type",
+                "displayName": "glass_type",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string",
+                "removed": false
+              },
+              {
+                "id": "product_external_id",
+                "displayName": "product_external_id",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string",
+                "removed": false
+              },
+              {
+                "id": "product_name",
+                "displayName": "product_name",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string",
+                "removed": false
+              },
+              {
+                "id": "product_origin",
+                "displayName": "product_origin",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string",
+                "removed": false
+              },
+              {
+                "id": "product_nag",
+                "displayName": "product_nag",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string",
+                "removed": false
+              },
+              {
+                "id": "product_price",
+                "displayName": "product_price",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "number",
+                "removed": false
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          }
+        },
+        "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+        "typeVersion": 2.2,
+        "position": [
+          1392,
+          928
+        ],
+        "id": "50b3c694-d0f4-4373-893d-12731ebc520f",
+        "name": "Consulta_Cotización"
+      },
+      {
+        "parameters": {
+          "operation": "getAll",
+          "tableId": "glassy_filtered_products",
+          "returnAll": true,
+          "filters": {
+            "conditions": [
+              {
+                "keyName": "chat_id",
+                "condition": "eq",
+                "keyValue": "={{ $('Telegram Trigger').first().json.message.chat.id }}"
+              }
+            ]
+          }
+        },
+        "type": "n8n-nodes-base.supabaseTool",
+        "typeVersion": 1,
+        "position": [
+          816,
+          928
+        ],
+        "id": "b6067103-9677-4f06-830a-a213b20a20ac",
+        "name": "tool_detalle_producto",
+        "credentials": {
+          "supabaseApi": {
+            "id": "ty0KiXsEYP1uJ8t9",
+            "name": "Supabase account - CANTERA"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "sessionIdType": "customKey",
+          "sessionKey": "={{ $('Telegram Trigger').first().json.message.chat.id }}",
+          "tableName": "n8n_chat_histories_glassy_dev",
+          "contextWindowLength": 50
+        },
+        "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+        "typeVersion": 1.3,
+        "position": [
+          336,
+          912
+        ],
+        "id": "6801a52e-369f-4e1b-a5ce-8e0157c56506",
+        "name": "Postgres Chat Memory",
+        "credentials": {
+          "postgres": {
+            "id": "CFNWnFQx8hqQIegZ",
+            "name": "Postgres account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "documentId": {
+            "__rl": true,
+            "value": "1MdybkUkgnwvXUuGsbB2oNIUvkpGcyBw6RBvo199ZqK0",
+            "mode": "list",
+            "cachedResultName": "codigos postales atencion a clientes",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1MdybkUkgnwvXUuGsbB2oNIUvkpGcyBw6RBvo199ZqK0/edit?usp=drivesdk"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": "gid=0",
+            "mode": "list",
+            "cachedResultName": "Hoja 1",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1MdybkUkgnwvXUuGsbB2oNIUvkpGcyBw6RBvo199ZqK0/edit#gid=0"
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleSheetsTool",
+        "typeVersion": 4.5,
+        "position": [
+          352,
+          192
+        ],
+        "id": "10badc82-df3f-436a-a1c0-c193a9ee0a79",
+        "name": "codigos_postales",
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "VrznAZQXjQh9WpvY",
+            "name": "Google Sheets - Cantera"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "options": {}
+        },
+        "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+        "typeVersion": 1.2,
+        "position": [
+          560,
+          368
+        ],
+        "id": "e4402e69-17cf-4497-8a81-0a8b6a505369",
+        "name": "Embeddings OpenAI",
+        "credentials": {
+          "openAiApi": {
+            "id": "zZlJrTGKq8KER7gD",
+            "name": "OpenAi account - GLASSY"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "mode": "retrieve-as-tool",
+          "toolName": "kb_glasbil",
+          "toolDescription": "aqui tienes toda la información de glasbil como:\npolitica de devolucion\ninformacion de aditamentos\npreguntas frecuentes\ndatos de contacto\ndirecciones\nglosario de terminos\nentre mas información disponible",
+          "tableName": {
+            "__rl": true,
+            "value": "documents_glassy",
+            "mode": "list",
+            "cachedResultName": "documents_glassy"
+          },
+          "topK": 20,
+          "options": {
+            "queryName": "match_documents_glassy"
+          }
+        },
+        "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+        "typeVersion": 1.1,
+        "position": [
+          496,
+          192
+        ],
+        "id": "9691447f-0e49-42f0-bd2a-d9e13294984c",
+        "name": "kb_glasbil",
+        "credentials": {
+          "supabaseApi": {
+            "id": "ty0KiXsEYP1uJ8t9",
+            "name": "Supabase account - CANTERA"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "sessionIdType": "customKey",
+          "sessionKey": "={{ $('Telegram Trigger').first().json.message.chat.id }}",
+          "tableName": "n8n_chat_histories_glassy_dev",
+          "contextWindowLength": 50
+        },
+        "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+        "typeVersion": 1.3,
+        "position": [
+          0,
+          176
+        ],
+        "id": "ab995658-110a-45a9-8d9f-30be28750e80",
+        "name": "Postgres Chat Memory1",
+        "credentials": {
+          "postgres": {
+            "id": "CFNWnFQx8hqQIegZ",
+            "name": "Postgres account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "updates": [
+            "message"
+          ],
+          "additionalFields": {}
+        },
+        "type": "n8n-nodes-base.telegramTrigger",
+        "typeVersion": 1.2,
+        "position": [
+          -2736,
+          288
+        ],
+        "id": "103e9aef-fa6b-40a4-8421-81af566c258d",
+        "name": "Telegram Trigger",
+        "webhookId": "170b8744-b4ac-47c0-bbb2-d2e720410457",
+        "credentials": {
+          "telegramApi": {
+            "id": "vcUHDLkV2ZD6YfU8",
+            "name": "Telegram account - GLASSY"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "chatId": "={{ $('Telegram Trigger').first().json.message.chat.id }}",
+          "text": "={{ $json.output }}",
+          "additionalFields": {
+            "appendAttribution": false
+          }
+        },
+        "type": "n8n-nodes-base.telegram",
+        "typeVersion": 1.2,
+        "position": [
+          432,
+          -208
+        ],
+        "id": "ea2fa13c-695a-4035-8fbe-594b6acbf65a",
+        "name": "Send a text message",
+        "webhookId": "7b21ee7d-32ea-498f-aab1-047022851753",
+        "credentials": {
+          "telegramApi": {
+            "id": "vcUHDLkV2ZD6YfU8",
+            "name": "Telegram account - GLASSY"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "chatId": "={{ $('Telegram Trigger').first().json.message.chat.id }}",
+          "text": "={{ $json.output }}",
+          "additionalFields": {
+            "appendAttribution": false
+          }
+        },
+        "type": "n8n-nodes-base.telegram",
+        "typeVersion": 1.2,
+        "position": [
+          896,
+          512
+        ],
+        "id": "67c3a1f0-6a39-4857-baca-947fc8276386",
+        "name": "Send a text message1",
+        "webhookId": "7ad15e2e-6a86-4242-9b57-7d5b4becd611",
+        "credentials": {
+          "telegramApi": {
+            "id": "vcUHDLkV2ZD6YfU8",
+            "name": "Telegram account - GLASSY"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "appendOrUpdate",
+          "documentId": {
+            "__rl": true,
+            "value": "1_GBfXKFC_0YS9rJBIvt1rGnBl7LI_HbkRHHt1YJLT4s",
+            "mode": "list",
+            "cachedResultName": "Estado Glassy",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1_GBfXKFC_0YS9rJBIvt1rGnBl7LI_HbkRHHt1YJLT4s/edit?usp=drivesdk"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": "gid=0",
+            "mode": "list",
+            "cachedResultName": "estados",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1_GBfXKFC_0YS9rJBIvt1rGnBl7LI_HbkRHHt1YJLT4s/edit#gid=0"
+          },
+          "columns": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "user_id": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+              "current_state": "COTIZACION",
+              "updated_at": "={{ $now.setZone('America/Mexico_City').setLocale('es').toFormat(\"dd 'de' LLLL 'de' yyyy HH:mm:ss\") }}"
+            },
+            "matchingColumns": [
+              "user_id"
+            ],
+            "schema": [
+              {
+                "id": "user_id",
+                "displayName": "user_id",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "current_state",
+                "displayName": "current_state",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "updated_at",
+                "displayName": "updated_at",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "filter",
+                "displayName": "filter",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleSheets",
+        "typeVersion": 4.7,
+        "position": [
+          -224,
+          368
+        ],
+        "id": "013cf890-9135-441a-b7a4-4d05bae3edda",
+        "name": "Cambio de estado",
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "Vg1ihuXHaIOWrqDt",
+            "name": "Google Sheets Aaron Permanentes"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "append",
+          "documentId": {
+            "__rl": true,
+            "value": "1L0yBRQss7tAWz9GFaVJkjsV1QP89hq0uBXwyHFGz1Dg",
+            "mode": "list",
+            "cachedResultName": "Registro de Interacción Glassy",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1L0yBRQss7tAWz9GFaVJkjsV1QP89hq0uBXwyHFGz1Dg/edit?usp=drivesdk"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": "gid=0",
+            "mode": "list",
+            "cachedResultName": "Hoja 1",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1L0yBRQss7tAWz9GFaVJkjsV1QP89hq0uBXwyHFGz1Dg/edit#gid=0"
+          },
+          "columns": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "Fecha": "={{ $now.minus({ hours: 0 }).setLocale('es').toFormat(\"dd 'de' LLLL 'de' yyyy\") }}",
+              "Hora": "={{ $now.minus({ hours: 0 }).setLocale('es').toFormat(\"HH:mm\") }}",
+              "ChatID": "={{ $('Telegram Trigger').first().json.message.chat.id }}",
+              "Nombre": "={{ $('Telegram Trigger').item.json.message.from.first_name }}",
+              "Solicitud": "={{ $('Edit Fields').item.json.mensaje }}"
+            },
+            "matchingColumns": [],
+            "schema": [
+              {
+                "id": "Fecha",
+                "displayName": "Fecha",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "Hora",
+                "displayName": "Hora",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "ChatID",
+                "displayName": "ChatID",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "Nombre",
+                "displayName": "Nombre",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "Solicitud",
+                "displayName": "Solicitud",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleSheets",
+        "typeVersion": 4.7,
+        "position": [
+          -16,
+          368
+        ],
+        "id": "b9befec3-77fd-406e-860e-7a3ba5a7bcca",
+        "name": "Registro interacción",
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "Vg1ihuXHaIOWrqDt",
+            "name": "Google Sheets Aaron Permanentes"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "model": {
+            "__rl": true,
+            "value": "gpt-5",
+            "mode": "list",
+            "cachedResultName": "gpt-5"
+          },
+          "builtInTools": {},
+          "options": {}
+        },
+        "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "typeVersion": 1.3,
+        "position": [
+          112,
+          880
+        ],
+        "id": "ee3b5e7d-3467-4bc1-bb5d-5c0fcedab1a9",
+        "name": "OpenAI Chat Model2",
+        "credentials": {
+          "openAiApi": {
+            "id": "zZlJrTGKq8KER7gD",
+            "name": "OpenAi account - GLASSY"
+          }
+        }
+      },
+      {
+        "parameters": {},
+        "type": "n8n-nodes-base.manualTrigger",
+        "typeVersion": 1,
+        "position": [
+          -208,
+          -496
+        ],
+        "id": "f228b024-829d-4157-81e7-d9ee9af1828d",
+        "name": "When clicking ‘Test workflow’"
+      },
+      {
+        "parameters": {
+          "operation": "deleteTable",
+          "schema": {
+            "__rl": true,
+            "value": "public",
+            "mode": "list",
+            "cachedResultName": "public"
+          },
+          "table": {
+            "__rl": true,
+            "value": "n8n_chat_histories_glassy_dev",
+            "mode": "list",
+            "cachedResultName": "n8n_chat_histories_glassy_dev"
+          },
+          "deleteCommand": "drop",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.postgres",
+        "typeVersion": 2.6,
+        "position": [
+          32,
+          -704
+        ],
+        "id": "a06b8311-f8c8-488e-ab35-a7f1dce0a9d4",
+        "name": "Postgres",
+        "credentials": {
+          "postgres": {
+            "id": "CFNWnFQx8hqQIegZ",
+            "name": "Postgres account"
+          }
+        },
+        "disabled": true
+      },
+      {
+        "parameters": {
+          "operation": "executeQuery",
+          "query": "DELETE FROM n8n_chat_histories_glassy_dev;",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.postgres",
+        "typeVersion": 2.6,
+        "position": [
+          48,
+          -512
+        ],
+        "id": "0dd462ff-5a07-4fea-9c81-2752d79f2ead",
+        "name": "Postgres1",
+        "credentials": {
+          "postgres": {
+            "id": "CFNWnFQx8hqQIegZ",
+            "name": "Postgres account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "description": "Eres la herramienta 'tool_aditamento'",
+          "workflowId": {
+            "__rl": true,
+            "value": "ir104SnH4pO2CQfF",
+            "mode": "list",
+            "cachedResultUrl": "/workflow/ir104SnH4pO2CQfF",
+            "cachedResultName": "Información Aditamento"
+          },
+          "workflowInputs": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "nombre_aditamento": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('nombre_aditamento', ``, 'string') }}",
+              "chat_id": "={{ $('Telegram Trigger').first().json.message.chat.id }}"
+            },
+            "matchingColumns": [],
+            "schema": [
+              {
+                "id": "chat_id",
+                "displayName": "chat_id",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string"
+              },
+              {
+                "id": "nombre_aditamento",
+                "displayName": "nombre_aditamento",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string"
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          }
+        },
+        "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+        "typeVersion": 2.2,
+        "position": [
+          1008,
+          928
+        ],
+        "id": "3c1f5905-275f-49b1-a138-51490975cfa8",
+        "name": "tool_info_aditamento"
+      },
+      {
+        "parameters": {
+          "description": "Eres la herramienta 'tool_filtro_aditamentos'",
+          "workflowId": {
+            "__rl": true,
+            "value": "T1Ynurrox3CFhqVb",
+            "mode": "list",
+            "cachedResultUrl": "/workflow/T1Ynurrox3CFhqVb",
+            "cachedResultName": "glassy filtro aditamentos"
+          },
+          "workflowInputs": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "existe": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('existe', ``, 'boolean') }}",
+              "chat_id": "={{ $('Telegram Trigger').first().json.message.chat.id }}",
+              "aditamento": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('aditamento', ``, 'string') }}"
+            },
+            "matchingColumns": [],
+            "schema": [
+              {
+                "id": "chat_id",
+                "displayName": "chat_id",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string",
+                "removed": false
+              },
+              {
+                "id": "aditamento",
+                "displayName": "aditamento",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string",
+                "removed": false
+              },
+              {
+                "id": "existe",
+                "displayName": "existe",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "boolean",
+                "removed": false
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          }
+        },
+        "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+        "typeVersion": 2.2,
+        "position": [
+          1200,
+          928
+        ],
+        "id": "be42ce7e-5e70-464d-a2a1-d2696c823e93",
+        "name": "tool_filtro_aditamentos"
+      },
+      {
+        "parameters": {
+          "description": "Esta herramienta se usa para verificar si el usuario tiene un registro previo",
+          "workflowId": {
+            "__rl": true,
+            "value": "XT7M4Y141IgFcLfa",
+            "mode": "list",
+            "cachedResultUrl": "/workflow/XT7M4Y141IgFcLfa",
+            "cachedResultName": "Consulta Usuario"
+          },
+          "workflowInputs": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "chat_id": "={{ $('Telegram Trigger').first().json.message.chat.id }}"
+            },
+            "matchingColumns": [
+              "chat_id"
+            ],
+            "schema": [
+              {
+                "id": "chat_id",
+                "displayName": "chat_id",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string",
+                "removed": false
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          }
+        },
+        "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+        "typeVersion": 2.2,
+        "position": [
+          1584,
+          928
+        ],
+        "id": "583d2666-d5e8-4440-bda2-2ee4012d5726",
+        "name": "tool_consulta_usuario"
+      },
+      {
+        "parameters": {
+          "operation": "get",
+          "propertyName": "mensaje",
+          "key": "=glasbil-{{ $('Telegram Trigger').item.json.message.chat.id }}",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.redis",
+        "typeVersion": 1,
+        "position": [
+          -2336,
+          288
+        ],
+        "id": "74ab3e09-d0d7-4026-8a8c-c0e190108ba0",
+        "name": "obtenemos los datos del buffer",
+        "credentials": {
+          "redis": {
+            "id": "D8enpdVeoS0YaHLV",
+            "name": "Redis cantera"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "push",
+          "list": "=glasbil-{{ $json.message.chat.id }}",
+          "messageData": "={{ JSON.stringify({\n'message':  $json.message.text,\n'sessionId': $json.message.chat.id ,\n'date_time': $now.toLocal() \n}) }}"
+        },
+        "type": "n8n-nodes-base.redis",
+        "typeVersion": 1,
+        "position": [
+          -2528,
+          288
+        ],
+        "id": "d56f1955-fd5e-4907-873e-289141c8a04a",
+        "name": "añadimos al buffer",
+        "credentials": {
+          "redis": {
+            "id": "D8enpdVeoS0YaHLV",
+            "name": "Redis cantera"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "delete",
+          "key": "=glasbil-{{ $('Telegram Trigger').item.json.message.chat.id }}"
+        },
+        "type": "n8n-nodes-base.redis",
+        "typeVersion": 1,
+        "position": [
+          -1904,
+          288
+        ],
+        "id": "ed9a4a73-8377-4669-ae49-83217cee6ef3",
+        "name": "delete_buffer_data",
+        "credentials": {
+          "redis": {
+            "id": "D8enpdVeoS0YaHLV",
+            "name": "Redis cantera"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "rules": {
+            "values": [
+              {
+                "conditions": {
+                  "options": {
+                    "caseSensitive": true,
+                    "leftValue": "",
+                    "typeValidation": "strict",
+                    "version": 2
+                  },
+                  "conditions": [
+                    {
+                      "leftValue": "={{ JSON.parse($json.mensaje?.last()).sessionId }}",
+                      "rightValue": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+                      "operator": {
+                        "type": "number",
+                        "operation": "notEquals"
+                      },
+                      "id": "9fa3f169-ac9c-4968-bad6-5a42ff3cf3af"
+                    }
+                  ],
+                  "combinator": "and"
+                },
+                "renameOutput": true,
+                "outputKey": "ignorar"
+              },
+              {
+                "conditions": {
+                  "options": {
+                    "caseSensitive": true,
+                    "leftValue": "",
+                    "typeValidation": "strict",
+                    "version": 2
+                  },
+                  "conditions": [
+                    {
+                      "id": "3ed56750-601a-4d08-9b59-c0e90f55bc1d",
+                      "leftValue": "={{ JSON.parse($json.mensaje?.last()).date_time }}",
+                      "rightValue": "={{ $now.minus(3,'seconds').toLocal() }}",
+                      "operator": {
+                        "type": "dateTime",
+                        "operation": "before"
+                      }
+                    }
+                  ],
+                  "combinator": "and"
+                },
+                "renameOutput": true,
+                "outputKey": "continuamos"
+              }
+            ]
+          },
+          "options": {
+            "fallbackOutput": "extra",
+            "renameFallbackOutput": "espera"
+          }
+        },
+        "type": "n8n-nodes-base.switch",
+        "typeVersion": 3.2,
+        "position": [
+          -2112,
+          288
+        ],
+        "id": "1b4d51f4-fba6-4407-8d7b-0e8338bb9078",
+        "name": "Switch2"
+      },
+      {
+        "parameters": {
+          "amount": 3
+        },
+        "type": "n8n-nodes-base.wait",
+        "typeVersion": 1.1,
+        "position": [
+          -2208,
+          512
+        ],
+        "id": "3888bfcd-6fc9-4848-af8d-453966f23b52",
+        "name": "Wait",
+        "webhookId": "ea5a36ff-83da-4e96-b2fb-1537a68263a1"
+      },
+      {
+        "parameters": {},
+        "type": "n8n-nodes-base.noOp",
+        "typeVersion": 1,
+        "position": [
+          -1904,
+          128
+        ],
+        "id": "e7d5dd3d-b9f0-4399-b5f1-e9e159b8c893",
+        "name": "No Operation, do nothing"
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "14d45c9a-45b5-48c3-83d0-8f8265026b9f",
+                "name": "mensaje",
+                "value": "={{ $('delete_buffer_data').item.json.mensaje.map(m => JSON.parse(m).message).reverse().join('\\n') }}",
+                "type": "string"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          -1664,
+          288
+        ],
+        "id": "5a9a8522-7754-4940-a5d6-efb4c7572b48",
+        "name": "Edit Fields"
+      },
+      {
+        "parameters": {
+          "documentId": {
+            "__rl": true,
+            "value": "1_GBfXKFC_0YS9rJBIvt1rGnBl7LI_HbkRHHt1YJLT4s",
+            "mode": "list",
+            "cachedResultName": "Estado Glassy",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1_GBfXKFC_0YS9rJBIvt1rGnBl7LI_HbkRHHt1YJLT4s/edit?usp=drivesdk"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": "gid=0",
+            "mode": "list",
+            "cachedResultName": "estados",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1_GBfXKFC_0YS9rJBIvt1rGnBl7LI_HbkRHHt1YJLT4s/edit#gid=0"
+          },
+          "filtersUI": {
+            "values": [
+              {
+                "lookupColumn": "user_id",
+                "lookupValue": "={{ $('Telegram Trigger').first().json.message.chat.id }}"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleSheets",
+        "typeVersion": 4.7,
+        "position": [
+          -1200,
+          288
+        ],
+        "id": "049efab4-5109-4b23-ba9b-1600818ef3bb",
+        "name": "Get estado",
+        "alwaysOutputData": true,
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "Vg1ihuXHaIOWrqDt",
+            "name": "Google Sheets Aaron Permanentes"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "workflowId": {
+            "__rl": true,
+            "value": "3TRmy5xQe7htpSEH",
+            "mode": "list",
+            "cachedResultUrl": "/workflow/3TRmy5xQe7htpSEH",
+            "cachedResultName": "asistente inserta mensajes refactored"
+          },
+          "workflowInputs": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "number": "={{ $('Telegram Trigger').first().json.message.chat.id.toString() }}",
+              "agent_message": "={{ $json.output }}",
+              "human_messaage": "={{ $('Edit Fields').first().json.mensaje }}",
+              "contact_name": "={{ $('Telegram Trigger').first().json.message.from.first_name }}",
+              "project_id": 28
+            },
+            "matchingColumns": [],
+            "schema": [
+              {
+                "id": "number",
+                "displayName": "number",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string"
+              },
+              {
+                "id": "project_id",
+                "displayName": "project_id",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "number"
+              },
+              {
+                "id": "human_messaage",
+                "displayName": "human_messaage",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string"
+              },
+              {
+                "id": "agent_message",
+                "displayName": "agent_message",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string"
+              },
+              {
+                "id": "contact_name",
+                "displayName": "contact_name",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string"
+              },
+              {
+                "id": "tipo_entrega",
+                "displayName": "tipo_entrega",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string",
+                "removed": true
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": true
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.executeWorkflow",
+        "typeVersion": 1.2,
+        "position": [
+          896,
+          672
+        ],
+        "id": "bbafba72-bd5a-4500-acda-94a4cb344581",
+        "name": "Call 'asistente inserta mensajes refactored'"
+      },
+      {
+        "parameters": {
+          "workflowId": {
+            "__rl": true,
+            "value": "3TRmy5xQe7htpSEH",
+            "mode": "list",
+            "cachedResultUrl": "/workflow/3TRmy5xQe7htpSEH",
+            "cachedResultName": "asistente inserta mensajes refactored"
+          },
+          "workflowInputs": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "number": "={{ $('Telegram Trigger').first().json.message.chat.id.toString() }}",
+              "agent_message": "={{ $json.output }}",
+              "human_messaage": "={{ $('Edit Fields').first().json.mensaje }}",
+              "contact_name": "={{ $('Telegram Trigger').first().json.message.from.first_name }}",
+              "project_id": 28
+            },
+            "matchingColumns": [],
+            "schema": [
+              {
+                "id": "number",
+                "displayName": "number",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string"
+              },
+              {
+                "id": "project_id",
+                "displayName": "project_id",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "number"
+              },
+              {
+                "id": "human_messaage",
+                "displayName": "human_messaage",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string"
+              },
+              {
+                "id": "agent_message",
+                "displayName": "agent_message",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string"
+              },
+              {
+                "id": "contact_name",
+                "displayName": "contact_name",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string"
+              },
+              {
+                "id": "tipo_entrega",
+                "displayName": "tipo_entrega",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "canBeUsedToMatch": true,
+                "type": "string",
+                "removed": true
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": true
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.executeWorkflow",
+        "typeVersion": 1.2,
+        "position": [
+          432,
+          -48
+        ],
+        "id": "39046b9b-f906-42a7-af4c-bab7bded99be",
+        "name": "Call 'asistente inserta mensajes refactored'1"
+      },
+      {
+        "parameters": {
+          "operation": "append",
+          "documentId": {
+            "__rl": true,
+            "value": "12dLSTUHkRAhlmJfF8hcx08M0BAWfnjRTZlgGebt_FJY",
+            "mode": "list",
+            "cachedResultName": "Prueba Glassy",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/12dLSTUHkRAhlmJfF8hcx08M0BAWfnjRTZlgGebt_FJY/edit?usp=drivesdk"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": "gid=0",
+            "mode": "list",
+            "cachedResultName": "Hoja 1",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/12dLSTUHkRAhlmJfF8hcx08M0BAWfnjRTZlgGebt_FJY/edit#gid=0"
+          },
+          "columns": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "MENSAJE": "={{ $json.output }}",
+              "FECHA": "={{ $now.minus({ hours: 0 }).setLocale('es').toFormat(\"dd 'de' LLLL 'de' yyyy HH:mm\") }}",
+              "CHAT_ID": "={{ $('Telegram Trigger').first().json.message.chat.id }}",
+              "TIPO": "Agente"
+            },
+            "matchingColumns": [],
+            "schema": [
+              {
+                "id": "FECHA",
+                "displayName": "FECHA",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "CHAT_ID",
+                "displayName": "CHAT_ID",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "TIPO",
+                "displayName": "TIPO",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "MENSAJE",
+                "displayName": "MENSAJE",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleSheets",
+        "typeVersion": 4.6,
+        "position": [
+          1264,
+          320
+        ],
+        "id": "a6716806-15a0-41a9-a0a2-7b11c33733ab",
+        "name": "Registro mensaje salida 1",
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "Vg1ihuXHaIOWrqDt",
+            "name": "Google Sheets Aaron Permanentes"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "tableId": "conversation_glassy_dev",
+          "fieldsUi": {
+            "fieldValues": [
+              {
+                "fieldId": "chat_id",
+                "fieldValue": "={{ $('Telegram Trigger').first().json.message.chat.id }}"
+              },
+              {
+                "fieldId": "type",
+                "fieldValue": "Agente"
+              },
+              {
+                "fieldId": "message",
+                "fieldValue": "={{ $json.output }}"
+              },
+              {
+                "fieldId": "fecha",
+                "fieldValue": "={{ $now.minus({ hours: 0 }).setLocale('es').toFormat(\"dd 'de' LLLL 'de' yyyy HH:mm\") }}"
+              }
+            ]
+          }
+        },
+        "type": "n8n-nodes-base.supabase",
+        "typeVersion": 1,
+        "position": [
+          896,
+          352
+        ],
+        "id": "1f69d3a1-539a-426f-b5e7-ac473d70fab3",
+        "name": "Registro mensaje salida",
+        "credentials": {
+          "supabaseApi": {
+            "id": "ty0KiXsEYP1uJ8t9",
+            "name": "Supabase account - CANTERA"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "append",
+          "documentId": {
+            "__rl": true,
+            "value": "12dLSTUHkRAhlmJfF8hcx08M0BAWfnjRTZlgGebt_FJY",
+            "mode": "list",
+            "cachedResultName": "Prueba Glassy",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/12dLSTUHkRAhlmJfF8hcx08M0BAWfnjRTZlgGebt_FJY/edit?usp=drivesdk"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": "gid=0",
+            "mode": "list",
+            "cachedResultName": "Hoja 1",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/12dLSTUHkRAhlmJfF8hcx08M0BAWfnjRTZlgGebt_FJY/edit#gid=0"
+          },
+          "columns": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "MENSAJE": "={{ $json.mensaje }}",
+              "FECHA": "={{ $now.minus({ hours: 0 }).setLocale('es').toFormat(\"dd 'de' LLLL 'de' yyyy HH:mm\") }}",
+              "CHAT_ID": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+              "TIPO": "Usuario"
+            },
+            "matchingColumns": [],
+            "schema": [
+              {
+                "id": "FECHA",
+                "displayName": "FECHA",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "CHAT_ID",
+                "displayName": "CHAT_ID",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "TIPO",
+                "displayName": "TIPO",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "MENSAJE",
+                "displayName": "MENSAJE",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleSheets",
+        "typeVersion": 4.6,
+        "position": [
+          -1440,
+          544
+        ],
+        "id": "f835c155-5153-4054-b70e-859d65d3c797",
+        "name": "Registro mensaje entrada 1",
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "Vg1ihuXHaIOWrqDt",
+            "name": "Google Sheets Aaron Permanentes"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "tableId": "conversation_glassy_dev",
+          "fieldsUi": {
+            "fieldValues": [
+              {
+                "fieldId": "chat_id",
+                "fieldValue": "={{ $('Telegram Trigger').item.json.message.chat.id }}"
+              },
+              {
+                "fieldId": "type",
+                "fieldValue": "Usuario"
+              },
+              {
+                "fieldId": "message",
+                "fieldValue": "={{ $json.mensaje }}"
+              },
+              {
+                "fieldId": "fecha",
+                "fieldValue": "={{ $now.minus({ hours: 0 }).setLocale('es').toFormat(\"dd 'de' LLLL 'de' yyyy HH:mm\") }}"
+              }
+            ]
+          }
+        },
+        "type": "n8n-nodes-base.supabase",
+        "typeVersion": 1,
+        "position": [
+          -1440,
+          288
+        ],
+        "id": "8bddf7bf-57f8-499c-adc3-df11030d6fce",
+        "name": "Registro mensaje entrada",
+        "credentials": {
+          "supabaseApi": {
+            "id": "ty0KiXsEYP1uJ8t9",
+            "name": "Supabase account - CANTERA"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "append",
+          "documentId": {
+            "__rl": true,
+            "value": "12dLSTUHkRAhlmJfF8hcx08M0BAWfnjRTZlgGebt_FJY",
+            "mode": "list",
+            "cachedResultName": "Prueba Glassy",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/12dLSTUHkRAhlmJfF8hcx08M0BAWfnjRTZlgGebt_FJY/edit?usp=drivesdk"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": "gid=0",
+            "mode": "list",
+            "cachedResultName": "Hoja 1",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/12dLSTUHkRAhlmJfF8hcx08M0BAWfnjRTZlgGebt_FJY/edit#gid=0"
+          },
+          "columns": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "MENSAJE": "={{ $json.output }}",
+              "FECHA": "={{ $now.minus({ hours: 0 }).setLocale('es').toFormat(\"dd 'de' LLLL 'de' yyyy HH:mm\") }}",
+              "CHAT_ID": "={{ $('Telegram Trigger').first().json.message.chat.id }}",
+              "TIPO": "Agente"
+            },
+            "matchingColumns": [],
+            "schema": [
+              {
+                "id": "FECHA",
+                "displayName": "FECHA",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "CHAT_ID",
+                "displayName": "CHAT_ID",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "TIPO",
+                "displayName": "TIPO",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "MENSAJE",
+                "displayName": "MENSAJE",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleSheets",
+        "typeVersion": 4.6,
+        "position": [
+          432,
+          -592
+        ],
+        "id": "22b1b43a-894d-4bf3-82ee-2f99e88045e8",
+        "name": "Registro mensaje salida info 1",
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "Vg1ihuXHaIOWrqDt",
+            "name": "Google Sheets Aaron Permanentes"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "tableId": "conversation_glassy_dev",
+          "fieldsUi": {
+            "fieldValues": [
+              {
+                "fieldId": "chat_id",
+                "fieldValue": "={{ $('Telegram Trigger').first().json.message.chat.id }}"
+              },
+              {
+                "fieldId": "type",
+                "fieldValue": "Agente"
+              },
+              {
+                "fieldId": "message",
+                "fieldValue": "={{ $json.output }}"
+              },
+              {
+                "fieldId": "fecha",
+                "fieldValue": "={{ $now.minus({ hours: 0 }).setLocale('es').toFormat(\"dd 'de' LLLL 'de' yyyy HH:mm\") }}"
+              }
+            ]
+          }
+        },
+        "type": "n8n-nodes-base.supabase",
+        "typeVersion": 1,
+        "position": [
+          432,
+          -384
+        ],
+        "id": "31d3a69f-dc37-4b6f-876c-5c01b4baca70",
+        "name": "Registro mensaje salida info",
+        "credentials": {
+          "supabaseApi": {
+            "id": "ty0KiXsEYP1uJ8t9",
+            "name": "Supabase account - CANTERA"
+          }
+        }
+      }
+    ],
+    "connections": {
+      "Switch": {
+        "main": [
+          [
+            {
+              "node": "Text Classifier",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "AI Agent1",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Text Classifier",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Text Classifier": {
+        "main": [
+          [
+            {
+              "node": "Cambio de estado",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "AI Agent",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          []
+        ]
+      },
+      "OpenAI Chat Model": {
+        "ai_languageModel": [
+          [
+            {
+              "node": "Text Classifier",
+              "type": "ai_languageModel",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "AI Agent": {
+        "main": [
+          [
+            {
+              "node": "Send a text message",
+              "type": "main",
+              "index": 0
+            },
+            {
+              "node": "Call 'asistente inserta mensajes refactored'1",
+              "type": "main",
+              "index": 0
+            },
+            {
+              "node": "Registro mensaje salida info",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "AI Agent1": {
+        "main": [
+          [
+            {
+              "node": "Send a text message1",
+              "type": "main",
+              "index": 0
+            },
+            {
+              "node": "Call 'asistente inserta mensajes refactored'",
+              "type": "main",
+              "index": 0
+            },
+            {
+              "node": "Registro mensaje salida",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "OpenAI Chat Model1": {
+        "ai_languageModel": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "ai_languageModel",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "agente_cotizzacion": {
+        "ai_tool": [
+          [
+            {
+              "node": "AI Agent1",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "agente_filtrador": {
+        "ai_tool": [
+          [
+            {
+              "node": "AI Agent1",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "agente_registro": {
+        "ai_tool": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Consulta_Cotización": {
+        "ai_tool": [
+          [
+            {
+              "node": "AI Agent1",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "tool_detalle_producto": {
+        "ai_tool": [
+          [
+            {
+              "node": "AI Agent1",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Postgres Chat Memory": {
+        "ai_memory": [
+          [
+            {
+              "node": "AI Agent1",
+              "type": "ai_memory",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "codigos_postales": {
+        "ai_tool": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Embeddings OpenAI": {
+        "ai_embedding": [
+          [
+            {
+              "node": "kb_glasbil",
+              "type": "ai_embedding",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "kb_glasbil": {
+        "ai_tool": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Postgres Chat Memory1": {
+        "ai_memory": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "ai_memory",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Telegram Trigger": {
+        "main": [
+          [
+            {
+              "node": "añadimos al buffer",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Cambio de estado": {
+        "main": [
+          [
+            {
+              "node": "Registro interacción",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Registro interacción": {
+        "main": [
+          [
+            {
+              "node": "AI Agent1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "OpenAI Chat Model2": {
+        "ai_languageModel": [
+          [
+            {
+              "node": "AI Agent1",
+              "type": "ai_languageModel",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "When clicking ‘Test workflow’": {
+        "main": [
+          [
+            {
+              "node": "Postgres",
+              "type": "main",
+              "index": 0
+            },
+            {
+              "node": "Postgres1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "tool_info_aditamento": {
+        "ai_tool": [
+          [
+            {
+              "node": "AI Agent1",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "tool_filtro_aditamentos": {
+        "ai_tool": [
+          [
+            {
+              "node": "AI Agent1",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "tool_consulta_usuario": {
+        "ai_tool": [
+          [
+            {
+              "node": "AI Agent1",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "obtenemos los datos del buffer": {
+        "main": [
+          [
+            {
+              "node": "Switch2",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "añadimos al buffer": {
+        "main": [
+          [
+            {
+              "node": "obtenemos los datos del buffer",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Switch2": {
+        "main": [
+          [
+            {
+              "node": "No Operation, do nothing",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "delete_buffer_data",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Wait",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Wait": {
+        "main": [
+          [
+            {
+              "node": "obtenemos los datos del buffer",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "delete_buffer_data": {
+        "main": [
+          [
+            {
+              "node": "Edit Fields",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Edit Fields": {
+        "main": [
+          [
+            {
+              "node": "Registro mensaje entrada",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Get estado": {
+        "main": [
+          [
+            {
+              "node": "Switch",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Registro mensaje entrada 1": {
+        "main": [
+          []
+        ]
+      },
+      "Registro mensaje entrada": {
+        "main": [
+          [
+            {
+              "node": "Get estado",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "authors": "CANTERA ADMIN",
+    "name": "Version a4ae0068",
+    "description": "",
+    "autosaved": false,
+    "workflowPublishHistory": [
+      {
+        "createdAt": "2026-05-28T06:22:30.296Z",
+        "id": 210,
+        "workflowId": "7e8BytkZezISdom2",
+        "versionId": "a4ae0068-742d-4027-8e36-0835b00b6476",
+        "event": "activated",
+        "userId": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3"
+      }
+    ]
+  }
 }
