@@ -4,7 +4,7 @@
   "id": "0ihqqFtrSx9wxJqv",
   "name": "levantar_ticket_post_venta",
   "description": null,
-  "active": false,
+  "active": true,
   "isArchived": false,
   "nodes": [
     {
@@ -292,8 +292,8 @@
     ]
   },
   "versionId": "950b53a0-4669-4f28-95fb-b84f620a66c1",
-  "activeVersionId": null,
-  "versionCounter": 9,
+  "activeVersionId": "950b53a0-4669-4f28-95fb-b84f620a66c1",
+  "versionCounter": 10,
   "triggerCount": 0,
   "shared": [
     {
@@ -310,52 +310,293 @@
         "type": "personal",
         "icon": null,
         "description": null,
-        "projectRelations": [
-          {
-            "updatedAt": "2025-05-13T15:56:28.209Z",
-            "createdAt": "2025-05-13T15:56:28.209Z",
-            "userId": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
-            "projectId": "BZ9Ta5yhe4RhzY78",
-            "user": {
-              "updatedAt": "2026-05-28T06:00:27.000Z",
-              "createdAt": "2025-05-13T15:56:27.880Z",
-              "id": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
-              "email": "canteradigital7@gmail.com",
-              "firstName": "CANTERA",
-              "lastName": "ADMIN",
-              "personalizationAnswers": {
-                "version": "v4",
-                "personalization_survey_submitted_at": "2025-05-13T16:19:25.161Z",
-                "personalization_survey_n8n_version": "1.92.2",
-                "companySize": "<20",
-                "companyType": "saas",
-                "role": "customer-support",
-                "reportedSource": "event"
-              },
-              "settings": {
-                "userActivated": true,
-                "firstSuccessfulWorkflowId": "PTbESRzX3rguwQN8",
-                "userActivatedAt": 1747154580970,
-                "easyAIWorkflowOnboarded": true,
-                "npsSurvey": {
-                  "responded": true,
-                  "lastShownAt": 1765302536772
-                },
-                "dismissedCallouts": {
-                  "aiAgentStarterCallout": true,
-                  "preBuiltAgentsCalloutHttpRequest": true
-                }
-              },
-              "disabled": false,
-              "mfaEnabled": false,
-              "lastActiveAt": "2026-05-28",
-              "isPending": false
-            }
-          }
-        ]
+        "creatorId": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3"
       }
     }
   ],
   "tags": [],
-  "activeVersion": null
+  "activeVersion": {
+    "updatedAt": "2026-04-30T19:27:42.672Z",
+    "createdAt": "2026-04-30T19:27:42.672Z",
+    "versionId": "950b53a0-4669-4f28-95fb-b84f620a66c1",
+    "workflowId": "0ihqqFtrSx9wxJqv",
+    "nodes": [
+      {
+        "parameters": {
+          "workflowInputs": {
+            "values": [
+              {
+                "name": "mensaje_soporte"
+              },
+              {
+                "name": "numero_soporte"
+              },
+              {
+                "name": "project_id",
+                "type": "number"
+              },
+              {
+                "name": "type"
+              },
+              {
+                "name": "severity"
+              },
+              {
+                "name": "email_cliente"
+              },
+              {
+                "name": "type_garanty"
+              }
+            ]
+          }
+        },
+        "type": "n8n-nodes-base.executeWorkflowTrigger",
+        "typeVersion": 1.1,
+        "position": [
+          0,
+          0
+        ],
+        "id": "1bbaaa93-87a0-4869-b730-d7ae46762959",
+        "name": "inicio"
+      },
+      {
+        "parameters": {
+          "chatId": "775456693",
+          "text": "={{ $json.mensaje_soporte }}",
+          "additionalFields": {
+            "appendAttribution": false
+          }
+        },
+        "type": "n8n-nodes-base.telegram",
+        "typeVersion": 1.2,
+        "position": [
+          208,
+          -208
+        ],
+        "id": "2eb3b599-5cdb-4418-970e-56a814b6f201",
+        "name": "Send a text message",
+        "webhookId": "9d6aa865-c95f-45d0-bcdd-10cc5b3f75e7",
+        "credentials": {
+          "telegramApi": {
+            "id": "okTfVlpm9Q2XUHHF",
+            "name": "Telegram alertas cantera"
+          }
+        },
+        "disabled": true
+      },
+      {
+        "parameters": {
+          "toRecipients": "=ravila@canteradigital.mx",
+          "subject": "={{ $('inicio').item.json.subject }}",
+          "bodyContent": "={{ $('inicio').item.json.mensaje_soporte }}",
+          "additionalFields": {
+            "ccRecipients": "={{ $('inicio').item.json.email_cliente }}"
+          }
+        },
+        "type": "n8n-nodes-base.microsoftOutlook",
+        "typeVersion": 2,
+        "position": [
+          416,
+          -208
+        ],
+        "id": "f7a1988a-7452-4d45-b876-bd49a6468cdc",
+        "name": "Send a message",
+        "webhookId": "38ddb0a4-2beb-42c1-8886-fe72c5afbf78",
+        "credentials": {
+          "microsoftOutlookOAuth2Api": {
+            "id": "hV3xyOpWUpR6z3K6",
+            "name": "Microsoft Outlook Asesor Comercial"
+          }
+        },
+        "disabled": true
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "1068f22f-7f86-4685-be54-c7fad01231e7",
+                "name": "respuesdta",
+                "value": "mensaje enviado de manera exitosa",
+                "type": "string"
+              },
+              {
+                "id": "6e72343d-f48b-441b-b884-581323034a30",
+                "name": "folio",
+                "value": "={{ $json.folio }}",
+                "type": "string"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          1152,
+          0
+        ],
+        "id": "ce0b2301-b6c3-4e04-96e6-0e33369fa358",
+        "name": "Edit Fields"
+      },
+      {
+        "parameters": {
+          "tableId": "ticket_agent",
+          "fieldsUi": {
+            "fieldValues": [
+              {
+                "fieldId": "folio",
+                "fieldValue": "={{ $json.folio }}"
+              },
+              {
+                "fieldId": "description",
+                "fieldValue": "={{ $('inicio').item.json.mensaje_soporte }}"
+              },
+              {
+                "fieldId": "project_id",
+                "fieldValue": "={{ $('inicio').item.json.project_id }}"
+              },
+              {
+                "fieldId": "type",
+                "fieldValue": "={{ $('inicio').item.json.type.toLowerCase() }}"
+              },
+              {
+                "fieldId": "severity",
+                "fieldValue": "={{ $('inicio').item.json.severity.toLowerCase() }}"
+              },
+              {
+                "fieldId": "type_garanty",
+                "fieldValue": "={{ $('inicio').item.json.type_garanty.toLowerCase() }}"
+              }
+            ]
+          }
+        },
+        "type": "n8n-nodes-base.supabase",
+        "typeVersion": 1,
+        "position": [
+          928,
+          0
+        ],
+        "id": "3a8e5906-d268-437a-82d4-053365042a8a",
+        "name": "Create a row",
+        "credentials": {
+          "supabaseApi": {
+            "id": "ty0KiXsEYP1uJ8t9",
+            "name": "Supabase account - CANTERA"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "jsCode": "\nreturn {\nfolio: Date.now().toString()\n}"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          624,
+          0
+        ],
+        "id": "27eda46c-64c6-419f-ab1c-c3f5e0616752",
+        "name": "Code in JavaScript"
+      },
+      {
+        "parameters": {
+          "authentication": "oAuth2",
+          "description": "={{ $('inicio').item.json.mensaje_soporte }}",
+          "additionalFields": {
+            "type": "problem"
+          }
+        },
+        "type": "n8n-nodes-base.zendesk",
+        "typeVersion": 1,
+        "position": [
+          832,
+          -160
+        ],
+        "id": "de7e5b46-2955-4cf3-8e23-a03571778ac8",
+        "name": "Create a ticket",
+        "credentials": {
+          "zendeskOAuth2Api": {
+            "id": "QwBswBJCngXms2ow",
+            "name": "Zendesk account"
+          }
+        }
+      }
+    ],
+    "connections": {
+      "inicio": {
+        "main": [
+          [
+            {
+              "node": "Code in JavaScript",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Send a text message": {
+        "main": [
+          [
+            {
+              "node": "Send a message",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Send a message": {
+        "main": [
+          []
+        ]
+      },
+      "Create a row": {
+        "main": [
+          [
+            {
+              "node": "Edit Fields",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Code in JavaScript": {
+        "main": [
+          [
+            {
+              "node": "Create a row",
+              "type": "main",
+              "index": 0
+            },
+            {
+              "node": "Create a ticket",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Create a ticket": {
+        "main": [
+          []
+        ]
+      }
+    },
+    "authors": "CANTERA ADMIN",
+    "name": null,
+    "description": null,
+    "autosaved": false,
+    "workflowPublishHistory": [
+      {
+        "createdAt": "2026-04-30T19:27:42.000Z",
+        "id": 183,
+        "workflowId": "0ihqqFtrSx9wxJqv",
+        "versionId": "950b53a0-4669-4f28-95fb-b84f620a66c1",
+        "event": "activated",
+        "userId": null
+      }
+    ]
+  }
 }
