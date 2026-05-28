@@ -4,7 +4,7 @@
   "id": "044xtBIPUsarnCZS",
   "name": "buscar_productos_lauka",
   "description": null,
-  "active": false,
+  "active": true,
   "isArchived": false,
   "nodes": [
     {
@@ -160,7 +160,7 @@
     ]
   },
   "versionId": "4efcefb0-7428-4eef-95fc-290ea321bb11",
-  "activeVersionId": null,
+  "activeVersionId": "4efcefb0-7428-4eef-95fc-290ea321bb11",
   "versionCounter": 13,
   "triggerCount": 0,
   "shared": [
@@ -178,52 +178,161 @@
         "type": "personal",
         "icon": null,
         "description": null,
-        "projectRelations": [
-          {
-            "updatedAt": "2025-05-13T15:56:28.209Z",
-            "createdAt": "2025-05-13T15:56:28.209Z",
-            "userId": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
-            "projectId": "BZ9Ta5yhe4RhzY78",
-            "user": {
-              "updatedAt": "2026-05-28T06:00:27.000Z",
-              "createdAt": "2025-05-13T15:56:27.880Z",
-              "id": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
-              "email": "canteradigital7@gmail.com",
-              "firstName": "CANTERA",
-              "lastName": "ADMIN",
-              "personalizationAnswers": {
-                "version": "v4",
-                "personalization_survey_submitted_at": "2025-05-13T16:19:25.161Z",
-                "personalization_survey_n8n_version": "1.92.2",
-                "companySize": "<20",
-                "companyType": "saas",
-                "role": "customer-support",
-                "reportedSource": "event"
-              },
-              "settings": {
-                "userActivated": true,
-                "firstSuccessfulWorkflowId": "PTbESRzX3rguwQN8",
-                "userActivatedAt": 1747154580970,
-                "easyAIWorkflowOnboarded": true,
-                "npsSurvey": {
-                  "responded": true,
-                  "lastShownAt": 1765302536772
-                },
-                "dismissedCallouts": {
-                  "aiAgentStarterCallout": true,
-                  "preBuiltAgentsCalloutHttpRequest": true
-                }
-              },
-              "disabled": false,
-              "mfaEnabled": false,
-              "lastActiveAt": "2026-05-28",
-              "isPending": false
-            }
-          }
-        ]
+        "creatorId": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3"
       }
     }
   ],
   "tags": [],
-  "activeVersion": null
+  "activeVersion": {
+    "updatedAt": "2026-05-28T06:28:40.000Z",
+    "createdAt": "2026-05-21T15:57:31.630Z",
+    "versionId": "4efcefb0-7428-4eef-95fc-290ea321bb11",
+    "workflowId": "044xtBIPUsarnCZS",
+    "nodes": [
+      {
+        "parameters": {
+          "workflowInputs": {
+            "values": [
+              {
+                "name": "termino_busqueda"
+              },
+              {
+                "name": "marca"
+              },
+              {
+                "name": "categoria"
+              },
+              {
+                "name": "material"
+              },
+              {
+                "name": "precio_minimo"
+              },
+              {
+                "name": "precio_maximo"
+              },
+              {
+                "name": "ordenar_por"
+              },
+              {
+                "name": "pagina"
+              }
+            ]
+          }
+        },
+        "type": "n8n-nodes-base.executeWorkflowTrigger",
+        "typeVersion": 1.1,
+        "position": [
+          -208,
+          112
+        ],
+        "id": "6e7b466e-6328-42ad-9ff8-1097ce08edc2",
+        "name": "Execute Workflow Trigger"
+      },
+      {
+        "parameters": {
+          "jsCode": "// Recibe parámetros del agente y construye la query string para la API de Lauka\nconst input = $input.first().json;\n\nconst BASE = 'https://194.195.92.107:444/rest/default/V1/lauka/products';\n\nconst parts = [];\n\n// Búsqueda global q=\nconst q = (input.termino_busqueda || '').trim();\nif (q) parts.push(`q=${encodeURIComponent(q)}`);\n\n// Paginación\nconst pagina = parseInt(input.pagina) || 1;\nconst pageSize = parseInt(input.page_size) || 10;\nparts.push(`searchCriteria[currentPage]=${pagina}`);\nparts.push(`searchCriteria[pageSize]=${pageSize}`);\n\n// Ordenamiento\nconst ordenar = (input.ordenar_por || '').trim().toLowerCase();\nif (ordenar === 'bestsellers') {\n  parts.push('sort=bestsellers');\n} else if (ordenar === 'precio_asc') {\n  parts.push('searchCriteria[sortOrders][0][field]=sale_price');\n  parts.push('searchCriteria[sortOrders][0][direction]=ASC');\n} else if (ordenar === 'precio_desc') {\n  parts.push('searchCriteria[sortOrders][0][field]=sale_price');\n  parts.push('searchCriteria[sortOrders][0][direction]=DESC');\n} else if (ordenar === 'nombre') {\n  parts.push('searchCriteria[sortOrders][0][field]=name');\n  parts.push('searchCriteria[sortOrders][0][direction]=ASC');\n}\n\n// Filtros dinámicos — se acumulan como grupos separados (AND)\nlet groupIdx = 0;\n\n// Marca (eq)\nconst marca = (input.marca || '').trim();\nif (marca) {\n  parts.push(`searchCriteria[filterGroups][${groupIdx}][filters][0][field]=brand`);\n  parts.push(`searchCriteria[filterGroups][${groupIdx}][filters][0][value]=${encodeURIComponent(marca)}`);\n  parts.push(`searchCriteria[filterGroups][${groupIdx}][filters][0][condition_type]=eq`);\n  groupIdx++;\n}\n\n// Categoría / subcategoría (like)\nconst categoria = (input.categoria || '').trim();\nif (categoria) {\n  parts.push(`searchCriteria[filterGroups][${groupIdx}][filters][0][field]=subcategoria`);\n  parts.push(`searchCriteria[filterGroups][${groupIdx}][filters][0][value]=${encodeURIComponent('%' + categoria + '%')}`);\n  parts.push(`searchCriteria[filterGroups][${groupIdx}][filters][0][condition_type]=like`);\n  groupIdx++;\n}\n\n// Material (like)\nconst material = (input.material || '').trim();\nif (material) {\n  parts.push(`searchCriteria[filterGroups][${groupIdx}][filters][0][field]=material`);\n  parts.push(`searchCriteria[filterGroups][${groupIdx}][filters][0][value]=${encodeURIComponent('%' + material + '%')}`);\n  parts.push(`searchCriteria[filterGroups][${groupIdx}][filters][0][condition_type]=like`);\n  groupIdx++;\n}\n\n// Precio mínimo (gteq en sale_price)\nconst precioMin = (input.precio_minimo || '').trim();\nif (precioMin) {\n  parts.push(`searchCriteria[filterGroups][${groupIdx}][filters][0][field]=sale_price`);\n  parts.push(`searchCriteria[filterGroups][${groupIdx}][filters][0][value]=${encodeURIComponent(precioMin)}`);\n  parts.push(`searchCriteria[filterGroups][${groupIdx}][filters][0][condition_type]=gteq`);\n  groupIdx++;\n}\n\n// Precio máximo (lteq en sale_price)\nconst precioMax = (input.precio_maximo || '').trim();\nif (precioMax) {\n  parts.push(`searchCriteria[filterGroups][${groupIdx}][filters][0][field]=sale_price`);\n  parts.push(`searchCriteria[filterGroups][${groupIdx}][filters][0][value]=${encodeURIComponent(precioMax)}`);\n  parts.push(`searchCriteria[filterGroups][${groupIdx}][filters][0][condition_type]=lteq`);\n  groupIdx++;\n}\n\nconst url = parts.length ? `${BASE}?${parts.join('&')}` : BASE;\n\nreturn [{ json: { url } }];\n"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          32,
+          112
+        ],
+        "id": "44b4d577-2a82-458b-987c-d02bfa1e76f0",
+        "name": "Construir URL"
+      },
+      {
+        "parameters": {
+          "url": "={{ $json.url }}",
+          "authentication": "genericCredentialType",
+          "genericAuthType": "httpHeaderAuth",
+          "options": {
+            "allowUnauthorizedCerts": true,
+            "response": {
+              "response": {
+                "responseFormat": "json"
+              }
+            }
+          }
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          272,
+          112
+        ],
+        "id": "084df758-6f75-4f60-b8bf-78406cdcd134",
+        "name": "Llamar API Productos",
+        "credentials": {
+          "httpHeaderAuth": {
+            "id": "KytkW46HC2wPvhFf",
+            "name": "lauka bearer"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "jsCode": "// Formatea la respuesta del API para el agente\nconst data = $input.first().json;\nconst items = data.items || [];\nconst totalCount = data.total_count || 0;\nconst sc = data.search_criteria || {};\n\nif (items.length === 0) {\n  return [{ json: { resultado: 'No se encontraron productos con los criterios indicados.', total: 0, productos: [] } }];\n}\n\nconst productos = items.map(p => ({\n  product_id: p.product_id,\n  sku: p.sku,\n  nombre: p.name,\n  marca: p.brand || '',\n  precio_regular: p.regular_price || '',\n  precio_venta: p.sale_price || '',\n  stock: p.stock,\n  subcategoria: p.subcategoria || '',\n  descripcion_corta: p.short_description || '',\n  imagen: p.imagen_principal || '',\n  url_producto: p.product_id ? `https://194.195.92.107:444/productos/product/view/id/${p.product_id}` : (p.product_id ? `https://194.195.92.107:444/productos/product/view/id/${p.product_id}` : '')\n}));\n\nreturn [{ json: {\n  total: totalCount,\n  pagina_actual: sc.current_page || 1,\n  resultados_en_pagina: items.length,\n  productos\n} }];\n"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          512,
+          112
+        ],
+        "id": "6bfa99f6-d65f-4db9-b97b-7416ece6b7ed",
+        "name": "Formatear Respuesta"
+      }
+    ],
+    "connections": {
+      "Execute Workflow Trigger": {
+        "main": [
+          [
+            {
+              "node": "Construir URL",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Construir URL": {
+        "main": [
+          [
+            {
+              "node": "Llamar API Productos",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Llamar API Productos": {
+        "main": [
+          [
+            {
+              "node": "Formatear Respuesta",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "authors": "CANTERA ADMIN",
+    "name": "Version 4efcefb0",
+    "description": "",
+    "autosaved": false,
+    "workflowPublishHistory": [
+      {
+        "createdAt": "2026-05-28T06:28:40.568Z",
+        "id": 215,
+        "workflowId": "044xtBIPUsarnCZS",
+        "versionId": "4efcefb0-7428-4eef-95fc-290ea321bb11",
+        "event": "activated",
+        "userId": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3"
+      }
+    ]
+  }
 }
