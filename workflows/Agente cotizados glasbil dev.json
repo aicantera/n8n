@@ -4,7 +4,7 @@
   "id": "4QLd4KoP0XGafQmk",
   "name": "Agente cotizados glasbil dev",
   "description": null,
-  "active": false,
+  "active": true,
   "isArchived": false,
   "nodes": [
     {
@@ -380,8 +380,8 @@
     ]
   },
   "versionId": "ffb07e2f-be9f-413a-a6c7-84299599fb4e",
-  "activeVersionId": null,
-  "versionCounter": 12,
+  "activeVersionId": "ffb07e2f-be9f-413a-a6c7-84299599fb4e",
+  "versionCounter": 13,
   "triggerCount": 0,
   "shared": [
     {
@@ -398,49 +398,7 @@
         "type": "personal",
         "icon": null,
         "description": null,
-        "projectRelations": [
-          {
-            "updatedAt": "2025-05-13T15:56:28.209Z",
-            "createdAt": "2025-05-13T15:56:28.209Z",
-            "userId": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
-            "projectId": "BZ9Ta5yhe4RhzY78",
-            "user": {
-              "updatedAt": "2026-05-28T06:00:27.000Z",
-              "createdAt": "2025-05-13T15:56:27.880Z",
-              "id": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
-              "email": "canteradigital7@gmail.com",
-              "firstName": "CANTERA",
-              "lastName": "ADMIN",
-              "personalizationAnswers": {
-                "version": "v4",
-                "personalization_survey_submitted_at": "2025-05-13T16:19:25.161Z",
-                "personalization_survey_n8n_version": "1.92.2",
-                "companySize": "<20",
-                "companyType": "saas",
-                "role": "customer-support",
-                "reportedSource": "event"
-              },
-              "settings": {
-                "userActivated": true,
-                "firstSuccessfulWorkflowId": "PTbESRzX3rguwQN8",
-                "userActivatedAt": 1747154580970,
-                "easyAIWorkflowOnboarded": true,
-                "npsSurvey": {
-                  "responded": true,
-                  "lastShownAt": 1765302536772
-                },
-                "dismissedCallouts": {
-                  "aiAgentStarterCallout": true,
-                  "preBuiltAgentsCalloutHttpRequest": true
-                }
-              },
-              "disabled": false,
-              "mfaEnabled": false,
-              "lastActiveAt": "2026-05-28",
-              "isPending": false
-            }
-          }
-        ]
+        "creatorId": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3"
       }
     }
   ],
@@ -452,5 +410,381 @@
       "name": "AGENTE GLASSY"
     }
   ],
-  "activeVersion": null
+  "activeVersion": {
+    "updatedAt": "2026-03-06T01:58:57.884Z",
+    "createdAt": "2026-03-06T01:58:57.884Z",
+    "versionId": "ffb07e2f-be9f-413a-a6c7-84299599fb4e",
+    "workflowId": "4QLd4KoP0XGafQmk",
+    "nodes": [
+      {
+        "parameters": {
+          "inputSource": "passthrough"
+        },
+        "type": "n8n-nodes-base.executeWorkflowTrigger",
+        "typeVersion": 1.1,
+        "position": [
+          -336,
+          -80
+        ],
+        "id": "3d567082-b30f-427f-9bd5-daeedd2ec97a",
+        "name": "When Executed by Another Workflow"
+      },
+      {
+        "parameters": {
+          "promptType": "define",
+          "text": "={{ $json.query }}",
+          "options": {
+            "systemMessage": "=# Prompt para Agente de Cotizaciones Glasbil (n8n)\n\nEres un agente de IA experto en el catálogo de la empresa Glasbil. Tu objetivo principal es asistir a los usuarios proporcionando información precisa sobre años, marcas, modelos y tipos de vehículos y cristales, además de generar cotizaciones. Debes usar las herramientas proporcionadas y seguir rigurosamente las reglas de operación.\n\n### Herramientas Disponibles\n\n* **`available_years()`**: Consulta los años de vehículos disponibles en el sistema.\n* **`available_brands(year)`**: Consulta las marcas disponibles para un año específico. Es **obligatorio** proporcionar el año.\n* **`available_models(year, brand)`**: Busca los modelos de una marca para un año específico. Es **obligatorio** proporcionar el año y la marca.\n* **`available_type_car(year, brand, model)`**: Obtiene los tipos de carrocería (ej. Sedán, Coupé) para un año, marca y modelo. Es **obligatorio** proporcionar los tres datos.\n* **`search_products(year, brand, model, car_type, type_glass)`**: Busca productos de cristal específicos. Es **obligatorio** proporcionar todos los datos. Al retornar la información de cada producto, incluye: `external_id`, `origin` y `nag`.\n* **`send_quote(contact_name, ...)`**: Envía una cotización al usuario. Es **obligatorio** que todos los datos estén completos.\n\n---\n\n### Reglas de Operación y Razonamiento\n\n**¡MUY IMPORTANTE!** Antes de ejecutar una consulta que requiera múltiples datos (como marca o modelo), **SIEMPRE** debes seguir un proceso de validación en cadena para asegurar la calidad de los datos y corregir errores del usuario.\n\n#### Proceso de Validación Obligatorio para `available_type_car`\n\nSi un usuario te pide los tipos de automóvil para un año, marca y modelo (por ejemplo: *\"tipos de auto para Jetta Volkswagen 2012\"*), **NO DEBES** llamar a `available_type_car` directamente. En su lugar, debes seguir estos pasos en orden estricto:\n\n1.  **Validar el Año**:\n    * Invoca la herramienta `available_years()`.\n    * Comprueba si el año proporcionado por el usuario (ej. \"2012\") existe en la lista que recibes.\n    * Si el año no existe, detén el proceso e informa al usuario que el año no es válido.\n\n2.  **Validar y Corregir la Marca**:\n    * Si el año es válido, invoca `available_brands(year)` usando el año ya validado.\n    * Compara la marca que te dio el usuario (ej. \"Volkswagen\") con la lista de marcas que recibes.\n    * **Si encuentras una coincidencia muy similar (ej. el usuario escribió \"Volks wagen\" y la lista dice \"Volkswagen\"), asume la correcta y úsala para el siguiente paso.**\n    * Si no encuentras ninguna marca que coincida o se parezca, detén el proceso e informa al usuario que esa marca no está disponible para ese año.\n\n3.  **Validar y Corregir el Modelo**:\n    * Si la marca es válida, invoca `available_models(year, brand)` usando el año validado y la marca corregida.\n    * Compara el modelo que te dio el usuario (ej. \"Jetta\") con la lista de modelos que recibes.\n    * **Al igual que con la marca, si encuentras una coincidencia similar (ej. \"Jeta\" vs \"Jetta\"), usa la versión correcta de la herramienta.**\n    * Si el modelo no se encuentra, detén el proceso e informa al usuario que no se encontró ese modelo para la marca y año especificados.\n\n4.  **Ejecutar la Consulta Final**:\n    * **ÚNICAMENTE** si los tres datos (año, marca y modelo) han sido validados y corregidos exitosamente a través de los pasos anteriores, procede a llamar a la herramienta `available_type_car(year, brand, model)` con los datos limpios y correctos.\n\n### Formato de Salida (ESTRICTO)\n\n1. **Cero Texto de Relleno**: No saludes, no te despidas y no resumas la consulta del usuario.\n2. **Listado Directo**: Si el resultado es una lista de opciones (marcas, modelos o cristales), entrega solo los elementos numerados o con viñetas.\n3. **Manejo de Errores**: Si una validación falla, entrega solo el mensaje de error técnico, sin sugerencias adicionales"
+          }
+        },
+        "type": "@n8n/n8n-nodes-langchain.agent",
+        "typeVersion": 1.9,
+        "position": [
+          -128,
+          -80
+        ],
+        "id": "6b29d81d-feee-4192-bfd2-690d438237c3",
+        "name": "AI Agent"
+      },
+      {
+        "parameters": {
+          "model": {
+            "__rl": true,
+            "mode": "list",
+            "value": "gpt-4o-mini"
+          },
+          "options": {}
+        },
+        "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "typeVersion": 1.2,
+        "position": [
+          -208,
+          144
+        ],
+        "id": "3f70f824-7801-488f-80c0-a51c171b7b77",
+        "name": "OpenAI Chat Model",
+        "credentials": {
+          "openAiApi": {
+            "id": "zZlJrTGKq8KER7gD",
+            "name": "OpenAi account - GLASSY"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "toolDescription": "Esta herramienta se dedica a buscar informacion sobre años de automoviles ",
+          "url": "https://butik-vidrio.canteradigital.mx/api/finder/availableYears",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequestTool",
+        "typeVersion": 4.2,
+        "position": [
+          624,
+          0
+        ],
+        "id": "3aca31b7-a9c5-4d53-a702-7c7fb362e96a",
+        "name": "available_years"
+      },
+      {
+        "parameters": {
+          "url": "=https://butik-vidrio.canteradigital.mx/api/finder/availableBrandsYear?year={{ $fromAI('year') }}",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequestTool",
+        "typeVersion": 4.2,
+        "position": [
+          592,
+          208
+        ],
+        "id": "8487dc39-67fe-48a0-8078-2f34caab45f7",
+        "name": "available_brands"
+      },
+      {
+        "parameters": {
+          "toolDescription": "Con esta herramienta seras capaz de realizar la busqueda de los modelos disponibles dependiendo del año y de la marca del vehiculo",
+          "url": "=https://butik-vidrio.canteradigital.mx/api/finder/availableModelsBrandYear?year={{$fromAI('year')}}&brand={{ $fromAI('brand') }}",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequestTool",
+        "typeVersion": 4.2,
+        "position": [
+          464,
+          -144
+        ],
+        "id": "b3dcd634-7878-4b9f-ac58-48bc089a10a5",
+        "name": "available_models"
+      },
+      {
+        "parameters": {
+          "toolDescription": "con esta herramienta podras mostrar los tipos de autos dependiendo del año, marca y modelo del vehiculo",
+          "url": "=https://butik-vidrio.canteradigital.mx/api/finder/availableCarTypesModelsBrandsYear?year={{$fromAI('year')}}&brand={{$fromAI('brand')}}&model={{ $fromAI('model') }}",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequestTool",
+        "typeVersion": 4.2,
+        "position": [
+          512,
+          368
+        ],
+        "id": "f3bc81ba-5d13-4d9c-9fba-1f5f7c0c9697",
+        "name": "available_type_car"
+      },
+      {
+        "parameters": {
+          "toolDescription": "Eesta herramienta te ayudara a obtener los tipos de cristales disponibles para un vehiculo de acuerdo a year,brand,model,type_car",
+          "url": "=https://butik-vidrio.canteradigital.mx/api/finder/availableGlassTypesModelsBrandsYearCartypes?year={{$fromAI('year')}}&brand={{$fromAI('brand')}}&model={{$fromAI('model')}}&type_car={{ $fromAI('type_car') }}",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequestTool",
+        "typeVersion": 4.2,
+        "position": [
+          320,
+          400
+        ],
+        "id": "e041f4ee-d415-4c2d-b0e8-95bfea45764e",
+        "name": "available_type_glasses"
+      },
+      {
+        "parameters": {
+          "toolDescription": "Esta herramienta te ayudara a obtener los productos disponibles para un vehiculo de acuerdo a year, brand, model, car_type, type_glass ",
+          "url": "=https://butik-vidrio.canteradigital.mx/api/finder/searchProducts/filtered?year={{$fromAI('year')}}&brand={{$fromAI('brand')}}&model={{$fromAI('model')}}&car_type={{$fromAI('car_type')}}&type_glass={{$fromAI('type_glass')}}&antenna=false&encapsulated=false&hud=false&heated=false&attachment=false&request_origin=chatbot",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequestTool",
+        "typeVersion": 4.2,
+        "position": [
+          144,
+          400
+        ],
+        "id": "ecdd068e-8f10-47f5-bfc2-aebbc2bf88e5",
+        "name": "search_products"
+      },
+      {
+        "parameters": {
+          "toolDescription": "Esta herramienta te ayudara a mandar la cotización del usuario con los siguientes datos contact_name, contact_phone, contact_email, brand, model, year, car_type, glass_type, product_external_id, product_origin, product_nag, product_name",
+          "method": "POST",
+          "url": "https://butik-vidrio.canteradigital.mx/api/productQuotes",
+          "sendBody": true,
+          "bodyParameters": {
+            "parameters": [
+              {
+                "name": "user_id",
+                "value": "={{ null }}"
+              },
+              {
+                "name": "contact_name",
+                "value": "={{ $fromAI('contact_name') }}"
+              },
+              {
+                "name": "contact_phone",
+                "value": "={{ $fromAI('contact_phone') }}"
+              },
+              {
+                "name": "contact_email",
+                "value": "={{ $fromAI('contact_email') }}"
+              },
+              {
+                "name": "brand",
+                "value": "={{ $fromAI('brand') }}"
+              },
+              {
+                "name": "model",
+                "value": "={{ $fromAI('model') }}"
+              },
+              {
+                "name": "year",
+                "value": "={{ $fromAI('year') }}"
+              },
+              {
+                "name": "car_type",
+                "value": "={{ $fromAI('car_type') }}"
+              },
+              {
+                "name": "glass_type",
+                "value": "={{ $fromAI('glass_type') }}"
+              },
+              {
+                "name": "product_external_id",
+                "value": "={{ $fromAI('product_external_id') }}"
+              },
+              {
+                "name": "product_origin",
+                "value": "={{ $fromAI('product_origin') }}"
+              },
+              {
+                "name": "product_nag",
+                "value": "={{ $fromAI('product_nag') }}"
+              },
+              {
+                "name": "product_name",
+                "value": "={{ $fromAI('product_name') }}"
+              },
+              {
+                "name": "postal_code",
+                "value": "={{ $fromAI('contact_postal_code') }}"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequestTool",
+        "typeVersion": 4.2,
+        "position": [
+          -48,
+          400
+        ],
+        "id": "c517ee17-d2b8-4009-8b1a-4aaf86ad93e1",
+        "name": "send_quote"
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "fd58a625-106a-41c4-b2bd-f3869189de24",
+                "name": "data",
+                "value": "={{ $json.output }}",
+                "type": "string"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          288,
+          -288
+        ],
+        "id": "9dc85e41-3a9a-4744-96cb-c110e231e94e",
+        "name": "Edit Fields"
+      }
+    ],
+    "connections": {
+      "When Executed by Another Workflow": {
+        "main": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "OpenAI Chat Model": {
+        "ai_languageModel": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "ai_languageModel",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "available_years": {
+        "ai_tool": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "available_brands": {
+        "ai_tool": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "available_models": {
+        "ai_tool": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "available_type_car": {
+        "ai_tool": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "available_type_glasses": {
+        "ai_tool": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "search_products": {
+        "ai_tool": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "send_quote": {
+        "ai_tool": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "AI Agent": {
+        "main": [
+          [
+            {
+              "node": "Edit Fields",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "authors": "CANTERA ADMIN",
+    "name": null,
+    "description": null,
+    "autosaved": false,
+    "workflowPublishHistory": [
+      {
+        "createdAt": "2026-03-17T20:39:21.000Z",
+        "id": 4,
+        "workflowId": "4QLd4KoP0XGafQmk",
+        "versionId": "ffb07e2f-be9f-413a-a6c7-84299599fb4e",
+        "event": "activated",
+        "userId": null
+      }
+    ]
+  }
 }
