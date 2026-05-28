@@ -4,7 +4,7 @@
   "id": "756HHyVOO4c7uMO1",
   "name": "get_cursos_agente",
   "description": null,
-  "active": false,
+  "active": true,
   "isArchived": false,
   "nodes": [
     {
@@ -154,8 +154,8 @@
     ]
   },
   "versionId": "09cdc716-2d0c-4127-876f-7348e143f2fc",
-  "activeVersionId": null,
-  "versionCounter": 5,
+  "activeVersionId": "09cdc716-2d0c-4127-876f-7348e143f2fc",
+  "versionCounter": 6,
   "triggerCount": 0,
   "shared": [
     {
@@ -172,52 +172,160 @@
         "type": "personal",
         "icon": null,
         "description": null,
-        "projectRelations": [
-          {
-            "updatedAt": "2025-05-13T15:56:28.209Z",
-            "createdAt": "2025-05-13T15:56:28.209Z",
-            "userId": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
-            "projectId": "BZ9Ta5yhe4RhzY78",
-            "user": {
-              "updatedAt": "2026-05-28T06:00:27.000Z",
-              "createdAt": "2025-05-13T15:56:27.880Z",
-              "id": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3",
-              "email": "canteradigital7@gmail.com",
-              "firstName": "CANTERA",
-              "lastName": "ADMIN",
-              "personalizationAnswers": {
-                "version": "v4",
-                "personalization_survey_submitted_at": "2025-05-13T16:19:25.161Z",
-                "personalization_survey_n8n_version": "1.92.2",
-                "companySize": "<20",
-                "companyType": "saas",
-                "role": "customer-support",
-                "reportedSource": "event"
-              },
-              "settings": {
-                "userActivated": true,
-                "firstSuccessfulWorkflowId": "PTbESRzX3rguwQN8",
-                "userActivatedAt": 1747154580970,
-                "easyAIWorkflowOnboarded": true,
-                "npsSurvey": {
-                  "responded": true,
-                  "lastShownAt": 1765302536772
-                },
-                "dismissedCallouts": {
-                  "aiAgentStarterCallout": true,
-                  "preBuiltAgentsCalloutHttpRequest": true
-                }
-              },
-              "disabled": false,
-              "mfaEnabled": false,
-              "lastActiveAt": "2026-05-28",
-              "isPending": false
-            }
-          }
-        ]
+        "creatorId": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3"
       }
     }
   ],
   "tags": [],
-  "activeVersion": null
+  "activeVersion": {
+    "updatedAt": "2026-02-25T18:29:52.902Z",
+    "createdAt": "2026-02-25T18:29:52.902Z",
+    "versionId": "09cdc716-2d0c-4127-876f-7348e143f2fc",
+    "workflowId": "756HHyVOO4c7uMO1",
+    "nodes": [
+      {
+        "parameters": {
+          "workflowInputs": {
+            "values": [
+              {
+                "name": "project_id"
+              }
+            ]
+          }
+        },
+        "type": "n8n-nodes-base.executeWorkflowTrigger",
+        "typeVersion": 1.1,
+        "position": [
+          0,
+          0
+        ],
+        "id": "875f81d9-e553-4382-9369-c5b743a18d45",
+        "name": "When Executed by Another Workflow"
+      },
+      {
+        "parameters": {
+          "operation": "get",
+          "tableId": "products",
+          "filters": {
+            "conditions": [
+              {
+                "keyName": "project_id",
+                "keyValue": "={{ $json.project_id }}"
+              },
+              {
+                "keyName": "status",
+                "keyValue": "active"
+              }
+            ]
+          }
+        },
+        "type": "n8n-nodes-base.supabase",
+        "typeVersion": 1,
+        "position": [
+          208,
+          0
+        ],
+        "id": "ca6672be-0dcb-41a3-8572-e3c4e37ff6f9",
+        "name": "Get a row",
+        "credentials": {
+          "supabaseApi": {
+            "id": "ty0KiXsEYP1uJ8t9",
+            "name": "Supabase account - CANTERA"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "ce81b166-9921-4890-83d7-71837df7c631",
+                "name": "course_id",
+                "value": "={{ $json.id }}",
+                "type": "number"
+              },
+              {
+                "id": "9bd8333d-4bc5-4efa-9c3c-1daac04417e9",
+                "name": "name",
+                "value": "={{ $json.name }}",
+                "type": "string"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          416,
+          0
+        ],
+        "id": "b1633449-48b2-4a1e-8259-eddc2bdefea7",
+        "name": "Edit Fields"
+      },
+      {
+        "parameters": {
+          "aggregate": "aggregateAllItemData",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.aggregate",
+        "typeVersion": 1,
+        "position": [
+          624,
+          0
+        ],
+        "id": "a69db074-74cd-4461-8b28-c519548a4cc5",
+        "name": "Aggregate"
+      }
+    ],
+    "connections": {
+      "When Executed by Another Workflow": {
+        "main": [
+          [
+            {
+              "node": "Get a row",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Get a row": {
+        "main": [
+          [
+            {
+              "node": "Edit Fields",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Edit Fields": {
+        "main": [
+          [
+            {
+              "node": "Aggregate",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "authors": "CANTERA ADMIN",
+    "name": null,
+    "description": null,
+    "autosaved": false,
+    "workflowPublishHistory": [
+      {
+        "createdAt": "2026-02-25T18:29:52.000Z",
+        "id": 162,
+        "workflowId": "756HHyVOO4c7uMO1",
+        "versionId": "09cdc716-2d0c-4127-876f-7348e143f2fc",
+        "event": "activated",
+        "userId": null
+      }
+    ]
+  }
 }
