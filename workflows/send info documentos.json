@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-05-18T22:41:22.000Z",
+  "updatedAt": "2026-06-05T02:26:08.160Z",
   "createdAt": "2026-04-30T21:35:21.354Z",
   "id": "28z14cDPX6ZPRTxS",
   "name": "send info documentos",
@@ -364,6 +364,31 @@
               },
               "renameOutput": true,
               "outputKey": "extra"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "fcece9db-e9c1-4bd7-89de-f0b3801b95a5",
+                    "leftValue": "={{ $('inicio').item.json.type }}",
+                    "rightValue": "transpaleta",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "transpaleta"
             }
           ]
         },
@@ -417,7 +442,7 @@
     },
     {
       "parameters": {
-        "numberInputs": 3
+        "numberInputs": 4
       },
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3.2,
@@ -476,7 +501,7 @@
       "typeVersion": 2,
       "position": [
         -1920,
-        880
+        768
       ],
       "id": "df86ef85-377e-4232-b36a-b72a0b8b8feb",
       "name": "Code in JavaScript2"
@@ -1270,6 +1295,19 @@
       ],
       "id": "4c102727-f859-4c85-b9c1-6f5d0185593a",
       "name": "Edit Fields6"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Code node en n8n\n\n// 🔧 Nombre de carpeta que quieres buscar.\n// Puedes cambiarlo o traerlo de otro nodo: p.ej. const targetName = $json.folderName;\nconst targetName = 'Transpaleta'; // 'principal' | 'ubicación' | 'extra'\n\n// --- Funciones auxiliares ---\n\nfunction normalizeName(name) {\n  return String(name)\n    .toLowerCase()\n    .normalize('NFD')                  // separa acentos\n    .replace(/[\\u0300-\\u036f]/g, '')   // elimina acentos\n    .trim();\n}\n\nfunction getFilesArray(fromJson) {\n  // Caso 1: JSON es un array: [ { files: [...] } ]\n  if (Array.isArray(fromJson)) {\n    if (!fromJson[0] || !Array.isArray(fromJson[0].files)) {\n      throw new Error('No se encontró la propiedad \"files\" en el primer elemento del array.');\n    }\n    return fromJson[0].files;\n  }\n\n  // Caso 2: JSON es un objeto: { files: [...] }\n  if (Array.isArray(fromJson.files)) {\n    return fromJson.files;\n  }\n\n  throw new Error('No se encontró un arreglo \"files\" en el JSON recibido.');\n}\n\nfunction findFolderByName(files, name) {\n  const normalizedTarget = normalizeName(name);\n\n  return files.find(f => \n    f.mimeType === 'application/vnd.google-apps.folder' &&\n    normalizeName(f.name) === normalizedTarget\n  ) || null;\n}\n\n// --- Lógica principal ---\n\n// Tomamos el JSON del primer item (ajusta si lo necesitas por item)\nconst sourceJson = items[0].json;\n\nconst files = getFilesArray(sourceJson);\nconst folder = findFolderByName(files, targetName);\n\nif (!folder) {\n  throw new Error(`No se encontró ninguna carpeta con el nombre \"${targetName}\".`);\n}\n\n// Devolvemos solo la carpeta encontrada como resultado del nodo\nreturn [\n  {\n    json: folder,\n  },\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1920,
+        944
+      ],
+      "id": "adf41dd4-cf98-4c3a-b715-0783b3bb4918",
+      "name": "Code in JavaScript4"
     }
   ],
   "connections": {
@@ -1419,6 +1457,13 @@
         [
           {
             "node": "Code in JavaScript2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Code in JavaScript4",
             "type": "main",
             "index": 0
           }
@@ -1704,10 +1749,22 @@
           }
         ]
       ]
+    },
+    "Code in JavaScript4": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 3
+          }
+        ]
+      ]
     }
   },
   "settings": {
-    "executionOrder": "v1"
+    "executionOrder": "v1",
+    "binaryMode": "separate"
   },
   "staticData": null,
   "meta": null,
@@ -1715,16 +1772,16 @@
     "inicio": [
       {
         "json": {
-          "vacante_id": "32",
+          "vacante_id": "33",
           "chat_id": "5214432267282",
-          "type": "general"
+          "type": "transpaleta"
         }
       }
     ]
   },
-  "versionId": "f4243f24-95ab-424e-a344-b6ba17437ab0",
-  "activeVersionId": "f4243f24-95ab-424e-a344-b6ba17437ab0",
-  "versionCounter": 10,
+  "versionId": "4fc7b438-1119-46e2-a7ba-cf57d2e6460a",
+  "activeVersionId": "4fc7b438-1119-46e2-a7ba-cf57d2e6460a",
+  "versionCounter": 33,
   "triggerCount": 0,
   "shared": [
     {
@@ -1747,9 +1804,9 @@
   ],
   "tags": [],
   "activeVersion": {
-    "updatedAt": "2026-05-18T22:41:22.970Z",
-    "createdAt": "2026-05-18T22:41:22.970Z",
-    "versionId": "f4243f24-95ab-424e-a344-b6ba17437ab0",
+    "updatedAt": "2026-06-05T02:26:11.000Z",
+    "createdAt": "2026-06-05T02:25:53.276Z",
+    "versionId": "4fc7b438-1119-46e2-a7ba-cf57d2e6460a",
     "workflowId": "28z14cDPX6ZPRTxS",
     "nodes": [
       {
@@ -2109,6 +2166,31 @@
                 },
                 "renameOutput": true,
                 "outputKey": "extra"
+              },
+              {
+                "conditions": {
+                  "options": {
+                    "caseSensitive": true,
+                    "leftValue": "",
+                    "typeValidation": "strict",
+                    "version": 2
+                  },
+                  "conditions": [
+                    {
+                      "id": "fcece9db-e9c1-4bd7-89de-f0b3801b95a5",
+                      "leftValue": "={{ $('inicio').item.json.type }}",
+                      "rightValue": "transpaleta",
+                      "operator": {
+                        "type": "string",
+                        "operation": "equals",
+                        "name": "filter.operator.equals"
+                      }
+                    }
+                  ],
+                  "combinator": "and"
+                },
+                "renameOutput": true,
+                "outputKey": "transpaleta"
               }
             ]
           },
@@ -2162,7 +2244,7 @@
       },
       {
         "parameters": {
-          "numberInputs": 3
+          "numberInputs": 4
         },
         "type": "n8n-nodes-base.merge",
         "typeVersion": 3.2,
@@ -2221,7 +2303,7 @@
         "typeVersion": 2,
         "position": [
           -1920,
-          880
+          768
         ],
         "id": "df86ef85-377e-4232-b36a-b72a0b8b8feb",
         "name": "Code in JavaScript2"
@@ -3015,6 +3097,19 @@
         ],
         "id": "4c102727-f859-4c85-b9c1-6f5d0185593a",
         "name": "Edit Fields6"
+      },
+      {
+        "parameters": {
+          "jsCode": "// Code node en n8n\n\n// 🔧 Nombre de carpeta que quieres buscar.\n// Puedes cambiarlo o traerlo de otro nodo: p.ej. const targetName = $json.folderName;\nconst targetName = 'Transpaleta'; // 'principal' | 'ubicación' | 'extra'\n\n// --- Funciones auxiliares ---\n\nfunction normalizeName(name) {\n  return String(name)\n    .toLowerCase()\n    .normalize('NFD')                  // separa acentos\n    .replace(/[\\u0300-\\u036f]/g, '')   // elimina acentos\n    .trim();\n}\n\nfunction getFilesArray(fromJson) {\n  // Caso 1: JSON es un array: [ { files: [...] } ]\n  if (Array.isArray(fromJson)) {\n    if (!fromJson[0] || !Array.isArray(fromJson[0].files)) {\n      throw new Error('No se encontró la propiedad \"files\" en el primer elemento del array.');\n    }\n    return fromJson[0].files;\n  }\n\n  // Caso 2: JSON es un objeto: { files: [...] }\n  if (Array.isArray(fromJson.files)) {\n    return fromJson.files;\n  }\n\n  throw new Error('No se encontró un arreglo \"files\" en el JSON recibido.');\n}\n\nfunction findFolderByName(files, name) {\n  const normalizedTarget = normalizeName(name);\n\n  return files.find(f => \n    f.mimeType === 'application/vnd.google-apps.folder' &&\n    normalizeName(f.name) === normalizedTarget\n  ) || null;\n}\n\n// --- Lógica principal ---\n\n// Tomamos el JSON del primer item (ajusta si lo necesitas por item)\nconst sourceJson = items[0].json;\n\nconst files = getFilesArray(sourceJson);\nconst folder = findFolderByName(files, targetName);\n\nif (!folder) {\n  throw new Error(`No se encontró ninguna carpeta con el nombre \"${targetName}\".`);\n}\n\n// Devolvemos solo la carpeta encontrada como resultado del nodo\nreturn [\n  {\n    json: folder,\n  },\n];\n"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          -1920,
+          944
+        ],
+        "id": "adf41dd4-cf98-4c3a-b715-0783b3bb4918",
+        "name": "Code in JavaScript4"
       }
     ],
     "connections": {
@@ -3164,6 +3259,13 @@
           [
             {
               "node": "Code in JavaScript2",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Code in JavaScript4",
               "type": "main",
               "index": 0
             }
@@ -3449,20 +3551,31 @@
             }
           ]
         ]
+      },
+      "Code in JavaScript4": {
+        "main": [
+          [
+            {
+              "node": "Merge",
+              "type": "main",
+              "index": 3
+            }
+          ]
+        ]
       }
     },
     "authors": "CANTERA ADMIN",
-    "name": null,
-    "description": null,
-    "autosaved": false,
+    "name": "Version 4fc7b438",
+    "description": "",
+    "autosaved": true,
     "workflowPublishHistory": [
       {
-        "createdAt": "2026-05-18T22:41:22.000Z",
-        "id": 196,
+        "createdAt": "2026-06-05T02:26:11.507Z",
+        "id": 327,
         "workflowId": "28z14cDPX6ZPRTxS",
-        "versionId": "f4243f24-95ab-424e-a344-b6ba17437ab0",
+        "versionId": "4fc7b438-1119-46e2-a7ba-cf57d2e6460a",
         "event": "activated",
-        "userId": null
+        "userId": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3"
       }
     ]
   }
