@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-05-29T18:27:54.731Z",
+  "updatedAt": "2026-06-15T18:44:20.521Z",
   "createdAt": "2026-05-14T19:04:21.833Z",
   "id": "044xtBIPUsarnCZS",
   "name": "buscar_productos_lauka",
@@ -49,7 +49,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// Recibe parámetros del agente y construye la query string para la API de Lauka\nconst input = $input.first().json;\n\nconst BASE = 'https://194.195.92.107:444/rest/default/V1/lauka/products';\n\nconst parts = [];\n\n// Búsqueda global q=\nconst q = (input.termino_busqueda || '').trim();\nif (q) parts.push(`q=${encodeURIComponent(q)}`);\n\n// Paginación\nconst pagina = parseInt(input.pagina) || 1;\nconst pageSize = parseInt(input.page_size) || 10;\nparts.push(`searchCriteria[currentPage]=${pagina}`);\nparts.push(`searchCriteria[pageSize]=${pageSize}`);\n\n// Ordenamiento\nconst ordenar = (input.ordenar_por || '').trim().toLowerCase();\nif (ordenar === 'bestsellers') {\n  parts.push('sort=bestsellers');\n} else if (ordenar === 'precio_asc') {\n  parts.push('searchCriteria[sortOrders][0][field]=sale_price');\n  parts.push('searchCriteria[sortOrders][0][direction]=ASC');\n} else if (ordenar === 'precio_desc') {\n  parts.push('searchCriteria[sortOrders][0][field]=sale_price');\n  parts.push('searchCriteria[sortOrders][0][direction]=DESC');\n} else if (ordenar === 'nombre') {\n  parts.push('searchCriteria[sortOrders][0][field]=name');\n  parts.push('searchCriteria[sortOrders][0][direction]=ASC');\n}\n\n// Filtros dinámicos — se acumulan como grupos separados (AND)\nlet groupIdx = 0;\n\n// Marca (eq)\nconst marca = (input.marca || '').trim();\nif (marca) {\n  parts.push(`searchCriteria[filterGroups][${groupIdx}][filters][0][field]=brand`);\n  parts.push(`searchCriteria[filterGroups][${groupIdx}][filters][0][value]=${encodeURIComponent(marca)}`);\n  parts.push(`searchCriteria[filterGroups][${groupIdx}][filters][0][condition_type]=eq`);\n  groupIdx++;\n}\n\n// Categoría / subcategoría (like)\nconst categoria = (input.categoria || '').trim();\nif (categoria) {\n  parts.push(`searchCriteria[filterGroups][${groupIdx}][filters][0][field]=subcategoria`);\n  parts.push(`searchCriteria[filterGroups][${groupIdx}][filters][0][value]=${encodeURIComponent('%' + categoria + '%')}`);\n  parts.push(`searchCriteria[filterGroups][${groupIdx}][filters][0][condition_type]=like`);\n  groupIdx++;\n}\n\n// Material (like)\nconst material = (input.material || '').trim();\nif (material) {\n  parts.push(`searchCriteria[filterGroups][${groupIdx}][filters][0][field]=material`);\n  parts.push(`searchCriteria[filterGroups][${groupIdx}][filters][0][value]=${encodeURIComponent('%' + material + '%')}`);\n  parts.push(`searchCriteria[filterGroups][${groupIdx}][filters][0][condition_type]=like`);\n  groupIdx++;\n}\n\n// Precio mínimo (gteq en sale_price)\nconst precioMin = (input.precio_minimo || '').trim();\nif (precioMin) {\n  parts.push(`searchCriteria[filterGroups][${groupIdx}][filters][0][field]=sale_price`);\n  parts.push(`searchCriteria[filterGroups][${groupIdx}][filters][0][value]=${encodeURIComponent(precioMin)}`);\n  parts.push(`searchCriteria[filterGroups][${groupIdx}][filters][0][condition_type]=gteq`);\n  groupIdx++;\n}\n\n// Precio máximo (lteq en sale_price)\nconst precioMax = (input.precio_maximo || '').trim();\nif (precioMax) {\n  parts.push(`searchCriteria[filterGroups][${groupIdx}][filters][0][field]=sale_price`);\n  parts.push(`searchCriteria[filterGroups][${groupIdx}][filters][0][value]=${encodeURIComponent(precioMax)}`);\n  parts.push(`searchCriteria[filterGroups][${groupIdx}][filters][0][condition_type]=lteq`);\n  groupIdx++;\n}\n\nconst url = parts.length ? `${BASE}?${parts.join('&')}` : BASE;\n\nreturn [{ json: { url } }];\n"
+        "jsCode": "// Recibe parámetros del agente y construye la query string para la API de Lauka\nconst input = $input.first().json;\n\nconst BASE = 'https://194.195.92.107:444/rest/default/V1/lauka/products';\n\nconst parts = [];\n\n// Paginación\nconst pagina = parseInt(input.pagina) || 1;\nconst pageSize = parseInt(input.page_size) || 10;\nparts.push(`searchCriteria[currentPage]=${pagina}`);\nparts.push(`searchCriteria[pageSize]=${pageSize}`);\n\n// Ordenamiento\nconst ordenar = (input.ordenar_por || '').trim().toLowerCase();\nif (ordenar === 'bestsellers') {\n  parts.push('sort=bestsellers');\n} else if (ordenar === 'precio_asc') {\n  parts.push('searchCriteria[sortOrders][0][field]=sale_price');\n  parts.push('searchCriteria[sortOrders][0][direction]=ASC');\n} else if (ordenar === 'precio_desc') {\n  parts.push('searchCriteria[sortOrders][0][field]=sale_price');\n  parts.push('searchCriteria[sortOrders][0][direction]=DESC');\n} else if (ordenar === 'nombre') {\n  parts.push('searchCriteria[sortOrders][0][field]=name');\n  parts.push('searchCriteria[sortOrders][0][direction]=ASC');\n}\n\n// Filtros dinámicos — grupos separados = AND entre ellos\nlet groupIdx = 0;\n\n// ── Búsqueda por término (OR sobre campos confiables, EXCLUYE sku/skux) ──────\n// Reemplazamos q= porque ese parámetro incluye sku/skux que contienen texto\n// descriptivo sucio (ej: el sku puede decir \"El Termómetro LAUKA se utiliza...\")\n// lo que causa falsos positivos. Con filterGroups controlamos exactamente qué\n// campos se buscan.\nconst q = (input.termino_busqueda || '').trim();\nif (q) {\n  const val = encodeURIComponent('%' + q + '%');\n  const camposBusqueda = [\n    'name',\n    'short_description',\n    'description',\n    'tags',\n    'brand',\n    'grupo',\n    'subcategoria',\n    'categories',\n    'gtin',\n    'fabricante',\n    'material',\n    'tipo_capacidad',\n    'caracteristica_1',\n    'caracteristica_2',\n    'medida'\n  ];\n  camposBusqueda.forEach((campo, filterIdx) => {\n    parts.push(`searchCriteria[filterGroups][${groupIdx}][filters][${filterIdx}][field]=${campo}`);\n    parts.push(`searchCriteria[filterGroups][${groupIdx}][filters][${filterIdx}][value]=${val}`);\n    parts.push(`searchCriteria[filterGroups][${groupIdx}][filters][${filterIdx}][condition_type]=like`);\n  });\n  groupIdx++;\n}\n\n// Marca (eq) — grupo separado = AND con la búsqueda\nconst marca = (input.marca || '').trim();\nif (marca) {\n  parts.push(`searchCriteria[filterGroups][${groupIdx}][filters][0][field]=brand`);\n  parts.push(`searchCriteria[filterGroups][${groupIdx}][filters][0][value]=${encodeURIComponent(marca)}`);\n  parts.push(`searchCriteria[filterGroups][${groupIdx}][filters][0][condition_type]=eq`);\n  groupIdx++;\n}\n\n// Categoría / subcategoría (like)\nconst categoria = (input.categoria || '').trim();\nif (categoria) {\n  parts.push(`searchCriteria[filterGroups][${groupIdx}][filters][0][field]=subcategoria`);\n  parts.push(`searchCriteria[filterGroups][${groupIdx}][filters][0][value]=${encodeURIComponent('%' + categoria + '%')}`);\n  parts.push(`searchCriteria[filterGroups][${groupIdx}][filters][0][condition_type]=like`);\n  groupIdx++;\n}\n\n// Material (like)\nconst material = (input.material || '').trim();\nif (material) {\n  parts.push(`searchCriteria[filterGroups][${groupIdx}][filters][0][field]=material`);\n  parts.push(`searchCriteria[filterGroups][${groupIdx}][filters][0][value]=${encodeURIComponent('%' + material + '%')}`);\n  parts.push(`searchCriteria[filterGroups][${groupIdx}][filters][0][condition_type]=like`);\n  groupIdx++;\n}\n\n// Precio mínimo (gteq en sale_price)\nconst precioMin = (input.precio_minimo || '').trim();\nif (precioMin) {\n  parts.push(`searchCriteria[filterGroups][${groupIdx}][filters][0][field]=sale_price`);\n  parts.push(`searchCriteria[filterGroups][${groupIdx}][filters][0][value]=${encodeURIComponent(precioMin)}`);\n  parts.push(`searchCriteria[filterGroups][${groupIdx}][filters][0][condition_type]=gteq`);\n  groupIdx++;\n}\n\n// Precio máximo (lteq en sale_price)\nconst precioMax = (input.precio_maximo || '').trim();\nif (precioMax) {\n  parts.push(`searchCriteria[filterGroups][${groupIdx}][filters][0][field]=sale_price`);\n  parts.push(`searchCriteria[filterGroups][${groupIdx}][filters][0][value]=${encodeURIComponent(precioMax)}`);\n  parts.push(`searchCriteria[filterGroups][${groupIdx}][filters][0][condition_type]=lteq`);\n  groupIdx++;\n}\n\nconst url = parts.length ? `${BASE}?${parts.join('&')}` : BASE;\n\nreturn [{ json: { url } }];\n"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -140,10 +140,14 @@
   },
   "settings": {
     "executionOrder": "v1",
-    "binaryMode": "separate"
+    "binaryMode": "separate",
+    "availableInMCP": true
   },
   "staticData": null,
-  "meta": null,
+  "meta": {
+    "aiBuilderAssisted": true,
+    "builderVariant": "mcp"
+  },
   "pinData": {
     "Execute Workflow Trigger": [
       {
@@ -163,9 +167,9 @@
       }
     ]
   },
-  "versionId": "4efcefb0-7428-4eef-95fc-290ea321bb11",
-  "activeVersionId": "4efcefb0-7428-4eef-95fc-290ea321bb11",
-  "versionCounter": 14,
+  "versionId": "a0f89d3f-f06c-41b9-95dd-746c75b8db97",
+  "activeVersionId": "a0f89d3f-f06c-41b9-95dd-746c75b8db97",
+  "versionCounter": 16,
   "triggerCount": 0,
   "shared": [
     {
@@ -188,9 +192,9 @@
   ],
   "tags": [],
   "activeVersion": {
-    "updatedAt": "2026-05-28T06:28:40.000Z",
-    "createdAt": "2026-05-21T15:57:31.630Z",
-    "versionId": "4efcefb0-7428-4eef-95fc-290ea321bb11",
+    "updatedAt": "2026-06-15T18:44:20.522Z",
+    "createdAt": "2026-06-15T18:44:20.522Z",
+    "versionId": "a0f89d3f-f06c-41b9-95dd-746c75b8db97",
     "workflowId": "044xtBIPUsarnCZS",
     "nodes": [
       {
@@ -235,7 +239,7 @@
       },
       {
         "parameters": {
-          "jsCode": "// Recibe parámetros del agente y construye la query string para la API de Lauka\nconst input = $input.first().json;\n\nconst BASE = 'https://194.195.92.107:444/rest/default/V1/lauka/products';\n\nconst parts = [];\n\n// Búsqueda global q=\nconst q = (input.termino_busqueda || '').trim();\nif (q) parts.push(`q=${encodeURIComponent(q)}`);\n\n// Paginación\nconst pagina = parseInt(input.pagina) || 1;\nconst pageSize = parseInt(input.page_size) || 10;\nparts.push(`searchCriteria[currentPage]=${pagina}`);\nparts.push(`searchCriteria[pageSize]=${pageSize}`);\n\n// Ordenamiento\nconst ordenar = (input.ordenar_por || '').trim().toLowerCase();\nif (ordenar === 'bestsellers') {\n  parts.push('sort=bestsellers');\n} else if (ordenar === 'precio_asc') {\n  parts.push('searchCriteria[sortOrders][0][field]=sale_price');\n  parts.push('searchCriteria[sortOrders][0][direction]=ASC');\n} else if (ordenar === 'precio_desc') {\n  parts.push('searchCriteria[sortOrders][0][field]=sale_price');\n  parts.push('searchCriteria[sortOrders][0][direction]=DESC');\n} else if (ordenar === 'nombre') {\n  parts.push('searchCriteria[sortOrders][0][field]=name');\n  parts.push('searchCriteria[sortOrders][0][direction]=ASC');\n}\n\n// Filtros dinámicos — se acumulan como grupos separados (AND)\nlet groupIdx = 0;\n\n// Marca (eq)\nconst marca = (input.marca || '').trim();\nif (marca) {\n  parts.push(`searchCriteria[filterGroups][${groupIdx}][filters][0][field]=brand`);\n  parts.push(`searchCriteria[filterGroups][${groupIdx}][filters][0][value]=${encodeURIComponent(marca)}`);\n  parts.push(`searchCriteria[filterGroups][${groupIdx}][filters][0][condition_type]=eq`);\n  groupIdx++;\n}\n\n// Categoría / subcategoría (like)\nconst categoria = (input.categoria || '').trim();\nif (categoria) {\n  parts.push(`searchCriteria[filterGroups][${groupIdx}][filters][0][field]=subcategoria`);\n  parts.push(`searchCriteria[filterGroups][${groupIdx}][filters][0][value]=${encodeURIComponent('%' + categoria + '%')}`);\n  parts.push(`searchCriteria[filterGroups][${groupIdx}][filters][0][condition_type]=like`);\n  groupIdx++;\n}\n\n// Material (like)\nconst material = (input.material || '').trim();\nif (material) {\n  parts.push(`searchCriteria[filterGroups][${groupIdx}][filters][0][field]=material`);\n  parts.push(`searchCriteria[filterGroups][${groupIdx}][filters][0][value]=${encodeURIComponent('%' + material + '%')}`);\n  parts.push(`searchCriteria[filterGroups][${groupIdx}][filters][0][condition_type]=like`);\n  groupIdx++;\n}\n\n// Precio mínimo (gteq en sale_price)\nconst precioMin = (input.precio_minimo || '').trim();\nif (precioMin) {\n  parts.push(`searchCriteria[filterGroups][${groupIdx}][filters][0][field]=sale_price`);\n  parts.push(`searchCriteria[filterGroups][${groupIdx}][filters][0][value]=${encodeURIComponent(precioMin)}`);\n  parts.push(`searchCriteria[filterGroups][${groupIdx}][filters][0][condition_type]=gteq`);\n  groupIdx++;\n}\n\n// Precio máximo (lteq en sale_price)\nconst precioMax = (input.precio_maximo || '').trim();\nif (precioMax) {\n  parts.push(`searchCriteria[filterGroups][${groupIdx}][filters][0][field]=sale_price`);\n  parts.push(`searchCriteria[filterGroups][${groupIdx}][filters][0][value]=${encodeURIComponent(precioMax)}`);\n  parts.push(`searchCriteria[filterGroups][${groupIdx}][filters][0][condition_type]=lteq`);\n  groupIdx++;\n}\n\nconst url = parts.length ? `${BASE}?${parts.join('&')}` : BASE;\n\nreturn [{ json: { url } }];\n"
+          "jsCode": "// Recibe parámetros del agente y construye la query string para la API de Lauka\nconst input = $input.first().json;\n\nconst BASE = 'https://194.195.92.107:444/rest/default/V1/lauka/products';\n\nconst parts = [];\n\n// Paginación\nconst pagina = parseInt(input.pagina) || 1;\nconst pageSize = parseInt(input.page_size) || 10;\nparts.push(`searchCriteria[currentPage]=${pagina}`);\nparts.push(`searchCriteria[pageSize]=${pageSize}`);\n\n// Ordenamiento\nconst ordenar = (input.ordenar_por || '').trim().toLowerCase();\nif (ordenar === 'bestsellers') {\n  parts.push('sort=bestsellers');\n} else if (ordenar === 'precio_asc') {\n  parts.push('searchCriteria[sortOrders][0][field]=sale_price');\n  parts.push('searchCriteria[sortOrders][0][direction]=ASC');\n} else if (ordenar === 'precio_desc') {\n  parts.push('searchCriteria[sortOrders][0][field]=sale_price');\n  parts.push('searchCriteria[sortOrders][0][direction]=DESC');\n} else if (ordenar === 'nombre') {\n  parts.push('searchCriteria[sortOrders][0][field]=name');\n  parts.push('searchCriteria[sortOrders][0][direction]=ASC');\n}\n\n// Filtros dinámicos — grupos separados = AND entre ellos\nlet groupIdx = 0;\n\n// ── Búsqueda por término (OR sobre campos confiables, EXCLUYE sku/skux) ──────\n// Reemplazamos q= porque ese parámetro incluye sku/skux que contienen texto\n// descriptivo sucio (ej: el sku puede decir \"El Termómetro LAUKA se utiliza...\")\n// lo que causa falsos positivos. Con filterGroups controlamos exactamente qué\n// campos se buscan.\nconst q = (input.termino_busqueda || '').trim();\nif (q) {\n  const val = encodeURIComponent('%' + q + '%');\n  const camposBusqueda = [\n    'name',\n    'short_description',\n    'description',\n    'tags',\n    'brand',\n    'grupo',\n    'subcategoria',\n    'categories',\n    'gtin',\n    'fabricante',\n    'material',\n    'tipo_capacidad',\n    'caracteristica_1',\n    'caracteristica_2',\n    'medida'\n  ];\n  camposBusqueda.forEach((campo, filterIdx) => {\n    parts.push(`searchCriteria[filterGroups][${groupIdx}][filters][${filterIdx}][field]=${campo}`);\n    parts.push(`searchCriteria[filterGroups][${groupIdx}][filters][${filterIdx}][value]=${val}`);\n    parts.push(`searchCriteria[filterGroups][${groupIdx}][filters][${filterIdx}][condition_type]=like`);\n  });\n  groupIdx++;\n}\n\n// Marca (eq) — grupo separado = AND con la búsqueda\nconst marca = (input.marca || '').trim();\nif (marca) {\n  parts.push(`searchCriteria[filterGroups][${groupIdx}][filters][0][field]=brand`);\n  parts.push(`searchCriteria[filterGroups][${groupIdx}][filters][0][value]=${encodeURIComponent(marca)}`);\n  parts.push(`searchCriteria[filterGroups][${groupIdx}][filters][0][condition_type]=eq`);\n  groupIdx++;\n}\n\n// Categoría / subcategoría (like)\nconst categoria = (input.categoria || '').trim();\nif (categoria) {\n  parts.push(`searchCriteria[filterGroups][${groupIdx}][filters][0][field]=subcategoria`);\n  parts.push(`searchCriteria[filterGroups][${groupIdx}][filters][0][value]=${encodeURIComponent('%' + categoria + '%')}`);\n  parts.push(`searchCriteria[filterGroups][${groupIdx}][filters][0][condition_type]=like`);\n  groupIdx++;\n}\n\n// Material (like)\nconst material = (input.material || '').trim();\nif (material) {\n  parts.push(`searchCriteria[filterGroups][${groupIdx}][filters][0][field]=material`);\n  parts.push(`searchCriteria[filterGroups][${groupIdx}][filters][0][value]=${encodeURIComponent('%' + material + '%')}`);\n  parts.push(`searchCriteria[filterGroups][${groupIdx}][filters][0][condition_type]=like`);\n  groupIdx++;\n}\n\n// Precio mínimo (gteq en sale_price)\nconst precioMin = (input.precio_minimo || '').trim();\nif (precioMin) {\n  parts.push(`searchCriteria[filterGroups][${groupIdx}][filters][0][field]=sale_price`);\n  parts.push(`searchCriteria[filterGroups][${groupIdx}][filters][0][value]=${encodeURIComponent(precioMin)}`);\n  parts.push(`searchCriteria[filterGroups][${groupIdx}][filters][0][condition_type]=gteq`);\n  groupIdx++;\n}\n\n// Precio máximo (lteq en sale_price)\nconst precioMax = (input.precio_maximo || '').trim();\nif (precioMax) {\n  parts.push(`searchCriteria[filterGroups][${groupIdx}][filters][0][field]=sale_price`);\n  parts.push(`searchCriteria[filterGroups][${groupIdx}][filters][0][value]=${encodeURIComponent(precioMax)}`);\n  parts.push(`searchCriteria[filterGroups][${groupIdx}][filters][0][condition_type]=lteq`);\n  groupIdx++;\n}\n\nconst url = parts.length ? `${BASE}?${parts.join('&')}` : BASE;\n\nreturn [{ json: { url } }];\n"
         },
         "type": "n8n-nodes-base.code",
         "typeVersion": 2,
@@ -325,32 +329,16 @@
       }
     },
     "authors": "CANTERA ADMIN",
-    "name": "Version 4efcefb0",
-    "description": "",
+    "name": null,
+    "description": null,
     "autosaved": false,
     "workflowPublishHistory": [
       {
-        "createdAt": "2026-05-28T06:28:40.568Z",
-        "id": 215,
+        "createdAt": "2026-06-15T18:51:27.542Z",
+        "id": 428,
         "workflowId": "044xtBIPUsarnCZS",
-        "versionId": "4efcefb0-7428-4eef-95fc-290ea321bb11",
+        "versionId": "a0f89d3f-f06c-41b9-95dd-746c75b8db97",
         "event": "activated",
-        "userId": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3"
-      },
-      {
-        "createdAt": "2026-05-29T18:27:54.788Z",
-        "id": 234,
-        "workflowId": "044xtBIPUsarnCZS",
-        "versionId": "4efcefb0-7428-4eef-95fc-290ea321bb11",
-        "event": "activated",
-        "userId": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3"
-      },
-      {
-        "createdAt": "2026-05-29T18:27:54.774Z",
-        "id": 233,
-        "workflowId": "044xtBIPUsarnCZS",
-        "versionId": "4efcefb0-7428-4eef-95fc-290ea321bb11",
-        "event": "deactivated",
         "userId": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3"
       }
     ]
