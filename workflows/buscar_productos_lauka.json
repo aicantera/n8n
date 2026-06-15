@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-06-15T19:54:31.714Z",
+  "updatedAt": "2026-06-15T20:03:57.809Z",
   "createdAt": "2026-05-14T19:04:21.833Z",
   "id": "044xtBIPUsarnCZS",
   "name": "buscar_productos_lauka",
@@ -91,7 +91,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const data = $input.first().json;\nconst items = data.items || [];\nconst totalCount = data.total_count || 0;\nconst sc = data.search_criteria || {};\n\n// Obtener el término de búsqueda del nodo anterior para filtrar client-side\nconst terminoBusqueda = ($('Construir URL').first().json.termino_busqueda || '').toLowerCase().trim();\n\nif (items.length === 0) {\n  return [{ json: { resultado: 'No se encontraron productos.', total: 0, productos: [] } }];\n}\n\n// Función: normaliza texto para comparación (quita acentos, minúsculas)\nfunction normalizar(texto) {\n  return (texto || '').toLowerCase()\n    .normalize('NFD').replace(/[\\u0300-\\u036f]/g, '');\n}\n\n// Filtro client-side: descarta productos cuyo short_description Y description\n// no contienen el término buscado (segunda línea de defensa contra falsos positivos del sku)\nconst terminoNorm = normalizar(terminoBusqueda);\n\nconst productosFiltrados = items.filter(p => {\n  if (!terminoNorm) return true; // sin término = sin filtro\n  const descCorta = normalizar(p.short_description);\n  const desc = normalizar(p.description);\n  const grupo = normalizar(p.grupo);\n  const subcat = normalizar(p.subcategoria);\n  const tags = normalizar((p.tags || ''));\n  const tipoCapacidad = normalizar(p.tipo_capacidad);\n  return descCorta.includes(terminoNorm)\n    || desc.includes(terminoNorm)\n    || grupo.includes(terminoNorm)\n    || subcat.includes(terminoNorm)\n    || tags.includes(terminoNorm)\n    || tipoCapacidad.includes(terminoNorm);\n});\n\nif (productosFiltrados.length === 0) {\n  return [{ json: {\n    resultado: `No se encontraron productos relevantes para \"${terminoBusqueda}\". Intenta con términos relacionados o contacta a Lauka directamente.`,\n    total: 0,\n    productos: []\n  } }];\n}\n\nconst productos = productosFiltrados.map(p => ({\n  product_id: p.product_id,\n  skux: p.skux || '',\n  nombre: p.short_description || '',\n  descripcion: p.description || '',\n  marca: p.brand || '',\n  precio_regular: p.regular_price || '0.00',\n  precio_venta: p.sale_price || '0.00',\n  stock: p.stock ?? 0,\n  subcategoria: p.subcategoria || '',\n  grupo: p.grupo || '',\n  tipo_capacidad: p.tipo_capacidad || '',\n  material: p.material || '',\n  url_producto: `https://194.195.92.107:444/productos/product/view/id/${p.product_id}`\n}));\n\nreturn [{ json: {\n  total: productosFiltrados.length,\n  total_en_catalogo: totalCount,\n  pagina_actual: sc.current_page || 1,\n  resultados_en_pagina: productosFiltrados.length,\n  productos\n} }];\n"
+        "jsCode": "const data = $input.first().json;\nconst items = data.items || [];\nconst totalCount = data.total_count || 0;\nconst sc = data.search_criteria || {};\nconst terminoBusqueda = ($('Construir URL').first().json.termino_busqueda || '').trim();\n\nif (items.length === 0) {\n  return [{ json: { resultado: 'No se encontraron productos.', total: 0, productos: [] } }];\n}\n\n// Normaliza texto: minúsculas + sin acentos\nfunction norm(t) {\n  return (t || '').toLowerCase().normalize('NFD').replace(/[\\u0300-\\u036f]/g, '').trim();\n}\n\nconst tNorm = norm(terminoBusqueda);\n\n// Scoring de relevancia\n// 3 = el producto ES principalmente lo que se busca (término al inicio de short_description)\n// 2 = el producto es claramente lo que se busca (término en las primeras 3 palabras)\n// 1 = el producto lo contiene como accesorio (término aparece pero no es el sujeto)\n// 0 = no relevante\nfunction calcularScore(p) {\n  if (!tNorm) return 3;\n  \n  const descNorm = norm(p.short_description);\n  const descPalabras = descNorm.split(/\\s+/);\n  const grupoNorm = norm(p.grupo);\n  const subcatNorm = norm(p.subcategoria);\n  const descCompleta = norm(p.description);\n  \n  // Score 3: el término es la primera palabra de short_description\n  if (descPalabras[0] === tNorm || descPalabras[0].startsWith(tNorm)) return 3;\n  \n  // Score 3: el grupo principal ES el término buscado\n  if (grupoNorm === tNorm || grupoNorm.startsWith(tNorm)) return 3;\n  \n  // Score 2: el término está en las primeras 3 palabras de short_description\n  if (descPalabras.slice(0, 3).some(p => p.includes(tNorm))) return 2;\n  \n  // Score 2: la subcategoría contiene el término\n  if (subcatNorm.includes(tNorm)) return 2;\n  \n  // Score 1: el término aparece en short_description pero no es el sujeto\n  if (descNorm.includes(tNorm)) return 1;\n  \n  // Score 1: aparece en description larga\n  if (descCompleta.includes(tNorm)) return 1;\n  \n  // Score 0: no es relevante\n  return 0;\n}\n\n// Calcular score para todos\nconst conScore = items\n  .map(p => ({ ...p, _score: calcularScore(p) }))\n  .filter(p => p._score > 0);\n\nif (conScore.length === 0) {\n  return [{ json: {\n    resultado: `No encontré productos que sean \"${terminoBusqueda}\" en el catálogo. Puedes intentar con términos relacionados o contactar a Lauka.`,\n    total: 0,\n    productos: []\n  } }];\n}\n\n// Determinar si hay resultados de score alto (2 o 3)\nconst scoreMaximo = Math.max(...conScore.map(p => p._score));\nconst umbral = scoreMaximo >= 2 ? 2 : 1; // si hay resultados directos, solo mostrar esos\n\nconst productosFiltrados = conScore\n  .filter(p => p._score >= umbral)\n  .sort((a, b) => b._score - a._score);\n\nconst productos = productosFiltrados.map(p => ({\n  product_id: p.product_id,\n  skux: p.skux || '',\n  nombre: p.short_description || '',\n  descripcion: p.description || '',\n  marca: p.brand || '',\n  precio_regular: p.regular_price || '0.00',\n  precio_venta: p.sale_price || '0.00',\n  stock: p.stock ?? 0,\n  subcategoria: p.subcategoria || '',\n  grupo: p.grupo || '',\n  tipo_capacidad: p.tipo_capacidad || '',\n  material: p.material || '',\n  url_producto: `https://194.195.92.107:444/productos/product/view/id/${p.product_id}`\n}));\n\nreturn [{ json: {\n  total: productos.length,\n  total_en_catalogo: totalCount,\n  pagina_actual: sc.current_page || 1,\n  resultados_en_pagina: productos.length,\n  productos\n} }];\n"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -156,8 +156,8 @@
           "marca": "",
           "categoria": "",
           "material": "",
-          "precio_minimo": "",
-          "precio_maximo": "",
+          "precio_minimo": "0",
+          "precio_maximo": "99999",
           "ordenar_por": "",
           "pagina": "1"
         },
@@ -167,9 +167,9 @@
       }
     ]
   },
-  "versionId": "419b42ab-942f-4c7b-9f61-0c39f1d36e1d",
-  "activeVersionId": "419b42ab-942f-4c7b-9f61-0c39f1d36e1d",
-  "versionCounter": 19,
+  "versionId": "f7489034-846a-4080-9da1-92ff4b199bed",
+  "activeVersionId": "f7489034-846a-4080-9da1-92ff4b199bed",
+  "versionCounter": 20,
   "triggerCount": 0,
   "shared": [
     {
@@ -192,9 +192,9 @@
   ],
   "tags": [],
   "activeVersion": {
-    "updatedAt": "2026-06-15T19:54:31.716Z",
-    "createdAt": "2026-06-15T19:54:31.716Z",
-    "versionId": "419b42ab-942f-4c7b-9f61-0c39f1d36e1d",
+    "updatedAt": "2026-06-15T20:02:14.925Z",
+    "createdAt": "2026-06-15T20:02:14.925Z",
+    "versionId": "f7489034-846a-4080-9da1-92ff4b199bed",
     "workflowId": "044xtBIPUsarnCZS",
     "nodes": [
       {
@@ -281,7 +281,7 @@
       },
       {
         "parameters": {
-          "jsCode": "const data = $input.first().json;\nconst items = data.items || [];\nconst totalCount = data.total_count || 0;\nconst sc = data.search_criteria || {};\n\n// Obtener el término de búsqueda del nodo anterior para filtrar client-side\nconst terminoBusqueda = ($('Construir URL').first().json.termino_busqueda || '').toLowerCase().trim();\n\nif (items.length === 0) {\n  return [{ json: { resultado: 'No se encontraron productos.', total: 0, productos: [] } }];\n}\n\n// Función: normaliza texto para comparación (quita acentos, minúsculas)\nfunction normalizar(texto) {\n  return (texto || '').toLowerCase()\n    .normalize('NFD').replace(/[\\u0300-\\u036f]/g, '');\n}\n\n// Filtro client-side: descarta productos cuyo short_description Y description\n// no contienen el término buscado (segunda línea de defensa contra falsos positivos del sku)\nconst terminoNorm = normalizar(terminoBusqueda);\n\nconst productosFiltrados = items.filter(p => {\n  if (!terminoNorm) return true; // sin término = sin filtro\n  const descCorta = normalizar(p.short_description);\n  const desc = normalizar(p.description);\n  const grupo = normalizar(p.grupo);\n  const subcat = normalizar(p.subcategoria);\n  const tags = normalizar((p.tags || ''));\n  const tipoCapacidad = normalizar(p.tipo_capacidad);\n  return descCorta.includes(terminoNorm)\n    || desc.includes(terminoNorm)\n    || grupo.includes(terminoNorm)\n    || subcat.includes(terminoNorm)\n    || tags.includes(terminoNorm)\n    || tipoCapacidad.includes(terminoNorm);\n});\n\nif (productosFiltrados.length === 0) {\n  return [{ json: {\n    resultado: `No se encontraron productos relevantes para \"${terminoBusqueda}\". Intenta con términos relacionados o contacta a Lauka directamente.`,\n    total: 0,\n    productos: []\n  } }];\n}\n\nconst productos = productosFiltrados.map(p => ({\n  product_id: p.product_id,\n  skux: p.skux || '',\n  nombre: p.short_description || '',\n  descripcion: p.description || '',\n  marca: p.brand || '',\n  precio_regular: p.regular_price || '0.00',\n  precio_venta: p.sale_price || '0.00',\n  stock: p.stock ?? 0,\n  subcategoria: p.subcategoria || '',\n  grupo: p.grupo || '',\n  tipo_capacidad: p.tipo_capacidad || '',\n  material: p.material || '',\n  url_producto: `https://194.195.92.107:444/productos/product/view/id/${p.product_id}`\n}));\n\nreturn [{ json: {\n  total: productosFiltrados.length,\n  total_en_catalogo: totalCount,\n  pagina_actual: sc.current_page || 1,\n  resultados_en_pagina: productosFiltrados.length,\n  productos\n} }];\n"
+          "jsCode": "const data = $input.first().json;\nconst items = data.items || [];\nconst totalCount = data.total_count || 0;\nconst sc = data.search_criteria || {};\nconst terminoBusqueda = ($('Construir URL').first().json.termino_busqueda || '').trim();\n\nif (items.length === 0) {\n  return [{ json: { resultado: 'No se encontraron productos.', total: 0, productos: [] } }];\n}\n\n// Normaliza texto: minúsculas + sin acentos\nfunction norm(t) {\n  return (t || '').toLowerCase().normalize('NFD').replace(/[\\u0300-\\u036f]/g, '').trim();\n}\n\nconst tNorm = norm(terminoBusqueda);\n\n// Scoring de relevancia\n// 3 = el producto ES principalmente lo que se busca (término al inicio de short_description)\n// 2 = el producto es claramente lo que se busca (término en las primeras 3 palabras)\n// 1 = el producto lo contiene como accesorio (término aparece pero no es el sujeto)\n// 0 = no relevante\nfunction calcularScore(p) {\n  if (!tNorm) return 3;\n  \n  const descNorm = norm(p.short_description);\n  const descPalabras = descNorm.split(/\\s+/);\n  const grupoNorm = norm(p.grupo);\n  const subcatNorm = norm(p.subcategoria);\n  const descCompleta = norm(p.description);\n  \n  // Score 3: el término es la primera palabra de short_description\n  if (descPalabras[0] === tNorm || descPalabras[0].startsWith(tNorm)) return 3;\n  \n  // Score 3: el grupo principal ES el término buscado\n  if (grupoNorm === tNorm || grupoNorm.startsWith(tNorm)) return 3;\n  \n  // Score 2: el término está en las primeras 3 palabras de short_description\n  if (descPalabras.slice(0, 3).some(p => p.includes(tNorm))) return 2;\n  \n  // Score 2: la subcategoría contiene el término\n  if (subcatNorm.includes(tNorm)) return 2;\n  \n  // Score 1: el término aparece en short_description pero no es el sujeto\n  if (descNorm.includes(tNorm)) return 1;\n  \n  // Score 1: aparece en description larga\n  if (descCompleta.includes(tNorm)) return 1;\n  \n  // Score 0: no es relevante\n  return 0;\n}\n\n// Calcular score para todos\nconst conScore = items\n  .map(p => ({ ...p, _score: calcularScore(p) }))\n  .filter(p => p._score > 0);\n\nif (conScore.length === 0) {\n  return [{ json: {\n    resultado: `No encontré productos que sean \"${terminoBusqueda}\" en el catálogo. Puedes intentar con términos relacionados o contactar a Lauka.`,\n    total: 0,\n    productos: []\n  } }];\n}\n\n// Determinar si hay resultados de score alto (2 o 3)\nconst scoreMaximo = Math.max(...conScore.map(p => p._score));\nconst umbral = scoreMaximo >= 2 ? 2 : 1; // si hay resultados directos, solo mostrar esos\n\nconst productosFiltrados = conScore\n  .filter(p => p._score >= umbral)\n  .sort((a, b) => b._score - a._score);\n\nconst productos = productosFiltrados.map(p => ({\n  product_id: p.product_id,\n  skux: p.skux || '',\n  nombre: p.short_description || '',\n  descripcion: p.description || '',\n  marca: p.brand || '',\n  precio_regular: p.regular_price || '0.00',\n  precio_venta: p.sale_price || '0.00',\n  stock: p.stock ?? 0,\n  subcategoria: p.subcategoria || '',\n  grupo: p.grupo || '',\n  tipo_capacidad: p.tipo_capacidad || '',\n  material: p.material || '',\n  url_producto: `https://194.195.92.107:444/productos/product/view/id/${p.product_id}`\n}));\n\nreturn [{ json: {\n  total: productos.length,\n  total_en_catalogo: totalCount,\n  pagina_actual: sc.current_page || 1,\n  resultados_en_pagina: productos.length,\n  productos\n} }];\n"
         },
         "type": "n8n-nodes-base.code",
         "typeVersion": 2,
@@ -334,10 +334,10 @@
     "autosaved": false,
     "workflowPublishHistory": [
       {
-        "createdAt": "2026-06-15T19:54:34.215Z",
-        "id": 454,
+        "createdAt": "2026-06-15T20:02:17.666Z",
+        "id": 456,
         "workflowId": "044xtBIPUsarnCZS",
-        "versionId": "419b42ab-942f-4c7b-9f61-0c39f1d36e1d",
+        "versionId": "f7489034-846a-4080-9da1-92ff4b199bed",
         "event": "activated",
         "userId": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3"
       }
