@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-06-18T18:01:00.335Z",
+  "updatedAt": "2026-06-18T18:03:15.622Z",
   "createdAt": "2025-09-29T19:02:12.427Z",
   "id": "5xylK7XDAkPDlQ99",
   "name": "Agente Glassy Filtrador Prod",
@@ -258,7 +258,7 @@
     },
     {
       "parameters": {
-        "toRecipients": "ravila@canteradigital.mx, aaron_avival@hotmail.com",
+        "toRecipients": "servicioalcliente@glasbil.com, hola@glasbil.com",
         "subject": "Error en consulta de producto",
         "bodyContent": "=Hubo un error en la siguiente consulta al API:\nhttps://glasbil.com/api/finder/searchProducts/filtered?year={{ $('Information Extractor1').item.json.output.year }}&brand={{ $('Information Extractor1').item.json.output.brand }}&model={{ $('Information Extractor1').item.json.output.model }}&car_type={{ $('Information Extractor1').item.json.output.car_type }}&type_glass={{ $('Information Extractor1').item.json.output.type_glass }}&antenna=false&encapsulated=false&hud=false&heated=false&attachment=false&request_origin=chatbot",
         "additionalFields": {}
@@ -433,9 +433,9 @@
       }
     ]
   },
-  "versionId": "0f1d398b-5775-447d-b346-8d246a117ed0",
-  "activeVersionId": "e9657bdb-5254-4b32-8692-a43b5ca43d4c",
-  "versionCounter": 13,
+  "versionId": "33e98f48-196a-4460-b06a-c7968405ccc1",
+  "activeVersionId": "33e98f48-196a-4460-b06a-c7968405ccc1",
+  "versionCounter": 16,
   "triggerCount": 0,
   "shared": [
     {
@@ -465,9 +465,9 @@
     }
   ],
   "activeVersion": {
-    "updatedAt": "2026-04-10T17:52:41.813Z",
-    "createdAt": "2026-04-10T17:52:41.813Z",
-    "versionId": "e9657bdb-5254-4b32-8692-a43b5ca43d4c",
+    "updatedAt": "2026-06-18T18:10:19.000Z",
+    "createdAt": "2026-06-18T18:03:15.623Z",
+    "versionId": "33e98f48-196a-4460-b06a-c7968405ccc1",
     "workflowId": "5xylK7XDAkPDlQ99",
     "nodes": [
       {
@@ -578,7 +578,8 @@
           -16
         ],
         "id": "7f5de426-9bc2-42fe-8232-792f87a3c545",
-        "name": "HTTP Request"
+        "name": "HTTP Request",
+        "onError": "continueErrorOutput"
       },
       {
         "parameters": {
@@ -698,6 +699,72 @@
             "name": "Supabase account - CANTERA"
           }
         }
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "=https://default3823387a1cbb49adbf5569153c1f82.69.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/a341821c24a04c4f9d8e9bf0480797ce/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=azqf3UT3Zcg2UShnVMwP2OVOqzbhANj2jHf9ju_ymQM",
+          "sendBody": true,
+          "specifyBody": "json",
+          "jsonBody": "={\n  \"@type\": \"MessageCard\",\n  \"@context\": \"https://schema.org/extensions\",\n  \"themeColor\": \"FF0000\",\n  \"summary\": \"Error en consulta de producto PROD\",\n  \"sections\": [{\n    \"activityTitle\": \"🚨 Error — Consulta de Producto PROD\",\n    \"facts\": [\n      { \"name\": \"Tipo de error\", \"value\": \"Fallo en back al consultar productos\" },\n      { \"name\": \"Producto\", \"value\": \"{{ $('Information Extractor1').item.json.output.type_glass }}\" },\n      { \"name\": \"Detalle\", \"value\": \"Hubo un error en la siguiente consulta: https://glasbil.com/api/finder/searchProducts/filtered?year={{ $('Information Extractor1').item.json.output.year }}&brand={{ $('Information Extractor1').item.json.output.brand }}&model={{ $('Information Extractor1').item.json.output.model }}&car_type={{ $('Information Extractor1').item.json.output.car_type }}&type_glass={{ $('Information Extractor1').item.json.output.type_glass }}&antenna=false&encapsulated=false&hud=false&heated=false&attachment=false&request_origin=chatbot\" },\n      { \"name\": \"Hora\", \"value\": \"{{ $now.toISO() }}\" }\n    ],\n    \"markdown\": true\n  }]\n}",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.4,
+        "position": [
+          -1120,
+          208
+        ],
+        "id": "b4590865-3ba7-4c85-b834-01028156e076",
+        "name": "HTTP Request1",
+        "onError": "continueRegularOutput"
+      },
+      {
+        "parameters": {
+          "toRecipients": "servicioalcliente@glasbil.com, hola@glasbil.com",
+          "subject": "Error en consulta de producto",
+          "bodyContent": "=Hubo un error en la siguiente consulta al API:\nhttps://glasbil.com/api/finder/searchProducts/filtered?year={{ $('Information Extractor1').item.json.output.year }}&brand={{ $('Information Extractor1').item.json.output.brand }}&model={{ $('Information Extractor1').item.json.output.model }}&car_type={{ $('Information Extractor1').item.json.output.car_type }}&type_glass={{ $('Information Extractor1').item.json.output.type_glass }}&antenna=false&encapsulated=false&hud=false&heated=false&attachment=false&request_origin=chatbot",
+          "additionalFields": {}
+        },
+        "type": "n8n-nodes-base.microsoftOutlook",
+        "typeVersion": 2,
+        "position": [
+          -912,
+          208
+        ],
+        "id": "762daa0b-9d7b-49ef-9ecd-ae22c63a9083",
+        "name": "Send a message",
+        "webhookId": "ccc072a7-2dd8-4417-aec3-69276697d870",
+        "credentials": {
+          "microsoftOutlookOAuth2Api": {
+            "id": "1e9fbzjIiV9wNv2j",
+            "name": "Microsoft Outlook account - azure@canteradigital.mx"
+          }
+        },
+        "onError": "continueRegularOutput"
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "98aa2c77-0409-4078-8485-fd8bcea2ebbf",
+                "name": "data",
+                "value": "=[ ]",
+                "type": "array"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          -720,
+          208
+        ],
+        "id": "994fe23a-873e-4ae2-b976-03fa9f4caa0c",
+        "name": "Edit Fields29"
       }
     ],
     "connections": {
@@ -747,6 +814,13 @@
               "type": "main",
               "index": 0
             }
+          ],
+          [
+            {
+              "node": "HTTP Request1",
+              "type": "main",
+              "index": 0
+            }
           ]
         ]
       },
@@ -782,35 +856,41 @@
             }
           ]
         ]
+      },
+      "HTTP Request1": {
+        "main": [
+          [
+            {
+              "node": "Send a message",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Send a message": {
+        "main": [
+          [
+            {
+              "node": "Edit Fields29",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
       }
     },
     "authors": "CANTERA ADMIN",
-    "name": null,
-    "description": null,
-    "autosaved": false,
+    "name": "Version 33e98f48",
+    "description": "",
+    "autosaved": true,
     "workflowPublishHistory": [
       {
-        "createdAt": "2026-04-10T17:52:41.000Z",
-        "id": 74,
+        "createdAt": "2026-06-18T18:10:19.744Z",
+        "id": 559,
         "workflowId": "5xylK7XDAkPDlQ99",
-        "versionId": "e9657bdb-5254-4b32-8692-a43b5ca43d4c",
+        "versionId": "33e98f48-196a-4460-b06a-c7968405ccc1",
         "event": "activated",
-        "userId": null
-      },
-      {
-        "createdAt": "2026-06-18T17:57:17.973Z",
-        "id": 557,
-        "workflowId": "5xylK7XDAkPDlQ99",
-        "versionId": "e9657bdb-5254-4b32-8692-a43b5ca43d4c",
-        "event": "activated",
-        "userId": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3"
-      },
-      {
-        "createdAt": "2026-06-18T17:57:17.960Z",
-        "id": 556,
-        "workflowId": "5xylK7XDAkPDlQ99",
-        "versionId": "e9657bdb-5254-4b32-8692-a43b5ca43d4c",
-        "event": "deactivated",
         "userId": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3"
       }
     ]
