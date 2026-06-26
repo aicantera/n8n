@@ -1,0 +1,147 @@
+{
+  "updatedAt": "2026-06-26T18:52:33.271Z",
+  "createdAt": "2026-06-26T18:36:07.979Z",
+  "id": "1tekzG9B2KYUQAbV",
+  "name": "DEESA - Notificar Asesor Terrenos",
+  "description": "Sub-workflow para notificar al asesor de terrenos cuando hay un lead caliente. Envía resumen del prospecto vía Telegram al asesor asignado a Tzintzuni Arboledas.",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "id": "3700e5f8-a40c-4fcc-a777-2bd2d78501c5",
+      "name": "Recibir Lead Caliente",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ],
+      "parameters": {
+        "inputSource": "workflowInputs",
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "chat_id",
+              "type": "string"
+            },
+            {
+              "name": "nombre",
+              "type": "string"
+            },
+            {
+              "name": "producto",
+              "type": "string"
+            },
+            {
+              "name": "perfil",
+              "type": "string"
+            },
+            {
+              "name": "resumen",
+              "type": "string"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "1208ce4e-2342-4700-8d15-0649b1d27c05",
+      "name": "Parsear Lead Caliente",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        224,
+        0
+      ],
+      "parameters": {
+        "jsCode": "const raw = $input.first().json;\nconst chat_id = raw.chat_id || 'pendiente';\nconst nombre = raw.nombre || 'No proporcionado';\nconst producto = raw.producto || 'terrenos';\nconst perfil = raw.perfil || 'sin_clasificar';\nconst resumen = raw.resumen || 'Sin resumen';\n\nconst lineas = [\n  '🔥 *LEAD CALIENTE - TERRENOS TZINTZUNI*',\n  '',\n  '🌲 *Desarrollo:* Tzintzuni Arboledas, Patzcuaro',\n  '👤 *Nombre:* ' + nombre,\n  '⭐ *Perfil:* ' + perfil,\n  '📋 *Resumen:* ' + resumen,\n  '',\n  '📱 *Referencia chat:* ' + chat_id\n];\n\nreturn [{ json: { chat_id, nombre, producto, perfil, resumen, mensaje_asesor: lineas.join('\\n') } }];"
+      }
+    },
+    {
+      "id": "24f3d2b3-7475-483b-9e48-9f21f1f228ea",
+      "name": "Avisar al Asesor Terrenos",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        448,
+        0
+      ],
+      "parameters": {
+        "resource": "message",
+        "operation": "sendMessage",
+        "chatId": "PENDING_ASESOR_TERRENOS",
+        "text": "={{ $json.mensaje_asesor }}",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "Markdown"
+        }
+      },
+      "credentials": {
+        "telegramApi": {
+          "id": "vcUHDLkV2ZD6YfU8",
+          "name": "Telegram account - GLASSY"
+        }
+      },
+      "webhookId": "10ce2c32-d728-4522-8501-b219d9f9bf73"
+    }
+  ],
+  "connections": {
+    "Recibir Lead Caliente": {
+      "main": [
+        [
+          {
+            "node": "Parsear Lead Caliente",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parsear Lead Caliente": {
+      "main": [
+        [
+          {
+            "node": "Avisar al Asesor Terrenos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": true
+  },
+  "staticData": null,
+  "meta": {
+    "aiBuilderAssisted": true,
+    "builderVariant": "mcp"
+  },
+  "pinData": null,
+  "versionId": "e63d5da2-2e8d-4dc6-8d2d-96a5aec0e9b2",
+  "activeVersionId": null,
+  "versionCounter": 1,
+  "triggerCount": 0,
+  "shared": [
+    {
+      "updatedAt": "2026-06-26T18:36:07.982Z",
+      "createdAt": "2026-06-26T18:36:07.982Z",
+      "role": "workflow:owner",
+      "workflowId": "1tekzG9B2KYUQAbV",
+      "projectId": "BZ9Ta5yhe4RhzY78",
+      "project": {
+        "updatedAt": "2025-05-13T16:18:54.372Z",
+        "createdAt": "2025-05-13T15:56:28.209Z",
+        "id": "BZ9Ta5yhe4RhzY78",
+        "name": "CANTERA ADMIN <canteradigital7@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "creatorId": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3"
+      }
+    }
+  ],
+  "tags": [],
+  "activeVersion": null
+}
