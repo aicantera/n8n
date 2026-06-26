@@ -1,0 +1,740 @@
+{
+  "updatedAt": "2026-06-26T19:00:22.734Z",
+  "createdAt": "2026-06-26T18:48:15.788Z",
+  "id": "8HidtFhttWLaQxLj",
+  "name": "Telegram → Sofía UNIP",
+  "description": "Agente Sofía de la UNIP: recibe mensajes de Telegram, auto-registra leads FRÍO, responde con RAG (Supabase) y catálogo de carreras (Google Sheets), califica prospectos y agenda visitas al campus con 10% de descuento.",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "id": "8df8ea62-43b3-42b4-9118-756bf78166f9",
+      "name": "Telegram Trigger",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        0,
+        208
+      ],
+      "webhookId": "4d612232-0bb2-4dea-b5d8-5d99251643da",
+      "credentials": {
+        "telegramApi": {
+          "id": "IKJBAZGN90Nv4csX",
+          "name": "Telegram account Edukai"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "chatId-1",
+              "name": "chatId",
+              "value": "={{ $json.message.chat.id.toString() }}",
+              "type": "string"
+            },
+            {
+              "id": "text-1",
+              "name": "text",
+              "value": "={{ $json.message.text || \"\" }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "e64b5d21-0d75-42e3-851e-11f54d4ed475",
+      "name": "Extraer Datos de Telegram",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        224,
+        208
+      ]
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "1Ab0dCJ2p2BwyA_RiphG52fxl4yFqbimBDw59sIytesY"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Leads"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "telegram_id",
+              "lookupValue": "={{ $('Extraer Datos de Telegram').item.json.chatId }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "a1081dd7-ef84-442b-9080-ee223deae4f0",
+      "name": "Verificar Lead Existente",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        448,
+        208
+      ],
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "T1b495TNgv7GQdA8",
+          "name": "Google Sheets Jumperaron"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ $json.telegram_id }}",
+              "operator": {
+                "type": "string",
+                "operation": "isNotEmpty"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "2848d264-073d-400a-8512-515d8e511208",
+      "name": "Lead ya existe?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        672,
+        208
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('Extraer Datos de Telegram').item.json.text }}",
+        "options": {
+          "systemMessage": "=Eres Sofía, asistente virtual de la Universidad del Pacífico Norte (UNIP).\n\nHERRAMIENTAS DISPONIBLES:\n- \"Consultar Base de Conocimientos\": información general sobre la universidad\n- \"Consultar Oferta Educativa\": catálogo de carreras, costos, duración y requisitos\n- \"Actualizar Lead\": guarda datos del prospecto (telegram_id automático)\n- \"Agendar Visita\": registra visita presencial (telegram_id automático)\n\nFLUJO DE CONVERSACIÓN:\n\n1. INTENCIÓN: Detecta si el mensaje es sobre la universidad o fuera de alcance.\n   - Fuera de alcance: responde brevemente y redirige a temas de la UNIP.\n   - Sobre la universidad: consulta la herramienta correspondiente.\n\n2. ATENCIÓN: Resuelve dudas con las herramientas.\n   - Usa \"Consultar Base de Conocimientos\" para preguntas generales.\n   - Usa \"Consultar Oferta Educativa\" para carreras, costos o modalidades.\n\n3. REGISTRO: Después de 1-2 respuestas, invita a registrarse.\n   Di: \"Para enviarte información personalizada, compárteme tu nombre completo, carrera de interés y número de contacto.\"\n   - Si acepta: llama \"Actualizar Lead\" con nombre, telefono, programa_interes y calificacion=\"TEMPLADO\".\n   - Si no acepta: sigue ayudando y reintenta más adelante.\n\n4. VISITA: Después del registro, propone visitar el campus.\n   Di: \"Tenemos una oferta especial: 10% de descuento en inscripción para quienes visiten el campus. ¿Te gustaría agendar un recorrido? Disponibilidad: Lunes a Viernes de 9am a 6pm.\"\n   - Si acepta: solicita fecha (DD/MM/YYYY) y hora (HH:MM), llama \"Agendar Visita\", luego llama \"Actualizar Lead\" con calificacion=\"CALIENTE\".\n   - Si no acepta: \"Sin problema, la oferta del 10% sigue disponible cuando quieras.\"\n\n5. CONFIRMACIÓN: Confirma la visita y di que un asesor de admisiones dará seguimiento.\n\nREGLAS:\n- SIEMPRE usa las herramientas antes de responder sobre la universidad.\n- NUNCA inventes información sobre costos, fechas o programas.\n- Responde en español con tono profesional, cálido y cercano.\n- Si no tienes la información, ofrece conectar con un asesor humano.\n- Horario de visitas: Lunes a Viernes 9:00am - 6:00pm.",
+          "maxIterations": 10
+        }
+      },
+      "id": "b7549a4f-d6cb-42ce-9cc6-2745e144c2b8",
+      "name": "Sofía - Asistente UNIP",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        1600,
+        208
+      ]
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "id",
+          "value": "gpt-4o"
+        },
+        "responsesApiEnabled": false,
+        "options": {
+          "temperature": 0.3
+        }
+      },
+      "id": "b63f73a0-21e7-48f4-b5ff-a99a977524d8",
+      "name": "GPT-4o",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        1120,
+        432
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "1JKgSV0LKM1wbzk3",
+          "name": "OpenAi Agente Nova"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "tableName": "sofia_unip_chat_histories",
+        "contextWindowLength": 10
+      },
+      "id": "2ebc9a3d-0e2a-405b-bf76-fe95bbd5fe9d",
+      "name": "Memoria de Conversación",
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "typeVersion": 1.4,
+      "position": [
+        1248,
+        432
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "njbkeKSjlbP7oPba",
+          "name": "Postgres Cuenta Aaron"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "retrieve-as-tool",
+        "toolDescription": "Consulta la base de conocimientos de la Universidad del Pacífico Norte (UNIP). Úsala para responder preguntas generales sobre la universidad: historia, campus, instalaciones, proceso de admisión, becas, eventos, vida universitaria y cualquier información que no sea sobre carreras específicas.",
+        "tableName": {
+          "__rl": true,
+          "mode": "id",
+          "value": "documents"
+        },
+        "options": {}
+      },
+      "id": "468550e4-6869-4c29-a878-a051357bf8fb",
+      "name": "Consultar Base de Conocimientos",
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1.3,
+      "position": [
+        1376,
+        432
+      ],
+      "credentials": {
+        "supabaseApi": {
+          "id": "JdSpBKWr20tzxL8D",
+          "name": "Supabase Aaron"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "eb85630f-36d1-4264-a8bd-89a0fc7acb18",
+      "name": "OpenAI Embeddings",
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        1456,
+        640
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "1JKgSV0LKM1wbzk3",
+          "name": "OpenAi Agente Nova"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "description": "Consulta el catálogo de programas y carreras de la UNIP. Úsala cuando el usuario pregunte qué carreras tienen, costos, duración, modalidades o requisitos de admisión.",
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "bzsOEdzRcnDbbaVU"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "query": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('query', 'La consulta del usuario sobre programas académicos') }}"
+          },
+          "schema": [
+            {
+              "id": "query",
+              "displayName": "query",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false
+            }
+          ]
+        }
+      },
+      "id": "4799213e-9dbb-4bdd-9e3e-2cd6a5d94753",
+      "name": "Consultar Oferta Educativa",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        1664,
+        432
+      ]
+    },
+    {
+      "parameters": {
+        "description": "Actualiza los datos del prospecto. El telegram_id se asigna automáticamente. Cuando el usuario da sus datos: incluye nombre, telefono, programa_interes y calificacion=\"TEMPLADO\". Cuando acepta visitar el campus: incluye calificacion=\"CALIENTE\".",
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "eJC8UmGPl9t1cBPj"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "telegram_id": "={{ $('Extraer Datos de Telegram').item.json.chatId }}",
+            "nombre": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('nombre', 'Nombre completo del prospecto') }}",
+            "telefono": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('telefono', 'Número de teléfono de contacto') }}",
+            "programa_interes": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('programa_interes', 'Carrera o programa de interés') }}",
+            "calificacion": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('calificacion', 'Estado del lead: TEMPLADO o CALIENTE') }}",
+            "notas": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('notas', 'Notas adicionales sobre el prospecto') }}"
+          },
+          "schema": [
+            {
+              "id": "telegram_id",
+              "displayName": "telegram_id",
+              "required": true,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "nombre",
+              "displayName": "nombre",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "telefono",
+              "displayName": "telefono",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "programa_interes",
+              "displayName": "programa_interes",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "calificacion",
+              "displayName": "calificacion",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "notas",
+              "displayName": "notas",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false
+            }
+          ]
+        }
+      },
+      "id": "e6fda04d-6f5a-4e74-b7d3-9f09736d71ff",
+      "name": "Actualizar Lead",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        1792,
+        432
+      ]
+    },
+    {
+      "parameters": {
+        "description": "Registra una visita presencial a la UNIP. El telegram_id se asigna automáticamente. Requiere: nombre, fecha_visita (DD/MM/YYYY) y hora_visita (HH:MM). Horario: Lunes a Viernes 9:00am-6:00pm.",
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "nrMdQWaKjUcVCTtm"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "telegram_id": "={{ $('Extraer Datos de Telegram').item.json.chatId }}",
+            "nombre": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('nombre', 'Nombre completo del prospecto') }}",
+            "fecha_visita": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fecha_visita', 'Fecha de visita en formato DD/MM/YYYY') }}",
+            "hora_visita": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('hora_visita', 'Hora de visita en formato HH:MM') }}",
+            "programa": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('programa', 'Carrera de interés del prospecto') }}"
+          },
+          "schema": [
+            {
+              "id": "telegram_id",
+              "displayName": "telegram_id",
+              "required": true,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "nombre",
+              "displayName": "nombre",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "fecha_visita",
+              "displayName": "fecha_visita",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "hora_visita",
+              "displayName": "hora_visita",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "programa",
+              "displayName": "programa",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false
+            }
+          ]
+        }
+      },
+      "id": "f56b8abf-fe73-44c7-83a4-7bf5a9b933ea",
+      "name": "Agendar Visita",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        1920,
+        432
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "5cd78027-75a7-4488-b3c9-57b45cea4453",
+      "name": "Pensar",
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1.1,
+      "position": [
+        2048,
+        432
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Extraer Datos de Telegram').item.json.chatId }}",
+        "text": "={{ $json.output }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "49b51fa7-f6ca-44aa-b4c0-a5a1ad67cbda",
+      "name": "Enviar Respuesta por Telegram",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2256,
+        208
+      ],
+      "webhookId": "be422088-bafd-460e-b2f5-7b0c0c121d98",
+      "credentials": {
+        "telegramApi": {
+          "id": "IKJBAZGN90Nv4csX",
+          "name": "Telegram account Edukai"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "1Ab0dCJ2p2BwyA_RiphG52fxl4yFqbimBDw59sIytesY"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Leads"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "telegram_id": "={{ $('Extraer Datos de Telegram').item.json.chatId }}",
+            "calificacion": "FRÍO",
+            "fecha_registro": "={{ $now.toFormat(\"dd/MM/yyyy\") }}"
+          },
+          "schema": [
+            {
+              "id": "telegram_id",
+              "displayName": "telegram_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "calificacion",
+              "displayName": "calificacion",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false
+            },
+            {
+              "id": "fecha_registro",
+              "displayName": "fecha_registro",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": false
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "de74ae3d-f96b-4025-a0b3-a7c49c010292",
+      "name": "Crear Lead FRÍO",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        896,
+        288
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "T1b495TNgv7GQdA8",
+          "name": "Google Sheets Jumperaron"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Extraer Datos de Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extraer Datos de Telegram": {
+      "main": [
+        [
+          {
+            "node": "Verificar Lead Existente",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verificar Lead Existente": {
+      "main": [
+        [
+          {
+            "node": "Lead ya existe?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lead ya existe?": {
+      "main": [
+        [
+          {
+            "node": "Sofía - Asistente UNIP",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Crear Lead FRÍO",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sofía - Asistente UNIP": {
+      "main": [
+        [
+          {
+            "node": "Enviar Respuesta por Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GPT-4o": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Sofía - Asistente UNIP",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Memoria de Conversación": {
+      "ai_memory": [
+        [
+          {
+            "node": "Sofía - Asistente UNIP",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consultar Base de Conocimientos": {
+      "ai_tool": [
+        [
+          {
+            "node": "Sofía - Asistente UNIP",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Embeddings": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Consultar Base de Conocimientos",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consultar Oferta Educativa": {
+      "ai_tool": [
+        [
+          {
+            "node": "Sofía - Asistente UNIP",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Actualizar Lead": {
+      "ai_tool": [
+        [
+          {
+            "node": "Sofía - Asistente UNIP",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agendar Visita": {
+      "ai_tool": [
+        [
+          {
+            "node": "Sofía - Asistente UNIP",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pensar": {
+      "ai_tool": [
+        [
+          {
+            "node": "Sofía - Asistente UNIP",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Crear Lead FRÍO": {
+      "main": [
+        [
+          {
+            "node": "Sofía - Asistente UNIP",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": true,
+    "binaryMode": "separate"
+  },
+  "staticData": null,
+  "meta": {
+    "aiBuilderAssisted": true,
+    "builderVariant": "mcp"
+  },
+  "pinData": {},
+  "versionId": "8eea7cdc-1446-4bcc-b240-255475adb52c",
+  "activeVersionId": null,
+  "versionCounter": 4,
+  "triggerCount": 0,
+  "shared": [
+    {
+      "updatedAt": "2026-06-26T18:48:15.790Z",
+      "createdAt": "2026-06-26T18:48:15.790Z",
+      "role": "workflow:owner",
+      "workflowId": "8HidtFhttWLaQxLj",
+      "projectId": "BZ9Ta5yhe4RhzY78",
+      "project": {
+        "updatedAt": "2025-05-13T16:18:54.372Z",
+        "createdAt": "2025-05-13T15:56:28.209Z",
+        "id": "BZ9Ta5yhe4RhzY78",
+        "name": "CANTERA ADMIN <canteradigital7@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "creatorId": "cc3cfe5e-ee8c-4740-93d3-7cf7143ccce3"
+      }
+    }
+  ],
+  "tags": [],
+  "activeVersion": null
+}
